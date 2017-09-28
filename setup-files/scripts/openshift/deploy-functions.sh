@@ -172,35 +172,48 @@ function tailorAppInstance() {
     sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/spring-admin/*.yml
     sed -i.bak "s/<<FRACTAL-ADDRESS>>/fractal-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/fractal/*.yml
 
-    if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" || ${TARGET} == "perf" ]]
-    then
+    if $(isNamedEnvironment ${TARGET}); then
+
         sed -i.bak "s/claimName: file-upload-claim/claimName: ${TARGET}-file-upload-claim/g" os-files-tmp/*.yml
 
         if [[ ${TARGET} == "demo" ]]
         then
             if [ -z "${bamboo_demo_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
             sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_demo_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
+            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_demo_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
         if [[ ${TARGET} == "sysint" ]]
         then
             if [ -z "${bamboo_sysint_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
             sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_sysint_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
+            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_sysint_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
         if [[ ${TARGET} == "perf" ]]
         then
             if [ -z "${bamboo_perf_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
             sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_perf_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
+            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_perf_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
         if [[ ${TARGET} == "uat" ]]
         then
             if [ -z "${bamboo_uat_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
             sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_uat_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
+            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_uat_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
         if [[ ${TARGET} == "production" ]]
         then
             if [ -z "${bamboo_production_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
             sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_production_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
+            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_production_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
+    else
+        ## TODO DW - when we remove the tech debt of having multiple files for the shib yml files per named environment,
+        ## we can do away with this more complex configuration
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldaps://ldap:389#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=nodomain#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=nodomain#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_PASSWORD>>#default#g" os-files-tmp/45-registration-svc.yml
     fi
 
     if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
@@ -260,6 +273,8 @@ function pushApplicationImages() {
         ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
     docker tag innovateuk/ldap-service:latest \
         ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
+    docker tag innovateuk/registration-service:latest \
+        ${REGISTRY}/${PROJECT}/registration-service:${VERSION}
 
     docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
 
@@ -273,8 +288,7 @@ function pushApplicationImages() {
     docker push ${REGISTRY}/${PROJECT}/sp-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
-
-
+    docker push ${REGISTRY}/${PROJECT}/registration-service:${VERSION}
 }
 
 function pushDBResetImages() {
