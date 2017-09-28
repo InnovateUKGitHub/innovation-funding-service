@@ -8,9 +8,11 @@ import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competitionsetup.viewmodel.ApplicationLandingViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,9 +24,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ApplicationLandingModelPopulator implements CompetitionSetupSectionModelPopulator {
-
-    private static final String QUESTIONS_KEY = "questions";
-    private static final String PROJECT_DETAILS_KEY = "projectDetails";
 
 	@Autowired
 	private SectionService sectionService;
@@ -38,14 +37,13 @@ public class ApplicationLandingModelPopulator implements CompetitionSetupSection
 	}
 
 	@Override
-	public void populateModel(Model model, CompetitionResource competitionResource) {
+	public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
 		List<SectionResource> sections = sectionService.getAllByCompetitionId(competitionResource.getId());
 		List<QuestionResource> questionResources = questionService.findByCompetition(competitionResource.getId());
         List<SectionResource> generalSections = sections.stream().filter(sectionResource -> sectionResource.getType() == SectionType.GENERAL).collect(Collectors.toList());
         List<SectionResource> parentSections = generalSections.stream().filter(sectionResource -> sectionResource.getParentSection() == null).collect(Collectors.toList());
-        model.addAttribute(QUESTIONS_KEY, getSortedQuestions(questionResources, parentSections));
-        model.addAttribute(PROJECT_DETAILS_KEY, getSortedProjectDetails(questionResources, parentSections));
-   }
+        return new ApplicationLandingViewModel(generalViewModel, getSortedQuestions(questionResources, parentSections), getSortedProjectDetails(questionResources, parentSections));
+    }
 
 	private List<QuestionResource> getSortedQuestions(List<QuestionResource> questionResources, List<SectionResource> parentSections) {
         Optional<SectionResource> section = parentSections.stream().filter(sectionResource -> sectionResource.getName().equals("Application questions")).findFirst();

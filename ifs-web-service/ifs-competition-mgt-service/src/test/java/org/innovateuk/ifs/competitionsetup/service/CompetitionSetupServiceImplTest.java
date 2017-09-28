@@ -55,7 +55,7 @@ public class CompetitionSetupServiceImplTest {
         CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
 
         List<CompetitionSetupSection> completedSections = new ArrayList<>();
-        service.populateCompetitionSectionModelAttributes(model, competition, section);
+        service.populateCompetitionSectionModelAttributes(competition, section);
 
         verifyCommonModelAttributes(model, competition, section, completedSections);
         assertEquals("section-initial", model.asMap().get("currentSectionFragment"));
@@ -81,7 +81,7 @@ public class CompetitionSetupServiceImplTest {
 
         List<CompetitionSetupSection> completedSections = new ArrayList<>();
 
-        service.populateCompetitionSectionModelAttributes(model, competition, section);
+        service.populateCompetitionSectionModelAttributes(competition, section);
 
         verifyCommonModelAttributes(model, competition, section, completedSections);
         assertEquals("section-eligibility", model.asMap().get("currentSectionFragment"));
@@ -303,7 +303,7 @@ public class CompetitionSetupServiceImplTest {
                 .withFundersPanelDate(yesterday)
                 .build();
 
-        service.populateCompetitionSectionModelAttributes(model, competition, competitionSetupSection);
+        service.populateCompetitionSectionModelAttributes(competition, competitionSetupSection);
 
         assertEquals(true, model.asMap().get("preventEdit"));
         assertEquals(true, model.asMap().get("isSetupAndLive"));
@@ -330,7 +330,7 @@ public class CompetitionSetupServiceImplTest {
                 .withStartDate(yesterday)
                 .build();
 
-        service.populateCompetitionSectionModelAttributes(model, competition, competitionSetupSection);
+        service.populateCompetitionSectionModelAttributes(competition, competitionSetupSection);
 
         assertEquals(false, model.asMap().get("preventEdit"));
         assertEquals(false, model.asMap().get("isSetupAndLive"));

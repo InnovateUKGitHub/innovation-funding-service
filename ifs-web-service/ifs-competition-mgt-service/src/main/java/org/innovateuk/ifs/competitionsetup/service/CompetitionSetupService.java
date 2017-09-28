@@ -5,7 +5,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.springframework.ui.Model;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupViewModel;
 
 import java.util.Optional;
 
@@ -14,15 +15,15 @@ import java.util.Optional;
  */
 public interface CompetitionSetupService {
 
-	void populateCompetitionSectionModelAttributes(Model model, CompetitionResource competitionResource,
-			CompetitionSetupSection section);
+	CompetitionSetupViewModel populateCompetitionSectionModelAttributes(CompetitionResource competitionResource,
+																		CompetitionSetupSection section);
 
-    void populateCompetitionSubsectionModelAttributes(Model model, CompetitionResource competitionResource,
-                                                      CompetitionSetupSection section, CompetitionSetupSubsection subsection,
-                                                      Optional<Long> objectId);
+	CompetitionSetupSubsectionViewModel populateCompetitionSubsectionModelAttributes(CompetitionResource competitionResource,
+																					 CompetitionSetupSection section, CompetitionSetupSubsection subsection,
+																					 Optional<Long> objectId);
 
-    CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
-                                            CompetitionSetupSection section);
+	CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
+											CompetitionSetupSection section);
 
 	CompetitionSetupForm getSubsectionFormData(CompetitionResource competitionResource,
 											CompetitionSetupSection section,

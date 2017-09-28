@@ -23,7 +23,7 @@ public class ManageInnovationLeadsModelPopulator {
     @Autowired
     private UserService userService;
 
-    public void populateModel(Model model, CompetitionResource competition) {
+    public ManageInnovationLeadsViewModel populateModel(Model model, CompetitionResource competition) {
 
         List<UserResource> availableInnovationLeads = userService.findUserByType(UserRoleType.INNOVATION_LEAD);
         List<UserResource> innovationLeadsAssignedToCompetition = competitionService.findInnovationLeads(competition.getId());
@@ -33,10 +33,10 @@ public class ManageInnovationLeadsModelPopulator {
         availableInnovationLeads.remove(leadTechnologistAssignedToCompetition);
         innovationLeadsAssignedToCompetition.remove(leadTechnologistAssignedToCompetition);
 
-        model.addAttribute("model", new ManageInnovationLeadsViewModel(competition.getId(), competition.getName(),
+        return new ManageInnovationLeadsViewModel(competition.getId(), competition.getName(),
                 competition.getLeadTechnologistName(), competition.getExecutiveName(), competition.getInnovationSectorName(),
                 competition.getInnovationAreaNames(), sortByName(innovationLeadsAssignedToCompetition),
-                sortByName(availableInnovationLeads)));
+                sortByName(availableInnovationLeads));
 
     }
 

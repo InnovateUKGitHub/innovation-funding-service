@@ -3,13 +3,12 @@ package org.innovateuk.ifs.competitionsetup.service.modelpopulator.application;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSubsectionModelPopulator;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.application.ApplicationDetailsViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.util.Optional;
-
-import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
-import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_NAME_KEY;
 
 /**
  * populates the model for the Application Details sub-section under the Application of competition setup section.
@@ -23,9 +22,7 @@ public class ApplicationDetailsModelPopulator implements CompetitionSetupSubsect
 	}
 
 	@Override
-	public void populateModel(Model model, CompetitionResource competitionResource, Optional<Long> objectId) {
-
-		model.addAttribute(COMPETITION_ID_KEY, competitionResource.getId());
-		model.addAttribute(COMPETITION_NAME_KEY, competitionResource.getName());
-	}
+	public CompetitionSetupSubsectionViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource, Optional<Long> objectId) {
+        return new ApplicationDetailsViewModel(generalViewModel, competitionResource.getId(), competitionResource.getName());
+    }
 }

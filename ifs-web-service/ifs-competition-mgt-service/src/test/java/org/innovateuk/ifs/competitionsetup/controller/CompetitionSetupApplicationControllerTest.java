@@ -160,7 +160,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         ArgumentCaptor<Model> model = ArgumentCaptor.forClass(Model.class);
         ArgumentCaptor<CompetitionResource> competitionResource = ArgumentCaptor.forClass(CompetitionResource.class);
         ArgumentCaptor<CompetitionSetupSection> competitionSetupSection = ArgumentCaptor.forClass(CompetitionSetupSection.class);
-        verify(competitionSetupService, atLeastOnce()).populateCompetitionSectionModelAttributes(model.capture(), competitionResource.capture(), competitionSetupSection.capture());
+        verify(competitionSetupService, atLeastOnce()).populateCompetitionSectionModelAttributes(competitionResource.capture(), competitionSetupSection.capture());
         verify(competitionService, never()).update(competition);
     }
 

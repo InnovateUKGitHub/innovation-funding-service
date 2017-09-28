@@ -15,6 +15,9 @@ import org.innovateuk.ifs.competitionsetup.form.application.ApplicationProjectFo
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,6 +50,7 @@ public class CompetitionSetupApplicationController {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupApplicationController.class);
     public static final String APPLICATION_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/application/landing-page";
     private static final String questionView = "competition/setup/question";
+    private static final String MODEL = "model";
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
@@ -73,7 +77,7 @@ public class CompetitionSetupApplicationController {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
-        competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionResource, APPLICATION_FORM);
+        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, APPLICATION_FORM));
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, new LandingPageForm());
         return "competition/setup";
     }
@@ -91,7 +95,7 @@ public class CompetitionSetupApplicationController {
         }
 
         Supplier<String> failureView = () -> {
-            competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionResource, APPLICATION_FORM);
+            model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, APPLICATION_FORM));
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, form);
             return "competition/setup";
         };
@@ -295,12 +299,14 @@ public class CompetitionSetupApplicationController {
     }
 
     private String getFinancePage(Model model, CompetitionResource competitionResource, boolean isEditable, CompetitionSetupForm form) {
-        setupQuestionToModel(competitionResource, Optional.empty(), model, FINANCES, isEditable, form);
+        model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.empty(), FINANCES, isEditable));
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, setupQuestionForm(competitionResource, Optional.empty(), FINANCES, form));
         return "competition/finances";
     }
 
     private String getDetailsPage(Model model, CompetitionResource competitionResource, boolean isEditable, CompetitionSetupForm form) {
-        setupQuestionToModel(competitionResource, Optional.empty(), model, APPLICATION_DETAILS, isEditable, form);
+        model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.empty(), APPLICATION_DETAILS, isEditable));
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, setupQuestionForm(competitionResource, Optional.empty(), APPLICATION_DETAILS, form));
         return "competition/application-details";
     }
 
@@ -316,7 +322,8 @@ public class CompetitionSetupApplicationController {
                         setupSubsection = CompetitionSetupSubsection.PROJECT_DETAILS;
                     }
 
-                    setupQuestionToModel(competitionResource, Optional.of(questionId), model, setupSubsection, isEditable, form);
+                    model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.of(questionId), setupSubsection, isEditable));
+                    model.addAttribute(COMPETITION_SETUP_FORM_KEY, setupQuestionForm(competitionResource, Optional.of(questionId), setupSubsection, form));
 
                     return questionView;
                 }).andOnFailure(() -> serviceSuccess("redirect:/non-ifs-competition/setup/" + questionId));
@@ -324,14 +331,19 @@ public class CompetitionSetupApplicationController {
         return view.getSuccessObjectOrThrowException();
     }
 
-    private void setupQuestionToModel(final CompetitionResource competition, final Optional<Long> questionId, Model model, CompetitionSetupSubsection subsection, boolean isEditable, CompetitionSetupForm form) {
+    private CompetitionSetupViewModel setupQuestionViewModel(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, boolean isEditable) {
         CompetitionSetupSection section = APPLICATION_FORM;
 
-        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competition, section,
+        CompetitionSetupSubsectionViewModel subsectionViewModel = competitionSetupService.populateCompetitionSubsectionModelAttributes(competition, section,
                 subsection, questionId);
 
-        CompetitionSetupForm competitionSetupForm = form;
-        if (form == null) {
+        return new QuestionSetupViewModel(subsectionViewModel, competition.getName(), isEditable);
+    }
+
+    private CompetitionSetupForm setupQuestionForm(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, CompetitionSetupForm competitionSetupForm) {
+        CompetitionSetupSection section = APPLICATION_FORM;
+
+        if (competitionSetupForm == null) {
             competitionSetupForm = competitionSetupService.getSubsectionFormData(
                     competition,
                     section,
@@ -339,9 +351,7 @@ public class CompetitionSetupApplicationController {
                     questionId);
         }
 
-        model.addAttribute(COMPETITION_NAME_KEY, competition.getName());
-        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
-        model.addAttribute("editable", isEditable);
+        return competitionSetupForm;
     }
 
     private String ifUserCanAccessEditPageMarkSectionAsIncomplete(CompetitionResource competition, Supplier<String> successAction) {
