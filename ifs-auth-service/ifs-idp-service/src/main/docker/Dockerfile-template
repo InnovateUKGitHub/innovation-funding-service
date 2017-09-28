@@ -25,7 +25,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
   LDAPRSEARCHFILTER="(mail=\$resolutionContext.principal)" \
   LDAPRRETURNATTRIBUTE="mail,uid" \
   LDAPVALIDATEPERIOD="PT20S" \
-  REGAPIKEY=@auth_idp_regapikey@ \
   GOOGLEANALYTICS_TRACKINGID="#" \
   IDP_PROXY_KEY="@auth_idp_proxy_key@" \
   IDP_PROXY_CERTIFICATE="@auth_idp_proxy_certificate@" \

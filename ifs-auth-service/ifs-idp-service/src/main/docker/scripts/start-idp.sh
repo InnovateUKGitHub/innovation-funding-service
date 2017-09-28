@@ -4,7 +4,7 @@ set -a
 [ -z "$JAVA_HOME" ] && JAVA_HOME="/usr/lib/jvm/default-java"
 CATALINA_HOME="/usr/share/tomcat8"
 CATALINA_BASE="/var/lib/tomcat8"
-JAVA_OPTS="$JAVA_OPTS -Djava.awt.headless=true -server -XX:+UseConcMarkSweepGC -Dspring.config.location=/etc/tomcat8/regapi.properties -Djava.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib:/usr/lib/x86_64-linux-gnu/"
+JAVA_OPTS="$JAVA_OPTS -Djava.awt.headless=true -server -XX:+UseConcMarkSweepGC -Djava.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib:/usr/lib/x86_64-linux-gnu/"
 CATALINA_PID="/var/run/tomcat8/tomcat8.pid"
 CATALINA_TMPDIR="/tmp/tomcat8-tomcat8-tmp"
 LANG=""

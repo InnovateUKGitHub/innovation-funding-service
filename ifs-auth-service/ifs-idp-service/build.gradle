@@ -17,7 +17,6 @@ def String idpEncryptionKeyFile = "${idpCertsVolume}/idp-encryption.key"
 def String idpEncryptionCertificateFile = "${idpCertsVolume}/idp-encryption.crt"
 
 def String ldapEncryptionCertificateFile = "${idpCertsVolume}/ldap-encryption.crt"
-def String authIdpRegapiKey = project.properties['auth.idp.regapikey'] ?:"1234567890"
 def String javaKeystorePassword = project.properties['java.keystore.password'] ?:"changeit"
 
 
@@ -76,8 +75,7 @@ task prepareDockerFile {
              into inputDir
              include 'Dockerfile-template'
              rename 'Dockerfile-template', 'Dockerfile'
-             filter(ReplaceTokens, tokens: [auth_idp_regapikey: authIdpRegapiKey,
-                                            auth_idp_proxy_key: idpProxyKey,
+             filter(ReplaceTokens, tokens: [auth_idp_proxy_key: idpProxyKey,
                                             auth_idp_proxy_certificate: idpProxyCertificate,
                                             auth_idp_proxy_cacertificate: idpProxyCacertificate,
                                             auth_sp_proxy_certificate: spProxyCertificate,
