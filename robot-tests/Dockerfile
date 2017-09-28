@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:17.04
 
 RUN apt-get update && \
     apt-get install -y mysql-client && \
@@ -9,7 +9,7 @@ RUN apt-get update && \
     apt-get install -y telnet && \
     rm -rf /var/lib/apt/lists/*
 
-RUN pip install -U selenium==3.3.1 && \
+RUN pip install -U selenium==3.0.1 && \
     pip install robotframework \
                 robotframework-selenium2library \
                 robotframework-imaplibrary \

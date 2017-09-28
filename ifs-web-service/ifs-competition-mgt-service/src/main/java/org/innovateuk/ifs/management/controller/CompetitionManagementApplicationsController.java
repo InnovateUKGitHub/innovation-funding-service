@@ -11,6 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -23,6 +24,12 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @Controller
 @RequestMapping("/competition/{competitionId}/applications")
 public class CompetitionManagementApplicationsController {
+
+    private static final String DEFAULT_PAGE_NUMBER = "0";
+
+    private static final String DEFAULT_PAGE_SIZE = "20";
+
+    private static final String DEFAULT_SORT_BY = "id";
 
     private static final String FILTER_FORM_ATTR_NAME = "filterForm";
 
@@ -101,10 +108,18 @@ public class CompetitionManagementApplicationsController {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'ifs_admin')")
     @GetMapping("/unsuccessful")
     public String unsuccessfulApplications(Model model,
+                                           HttpServletRequest request,
                                            @PathVariable("competitionId") long competitionId,
+                                           @RequestParam MultiValueMap<String, String> queryParams,
+                                           @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
+                                           @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int size,
+                                           @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortBy,
                                            UserResource loggedInUser) {
 
-        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId));
+        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.UNSUCCESSFUL_APPLICATIONS, queryParams);
+        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, originQuery));
+        model.addAttribute("originQuery", originQuery);
+
         return "competition/unsuccessful-applications";
     }
 
