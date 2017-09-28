@@ -19,6 +19,25 @@ def String idpEncryptionCertificateFile = "${idpCertsVolume}/idp-encryption.crt"
 def String ldapEncryptionCertificateFile = "${idpCertsVolume}/ldap-encryption.crt"
 def String javaKeystorePassword = project.properties['java.keystore.password'] ?:"changeit"
 
+task getNewRelicAgent {
+    if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
+         !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists() ) {
+        exec {
+            executable = 'curl'
+            args = ['--connect-timeout', '30',
+                    '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar",
+                    'https://tools.innovateuk.org/holding/newrelic/newrelic.jar'
+            ]
+        }
+        exec {
+            executable = 'curl'
+            args = ['--connect-timeout', '30',
+                    '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml",
+                    'https://tools.innovateuk.org/holding/newrelic/newrelic.yml'
+            ]
+        }
+    }
+}
 
 task prepareDockerFileBase {
     def inputDir = project.file("$project.buildDir/docker-base")
@@ -53,6 +72,7 @@ task buildDockerBaseImage(type: DockerBuildImage) {
 
 task prepareDockerFile {
     dependsOn ':ifs-auth-service:prepareSecrets'
+    dependsOn getNewRelicAgent
 
     def String idpProxyKey = file(idpProxyKeyFile).text.trim().replace('\n', '\\n')
     def String idpProxyCertificate = file(idpProxyCertificateFile).text.trim().replace('\n', '\\n')
@@ -116,6 +136,12 @@ task prepareDockerFile {
         copy {
             from fileTree('src/main/docker/certs')
             into "${inputDir}/certs"
+        }
+
+        copy {
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
+            into inputDir
         }
 
         configurations.runtime.setTransitive(false).resolvedConfiguration.resolvedArtifacts

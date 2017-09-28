@@ -34,8 +34,10 @@ items:
           - name: mysql-tmp-storage
             mountPath: /var/lib/mysql
           resources:
+            requests:
+              memory: 500M
             limits:
-              memory: 1500M
+              memory: 600M
         volumes:
           - emptyDir: {}
             name: mysql-tmp-storage

@@ -37,6 +37,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
 # packages and stuff \
 COPY idp/* /idp/
+COPY newrelic.jar /
+COPY newrelic.yml /
 # Apache layer
 COPY apache /apache/
 RUN  mkdir /etc/apache2/certs && \
@@ -71,13 +73,13 @@ RUN mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
   mv /idp/*.xml . && \
   mv /idp/sealer.* /opt/shibboleth-idp/credentials/ && \
   mkdir /var/log/shibboleth && rm -rf /opt/shibboleth-idp/logs && ln -s /var/log/shibboleth /opt/shibboleth-idp/logs && \
-  mkdir -p /var/run/tomcat8 && \
-  chown -R www-data:0 /etc/shibboleth /etc/apache2 /opt/shibboleth-idp /var/run/tomcat8 /usr/local/bin \
+  mkdir -p /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp && \
+  chown -R www-data:0 /etc/shibboleth /etc/apache2 /opt/shibboleth-idp /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp /usr/local/bin \
                       /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JRE_HOME"/lib/security/cacerts && \
-  chmod -R u=rwX,g=rwX,o= /etc/shibboleth /etc/apache2 /opt/shibboleth-idp /var/run/tomcat8 /usr/local/bin \
+  chmod -R u=rwX,g=rwX,o= /etc/shibboleth /etc/apache2 /opt/shibboleth-idp /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp /usr/local/bin \
                           /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JRE_HOME"/lib/security/cacerts && \
 
-  rm -rf /idp /tmp/* /var/tmp/*
+  rm -rf /idp
 
 # start and other useful scripts
 COPY scripts/* /usr/local/bin/
