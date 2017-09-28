@@ -51,7 +51,6 @@ public class CompetitionSetupController {
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String SECTION_PATH_KEY = "sectionPath";
     private static final String SUBSECTION_PATH_KEY = "subsectionPath";
-    public static final String COMPETITION_NAME_KEY = "competitionName";
     public static final String PUBLIC_CONTENT_LANDING_REDIRECT = "redirect:/competition/setup/public-content/";
     private static final String MODEL = "model";
 

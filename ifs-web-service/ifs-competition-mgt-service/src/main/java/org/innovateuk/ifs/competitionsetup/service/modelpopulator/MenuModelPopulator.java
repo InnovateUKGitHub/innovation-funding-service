@@ -33,5 +33,4 @@ public class MenuModelPopulator implements CompetitionSetupSectionModelPopulator
 	private boolean isPublicContentPublished(PublicContentResource publicContent) {
 		return null != publicContent.getPublishDate();
 	}
-
 }

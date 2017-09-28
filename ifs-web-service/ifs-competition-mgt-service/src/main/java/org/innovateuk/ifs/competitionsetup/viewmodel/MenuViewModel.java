@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 
 import java.time.ZonedDateTime;
@@ -20,5 +21,21 @@ public class MenuViewModel extends CompetitionSetupViewModel {
 
     public boolean isPublicContentPublished() {
         return isPublicContentPublished;
+    }
+
+    public boolean initialCompleteOrSectionIsInitial(CompetitionSetupSection setupSection) {
+        return generalSetupViewModel.isInitialComplete() || setupSection.equals(CompetitionSetupSection.INITIAL_DETAILS);
+    }
+
+    public boolean publicContentPublishedAndSectionIsContent(CompetitionSetupSection setupSection) {
+        return isPublicContentPublished() && setupSection.equals(CompetitionSetupSection.CONTENT);
+    }
+
+    public boolean sectionCompleteAndCompetitionNotLive(CompetitionSetupSection setupSection) {
+        return setupSection.isComplete(generalSetupViewModel.getCompetition()) && !generalSetupViewModel.getCompetition().isSetupAndLive();
+    }
+
+    public boolean sectionIsNotHome(CompetitionSetupSection setupSection) {
+        return !setupSection.equals(CompetitionSetupSection.HOME);
     }
 }

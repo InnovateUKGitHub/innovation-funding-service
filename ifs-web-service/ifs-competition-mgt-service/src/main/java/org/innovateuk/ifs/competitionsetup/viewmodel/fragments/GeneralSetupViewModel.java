@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionStateSetupViewMo
 public class GeneralSetupViewModel {
     private boolean editable;
     private CompetitionResource competition;
-    private CompetitionSetupSection section;
+    private CompetitionSetupSection currentSection;
     private String currentSectionFragment;
     private CompetitionSetupSection[] allSections;
     private boolean isInitialComplete;
@@ -18,7 +18,7 @@ public class GeneralSetupViewModel {
                                  CompetitionSetupSection[] allSections, boolean isInitialComplete) {
         this.editable = editable;
         this.competition = competition;
-        this.section = section;
+        this.currentSection = section;
         this.allSections = allSections;
         this.isInitialComplete = isInitialComplete;
     }
@@ -39,8 +39,8 @@ public class GeneralSetupViewModel {
         return competition;
     }
 
-    public CompetitionSetupSection getSection() {
-        return section;
+    public CompetitionSetupSection getCurrentSection() {
+        return currentSection;
     }
 
     public String getCurrentSectionFragment() {
@@ -57,5 +57,9 @@ public class GeneralSetupViewModel {
 
     public CompetitionStateSetupViewModel getState() {
         return state;
+    }
+
+    public boolean currentSectionIsHome() {
+        return currentSection.equals(CompetitionSetupSection.HOME);
     }
 }
