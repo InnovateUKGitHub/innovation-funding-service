@@ -534,6 +534,12 @@ Project Finance is able to see Spend Profile approval page
     Then the user should see the element    css=#accept-profile
     And the user should see the element    jQuery=#content .button.button.button-warning:contains("Reject")
 
+Check if project manager and project address fields are still editable
+   [Documentation]    IFS-1577, IFS-1578
+   [Tags]
+   Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
+   Then check if project manager and project address fields are editable  ${PS_SP_APPLICATION_PROJECT}
+
 Comp Admin is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-6226, INFUND-5549
     [Tags]
@@ -797,3 +803,27 @@ the user returns edit rights for the organisation
     the user clicks the button/link  jQuery=.button:contains("Allow edits")
     the user clicks the button/link  jQuery=.button:contains("Allow partner to edit")
     the user should see the text in the page    In progress
+
+check if project manager and project address fields are editable
+    [Arguments]  ${project}
+    the user navigates to the page  ${server}/project-setup/project/${project}/details
+    check if project address can be changed
+    check if project manager can be changed
+
+check if project address can be changed
+    the user clicks the button/link  jQuery=a:contains("Project address")
+    the user selects the radio button  addressType  address-use-operating
+    the user clicks the button/link  jQuery=button:contains("Save")
+    the user clicks the button/link  jQuery=a:contains("Project address")
+    the user sees that the radio button is selected  addressType  address-use-operating
+    the user selects the radio button  addressType  address-use-org
+    the user clicks the button/link  jQuery=button:contains("Save")
+
+check if project manager can be changed
+    the user clicks the button/link  jQuery=a:contains("Project Manager")
+    the user selects the radio button  projectManager  projectManager2
+    the user clicks the button/link  jQuery=button:contains("Save")
+    the user clicks the button/link  jQuery=a:contains("Project Manager")
+    the user sees that the radio button is selected  projectManager  projectManager2
+    the user selects the radio button  projectManager  projectManager1
+    the user clicks the button/link  jQuery=button:contains("Save")
