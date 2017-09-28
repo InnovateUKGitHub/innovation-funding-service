@@ -47,6 +47,11 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "ORDER BY m.date";
 
+    public static final String SEARCH_QUERY_LEAD_TECHNOLOGIST = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct LEFT JOIN c.leadTechnologist u " +
+            "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
+            "AND u.id = :leadTechnologistUserId " +
+            "ORDER BY m.date";
+
     public static final String NON_IFS_QUERY = "SELECT c FROM Competition c WHERE nonIfs = TRUE";
 
     public static final String NON_IFS_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE nonIfs = TRUE";
@@ -86,6 +91,9 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     @Query(SEARCH_QUERY)
     Page<Competition> search(@Param("searchQuery") String searchQuery, Pageable pageable);
+
+    @Query(SEARCH_QUERY_LEAD_TECHNOLOGIST)
+    Page<Competition> searchForLeadTechnologist(@Param("searchQuery") String searchQuery, @Param("leadTechnologistUserId") Long leadTechnologistUserId, Pageable pageable);
 
     List<Competition> findByName(String name);
 

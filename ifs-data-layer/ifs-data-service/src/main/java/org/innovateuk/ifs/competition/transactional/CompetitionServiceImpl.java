@@ -32,6 +32,7 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -274,7 +275,13 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
         String searchQueryLike = String.format("%%%s%%", searchQuery);
         PageRequest pageRequest = new PageRequest(page, size);
-        Page<Competition> pageResult = competitionRepository.search(searchQueryLike, pageRequest);
+        Page<Competition> pageResult;
+        if (getCurrentlyLoggedInUser().isSuccess() && getCurrentlyLoggedInUser().getSuccessObject().hasRole(UserRoleType.INNOVATION_LEAD)) {
+            Long leadTechnologist = getCurrentlyLoggedInUser().getSuccessObject().getId();
+            pageResult = competitionRepository.searchForLeadTechnologist(searchQueryLike, leadTechnologist, pageRequest);
+        } else {
+            pageResult = competitionRepository.search(searchQueryLike, pageRequest);
+        }
 
         CompetitionSearchResult result = new CompetitionSearchResult();
         List<Competition> competitions = pageResult.getContent();
