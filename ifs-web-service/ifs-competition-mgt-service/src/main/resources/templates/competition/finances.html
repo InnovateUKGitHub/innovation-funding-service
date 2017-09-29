@@ -22,7 +22,7 @@
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application finances',size='heading-xlarge'" />
     <div class="panel">
-        Each partner is required to complete the following finance sections, selected by the template for this competition.
+        The competition template will select the following finance sections for each partner.
     </div>
     <form th:if="${editable}" data-autosave="compSetup" method="POST"
           th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
