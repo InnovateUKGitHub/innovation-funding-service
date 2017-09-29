@@ -62,6 +62,7 @@ RUN mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
 # directory for certificates, added in entrypoint \
   mkdir /etc/tomcat8/certs && \
   mv /idp/server.xml /etc/tomcat8/ && \
+  mv /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
   sed -i -e 's#%{idp.signing.key}#/opt/shibboleth-idp/credentials/idp-signing.key#g' \
          -e 's#%{idp.signing.cert}#/opt/shibboleth-idp/credentials/idp-signing.crt#g' \
          -e 's#%{idp.encryption.key}#/opt/shibboleth-idp/credentials/idp-encryption.key#g' \
