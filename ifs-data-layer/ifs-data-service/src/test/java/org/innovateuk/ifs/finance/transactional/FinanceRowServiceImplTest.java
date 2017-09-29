@@ -8,9 +8,9 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
-import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
+import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.SubContractingCostHandler;
@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -74,8 +73,6 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
     private FinanceRowItem newFinanceRowItem;
     private ApplicationFinance applicationFinance;
-    private Application application;
-    private OrganisationType organisationType;
     private long costId;
     private FinanceRowMetaField financeRowMetaField;
 
@@ -85,10 +82,10 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
         String metaFieldTitle = "country";
         String metaFieldType = "String";
 
-        application = newApplication()
+        Application application = newApplication()
                 .withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()
                 ).build();
-        organisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
+        OrganisationType organisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
         newFinanceRowItem = new SubContractingCost(costId, new BigDecimal(10), "Scotland", "nibbles", "purring");
         applicationFinance = newApplicationFinance()
                 .withApplication(application)
@@ -197,14 +194,19 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
     @Test
     public void testOrganisationSeeksFunding(){
+        Long competitionId = 1L;
         Long applicationId = 1L;
         Long organisationId = 1L;
         Long projectId = 1L;
 
+        Competition competition = newCompetition().withId(competitionId).build();
+
+        Application application = newApplication().withId(applicationId).withCompetition(competition).build();
+
         Organisation organisation = newOrganisation().withOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build()).build();
         when(organisationRepositoryMock.findOne(organisationId)).thenReturn(organisation);
 
-        ApplicationFinance applicationFinance = newApplicationFinance().build();
+        ApplicationFinance applicationFinance = newApplicationFinance().withApplication(application).build();
         when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(applicationId, organisationId)).thenReturn(applicationFinance);
 
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().withOrganisation(organisationId).withGrantClaimPercentage(20).build();
@@ -214,9 +216,9 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
         Map<FinanceRowType, FinanceRowCostCategory> costs = new HashMap<>();
 
-        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId())).thenReturn(costs);
+        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(applicationFinanceResource.getId(), competition)).thenReturn(costs);
 
-        when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinanceResource.getId())).thenReturn(asList(new ApplicationFinanceRow(1L, COST_KEY, "", GRANT_CLAIM, 20, BigDecimal.ZERO, applicationFinance,null)));
+        when(applicationFinanceRowRepositoryMock.findByTargetId(applicationFinanceResource.getId())).thenReturn(singletonList(new ApplicationFinanceRow(1L, COST_KEY, "", GRANT_CLAIM, 20, BigDecimal.ZERO, applicationFinance, null)));
 
         ServiceResult<Boolean> result = service.organisationSeeksFunding(projectId, applicationId, organisationId);
 

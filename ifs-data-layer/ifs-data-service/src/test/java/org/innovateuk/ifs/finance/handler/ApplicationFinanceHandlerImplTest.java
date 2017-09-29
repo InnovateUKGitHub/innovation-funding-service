@@ -97,8 +97,8 @@ public class ApplicationFinanceHandlerImplTest extends BaseUnitTestMocksTest  {
         when(applicationFinanceMapperMock.mapToResource(appFinanceBusinessOrg)).thenReturn(appFinanceResourceBusinessOrg);
 
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(anyLong())).thenReturn(organisationFinanceDefaultHandlerMock);
-        when(organisationFinanceDefaultHandlerMock.getOrganisationFinanceTotals(appFinanceResourceResearchOrg.getId(), competition)).thenReturn(researchOrgFinances);
-        when(organisationFinanceDefaultHandlerMock.getOrganisationFinanceTotals(appFinanceResourceBusinessOrg.getId(), competition)).thenReturn(businessOrgFinances);
+        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(appFinanceResourceResearchOrg.getId(), competition)).thenReturn(researchOrgFinances);
+        when(organisationFinanceDefaultHandlerMock.getOrganisationFinances(appFinanceResourceBusinessOrg.getId(), competition)).thenReturn(businessOrgFinances);
     }
 
     @Test

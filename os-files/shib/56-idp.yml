@@ -43,6 +43,14 @@ items:
             failureThreshold: 1
           imagePullPolicy: Always
           env:
+          - name: JAVA_OPTS
+            value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
+          - name: NEW_RELIC_APP_NAME
+            value: "ifs-idp-service (<<NEWRELIC-ENVIRONMENT>>)"
+          - name: NEW_RELIC_LICENSE_KEY
+            value: "<<NEWRELIC-LICENCE-KEY>>"
+          - name: NEW_RELIC_LOG
+            value: "STDOUT"
           - name: IDP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"
           - name: IDP_PROXY_CACERTIFICATE
@@ -69,8 +77,10 @@ items:
           - containerPort: 9443
           - containerPort: 9080
           resources:
+            requests:
+              memory: 500M
             limits:
-              memory: 1024M
+              memory: 2048M
           test: false
   triggers:
   - type: ConfigChange
