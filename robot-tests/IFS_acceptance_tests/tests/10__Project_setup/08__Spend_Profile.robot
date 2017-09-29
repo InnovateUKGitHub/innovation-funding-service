@@ -76,6 +76,16 @@ ${project_duration}    36
 &{collaborator2_credentials_sp}   email=${PS_SP_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
 
 *** Test Cases ***
+Check if target start date can be changed until SP approval
+    [Documentation]    IFS-1576
+    [Tags]
+    Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
+    When the user navigates to the page  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details
+    And the user changes the start date back again  2021
+    Then the user should see the element  jQuery=#start-date:contains("1 Jun 2021")
+    When the user changes the start date back again  2020
+    Then the user should see the element  jQuery=#start-date:contains("1 Jun 2020")
+
 Project Finance user generates the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]    HappyPath
@@ -85,7 +95,6 @@ Project Finance user generates the Spend Profile
     And the user should see the element     jQuery=a.eligibility-1:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
     Then the user should see the element    css=.generate-spend-profile-main-button
-
 
 Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
@@ -534,16 +543,6 @@ Project Finance is able to see Spend Profile approval page
     When the user selects the checkbox    approvedByLeadTechnologist
     Then the user should see the element    css=#accept-profile
     And the user should see the element    jQuery=#content .button.button.button-warning:contains("Reject")
-
-Check if target start date can be changed until SP approval
-    [Documentation]    IFS-1576
-    [Tags]
-    Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-    When the user navigates to the page  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details
-    And the user changes the start date back again  2021
-    Then the user should see the element  jQuery=#start-date:contains("1 Jun 2021")
-    When the user changes the start date back again  2020
-    Then the user should see the element  jQuery=#start-date:contains("1 Jun 2020")
 
 Check if project manager and project address fields are still editable
    [Documentation]    IFS-1577, IFS-1578
