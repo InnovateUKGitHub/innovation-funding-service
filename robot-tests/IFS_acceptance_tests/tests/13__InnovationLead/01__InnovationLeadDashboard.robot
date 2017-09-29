@@ -27,13 +27,14 @@ Innovation Lead should see Submitted and Ineligible Applications
     When the user clicks the button/link      jQuery=a:contains("Back")
     Then the user should not see the element  jQuery=.button:contains("Inform applicant")
 
-Innovation lead cannot access CompSetup, Invite Assessors, Manage assessments, Funding decision
-    [Documentation]  IFS-984
+Innovation lead cannot access CompSetup, Invite Assessors, Manage assessments, Funding decision, All Applictions
+    [Documentation]  IFS-984, IFS-1414
     [Tags]
     The user should see permission error on page  ${server}/management/competition/setup/${openCompetitionRTO}
     The user should see permission error on page  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/assessors/find
     The user should see permission error on page  ${server}/management/assessment/competition/${competition_ids['${CLOSED_COMPETITION_NAME}']}
     The user should see permission error on page  ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding
+    The user should see permission error on page  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/all
 
 Innnovation lead can see competitions assigned to him only
     [Documentation]    IFS-191
