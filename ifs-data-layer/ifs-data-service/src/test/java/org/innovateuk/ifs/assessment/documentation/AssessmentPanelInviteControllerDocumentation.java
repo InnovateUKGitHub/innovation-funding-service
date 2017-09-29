@@ -2,6 +2,8 @@ package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessmentPanelInviteController;
+import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
+import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.junit.Test;
@@ -20,8 +22,8 @@ import static org.innovateuk.ifs.documentation.AssessorCreatedInviteResourceDocs
 import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs.availableAssessorPageResourceBuilder;
 import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs.availableAssessorPageResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.availableAssessorResourceFields;
-import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.existingUserStagedInviteListResourceBuilder;
-import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.existingUserStagedInviteResourceFields;
+import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
+import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.assessorInvitesToSendResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -141,5 +143,48 @@ public class AssessmentPanelInviteControllerDocumentation extends BaseController
                 ));
 
         verify(assessmentPanelInviteServiceMock, only()).inviteUsers(existingUserStagedInviteResources);
+    }
+
+    @Test
+    public void sendAllInvites() throws Exception {
+        long competitionId = 2L;
+
+        AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
+        when(assessmentPanelInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/assessmentpanelinvite/sendAllInvites/{competitionId}", competitionId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(toJson(assessorInviteSendResource)))
+                .andExpect(status().isOk())
+                .andDo(document("assessmentpanelinvite/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition to send assessor panel invites for")
+                        ),
+                        requestFields(
+                                fieldWithPath("subject").description("The subject of the invitation"),
+                                fieldWithPath("content").description("The custom content for this invitation")
+                        )
+                ));
+
+        verify(assessmentPanelInviteServiceMock, only()).sendAllInvites(competitionId, assessorInviteSendResource);
+    }
+
+    @Test
+    public void getAllInvitesToSend() throws Exception {
+        long competitionId = 1L;
+        AssessorInvitesToSendResource assessorInvitesToSendResource = assessorInvitesToSendResourceBuilder.build();
+
+        when(assessmentPanelInviteServiceMock.getAllInvitesToSend(competitionId)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
+
+        mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesToSend/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document("assessmentpanelinvite/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition to get assemment panel invites for")
+                        ),
+                        responseFields(assessorInvitesToSendResourceFields)
+                ));
+
+        verify(assessmentPanelInviteServiceMock, only()).getAllInvitesToSend(competitionId);
     }
 }

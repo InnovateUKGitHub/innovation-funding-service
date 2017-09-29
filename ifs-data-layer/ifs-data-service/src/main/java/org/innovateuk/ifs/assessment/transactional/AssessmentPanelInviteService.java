@@ -19,12 +19,12 @@ public interface AssessmentPanelInviteService {
 
 
     @SecuredBySpring(value = "GET_ALL_CREATED_INVITES",
-            description = "Competition Admins and Project Finance users can get all invites that have been created for a competition")
+            description = "Competition Admins and Project Finance users can get all invites that have been created for an assessment panel on a competition")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId);
 
     @SecuredBySpring(value = "SEND_ALL_INVITES",
-            description = "The Competition Admins and Project Finance users can send all competition invites")
+            description = "The Competition Admins and Project Finance users can send all assessment panel invites")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInvitesToSendResource);
 
