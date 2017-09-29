@@ -30,8 +30,8 @@ services:
     environment:
       - "SPHOST=ifs.local-dev"
       - "IDPHOST=auth.local-dev:9443"
-      - "HTTPSPORT=9443"
-      - "HTTPPORT=9080"
+      - "HTTPS_PORT=9443"
+      - "HTTP_PORT=9080"
     networks:
       ifs:
         aliases:

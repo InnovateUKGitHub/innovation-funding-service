@@ -5,8 +5,6 @@ dependencies{
     runtime project(path: ':ifs-auth-service:ifs-registration-service', configuration: 'war')
 }
 
-def String oracleJdkDomain = project.properties['oracle.jdk.domain'] ?:"http://download.oracle.com"
-
 def String idpCertsVolume = 'src/main/docker/certs'
 
 def String idpProxyKeyFile = "${idpCertsVolume}/idp_proxy_key.pem"
@@ -54,7 +52,6 @@ task prepareDockerFileBase {
             into inputDir
             include 'Dockerfile-base-template'
             rename 'Dockerfile-base-template', 'Dockerfile'
-            filter(ReplaceTokens, tokens: [oracle_jdk_domain: oracleJdkDomain])
         }
 
         copy {
