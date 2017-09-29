@@ -81,9 +81,9 @@ Check if target start date can be changed until SP approval
     [Tags]
     Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     When the user navigates to the page  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details
-    And the user changes the start date back again  2021
+    And the user changes the start date  2021
     Then the user should see the element  jQuery=#start-date:contains("1 Jun 2021")
-    When the user changes the start date back again  2020
+    When the user changes the start date  2020
     Then the user should see the element  jQuery=#start-date:contains("1 Jun 2020")
 
 Project Finance user generates the Spend Profile
@@ -752,7 +752,7 @@ Project finance user cannot access external users' spend profile page
     When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    ${403_error_message}
 
 Target start date cannot be changed after SP approval
-    [Documentation]    INFUND-1576
+    [Documentation]    IFS-1576
     [Tags]
     Given Log in as a different user  ${PS_SP_APPLICATION_PM_EMAIL}  ${short_password}
     When the user navigates to the page  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details

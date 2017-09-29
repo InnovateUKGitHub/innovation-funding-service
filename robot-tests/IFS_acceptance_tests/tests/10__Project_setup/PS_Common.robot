@@ -377,7 +377,7 @@ project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
     the project finance user approves bank details for  ${Kazio_Name}  ${PS_GOL_APPLICATION_PROJECT}
     the project finance user approves bank details for  ${Cogilith_Name}  ${PS_GOL_APPLICATION_PROJECT}
 
-the user changes the start date back again
+the user changes the start date
     [Arguments]  ${year}
     the user clicks the button/link  link=Target start date
     the user enters text to a text field  id=projectStartDate_year  ${year}
