@@ -215,27 +215,27 @@ function tailorAppInstance() {
         if [[ ${TARGET} == "demo" ]]
         then
             sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_demo_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_demo_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
         if [[ ${TARGET} == "sysint" ]]
         then
             sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_sysint_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_sysint_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
         if [[ ${TARGET} == "perf" ]]
         then
             sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_perf_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_perf_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
         if [[ ${TARGET} == "uat" ]]
         then
             sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_uat_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_uat_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
         if [[ ${TARGET} == "production" ]]
         then
             sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-            sed -i.bak "s/<<SHIBBOLETH-LDAP-PASSWORD>>/${bamboo_production_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_production_ldap_password}/g" os-files-tmp/45-registration-svc.yml
         fi
     else
         sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldaps://ldap:389#g" os-files-tmp/45-registration-svc.yml
