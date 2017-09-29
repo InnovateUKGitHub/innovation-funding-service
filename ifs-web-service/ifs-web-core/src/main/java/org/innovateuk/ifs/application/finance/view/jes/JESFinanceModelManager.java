@@ -169,6 +169,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
                 .stream()
                 .flatMap(cc -> cc.getCosts().stream())
                 .filter(Objects::nonNull)
+                .filter(c -> (c instanceof AcademicCost))
                 .forEach(c -> mapFinanceToField((AcademicCost) c, academicFinance));
         return academicFinance;
     }

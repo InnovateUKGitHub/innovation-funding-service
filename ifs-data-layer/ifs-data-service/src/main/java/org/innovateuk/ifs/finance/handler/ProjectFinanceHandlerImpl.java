@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.handler;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
@@ -75,7 +76,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
                             ProjectFinanceResource projectFinanceResource = null;
                             if(projectFinance!=null) {
                                 projectFinanceResource = projectFinanceMapper.mapToResource(projectFinance);
-                                setProjectFinanceDetails(projectFinanceResource);
+                                setProjectFinanceDetails(projectFinanceResource, projectFinance.getProject().getApplication().getCompetition());
                             }
                             return projectFinanceResource;
                         }
@@ -92,7 +93,7 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
             OrganisationFinanceHandler organisationFinanceHandler =
                     organisationFinanceDelegate.getOrganisationFinanceHandler(finance.getOrganisation().getOrganisationType().getId());
             EnumMap<FinanceRowType, FinanceRowCostCategory> costs =
-                    new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinanceTotals(financeResource.getId(),
+                    new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinances(financeResource.getId(),
                             finance.getProject().getApplication().getCompetition()));
             financeResource.setFinanceOrganisationDetails(costs);
             financeResources.add(financeResource);
@@ -100,10 +101,10 @@ public class ProjectFinanceHandlerImpl implements ProjectFinanceHandler {
         return financeResources;
     }
 
-    private void setProjectFinanceDetails(ProjectFinanceResource projectFinanceResource) {
+    private void setProjectFinanceDetails(ProjectFinanceResource projectFinanceResource, Competition competition) {
         Organisation organisation = organisationRepository.findOne(projectFinanceResource.getOrganisation());
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getId());
-        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getProjectOrganisationFinances(projectFinanceResource.getId());
+        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getProjectOrganisationFinances(projectFinanceResource.getId(), competition);
         projectFinanceResource.setFinanceOrganisationDetails(costs);
 
         Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> costChanges =
