@@ -74,201 +74,346 @@
             </div>
 
             <fieldset>
-                <div id="openingDate" class="form-group" th:classappend="${#fields.hasErrors('openDate*')} ? 'form-group-error'">
-                    <h3 class="heading-small no-margin">Opening date</h3>
-                    <legend>
-                        <span class="visuallyhidden">Opening date</span>
-                        <th:block th:if="${#fields.hasErrors('openDate*')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('openDate*')}" th:text="${err}"></span>
-                        </th:block>
-                    </legend>
-                    <div class="date-group"
-                         th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">
-                        <input type="hidden"
-                               th:field="${form.openDate.milestoneType}" />
-                        <div class="day">
-                            <label class="form-label" for="openDate-day">Day</label>
-                            <input id="openDate-day"
-                                   th:errorclass="form-control-error"
-                                   class="form-control width-extra-small"
-                                   type="number"
-                                   placeholder="DD"
-                                   required="required"
-                                   min="1"
-                                   max="12"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
-                                   th:field="${form.openDate.day}" />
-                        </div>
-                        <div class="month">
-                            <label class="form-label" for="openDate-month">
-                                Month
-                            </label>
-                            <input th:errorclass="form-control-error"
-                                   class="form-control width-extra-small"
-                                   type="number"
-                                   placeholder="MM"
-                                   required="required"
-                                   min="1"
-                                   max="31"
-                                   id="openDate-month"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
-                                   th:field="${form.openDate.month}" />
-                        </div>
-                        <div class="year">
-                            <label class="form-label" for="openDate-year">
-                                    Year
-                            </label>
-                            <input class="form-control width-extra-small"
-                                   th:errorclass="form-control-error"
-                                   id="openDate-year"
-                                   type="number"
-                                   placeholder="YYYY"
-                                   required="required"
-                                   min="2000"
-                                   max="9999"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
-                                   th:field="${form.openDate.year}" />
-                        </div>
-                    </div>
-                </div>
+
+                <legend class="visuallyhidden">Milestones</legend>
+
+                <table class="milestones-table extra-margin-bottom">
+                    <thead>
+                        <tr>
+                            <th scope="col" id="milestone">Milestone</th>
+                            <th scope="col">Time</th>
+                            <th scope="col">Weekday</th>
+                            <th scope="col">Day</th>
+                            <th scope="col">Month</th>
+                            <th scope="col">Year</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="date-group form-group-row"
+                            th:attr="data-date-invalid-errormessage=${'Competition opens: Please enter a valid date.'}">
+                                   <!-- TODO not sure if something similar to this will be required so leaving it commented out for now. REMOVE IF NOT REQUIRED
+                                   data-date-future-errormessage=${'Opening date: Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}"-->
+                            <th scope="row">Competition opens</th>
+                            <td class="time"></td>
+                            <td class="js-addWeekDay">Wed</td>
+                            <td class="day">
+                                <input id="openDate-day"
+                                       th:errorclass="form-control-error"
+                                       class="form-control width-small"
+                                       type="number"
+                                       placeholder="DD"
+                                       required="required"
+                                       min="1"
+                                       max="31"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
+                                       th:field="${form.openDate.day}" />
+                            </td>
+                            <td class="month">
+                                <input id="openDate-month"
+                                       th:errorclass="form-control-error"
+                                       class="form-control width-small"
+                                       type="number"
+                                       placeholder="MM"
+                                       required="required"
+                                       min="1"
+                                       max="12"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
+                                       th:field="${form.openDate.month}" />
+                            </td>
+                            <td class="year">
+                                <input id="openDate-year"
+                                       class="form-control width-small"
+                                       th:errorclass="form-control-error"
+                                       type="number"
+                                       placeholder="YYYY"
+                                       required="required"
+                                       min="2000"
+                                       max="9999"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
+                                       th:field="${form.openDate.year}" />
+                            </td>
+                        </tr>
+                        <tr class="date-group form-group-row"
+                            th:attr="data-date-invalid-errormessage=${'Registration closes: Please enter a valid date.'}">
+                            <!-- TODO not sure if something similar to this will be required so leaving it commented out for now. REMOVE IF NOT REQUIRED
+                            data-date-future-errormessage=${'Registration closes: Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}"-->
+                            <th scope="row">Registration closes</th>
+                            <td class="time"></td>
+                            <td class="js-addWeekDay">-</td>
+                            <td class="day">
+                                <input id="registrationCloses-day"
+                                       class="form-control width-small"
+                                       type="number"
+                                       placeholder="DD"
+                                       required="required"
+                                       min="1"
+                                       max="31" />
+                            </td>
+                            <td class="month">
+                                <input id="registrationCloses-month"
+                                       class="form-control width-small"
+                                       type="number"
+                                       placeholder="MM"
+                                       required="required"
+                                       min="1"
+                                       max="12" />
+                            </td>
+                            <td class="year">
+                                <input id="registrationCloses-year"
+                                       class="form-control width-small"
+                                       type="number"
+                                       placeholder="YYYY"
+                                       required="required"
+                                       min="2000"
+                                       max="9999" />
+                            </td>
+                        </tr>
+                        <tr class="date-group form-group-row"
+                            th:attr="data-date-invalid-errormessage=${'Competition closes: Please enter a valid date.'}">
+                            <!-- TODO not sure if something similar to this will be required so leaving it commented out for now. REMOVE IF NOT REQUIRED
+                            data-date-future-errormessage=${'Competition closes: Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}"-->
+                            <th scope="row">Competition closes</th>
+                            <td class="time">
+                                <select id="closeDate-time"
+                                        class="form-control"
+                                        required="required"
+                                        th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
+                                        th:field="${form.closeDate.time}" >
+                                    <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
+                                            th:text="${time.display}" th:value="${time}" th:attr="data-time=${time.hour}" th:selected="${time == form.closeDate.time}"></option>
+                                </select>
+                                <!-- TODO we might need something similar to this so leaving it commented out for now. REMOVE IF NOT REQUIRED-->
+                                <!--<th:block th:if="${milestoneEntry.value.middayTime}" >-->
+                                    <!--12:00 pm-->
+                                    <!--<input type="hidden"-->
+                                           <!--data-time="12"-->
+                                           <!--th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"-->
+                                           <!--th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"-->
+                                           <!--th:value="${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).TWELVE_PM}">-->
+                                <!--</th:block>-->
+                            </td>
+                            <td class="js-addWeekDay">-</td>
+                            <td class="day">
+                                <input id="closeDate-day"
+                                       th:errorclass="form-control-error"
+                                       class="form-control width-small"
+                                       type="number"
+                                       placeholder="DD"
+                                       required="required"
+                                       min="1"
+                                       max="31"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
+                                       th:field="${form.closeDate.day}" />
+                            </td>
+                            <td class="month">
+                                <input id="closeDate-month"
+                                       class="form-control width-small"
+                                       th:errorclass="form-control-error"
+                                       type="number"
+                                       placeholder="MM"
+                                       required="required"
+                                       min="1"
+                                       max="12"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
+                                       th:field="${form.closeDate.month}" />
+                            </td>
+                            <td class="year">
+                                <input id="closeDate-year"
+                                       class="form-control width-small"
+                                       th:errorclass="form-control-error"
+                                       type="number"
+                                       placeholder="YYYY"
+                                       required="required"
+                                       min="2000"
+                                       max="9999"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
+                                       th:field="${form.closeDate.year}" />
+                            </td>
+                        </tr>
+                        <tr class="date-group form-group-row"
+                            th:attr="data-date-invalid-errormessage=${'Applicants notified: Please enter a valid date.'}">
+                            <!-- TODO not sure if something similar to this will be required so leaving it commented out for now. REMOVE IF NOT REQUIRED
+                            data-date-future-errormessage=${'Applicants notified: Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}"-->
+                            <th scope="row">Applicants notified (optional)</th>
+                            <td class="time"></td>
+                            <td class="js-addWeekDay">-</td>
+                            <td class="day">
+                                <input id="applicantNotifiedDate-day"
+                                       class="form-control width-small"
+                                       th:errorclass="form-control-error"
+                                       type="number"
+                                       placeholder="DD"
+                                       required="required"
+                                       min="1"
+                                       max="31"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
+                                       th:field="${form.applicantNotifiedDate.day}" />
+                            </td>
+                            <td class="month">
+                                <input id="applicantNotifiedDate-month"
+                                       th:errorclass="form-control-error"
+                                       class="form-control width-small"
+                                       type="number"
+                                       placeholder="MM"
+                                       required="required"
+                                       min="1"
+                                       max="12"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
+                                       th:field="${form.applicantNotifiedDate.month}" />
+                            </td>
+                            <td class="year">
+                                <input id="applicantNotifiedDate-year"
+                                       th:errorclass="form-control-error"
+                                       class="form-control width-small"
+                                       type="number"
+                                       placeholder="YYYY"
+                                       required="required"
+                                       min="2000"
+                                       max="9999"
+                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
+                                       th:field="${form.applicantNotifiedDate.year}" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </fieldset>
 
-            <fieldset>
-                <div id="closeDate" class="form-group" th:classappend="${#fields.hasErrors('closeDate*')} ? 'form-group-error'">
-                    <h3 class="heading-small no-margin">Competition close date / submission deadline</h3>
-                    <legend>
-                        <span class="visuallyhidden">Competition close date / submission deadline</span>
-                        <th:block th:if="${#fields.hasErrors('closeDate*')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('closeDate*')}" th:text="${err}"></span>
-                        </th:block>
-                    </legend>
-                    <div class="date-group"
-                         th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">
-                        <input type="hidden"
-                               th:field="${form.closeDate.milestoneType}" />
-                        <div class="day">
-                            <label class="form-label" for="closeDate-day">
-                                Day
-                            </label>
-                            <input id="closeDate-day"
-                                   th:errorclass="form-control-error"
-                                   class="form-control width-extra-small"
-                                   type="number"
-                                   placeholder="DD"
-                                   required="required"
-                                   min="1"
-                                   max="31"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
-                                   th:field="${form.closeDate.day}" />
-                        </div>
-                        <div class="month">
-                            <label class="form-label" for="closeDate-month">
-                                Month
-                            </label>
-                            <input class="form-control width-extra-small"
-                                   th:errorclass="form-control-error"
-                                   type="number"
-                                   placeholder="MM"
-                                   required="required"
-                                   min="1"
-                                   max="12"
-                                   id="closeDate-month"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
-                                   th:field="${form.closeDate.month}" />
-                        </div>
-                        <div class="year">
-                            <label class="form-label" for="closeDate-year">
-                                Year
-                            </label>
-                            <input class="form-control width-extra-small"
-                                   th:errorclass="form-control-error"
-                                   id="closeDate-year"
-                                   type="number"
-                                   placeholder="YYYY"
-                                   required="required"
-                                   min="2000"
-                                   max="9999"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
-                                   th:field="${form.closeDate.year}" />
-                        </div>
-                        <div class="time">
-                            <label class="form-label" for="closeDate-time">
-                                <span>Time</span>
-                            </label>
-                            <select th:errorclass="form-control-error" class="form-control"
-                                    id="closeDate-time"
-                                    required="required"
-                                    th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
-                                    th:field="${form.closeDate.time}" >
-                                <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
-                                        th:text="${time.display}" th:value="${time}" th:selected="${time == form.closeDate.time}"></option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
+            <!--<fieldset>-->
+                <!--<div id="closeDate" class="form-group" th:classappend="${#fields.hasErrors('closeDate*')} ? 'form-group-error'">-->
+                    <!--<h3 class="heading-small no-margin">Competition close date / submission deadline</h3>-->
+                    <!--<legend>-->
+                        <!--<span class="visuallyhidden">Competition close date / submission deadline</span>-->
+                        <!--<th:block th:if="${#fields.hasErrors('closeDate*')}">-->
+                            <!--<span class="error-message"  th:each="err : ${#fields.errors('closeDate*')}" th:text="${err}"></span>-->
+                        <!--</th:block>-->
+                    <!--</legend>-->
+                    <!--<div class="date-group"-->
+                         <!--th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">-->
+                        <!--<input type="hidden"-->
+                               <!--th:field="${form.closeDate.milestoneType}" />-->
+                        <!--<div class="day">-->
+                            <!--<label class="form-label" for="closeDate-day">-->
+                                <!--Day-->
+                            <!--</label>-->
+                            <!--<input id="closeDate-day"-->
+                                   <!--th:errorclass="form-control-error"-->
+                                   <!--class="form-control width-extra-small"-->
+                                   <!--type="number"-->
+                                   <!--placeholder="DD"-->
+                                   <!--required="required"-->
+                                   <!--min="1"-->
+                                   <!--max="31"-->
+                                   <!--th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"-->
+                                   <!--th:field="${form.closeDate.day}" />-->
+                        <!--</div>-->
+                        <!--<div class="month">-->
+                            <!--<label class="form-label" for="closeDate-month">-->
+                                <!--Month-->
+                            <!--</label>-->
+                            <!--<input class="form-control width-extra-small"-->
+                                   <!--th:errorclass="form-control-error"-->
+                                   <!--type="number"-->
+                                   <!--placeholder="MM"-->
+                                   <!--required="required"-->
+                                   <!--min="1"-->
+                                   <!--max="12"-->
+                                   <!--id="closeDate-month"-->
+                                   <!--th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"-->
+                                   <!--th:field="${form.closeDate.month}" />-->
+                        <!--</div>-->
+                        <!--<div class="year">-->
+                            <!--<label class="form-label" for="closeDate-year">-->
+                                <!--Year-->
+                            <!--</label>-->
+                            <!--<input class="form-control width-extra-small"-->
+                                   <!--th:errorclass="form-control-error"-->
+                                   <!--id="closeDate-year"-->
+                                   <!--type="number"-->
+                                   <!--placeholder="YYYY"-->
+                                   <!--required="required"-->
+                                   <!--min="2000"-->
+                                   <!--max="9999"-->
+                                   <!--th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"-->
+                                   <!--th:field="${form.closeDate.year}" />-->
+                        <!--</div>-->
+                        <!--<div class="time">-->
+                            <!--<label class="form-label" for="closeDate-time">-->
+                                <!--<span>Time</span>-->
+                            <!--</label>-->
+                            <!--<select th:errorclass="form-control-error" class="form-control"-->
+                                    <!--id="closeDate-time"-->
+                                    <!--required="required"-->
+                                    <!--th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"-->
+                                    <!--th:field="${form.closeDate.time}" >-->
+                                <!--<option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"-->
+                                        <!--th:text="${time.display}" th:value="${time}" th:selected="${time == form.closeDate.time}"></option>-->
+                            <!--</select>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</fieldset>-->
 
-            <fieldset>
-                <div id="applicantNotifiedDate" class="form-group" th:classappend="${#fields.hasErrors('applicantNotifiedDate*')} ? 'form-group-error'">
-                    <h3 class="heading-small no-margin">Applicants notified date</h3>
-                    <legend>
-                        <span class="visuallyhidden">Applicants notified date</span>
-                        <th:block th:if="${#fields.hasErrors('applicantNotifiedDate*')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('applicantNotifiedDate*')}" th:text="${err}"></span>
-                        </th:block>
-                    </legend>
-                    <div class="date-group"
-                         th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">
-                        <input type="hidden"
-                               th:field="${form.applicantNotifiedDate.milestoneType}" />
-                        <div class="day">
-                            <label class="form-label" for="applicantNotifiedDate-day">
-                                Day
-                            </label>
-                            <input id="applicantNotifiedDate-day"
-                                   class="form-control width-extra-small"
-                                   th:errorclass="form-control-error"
-                                   type="number"
-                                   placeholder="DD"
-                                   required="required"
-                                   min="1"
-                                   max="31"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
-                                   th:field="${form.applicantNotifiedDate.day}" />
-                        </div>
-                        <div class="month">
-                            <label class="form-label" for="applicantNotifiedDate-month">
-                                Month
-                            </label>
-                            <input th:errorclass="form-control-error"
-                                   class="form-control width-extra-small"
-                                   type="number"
-                                   placeholder="MM"
-                                   required="required"
-                                   min="1"
-                                   max="12"
-                                   id="applicantNotifiedDate-month"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
-                                   th:field="${form.applicantNotifiedDate.month}" />
-                        </div>
-                        <div class="year">
-                            <label class="form-label" for="openDate-year">
-                                Year
-                            </label>
-                            <input th:errorclass="form-control-error"
-                                   class="form-control width-extra-small"
-                                   id="applicantNotifiedDate-year"
-                                   type="number"
-                                   placeholder="YYYY"
-                                   required="required"
-                                   min="2000"
-                                   max="9999"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
-                                   th:field="${form.applicantNotifiedDate.year}" />
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
+            <!--<fieldset>-->
+                <!--<div id="applicantNotifiedDate" class="form-group" th:classappend="${#fields.hasErrors('applicantNotifiedDate*')} ? 'form-group-error'">-->
+                    <!--<h3 class="heading-small no-margin">Applicants notified date</h3>-->
+                    <!--<legend>-->
+                        <!--<span class="visuallyhidden">Applicants notified date</span>-->
+                        <!--<th:block th:if="${#fields.hasErrors('applicantNotifiedDate*')}">-->
+                            <!--<span class="error-message"  th:each="err : ${#fields.errors('applicantNotifiedDate*')}" th:text="${err}"></span>-->
+                        <!--</th:block>-->
+                    <!--</legend>-->
+                    <!--<div class="date-group"-->
+                         <!--th:attr="data-date-invalid-errormessage=#{validation.standard.date.format}">-->
+                        <!--<input type="hidden"-->
+                               <!--th:field="${form.applicantNotifiedDate.milestoneType}" />-->
+                        <!--<div class="day">-->
+                            <!--<label class="form-label" for="applicantNotifiedDate-day">-->
+                                <!--Day-->
+                            <!--</label>-->
+                            <!--<input id="applicantNotifiedDate-day"-->
+                                   <!--class="form-control width-extra-small"-->
+                                   <!--th:errorclass="form-control-error"-->
+                                   <!--type="number"-->
+                                   <!--placeholder="DD"-->
+                                   <!--required="required"-->
+                                   <!--min="1"-->
+                                   <!--max="31"-->
+                                   <!--th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"-->
+                                   <!--th:field="${form.applicantNotifiedDate.day}" />-->
+                        <!--</div>-->
+                        <!--<div class="month">-->
+                            <!--<label class="form-label" for="applicantNotifiedDate-month">-->
+                                <!--Month-->
+                            <!--</label>-->
+                            <!--<input th:errorclass="form-control-error"-->
+                                   <!--class="form-control width-extra-small"-->
+                                   <!--type="number"-->
+                                   <!--placeholder="MM"-->
+                                   <!--required="required"-->
+                                   <!--min="1"-->
+                                   <!--max="12"-->
+                                   <!--id="applicantNotifiedDate-month"-->
+                                   <!--th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"-->
+                                   <!--th:field="${form.applicantNotifiedDate.month}" />-->
+                        <!--</div>-->
+                        <!--<div class="year">-->
+                            <!--<label class="form-label" for="openDate-year">-->
+                                <!--Year-->
+                            <!--</label>-->
+                            <!--<input th:errorclass="form-control-error"-->
+                                   <!--class="form-control width-extra-small"-->
+                                   <!--id="applicantNotifiedDate-year"-->
+                                   <!--type="number"-->
+                                   <!--placeholder="YYYY"-->
+                                   <!--required="required"-->
+                                   <!--min="2000"-->
+                                   <!--max="9999"-->
+                                   <!--th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"-->
+                                   <!--th:field="${form.applicantNotifiedDate.year}" />-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</fieldset>-->
             <div class="form-group" th:classappend="${#fields.hasErrors('url')} ? 'form-group-error'">
                 <label class="form-label" for="url">
                     <span class="form-label-bold">Competition URL</span>
