@@ -70,6 +70,7 @@ RUN  mkdir /etc/apache2/certs && \
 RUN mkdir /etc/tomcat8/certs && \
 # see also certificates and substitutions in entrypoint script \
   mv /idp/server.xml /etc/tomcat8/ && \
+  mv /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
   mkdir /etc/shibboleth && \
   mv /idp/metadata.xml /etc/shibboleth/ && \
   mv /idp/idp.properties /idp/ldap.properties /idp/*.xml /opt/shibboleth-idp/conf/ && \
