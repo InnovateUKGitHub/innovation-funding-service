@@ -1,5 +1,4 @@
 *** Settings ***
-Resource    ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource    ../../resources/defaultResources.robot
 
 
@@ -230,9 +229,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user moves focus to the element     css=label[for="app-row-104"]
     the user selects the checkbox           app-row-104
     the user clicks the button/link         jQuery=.button:contains("Write and send email")
-    the user enters text to a text field    css=[labelledby="message"]      testMessage
-    the user clicks the button/link         jQuery=button:contains("Send email to all applicants")
-    the user clicks the button/link         jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the internal sends the descision notification email to all applicants  EmailTextBody
     the user should see the text in the page    Manage funding applications
 
 lead partner navigates to project and fills project details
