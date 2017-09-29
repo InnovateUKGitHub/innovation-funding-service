@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
 
   JAVA_HOME=/usr/lib/jvm/java-8-oracle \
   JAVA_KEYSTORE_PASSWORD="@java_keystore_password@" \
-  
+
   LDAP_URL="ldaps://ldap:8389" \
   LDAP_PORT="8389" \
   LDAP_USESTARTTLS=false \
@@ -46,7 +46,6 @@ COPY newrelic.yml /
 COPY apache /apache/
 RUN  mkdir /etc/apache2/certs && \
 # configure apache \
-  mv /apache/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
   a2enmod socache_shmcb ssl status proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
   a2disconf other-vhosts-access-log && \
