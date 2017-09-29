@@ -20,7 +20,7 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
     public void test_getApplicationSummariesByCompetitionId() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
                 () -> classUnderTest.getApplicationSummariesByCompetitionId(1L, null, 0, 20, empty()),
-                PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD);
+                PROJECT_FINANCE, COMP_ADMIN, SUPPORT);
     }
 
     @Test
