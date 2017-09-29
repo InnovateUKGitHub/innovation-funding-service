@@ -143,14 +143,6 @@ task prepareDockerFile {
             from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
             into inputDir
         }
-
-        configurations.runtime.setTransitive(false).resolvedConfiguration.resolvedArtifacts
-                .each { artifact ->
-            project.copy {
-                from artifact.file
-                into "${inputDir}/idp"
-            }
-        }
     }
 }
 
