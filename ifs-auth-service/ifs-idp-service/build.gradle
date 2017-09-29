@@ -1,10 +1,6 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import org.apache.tools.ant.filters.ReplaceTokens
 
-dependencies{
-    runtime project(path: ':ifs-auth-service:ifs-registration-service', configuration: 'war')
-}
-
 def String idpCertsVolume = 'src/main/docker/certs'
 
 def String idpProxyKeyFile = "${idpCertsVolume}/idp_proxy_key.pem"
@@ -19,9 +15,7 @@ def String idpEncryptionKeyFile = "${idpCertsVolume}/idp-encryption.key"
 def String idpEncryptionCertificateFile = "${idpCertsVolume}/idp-encryption.crt"
 
 def String ldapEncryptionCertificateFile = "${idpCertsVolume}/ldap-encryption.crt"
-def String authIdpRegapiKey = project.properties['auth.idp.regapikey'] ?:"1234567890"
 def String javaKeystorePassword = project.properties['java.keystore.password'] ?:"changeit"
-
 
 task getNewRelicAgent {
     if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
@@ -67,7 +61,6 @@ task prepareDockerFileBase {
 }
 
 task buildDockerBaseImage(type: DockerBuildImage) {
-    dependsOn ':ifs-auth-service:ifs-registration-service:build'
     dependsOn prepareDockerFileBase
 
     tag = 'ifshibdev/idp-base:latest'
@@ -76,7 +69,6 @@ task buildDockerBaseImage(type: DockerBuildImage) {
 
 task prepareDockerFile {
     dependsOn ':ifs-auth-service:prepareSecrets'
-    dependsOn ':ifs-auth-service:ifs-registration-service:build'
     dependsOn getNewRelicAgent
 
     def String idpProxyKey = file(idpProxyKeyFile).text.trim().replace('\n', '\\n')
@@ -100,8 +92,7 @@ task prepareDockerFile {
              into inputDir
              include 'Dockerfile-template'
              rename 'Dockerfile-template', 'Dockerfile'
-             filter(ReplaceTokens, tokens: [auth_idp_regapikey: authIdpRegapiKey,
-                                            auth_idp_proxy_key: idpProxyKey,
+             filter(ReplaceTokens, tokens: [auth_idp_proxy_key: idpProxyKey,
                                             auth_idp_proxy_certificate: idpProxyCertificate,
                                             auth_idp_proxy_cacertificate: idpProxyCacertificate,
                                             auth_sp_proxy_certificate: spProxyCertificate,
@@ -148,14 +139,6 @@ task prepareDockerFile {
             from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
             from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
             into inputDir
-        }
-
-        configurations.runtime.setTransitive(false).resolvedConfiguration.resolvedArtifacts
-                .each { artifact ->
-            project.copy {
-                from artifact.file
-                into "${inputDir}/idp"
-            }
         }
     }
 }
