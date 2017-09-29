@@ -83,6 +83,6 @@ public class AssessmentPanelSendInviteController {
     }
 
     private String redirectToPanelOverviewTab(long competitionId) {
-        return format("redirect:/assessment/panel/competition/%s/assessors/overview", competitionId);
+        return format("redirect:/assessment/panel/competition/%s/assessors/invite", competitionId);
     }
 }

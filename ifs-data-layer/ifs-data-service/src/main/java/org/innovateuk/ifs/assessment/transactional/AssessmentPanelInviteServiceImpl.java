@@ -82,12 +82,8 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 @Transactional
 public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteService {
 
-
-    private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
     private static final String WEB_CONTEXT_DASHBOARD = "/assessment/assessor/dashboard";
-    private static final DateTimeFormatter detailsFormatter = ofPattern("dd MMM yyyy");
-
-
+    
     @Autowired
     private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
 
@@ -122,8 +118,8 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
 
     enum Notifications {
-        INVITE_ASSESSOR,
-        INVITE_ASSESSOR_GROUP
+        INVITE_ASSESSOR_TO_PANEL,
+        INVITE_ASSESSOR_GROUP_TO_PANEL
     }
 
     @Value("${ifs.web.baseURL}")
@@ -160,11 +156,10 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
                         return sendInviteNotification(
                                 assessorInviteSendResource.getSubject(),
-                                inviteFormatter,
                                 customTextPlain,
                                 customTextHtml,
                                 invite,
-                                CompetitionInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP
+                                Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL
                         );
                     }
             ));
@@ -278,11 +273,10 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
 
     private ServiceResult<Void> sendInviteNotification(String subject,
-                                                       DateTimeFormatter formatter,
                                                        String customTextPlain,
                                                        String customTextHtml,
                                                        AssessmentPanelInvite invite,
-                                                       CompetitionInviteServiceImpl.Notifications notificationType) {
+                                                       Notifications notificationType) {
         NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
         Notification notification = new Notification(
                 systemNotificationSource,
@@ -292,8 +286,6 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                         "subject", subject,
                         "name", invite.getName(),
                         "competitionName", invite.getTarget().getName(),
-                        "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
-                        "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
                         "inviteUrl", webBaseUrl + WEB_CONTEXT_DASHBOARD,
                         "customTextPlain", customTextPlain,
                         "customTextHtml", customTextHtml
