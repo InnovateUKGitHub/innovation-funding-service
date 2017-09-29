@@ -62,7 +62,7 @@ Enter address manually: Postcode Validations
     Given the user expands enter details manually
     Then the user enters text to a text field    id=addressForm.postcodeInput    ${EMPTY}
     And the user clicks the button/link    jQuery=button:contains("Find UK address")
-    And the user clicks the button/link    jQuery=summary:contains("Enter details manually")
+    And the user expands enter details manually
     And the user should see the element    css=.form-label .error-message
     When the user enters text to a text field    id=addressForm.postcodeInput    BS14NT/
     And the user clicks the button/link    jQuery=button:contains("Find UK address")
