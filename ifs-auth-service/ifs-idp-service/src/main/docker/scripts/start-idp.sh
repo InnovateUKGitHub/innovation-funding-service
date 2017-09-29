@@ -1,6 +1,6 @@
 #!/bin/sh
 
-JAVA_OPTS="$JAVA_OPTS -Djava.awt.headless=true -server -Dspring.config.location=/etc/tomcat8/regapi.properties -Djava.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib:/usr/lib/x86_64-linux-gnu/"
+JAVA_OPTS="$JAVA_OPTS -Djava.awt.headless=true -server -Djava.library.path=/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib:/usr/lib/x86_64-linux-gnu/"
 cd "/var/lib/tomcat8"
 
 # tomcat proxyName and proxyPort connector settings (server.xml) expect the user-visible domain and port

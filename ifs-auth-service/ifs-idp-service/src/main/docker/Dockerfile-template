@@ -23,7 +23,6 @@ ENV DEBIAN_FRONTEND=noninteractive \
   LDAP_AUTHENTICATOR="anonSearchAuthenticator" \
   LDAP_ATTRIBUTE_SEARCHFILTER="(mail=\$resolutionContext.principal)" \
   LDAP_VALIDATEPERIOD="PT20S" \
-  REGAPIKEY=@auth_idp_regapikey@ \
 
   GOOGLEANALYTICS_TRACKINGID="#" \
   IDP_PROXY_KEY="@auth_idp_proxy_key@" \
@@ -56,7 +55,7 @@ RUN  mkdir /etc/apache2/certs && \
 # put error pages in place \
   mv /apache/locking /var/www/html/ && \
 
-# configure idp+regapi virtual host \
+# configure idp virtual host \
   mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
   a2ensite idpproxy && \
 
@@ -70,11 +69,10 @@ RUN  mkdir /etc/apache2/certs && \
 RUN mkdir /etc/tomcat8/certs && \
 # see also certificates and substitutions in entrypoint script \
   mv /idp/server.xml /etc/tomcat8/ && \
-  mv /idp/ifs-registration-service-@version@.war /var/lib/tomcat8/webapps/shibboleth-api.war && \
+  mv /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
   mkdir /etc/shibboleth && \
   mv /idp/metadata.xml /etc/shibboleth/ && \
   mv /idp/idp.properties /idp/ldap.properties /idp/*.xml /opt/shibboleth-idp/conf/ && \
-  mv /idp/regapi.properties /etc/tomcat8/ && \
 
 # run tomcat/idp as its own user
   mkdir -p /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp && \

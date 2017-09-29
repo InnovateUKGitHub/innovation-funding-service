@@ -57,10 +57,6 @@ subprojects {
                     from jar
                     into inputDir
                 }
-                copy{
-                    from file('src/main/docker/certificate')
-                    into inputDir
-                }
                 copy {
                     from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
                     into inputDir

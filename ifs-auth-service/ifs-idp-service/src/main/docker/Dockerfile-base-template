@@ -34,7 +34,7 @@ RUN apt-get update --fix-missing && \
   update-alternatives --set javac "${JAVA_HOME}/bin/javac" && \
 # default-jre-headless-dummy_1.0_all.deb prevents openjdk being installed and saves 100MB or so \
   dpkg -i --force-depends /idp/default-jre-headless-dummy_1.0_all.deb && rm -f /idp/default-jre-headless-dummy_1.0_all.deb && \
-# tomcat for IDP and Regapi. Permission changes here due to https://github.com/docker-library/tomcat/issues/35#issuecomment-238014866 \
+# tomcat for IDP. Permission changes here due to https://github.com/docker-library/tomcat/issues/35#issuecomment-238014866 \
   apt-get -y install tomcat8 libtcnative-1 tomcat8-common libtomcat8-java libecj-java ucf && \
   rm -Rf /var/lib/tomcat8/webapps/ROOT/ && \
   chown -R www-data:0 /var/cache/tomcat8 && \
