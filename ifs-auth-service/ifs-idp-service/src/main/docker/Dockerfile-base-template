@@ -46,7 +46,6 @@ RUN apt-get update --fix-missing && \
   curl --connect-timeout 30 -s -L --retry 3 http://shibboleth.net/downloads/identity-provider/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf - && \
   sed "s/3\.3\.1/$IDPVER/" /idp/build.xml > /root/shibboleth-identity-provider-$IDPVER/bin/build.xml && rm -f /idp/build.xml && \
   (cd /root/shibboleth-identity-provider-$IDPVER/bin; ./install.sh) && rm -rf /root/shibboleth-identity-provider-$IDPVER && \
-  mv /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
 # apache. not strictly needed \
   apt-get -y install grep lsof net-tools ldap-utils apache2 && \
   apt-get autoclean && apt-get remove --purge --auto-remove -y unzip && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
