@@ -1,48 +1,44 @@
-FROM ifshibdev/idp-base:1.1.11
+FROM ifshibdev/idp-base:1.1.15
 
 ENV DEBIAN_FRONTEND=noninteractive \
-  HTTPPORT=9080 \
-  HTTPSPORT=9443 \
-  JAVAVER=8 \
+  HTTP_PORT=9080 \
+  HTTPS_PORT=9443 \
+  IDP_DOMAIN=idp \
+  SP_DOMAIN=ifs.local-dev \
+
+  JAVA_HOME=/usr/lib/jvm/java-8-oracle \
   JAVA_KEYSTORE_PASSWORD="@java_keystore_password@" \
-  LDAPURL="ldaps://ldap:8389" \
-  LDAPPORT="8389" \
-  LDAPUSESTARTTLS=false \
-  LDAPUSESSL=true \
-  LDAPBASEDN="dc=nodomain" \
-  LDAPBINDDN="cn=admin,dc=nodomain" \
-  LDAPBINDDNCRED="default" \
-  LDAPPPOLICYDN="cn=PPolicy,ou=Policies" \
-  LDAPPPOLICY="true" \
-  LDAPUSERFILTER="(&(mail={user})(!(employeeType=inactive)))" \
-  LDAPRURL="%{idp.authn.LDAP.ldapURL}" \
-  LDAPAUTHENTICATOR="anonSearchAuthenticator" \
-  LDAPRBASEDN="%{idp.authn.LDAP.baseDN:undefined}" \
-  LDAPRBINDDN="%{idp.authn.LDAP.bindDN:undefined}" \
-  LDAPRBINDDNCRED="%{idp.authn.LDAP.bindDNCredential:undefined}" \
-  LDAPRUSESTARTTLS="%{idp.authn.LDAP.useStartTLS:true}" \
-  LDAPRTRUSTCERT="/opt/shibboleth-idp/credentials/ldap-encryption.crt" \
-  LDAPRSEARCHFILTER="(mail=\$resolutionContext.principal)" \
-  LDAPRRETURNATTRIBUTE="mail,uid" \
-  LDAPVALIDATEPERIOD="PT20S" \
-  REGAPIKEY=@auth_idp_regapikey@ \
+
+  LDAP_URL="ldaps://ldap:8389" \
+  LDAP_PORT="8389" \
+  LDAP_USESTARTTLS=false \
+  LDAP_USESSL=true \
+  LDAP_BASEDN="dc=nodomain" \
+  LDAP_BINDDN="cn=admin,dc=nodomain" \
+  LDAP_BINDDNCREDENTIAL="default" \
+  LDAP_RETURNATTRIBUTES="mail,uid" \
+  LDAP_PPOLICYDN="cn=PPolicy,ou=Policies" \
+  LDAP_PPOLICY="true" \
+  LDAP_USERFILTER="(&(mail={user})(!(employeeType=inactive)))" \
+  LDAP_AUTHENTICATOR="anonSearchAuthenticator" \
+  LDAP_ATTRIBUTE_SEARCHFILTER="(mail=\$resolutionContext.principal)" \
+  LDAP_VALIDATEPERIOD="PT20S" \
+
   GOOGLEANALYTICS_TRACKINGID="#" \
   IDP_PROXY_KEY="@auth_idp_proxy_key@" \
   IDP_PROXY_CERTIFICATE="@auth_idp_proxy_certificate@" \
   IDP_PROXY_CACERTIFICATE="@auth_idp_proxy_cacertificate@" \
   SP_PROXY_CERTIFICATE="@auth_sp_proxy_certificate@" \
-  IDP_SIGNING_KEY="@auth_idp_signing_key@" \
-  IDP_SIGNING_CERTIFICATE="@auth_idp_signing_certificate@" \
-  IDP_ENCRYPTION_KEY="@auth_idp_encryption_key@" \
-  IDP_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@" \
+  IDP_SAML_SIGNING_KEY="@auth_idp_signing_key@" \
+  IDP_SAML_SIGNING_CERTIFICATE="@auth_idp_signing_certificate@" \
+  IDP_SAML_ENCRYPTION_KEY="@auth_idp_encryption_key@" \
+  IDP_SAML_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@" \
   LDAP_ENCRYPTION_CERTIFICATE="@auth_ldap_encryption_certificate@" \
+
   JAVA_OPTS="-Xms384M -Xmx768M" \
   MEMCACHE_ENDPOINT=
 
-ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
-ENV JRE_HOME=${JAVA_HOME}/jre
-
-# packages and stuff \
+# shibboleth configuration files \
 COPY idp/* /idp/
 COPY newrelic.jar /
 COPY newrelic.yml /
@@ -50,43 +46,40 @@ COPY newrelic.yml /
 COPY apache /apache/
 RUN  mkdir /etc/apache2/certs && \
 # configure apache \
-  mv /apache/ssl.conf /etc/apache2/mods-available/ssl.conf && \
-  mv /apache/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
   a2enmod socache_shmcb ssl status proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
   a2disconf other-vhosts-access-log && \
+  sed -i -e 's/Listen 80/Listen ${HTTP_PORT}/' -e 's/Listen 443/Listen ${HTTPS_PORT}/' /etc/apache2/ports.conf && \
+  mv /apache/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
+
+# put error pages in place \
   mv /apache/locking /var/www/html/ && \
+
+# configure idp virtual host \
+  mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
+  a2ensite idpproxy && \
 
 # run apache as its own user \
   mkdir -p /var/run/apache2 /run/lock/apache2 && \
   chown -R www-data:0 /etc/apache2 /var/cache/apache2 /run/lock /var/run/apache2 /var/www/html && \
   chmod -R u=rwX,g=rwX,o= /etc/apache2 /var/cache/apache2 /run/lock /var/run/apache2 /var/www/html/ && \
 
-  rm -rf /apache /tmp/* /var/tmp/*
+  rm -rf /apache
 
-RUN mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
-  a2ensite idpproxy && \
-# directory for certificates, added in entrypoint \
-  mkdir /etc/tomcat8/certs && \
+RUN mkdir /etc/tomcat8/certs && \
+# see also certificates and substitutions in entrypoint script \
   mv /idp/server.xml /etc/tomcat8/ && \
-  mv /idp/ifs-registration-service-@version@.war /var/lib/tomcat8/webapps/shibboleth-api.war && \
-  sed -i -e 's#%{idp.signing.key}#/opt/shibboleth-idp/credentials/idp-signing.key#g' \
-         -e 's#%{idp.signing.cert}#/opt/shibboleth-idp/credentials/idp-signing.crt#g' \
-         -e 's#%{idp.encryption.key}#/opt/shibboleth-idp/credentials/idp-encryption.key#g' \
-         -e 's#%{idp.encryption.cert}#/opt/shibboleth-idp/credentials/idp-encryption.crt#g' /opt/shibboleth-idp/conf/credentials.xml && \
+  mv /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
   mkdir /etc/shibboleth && \
   mv /idp/metadata.xml /etc/shibboleth/ && \
-  cd /opt/shibboleth-idp/conf/ && \
-  mv /idp/*.properties . && \
-  mv /idp/*.xml . && \
-  mv /idp/sealer.* /opt/shibboleth-idp/credentials/ && \
-  mv /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
-  mkdir /var/log/shibboleth && rm -rf /opt/shibboleth-idp/logs && ln -s /var/log/shibboleth /opt/shibboleth-idp/logs && \
+  mv /idp/idp.properties /idp/ldap.properties /idp/*.xml /opt/shibboleth-idp/conf/ && \
+
+# run tomcat/idp as its own user
   mkdir -p /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp && \
-  chown -R www-data:0 /etc/shibboleth /etc/apache2 /opt/shibboleth-idp /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp /usr/local/bin \
-                      /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JRE_HOME"/lib/security/cacerts && \
-  chmod -R u=rwX,g=rwX,o= /etc/shibboleth /etc/apache2 /opt/shibboleth-idp /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp /usr/local/bin \
-                          /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JRE_HOME"/lib/security/cacerts && \
+  chown -R www-data:0 /etc/shibboleth /opt/shibboleth-idp /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp /usr/local/bin \
+                      /etc/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JAVA_HOME"/jre/lib/security/cacerts && \
+  chmod -R u=rwX,g=rwX,o= /etc/shibboleth /opt/shibboleth-idp /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp /usr/local/bin \
+                          /etc/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JAVA_HOME"/jre/lib/security/cacerts && \
 
   rm -rf /idp
 
