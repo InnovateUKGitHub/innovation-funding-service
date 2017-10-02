@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors to panel'" />
     </head>
 
     <body th:with="context='comp-management'" class="competition-management competition-overview">
@@ -12,7 +12,7 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='heading-xlarge'" />
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors to panel',subTitle=${model.competitionName},size='heading-xlarge'" />
             <h2 class="heading-medium">Key statistics</h2>
 
             <div class="grid-row">
