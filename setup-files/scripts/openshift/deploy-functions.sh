@@ -180,20 +180,20 @@ function tailorAppInstance() {
     fi
 
     if [ -z "${LDAP_PASSWORD}" ]; then echo "Set LDAP_PASSWORD environment variable"; exit -1; fi
-    sed -i.bak "s/<<LDAP-PASSWORD>>/${LDAP_PASSWORD}/g" os-files-tmp/shib/*.yml
-    sed -i.bak "s/<<LDAP-PASSWORD>>/${LDAP_PASSWORD}/g" os-files-tmp/shib/named-envs/*.yml
+    sed -i.bak "s#<<LDAP-PASSWORD>>#${LDAP_PASSWORD}#g" os-files-tmp/shib/*.yml
+    sed -i.bak "s#<<LDAP-PASSWORD>>#${LDAP_PASSWORD}#g" os-files-tmp/shib/named-envs/*.yml
 
     if [ -z "${LDAP_URL}" ]; then echo "Set LDAP_URL environment variable"; exit -1; fi
-    sed -i.bak "s/<<LDAP-URL>>/${LDAP_URL}/g" os-files-tmp/shib/*.yml
-    sed -i.bak "s/<<LDAP-URL>>/${LDAP_URL}/g" os-files-tmp/shib/named-envs/*.yml
+    sed -i.bak "s#<<LDAP-URL>>#${LDAP_URL}#g" os-files-tmp/shib/*.yml
+    sed -i.bak "s#<<LDAP-URL>>#${LDAP_URL}#g" os-files-tmp/shib/named-envs/*.yml
 
     if [ -z "${SHIBBOLETH_MEMCACHE_ENDPOINT}" ]; then echo "Set SHIBBOLETH_MEMCACHE_ENDPOINT environment variable"; exit -1; fi
-    sed -i.bak "s/<<SHIBBOLETH-MEMCACHE-ENDPOINT>>/${SHIBBOLETH_MEMCACHE_ENDPOINT}/g" os-files-tmp/shib/*.yml
-    sed -i.bak "s/<<SHIBBOLETH-MEMCACHE-ENDPOINT>>/${SHIBBOLETH_MEMCACHE_ENDPOINT}/g" os-files-tmp/shib/named-envs/*.yml
+    sed -i.bak "s#<<SHIBBOLETH-MEMCACHE-ENDPOINT>>#${SHIBBOLETH_MEMCACHE_ENDPOINT}#g" os-files-tmp/shib/*.yml
+    sed -i.bak "s#<<SHIBBOLETH-MEMCACHE-ENDPOINT>>#${SHIBBOLETH_MEMCACHE_ENDPOINT}#g" os-files-tmp/shib/named-envs/*.yml
 
     if [ -z "${GA_TRACKING_ID}" ]; then echo "Set GA_TRACKING_ID environment variable"; exit -1; fi
-    sed -i.bak "s/<<GA-TRACKING-ID>>/${GA_TRACKING_ID}/g" os-files-tmp/shib/*.yml
-    sed -i.bak "s/<<GA-TRACKING-ID>>/${GA_TRACKING_ID}/g" os-files-tmp/shib/named-envs/*.yml
+    sed -i.bak "s#<<GA-TRACKING-ID>>#${GA_TRACKING_ID}#g" os-files-tmp/shib/*.yml
+    sed -i.bak "s#<<GA-TRACKING-ID>>#${GA_TRACKING_ID}#g" os-files-tmp/shib/named-envs/*.yml
 
     ## TODO DW - when we remove the tech debt of having multiple files for the shib yml files per named environment,
     ## we can do away with this more complex configuration block and that of the one above that this one mirrors
