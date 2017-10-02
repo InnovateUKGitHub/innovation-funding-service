@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.management.model;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelInviteStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
+import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,14 +12,14 @@ import org.springframework.stereotype.Component;
  * Build the model for the Invite assessors view.
  */
 @Component
-abstract class InviteAssessorsModelPopulator<ViewModelType extends InviteAssessorsViewModel> {
+abstract class PanelInviteAssessorsModelPopulator<ViewModelType extends PanelInviteAssessorsViewModel> {
 
     @Autowired
-    private CompetitionInviteRestService competitionInviteRestService;
+    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
 
     public ViewModelType populateModel(CompetitionResource competition) {
         ViewModelType model = populateCompetitionDetails(createModel(), competition);
-        populateStatistics(model, competition);
+        populateStatistics(model,competition);
         populateCompetitionInnovationSectorAndArea(model, competition);
         return model;
     }
@@ -33,11 +33,11 @@ abstract class InviteAssessorsModelPopulator<ViewModelType extends InviteAssesso
     }
 
     private ViewModelType populateStatistics(ViewModelType model, CompetitionResource competitionResource) {
-        CompetitionInviteStatisticsResource competitionInviteStatisticsResource = competitionInviteRestService.getInviteStatistics(competitionResource.getId()).getSuccessObject();
-        model.setAssessorsInvited(competitionInviteStatisticsResource.getInvited());
-        model.setAssessorsAccepted(competitionInviteStatisticsResource.getAccepted());
-        model.setAssessorsDeclined(competitionInviteStatisticsResource.getDeclined());
-        model.setAssessorsStaged(competitionInviteStatisticsResource.getInviteList());
+        AssessmentPanelInviteStatisticsResource statisticsResource = competitionKeyStatisticsRestService.getAssessmentPanelInviteStatisticsByCompetition(competitionResource.getId()).getSuccessObject();
+        model.setAssessorsInvited(statisticsResource.getInvited());
+        model.setAssessorsAccepted(statisticsResource.getAccepted());
+        model.setAssessorsDeclined(statisticsResource.getDeclined());
+        model.setAssessorsStaged(statisticsResource.getPending());
         return model;
     }
 
