@@ -114,7 +114,6 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
                 .withAssessorsInvited(5)
                 .withAssessorsAccepted(1)
                 .withAssessorsRejected(1)
-                .withAssessorsPending(3)
                 .build();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
