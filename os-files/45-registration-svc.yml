@@ -54,7 +54,7 @@ items:
           - name: NEW_RELIC_LOG
             value: "STDOUT"
           - name: SHIBBOLETH_LDAP_URL
-            value: "<<SHIBBOLETH_LDAP_URL>>"
+            value: "<<LDAP-URL>>"
           - name: SHIBBOLETH_LDAP_PORT
             value: "<<SHIBBOLETH_LDAP_PORT>>"
           - name: SHIBBOLETH_LDAP_BASE_DN
@@ -62,7 +62,7 @@ items:
           - name: SHIBBOLETH_LDAP_USER
             value: "<<SHIBBOLETH_LDAP_USER>>"
           - name: SHIBBOLETH_LDAP_PASSWORD
-            value: "<<SHIBBOLETH_LDAP_PASSWORD>>"
+            value: "<<LDAP-PASSWORD>>"
           - name: SHIBBOLETH_API_KEYS
             value: "1234567890"
           ports:
