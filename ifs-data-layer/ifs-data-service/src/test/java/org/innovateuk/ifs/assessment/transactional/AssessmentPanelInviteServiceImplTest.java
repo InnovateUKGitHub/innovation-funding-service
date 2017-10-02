@@ -575,16 +575,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 }
         );
     }
-
-//    private CompetitionParticipant createCompetitionParticipantExpectations(CompetitionInvite competitionInvite) {
-//        return createLambdaMatcher(competitionParticipant -> {
-//            assertNull(competitionParticipant.getId());
-//            assertEquals(competitionInvite.getTarget(), competitionParticipant.getProcess());
-//            assertEquals(competitionInvite, competitionParticipant.getInvite());
-//            assertEquals(ASSESSOR, competitionParticipant.getRole());
-//            assertEquals(competitionInvite.getUser(), competitionParticipant.getUser());
-//        });
-//    }
+    
 
     private AssessorInviteSendResource setUpAssessorInviteSendResource() {
         return newAssessorInviteSendResource()
