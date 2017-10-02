@@ -187,6 +187,10 @@ function tailorAppInstance() {
     sed -i.bak "s/<<LDAP-URL>>/${LDAP_URL}/g" os-files-tmp/shib/*.yml
     sed -i.bak "s/<<LDAP-URL>>/${LDAP_URL}/g" os-files-tmp/shib/named-envs*.yml
 
+    if [ -z "${SHIBBOLETH_MEMCACHE_ENDPOINT}" ]; then echo "Set SHIBBOLETH_MEMCACHE_ENDPOINT environment variable"; exit -1; fi
+    sed -i.bak "s/<<SHIBBOLETH-MEMCACHE-ENDPOINT>>/${SHIBBOLETH_MEMCACHE_ENDPOINT}/g" os-files-tmp/shib/*.yml
+    sed -i.bak "s/<<SHIBBOLETH-MEMCACHE-ENDPOINT>>/${SHIBBOLETH_MEMCACHE_ENDPOINT}/g" os-files-tmp/shib/named-envs*.yml
+
     ## TODO DW - when we remove the tech debt of having multiple files for the shib yml files per named environment,
     ## we can do away with this more complex configuration block and that of the one above that this one mirrors
     if $(isNamedEnvironment ${TARGET}); then
@@ -195,26 +199,6 @@ function tailorAppInstance() {
         sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=int,dc=g2g3digital,dc=net#g" os-files-tmp/45-registration-svc.yml
         sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=int,dc=g2g3digital,dc=net#g" os-files-tmp/45-registration-svc.yml
 
-        if [[ ${TARGET} == "demo" ]]
-        then
-            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-        fi
-        if [[ ${TARGET} == "sysint" ]]
-        then
-            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-        fi
-        if [[ ${TARGET} == "perf" ]]
-        then
-            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-        fi
-        if [[ ${TARGET} == "uat" ]]
-        then
-            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-        fi
-        if [[ ${TARGET} == "production" ]]
-        then
-            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-        fi
     else
         sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldaps://ldap:389#g" os-files-tmp/45-registration-svc.yml
         sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" os-files-tmp/45-registration-svc.yml
