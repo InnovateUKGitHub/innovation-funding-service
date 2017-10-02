@@ -180,20 +180,13 @@ function tailorAppInstance() {
     fi
 
     if [ -z "${LDAP_PASSWORD}" ]; then echo "Set LDAP_PASSWORD environment variable"; exit -1; fi
-    sed -i.bak "s#<<LDAP-PASSWORD>>#${LDAP_PASSWORD}#g" os-files-tmp/shib/*.yml
-    sed -i.bak "s#<<LDAP-PASSWORD>>#${LDAP_PASSWORD}#g" os-files-tmp/shib/named-envs/*.yml
+    find os-files-tmp -name '*.yml' | xargs sed -i.bak "s#<<LDAP-PASSWORD>>#${LDAP_PASSWORD}#g"
 
     if [ -z "${LDAP_URL}" ]; then echo "Set LDAP_URL environment variable"; exit -1; fi
-    sed -i.bak "s#<<LDAP-URL>>#${LDAP_URL}#g" os-files-tmp/shib/*.yml
-    sed -i.bak "s#<<LDAP-URL>>#${LDAP_URL}#g" os-files-tmp/shib/named-envs/*.yml
+    find os-files-tmp -name '*.yml' | xargs sed -i.bak "s#<<LDAP-URL>>#${LDAP_URL}#g"
 
-#    if [ -z "${SHIBBOLETH_MEMCACHE_ENDPOINT}" ]; then echo "Set SHIBBOLETH_MEMCACHE_ENDPOINT environment variable"; exit -1; fi
-    sed -i.bak "s#<<SHIBBOLETH-MEMCACHE-ENDPOINT>>#${SHIBBOLETH_MEMCACHE_ENDPOINT-}#g" os-files-tmp/shib/*.yml
-    sed -i.bak "s#<<SHIBBOLETH-MEMCACHE-ENDPOINT>>#${SHIBBOLETH_MEMCACHE_ENDPOINT-}#g" os-files-tmp/shib/named-envs/*.yml
-
-#    if [ -z "${GA_TRACKING_ID}" ]; then echo "Set GA_TRACKING_ID environment variable"; exit -1; fi
-    sed -i.bak "s#<<GA-TRACKING-ID>>#${GA_TRACKING_ID-}#g" os-files-tmp/shib/*.yml
-    sed -i.bak "s#<<GA-TRACKING-ID>>#${GA_TRACKING_ID-}#g" os-files-tmp/shib/named-envs/*.yml
+    find os-files-tmp -name '*.yml' | xargs sed -i.bak "s#<<SHIBBOLETH-MEMCACHE-ENDPOINT>>#${SHIBBOLETH_MEMCACHE_ENDPOINT-}#g"
+    find os-files-tmp -name '*.yml' | sed -i.bak "s#<<GA-TRACKING-ID>>#${GA_TRACKING_ID-}#g"
 
     ## TODO DW - when we remove the tech debt of having multiple files for the shib yml files per named environment,
     ## we can do away with this more complex configuration block and that of the one above that this one mirrors
@@ -204,7 +197,6 @@ function tailorAppInstance() {
         sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=int,dc=g2g3digital,dc=net#g" os-files-tmp/45-registration-svc.yml
 
     else
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldaps://ldap:389#g" os-files-tmp/45-registration-svc.yml
         sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" os-files-tmp/45-registration-svc.yml
         sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=nodomain#g" os-files-tmp/45-registration-svc.yml
         sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=nodomain#g" os-files-tmp/45-registration-svc.yml
