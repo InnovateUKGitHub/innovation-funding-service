@@ -89,7 +89,7 @@
                                     th:errorclass="form-control-error"
                                     rows="4"
                                     th:field="*{feedback}"></textarea>
-                                <div class="textarea-footer" th:with="feedback=*{feedback}">
+                                <div class="textarea-footer" th:with="feedback=*{feedback}" aria-live="polite" aria-atomic="true" role="status">
                                     <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, feedback)})" />
                                 </div>
                             </div>
@@ -117,7 +117,7 @@
                                     rows="4"
                                     th:field="*{comment}"></textarea>
 
-                                <div class="textarea-footer" th:with="comment=*{comment}">
+                                <div class="textarea-footer" th:with="comment=*{comment}" aria-live="polite" aria-atomic="true" role="status">
                                     <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, comment)})" />
                                 </div>
                             </div>

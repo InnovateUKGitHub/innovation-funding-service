@@ -59,7 +59,7 @@
                           data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxNoteWords})},
                           data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxNoteCharacters})},
                           data-required-errormessage=#{validation.field.must.not.be.blank}"></textarea>
-                        <div class="textarea-footer" th:with="note=*{note}">
+                        <div class="textarea-footer" th:with="note=*{note}" aria-live="polite" aria-atomic="true" role="status">
                             <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxNoteWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxNoteWords, content)})"/>
                         </div>
                     </div>

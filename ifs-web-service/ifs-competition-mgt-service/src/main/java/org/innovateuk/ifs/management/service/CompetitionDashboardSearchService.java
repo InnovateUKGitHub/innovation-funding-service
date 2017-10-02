@@ -15,7 +15,7 @@ public interface CompetitionDashboardSearchService {
 
     Map<CompetitionStatus, List<CompetitionSearchResultItem>> getLiveCompetitions();
 
-    Map<CompetitionStatus, List<CompetitionSearchResultItem>> getProjectSetupCompetitions();
+    List<CompetitionSearchResultItem> getProjectSetupCompetitions();
 
     Map<CompetitionStatus, List<CompetitionSearchResultItem>> getUpcomingCompetitions();
 
@@ -24,5 +24,7 @@ public interface CompetitionDashboardSearchService {
     CompetitionSearchResult searchCompetitions(String searchQuery, int page);
 
     CompetitionCountResource getCompetitionCounts();
+
+    List<CompetitionSearchResultItem> getPreviousCompetitions();
 
 }

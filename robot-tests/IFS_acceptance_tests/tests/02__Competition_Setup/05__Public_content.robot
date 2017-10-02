@@ -81,7 +81,7 @@ Competition information and search: Valid values
     And the user enters text to a text field        id=keywords  Search, Testing, Robot
     Then the user clicks the button/link            jQuery=.button:contains("Save and review")
     And the user clicks the button/link             jQuery=.button:contains("Return to public content")
-    Then the user should see the element            jQuery=li:nth-of-type(1) .task-status-complete
+    Then the user should see the element            css=li:nth-of-type(1) .task-status-complete
 
 Competition information and search: ReadOnly
     [Documentation]  INFUND-6915  IFS-179
@@ -123,7 +123,7 @@ Summary: User enters valid values and saves
     Then the user clicks the button/link        jQuery=.button:contains("Return to public content")
     And the user should be redirected to the correct page  ${public_content_overview}
     Then the user should see the element      link=Summary
-    And the user should see the element      jQuery=li:nth-child(2) .task-status-complete
+    And the user should see the element      css=li:nth-child(2) .task-status-complete
 
 Summary: Contains the correct values when viewed
     [Documentation]    INFUND-6916, INFUND-7486
@@ -159,18 +159,18 @@ Eligibility: User enters valid values and saves
     Given the internal user navigates to public content     ${public_content_competition_name}
     When the user clicks the button/link                    link=Eligibility
     And the user enters valid data in the eligibility details
-    Then the user enters text to a text field               jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="heading"]   Nationality Eligibility Heading
-    And the user enters text to a text field                jQuery=.contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions
-    And the user uploads the file                           jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
+    Then the user enters text to a text field               css=.contentGroup:first-of-type input[id^="contentGroups"][id$="heading"]   Nationality Eligibility Heading
+    And the user enters text to a text field                css=.contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions
+    And the user uploads the file                           css=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
     Then the user clicks the button/link                    jQuery=button:contains("+ add new section")
-    And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="heading"]   Minimum Eligibility Threshold
-    And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) .editor    One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support
-    And the user uploads the file                           jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]   ${valid_pdf}
+    And The user enters text to a text field                css=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="heading"]   Minimum Eligibility Threshold
+    And The user enters text to a text field                css=.contentGroup:nth-of-type(2) .editor    One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support
+    And the user uploads the file                           css=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]   ${valid_pdf}
     When the user clicks the button/link                    jQuery=button:contains("Save and review")
     Then the user clicks the button/link                    jQuery=.button:contains("Return to public content")
     And the user should be redirected to the correct page   ${public_content_overview}
     Then the user should see the element                    link=Eligibility
-    And the user should see the element                     jQuery=li:nth-child(3) .task-status-complete
+    And the user should see the element                     css=li:nth-child(3) .task-status-complete
 
 Eligibility: Contains the correct values when viewed, Edit sections
     [Documentation]    INFUND-6916, INFUND-7487
@@ -180,21 +180,21 @@ Eligibility: Contains the correct values when viewed, Edit sections
     And the user should see the element       jQuery=a:contains("${valid_pdf}")
     And the user should see the element       jQuery=.button:contains("Return to public content")
     When the user clicks the button/link      jQuery=.button-secondary:contains("Edit")
-    And the user enters text to a text field  jQuery=.contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments rule of 267567£$*90 take these responses into consideration before making decisions, Local authorities can decide to meet needs that do not meet the eligibility criteria, Where they decide to do this, the same steps must be taken as would be if the person did have eligible needs (for example, the preparation of a care and support plan).
-    And The user enters text to a text field  jQuery=.contentGroup:nth-of-type(2) .editor   One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support This is to be achieved through regulations to be made under a power in clause 13 of the Care Bill. These will set a minimum threshold.
+    And the user enters text to a text field  css=.contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments rule of 267567£$*90 take these responses into consideration before making decisions, Local authorities can decide to meet needs that do not meet the eligibility criteria, Where they decide to do this, the same steps must be taken as would be if the person did have eligible needs (for example, the preparation of a care and support plan).
+    And The user enters text to a text field  css=.contentGroup:nth-of-type(2) .editor   One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support This is to be achieved through regulations to be made under a power in clause 13 of the Care Bill. These will set a minimum threshold.
     Then the user clicks the button/link      jQuery=button:contains("+ add new section")
-    And The user enters text to a text field  jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="heading"]    Draft Care and Support - Eligibility Criteria
-    And the user enters text to a text field  jQuery=.contentGroup:nth-of-type(3) .editor   In these Regulations— Citation, commencement “basic personal care activities” means essential personal care tasks that a person carries out as part of normal daily, An adult’s needs meet the eligibility criteria if those needs are due to a physical or mental impairment or illness and the effect of such needs is that the adult.
+    And The user enters text to a text field  css=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="heading"]    Draft Care and Support - Eligibility Criteria
+    And the user enters text to a text field  css=.contentGroup:nth-of-type(3) .editor   In these Regulations— Citation, commencement “basic personal care activities” means essential personal care tasks that a person carries out as part of normal daily, An adult’s needs meet the eligibility criteria if those needs are due to a physical or mental impairment or illness and the effect of such needs is that the adult.
     And the user clicks the button/link       jQuery=.contentGroup:first-of-type button:contains("Remove")
     And the user clicks the button/link       jQuery=.contentGroup:nth-of-type(2) button:contains("Remove")
-    Then the user uploads the file            jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-    And the user uploads the file             jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
-    And the user uploads the file             jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    Then the user uploads the file            css=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file             css=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
+    And the user uploads the file             css=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     Then the user clicks the button/link      jQuery=.contentGroup:nth-of-type(3) button:contains("Remove")
-    And the user uploads the file             jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file             css=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link      jQuery=button:contains("Save and review")
     And the user clicks the button/link       jQuery=.button:contains("Return to public content")
-    Then the user should see the element      jQuery=li:nth-child(3) .task-status-complete
+    Then the user should see the element      css=li:nth-child(3) .task-status-complete
 
 Scope: Server side validation
     [Documentation]  INFUND-7488
@@ -210,7 +210,7 @@ Scope: Add, remove sections and submit
     Given the user can add and remove multiple content groups
     When the user clicks the button/link  jQuery=button:contains("Save and review")
     And the user clicks the button/link   jQuery=.button:contains("Return to public content")
-    Then the user should see the element  jQuery=li:nth-child(4) .task-status-complete
+    Then the user should see the element  css=li:nth-child(4) .task-status-complete
 
 Dates: Add, remove dates and submit
     [Documentation]    INFUND-6919
@@ -221,7 +221,7 @@ Dates: Add, remove dates and submit
     And the user should see the text in the page   Submission deadline, competition closed.
     And the user should see the text in the page   Applicants notified
     And the user can add and remove multiple event groups
-    And the user should see the element            jQuery=li:nth-child(5) .task-status-complete
+    And the user should see the element            css=li:nth-child(5) .task-status-complete
 
 How to apply: server side validation and autosave
     [Documentation]    INFUND-7490
@@ -241,18 +241,18 @@ How to apply: User enters valid values and saves
     Given the internal user navigates to public content     ${public_content_competition_name}
     When the user clicks the button/link                    link=How to apply
     And the user enters valid data in How-to-apply details
-    Then the user enters text to a text field               jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="heading"]   The application process
-    And the user enters text to a text field                jQuery=.contentGroup:first-of-type .editor   External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.
-    And the user uploads the file                           jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
+    Then the user enters text to a text field               css=.contentGroup:first-of-type input[id^="heading"]   The application process
+    And the user enters text to a text field                css=.contentGroup:first-of-type .editor   External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.
+    And the user uploads the file                           css=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
     Then the user clicks the button/link                    jQuery=button:contains("+ add new section")
-    And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="heading"]   Application questions
-    And The user enters text to a text field                jQuery=.contentGroup:nth-of-type(2) .editor    Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765 or email us at support@innovateTest.worth.com
-    And the user uploads the file                           jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And The user enters text to a text field                css=.contentGroup:nth-of-type(2) input[id^="heading"]   Application questions
+    And The user enters text to a text field                css=.contentGroup:nth-of-type(2) .editor    Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765 or email us at support@innovateTest.worth.com
+    And the user uploads the file                           css=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link                    jQuery=button:contains("Save and review")
     Then the user clicks the button/link                    jQuery=.button:contains("Return to public content")
     And the user should be redirected to the correct page   ${public_content_overview}
     Then the user should see the element                    link=How to apply
-    And the user should see the element                     jQuery=li:nth-child(6) .task-status-complete
+    And the user should see the element                     css=li:nth-child(6) .task-status-complete
 
 How to apply: Contains the correct values when viewed, Edit sections
     [Documentation]    INFUND-6920  INFUND-7602  INFUND-7490
@@ -262,30 +262,30 @@ How to apply: Contains the correct values when viewed, Edit sections
     And the user should see the element       jQuery=a:contains("${valid_pdf}")
     And the user should see the element       jQuery=.button:contains("Return to public content")
     When the user clicks the button/link      jQuery=.button-secondary:contains("Edit")
-    And the user enters text to a text field  jQuery=.contentGroup:nth-of-type(1) .editor   External independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance. Government departments & Some departments, like the Ministry of Defence, cover the whole UK. Others don’t – the Department for Work and Pensions doesn't cover Northern Ireland. This is because some aspects of government are devolved to Scotland, Wales and Northern Ireland. Other public bodiesThese have varying degrees of independence but are directly accountable to ministers. There are 4 types of non-departmental public bodies (NDPBs).Executive NDPBs do work for the government in specific areas
+    And the user enters text to a text field  css=.contentGroup:nth-of-type(1) .editor   External independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance. Government departments & Some departments, like the Ministry of Defence, cover the whole UK. Others don’t – the Department for Work and Pensions doesn't cover Northern Ireland. This is because some aspects of government are devolved to Scotland, Wales and Northern Ireland. Other public bodiesThese have varying degrees of independence but are directly accountable to ministers. There are 4 types of non-departmental public bodies (NDPBs).Executive NDPBs do work for the government in specific areas
     And the user moves focus to the element   css=#contentGroup-row-1 >div.form-group.textarea-wrapped >div.editor
-    And The user enters text to a text field  jQuery=.contentGroup:nth-of-type(2) .editor  Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765.
+    And The user enters text to a text field  css=.contentGroup:nth-of-type(2) .editor  Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765.
     Then the user clicks the button/link      jQuery=button:contains("+ add new section")
-    And The user enters text to a text field  jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="heading"]    Application Rules -- Competition Procedures
-    And the user enters text to a text field  jQuery=.contentGroup:nth-of-type(3) .editor   Sets out the rules for Competition framework provision funded by the CodeTechnology: ADReedoor8793£$%^^&&*^%%!@. This document forms part of the ADReedoor8793£$%^^&&*^%%!@ - Funding Rules 2016 to 2017. This document sets out the additional funding rules for Competition frameworks. You must read it together with other relevant funding rule documents. These include: Follow the Instructions.
+    And The user enters text to a text field  css=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="heading"]    Application Rules -- Competition Procedures
+    And the user enters text to a text field  css=.contentGroup:nth-of-type(3) .editor   Sets out the rules for Competition framework provision funded by the CodeTechnology: ADReedoor8793£$%^^&&*^%%!@. This document forms part of the ADReedoor8793£$%^^&&*^%%!@ - Funding Rules 2016 to 2017. This document sets out the additional funding rules for Competition frameworks. You must read it together with other relevant funding rule documents. These include: Follow the Instructions.
     Then the user clicks the button/link      jQuery=button:contains("+ add new section")
-    And The user enters text to a text field  jQuery=.contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="heading"]    Competition Officers Contact
-    And the user enters text to a text field  jQuery=.contentGroup:nth-of-type(4) .editor  You can access an up-to-date list of areas where Competition is managed locally and how to contact them on GOV.UK. Follow the guidelines attached.
-    And the user uploads the file             jQuery=.contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And The user enters text to a text field  css=.contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="heading"]    Competition Officers Contact
+    And the user enters text to a text field  css=.contentGroup:nth-of-type(4) .editor  You can access an up-to-date list of areas where Competition is managed locally and how to contact them on GOV.UK. Follow the guidelines attached.
+    And the user uploads the file             css=.contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     And the user clicks the button/link       jQuery=.contentGroup:first-of-type button:contains("Remove")
     And the user clicks the button/link       jQuery=.contentGroup:nth-of-type(2) button:contains("Remove")
     Then the user clicks the button/link      jQuery=button:contains("+ add new section")
-    And The user enters text to a text field  jQuery=.contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="heading"]    Confidentiality and Conflicts
-    And the user enters text to a text field  jQuery=.contentGroup:nth-of-type(5) .editor     We are confident that awarding an increase to your funding allocation is a good use of public funds, Providers with a Financial Memorandum or Conditions of Funding (Grant) or Conditions of Funding. For more information email us back on support@innovateTest.worth.com and find the attached memorandum.
-    Then the user uploads the file            jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-    And the user uploads the file             jQuery=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
-    And the user uploads the file             jQuery=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And The user enters text to a text field  css=.contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="heading"]    Confidentiality and Conflicts
+    And the user enters text to a text field  css=.contentGroup:nth-of-type(5) .editor     We are confident that awarding an increase to your funding allocation is a good use of public funds, Providers with a Financial Memorandum or Conditions of Funding (Grant) or Conditions of Funding. For more information email us back on support@innovateTest.worth.com and find the attached memorandum.
+    Then the user uploads the file            css=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file             css=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
+    And the user uploads the file             css=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     Then the user clicks the button/link      jQuery=.contentGroup:nth-of-type(3) button:contains("Remove")
-    And the user uploads the file             jQuery=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
-    And the user uploads the file             jQuery=.contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file             css=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
+    And the user uploads the file             css=.contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link      jQuery=button:contains("Save and review")
     And the user clicks the button/link       jQuery=.button:contains("Return to public content")
-    Then the user should see the element      jQuery=li:nth-child(6) .task-status-complete
+    Then the user should see the element      css=li:nth-child(6) .task-status-complete
 
 Supporting information: Add, remove sections and submit
     [Documentation]    INFUND-6921 INFUND-7602
@@ -294,7 +294,7 @@ Supporting information: Add, remove sections and submit
     Then the user can add and remove multiple content groups
     When the user clicks the button/link  jQuery=button:contains("Save and review")
     And the user clicks the button/link   jQuery=.button:contains("Return to public content")
-    Then the user should see the element  jQuery=li:nth-child(7) .task-status-complete
+    Then the user should see the element  css=li:nth-child(7) .task-status-complete
 
 Publish public content: Publish once all sections are complete
     [Documentation]    INFUND-6914
@@ -458,7 +458,7 @@ User creates a new competition
     [Arguments]    ${competition_name}
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}
+    When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}
     And the user fills in the CS Milestones  ${month}  ${nextMonth}  ${nextyear}
 
 the user enters valid data in the summary details
@@ -566,4 +566,4 @@ the user visits
 
 the user should see all sections completed
     :FOR  ${i}  IN RANGE  1  8
-    \    the user should see the element  jQuery=li:nth-child(${i}) .task-status-complete
+    \    the user should see the element  css=li:nth-child(${i}) .task-status-complete

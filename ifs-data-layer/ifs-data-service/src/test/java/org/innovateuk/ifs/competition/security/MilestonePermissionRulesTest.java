@@ -46,7 +46,18 @@ public class MilestonePermissionRulesTest extends BasePermissionRulesTest<Milest
 
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
 
-        assertTrue(rules.innovationLeadsCanViewMilestonesOnAssginedComps(1L, innovationLeadAssignedToCompetition));
-        assertFalse(rules.innovationLeadsCanViewMilestonesOnAssginedComps(1L, innovationLeadNotAssignedToCompetition));
+        assertTrue(rules.innovationLeadsCanViewMilestonesOnAssignedComps(1L, innovationLeadAssignedToCompetition));
+        assertFalse(rules.innovationLeadsCanViewMilestonesOnAssignedComps(1L, innovationLeadNotAssignedToCompetition));
+    }
+
+    @Test
+    public void testInternalUsersCanReadMilestoneByType() {
+        allGlobalRoleUsers.forEach(user -> {
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.allInternalUsersCanViewCompetitionMilestonesByType(1L, user));
+            } else {
+                assertFalse(rules.allInternalUsersCanViewCompetitionMilestonesByType(1L, user));
+            }
+        });
     }
 }

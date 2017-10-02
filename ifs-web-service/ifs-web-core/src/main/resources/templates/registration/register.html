@@ -37,6 +37,7 @@
                 </th:block>
             </label>
             <input class="form-control"
+                   id="firstName"
                    th:errorclass="form-control-error"
                    type="text"
                    th:field="*{firstName}"
@@ -78,6 +79,7 @@
                 </th:block>
             </label>
             <input class="form-control"
+                   id="phoneNUmber"
                    th:errorclass="form-control-error"
                    type="tel"
                    th:field="*{phoneNumber}"
@@ -109,7 +111,8 @@
 
             <th:block th:unless="${invitee}">
                 <input class="form-control"
-                      th:errorclass="form-control-error"
+                       id="email"
+                       th:errorclass="form-control-error"
                        type="email"
                        th:field="*{email}"
                        maxlength="256"

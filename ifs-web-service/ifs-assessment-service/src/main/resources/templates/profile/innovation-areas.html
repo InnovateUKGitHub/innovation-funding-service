@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your skills'" />
+    </head>
+
+    <body th:with="context='assessment'">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to your assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
+
+            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
+                <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+                </ul>
+            </div>
+
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your skills',size='heading-xlarge'" />
+            <p>Before you can assess we need you to provide some additional information about your skills. We can then allocate you applications relevant to your expertise and skills.</p>
+
+            <form th:action="@{/profile/skills}" method="post" th:object="${form}" class="extra-margin">
+                <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'form-group-error'">
+                    <label class="form-label" th:for="skillAreas">
+                        <span class="heading-large">Skill areas</span>
+                        <th:block th:if="${#fields.hasErrors('skillAreas')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}" />
+                        </th:block>
+                    </label>
+                    <p class="form-hint">
+                        Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.<br />
+                        For example; Solar Power, Genetics, Recycling
+                    </p>
+                    <div class="textarea-wrapped word-count">
+                        <textarea
+                            class="form-control width-full"
+                            data-max_words="100"
+                            data-maxwordslength="100"
+                            data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                            th:errorclass="field-error"
+                            rows="4"
+                            th:field="*{skillAreas}"></textarea>
+                        <div class="textarea-footer" th:with="skillAreas=*{skillAreas}" aria-live="polite" aria-atomic="true" role="status">
+                            <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, skillAreas)})" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')} ? 'form-group-error'">
+                    <fieldset class="inline">
+                        <legend>
+                            <span class="heading-large">Assessor type</span>
+                            <th:block th:if="${#fields.hasErrors('assessorType')}">
+                                <span class="error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
+                            </th:block>
+                        </legend>
+                        <p class="form-hint">Please select your current area of work. If you are working in both please select the most dominant.</p>
+                        <div class="multiple-choice" th:each="type : ${T(com.worth.ifs.user.resource.BusinessType).values()}">
+                            <input th:field="*{assessorType}" th:value="${type}" type="radio" required="required" data-required-errormessage="Please select an assessor type" />
+                            <label th:for="${#ids.prev('assessorType')}" th:text="${type.displayName}">Label</label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <button class="button button-large extra-margin" type="submit">Continue</button>
+            </form>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

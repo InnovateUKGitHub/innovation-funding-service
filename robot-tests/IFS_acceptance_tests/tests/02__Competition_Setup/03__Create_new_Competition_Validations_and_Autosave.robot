@@ -252,7 +252,7 @@ the user leaves all the question field empty
     wait for autosave
     The user enters text to a text field    id=question.title    ${EMPTY}
     The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
-    The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}
+    The user enters text to a text field    id=question.maxWords    ${EMPTY}
     the user moves focus and waits for autosave
 
 the validation error above the question should be visible

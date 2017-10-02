@@ -32,6 +32,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
@@ -45,6 +47,8 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
+import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.SETUP_READY_KEY;
+import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.READY_TO_OPEN_KEY;
 import static org.innovateuk.ifs.competitionsetup.service.sectionupdaters.InitialDetailsSectionSaver.OPENINGDATE_FIELDNAME;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -116,12 +120,40 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     @Test
     public void initCompetitionSetupSection() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
-
+        when(competitionSetupService.isCompetitionReadyToOpen(competition)).thenReturn(FALSE);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name("competition/setup"));
+                .andExpect(view().name("competition/setup"))
+                .andExpect(model().attribute(SETUP_READY_KEY, FALSE))
+                .andExpect(model().attribute(READY_TO_OPEN_KEY, FALSE));
+    }
+
+    @Test
+    public void initCompetitionSetupSectionSetupComplete() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        when(competitionSetupService.isCompetitionReadyToOpen(competition)).thenReturn(TRUE);
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition/setup"))
+                .andExpect(model().attribute(SETUP_READY_KEY, TRUE))
+                .andExpect(model().attribute(READY_TO_OPEN_KEY, FALSE));
+    }
+
+    @Test
+    public void initCompetitionSetupSectionReadyToOpen() throws Exception {
+        CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.READY_TO_OPEN).build();
+        when(competitionSetupService.isCompetitionReadyToOpen(competition)).thenReturn(FALSE);
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition/setup"))
+                .andExpect(model().attribute(SETUP_READY_KEY, FALSE))
+                .andExpect(model().attribute(READY_TO_OPEN_KEY, TRUE));
     }
 
     @Test

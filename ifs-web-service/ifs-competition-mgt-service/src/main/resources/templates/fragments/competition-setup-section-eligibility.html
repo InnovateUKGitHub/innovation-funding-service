@@ -16,7 +16,7 @@
         <th:block th:if="${editable}" id="section-3-edit">
             <input type="hidden" th:field="*{multipleStream}" />
             <div class="form-group" th:classappend="${#fields.hasErrors('singleOrCollaborative')} ? 'form-group-error'">
-                <fieldset class="inline">
+                <fieldset>
                     <legend id="singleOrCollaborative">
                         <span class="form-label-bold">Please choose the project type.</span>
                         <th:block th:if="${#fields.hasErrors('singleOrCollaborative')}">
@@ -40,7 +40,7 @@
 
 
             <div class="form-group" th:classappend="${#fields.hasErrors('researchCategoryId')} ? 'form-group-error'">
-                <fieldset class="inline">
+                <fieldset>
                     <legend id="researchCategoryId">
                         <span class="form-label-bold">Please choose the research categories.</span>
                         <th:block th:if="${#fields.hasErrors('researchCategoryId')}">
@@ -63,7 +63,7 @@
 
 
             <div class="form-group" th:classappend="${#fields.hasErrors('leadApplicantTypes')} ? 'form-group-error'">
-                <fieldset class="inline">
+                <fieldset>
                     <legend id="leadApplicantTypes">
                        <span class="form-label-bold">Lead applicant</span>
                        <span class="hint">Select the lead applicant type required.</span>

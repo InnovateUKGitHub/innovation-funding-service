@@ -79,6 +79,11 @@ get today
     # This format is like: 4 February 2017
     [Return]    ${today}
 
+get today short month
+    ${today} =    Get Current Date  UTC   result_format=%-d %b %Y    exclude_millis=true
+    # This format is like: 4 Feb 2017
+    [Return]    ${today}
+
 get tomorrow
     ${today} =    Get Time
     ${tomorrow} =     Add time To Date    ${today}    1 day
@@ -93,6 +98,11 @@ get thirteen days
     ${today} =    Get Time
     ${thirteen} =     Add time To Date    ${today}    13 day
     [Return]    ${thirteen}
+
+get fifteen days
+    ${today} =    Get Time
+    ${fifteen} =     Add time To Date    ${today}    15 day
+    [Return]    ${fifteen}
 
 get tomorrow day
     ${today}=    get time

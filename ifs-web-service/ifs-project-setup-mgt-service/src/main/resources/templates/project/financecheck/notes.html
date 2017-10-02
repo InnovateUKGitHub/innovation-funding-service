@@ -83,7 +83,7 @@
                                                data-maxlength-errormessage=#{validation.field.too.many.characters(null, ${model.maxNoteCharacters})},
                                                data-required-errormessage=#{validation.field.must.not.be.blank}"
                                       th:errorclass="field-group-error"></textarea>
-                                    <div class="textarea-footer" th:with="comment=*{comment}">
+                                    <div class="textarea-footer" th:with="comment=*{comment}" aria-live="polite" aria-atomic="true" role="status">
                                         <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxNoteWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxNoteWords, content)})" />
                                     </div>
                                 </div>

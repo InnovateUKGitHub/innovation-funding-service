@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -20,6 +21,12 @@ import java.util.List;
 @RestController
 @RequestMapping("/competition")
 public class CompetitionController {
+
+    private static final String DEFAULT_PAGE_NUMBER = "0";
+
+    private static final String DEFAULT_PAGE_SIZE = "20";
+
+    private static final String DEFAULT_SORT_BY = "id";
 
     @Autowired
     private CompetitionService competitionService;
@@ -88,6 +95,15 @@ public class CompetitionController {
     @GetMapping("/non-ifs")
     public RestResult<List<CompetitionSearchResultItem>> nonIfs() {
         return competitionService.findNonIfsCompetitions().toGetResponse();
+    }
+
+    @GetMapping("/{competitionId}/unsuccessful-applications")
+    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
+                                                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
+                                                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField) {
+
+        return competitionService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField).toGetResponse();
     }
 
     @GetMapping("/search/{page}/{size}")
@@ -180,4 +196,10 @@ public class CompetitionController {
                 .andOnSuccess(() -> applicationService.notifyApplicantsByCompetition(competitionId))
                 .toPutResponse();
     }
+
+    @GetMapping("/feedback-released")
+    public RestResult<List<CompetitionSearchResultItem>> feedbackReleased() {
+        return competitionService.findFeedbackReleasedCompetitions().toGetResponse();
+    }
+
 }

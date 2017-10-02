@@ -19,7 +19,7 @@ fractal.set('project.title', 'Innovate UK Front-end');
 ----------------------------------------------------------------------------- */
 
 /* Tell Fractal where the components will live */
-fractal.components.set('path', __dirname + '/ifs-web-core/src/main/resources/templates/fractal-components');
+fractal.components.set('path', __dirname + '/fractal-components');
 
 /* Set component file extensions */
 fractal.components.set('ext', '.html');
@@ -27,14 +27,6 @@ fractal.components.set('ext', '.html');
 /* Status to apply to all components unless overridden */
 fractal.components.set('default.status', 'wip');
 
-/* Fractal docs
------------------------------------------------------------------------------ */
-
-/* Tell Fractal where the documentation pages will live */
-fractal.docs.set('path', __dirname + '/ifs-web-core/src/main/resources/docs');
-
-/* Set the file extension for documentation files */
-fractal.docs.set('ext', '.md')
 
 /* Fractal web UI
 ----------------------------------------------------------------------------- */
@@ -43,7 +35,7 @@ fractal.docs.set('ext', '.md')
 fractal.web.theme(myCustomisedTheme);
 
 /* Specify a directory of static assets */
-fractal.web.set('static.path', __dirname + '/ifs-web-core/src/main/resources/static');
+fractal.web.set('static.path', __dirname + '/static');
 
 /* Specify a default preview file */
 fractal.components.set('default.preview', '@preview');

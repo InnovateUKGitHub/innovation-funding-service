@@ -16,7 +16,7 @@ Business opportunity Server-side validations setup questions
     And The user clicks the button/link    link=Business opportunity
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     When the user leaves all the question field empty
-    And The user clicks the button/link    jQuery=.button[value="Save and close"]
+    And The user clicks the button/link    css=.button[value="Save and close"]
     Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank.
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank.
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank.
@@ -69,7 +69,7 @@ Business opportunity: Autosave
 Business opportunity: Mark as done
     [Documentation]    INFUND-5629
     [Tags]    HappyPath
-    When The user clicks the button/link    jQuery=.button[value="Save and close"]
+    When The user clicks the button/link    css=.button[value="Save and close"]
     And the user clicks the button/link    link=Test Heading
     Then The user should see the text in the page    Test Heading
     And The user should see the text in the page    Test title
@@ -105,7 +105,7 @@ the user leaves all the question field empty
     the user moves focus and waits for autosave
     The user enters text to a text field    id=question.guidanceTitle    ${EMPTY}
     the user moves focus and waits for autosave
-    The user enters text to a text field    jQuery=[id="question.maxWords"]    ${EMPTY}
+    The user enters text to a text field    id=question.maxWords    ${EMPTY}
     the user moves focus and waits for autosave
 
 The user leaves all the assessment questions empty

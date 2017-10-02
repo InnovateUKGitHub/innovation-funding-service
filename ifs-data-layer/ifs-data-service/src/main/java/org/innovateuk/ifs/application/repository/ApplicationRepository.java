@@ -71,6 +71,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates);
 
+	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> applicationStates, Pageable pageable);
+
 	@Query(COMP_NOT_STATUS_FILTER)
 	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(@Param("compId") long competitionId,
 																					  @Param("states") Collection<State> applicationStates,
@@ -95,7 +97,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     int countByCompetitionId(long competitionId);
 
-	int countByCompetitionIdAndApplicationProcessActivityStateState(long competitionId, State applicationStates);
+	int countByCompetitionIdAndApplicationProcessActivityStateState(long competitionId, State applicationState);
 
 	int countByCompetitionIdAndApplicationProcessActivityStateStateIn(long competitionId, Collection<State> submittedStates);
 

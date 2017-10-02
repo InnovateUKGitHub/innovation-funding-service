@@ -37,7 +37,7 @@ Non-lead partner cannot upload either document
     [Tags]
     Given Log in as a different user   &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
+    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
     And The user should see the text in the page    Your Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -48,7 +48,7 @@ Lead partner cannot upload either document
     [Tags]
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
+    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
     And The user should see the text in the page    Your Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -62,8 +62,8 @@ PM cannot submit when both documents are not uploaded
     And the user clicks the button/link    link=Other documents
     And the user should see the text in the page   Only the Project Manager can upload and submit additional documents
     #Then the user should see the 2 Upload buttons
-    And the user should see the element    jQuery=label[for="collaborationAgreement"]
-    And the user should see the element    jQuery=label[for="exploitationPlan"]
+    And the user should see the element    css=label[for="collaborationAgreement"]
+    And the user should see the element    css=label[for="exploitationPlan"]
     Then the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
 
 
@@ -113,7 +113,7 @@ Lead partner can view both documents
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    link=status of my partners
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    the user navigates to the page    ${project_in_setup_page}
 
 Lead partner does not have the option to submit the mandatory documents
@@ -134,8 +134,8 @@ Non-lead partner can view both documents
     [Tags]
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user moves focus to the element  jQuery=ul li:nth-child(7)
-    And the user should see the element   jQuery=#content ul > li:nth-child(7) .msg-progress
+    Then the user moves focus to the element  css=ul li:nth-child(7)
+    And the user should see the element   css=#content ul > li:nth-child(7) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
@@ -143,7 +143,7 @@ Non-lead partner can view both documents
     Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
 
 Non-lead partner cannot remove or submit right
@@ -166,7 +166,7 @@ PM can view both documents
     Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
 
 PM can remove the second document
@@ -215,9 +215,9 @@ Status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011
     [Tags]    HappyPath
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should not see the element    jQuery=ul li.complete:nth-child(7)
+    Then the user should not see the element    css=ul li.complete:nth-child(7)
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 Mandatory document submission
     [Documentation]    INFUND-3011, INFUND-6152, INFUND-6139
@@ -234,10 +234,10 @@ Mandatory document submission
     And the user clicks the button/link    jQuery=.button:contains("Submit")
     When the user clicks the button/link    link=Project setup status
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the user should see the element    jQuery=ul li.waiting:nth-child(7)
+    And the user should see the element    css=ul li.waiting:nth-child(7)
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=status of my partners
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
     And the user goes back to the previous page
 
 PM can still view both documents after submitting
@@ -292,7 +292,7 @@ Non-lead partner can still view both documents after submitting
     Then the user goes back to the previous tab
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=status of my partners
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
+    And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
 
 CompAdmin can see uploaded files
     [Documentation]    INFUND-4621
@@ -301,11 +301,11 @@ CompAdmin can see uploaded files
     When the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element    jQuery=h2:contains("Projects in setup")
-    When the user clicks the button/link    jQuery=#table-project-status tr:nth-child(2) td:nth-child(7) a
+    When the user clicks the button/link    css=#table-project-status tr:nth-child(2) td:nth-child(7) a
     Then the user should see the text in the page    Collaboration agreement
-    When the user clicks the button/link    jQuery=.uploaded-file:nth-of-type(1)
+    When the user clicks the button/link    css=.uploaded-file:nth-of-type(1)
     Then the user should see the file without error
-    When the user clicks the button/link    jQuery=.uploaded-file:nth-of-type(2)
+    When the user clicks the button/link    css=.uploaded-file:nth-of-type(2)
     Then the user should see the file without error
 
 CompAdmin rejects other documents
@@ -355,7 +355,7 @@ After rejection, lead partner cannot upload either document
     [Tags]    HappyPath
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
+    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
     And The user should see the text in the page    Your Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -372,7 +372,7 @@ After rejection, lead partner can view both documents
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    link=status of my partners
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    the user navigates to the page    ${project_in_setup_page}
 
 After rejection, lead partner does not have the option to submit the mandatory documents
@@ -387,8 +387,8 @@ After rejection, non-lead partner cannot view both documents
     [Tags]    HappyPath
     Given log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user moves focus to the element  jQuery=ul li:nth-child(7)
-    And the user should see the element   jQuery=#content ul > li:nth-child(7) .msg-progress
+    Then the user moves focus to the element  css=ul li:nth-child(7)
+    And the user should see the element   css=#content ul > li:nth-child(7) .msg-progress
     And the user clicks the button/link    link=Other documents
     And the user clicks the button/link    link=${valid_pdf} (opens in a new window)
     Then the user goes back to the previous tab
@@ -396,16 +396,16 @@ After rejection, non-lead partner cannot view both documents
     Then the user goes back to the previous tab
     And the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 
 After rejection, status in the dashboard remains action required after uploads
     [Documentation]    INFUND-3011, INFUND-7342
     [Tags]    HappyPath
     When the user clicks the button/link    link=Project setup status
-    Then the user should not see the element    jQuery=ul li.complete:nth-child(7)
+    Then the user should not see the element    css=ul li.complete:nth-child(7)
     When the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 Project Manager can remove the offending documents
     [Documentation]    INFUND-7342
@@ -422,7 +422,7 @@ After rejection, non-lead partner cannot upload either document
     [Tags]
     [Setup]    log in as a different user   &{collaborator1_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=.progress-list ul > li.waiting:nth-of-type(7)
+    Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
     And The user should see the text in the page    Your Project Manager will need to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
@@ -459,8 +459,8 @@ After rejection, PM cannot submit when both documents are removed
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     #Then the user should see the 2 Upload buttons
-    And the user should see the element    jQuery=label[for="collaborationAgreement"]
-    And the user should see the element    jQuery=label[for="exploitationPlan"]
+    And the user should see the element    css=label[for="collaborationAgreement"]
+    And the user should see the element    css=label[for="exploitationPlan"]
     Then the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
 
 
@@ -490,7 +490,7 @@ After rejection, mandatory document submission
     And the user clicks the button/link    jQuery=.button:contains("Submit")
     When the user clicks the button/link    link=Project setup status
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the user should see the element    jQuery=ul li.waiting:nth-child(7)
+    And the user should see the element    css=ul li.waiting:nth-child(7)
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=status of my partners
 
@@ -526,9 +526,9 @@ Project finance can see zero funding for partner in bank details
     When partners submit bank details
     And log in as a different user                     &{collaborator1_credentials}
     And the user navigates to the page                 ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-checks/eligibility
-    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 200,903    # Total costs
-    And the user should see the text in the element     jQuery=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
-    And the user should see the text in the element     jQuery=.table-overview tr:nth-child(1) td:nth-child(4)     £ 0         # Funding sought
+    Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(2)    £ 200,903    # Total costs
+    And the user should see the text in the element     css=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
+    And the user should see the text in the element     css=.table-overview tr:nth-child(1) td:nth-child(4)     £ 0         # Funding sought
     When log in as a different user                     &{internal_finance_credentials}
     And the user navigates to the page                 ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
     Then the user should see the element                jQuery=.read-only span:contains("No action required")
@@ -576,7 +576,7 @@ CompAdmin can see Project status updated
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element    jQuery=tr:nth-child(2):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(6)
+    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(6)
 
 
 Status updates correctly for internal user's table
@@ -584,11 +584,11 @@ Status updates correctly for internal user's table
     [Tags]    Experian    HappyPath
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_competition_status}
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.ok
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.ok
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok
+    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.ok
+    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status
+    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action
+    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.ok
 
 *** Keywords ***
 

@@ -140,8 +140,9 @@ function tailorAppInstance() {
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/named-envs/*.yml
 
-    sed -i.bak "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" os-files-tmp/*.yml
-    sed -i.bak "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/*.yml
+    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/*.yml
+    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/shib/56-*.yml
+    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/shib/named-envs/56-*.yml
 
     if [[ ${TARGET} == "production" ]]
     then
@@ -170,9 +171,10 @@ function tailorAppInstance() {
 
     sed -i.bak "s/<<MAIL-ADDRESS>>/mail-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/mail/*.yml
     sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/spring-admin/*.yml
+    sed -i.bak "s/<<FRACTAL-ADDRESS>>/fractal-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/fractal/*.yml
 
-    if [[ ${TARGET} == "production" || ${TARGET} == "demo" || ${TARGET} == "uat" || ${TARGET} == "sysint" || ${TARGET} == "perf" ]]
-    then
+    if $(isNamedEnvironment ${TARGET}); then
+
         sed -i.bak "s/claimName: file-upload-claim/claimName: ${TARGET}-file-upload-claim/g" os-files-tmp/*.yml
 
         if [[ ${TARGET} == "demo" ]]
@@ -202,6 +204,47 @@ function tailorAppInstance() {
         fi
     fi
 
+    ## TODO DW - when we remove the tech debt of having multiple files for the shib yml files per named environment,
+    ## we can do away with this more complex configuration block and that of the one above that this one mirrors
+    if $(isNamedEnvironment ${TARGET}); then
+
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=int,dc=g2g3digital,dc=net#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=int,dc=g2g3digital,dc=net#g" os-files-tmp/45-registration-svc.yml
+
+        if [[ ${TARGET} == "demo" ]]
+        then
+            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_demo_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+        fi
+        if [[ ${TARGET} == "sysint" ]]
+        then
+            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_sysint_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+        fi
+        if [[ ${TARGET} == "perf" ]]
+        then
+            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_perf_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+        fi
+        if [[ ${TARGET} == "uat" ]]
+        then
+            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_uat_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+        fi
+        if [[ ${TARGET} == "production" ]]
+        then
+            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
+            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_production_ldap_password}/g" os-files-tmp/45-registration-svc.yml
+        fi
+    else
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldaps://ldap:389#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=nodomain#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=nodomain#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_PASSWORD>>#default#g" os-files-tmp/45-registration-svc.yml
+    fi
+
     if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
@@ -217,11 +260,13 @@ function useContainerRegistry() {
 
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/db-reset/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/fractal/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/db-anonymised-data/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/robot-tests/*.yml
 
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/db-reset/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/fractal/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/db-anonymised-data/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/shib/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/shib/named-envs/*.yml
@@ -229,6 +274,7 @@ function useContainerRegistry() {
 
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/db-reset/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/fractal/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/db-anonymised-data/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/shib/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/shib/named-envs/*.yml
@@ -256,6 +302,8 @@ function pushApplicationImages() {
         ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
     docker tag innovateuk/ldap-service:latest \
         ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
+    docker tag innovateuk/registration-service:latest \
+        ${REGISTRY}/${PROJECT}/registration-service:${VERSION}
 
     docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
 
@@ -269,16 +317,27 @@ function pushApplicationImages() {
     docker push ${REGISTRY}/${PROJECT}/sp-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
+    docker push ${REGISTRY}/${PROJECT}/registration-service:${VERSION}
 }
 
 function pushDBResetImages() {
-    docker tag innovateuk/dbreset:${VERSION} \
+    docker tag innovateuk/dbreset:latest \
         ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
 
     docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
 
     docker push ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
 }
+
+function pushFractalImages() {
+    docker tag innovateuk/fractal:latest \
+        ${REGISTRY}/${PROJECT}/fractal:${VERSION}
+
+    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
+
+    docker push ${REGISTRY}/${PROJECT}/fractal:${VERSION}
+}
+
 
 function pushAnonymisedDatabaseDumpImages() {
     docker tag innovateuk/db-anonymised-data:${VERSION} \
@@ -287,6 +346,18 @@ function pushAnonymisedDatabaseDumpImages() {
     docker login -p ${REGISTRY_TOKEN} -e unused -u unused ${REGISTRY}
 
     docker push ${REGISTRY}/${PROJECT}/db-anonymised-data:${VERSION}
+}
+
+function blockUntilServiceIsUp() {
+    UNREADY_PODS=1
+    while [ ${UNREADY_PODS} -ne "0" ]
+    do
+        UNREADY_PODS=$(oc get pods  ${SVC_ACCOUNT_CLAUSE} -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
+        oc get pods ${SVC_ACCOUNT_CLAUSE}
+        echo "$UNREADY_PODS pods still not ready"
+        sleep 5s
+    done
+    oc get routes ${SVC_ACCOUNT_CLAUSE}
 }
 
 function cloneConfig() {

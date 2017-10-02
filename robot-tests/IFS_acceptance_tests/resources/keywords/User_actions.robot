@@ -81,7 +81,6 @@ the address fields should be filled with dummy data
     Textfield Should Contain    id=addressForm.selectedPostcode.county    Cheshire
     Textfield Should Contain    id=addressForm.selectedPostcode.postcode    CH64 3RU
 
-
 the user submits their information
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     the user selects the checkbox    termsAndConditions
@@ -101,12 +100,10 @@ the user cannot login with either password
     Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your email/password combination doesn't seem to work.
 
-
 the lead applicant invites a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     run keyword if    ${smoke_test}!=1    invite a registered user    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     run keyword if    ${smoke_test}==1    invite a new academic    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-
 
 invite a new academic
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
@@ -119,7 +116,6 @@ invite a new academic
     the user enters text to a text field    name=organisations[1].invites[0].personName    Academic User
     the user enters text to a text field    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
     the user clicks the button/link    jQuery=.button:contains("Save changes")
-
 
 the user should see that the element is disabled
     [Arguments]    ${element}

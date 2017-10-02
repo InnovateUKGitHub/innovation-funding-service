@@ -45,6 +45,10 @@ ShibCompatValidUser On
     Require local
   </Location>
 
+  <Location ~ "^/monitoring/benchmark/.*">
+    Require local
+  </Location>
+
   # Errors & holding pages
   <Location /holding>
     ProxyPass !
@@ -188,7 +192,6 @@ ShibCompatValidUser On
     require shibboleth
   </Location>
 
-
   # if that becomes a bigger requirement we might have to rethink it (using glusterfs?)
   <Location /files>
     ProxyPass !
@@ -204,7 +207,6 @@ ShibCompatValidUser On
   RewriteRule . - [E=RU:%1]
   RequestHeader set REMOTE_USER %{RU}e
   ProxyPass /Shibboleth.sso !
-  ProxyPass /balancer-manager !
   ProxyPass /Logout !
 
   ProxyPass  /assessment/ ajp://assessment-svc:8009/assessment/ timeout=30 connectiontimeout=30 retry=2

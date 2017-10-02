@@ -1,19 +1,5 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import org.apache.tools.ant.filters.ReplaceTokens
-
-apply plugin: 'docker'
-
-buildscript {
-    repositories { mavenCentral() }
-    dependencies {
-        classpath "se.transmode.gradle:gradle-docker:1.2"
-    }
-}
-
-dependencies{
-    runtime project(path: ':ifs-auth-service:ifs-registration-service', configuration: 'war')
-}
-
-def String oracleJdkDomain = project.properties['oracle.jdk.domain'] ?:"http://download.oracle.com"
 
 def String idpCertsVolume = 'src/main/docker/certs'
 
@@ -29,14 +15,61 @@ def String idpEncryptionKeyFile = "${idpCertsVolume}/idp-encryption.key"
 def String idpEncryptionCertificateFile = "${idpCertsVolume}/idp-encryption.crt"
 
 def String ldapEncryptionCertificateFile = "${idpCertsVolume}/ldap-encryption.crt"
-def String authIdpRegapiKey = project.properties['auth.idp.regapikey'] ?:"1234567890"
 def String javaKeystorePassword = project.properties['java.keystore.password'] ?:"changeit"
 
+task getNewRelicAgent {
+    if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
+         !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists() ) {
+        exec {
+            executable = 'curl'
+            args = ['--connect-timeout', '30',
+                    '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar",
+                    'https://tools.innovateuk.org/holding/newrelic/newrelic.jar'
+            ]
+        }
+        exec {
+            executable = 'curl'
+            args = ['--connect-timeout', '30',
+                    '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml",
+                    'https://tools.innovateuk.org/holding/newrelic/newrelic.yml'
+            ]
+        }
+    }
+}
+
+task prepareDockerFileBase {
+    def inputDir = project.file("$project.buildDir/docker-base")
+
+    doFirst {
+        copy {
+            from 'src/main/docker/'
+            into inputDir
+            include 'Dockerfile-base-template'
+            rename 'Dockerfile-base-template', 'Dockerfile'
+        }
+
+        copy {
+            from fileTree('src/main/docker/idp')
+            into "${inputDir}/idp"
+        }
+
+        copy {
+            from file('src/main/docker/idp/default-jre-headless-dummy_1.0_all.deb')
+            into "${inputDir}/idp"
+        }
+    }
+}
+
+task buildDockerBaseImage(type: DockerBuildImage) {
+    dependsOn prepareDockerFileBase
+
+    tag = 'ifshibdev/idp-base:latest'
+    inputDir = project.file("$project.buildDir/docker-base")
+}
 
 task prepareDockerFile {
     dependsOn ':ifs-auth-service:prepareSecrets'
-
-    outputs.upToDateWhen { false }
+    dependsOn getNewRelicAgent
 
     def String idpProxyKey = file(idpProxyKeyFile).text.trim().replace('\n', '\\n')
     def String idpProxyCertificate = file(idpProxyCertificateFile).text.trim().replace('\n', '\\n')
@@ -51,88 +84,67 @@ task prepareDockerFile {
 
     def String ldapEncryptionCertificate = file(ldapEncryptionCertificateFile).text.trim().replace('\n', '\\n')
 
-    copy {
-        from 'src/main/docker/'
-        into 'src/main/docker/'
-        include 'Dockerfile-base-template'
-        rename 'Dockerfile-base-template', 'Dockerfile-base'
-        filter(ReplaceTokens, tokens: [oracle_jdk_domain: oracleJdkDomain])
-    }
+    def inputDir = project.file("$project.buildDir/docker")
 
-    copy {
-        from 'src/main/docker/'
-        into 'src/main/docker/'
-        include 'Dockerfile-template'
-        rename 'Dockerfile-template', 'Dockerfile'
-        filter(ReplaceTokens, tokens: [auth_idp_regapikey: authIdpRegapiKey,
-                                       auth_idp_proxy_key: idpProxyKey,
-                                       auth_idp_proxy_certificate: idpProxyCertificate,
-                                       auth_idp_proxy_cacertificate: idpProxyCacertificate,
-                                       auth_sp_proxy_certificate: spProxyCertificate,
-                                       auth_idp_signing_key: idpSigningKey,
-                                       auth_idp_signing_certificate: idpSigningCertificate,
-                                       auth_idp_encryption_key: idpEncryptionKey,
-                                       auth_idp_encryption_certificate: idpEncryptionCertificate,
-                                       auth_ldap_encryption_certificate: ldapEncryptionCertificate,
-                                       java_keystore_password: javaKeystorePassword,
-                                       version: project.properties['version']])
-   }
-}
-
-task buildDockerBaseImage(type: Docker) {
-    dependsOn ':ifs-auth-service:ifs-registration-service:build'
-    dependsOn prepareDockerFile
-
-    push = false
-    applicationName = 'idp-base'
-    dockerfile = file('src/main/docker/Dockerfile-base')
     doFirst {
         copy {
-            from file('src/main/docker/idp/default-jre-headless-dummy_1.0_all.deb')
-            into "${stageDir}/idp"
+             from 'src/main/docker/'
+             into inputDir
+             include 'Dockerfile-template'
+             rename 'Dockerfile-template', 'Dockerfile'
+             filter(ReplaceTokens, tokens: [auth_idp_proxy_key: idpProxyKey,
+                                            auth_idp_proxy_certificate: idpProxyCertificate,
+                                            auth_idp_proxy_cacertificate: idpProxyCacertificate,
+                                            auth_sp_proxy_certificate: spProxyCertificate,
+                                            auth_idp_signing_key: idpSigningKey,
+                                            auth_idp_signing_certificate: idpSigningCertificate,
+                                            auth_idp_encryption_key: idpEncryptionKey,
+                                            auth_idp_encryption_certificate: idpEncryptionCertificate,
+                                            auth_ldap_encryption_certificate: ldapEncryptionCertificate,
+                                            java_keystore_password: javaKeystorePassword,
+                                            version: project.properties['version']])
         }
-    }
-}
 
-task buildDocker(type: Docker) {
-    dependsOn ':ifs-auth-service:ifs-registration-service:build'
-    dependsOn prepareDockerFile
-
-    push = false
-    applicationName = 'idp-service'
-    dockerfile = file('src/main/docker/Dockerfile')
-    tagVersion = 'latest'
-    doFirst {
         copy {
             from fileTree('src/main/docker/apache')
-            into "${stageDir}/apache"
+            into "${inputDir}/apache"
         }
+
         copy {
             from fileTree('src/main/docker/idp')
-            into "${stageDir}/idp"
+            into "${inputDir}/idp"
         }
+
         copy {
             from fileTree('src/main/docker/scripts')
-            into "${stageDir}/scripts"
+            into "${inputDir}/scripts"
         }
+
         copy {
             from fileTree('src/main/docker/pages')
-            into "${stageDir}/pages"
+            into "${inputDir}/pages"
         }
+
         copy {
             from file('src/main/docker/default-jre-headless-dummy_1.0_all.deb')
-            into stageDir
+            into inputDir
         }
+
         copy {
             from fileTree('src/main/docker/certs')
-            into "${stageDir}/certs"
+            into "${inputDir}/certs"
         }
-        configurations.runtime.setTransitive(false).resolvedConfiguration.resolvedArtifacts
-                .each { artifact ->
-            project.copy {
-                from artifact.file
-                into "${stageDir}/idp"
-            }
+
+        copy {
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
+            into inputDir
         }
     }
+}
+
+task buildDocker(type: DockerBuildImage, dependsOn: prepareDockerFile) {
+
+    inputDir = project.file("$project.buildDir/docker")
+    tag = 'innovateuk/idp-service:latest'
 }

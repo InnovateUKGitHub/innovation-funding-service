@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isSystemMaintenanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isSystemMaintenanceUser;
 
 /**
  * Provides the permissions around CRUD operations for {@link org.innovateuk.ifs.alert.domain.Alert} resources.

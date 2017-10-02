@@ -4,7 +4,7 @@ allprojects {
 
     apply plugin: 'idea'
     apply plugin: 'java'
-    apply plugin: 'docker'
+    apply plugin: 'com.bmuschko.docker-remote-api'
     apply plugin: 'com.github.ben-manes.versions'
 
 
@@ -115,7 +115,7 @@ buildscript {
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath 'org.owasp:dependency-check-gradle:1.4.5'
         classpath "com.avast.gradle:docker-compose-gradle-plugin:0.4.5"
-        classpath "se.transmode.gradle:gradle-docker:1.2"
+        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
         classpath 'net.researchgate:gradle-release:2.6.0'
         classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
@@ -184,6 +184,10 @@ dockerCompose {
 
     if (project.hasProperty('ifs.admin.enabled') ? project.property('ifs.admin.enabled').toBoolean() : false) {
         useComposeFiles.add('docker-compose-admin-console.yml')
+    }
+
+    if (project.hasProperty('ifs.fractal.enabled') ? project.property('ifs.fractal.enabled').toBoolean() : false) {
+        useComposeFiles.add('docker-compose-fractal.yml')
     }
 
     removeContainers = false

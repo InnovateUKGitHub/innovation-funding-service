@@ -148,7 +148,7 @@ Support User can see read only summary link for each partner
 Support User can see read only summary for lead
     [Documentation]  IFS-401
     [Tags]  Support
-    [Setup]  The user clicks the button/link       jQuery=.finance-summary tbody tr:nth-of-type(1) th a
+    [Setup]  The user clicks the button/link       css=.finance-summary tbody tr:nth-of-type(1) th a
     When the user should see the text in the page  Please complete your project finances.
     Then the finance summary table in Your Finances has correct values for lead
 
@@ -185,7 +185,7 @@ Support User can see read only view of Your organisation
     When the user clicks the button/link           jQuery=a:contains("Your organisation")
     Then the user should see the text in the page  Organisation size
     And the user should see the element            jQuery=dt:contains("Turnover") + dd:contains("150")
-    And the user should see the element            jQuery=dt:contains("employees") + dd:contains("0")
+    And the user should see the element            jQuery=dt:contains("employees") + dd:contains("3")
 
 Support User can see read only view of Your funding
     [Documentation]  IFS-401
@@ -210,7 +210,7 @@ Innovation lead can see read only summary link for each partner
 Innovation lead can see read only summary for lead
     [Documentation]  IFS-802
     [Tags]  InnovationLead
-    [Setup]  The user clicks the button/link  jQuery=.finance-summary tbody tr:nth-of-type(1) th a
+    [Setup]  The user clicks the button/link  css=.finance-summary tbody tr:nth-of-type(1) th a
     When the user should see the text in the page       Please complete your project finances.
     Then the finance summary table in Your Finances has correct values for lead
 
@@ -245,7 +245,7 @@ Innovation lead can see read only view of Your organisation
     When the user clicks the button/link           jQuery=a:contains("Your organisation")
     Then the user should see the text in the page  Organisation size
     And the user should see the element            jQuery=dt:contains("Turnover") + dd:contains("150")
-    And the user should see the element            jQuery=dt:contains("employees") + dd:contains("0")
+    And the user should see the element            jQuery=dt:contains("employees") + dd:contains("3")
 
 Innovation lead can see read only view of Your funding
     [Documentation]  IFS-802

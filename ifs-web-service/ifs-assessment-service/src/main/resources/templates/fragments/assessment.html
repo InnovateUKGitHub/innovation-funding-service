@@ -109,6 +109,76 @@
     </div>
 </div>
 
+
+<!-- ======== Assessment - reject assessment modal ======= -->
+<div th:fragment="assessment-reject-assessment-modal (assessmentId)">
+    <div class="reject-assessment-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+
+        <th:block th:insert="fragments/assessment :: assessment-reject-application-form (assessmentId=${assessmentId})" />
+    </div>
+</div>
+
+
+<!-- ======== Assessment - reject assessment form for modal and non-js page ======= -->
+<div th:fragment="assessment-reject-application-form (assessmentId)">
+    <form action="#" th:action="@{/{assessmentId}/reject(assessmentId=${assessmentId})}" method="post" th:object="${form}" novalidate="novalidate">
+        <h2 class="heading-medium no-margin">Reject assessment</h2>
+        <div class="error-summary" th:if="${#fields.hasErrors('global')}">
+            <h2 class="heading-medium error-summary-heading">We were unable to reject the assessment:</h2>
+            <ul class="error-summary-list">
+                <li th:each="err : ${#fields.errors('global')}" th:text="${err}"></li>
+            </ul>
+        </div>
+
+        <div class="form-group" th:classappend="${#fields.hasErrors('rejectReason')} ? 'form-group-error'">
+            <label class="form-label" th:for="rejectReason">
+                Please select a reason for rejecting the application
+                <th:block th:if="${#fields.hasErrors('rejectReason')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}"></span>
+                </th:block>
+            </label>
+            <select class="form-control"
+                    th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}"
+                    th:errorclass="form-control-error"
+                    required="required"
+                    th:field="*{rejectReason}">
+                <option value="">Select a reason</option>
+                <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
+                        th:value="${reason}"
+                        th:text="${reason.displayLabel}">Conflict of interest</option>
+            </select>
+        </div>
+        <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')} ? 'form-group-error'">
+            <label class="form-label" th:for="rejectComment">
+                Use this space to provide more information
+                <th:block th:if="${#fields.hasErrors('rejectComment')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}"></span>
+                </th:block>
+            </label>
+            <textarea
+                class="form-control width-full"
+                maxlength="5000"
+                data-max_words="100"
+                data-maxwordslength="100"
+                data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
+                th:errorclass="form-control-error"
+                rows="4"
+                th:field="*{rejectComment}"></textarea>
+            <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
+                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
+            </div>
+        </div>
+        <hr />
+        <div>
+            <button class="button" name="submit-app-details">Reject</button>
+            <button class="js-close buttonlink" type="button">Cancel</button>
+        </div>
+    </form>
+</div>
+
+
 <!-- ======== Confirmation assessment submissions ======= -->
 <div th:fragment="modal-submit-assessments">
     <div class="modal-submit-assessments" role="dialog" aria-hidden="true">
