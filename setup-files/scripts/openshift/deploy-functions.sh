@@ -132,6 +132,17 @@ function injectLDAPVariables() {
 }
 
 function tailorAppInstance() {
+
+    if ! $(isNamedEnvironment $TARGET); then
+
+        export LDAP_URL="ldaps://ldap:8389"
+        export LDAP_PASSWORD="default"
+
+        # not necessary to have here as they have default values, but included here for clarity
+        # export SHIBBOLETH_MEMCACHE_ENDPOINT=
+        # export GA_TRACKING_ID=
+    fi
+
     if [ -z "$SSLCERTFILE" ]; then echo "Set SSLCERTFILE, SSLCACERTFILE, and SSLKEYFILE environment variables"; exit -1; fi
     sed -i.bak -e $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
     sed -i.bak -e $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/named-envs/*.yml
