@@ -4,6 +4,7 @@ import org.innovateuk.ifs.shibboleth.api.ApiProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,9 @@ import org.springframework.security.web.authentication.preauth.RequestHeaderAuth
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final Logger LOG = LoggerFactory.getLogger(WebSecurityConfig.class);
+
+    @Value("management.contextPath")
+    private String monitoringEndpoint;
 
     @Autowired
     private ApiProperties apiProperties;
@@ -49,7 +53,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
             sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().
 
-            authorizeRequests().anyRequest().fullyAuthenticated().and().
+            authorizeRequests().
+
+                antMatchers(monitoringEndpoint+"/**").permitAll().
+
+                anyRequest().fullyAuthenticated().and().
 
             authenticationProvider(preAuthProvider()).
 
