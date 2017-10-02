@@ -37,7 +37,7 @@ ${openCompetitionBusinessRTO_name}      Home and industrial efficiency programme
 ${openCompetitionBusinessRTO}           ${competition_ids['${openCompetitionBusinessRTO_name}']}
 ${openCompetitionBusinessRTO_overview}  ${SERVER}/competition/${openCompetitionBusinessRTO}/overview/
 
-${openCompetitionPublicSector_name}  Photonics for RTO
+${openCompetitionPublicSector_name}  Photonics for Public
 ${openCompetitionPublicSector}       ${competition_ids['${openCompetitionPublicSector_name}']}
 
 ${openCompetitionResearch_name}  Photonics for Research

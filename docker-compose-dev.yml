@@ -1,6 +1,14 @@
 version: '3'
 services:
 
+  registration-svc:
+    hostname: registration-svc
+    ports:
+      - "8088:8080"
+      - "9008:8000"
+    environment:
+      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+
   application-svc:
     hostname: application-svc
     ports:

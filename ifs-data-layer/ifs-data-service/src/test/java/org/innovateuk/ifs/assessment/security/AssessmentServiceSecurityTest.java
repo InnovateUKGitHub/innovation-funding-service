@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelInviteStatisticsResource;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
@@ -109,6 +110,20 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         long competitionId = 1L;
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countByStateAndCompetition(state, competitionId), COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD);
+    }
+
+    @Test
+    public void getAssessmentPanelKeyStatistics() {
+        long competitionId = 1L;
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessmentPanelKeyStatistics(competitionId), COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
+    public void getAssessmentPanelInviteStatistics() {
+        long competitionId = 1L;
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessmentPanelInviteStatistics(competitionId), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -233,6 +248,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         @Override
         public ServiceResult<AssessmentPanelKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<AssessmentPanelInviteStatisticsResource> getAssessmentPanelInviteStatistics(long competitionId) {
             return null;
         }
 
