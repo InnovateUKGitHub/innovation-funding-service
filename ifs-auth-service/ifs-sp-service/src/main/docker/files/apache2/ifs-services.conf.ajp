@@ -207,7 +207,6 @@ ShibCompatValidUser On
   RewriteRule . - [E=RU:%1]
   RequestHeader set REMOTE_USER %{RU}e
   ProxyPass /Shibboleth.sso !
-  ProxyPass /balancer-manager !
   ProxyPass /Logout !
 
   ProxyPass  /assessment/ ajp://assessment-svc:8009/assessment/ timeout=30 connectiontimeout=30 retry=2
