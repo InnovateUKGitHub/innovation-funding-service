@@ -241,11 +241,11 @@ How to apply: User enters valid values and saves
     Given the internal user navigates to public content     ${public_content_competition_name}
     When the user clicks the button/link                    link=How to apply
     And the user enters valid data in How-to-apply details
-    Then the user enters text to a text field               css=.contentGroup:first-of-type input[id^="heading"]   The application process
+    Then the user enters text to a text field               css=.contentGroup:first-of-type input[id^="contentGroups"][id$="heading"]   The application process
     And the user enters text to a text field                css=.contentGroup:first-of-type .editor   External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.
     And the user uploads the file                           css=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
     Then the user clicks the button/link                    jQuery=button:contains("+ add new section")
-    And The user enters text to a text field                css=.contentGroup:nth-of-type(2) input[id^="heading"]   Application questions
+    And The user enters text to a text field                css=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="heading"]   Application questions
     And The user enters text to a text field                css=.contentGroup:nth-of-type(2) .editor    Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765 or email us at support@innovateTest.worth.com
     And the user uploads the file                           css=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link                    jQuery=button:contains("Save and review")
