@@ -496,15 +496,13 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         InOrder inOrder = inOrder(competitionRepositoryMock, assessmentPanelInviteRepositoryMock, userRepositoryMock, roleRepositoryMock, competitionParticipantRepositoryMock, notificationSenderMock);
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(assessmentPanelInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
-        // inOrder.verify(userRepositoryMock.findByEmail("john@email.com"));
-        inOrder.verify(userRepositoryMock).findByEmail(emails.get(0));
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
-        inOrder.verify(userRepositoryMock).findByEmail(emails.get(1));
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
 
         inOrder.verifyNoMoreInteractions();
     }
 
+    @Test
     public void getAllInvitesToSend() throws Exception {
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
@@ -518,11 +516,10 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withAssessorDeadlineDate(deadlineDate)
                 .build();
 
-        List<CompetitionInvite> invites = newCompetitionInvite()
+        List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
                 .withCompetition(competition)
                 .withEmail(emails.get(0), emails.get(1))
                 .withHash(Invite.generateInviteHash())
-                .withInnovationArea(innovationArea)
                 .withName(names.get(0), names.get(1))
                 .withStatus(CREATED)
                 .withUser(new User())
@@ -534,10 +531,10 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
         NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
 
-        String templatePath = "invite_assessor_preview_text.txt";
+        String templatePath = "invite_assessors_to_assessors_panel_text.txt";
 
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-        when(competitionInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
+        when(assessmentPanelInviteRepositoryMock.getByCompetitionIdAndStatus(competition.getId(), CREATED)).thenReturn(invites);
         when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath,
                 expectedNotificationArguments)).thenReturn(serviceSuccess("content"));
 
