@@ -71,7 +71,7 @@ items:
           - name: MPM_MAXCONNECTIONSPERCHILD
             value: "0"
           - name: MEMCACHE_ENDPOINT
-            value: "cluster5-memcached01.l8op6o.cfg.euw2.cache.amazonaws.com:11211"
+            value: "<<SHIBBOLETH-MEMCACHE-ENDPOINT>>"
           ports:
           - containerPort: 9443
           - containerPort: 9080
