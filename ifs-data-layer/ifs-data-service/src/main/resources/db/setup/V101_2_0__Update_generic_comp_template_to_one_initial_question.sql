@@ -1,5 +1,5 @@
 /* Find the current the generic competition type and project details section ids */
-SET @generic_template_id = 4;
+SET @generic_template_id = (SELECT `id` FROM competition WHERE name='Template for the Generic competition type');
 SET @project_details_questions_section = (SELECT `id` FROM section WHERE name='Application questions' AND competition_id=@generic_template_id);
 
 /* Remove all current application questions and attached validators/guidance rows from generic competition type */
