@@ -14,7 +14,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${currentSection.toString() == 'HOME'}" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${competition.id})}" th:if="${currentSection.toString() != 'HOME'}" />
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${editable} ? |Edit '${competitionSetupForm.question.shortTitle}'| : ${competitionSetupForm.question.shortTitle},subTitle=${competitionName},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${competitionSetupForm.question.shortTitle != null} ? ${competitionSetupForm.question.shortTitle} : #{ifs.application.question.no_heading},subTitle=${competitionName},size='heading-xlarge'" />
 
     <p class="extra-margin">
         You can edit this question for the applicant as well as the guidance for assessors.
