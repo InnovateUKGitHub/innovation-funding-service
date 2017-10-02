@@ -34,7 +34,7 @@ function upgradeServices {
 
     # shib & idp
     if $(isNamedEnvironment $TARGET); then
-        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/56-${TARGET}-idp.yml
+        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/56-idp.yml
         oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/5-${TARGET}-shib.yml
     else
         oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/56-idp.yml
