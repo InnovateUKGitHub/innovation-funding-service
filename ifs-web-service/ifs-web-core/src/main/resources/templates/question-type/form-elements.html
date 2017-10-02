@@ -165,7 +165,7 @@
 
 <th:block th:fragment="form-finance-textarea (type, id, name, value,readonly,required)">
 		<textarea  class="form-control"
-                th:id="${'cost-'+ type + '-'+id+'-'+name}"
+                th:id="|formInput[cost-${id}-${name}]|"
                 th:name="${(id == null) ? type +'-'+name+'-'+question.id : type +'-'+name+'-'+question.id+'-' + id}"
                 th:text="${value}"
                 maxlength="255"
