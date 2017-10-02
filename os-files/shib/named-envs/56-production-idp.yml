@@ -70,7 +70,7 @@ items:
           - name: MEMCACHE_ENDPOINT
             value: "cluster5-memcached01.l8op6o.cfg.euw2.cache.amazonaws.com:11211"
           - name: LDAP_URL
-            value: "ldap://oldap.org.iuk.local:389"
+            value: "<<LDAP-URL>>"
           - name: LDAP_USESTARTTLS
             value: "false"
           - name: LDAP_USESSL

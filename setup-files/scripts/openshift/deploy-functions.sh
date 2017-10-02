@@ -183,6 +183,10 @@ function tailorAppInstance() {
     sed -i.bak "s/<<LDAP-PASSWORD>>/${LDAP_PASSWORD}/g" os-files-tmp/shib/*.yml
     sed -i.bak "s/<<LDAP-PASSWORD>>/${LDAP_PASSWORD}/g" os-files-tmp/shib/named-envs*.yml
 
+    if [ -z "${LDAP_URL}" ]; then echo "Set LDAP_URL environment variable"; exit -1; fi
+    sed -i.bak "s/<<LDAP-URL>>/${LDAP_URL}/g" os-files-tmp/shib/*.yml
+    sed -i.bak "s/<<LDAP-URL>>/${LDAP_URL}/g" os-files-tmp/shib/named-envs*.yml
+
     ## TODO DW - when we remove the tech debt of having multiple files for the shib yml files per named environment,
     ## we can do away with this more complex configuration block and that of the one above that this one mirrors
     if $(isNamedEnvironment ${TARGET}); then
