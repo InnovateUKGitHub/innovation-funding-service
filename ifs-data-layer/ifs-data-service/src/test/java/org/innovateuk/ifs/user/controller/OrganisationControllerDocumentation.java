@@ -14,6 +14,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -85,6 +86,22 @@ public class OrganisationControllerDocumentation extends BaseControllerMockMVCTe
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(organisationResource)))
                 .andExpect(status().isCreated())
+                .andDo(document("organisation/{method-name}",
+                        requestFields(organisationResourceFields),
+                        responseFields(organisationResourceFields)
+                ));
+    }
+
+    @Test
+    public void saveResource() throws Exception {
+        OrganisationResource organisationResource = organisationResourceBuilder.build();
+
+        when(organisationServiceMock.update(organisationResource)).thenReturn(serviceSuccess(organisationResource));
+
+        mockMvc.perform(put("/organisation/update")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(organisationResource)))
+                .andExpect(status().isOk())
                 .andDo(document("organisation/{method-name}",
                         requestFields(organisationResourceFields),
                         responseFields(organisationResourceFields)

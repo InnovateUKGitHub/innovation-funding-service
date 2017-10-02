@@ -5,26 +5,26 @@ items:
   kind: DeploymentConfig
   metadata:
     creationTimestamp: null
-    name: data-service
+    name: registration-svc
   spec:
     replicas: 1
     selector:
-      deploymentconfig: data-service
+      deploymentconfig: registration-svc
     strategy:
       type: Rolling
       rollingParams:
         timeoutSeconds: 600
-        maxSurge: 1 #So Flyway runs on one thread at a time
+        maxSurge: 2
         maxUnavailable: 0
     template:
       metadata:
         creationTimestamp: null
         labels:
-          deploymentconfig: data-service
+          deploymentconfig: registration-svc
       spec:
         containers:
-        - image: innovateuk/data-service:1.0-SNAPSHOT
-          name: data-service
+        - image: innovateuk/registration-service:1.0-SNAPSHOT
+          name: registration-svc
           livenessProbe:
             httpGet:
               path: /monitoring/health
@@ -38,57 +38,55 @@ items:
             httpGet:
               path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 40
+            initialDelaySeconds: 60
             periodSeconds: 5
             timeoutSeconds: 5
             successThreshold: 1
             failureThreshold: 1
           imagePullPolicy: Always
           env:
-          - name: IFS_WEB_BASEURL
-            value: 'https://<<SHIB-ADDRESS>>'
-          - name: IDP_REST_BASEURL
-            value: 'http://registration-svc:8080'
           - name: JAVA_OPTS
-            value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
+            value: -Xms256m -Xmx650m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-data-service (<<NEWRELIC-ENVIRONMENT>>)"
+            value: "ifs-registration-service (<<NEWRELIC-ENVIRONMENT>>)"
           - name: NEW_RELIC_LICENSE_KEY
             value: "<<NEWRELIC-LICENCE-KEY>>"
           - name: NEW_RELIC_LOG
             value: "STDOUT"
-          - name: SPRING_DATASOURCE_TOMCAT_MAX_ACTIVE
-            value: "100"
+          - name: SHIBBOLETH_LDAP_URL
+            value: "<<SHIBBOLETH_LDAP_URL>>"
+          - name: SHIBBOLETH_LDAP_PORT
+            value: "<<SHIBBOLETH_LDAP_PORT>>"
+          - name: SHIBBOLETH_LDAP_BASE_DN
+            value: "<<SHIBBOLETH_LDAP_BASE_DN>>"
+          - name: SHIBBOLETH_LDAP_USER
+            value: "<<SHIBBOLETH_LDAP_USER>>"
+          - name: SHIBBOLETH_LDAP_PASSWORD
+            value: "<<SHIBBOLETH_LDAP_PASSWORD>>"
+          - name: SHIBBOLETH_API_KEYS
+            value: "1234567890"
           ports:
           - containerPort: 8080
           resources:
-            limits:
-              cpu: 2000m
             requests:
-              cpu: 400m
-              memory: 1500M
-          volumeMounts:
-          - mountPath: /mnt/ifs_storage
-            name: dir-1
-        volumes:
-          - name: dir-1
-            persistentVolumeClaim:
-              claimName: file-upload-claim
+              memory: 512M
+            limits:
+              memory: 768M
     test: false
     triggers:
     - type: ConfigChange
-  status: {}
+    status: {}
 - apiVersion: v1
   kind: Service
   metadata:
     creationTimestamp: null
-    name: data-service
+    name: registration-svc
   spec:
     ports:
     - name: 8080-tcp
       port: 8080
       targetPort: 8080
     selector:
-      deploymentconfig: data-service
+      deploymentconfig: registration-svc
   status:
     loadBalancer: {}

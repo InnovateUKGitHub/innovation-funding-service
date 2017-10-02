@@ -35,17 +35,17 @@ include::{snippets}/organisation/get-primary-for-user/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/organisation/get-primary-for-user/curl-request.adoc[]
 
-=== Create organisation
+=== Create or match organisation
 ==== Request
-include::{snippets}/organisation/create/http-request.adoc[]
-include::{snippets}/organisation/create/request-fields.adoc[]
+include::{snippets}/organisation/create-or-match/http-request.adoc[]
+include::{snippets}/organisation/create-or-match/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/organisation/create/http-response.adoc[]
-include::{snippets}/organisation/create/response-fields.adoc[]
+include::{snippets}/organisation/create-or-match/http-response.adoc[]
+include::{snippets}/organisation/create-or-match/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/organisation/create/curl-request.adoc[]
+include::{snippets}/organisation/create-or-match/curl-request.adoc[]
 
 === Update organisation
 ==== Request
@@ -72,16 +72,15 @@ include::{snippets}/organisation/update-name-and-registration/response-fields.ad
 ==== Curl Example
 include::{snippets}/organisation/update-name-and-registration/curl-request.adoc[]
 
-=== Add address
+=== Create and link by invite
 ==== Request
-include::{snippets}/organisation/add-address/http-request.adoc[]
-include::{snippets}/organisation/add-address/path-parameters.adoc[]
-include::{snippets}/organisation/add-address/request-parameters.adoc[]
-include::{snippets}/organisation/add-address/request-fields.adoc[]
+include::{snippets}/organisation/create-and-link-by-invite/http-request.adoc[]
+include::{snippets}/organisation/create-and-link-by-invite/request-parameters.adoc[]
+include::{snippets}/organisation/create-and-link-by-invite/request-fields.adoc[]
 
 ==== Response
-include::{snippets}/organisation/add-address/http-response.adoc[]
-include::{snippets}/organisation/add-address/response-fields.adoc[]
+include::{snippets}/organisation/create-and-link-by-invite/http-response.adoc[]
+include::{snippets}/organisation/create-and-link-by-invite/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}/organisation/add-address/curl-request.adoc[]
+include::{snippets}/organisation/create-and-link-by-invite/curl-request.adoc[]
