@@ -191,6 +191,10 @@ function tailorAppInstance() {
     sed -i.bak "s/<<SHIBBOLETH-MEMCACHE-ENDPOINT>>/${SHIBBOLETH_MEMCACHE_ENDPOINT}/g" os-files-tmp/shib/*.yml
     sed -i.bak "s/<<SHIBBOLETH-MEMCACHE-ENDPOINT>>/${SHIBBOLETH_MEMCACHE_ENDPOINT}/g" os-files-tmp/shib/named-envs*.yml
 
+    if [ -z "${GA_TRACKING_ID}" ]; then echo "Set GA_TRACKING_ID environment variable"; exit -1; fi
+    sed -i.bak "s/<<GA-TRACKING-ID>>/${GA_TRACKING_ID}/g" os-files-tmp/shib/*.yml
+    sed -i.bak "s/<<GA-TRACKING-ID>>/${GA_TRACKING_ID}/g" os-files-tmp/shib/named-envs*.yml
+
     ## TODO DW - when we remove the tech debt of having multiple files for the shib yml files per named environment,
     ## we can do away with this more complex configuration block and that of the one above that this one mirrors
     if $(isNamedEnvironment ${TARGET}); then

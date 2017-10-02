@@ -91,6 +91,8 @@ items:
             value: "mail,uid"
           - name: LDAP_AUTHENTICATOR
             value: "bindSearchAuthenticator"
+          - name: GOOGLEANALYTICS_TRACKINGID
+            value: "<<GA-TRACKING-ID>>"
           ports:
           - containerPort: 9443
           - containerPort: 9080
