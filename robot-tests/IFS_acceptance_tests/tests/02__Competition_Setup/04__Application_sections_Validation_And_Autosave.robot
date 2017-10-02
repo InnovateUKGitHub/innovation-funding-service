@@ -29,7 +29,7 @@ Application questions mark as done validations
     And the user clicks the button/link    jQuery=button:contains("Done")
     And the user should see the text in the page    Unable to mark as complete.
     And the user should see the text in the page    view the application section(s) to resolve the error.
-    And The user clicks the button/link    link=No question header entered
+    And The user clicks the button/link    link=Edit this question
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
 
 Business opportunity Sever-side validations assessment questions
