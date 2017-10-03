@@ -37,6 +37,7 @@ public class ProjectDetailsViewModel {
 
     private boolean projectManagerEditable;
     private boolean addressEditable;
+    private boolean financeContactEditable;
 
     public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
                                    List<Long> usersPartnerOrganisations,
@@ -51,7 +52,8 @@ public class ProjectDetailsViewModel {
                                    boolean spendProfileGenerated,
                                    boolean readOnlyView,
                                    boolean projectManagerEditable,
-                                   boolean addressEditable) {
+                                   boolean addressEditable,
+                                   boolean financeContactEditable) {
         this.project = project;
         this.currentUser = currentUser;
         this.usersPartnerOrganisations = usersPartnerOrganisations;
@@ -68,6 +70,7 @@ public class ProjectDetailsViewModel {
         this.userLeadPartner = userIsLeadPartner;
         this.projectManagerEditable = projectManagerEditable;
         this.addressEditable = addressEditable;
+        this.financeContactEditable = financeContactEditable;
     }
 
     public ProjectResource getProject() {
@@ -134,5 +137,9 @@ public class ProjectDetailsViewModel {
 
     public boolean isAddressEditable() {
         return addressEditable;
+    }
+
+    public boolean isFinanceContactEditable() {
+        return financeContactEditable;
     }
 }

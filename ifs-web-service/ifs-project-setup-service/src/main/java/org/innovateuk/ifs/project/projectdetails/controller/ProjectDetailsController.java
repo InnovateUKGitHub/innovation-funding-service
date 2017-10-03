@@ -122,7 +122,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsCompleteAndAllFinanceContactsAssigned,
                 getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, false,
-                /*!statusAccessor.isGrantOfferLetterSent()*/ !statusAccessor.isGrantOfferLetterGenerated(), /*!statusAccessor.isGrantOfferLetterSent()*/ !statusAccessor.isGrantOfferLetterGenerated()));
+                !statusAccessor.isGrantOfferLetterGenerated(), !statusAccessor.isGrantOfferLetterGenerated(), !statusAccessor.isGrantOfferLetterGenerated()));
 
         return "project/detail";
     }
@@ -148,12 +148,12 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), true,
-                getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, true, false, false));
+                getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, true, false, false, false));
 
         return "project/detail";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CONTACT_PAGE')")
     @GetMapping("/{projectId}/details/finance-contact")
     public String viewFinanceContact(@PathVariable("projectId") final Long projectId,
                                      @RequestParam(value="organisation",required=false) Long organisation,
@@ -163,7 +163,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, true, false);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CONTACT_PAGE')")
     @PostMapping(value = "/{projectId}/details/finance-contact", params = SAVE_FC)
     public String updateFinanceContact(@PathVariable("projectId") final Long projectId,
                                        Model model,
@@ -181,7 +181,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CONTACT_PAGE')")
     @PostMapping(value = "/{projectId}/details/finance-contact", params = INVITE_FC)
     public String inviteFinanceContact(Model model, @PathVariable("projectId") final Long projectId,
                                        @RequestParam(value="organisation") Long organisation,
