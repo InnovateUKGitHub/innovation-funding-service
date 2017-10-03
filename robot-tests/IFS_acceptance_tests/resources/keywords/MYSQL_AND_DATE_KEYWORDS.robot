@@ -99,6 +99,11 @@ get thirteen days
     ${thirteen} =     Add time To Date    ${today}    13 day
     [Return]    ${thirteen}
 
+get fifteen days
+    ${today} =    Get Time
+    ${fifteen} =     Add time To Date    ${today}    15 day
+    [Return]    ${fifteen}
+
 get tomorrow day
     ${today}=    get time
     ${tomorrow} =    Add time To Date    ${today}    1 day    result_format=%d    exclude_millis=true

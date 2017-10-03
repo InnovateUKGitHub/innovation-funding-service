@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
@@ -123,12 +122,16 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void findUnsuccessfulApplications() throws Exception {
         Long competitionId = 1L;
-        List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
-        when(competitionsRestService.findUnsuccessfulApplications(competitionId)).thenReturn(restSuccess(unsuccessfulApplications));
+        int pageNumber = 0;
+        int pageSize = 20;
+        String sortField = "id";
 
-        List<ApplicationResource> result = service.findUnsuccessfulApplications(competitionId);
-        assertEquals(unsuccessfulApplications, result);
-        verify(competitionsRestService, only()).findUnsuccessfulApplications(competitionId);
+        ApplicationPageResource applicationPage = new ApplicationPageResource();
+        when(competitionsRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField)).thenReturn(restSuccess(applicationPage));
+
+        ApplicationPageResource result = service.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField);
+        assertEquals(applicationPage, result);
+        verify(competitionsRestService, only()).findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField);
     }
 
     @Test

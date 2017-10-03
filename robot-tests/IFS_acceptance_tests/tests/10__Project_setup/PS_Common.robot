@@ -206,7 +206,7 @@ finance contacts are selected and bank details are approved
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     The user logs-in in new browser  &{lead_applicant_credentials}
-    ${update_comp}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery=h2:contains("Set up your project") ~ ul a:contains("Sensing & Control network using the lighting infrastructure")
+    ${update_comp}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery=h2:contains("Set up your project") ~ ul a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     run keyword if    '${update_comp}' == 'PASS'  the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user   &{lead_applicant_credentials}
     the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
@@ -377,7 +377,7 @@ project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
     the project finance user approves bank details for  ${Kazio_Name}  ${PS_GOL_APPLICATION_PROJECT}
     the project finance user approves bank details for  ${Cogilith_Name}  ${PS_GOL_APPLICATION_PROJECT}
 
-the user changes the start date back again
+the user changes the start date
     [Arguments]  ${year}
     the user clicks the button/link  link=Target start date
     the user enters text to a text field  id=projectStartDate_year  ${year}
