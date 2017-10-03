@@ -33,10 +33,27 @@ CompAdmin can add an assessor to invite list
     And the user clicks the button/link      link=Find
     And the user should not see the element  jQuery=td:contains("Benjamin Nixon")
 
+Cancel sending invite returns to the invite tab
+    [Documentation]  IFS-1580
+    [Tags]
+    [Setup]  the user clicks the button/link  link=Invite
+    Given the user clicks the button/link     jQuery=.button:contains("Review and send invites")
+    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("Benjamin Nixon")
+    When the user clicks the button/link      jQuery=.button:contains("Cancel")
+    Then the user should see the element      jQuery=td:contains("Benjamin Nixon")
+
+Assessor recieves the invite to panel
+    [Documentation]  IFS-1580
+    [Tags]
+    Given the user clicks the button/link     jQuery=.button:contains("Review and send invites")
+    When the user clicks the button/link      jQuery=button:contains("Send invite")
+    And the user reads his email              benjamin.nixon@gmail.com  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
+
 Bulk add assessor to invite list
     [Documentation]  IFS-31
     [Tags]
-    Given the user selects the checkbox  select-all-check
+    [Setup]  the user clicks the button/link   link=Find
+    Given the user selects the checkbox     select-all-check
     And the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
     And the user should see the element     jQuery=td:contains("Joel George") + td:contains("joel.george@gmail.com")
     When the user clicks the button/link    link=Find
