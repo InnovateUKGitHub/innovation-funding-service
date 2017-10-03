@@ -1,9 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Shibboleth Identity Provider V3" basedir=".." default="install"
     xmlns:if="ant:if"
-    xmlns:unless="ant:unless">
+    xmlns:unless="ant:unless">  
 
     <taskdef resource="net/shibboleth/idp/installer/ant.xml" />
+
+    <!--  TARGETS:
+
+        The following top level targets are implemented and supported.  These in turn call subsidiary targets,
+        whose use outside this file is not supported.
+
+        install-nocopy:  Does the installation/upgrade on a layout that has been copied (ie, the important
+                         stuff has been copied or overwritten from the distribution)
+                         A V2 upgrade will be performed if a V2 site is detected.
+        build-war:       Create the war file
+        install:         Copies files from the distribution to the specified target and then
+                         invokes install-nocopy
+
+        PROPERTIES:
+        The following properties are used.  If they are not specified on the command line then
+        they will be prompted for if needed.
+
+        idp.src.dir (update only):  Where to install from.  No default
+        idp.target.dir (all): where to install to.  Default is basedir.
+        idp.host.name: If we are creating certificates
+        idp.uri.subject.alt.name: If we are creating certificates.  Defaulted
+        idp.sealer.password:
+        idp.sealer.alias:
+        idp.keystore.password:
+        idp.scope: The scope to assert.  If present this should also be present in idp.merge.properties
+        idp.merge.properties: The name of a property file to merge with idp.properties.  This file only
+          used when doing the initial create of idp.properties, and is deleted after processing
+            - if idp.noprompt is set, then this file should contain a line setting idp.entityID.
+            - if idp.sealer.password is set, then this file should contain a line setting idp.sealer.storePassword and idp.sealer.keyPassword
+            - if idp.scope is present, then this file should contain a line setting idp.scope
+        services.merge.properties: The name of a property file to merge with services.properties
+            - if idp.is.V2 is set, then this file should contain a line setting
+                idp.service.relyingparty.resources=shibboleth.LegacyRelyingPartyResolverResources
+        nameid.merge.properties: The name of a property file to merge with saml-nameid.properties
+            - if idp.is.V2 is set, then this file should contain lines enabling legacy nameid generation
+        idp.property.file: The name of a property file to fill in some or all of the above. This file is deleted after processing.
+        idp.no.tidy: Do not delete the two above files (debug only)
+        idp.jetty.config: Copy jetty configuration from distribution (Unsupported)
+        ldap.merge.properties:  The name of a property file to merge with ldap.properties
+        idp.conf.filemode (default "600"): The permissions to mark the files in conf with (UNIX only).
+
+        The property idp.noprompt will cause a failure rather than a prompt.
+    -->
+
     <macrodef name="TGT" description="log the invocation of an Ant target">
         <text name="t" description="name of the target being invoked"/>
         <sequential>
@@ -72,12 +116,12 @@
         <property name="idp.sealer.alias" value="secret"/>
     </target>
 
-    <target name="getsource" unless="idp.src.dir">
-        <TGT>getsource</TGT>
+     <target name="getsource" unless="idp.src.dir">
+         <TGT>getsource</TGT>
 <!--        <fail if="idp.noprompt">Input needed, silence demanded</fail>
-        <input message="Source (Distribution) Directory:" addproperty="idp.src.dir" defaultvalue="${basedir}" />-->
-        <property name="idp.src.dir" value="/root/shibboleth-identity-provider-3.2.1"/>
-    </target>
+        <input message="Source (Distribution) Directory (press &lt;enter&gt; to accept default):" addproperty="idp.src.dir" defaultvalue="${basedir}" />-->
+        <property name="idp.src.dir" value="/root/shibboleth-identity-provider-3.3.1"/>
+     </target>
 
     <target name="gettarget" depends="target-properties, setmerge, setservicemerge, target-src-default, target-nosrc-default, prompttarget, settarget, setfilemode" />
 
@@ -150,7 +194,7 @@
            idp.scope=${idp.scope}
         </echo>
     </target>
-
+    
     <!--
      KEY MANAGEMENT
     -->
@@ -214,6 +258,7 @@
                 <isfalse value="${idp.properties.present}" />
             </and>
         </condition>
+
         <condition property="idp.set.scope">
             <!-- We set scope if there is no scope and we do not allow user input and there is no idp properties file -->
             <and>
@@ -243,6 +288,7 @@
                 <istrue value="${idp.will.call.certgen}" />
             </and>
         </condition>
+
         <condition property="idp.ask.keystore.password">
             <!-- We ask for keystore password if there is no keystore password and
                  the relying party (and hence keys) are not there -->
@@ -290,6 +336,7 @@
             </and>
         </condition>
     </target>
+
     <target name="target-properties">
         <TGT>target-properties</TGT>
         <condition property="idp.ask.target">
@@ -319,6 +366,7 @@
         <condition property="idp.merge.properties.present">
             <isset property="idp.merge.properties" />
         </condition>
+
         <condition property="nameid.merge.properties.present">
             <isset property="nameid.merge.properties" />
         </condition>
@@ -392,6 +440,7 @@
             </fileset>
             <mapper type="glob" from="*.dist" to="*" />
         </copy>
+
         <!-- messages: copy from dist if not already present -->
         <mkdir dir="${idp.target.dir}/messages" />
         <copy todir="${idp.target.dir}/messages">
@@ -470,6 +519,7 @@
             <fileset dir="${idp.target.dir}/webapp/images" />
         </copy>
     </target>
+
     <!--
      CREATE WAR FILE
     -->
@@ -484,6 +534,7 @@
         <jar destfile="${idp.target.dir}/war/idp.war" basedir="${idp.target.dir}/webapp" />
         <echo>...done</echo>
     </target>
+
     <!-- specify getsource before get target to force target default-->
     <target name="copy-distribution" depends="init, getsource, gettarget">
         <TGT>copy-distribution</TGT>
@@ -635,6 +686,7 @@ A V2 Installation has been detected. Configuration will be preserved into
             </and>
         </condition>
     </target>
+
     <target name="reprotect" depends="gettarget">
         <!-- See IDP-487 -->
         <chmod perm="755" dir="${idp.target.dir}/bin" includes="**/*.sh"/>
@@ -656,4 +708,3 @@ A V2 Installation has been detected. Configuration will be preserved into
     </target>
 
 </project>
-

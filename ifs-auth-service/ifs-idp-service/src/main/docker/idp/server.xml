@@ -7,25 +7,12 @@
   <!--APR library loader. Documentation at /docs/apr.html -->
   <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
 
-  <GlobalNamingResources>
-    <Resource name="UserDatabase" auth="Container"
-              type="org.apache.catalina.UserDatabase"
-              description="User database that can be updated and saved"
-              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
-              pathname="conf/tomcat-users.xml" />
-  </GlobalNamingResources>
   <Service name="Catalina">
-    <Connector port="8080" protocol="HTTP/1.1"
-               connectionTimeout="20000"
-               URIEncoding="UTF-8"
-               redirectPort="8443" />
-
     <Connector
            protocol="org.apache.coyote.http11.Http11AprProtocol"
            port="8009"
-           proxyName="idp"
-           proxyPort="443"
-           redirectPort="8443"
+           proxyName="${idp.domain}"
+           proxyPort="${idp.port}"
            scheme="https" secure="true" SSLEnabled="true"
            SSLCertificateFile="/etc/tomcat8/certs/server.crt"
            SSLCertificateKeyFile="/etc/tomcat8/certs/server.key"
@@ -33,10 +20,6 @@
     />
 
     <Engine name="Catalina" defaultHost="localhost">
-      <Realm className="org.apache.catalina.realm.LockOutRealm">
-        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
-               resourceName="UserDatabase"/>
-      </Realm>
       <Host name="localhost"  appBase="webapps"
             unpackWARs="true" autoDeploy="true">
       </Host>
