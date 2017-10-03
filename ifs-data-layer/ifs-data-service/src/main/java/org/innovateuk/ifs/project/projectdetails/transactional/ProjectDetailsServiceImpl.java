@@ -139,7 +139,8 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Transactional
     public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
         return getProject(composite.getProjectId()).
-                andOnSuccess(this::validateProjectIsInSetup).
+                //andOnSuccess(this::validateProjectIsInSetup).
+                andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
                 andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, composite.getOrganisationId(), financeContactUserId).
                         andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
                                 andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
