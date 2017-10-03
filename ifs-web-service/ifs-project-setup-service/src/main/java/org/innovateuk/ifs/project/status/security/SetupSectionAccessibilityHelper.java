@@ -41,6 +41,15 @@ public class SetupSectionAccessibilityHelper {
         return NOT_ACCESSIBLE;
     }
 
+    public SectionAccess canAccessFinanceContactPage(OrganisationResource organisation) {
+
+        if (isCompaniesHouseIncompleteOrGOLAlreadyGenerated(organisation)) {
+            return NOT_ACCESSIBLE;
+        }
+
+        return ACCESSIBLE;
+    }
+
     public SectionAccess leadCanAccessProjectManagerPage(OrganisationResource organisation) {
 
         if (isCompaniesHouseIncompleteOrGOLAlreadyGeneratedOrNotLeadPartner(organisation)) {
@@ -77,6 +86,15 @@ public class SetupSectionAccessibilityHelper {
         return !isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access until Companies House details are complete for Organisation")
                 || !setupProgressChecker.isLeadPartnerOrganisation(organisation);
+
+    }
+
+    private boolean isCompaniesHouseIncompleteOrGOLAlreadyGenerated(OrganisationResource organisation) {
+
+        return !isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
+                "Unable to access until Companies House details are complete for Organisation")
+
+                || isGrantOfferLetterGenerated();
 
     }
 
