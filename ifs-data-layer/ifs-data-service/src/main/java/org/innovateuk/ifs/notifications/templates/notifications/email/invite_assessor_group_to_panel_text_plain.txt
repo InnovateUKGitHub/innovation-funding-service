@@ -1,6 +1,6 @@
 <#import "layout/default.html" as layout>
 <@layout.defaultPlainText>
-Dear ${name}
+Dear ${name},
 
 We are inviting you to the assessment panel for the competition '${competitionName}'.
 
