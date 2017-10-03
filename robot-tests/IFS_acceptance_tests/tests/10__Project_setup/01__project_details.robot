@@ -52,7 +52,6 @@ Force Tags        Project Setup  Applicant
 Resource          PS_Common.robot
 
 *** Variables ***
-${project_details_submitted_message}  The project details have been submitted to Innovate UK
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
 
 *** Test Cases ***
@@ -211,12 +210,6 @@ Lead partner can see the overview of the project details
     And the user should see the element    link=Project Manager
     And the user should see the text in the page    Finance contacts
 
-Submit button is disabled if the details are not fully filled out
-    [Documentation]    INFUND-3381
-    [Tags]
-    When the user should see the element    xpath=//span[contains(text(), 'No')]
-    Then the submit button should be disabled
-
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
     [Tags]    HappyPath
@@ -233,7 +226,7 @@ Lead partner can change the Start Date
     Then The user should see the text in the page   Project details
     And the user should see the text in the page    1 Jan ${nextyear}
     Then the matching status checkbox is updated    project-details    1    yes
-    [Teardown]    the user changes the start date back again
+    [Teardown]    the user changes the start date  ${nextyear}
 
 Option to invite a project manager
     [Documentation]    INFUND-3483
@@ -353,7 +346,6 @@ Project details can be submitted with PM, project address and start date
     Given the user should see the element    css=#start-date-status.yes
     And the user should see the element    css=#project-address-status.yes
     And the user should see the element    css=#project-manager-status.yes
-    Mark as complete button should be enabled
 
 Non lead partner invites finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
@@ -537,12 +529,8 @@ Project details submission flow
     [Setup]    log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_details_page}
     When all the fields are completed
-    And the applicant clicks the submit button and then clicks cancel in the submit modal
-    And the user should not see the text in the page    The project details have been submitted to Innovate UK
-    Then the applicant clicks the submit button in the modal
-    And the user should see the text in the page    The project details have been submitted to Innovate UK
-    Then the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    css=li.complete:nth-of-type(2)
+    And the user navigates to the page    ${project_in_setup_page}
+    Then the user should see the element    css=li.complete:nth-of-type(2)
 
 Lead partner can see the status update when all Project details are submitted
     [Documentation]    INFUND-5827
@@ -557,14 +545,14 @@ Lead partner can see the status update when all Project details are submitted
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
 
-Project details read only after submission
+Project details links are still enabled after submission
     [Documentation]    INFUND-3381
     [Tags]
     Given the user navigates to the page    ${project_in_setup_details_page}
-    Then all the fields are completed
-    And The user should not see the element    link=Target start date
-    And The user should not see the element    link=Project address
-    And The user should not see the element    link=Project Manager
+    When all the fields are completed
+    Then The user should see the element    link=Target start date
+    And the user should see the element     link=Project address
+    And the user should see the element     link=Project Manager
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
@@ -572,19 +560,17 @@ All partners can view submitted project details
     When log in as a different user       &{collaborator1_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-    And all the fields are completed
-    And the user should see the text in the page    ${project_details_submitted_message}
-    Then the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=status of my partners
+    When all the fields are completed
+    And the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=status of my partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     When log in as a different user         &{lead_applicant_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
     Then the user should see the text in the page    ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    And all the fields are completed
-    And the user should see the text in the page    ${project_details_submitted_message}
-    When the user navigates to the page    ${project_in_setup_page}
-    Then the user clicks the button/link    link=status of my partners
-    And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
+    When all the fields are completed
+    And the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=status of my partners
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
 
 Non-lead partner cannot change any project details
     [Documentation]    INFUND-2619
@@ -656,19 +642,6 @@ the user should see the valid data
 the user should see the dummy data
     the user should see the text in the page    Montrose House 1, Neston, CH64 3RU
 
-the submit button should be disabled
-    Element Should Be Disabled    jQuery=.button:contains("Mark as complete")
-
-the applicant clicks the submit button and then clicks cancel in the submit modal
-    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link    jquery=button:contains("Cancel")
-
-the applicant clicks the submit button in the modal
-    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link    jQuery=button:contains("Submit")
-
 all the fields are completed
     the matching status checkbox is updated  project-details  1  yes
     the matching status checkbox is updated  project-details  2  yes
@@ -676,15 +649,6 @@ all the fields are completed
     the matching status checkbox is updated  project-details-finance  1  yes
     the matching status checkbox is updated  project-details-finance  2  yes
     the matching status checkbox is updated  project-details-finance  3  yes
-
-the user changes the start date back again
-    the user clicks the button/link    link=Target start date
-    the user enters text to a text field    id=projectStartDate_year    ${nextyear}
-    the user clicks the button/link    jQuery=.button:contains("Save")
-
-Mark as complete button should be enabled
-
-    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //*[@class="multiple-choice"]
@@ -718,7 +682,7 @@ the user accepts invitation and signs in
     the user reads his email and clicks the link  ${email}  ${title}  ${pattern}
     the user should see the element               jQuery=h1:contains("Join a project")
     the user clicks the button/link               link=Create account
-    the user fills the create account form        ${name}  ${famName}
+    the invited user fills the create account form  ${name}  ${famName}
     the user reads his email and clicks the link  ${email}  Please verify your email address  Dear ${name} ${famName}
     the user should see the element               jQuery=h1:contains("Account verified")
     the user clicks the button/link               jQuery=.button:contains("Sign in")

@@ -43,6 +43,14 @@ items:
             failureThreshold: 1
           imagePullPolicy: Always
           env:
+          - name: JAVA_OPTS
+            value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
+          - name: NEW_RELIC_APP_NAME
+            value: "ifs-idp-service (<<NEWRELIC-ENVIRONMENT>>)"
+          - name: NEW_RELIC_LICENSE_KEY
+            value: "<<NEWRELIC-LICENCE-KEY>>"
+          - name: NEW_RELIC_LOG
+            value: "STDOUT"
           - name: IDP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"
           - name: IDP_PROXY_CACERTIFICATE
@@ -51,49 +59,37 @@ items:
             value: "<<SSLKEY>>"
           - name: SP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"
-          - name: SPHOST
+          - name: SP_DOMAIN
             value: <<SHIB-ADDRESS>>
-          - name: IDPHOST
+          - name: IDP_DOMAIN
             value: <<SHIB-IDP-ADDRESS>>
-          - name: HTTPSPORT
+          - name: HTTPS_PORT
             value: "9443"
-          - name: HTTPPORT
+          - name: HTTP_PORT
             value: "9080"
           - name: MEMCACHE_ENDPOINT
             value: "cluster5-memcached01.l8op6o.cfg.euw2.cache.amazonaws.com:11211"
-          - name: LDAPURL
+          - name: LDAP_URL
             value: "ldap://oldap.org.iuk.local:389"
-          - name: LDAPUSESTARTTLS
+          - name: LDAP_USESTARTTLS
             value: "false"
-          - name: LDAPUSESSL
+          - name: LDAP_USESSL
             value: "false"
-          - name: LDAPPORT
+          - name: LDAP_PORT
             value: "389"
-          - name: LDAPBASEDN
+          - name: LDAP_BASEDN
             value: "dc=int,dc=g2g3digital,dc=net"
-          - name: LDAPBINDDN
+          - name: LDAP_BINDDN
             value: "cn=admin,dc=int,dc=g2g3digital,dc=net"
-          - name: LDAPBINDDNCRED
+          - name: LDAP_BINDDNCREDENTIAL
             value: "<<LDAP-PASSWORD>>"
-          - name: LDAPUSERFILTER
+          - name: LDAP_USERFILTER
             value: "(&(mail={user})(!(employeeType=inactive)))"
-          - name: LDAPRURL
-            value: "ldap://oldap.org.iuk.local:389"
-          - name: LDAPRBASEDN
-            value: "dc=int,dc=g2g3digital,dc=net"
-          - name: LDAPRBINDDN
-            value: "cn=admin,dc=int,dc=g2g3digital,dc=net"
-          - name: LDAPRBINDDNCRED
-            value: "<<LDAP-PASSWORD>>"
-          - name: LDAPRUSESTARTTLS
-            value: "false"
-          - name: LDAPRTRUSTCERT
-            value: "%{idp.authn.LDAP.trustCertificates:undefined}"
-          - name: LDAPRSEARCHFILTER
+          - name: LDAP_ATTRIBUTE_SEARCHFILTER
             value: "(mail=$resolutionContext.principal)"
-          - name: LDAPRRETURNATTRIBUTE
+          - name: LDAP_RETURNATTRIBUTES
             value: "mail,uid"
-          - name: LDAPAUTHENTICATOR
+          - name: LDAP_AUTHENTICATOR
             value: "bindSearchAuthenticator"
           - name: GOOGLEANALYTICS_TRACKINGID
             value: "UA-3837161-32"
@@ -101,8 +97,10 @@ items:
           - containerPort: 9443
           - containerPort: 9080
           resources:
-            limits:
+            requests:
               memory: 1024M
+            limits:
+              memory: 1500M
           test: false
   triggers:
   - type: ConfigChange

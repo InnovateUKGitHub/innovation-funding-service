@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.service;
 
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
@@ -21,6 +22,7 @@ public interface CompetitionsRestService {
     RestResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions();
     RestResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
     RestResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions();
+    RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField);
     RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
     RestResult<CompetitionCountResource> countCompetitions();
     RestResult<CompetitionResource> getCompetitionById(long competitionId);
@@ -43,4 +45,5 @@ public interface CompetitionsRestService {
     RestResult<Void> releaseFeedback(long competitionId);
     RestResult<CompetitionResource> createNonIfs();
     RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long id);
+    RestResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
 }

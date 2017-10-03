@@ -38,7 +38,7 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
     public void configure(StateMachineStateConfigurer<ProjectDetailsState, ProjectDetailsEvent> states) throws Exception {
         states.withStates()
                 .initial(PENDING)
-                .states(EnumSet.of(PENDING, READY_TO_SUBMIT, SUBMITTED))
+                .states(EnumSet.of(PENDING, SUBMITTED))
                 .choice(DECIDE_IF_READY_TO_SUBMIT)
                 .end(SUBMITTED);
     }
@@ -66,30 +66,10 @@ public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<Projec
                 .event(PROJECT_MANAGER_ADDED)
                 .target(DECIDE_IF_READY_TO_SUBMIT)
                 .and()
-            .withExternal()
-                .source(READY_TO_SUBMIT)
-                .event(PROJECT_START_DATE_ADDED)
-                .target(DECIDE_IF_READY_TO_SUBMIT)
-                .and()
-            .withExternal()
-                .source(READY_TO_SUBMIT)
-                .event(PROJECT_ADDRESS_ADDED)
-                .target(DECIDE_IF_READY_TO_SUBMIT)
-                .and()
-            .withExternal()
-                .source(READY_TO_SUBMIT)
-                .event(PROJECT_MANAGER_ADDED)
-                .target(DECIDE_IF_READY_TO_SUBMIT)
-                .and()
             .withChoice()
                 .source(DECIDE_IF_READY_TO_SUBMIT)
-                .first(READY_TO_SUBMIT, allProjectDetailsSuppliedGuard)
-                .last(PENDING)
-                .and()
-            .withExternal()
-                .source(READY_TO_SUBMIT)
-                .event(SUBMIT)
-                .target(SUBMITTED)
-                .guard(allProjectDetailsSuppliedGuard);
+                .first(SUBMITTED, allProjectDetailsSuppliedGuard)
+                .last(PENDING);
+
     }
 }

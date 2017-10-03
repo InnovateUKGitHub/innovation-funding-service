@@ -65,7 +65,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.util.MathFunctions.percentage;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.util.StringFunctions.plainTextToHtml;
 import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 
@@ -468,7 +467,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                     boolean readyForSubmit = false;
                     if (allSectionsComplete &&
                             progressPercentage.compareTo(BigDecimal.valueOf(100)) == 0 &&
-                            researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) < 0) {
+                            researchParticipation.compareTo(BigDecimal.valueOf(competition.getMaxResearchRatio())) <= 0) {
                         readyForSubmit = true;
                     }
                     return readyForSubmit;

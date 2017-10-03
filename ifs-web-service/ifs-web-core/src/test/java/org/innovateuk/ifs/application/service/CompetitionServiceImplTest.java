@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
@@ -116,6 +117,21 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         final List<CompetitionResource> found = service.getAllCompetitionsNotInSetup();
         assertEquals(1, found.size());
         assertEquals(Long.valueOf(2L), found.get(0).getId());
+    }
+
+    @Test
+    public void findUnsuccessfulApplications() throws Exception {
+        Long competitionId = 1L;
+        int pageNumber = 0;
+        int pageSize = 20;
+        String sortField = "id";
+
+        ApplicationPageResource applicationPage = new ApplicationPageResource();
+        when(competitionsRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField)).thenReturn(restSuccess(applicationPage));
+
+        ApplicationPageResource result = service.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField);
+        assertEquals(applicationPage, result);
+        verify(competitionsRestService, only()).findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField);
     }
 
     @Test
@@ -264,4 +280,5 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         service.removeInnovationLead(competitionId, innovationLeadUserId);
         verify(competitionsRestService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
     }
+
 }
