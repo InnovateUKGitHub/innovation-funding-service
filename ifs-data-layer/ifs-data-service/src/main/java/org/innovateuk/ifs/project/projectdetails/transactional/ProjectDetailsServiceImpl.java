@@ -169,7 +169,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Transactional
     public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
         return getProject(composite.getProjectId()).
-                //andOnSuccess(this::validateProjectIsInSetup).
                 andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
                 andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, composite.getOrganisationId(), financeContactUserId).
                         andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
@@ -281,14 +280,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
         return getOnlyElementOrEmpty(projectManagers);
     }
-
-/*    private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
-        if(!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
-            return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
-        }
-
-        return serviceSuccess(project);
-    }*/
 
     private ServiceResult<ProjectUser> validateProjectOrganisationFinanceContact(Project project, Long organisationId, Long financeContactUserId) {
 
