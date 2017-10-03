@@ -22,7 +22,7 @@ public class ApplicationDetailsModelPopulator implements CompetitionSetupSubsect
 	}
 
 	@Override
-	public CompetitionSetupSubsectionViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource, Optional<Long> objectId) {
-        return new ApplicationDetailsViewModel(generalViewModel, competitionResource.getId(), competitionResource.getName());
+	public CompetitionSetupSubsectionViewModel populateModel(CompetitionResource competitionResource, Optional<Long> objectId) {
+        return new ApplicationDetailsViewModel();
     }
 }

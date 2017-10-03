@@ -6,7 +6,6 @@ import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceServic
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSubsectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.application.ApplicationFinanceViewModel;
-import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,7 @@ public class ApplicationFinanceModelPopulator implements CompetitionSetupSubsect
 	}
 
 	@Override
-	public CompetitionSetupSubsectionViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource, Optional<Long> objectId) {
-        return new ApplicationFinanceViewModel(generalViewModel, "sector".equalsIgnoreCase(competitionResource.getCompetitionTypeName()), competitionResource.getId());
+	public CompetitionSetupSubsectionViewModel populateModel(CompetitionResource competitionResource, Optional<Long> objectId) {
+        return new ApplicationFinanceViewModel("sector".equalsIgnoreCase(competitionResource.getCompetitionTypeName()));
     }
 }

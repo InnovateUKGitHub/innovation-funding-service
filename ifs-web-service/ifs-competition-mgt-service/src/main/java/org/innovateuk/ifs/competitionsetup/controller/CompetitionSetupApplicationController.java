@@ -16,8 +16,8 @@ import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionF
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
-import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.QuestionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -36,7 +36,8 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
-import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.*;
+import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
+import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
 
 /**
  * Controller to manage the Application Questions and it's sub-sections in the
@@ -331,13 +332,14 @@ public class CompetitionSetupApplicationController {
         return view.getSuccessObjectOrThrowException();
     }
 
-    private CompetitionSetupViewModel setupQuestionViewModel(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, boolean isEditable) {
+    private QuestionSetupViewModel setupQuestionViewModel(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, boolean isEditable) {
         CompetitionSetupSection section = APPLICATION_FORM;
 
         CompetitionSetupSubsectionViewModel subsectionViewModel = competitionSetupService.populateCompetitionSubsectionModelAttributes(competition, section,
                 subsection, questionId);
+        GeneralSetupViewModel generalViewModel = competitionSetupService.populateGeneralModelAttributes(competition, section);
 
-        return new QuestionSetupViewModel(subsectionViewModel, competition.getName(), isEditable);
+        return new QuestionSetupViewModel(generalViewModel, subsectionViewModel, competition.getName(), isEditable);
     }
 
     private CompetitionSetupForm setupQuestionForm(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, CompetitionSetupForm competitionSetupForm) {

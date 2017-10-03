@@ -22,7 +22,7 @@ public class ApplicationProjectModelPopulator implements CompetitionSetupSubsect
 	}
 
 	@Override
-	public CompetitionSetupSubsectionViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource, Optional<Long> objectId) {
-        return new ApplicationProjectViewModel(generalViewModel);
+	public CompetitionSetupSubsectionViewModel populateModel(CompetitionResource competitionResource, Optional<Long> objectId) {
+        return new ApplicationProjectViewModel();
     }
 }

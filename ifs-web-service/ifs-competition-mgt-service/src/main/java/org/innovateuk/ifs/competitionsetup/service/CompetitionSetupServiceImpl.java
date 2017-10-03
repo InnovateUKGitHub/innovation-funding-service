@@ -103,12 +103,10 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
         CompetitionSetupSubsectionViewModel viewModel = null;
 	    checkIfSubsectionIsInSection(section, subsection);
-        GeneralSetupViewModel generalViewModel = populateGeneralModelAttributes(competitionResource, section);
-
         CompetitionSetupSubsectionModelPopulator populator = subsectionModelPopulators.get(subsection);
 
         if(populator != null) {
-            viewModel = populator.populateModel(generalViewModel, competitionResource, objectId);
+            viewModel = populator.populateModel(competitionResource, objectId);
         }
 
         return viewModel;
@@ -278,7 +276,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		return requiredSections;
 	}
 
-	private GeneralSetupViewModel populateGeneralModelAttributes(CompetitionResource competitionResource, CompetitionSetupSection section) {
+	@Override
+	public GeneralSetupViewModel populateGeneralModelAttributes(CompetitionResource competitionResource, CompetitionSetupSection section) {
 		boolean editable = (!competitionResource.getSectionSetupStatus().containsKey(section)
 				|| !competitionResource.getSectionSetupStatus().get(section))
 				&& !section.preventEdit(competitionResource);
