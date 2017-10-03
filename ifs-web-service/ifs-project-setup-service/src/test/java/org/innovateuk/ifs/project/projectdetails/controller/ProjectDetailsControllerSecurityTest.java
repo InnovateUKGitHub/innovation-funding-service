@@ -21,12 +21,6 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
     }
 
     @Test
-    public void testProjectDetailConfirmSubmit() {
-        assertSecured(() -> classUnderTest.projectDetailConfirmSubmit(123L, null, null),
-                permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class)));
-    }
-
-    @Test
     public void testViewFinanceContact() {
         assertSecured(() -> classUnderTest.viewFinanceContact(123L, null, null, null, null),
                 permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class)));
@@ -91,11 +85,5 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
     public void testManualAddress() {
         assertSecured(() -> classUnderTest.manualAddress(123L, null, null),
                 permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(123L), isA(UserResource.class)));
-    }
-
-    @Test
-    public void testSubmitProjectDetails() {
-        assertSecured(() -> classUnderTest.submitProjectDetails(123L),
-                permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class)));
     }
 }

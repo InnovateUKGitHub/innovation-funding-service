@@ -34,7 +34,7 @@ ext.ifsSmtpPassword="smtp"
 ext.ifsSmtpTlsEnabled=false
 ext.ifsMailTimeoutMillis=10000
 
-ext.idpRestBaseURL="https://iuk-auth-localdev:9443/regapi"
+ext.idpRestBaseURL="http://registration-svc:8080"
 
 ext.ifsDataServiceRestBaseURL="http://data-service:8080"
 

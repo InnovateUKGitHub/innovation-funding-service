@@ -23,8 +23,6 @@
         <property name="profileConfigurations">
             <list>
                 <ref bean="Shibboleth.SSO" />
-                <ref bean="SAML1.AttributeQuery" />
-                <ref bean="SAML1.ArtifactResolution" />
                 <ref bean="SAML2.SSO" />
                 <ref bean="SAML2.ECP" />
                 <ref bean="SAML2.Logout" />
@@ -39,4 +37,3 @@
     </util:list>
 
 </beans>
-
