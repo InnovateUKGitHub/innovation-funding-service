@@ -88,17 +88,22 @@
         <tbody>
             <tr th:each="organisation: ${model.partnerOrganisations}">
                 <td>
-                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}">
+                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and model.financeContactEditable}">
                         <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
-                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block></th:block>
-                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and model.isReadOnly()}">
+                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                    </th:block>
+                    <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and model.financeContactEditable}">
+                        <th:block th:text="${organisation.name}">organisation name</th:block>
+                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
+                    </th:block>
+<!--                <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and model.isReadOnly()}">
                         <th:block th:text="${organisation.name}">organisation name</th:block>
                         <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
                     </th:block>
                     <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id)}">
                         <th:block th:text="${organisation.name}">organisation name</th:block>
                         <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
-                    </th:block>
+                    </th:block>-->
                 </td>
                 <td>
                   <th:block th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
