@@ -135,7 +135,7 @@ function tailorAppInstance() {
 
     if ! $(isNamedEnvironment $TARGET); then
 
-        export LDAP_URL="ldaps://ldap:8389"
+        export LDAP_URL="ldaps://ldap:389"
         export LDAP_PASSWORD="default"
 
         # not necessary to have here as they have default values, but included here for clarity
