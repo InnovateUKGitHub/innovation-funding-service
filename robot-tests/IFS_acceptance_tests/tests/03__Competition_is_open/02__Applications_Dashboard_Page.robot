@@ -202,7 +202,6 @@ the applicant edits the Subcontracting costs section
     The user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-role"]    Contractor
     the user selects the checkbox      stateAidAgreed
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    sleep    30s
 
 the user should see the correct finances change
     Wait Until Element Contains Without Screenshots    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}

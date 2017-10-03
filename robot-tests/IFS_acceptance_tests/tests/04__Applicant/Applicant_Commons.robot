@@ -121,7 +121,7 @@ the user fills in the project costs
     the user fills in Subcontracting costs
     the user fills in Travel and subsistence
     the user fills in Other costs
-    the user clicks the button/link  css=label[for="agree-state-aid-page"]
+    the user clicks the button/link  css=label[for="stateAidAgreed"]
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
     the user has read only view once section is marked complete
@@ -134,7 +134,7 @@ the user has read only view once section is marked complete
 the user fills in Labour
     the user clicks the button/link            jQuery=button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
-    the user enters text to a text field       css=input[id$="labourDaysYearly"]    230
+    the user enters text to a text field       css=input[name^="labour-labourDaysYearly"]    230
     the user should see the element            jQuery=input.form-control[name^=labour-role]:text[value=""]:first
     the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:first    anotherrole
     the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000

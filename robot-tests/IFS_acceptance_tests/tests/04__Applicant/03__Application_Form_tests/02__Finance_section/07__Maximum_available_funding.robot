@@ -173,7 +173,7 @@ the business user fills in the project costs
     the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    131265
     the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
     the user clicks the button/link         jQuery=button:contains("Materials")
-    the user selects the checkbox           agree-state-aid-page
+    the user selects the checkbox           stateAidAgreed
     the user clicks the button/link         jQuery=button:contains("Mark as complete")
 
 the user edits the research category

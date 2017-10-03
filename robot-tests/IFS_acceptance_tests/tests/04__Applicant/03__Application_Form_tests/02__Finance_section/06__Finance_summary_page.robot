@@ -318,7 +318,7 @@ Lead enters a valid research participation value
     wait for autosave
     the user enters text to a text field              css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input  1000
     wait for autosave
-    the user selects the checkbox                     id=agree-state-aid-page
+    the user selects the checkbox                     id=stateAidAgreed
     the user clicks the button/link                   jQuery= button:contains('Mark as complete')
     wait for autosave
 

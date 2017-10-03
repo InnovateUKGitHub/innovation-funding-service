@@ -162,7 +162,7 @@ Applicant chooses Calculate overheads option
     Then the user should see the text in the page           ${excel_file}
     And the user clicks the button/link                     jQuery=button:contains("Edit your project costs")
     And the user clicks the button/link                     css=button[name="overheadfiledelete"]
-    When the user selects the checkbox                      agree-state-aid-page
+    When the user selects the checkbox                      stateAidAgreed
     And the user clicks the button/link                     jQuery=button:contains("Mark as complete")
     Then the user should see a summary error                You cannot mark as complete.
 
@@ -214,4 +214,3 @@ the user should see the funding guidance
 the user should not see the funding guidance
     [Documentation]    INFUND-7093
     the user should not see the element           css=#details-content-0 p
-

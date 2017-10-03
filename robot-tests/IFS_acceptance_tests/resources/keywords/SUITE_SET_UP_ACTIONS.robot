@@ -130,8 +130,8 @@ the user fills in the inviting steps
     the user clicks the button/link       link=view and manage contributors and collaborators
     the user clicks the button/link       link=Add a collaborator organisation
     the user enters text to a text field  css=#organisationName  New Organisation's Name
-    the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
-    the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
+    the user enters text to a text field  css=[id="applicants[0].name"]  Partner's name
+    the user enters text to a text field  css=[id="applicants[0].email"]  ${email}
     the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
 
 # The search results are specific to Research Organisation type
@@ -183,8 +183,8 @@ invite a registered user
     the user clicks the button/link                            link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link                            link=Add a collaborator organisation
     the user enters text to a text field                       css=#organisationName  New Organisation's Name
-    the user enters text to a text field                       css=input[id="applicants0.name"]  Partner's name
-    the user enters text to a text field                       css=input[id="applicants0.email"]  ${EMAIL_INVITED}
+    the user enters text to a text field                       css=[id="applicants[0].name"]  Partner's name
+    the user enters text to a text field                       css=[id="applicants[0].email"]  ${EMAIL_INVITED}
     the user clicks the button/link                            jQuery=button:contains("Add organisation and invite applicants")
     the user clicks the button/link                            jQuery=a:contains("Begin application")
     the user should see the text in the page                   Application overview
