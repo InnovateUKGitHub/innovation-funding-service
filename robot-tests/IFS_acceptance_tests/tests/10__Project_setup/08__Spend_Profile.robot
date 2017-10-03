@@ -60,7 +60,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-7422 On rejection non-lead partners should still see a tick instead of an hourglass, until edit rights have been returned to them
 ...
 ...               INFUND-7685 Broken link on spend profile page
-
+...
+...               IFS-1576 Allow changes to Target start date until generation of Spend Profile
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -75,6 +76,16 @@ ${project_duration}    36
 &{collaborator2_credentials_sp}   email=${PS_SP_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
 
 *** Test Cases ***
+Check if target start date can be changed until SP approval
+    [Documentation]    IFS-1576
+    [Tags]
+    Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
+    When the user navigates to the page  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details
+    And the user changes the start date  2021
+    Then the user should see the element  jQuery=#start-date:contains("1 Jun 2021")
+    When the user changes the start date  2020
+    Then the user should see the element  jQuery=#start-date:contains("1 Jun 2020")
+
 Project Finance user generates the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]    HappyPath
@@ -84,7 +95,6 @@ Project Finance user generates the Spend Profile
     And the user should see the element     jQuery=a.eligibility-1:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
     Then the user should see the element    css=.generate-spend-profile-main-button
-
 
 Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
@@ -741,6 +751,13 @@ Project finance user cannot access external users' spend profile page
     [Tags]
     When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    ${403_error_message}
 
+Target start date cannot be changed after SP approval
+    [Documentation]    IFS-1576
+    [Tags]
+    Given Log in as a different user  ${PS_SP_APPLICATION_PM_EMAIL}  ${short_password}
+    When the user navigates to the page  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details
+    Then the user should not see the element  jQuery=a:contains("Target start date")
+    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details/project-address  ${403_error_message}
 
 *** Keywords ***
 the user uploads the file
