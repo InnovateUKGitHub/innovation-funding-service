@@ -133,6 +133,8 @@ function injectLDAPVariables() {
 
 function tailorAppInstance() {
 
+    # We will set up the default environment variables here for local and remote projects as we do not expect these to
+    # be available other than in Bamboo-triggered jobs
     if ! $(isNamedEnvironment $TARGET); then
 
         export LDAP_URL="ldaps://ldap:389"
