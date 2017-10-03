@@ -414,9 +414,19 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(size, response.getSize());
 
         CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
-                competition.getName(), Collections.EMPTY_SET, 0, openDate.format(DateTimeFormatter.ofPattern("dd/MM/YYYY")), CompetitionStatus.COMPETITION_SETUP, competitionType, 0, null, null, openDate);
+                competition.getName(),
+                Collections.EMPTY_SET,
+                0,
+                openDate.format(DateTimeFormatter.ofPattern("dd/MM/YYYY")),
+                CompetitionStatus.COMPETITION_SETUP,
+                competitionType,
+                0,
+                null,
+                null,
+                openDate);
         // check actual open date is as expected then copy into expected structure (avoids time dependency in tests)
-        assertTrue((response.getContent().get(0)).getOpenDate().isBefore(ZonedDateTime.now()));
+        ZonedDateTime now = ZonedDateTime.now();
+        assertTrue((response.getContent().get(0)).getOpenDate().isBefore(now) || (response.getContent().get(0)).getOpenDate().isEqual(now));
         response.getContent().get(0).setOpenDate(expectedSearchResult.getOpenDate());
         assertEquals(singletonList(expectedSearchResult), response.getContent());
     }
@@ -452,9 +462,19 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(size, response.getSize());
 
         CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
-                competition.getName(), Collections.EMPTY_SET, 0, "", CompetitionStatus.COMPETITION_SETUP, competitionType, 0, null, null, null);
+                competition.getName(),
+                Collections.EMPTY_SET,
+                0,
+                "",
+                CompetitionStatus.COMPETITION_SETUP,
+                competitionType,
+                0,
+                null,
+                null,
+                ZonedDateTime.now());
         // check actual open date is as expected then copy into expected structure (avoids time dependency in tests)
-        assertTrue((response.getContent().get(0)).getOpenDate().isBefore(ZonedDateTime.now()));
+        ZonedDateTime now = ZonedDateTime.now();
+        assertTrue((response.getContent().get(0)).getOpenDate().isBefore(now) || (response.getContent().get(0)).getOpenDate().isEqual(now));
         response.getContent().get(0).setOpenDate(expectedSearchResult.getOpenDate());
         assertEquals(singletonList(expectedSearchResult), response.getContent());
     }
@@ -490,9 +510,19 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(size, response.getSize());
 
         CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
-                competition.getName(), Collections.EMPTY_SET, 0, "", CompetitionStatus.COMPETITION_SETUP, competitionType, 0, null, null, null);
+                competition.getName(),
+                Collections.EMPTY_SET,
+                0,
+                "",
+                CompetitionStatus.COMPETITION_SETUP,
+                competitionType,
+                0,
+                null,
+                null,
+                ZonedDateTime.now());
         // check actual open date is as expected then copy into expected structure (avoids time dependency in tests)
-        assertTrue((response.getContent().get(0)).getOpenDate().isBefore(ZonedDateTime.now()));
+        ZonedDateTime now = ZonedDateTime.now();
+        assertTrue((response.getContent().get(0)).getOpenDate().isBefore(now) || (response.getContent().get(0)).getOpenDate().isEqual(now));
         response.getContent().get(0).setOpenDate(expectedSearchResult.getOpenDate());
         assertEquals(singletonList(expectedSearchResult), response.getContent());
     }
