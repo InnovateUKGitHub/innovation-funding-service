@@ -52,7 +52,11 @@ public class SetupSectionAccessibilityHelper {
 
     public SectionAccess leadCanAccessProjectStartDatePage(OrganisationResource organisation) {
 
-        if (isCompaniesHouseIncompleteOrProjectDetailsSubmittedOrNotLeadPartner(organisation)) {
+        if (isCompaniesHouseIncompleteOrNotLeadPartner(organisation)) {
+            return NOT_ACCESSIBLE;
+        }
+
+        if (isSpendProfileGenerated()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -68,12 +72,10 @@ public class SetupSectionAccessibilityHelper {
         return ACCESSIBLE;
     }
 
-    private boolean isCompaniesHouseIncompleteOrProjectDetailsSubmittedOrNotLeadPartner(OrganisationResource organisation) {
+    private boolean isCompaniesHouseIncompleteOrNotLeadPartner(OrganisationResource organisation) {
 
         return !isCompaniesHouseSectionIsUnnecessaryOrComplete(organisation,
                 "Unable to access until Companies House details are complete for Organisation")
-
-                || setupProgressChecker.isProjectDetailsSubmitted()
                 || !setupProgressChecker.isLeadPartnerOrganisation(organisation);
 
     }
@@ -89,7 +91,7 @@ public class SetupSectionAccessibilityHelper {
     }
 
     public boolean isGrantOfferLetterGenerated(){
-        return setupProgressChecker.isSpendProfileApproved();
+        return setupProgressChecker.isGrantOfferLetterAvailable();
     }
 
     public SectionAccess canAccessMonitoringOfficerSection(OrganisationResource organisation) {
@@ -200,6 +202,10 @@ public class SetupSectionAccessibilityHelper {
 
     public boolean isProjectDetailsSubmitted() {
         return setupProgressChecker.isProjectDetailsSubmitted();
+    }
+
+    public boolean isSpendProfileGenerated() {
+        return setupProgressChecker.isSpendProfileGenerated();
     }
 
     public boolean isFinanceContactSubmitted(OrganisationResource organisationResource) {

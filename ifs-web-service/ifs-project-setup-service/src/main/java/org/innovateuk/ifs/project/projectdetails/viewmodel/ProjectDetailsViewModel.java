@@ -27,10 +27,9 @@ public class ProjectDetailsViewModel {
     private OrganisationResource leadOrganisation;
     private ApplicationResource app;
     private CompetitionResource competition;
-    private boolean projectDetailsSubmitted;
+    private boolean projectDetailsCompleteAndAllFinanceContactsAssigned;
+    private boolean spendProfileGenerated;
     private ProjectUserResource projectManager;
-    private boolean submissionAllowed;
-    private boolean isFinanceContactSubmitted;
     private boolean readOnlyView;
 
     private Map<Long, ProjectUserResource> financeContactsByOrganisationId;
@@ -47,9 +46,9 @@ public class ProjectDetailsViewModel {
                                    List<ProjectUserResource> projectUsers,
                                    CompetitionResource competition,
                                    boolean userIsLeadPartner,
-                                   boolean projectDetailsSubmitted,
+                                   boolean projectDetailsCompleteAndAllFinanceContactsAssigned,
                                    ProjectUserResource projectManager,
-                                   boolean submissionAllowed,
+                                   boolean spendProfileGenerated,
                                    boolean readOnlyView,
                                    boolean projectManagerEditable,
                                    boolean addressEditable) {
@@ -60,13 +59,12 @@ public class ProjectDetailsViewModel {
         this.leadOrganisation = leadOrganisation;
         this.app = app;
         this.competition = competition;
-        this.projectDetailsSubmitted = projectDetailsSubmitted;
+        this.projectDetailsCompleteAndAllFinanceContactsAssigned = projectDetailsCompleteAndAllFinanceContactsAssigned;
+        this.spendProfileGenerated = spendProfileGenerated;
         this.projectManager = projectManager;
-        this.submissionAllowed = submissionAllowed;
         this.readOnlyView = readOnlyView;
         List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
         this.financeContactsByOrganisationId = simpleToMap(financeRoles, ProjectUserResource::getOrganisation, Function.identity());
-        this.isFinanceContactSubmitted = usersPartnerOrganisations.stream().anyMatch(organisation -> financeContactsByOrganisationId.containsKey(organisation));
         this.userLeadPartner = userIsLeadPartner;
         this.projectManagerEditable = projectManagerEditable;
         this.addressEditable = addressEditable;
@@ -118,28 +116,16 @@ public class ProjectDetailsViewModel {
 
     public boolean isReadOnly() { return readOnlyView; }
 
-    public boolean isProjectDetailsSubmitted() {
-        return projectDetailsSubmitted;
+    public boolean isProjectDetailsCompleteAndAllFinanceContactsAssigned() {
+        return projectDetailsCompleteAndAllFinanceContactsAssigned;
+    }
+
+    public boolean isSpendProfileGenerated() {
+        return spendProfileGenerated;
     }
 
     public ProjectUserResource getProjectManager() {
         return projectManager;
-    }
-
-    public boolean isSubmissionAllowed() {
-        return submissionAllowed;
-    }
-
-    public boolean isFinanceContactSubmitted() {
-        return isFinanceContactSubmitted;
-    }
-
-    public boolean isSubmitProjectDetailsAllowed() {
-        return userLeadPartner && submissionAllowed && !projectDetailsSubmitted;
-    }
-
-    public boolean isAnySectionIncomplete() {
-        return userLeadPartner && !submissionAllowed && !projectDetailsSubmitted;
     }
 
     public boolean isProjectManagerEditable() {
