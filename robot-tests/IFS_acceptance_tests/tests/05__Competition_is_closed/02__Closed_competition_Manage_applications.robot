@@ -21,22 +21,14 @@ Resource          ../../resources/defaultResources.robot
 ${Neural_id}   ${application_ids['Neural networks to optimise freight train routing']}
 
 *** Test Cases ***
-Search for applications
-    [Documentation]    INFUND-8061
-    [Tags]
-    Given The user clicks the button/link      link=${CLOSED_COMPETITION_NAME}
-    And the user clicks the button/Link        jQuery=a:contains("Manage assessments")
-    And the user clicks the button/link        jQuery=a:contains("Allocate applications")
-    When The user enters text to a text field  css=#filterSearch    ${CLOSED_COMPETITION_APPLICATION}
-    And The user clicks the button/link        jQuery=button:contains(Filter)
-    Then the user should see the element       jQuery=tr:nth-child(1) td:nth-child(1):contains("${CLOSED_COMPETITION_APPLICATION}")
-    And The user clicks the button/link        link=Clear all filters
-    Then the user should not see the element   jQuery=tr:nth-child(1) td:nth-child(1):contains("137")
-
+# Search for applications is covered in 'Filtering of the applications' inside file 03__Manage_applications.robot
 Filtering the Assessors in the Allocate Applications page
     [Documentation]    INFUND-7042  INFUND-7729  INFUND-8062
     [Tags]
-    Given the user clicks the button/Link                     jQuery=tr:contains(Neural Industries) .no-margin
+    Given The user clicks the button/link                     link=${CLOSED_COMPETITION_NAME}
+    And the user clicks the button/Link                       link=Manage assessments
+    And the user clicks the button/link                       link=Allocate applications
+    When the user clicks the button/Link                      jQuery=tr:contains(Neural Industries) .no-margin
     And the user should see the element                       jQuery=h3:contains("Innovation area") ~ span:contains("Smart infrastructure")
     Then the user should see the element                      jQuery=tr:nth-child(1) td:contains("Benjamin Nixon")    #this check verfies that the list of assessors in alphabetical order
     When the user selects the option from the drop-down menu  Materials, process and manufacturing design technologies    id=filterInnovationArea
