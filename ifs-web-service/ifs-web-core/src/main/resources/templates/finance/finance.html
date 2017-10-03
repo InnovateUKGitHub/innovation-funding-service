@@ -6,7 +6,7 @@
         <th:block th:fragment="finance(model)" th:with="formInput=${model.formInput}, question=${model.question}">
             <th:block th:unless="${model.readonly}">
                 <div th:class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +'-grantClaimPercentage]}') or #fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +']}')}? 'form-group-error'">
-                    <label class="form-label form-label-bold" for="cost-financegrantclaim">
+                    <label class="form-label form-label-bold" th:for="|formInput[cost-'+ organisationGrantClaimPercentageId +'-grantClaimPercentage]|">
                         <div th:text="'Enter your funding level (maximum ' + ${model.maximumGrantClaimPercentage} + '%).'"></div>
                         <span class="form-hint" th:text="'The maximum funding level is ' + ${model.maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + model.organisationGrantClaimPercentageId + '-grantClaimPercentage'})" />
@@ -20,7 +20,7 @@
                            th:max="${model.maximumGrantClaimPercentage}"
                            th:readonly="${model.readonly}"
                            th:classappend="${model.maximumGrantClaimPercentage != null and model.maximumGrantClaimPercentage &lt; model.organisationGrantClaimPercentage} ? 'form-control-error'"
-                           id="cost-financegrantclaim"
+                           th:id="|formInput[cost-'+ organisationGrantClaimPercentageId +'-grantClaimPercentage]|"
                            th:name="${'finance-grantclaimpercentage-' + question.id + '-' + model.organisationGrantClaimPercentageId}"
                            th:value="${model.organisationGrantClaimPercentage}"
                            placeholder="0"
@@ -49,7 +49,7 @@
             <!--/* edit */-->
             <div class="form-group" th:classappend="${#fields.hasErrors('organisationSize')} ? 'form-group-error'">
                 <fieldset>
-                    <legend>
+                    <legend id="organisationSize">
                         <span class="form-label form-label-bold" th:text="${question.name}"></span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
                         <th:block th:if="${#fields.hasErrors('organisationSize')}">
@@ -87,13 +87,13 @@
         <th:block th:unless="${model.readonly}">
             <!--/* edit */-->
             <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-group-error'">
-                <label th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
+                <label th:for="|formInput[${formInput.id}]|" th:id="'form-label-'+${formInput.id}">
                     <span class="form-label form-label-bold" th:text="${formInput.description}"></span>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
                 </label>
                 <input class="form-control width-medium"
-                       th:id="'formInput-'+${formInput.id}"
+                       th:id="|formInput[${formInput.id}]|"
                        th:name="'formInput['+${formInput.id}+']'"
                        th:value="*{formInput[__${formInput.id}__]}"
                        required="required"
@@ -115,14 +115,14 @@
         <th:block th:unless="${model.readonly}">
             <!--/* edit */-->
             <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-group-error'">
-                <label th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
+                <label th:for="|formInput[${formInput.id}]|" th:id="'form-label-'+${formInput.id}">
                     <span class="form-label form-label-bold" th:text="${formInput.description}"></span>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
                 </label>
                 <input class="form-control width-medium"
                        type="number"
-                       th:id="'formInput-'+${formInput.id}"
+                       th:id="|formInput[${formInput.id}]|"
                        th:name="'formInput['+${formInput.id}+']'"
                        min="0"
                        max="2147483647"
@@ -143,7 +143,7 @@
     <div th:fragment="financial_year_end(model)" th:with="formInput=${model.formInput}, question=${model.question}"
          class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-group-error'">
         <fieldset th:with="value=(*{formInput[__${formInput.id}__]})">
-            <legend>
+            <legend th:id="|formInput[${formInput.id}]|">
                 <span class="form-label form-label-bold">End of last financial year</span>
                 <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
                 <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
@@ -192,7 +192,7 @@
     <div th:fragment="financial_staff_count(model)" th:with="formInput=${model.formInput}, question=${model.question}"
          class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'form-group-error'">
         <th:block th:unless="${model.readonly}">
-            <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
+            <label class="form-label form-label-bold" th:for="|formInput[${formInput.id}]|" th:id="'form-label-'+${formInput.id}">
                 <span th:text="${formInput.description}"></span>
                 <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
                 <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
@@ -200,7 +200,7 @@
             <input class="form-control width-medium"
                    th:disabled="${model.readonly or model.complete}"
                    type="number"
-                   th:id="${formInput.id}"
+                   th:id="|formInput[${formInput.id}]|"
                    th:name="'formInput['+${formInput.id}+']'"
                    th:min="0"
                    th:max="2147483647"
