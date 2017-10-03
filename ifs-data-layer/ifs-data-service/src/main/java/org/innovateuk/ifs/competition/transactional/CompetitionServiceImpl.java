@@ -57,6 +57,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBL
 import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
+import static org.innovateuk.ifs.commons.service.ServiceResult.handlingErrors;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
@@ -274,6 +275,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return getCurrentlyLoggedInUser().andOnSuccess(user -> {
             if (user.hasRole(UserRoleType.INNOVATION_LEAD)) {
                 return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForLeadTechnologist(searchQueryLike, user.getId(), pageRequest));
+            } else if (user.hasRole(UserRoleType.SUPPORT)) {
+                return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForSupportUser(searchQueryLike, pageRequest));
             } else {
                 return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.search(searchQueryLike, pageRequest));
             }
