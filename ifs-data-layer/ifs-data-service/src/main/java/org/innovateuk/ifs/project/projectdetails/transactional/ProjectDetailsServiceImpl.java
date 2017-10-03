@@ -28,6 +28,7 @@ import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectD
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.transactional.EmailService;
@@ -130,9 +131,40 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Transactional
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return validateProjectStartDate(projectStartDate).
+                andOnSuccess(() -> validateIfStartDateCanBeChanged(projectId)).
                 andOnSuccess(() -> getProject(projectId)).
-                andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
+    }
+
+    private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
+
+        if (date.getDayOfMonth() != 1) {
+            return serviceFailure(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH);
+        }
+
+        if (date.isBefore(LocalDate.now())) {
+            return serviceFailure(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateIfStartDateCanBeChanged(Long projectId) {
+
+        if (isSpendProfileIsGenerated(projectId)) {
+            return serviceFailure(PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED);
+        }
+
+        return serviceSuccess();
+    }
+
+    private boolean isSpendProfileIsGenerated(Long projectId) {
+        List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
+        return !spendProfiles.isEmpty();
+    }
+
+    private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
+        return spendProfileRepository.findByProjectId(projectId);
     }
 
     @Override
@@ -179,26 +211,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> submitProjectDetails(final Long projectId, ZonedDateTime date) {
-
-        return getProject(projectId).andOnSuccess(project ->
-                getCurrentlyLoggedInPartner(project).andOnSuccess(projectUser -> {
-
-                    if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
-                        return serviceSuccess();
-                    } else {
-                        return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE);
-                    }
-                }));
-    }
-
-    @Override
-    public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(this::doIsSubmissionAllowed);
-    }
-
-    @Override
-    @Transactional
     public ServiceResult<Void> inviteFinanceContact(Long projectId, InviteProjectResource inviteResource) {
         return inviteContact(projectId, inviteResource, Notifications.INVITE_FINANCE_CONTACT);
     }
@@ -212,24 +224,11 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
                 .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MANAGER));
     }
 
-    private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
-
-        if (projectDetailsWorkflowHandler.isSubmitted(project)) {
-            return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED);
-        }
-
-        return serviceSuccess(project);
-    }
-
     private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey){
-        return statusService.getProjectStatusByProject(project).andOnSuccess(
-                projectStatus -> {
-                    if(projectStatus.getSpendProfileStatus().equals(COMPLETE)){
-                        return serviceFailure(failKey);
-                    }
-                    return serviceSuccess(project);
-                }
-        );
+        if (project.getGrantOfferLetter() != null){
+            return serviceFailure(failKey);
+        }
+        return serviceSuccess(project);
     }
 
     private ServiceResult<ProjectUser> validateProjectManager(Project project, Long projectManagerUserId) {
@@ -283,19 +282,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         return getOnlyElementOrEmpty(projectManagers);
     }
 
-    private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
-
-        if (date.getDayOfMonth() != 1) {
-            return serviceFailure(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH);
-        }
-
-        if (date.isBefore(LocalDate.now())) {
-            return serviceFailure(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE);
-        }
-
-        return serviceSuccess();
-    }
-
     private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
         if(!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
             return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
@@ -345,10 +331,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
         project.addProjectUser(newFinanceContact);
         return serviceSuccess();
-    }
-
-    private boolean doIsSubmissionAllowed(Project project) {
-        return projectDetailsWorkflowHandler.isSubmissionAllowed(project);
     }
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {
