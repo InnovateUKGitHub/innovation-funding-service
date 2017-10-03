@@ -575,7 +575,6 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 }
         );
     }
-    
 
     private AssessorInviteSendResource setUpAssessorInviteSendResource() {
         return newAssessorInviteSendResource()

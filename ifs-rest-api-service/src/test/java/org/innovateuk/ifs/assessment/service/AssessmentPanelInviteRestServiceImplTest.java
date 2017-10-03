@@ -124,8 +124,8 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
                 .build();
 
         setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "sendAllInvites", competitionId), assessorInviteSendResource, OK);
-
         assertTrue(service.sendAllInvites(competitionId, assessorInviteSendResource).isSuccess());
+        setupPostWithRestResultVerifications(format("%s/%s/%s", restUrl, "sendAllInvites", competitionId), Void.class, assessorInviteSendResource);
     }
 
     @Test
