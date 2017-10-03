@@ -27,6 +27,8 @@ public class AssessmentPanelInviteStatisticsResourceBuilderTest {
         assertEquals(expectedAssessorsAccepted, inviteStatisticsResource.getAccepted());
         assertEquals(expectedAssessorsRejected, inviteStatisticsResource.getDeclined());
         assertEquals(expectedAssessorsPending, inviteStatisticsResource.getPending());
+        int totaInvitesInDifferentStates = inviteStatisticsResource.getAccepted() + inviteStatisticsResource.getDeclined() + inviteStatisticsResource.getPending();
+        assertEquals(expectedAssessorInvites,totaInvitesInDifferentStates);
     }
 
     @Test
