@@ -190,23 +190,20 @@ public class AssessmentPanelInviteControllerTest extends BaseControllerMockMVCTe
 
     @Test
     public void sendAllInvites() throws Exception {
-        long competitionId = 1L;
-
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
                 .withContent("content")
                 .build();
 
-        when(assessmentPanelInviteServiceMock.sendAllInvites(competitionId, assessorInviteSendResource)).thenReturn(serviceSuccess());
+        when(assessmentPanelInviteServiceMock.sendAllInvites(COMPETITION_ID, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/assessmentpanelinvite/sendAllInvites/{competitionId}", competitionId)
+        mockMvc.perform(post("/assessmentpanelinvite/sendAllInvites/{competitionId}", COMPETITION_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
                 .andExpect(status().isOk());
 
-        verify(assessmentPanelInviteServiceMock).sendAllInvites(competitionId, assessorInviteSendResource);
+        verify(assessmentPanelInviteServiceMock).sendAllInvites(COMPETITION_ID, assessorInviteSendResource);
     }
-
 
     @Test
     public void getAllInvitesToSend() throws Exception {
@@ -219,6 +216,4 @@ public class AssessmentPanelInviteControllerTest extends BaseControllerMockMVCTe
 
         verify(assessmentPanelInviteServiceMock, only()).getAllInvitesToSend(COMPETITION_ID);
     }
-
-
 }

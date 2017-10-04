@@ -1,4 +1,4 @@
-Dear [recipient name]
+Dear [recipient name],
 
 We are inviting you to the assessment panel for the competition '${competitionName}'.
 

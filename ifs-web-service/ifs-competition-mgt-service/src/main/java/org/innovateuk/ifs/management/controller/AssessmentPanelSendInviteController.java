@@ -13,10 +13,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.function.Supplier;
-
 import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
@@ -67,10 +65,8 @@ public class AssessmentPanelSendInviteController {
         Supplier<String> failureView = () -> getInvitesToSend(model, competitionId, form, bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            ServiceResult<Void> sendResult = assessmentPanelInviteRestService.sendAllInvites(
-                    competitionId,
-                    new AssessorInviteSendResource(form.getSubject(), form.getContent())
-            )
+            ServiceResult<Void> sendResult = assessmentPanelInviteRestService
+                    .sendAllInvites(competitionId, new AssessorInviteSendResource(form.getSubject(), form.getContent()))
                     .toServiceResult();
 
             return validationHandler.addAnyErrors(sendResult, fieldErrorsToFieldErrors(), asGlobalErrors())

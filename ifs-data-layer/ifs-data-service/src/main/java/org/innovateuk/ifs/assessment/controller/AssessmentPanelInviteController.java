@@ -10,9 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-
-
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -20,11 +17,9 @@ import java.util.List;
  * Controller for managing Invites to Assessment Panels.
  */
 
-
 @RestController
 @RequestMapping("/assessmentpanelinvite")
 public class AssessmentPanelInviteController {
-
 
     private static final int DEFAULT_PAGE_SIZE = 20;
 
@@ -41,7 +36,6 @@ public class AssessmentPanelInviteController {
                                            @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
         return assessmentPanelInviteService.sendAllInvites(competitionId, assessorInviteSendResource).toPostResponse();
     }
-
 
     @GetMapping("/getCreatedInvites/{competitionId}")
     public RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(
@@ -68,5 +62,4 @@ public class AssessmentPanelInviteController {
             @PathVariable long competitionId) {
         return assessmentPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
     }
-
 }

@@ -949,7 +949,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(assessmentPanelInviteRepositoryMock).getByCompetitionId(competitionId);
         inOrder.verify(competitionParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.ASSESSOR, ParticipantStatus.ACCEPTED, panelInviteIds);
         inOrder.verify(competitionParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, CompetitionParticipantRole.ASSESSOR, ParticipantStatus.REJECTED, panelInviteIds);
-        // inOrder.verify(assessmentPanelInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, Collections.singleton(InviteStatus.SENT)));
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
