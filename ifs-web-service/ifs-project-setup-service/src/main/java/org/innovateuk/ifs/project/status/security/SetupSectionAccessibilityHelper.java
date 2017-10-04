@@ -218,10 +218,6 @@ public class SetupSectionAccessibilityHelper {
         return NOT_ACCESSIBLE;
     }
 
-    public boolean isProjectDetailsSubmitted() {
-        return setupProgressChecker.isProjectDetailsSubmitted();
-    }
-
     public boolean isSpendProfileGenerated() {
         return setupProgressChecker.isSpendProfileGenerated();
     }
