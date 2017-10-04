@@ -103,8 +103,8 @@ the user selects Research category
     the user clicks the button/link   jQuery=button:contains("Save")
 
 the user marks the finances as complete
-    [Arguments]  ${Application}  ${overheadsCost}
-    the user fills in the project costs  ${overheadsCost}
+    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
+    the user fills in the project costs  ${overheadsCost}  ${totalCosts}
     the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
