@@ -22,10 +22,6 @@ public interface ProjectDetailsService {
 
     ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource address);
 
-    ServiceResult<Void> setApplicationDetailsSubmitted(Long projectId);
-
-    ServiceResult<Boolean> isSubmitAllowed(Long projectId);
-
     ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource);
 
     ServiceResult<Void> inviteProjectManager (Long projectId, InviteProjectResource inviteProjectResource);
