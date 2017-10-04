@@ -6,6 +6,8 @@ Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 
+# This Suite moves competition Photonics for Public to Project Setup
+
 *** Variables ***
 ${compResearch}     Research can lead
 ${compPublic}       Public Sector can lead
@@ -46,7 +48,7 @@ Applicant Applies to Public content leading Competition
     Then the user fills in the Application details        ${publicLeadApp}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
     And the user marks every section but one as complete  ${publicLeadApp}
     When the user navigates to Your-finances page         ${publicLeadApp}
-    Then the user marks the finances as complete          ${publicLeadApp}
+    Then the user marks the finances as complete          ${publicLeadApp}  Calculate  52,214
     And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  becky.mason@gmail.com
 
 Project Finance is able to see the Overheads costs file
@@ -106,7 +108,7 @@ the collaborator accepts and fills in his part in the application
     the user reads his email and clicks the link  ${collaborator}  Invitation to collaborate in ${competition}  You are invited by  2
     the user is able to confirm the invite        ${collaborator}  ${short_password}
     the user navigates to Your-finances page      ${application}
-    the user marks the finances as complete       ${application}
+    the user marks the finances as complete       ${application}  Calculate  52,214
 
 the lead is able to submit the application
     [Arguments]  ${user}  ${application}
