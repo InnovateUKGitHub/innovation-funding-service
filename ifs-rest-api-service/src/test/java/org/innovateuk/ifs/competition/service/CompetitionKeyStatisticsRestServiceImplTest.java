@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelInviteStatisticsResource;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.*;
 import org.junit.Test;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.competition.builder.AssessmentPanelInviteStatisticsResourceBuilder.newAssessmentPanelInviteStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyStatisticsResourceBuilder.newCompetitionClosedKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatisticsResourceBuilder.newCompetitionFundedKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
@@ -69,6 +71,7 @@ public class CompetitionKeyStatisticsRestServiceImplTest extends BaseRestService
         setupGetWithRestResultExpectations(format("%s/%s/funded", competitionKeyStatisticsRestURL, competitionId), CompetitionFundedKeyStatisticsResource.class, expected);
         assertSame(expected, service.getFundedKeyStatisticsByCompetition(competitionId).getSuccessObject());
     }
+
     @Test
     public void getAssessmentPanelKeyStatisticsByCompetition() {
         AssessmentPanelKeyStatisticsResource expected = newAssessmentPanelKeyStatisticsResource().build();
@@ -76,5 +79,14 @@ public class CompetitionKeyStatisticsRestServiceImplTest extends BaseRestService
 
         setupGetWithRestResultExpectations(format("%s/%s/%s", competitionKeyStatisticsRestURL, competitionId, "panel"), AssessmentPanelKeyStatisticsResource.class, expected);
         assertSame(expected, service.getAssessmentPanelKeyStatisticsByCompetition(competitionId).getSuccessObject());
+    }
+
+    @Test
+    public void getAssessmentPanelInviteStatisticsByCompetition() {
+        AssessmentPanelInviteStatisticsResource expected = newAssessmentPanelInviteStatisticsResource().build();
+        long competitionId = 1L;
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s", competitionKeyStatisticsRestURL, competitionId, "panelInvites"), AssessmentPanelInviteStatisticsResource.class, expected);
+        assertSame(expected, service.getAssessmentPanelInviteStatisticsByCompetition(competitionId).getSuccessObject());
     }
 }

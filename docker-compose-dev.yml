@@ -1,13 +1,21 @@
 version: '3'
 services:
 
+  registration-svc:
+    hostname: registration-svc
+    ports:
+      - "8088:8080"
+      - "9008:8000"
+    environment:
+      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+
   application-svc:
     hostname: application-svc
     ports:
       - "8081:8080"
       - "9001:8000"
     environment:
-      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   assessment-svc:
     hostname: assessment-svc
@@ -15,13 +23,13 @@ services:
       - "8082:8080"
       - "9002:8000"
     environment:
-      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
 
   competition-mgt-svc:
     hostname: competition-mgt-svc
     environment:
-      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
     ports:
       - "8083:8080"
       - "9003:8000"
@@ -32,7 +40,7 @@ services:
       - "8084:8080"
       - "9004:8000"
     environment:
-      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   project-setup-svc:
     hostname: project-setup-svc
@@ -40,14 +48,14 @@ services:
       - "8085:8080"
       - "9005:8000"
     environment:
-      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
   front-door-svc:
     hostname: front-door-svc
     ports:
       - "8087:8080"
       - "9007:8000"
     environment:
-      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   data-service:
     hostname: data-service
@@ -60,7 +68,7 @@ services:
       - "8086:8080"
       - "9006:8000"
     environment:
-      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   mail:
     image: davidrums/local-webmail-sink

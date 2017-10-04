@@ -48,16 +48,13 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
 
     private Long projectId = 1L;
 
-    private Long organisationId = 2L;
-
-    //private Long projectFinanceId = 3L;
-
     private ProjectFinanceResourceId projectFinanceResourceId;
 
     private ProjectFinanceResource projectFinanceResource;
 
     @Before
     public void setUp() throws Exception {
+        Long organisationId = 2L;
         Organisation organisation = newOrganisation().withId(organisationId).withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
         Competition competition = newCompetition().build();
         Application application = newApplication().withCompetition(competition).build();
@@ -74,8 +71,8 @@ public class ProjectFinanceHandlerImplTest extends BaseUnitTestMocksTest {
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(anyLong())).thenReturn(organisationFinanceDefaultHandlerMock);
         when(projectFinanceRepositoryMock.findByProjectId(projectId)).thenReturn(singletonList(projectFinance));
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(any(Long.class))).thenReturn(organisationFinanceDefaultHandlerMock);
-        when(organisationFinanceDefaultHandlerMock.getProjectOrganisationFinances(projectFinance.getId())).thenReturn(costs);
-        when(organisationFinanceDefaultHandlerMock.getProjectOrganisationFinanceTotals(projectFinance.getId(), competition)).thenReturn(costs);
+        when(organisationFinanceDefaultHandlerMock.getProjectOrganisationFinances(projectFinance.getId(), competition)).thenReturn(costs);
+        when(organisationFinanceDefaultHandlerMock.getProjectOrganisationFinances(projectFinance.getId(), competition)).thenReturn(costs);
     }
 
     @Test

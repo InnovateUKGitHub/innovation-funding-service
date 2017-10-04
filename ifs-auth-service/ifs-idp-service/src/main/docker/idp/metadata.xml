@@ -5,7 +5,7 @@
 
 <EntityDescriptor  xmlns="urn:oasis:names:tc:SAML:2.0:metadata" xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:shibmd="urn:mace:shibboleth:metadata:1.0" xmlns:xml="http://www.w3.org/XML/1998/namespace" xmlns:mdui="urn:oasis:names:tc:SAML:metadata:ui" entityID="https://idp/idp/shibboleth">
 
-    <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol urn:mace:shibboleth:1.0">
+    <IDPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:mace:shibboleth:1.0">
 
         <Extensions>
             <shibmd:Scope regexp="false">innovateuk.org</shibmd:Scope>
@@ -15,35 +15,27 @@
         <KeyDescriptor use="signing">
             <ds:KeyInfo>
                     <ds:X509Data>
-                        <ds:X509Certificate>${IDP_SIGNING_CERTIFICATE}</ds:X509Certificate>
+                        <ds:X509Certificate>${IDP_SAML_SIGNING_CERTIFICATE}</ds:X509Certificate>
                     </ds:X509Data>
             </ds:KeyInfo>
         </KeyDescriptor>
-        <KeyDescriptor use="signing">
-            <ds:KeyInfo>
-                    <ds:X509Data>
-                        <ds:X509Certificate>${IDP_SIGNING_CERTIFICATE}</ds:X509Certificate>
-                    </ds:X509Data>
-            </ds:KeyInfo>
 
-        </KeyDescriptor>
         <KeyDescriptor use="encryption">
             <ds:KeyInfo>
                     <ds:X509Data>
-                        <ds:X509Certificate>${IDP_ENCRYPTION_CERTIFICATE}</ds:X509Certificate>
+                        <ds:X509Certificate>${IDP_SAML_ENCRYPTION_CERTIFICATE}</ds:X509Certificate>
                     </ds:X509Data>
             </ds:KeyInfo>
 
         </KeyDescriptor>
 
-        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://idp:8443/idp/profile/SAML1/SOAP/ArtifactResolution" index="1"/>
-        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://idp:8443/idp/profile/SAML2/SOAP/ArtifactResolution" index="2"/>
+        <ArtifactResolutionService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://idp/idp/profile/SAML2/SOAP/ArtifactResolution" index="2"/>
 
         <!--
         <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://idp/idp/profile/SAML2/Redirect/SLO"/>
         <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://idp/idp/profile/SAML2/POST/SLO"/>
         <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://idp/idp/profile/SAML2/POST-SimpleSign/SLO"/>
-        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://idp:8443/idp/profile/SAML2/SOAP/SLO"/>
+        <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://idp/idp/profile/SAML2/SOAP/SLO"/>
         -->
 
 
@@ -56,44 +48,6 @@
         <SingleSignOnService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="https://idp/idp/profile/SAML2/Redirect/SSO"/>
 
     </IDPSSODescriptor>
-
-
-    <AttributeAuthorityDescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:1.1:protocol">
-
-        <Extensions>
-            <shibmd:Scope regexp="false">innovateuk.org</shibmd:Scope>
-        </Extensions>
-        <KeyDescriptor use="signing">
-            <ds:KeyInfo>
-                    <ds:X509Data>
-                        <ds:X509Certificate>${IDP_SIGNING_CERTIFICATE}</ds:X509Certificate>
-                    </ds:X509Data>
-            </ds:KeyInfo>
-
-        </KeyDescriptor>
-        <KeyDescriptor use="signing">
-            <ds:KeyInfo>
-                    <ds:X509Data>
-                        <ds:X509Certificate>${IDP_SIGNING_CERTIFICATE}</ds:X509Certificate>
-                    </ds:X509Data>
-            </ds:KeyInfo>
-
-        </KeyDescriptor>
-        <KeyDescriptor use="encryption">
-            <ds:KeyInfo>
-                    <ds:X509Data>
-                        <ds:X509Certificate>${IDP_ENCRYPTION_CERTIFICATE}</ds:X509Certificate>
-                    </ds:X509Data>
-            </ds:KeyInfo>
-
-        </KeyDescriptor>
-
-        <AttributeService Binding="urn:oasis:names:tc:SAML:1.0:bindings:SOAP-binding" Location="https://idp:8443/idp/profile/SAML1/SOAP/AttributeQuery"/>
-        <!-- <AttributeService Binding="urn:oasis:names:tc:SAML:2.0:bindings:SOAP" Location="https://idp:8443/idp/profile/SAML2/SOAP/AttributeQuery"/> -->
-        <!-- If you uncomment the above you should add urn:oasis:names:tc:SAML:2.0:protocol to the protocolSupportEnumeration above -->
-
-    </AttributeAuthorityDescriptor>
-
 </EntityDescriptor>
 
 <EntityDescriptor xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" ID="_5bec37c96575996255dab967c3c21bf6b1400113" entityID="https://ifs.local-dev">
@@ -103,7 +57,6 @@
     <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#sha384"/>
     <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
     <mdalg:DigestMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#sha224"/>
-    <mdalg:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
     <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512"/>
     <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384"/>
     <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256"/>
@@ -111,13 +64,9 @@
     <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/>
     <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha384"/>
     <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
-    <mdalg:SigningMethod Algorithm="http://www.w3.org/2009/xmldsig11#dsa-sha256"/>
-    <mdalg:SigningMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha1"/>
-    <mdalg:SigningMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
-    <mdalg:SigningMethod Algorithm="http://www.w3.org/2000/09/xmldsig#dsa-sha1"/>
   </Extensions>
 
-  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol urn:oasis:names:tc:SAML:1.1:protocol urn:oasis:names:tc:SAML:1.0:protocol">
+  <SPSSODescriptor protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
     <Extensions>
       <init:RequestInitiator xmlns:init="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Binding="urn:oasis:names:tc:SAML:profiles:SSO:request-init" Location="https://ifs.local-dev/Shibboleth.sso/Login"/>
       <idpdisc:DiscoveryResponse xmlns:idpdisc="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Binding="urn:oasis:names:tc:SAML:profiles:SSO:idp-discovery-protocol" Location="https://ifs.local-dev/Shibboleth.sso/Login" index="1"/>
@@ -136,7 +85,6 @@
       <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes128-cbc"/>
       <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes192-cbc"/>
       <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc"/>
-      <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#tripledes-cbc"/>
       <EncryptionMethod Algorithm="http://www.w3.org/2009/xmlenc11#rsa-oaep"/>
       <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"/>
     </KeyDescriptor>
@@ -145,12 +93,8 @@
     <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST-SimpleSign" Location="https://ifs.local-dev/Shibboleth.sso/SAML2/POST-SimpleSign" index="2"/>
     <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https://ifs.local-dev/Shibboleth.sso/SAML2/Artifact" index="3"/>
     <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:PAOS" Location="https://ifs.local-dev/Shibboleth.sso/SAML2/ECP" index="4"/>
-    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:browser-post" Location="https://ifs.local-dev/Shibboleth.sso/SAML/POST" index="5"/>
-    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:1.0:profiles:artifact-01" Location="https://ifs.local-dev/Shibboleth.sso/SAML/Artifact" index="6"/>
   </SPSSODescriptor>
 
 </EntityDescriptor>
 
 </EntitiesDescriptor>
-
-

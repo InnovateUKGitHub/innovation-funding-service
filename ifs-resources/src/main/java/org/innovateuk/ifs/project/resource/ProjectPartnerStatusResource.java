@@ -6,7 +6,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 
-import static java.lang.Boolean.FALSE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 
 /**
