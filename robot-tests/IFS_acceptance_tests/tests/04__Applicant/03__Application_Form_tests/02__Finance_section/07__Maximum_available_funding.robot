@@ -230,7 +230,7 @@ the correct funding displayed for lead applicant
     the user should see the text in the page    Enter your funding level (maximum ${funding_amoount}).
 
 the user marks your funding section as complete
-    the user enters text to a text field  id=cost-financegrantclaim  30
+    the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  30
     the user clicks the button/link       jQuery=label[for$="otherPublicFunding-no"]:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")

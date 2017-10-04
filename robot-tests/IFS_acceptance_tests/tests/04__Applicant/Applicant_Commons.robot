@@ -282,7 +282,7 @@ the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page   ${Application}
     the user clicks the button/link       link=Your funding
-    the user enters text to a text field  css=#cost-financegrantclaim  45
+    the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  45
     click element                         jQuery=label:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
