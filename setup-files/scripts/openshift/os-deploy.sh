@@ -22,20 +22,22 @@ echo "Deploying the $PROJECT Openshift project"
 
 function deploy() {
 
+    oc create -f os-files-tmp/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
+    oc create -f os-files-tmp/shib/55-ldap.yml ${SVC_ACCOUNT_CLAUSE}
+
     if $(isNamedEnvironment ${TARGET}); then
         oc create -f os-files-tmp/gluster/10-gluster-svc.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/gluster/11-gluster-endpoints.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/gluster/named-envs/12-${TARGET}-file-upload-claim.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
-        oc create -f os-files-tmp/shib/named-envs/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/shib/named-envs/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
     else
         oc create -f os-files-tmp/mail/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/mysql/ ${SVC_ACCOUNT_CLAUSE}
-        oc create -f os-files-tmp/shib/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/gluster/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
+        oc create -f os-files-tmp/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
 }

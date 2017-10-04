@@ -131,18 +131,56 @@ function injectLDAPVariables() {
     sed -i.bak "s#<<LDAP-SCHEME>>#$LDAP_SCHEME#g" os-files-tmp/db-reset/*.yml
 }
 
+function getEnvVariableValue() {
+    variableName=$1
+    eval echo "\$$variableName"
+}
+
+function substituteOptionalEnvVariable() {
+    variableValue=$(getEnvVariableValue $1)
+    replacementToken=$2
+    find os-files-tmp -name '*.yml' | xargs sed -i.bak "s#${replacementToken}#${variableValue}#g"
+}
+
+function substituteMandatoryEnvVariable() {
+
+    variableValue=$(getEnvVariableValue $1)
+
+    if [ -z "${variableValue}" ]; then
+        echo "Set ${variableName} environment variable"; exit -1
+    fi
+
+    replacementToken=$2
+
+    find os-files-tmp -name '*.yml' | xargs sed -i.bak "s#${replacementToken}#${variableValue}#g"
+}
+
 function tailorAppInstance() {
 
     # We will set up the default environment variables here for local and remote projects as we do not expect these to
     # be available other than in Bamboo-triggered jobs
     if ! $(isNamedEnvironment $TARGET); then
 
+        # for the IDP and Registration Service
         export LDAP_URL="ldaps://ldap:389"
         export LDAP_PASSWORD="default"
 
-        # not necessary to have here as they have default values, but included here for clarity
-        # export SHIBBOLETH_MEMCACHE_ENDPOINT=
-        # export GA_TRACKING_ID=
+        # for the SP
+        export SHIBBOLETH_SP_MPM_STARTSERVERS="2"
+        export SHIBBOLETH_SP_MPM_MINSPARETHREADS="25"
+        export SHIBBOLETH_SP_MPM_MAXSPARETHREADS="75"
+        export SHIBBOLETH_SP_MPM_THREADLIMIT="64"
+        export SHIBBOLETH_SP_MPM_THREADSPERCHILD="25"
+        export SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS="150"
+        export SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD="0"
+        export SHIBBOLETH_SP_MEMORY_LIMIT="600Mi"
+        export SHIBBOLETH_SP_MEMORY_REQUEST="300Mi"
+
+        # for the IDP
+        export GA_TRACKING_ID=
+
+        # for the SP and IDP
+        export SHIBBOLETH_MEMCACHE_ENDPOINT=
     fi
 
     if [ -z "$SSLCERTFILE" ]; then echo "Set SSLCERTFILE, SSLCACERTFILE, and SSLKEYFILE environment variables"; exit -1; fi
@@ -173,8 +211,6 @@ function tailorAppInstance() {
       sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
       sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
 
-
-
       sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
       sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/db-reset/*.yml
       sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
@@ -192,14 +228,26 @@ function tailorAppInstance() {
 
     fi
 
-    if [ -z "${LDAP_PASSWORD}" ]; then echo "Set LDAP_PASSWORD environment variable"; exit -1; fi
-    find os-files-tmp -name '*.yml' | xargs sed -i.bak "s#<<LDAP-PASSWORD>>#${LDAP_PASSWORD}#g"
+    # for the IDP and Registration Service
+    substituteMandatoryEnvVariable LDAP_URL "<<LDAP-URL>>"
+    substituteMandatoryEnvVariable LDAP_PASSWORD "<<LDAP-PASSWORD>>"
 
-    if [ -z "${LDAP_URL}" ]; then echo "Set LDAP_URL environment variable"; exit -1; fi
-    find os-files-tmp -name '*.yml' | xargs sed -i.bak "s#<<LDAP-URL>>#${LDAP_URL}#g"
+    # for the SP
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_STARTSERVERS "<<SHIBBOLETH_SP_MPM_STARTSERVERS>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MINSPARETHREADS "<<SHIBBOLETH_SP_MPM_MINSPARETHREADS>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MAXSPARETHREADS "<<SHIBBOLETH_SP_MPM_MAXSPARETHREADS>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_THREADLIMIT "<<SHIBBOLETH_SP_MPM_THREADLIMIT>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_THREADSPERCHILD "<<SHIBBOLETH_SP_MPM_THREADSPERCHILD>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS "<<SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD "<<SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MEMORY_LIMIT "<<SHIBBOLETH_SP_MEMORY_LIMIT>>"
+    substituteOptionalEnvVariable SHIBBOLETH_SP_MEMORY_REQUEST "<<SHIBBOLETH_SP_MEMORY_REQUEST>>"
 
-    find os-files-tmp -name '*.yml' | xargs sed -i.bak "s#<<SHIBBOLETH-MEMCACHE-ENDPOINT>>#${SHIBBOLETH_MEMCACHE_ENDPOINT-}#g"
-    find os-files-tmp -name '*.yml' | xargs sed -i.bak "s#<<GA-TRACKING-ID>>#${GA_TRACKING_ID-}#g"
+    # for the IDP
+    substituteOptionalEnvVariable GA_TRACKING_ID "<<GA-TRACKING-ID>>"
+
+    # for the SP and IDP
+    substituteOptionalEnvVariable SHIBBOLETH_MEMCACHE_ENDPOINT "<<SHIBBOLETH-MEMCACHE-ENDPOINT>>"
 
     ## TODO DW - when we remove the tech debt of having multiple files for the shib yml files per named environment,
     ## we can do away with this more complex configuration block and that of the one above that this one mirrors
