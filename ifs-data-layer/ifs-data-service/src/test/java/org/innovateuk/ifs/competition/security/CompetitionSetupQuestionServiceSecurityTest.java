@@ -76,14 +76,14 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
     public void testSaveAllowedIfGlobalCompAdminRole() {
         RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
-        classUnderTest.save(newCompetitionSetupQuestionResource().build());
+        classUnderTest.update(newCompetitionSetupQuestionResource().build());
     }
 
     @Test
     public void testSaveAllowedIfNoGlobalRolesAtAll() {
         try {
-            classUnderTest.save(newCompetitionSetupQuestionResource().build());
-            fail("Should not have been able to save question without the global Comp Admin role");
+            classUnderTest.update(newCompetitionSetupQuestionResource().build());
+            fail("Should not have been able to update question without the global Comp Admin role");
         } catch (AccessDeniedException e) {
             // expected behaviour
         }
@@ -100,8 +100,8 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.save(newCompetitionSetupQuestionResource().build());
-                fail("Should not have been able to save question without the global Comp Admin role");
+                classUnderTest.update(newCompetitionSetupQuestionResource().build());
+                fail("Should not have been able to update question without the global Comp Admin role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
             }
@@ -118,7 +118,7 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
             return null;
         }
 
-        public ServiceResult<CompetitionSetupQuestionResource> save(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+        public ServiceResult<CompetitionSetupQuestionResource> update(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
             return null;
         }
 

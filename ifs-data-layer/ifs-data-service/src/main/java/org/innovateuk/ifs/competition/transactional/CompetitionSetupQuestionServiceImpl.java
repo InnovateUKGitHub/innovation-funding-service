@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -47,6 +49,9 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     @Autowired
     private GuidanceRowRepository guidanceRowRepository;
+
+    @Autowired
+    private CompetitionSetupTemplateService competitionSetupTemplateService;
 
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
@@ -71,7 +76,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                     setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
                     setupResource.setShortTitleEditable(isShortNameEditable(setupResource.getType()));
 
-                    return ServiceResult.serviceSuccess(setupResource);
+                    return serviceSuccess(setupResource);
                 });
     }
 
@@ -117,7 +122,23 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     @Override
     @Transactional
-    public ServiceResult<CompetitionSetupQuestionResource> save(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+    public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(Long competitionId) {
+        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
+                .andOnSuccess(competition -> competitionSetupTemplateService.addDefaultQuestionToCompetition(competition))
+                .andOnSuccess(question -> getByQuestionId(question.getId()));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> delete(Long questionId) {
+        questionRepository.delete(questionId);
+
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<CompetitionSetupQuestionResource> update(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         Long questionId = competitionSetupQuestionResource.getQuestionId();
         Question question = questionRepository.findOne(questionId);
 
@@ -140,7 +161,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         markResearchCategoryQuestionAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markScopeAsActiveOrInactive(questionId, competitionSetupQuestionResource);
 
-        return ServiceResult.serviceSuccess(competitionSetupQuestionResource);
+        return serviceSuccess(competitionSetupQuestionResource);
     }
 
     private void markAppendixAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {

@@ -25,7 +25,7 @@ public class CompetitionSetupQuestionController {
     @PutMapping("/{id}")
     public RestResult<Void> save(@PathVariable("id") final Long questionId,
                                  @RequestBody final CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        return competitionSetupQuestionService.save(competitionSetupQuestionResource).toPutResponse();
+        return competitionSetupQuestionService.update(competitionSetupQuestionResource).toPutResponse();
     }
 
 }

@@ -354,16 +354,16 @@ Application - Application process Page
     [Setup]    go to    ${COMP_MANAGEMENT_COMP_SETUP}
     When The user clicks the button/link    link=Application
     Then The user should see the text in the page  Sector competition questions
-    And the user should see the element    link=Need or challenge
-    And the user should see the element    link=Approach and innovation
-    And the user should see the element    link=Team and resources
-    And the user should see the element    link=Market awareness
-    And the user should see the element    link=Outcomes and route to market
-    And the user should see the element    link=Wider impacts
-    And the user should see the element    link=Project management
-    And the user should see the element    link=Risks
-    And the user should see the element    link=Additionality
-    And the user should see the element    link=Costs and value for money
+    And the user should see the element    link=1. Need or challenge
+    And the user should see the element    link=2. Approach and innovation
+    And the user should see the element    link=3. Team and resources
+    And the user should see the element    link=4. Market awareness
+    And the user should see the element    link=5. Outcomes and route to market
+    And the user should see the element    link=6. Wider impacts
+    And the user should see the element    link=7. Project management
+    And the user should see the element    link=8. Risks
+    And the user should see the element    link=9. Additionality
+    And the user should see the element    link=10. Costs and value for money
     And the user should see the element    link=Application details
     And the user should see the element    link=Project summary
     And the user should see the element    link=Public description
@@ -372,19 +372,19 @@ Application - Application process Page
 
 Application: Need or challenge
     [Documentation]    INFUND-5632 INFUND-5685 INFUND-5630 INFUND-6283
-    When the user clicks the button/link    link=Need or challenge
+    When the user clicks the button/link    link=1. Need or challenge
     Then the user should see the element    jQuery=h1:contains("Need or challenge")
     When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And the user edits the assessed question information
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
-    And the user clicks the button/link    link=Need or challenge
+    And the user clicks the button/link    link=1. Need or challenge
     And the user sees the correct assessed question information
     And the user clicks the button/link    jQuery=a:contains("Edit this question")
     And the user selects the radio button    question.writtenFeedback    0
     And the user selects the radio button    question.scored    0
     And the user should not be able to edit the assessed question feedback
     And the user clicks the button/link    jQuery=.button[value="Save and close"]
-    And the user clicks the button/link    link=Need or challenge
+    And the user clicks the button/link    link=1. Need or challenge
     Then the user should not see the assessed question feedback
     [Teardown]    The user clicks the button/link    link=Application
 
