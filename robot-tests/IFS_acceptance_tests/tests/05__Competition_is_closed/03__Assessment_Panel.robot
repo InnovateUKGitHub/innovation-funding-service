@@ -2,6 +2,7 @@
 Documentation     IFS-786 Assessment panels - Manage assessment panel link on competition dashboard
 ...
 ...               IFS-31 Assessment panels - Invite assessors to panel- Find and Invite Tabs
+...               IFS-1564 Assessment panels - Invite assessors to panel - Key statistics
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -25,13 +26,15 @@ Assessment panel links are active if the assessment panel has been set
     Then the user should see the element   jQuery=h1:contains("Invite assessors to panel")
 
 CompAdmin can add an assessor to invite list
-    [Documentation]  IFS-31
+    [Documentation]  IFS-31  IFS-1564
     [Tags]
     Given the user clicks the button/link    jQuery=tr:contains("Benjamin Nixon") label
     When the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
     Then the user should see the element     jQuery=td:contains("Benjamin Nixon") + td:contains("benjamin.nixon@gmail.com")
     And the user clicks the button/link      link=Find
     And the user should not see the element  jQuery=td:contains("Benjamin Nixon")
+    And the user should see the element      jQuery=.column-quarter:contains("0") small:contains("Invited")
+    And the user should see the element      jQuery=.column-quarter:contains("0") small:contains("Pending")
 
 Bulk add assessor to invite list
     [Documentation]  IFS-31
@@ -41,6 +44,7 @@ Bulk add assessor to invite list
     And the user should see the element     jQuery=td:contains("Joel George") + td:contains("joel.george@gmail.com")
     When the user clicks the button/link    link=Find
     Then the user should see the element    jQuery=td:contains("No available assessors found")
+
 
 *** Keywords ***
 
