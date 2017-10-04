@@ -1212,12 +1212,12 @@ Project finance user amends labour details in eligibility for lead
     When the user clears the text from the element  css=[name^="labour-labourDaysYearly"]
     And the user enters text to a text field        css=[name^="labour-labourDaysYearly"]    230
     And the user adds data into labour row          1  test  120000  100
-    Then verify percentage and total                1    20%    £ 53,648
+    Then verify percentage and total                1    21%    £ 53,648
     When the user clicks the button/link            jQuery=section:nth-of-type(1) button:contains("Add another role")
     And the user adds data into labour row          7    test    14500    100
-    Then verify percentage and total                1    22%    £ 59,952
+    Then verify percentage and total                1    23%    £ 59,952
     When the user clicks the button/link            css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(5) button
-    Then verify percentage and total                1    22%    £ 59,430
+    Then verify percentage and total                1    23%    £ 59,430
     When the user clicks the button/link            css=section:nth-of-type(1) button[name=save-eligibility]
     Then verify total costs of project              £ 257,252
     And the user should see the element             jQuery=section:nth-of-type(1) a:contains("Edit")

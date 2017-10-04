@@ -50,6 +50,12 @@ input {
       @extend %read-only-boxed;
     }
   }
+
+  &[type="number"] {
+    &::-moz-placeholder {
+      letter-spacing: 3px;
+    }
+  }
 }
 
 .form-group {

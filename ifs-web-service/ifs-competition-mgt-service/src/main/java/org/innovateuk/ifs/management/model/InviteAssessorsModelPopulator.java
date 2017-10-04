@@ -19,7 +19,7 @@ abstract class InviteAssessorsModelPopulator<ViewModelType extends InviteAssesso
 
     public ViewModelType populateModel(CompetitionResource competition) {
         ViewModelType model = populateCompetitionDetails(createModel(), competition);
-        populateStatistics(model,competition);
+        populateStatistics(model, competition);
         populateCompetitionInnovationSectorAndArea(model, competition);
         return model;
     }

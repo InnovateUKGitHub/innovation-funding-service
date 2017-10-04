@@ -10,7 +10,20 @@
                         urn:mace:shibboleth:2.0:security http://shibboleth.net/schema/idp/shibboleth-security.xsd
                         urn:oasis:names:tc:SAML:2.0:metadata http://docs.oasis-open.org/security/saml/v2.0/saml-schema-metadata-2.0.xsd">
 
-<MetadataProvider id="OurProviders" xsi:type="FilesystemMetadataProvider" metadataFile="/etc/shibboleth/metadata.xml" />
+    <!-- ========================================================================================== -->
+    <!--                             Metadata Configuration                                         -->
+    <!--                                                                                            -->
+    <!--  Below you place the mechanisms which define how to load the metadata for SP(s) you will   -->
+    <!--  provide service to.                                                                       -->
+    <!--                                                                                            -->
+    <!--  The Shibboleth Documentation at                                                           -->
+    <!--  https://wiki.shibboleth.net/confluence/display/IDP30/MetadataConfiguration                -->
+    <!--  provides more details.                                                                    --> 
+    <!--                                                                                            -->
+    <!--  NOTE.  This file SHOULD NOT contain the metadata themselves for this IdP.                            -->
+    <!-- ========================================================================================== -->
+
+    <MetadataProvider id="OurProviders" xsi:type="FilesystemMetadataProvider" metadataFile="/etc/shibboleth/metadata.xml" />
 </MetadataProvider>
 
 

@@ -13,7 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -112,16 +111,6 @@ public class ProjectDetailsServiceSecurityTest extends BaseServiceSecurityTest<P
 
         @Override
         public ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> submitProjectDetails(Long id, ZonedDateTime date) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
             return null;
         }
 
