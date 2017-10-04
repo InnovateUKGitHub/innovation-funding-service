@@ -67,18 +67,40 @@ items:
             value: "9443"
           - name: HTTP_PORT
             value: "9080"
+          - name: MEMCACHE_ENDPOINT
+            value: "<<SHIBBOLETH-MEMCACHE-ENDPOINT>>"
           - name: LDAP_URL
-            value: "ldaps://ldap:389"
+            value: "<<LDAP-URL>>"
           - name: LDAP_PORT
             value: "389"
+          - name: LDAP_USESTARTTLS
+            value: "false"
+          - name: LDAP_USESSL
+            value: "false"
+          - name: LDAP_BASEDN
+            value: "dc=int,dc=g2g3digital,dc=net"
+          - name: LDAP_BINDDN
+            value: "cn=admin,dc=int,dc=g2g3digital,dc=net"
+          - name: LDAP_BINDDNCREDENTIAL
+            value: "<<LDAP-PASSWORD>>"
+          - name: LDAP_USERFILTER
+            value: "(&(mail={user})(!(employeeType=inactive)))"
+          - name: LDAP_ATTRIBUTE_SEARCHFILTER
+            value: "(mail=$resolutionContext.principal)"
+          - name: LDAP_RETURNATTRIBUTES
+            value: "mail,uid"
+          - name: LDAP_AUTHENTICATOR
+            value: "bindSearchAuthenticator"
+          - name: GOOGLEANALYTICS_TRACKINGID
+            value: "<<GA-TRACKING-ID>>"
           ports:
           - containerPort: 9443
           - containerPort: 9080
           resources:
             requests:
-              memory: 500M
+              memory: "<<SHIBBOLETH_IDP_MEMORY_REQUEST>>"
             limits:
-              memory: 2048M
+              memory: "<<SHIBBOLETH_IDP_MEMORY_LIMIT>>"
           test: false
   triggers:
   - type: ConfigChange

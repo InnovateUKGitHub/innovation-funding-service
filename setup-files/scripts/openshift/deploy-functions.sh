@@ -173,10 +173,12 @@ function tailorAppInstance() {
         export SHIBBOLETH_SP_MPM_THREADSPERCHILD="25"
         export SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS="150"
         export SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD="0"
-        export SHIBBOLETH_SP_MEMORY_LIMIT="600Mi"
         export SHIBBOLETH_SP_MEMORY_REQUEST="300Mi"
+        export SHIBBOLETH_SP_MEMORY_LIMIT="600Mi"
 
         # for the IDP
+        export SHIBBOLETH_IDP_MEMORY_REQUEST="500M"
+        export SHIBBOLETH_IDP_MEMORY_LIMIT="2048M"
         export GA_TRACKING_ID=
 
         # for the SP and IDP
@@ -240,10 +242,12 @@ function tailorAppInstance() {
     substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_THREADSPERCHILD "<<SHIBBOLETH_SP_MPM_THREADSPERCHILD>>"
     substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS "<<SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS>>"
     substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD "<<SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD>>"
-    substituteMandatoryEnvVariable SHIBBOLETH_SP_MEMORY_LIMIT "<<SHIBBOLETH_SP_MEMORY_LIMIT>>"
     substituteOptionalEnvVariable SHIBBOLETH_SP_MEMORY_REQUEST "<<SHIBBOLETH_SP_MEMORY_REQUEST>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MEMORY_LIMIT "<<SHIBBOLETH_SP_MEMORY_LIMIT>>"
 
     # for the IDP
+    substituteOptionalEnvVariable SHIBBOLETH_IDP_MEMORY_REQUEST "<<SHIBBOLETH_IDP_MEMORY_REQUEST>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_IDP_MEMORY_LIMIT "<<SHIBBOLETH_IDP_MEMORY_LIMIT>>"
     substituteOptionalEnvVariable GA_TRACKING_ID "<<GA-TRACKING-ID>>"
 
     # for the SP and IDP
