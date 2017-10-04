@@ -29,13 +29,14 @@ function do_baseline() {
     # run generator test class
     ./gradlew :ifs-data-layer:ifs-data-service:cleanTest :ifs-data-layer:ifs-data-service:test --tests org.innovateuk.ifs.testdata.GenerateTestData -x asciidoctor
 
-    # create baseline dump
-    setup-files/scripts/create-baseline-dump.sh ${newversion}
     cd ifs-data-layer/ifs-data-service/src/main/resources/db/webtest/
 
     for i in ${oldversion}*; do mv $i ${i/${oldversion}/${newversion}}; done
 
     cd ../../../../../../../
+
+    # create baseline dump
+    setup-files/scripts/create-baseline-dump.sh ${newversion}
 
     # ignore generator test class
     sed -i -e '/import/i \
