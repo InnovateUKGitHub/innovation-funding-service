@@ -1,0 +1,46 @@
+=== Get all available assessors by competition
+==== Request
+include::{snippets}/assessmentpanelinvite/get-available-assessors/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-available-assessors/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-available-assessors/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-available-assessors/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-available-assessors/curl-request.adoc[]
+
+=== Get all available assessor ids by competition
+==== Request
+include::{snippets}/assessmentpanelinvite/get-available-assessor-ids/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-available-assessor-ids/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-available-assessor-ids/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-available-assessor-ids/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-available-assessor-ids/curl-request.adoc[]
+
+=== Get the assessment panel invite list for a competition
+==== Request
+include::{snippets}/assessmentpanelinvite/get-created-invites/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-created-invites/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-created-invites/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-created-invites/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-created-invites/curl-request.adoc[]
+
+=== Add existing users to the assessor invite list for a competition's assessment panel
+==== Request
+include::{snippets}/assessmentpanelinvite/invite-users/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/invite-users/request-fields.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/invite-users/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/invite-users/curl-request.adoc[]

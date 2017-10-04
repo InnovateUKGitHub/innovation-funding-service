@@ -86,28 +86,6 @@ public class ProjectDetailsServiceImplTest {
     }
 
     @Test
-    public void testSetApplicationDetailsSubmitted() {
-        when(projectDetailsRestService.setApplicationDetailsSubmitted(1L)).thenReturn(restSuccess());
-
-        ServiceResult<Void> result = service.setApplicationDetailsSubmitted(1L);
-
-        assertTrue(result.isSuccess());
-
-        verify(projectDetailsRestService).setApplicationDetailsSubmitted(1L);
-    }
-
-    @Test
-    public void testIsSubmitAllowed() {
-        when(projectDetailsRestService.isSubmitAllowed(1L)).thenReturn(restSuccess(false));
-
-        ServiceResult<Boolean> result = service.isSubmitAllowed(1L);
-
-        assertTrue(result.isSuccess());
-
-        verify(projectDetailsRestService).isSubmitAllowed(1L);
-    }
-
-    @Test
     public void testInviteProjectFinanceUser() throws Exception {
 
         InviteProjectResource invite = ProjectInviteResourceBuilder.newInviteProjectResource().build();
