@@ -16,10 +16,12 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='heading-xlarge'" />
 
-    <p th:if="${!model.projectDetailsCompleteAndAllFinanceContactsAssigned}">Please supply the following details for your project and the team. We need these to set up your project.</p>
+    <p th:if="${model.userLeadPartner and !model.projectDetailsCompleteAndAllFinanceContactsAssigned}">Please supply the following details for your project and the team. We need these to set up your project.</p>
+    <p th:if="${!model.userLeadPartner}">Please provide a finance contact. The lead applicant will provide your project information.</p>
 
 <h2 class="heading-medium">Project information</h2>
-<p>You are providing these details as the lead on behalf of the overall project.</p>
+<p th:if="${model.userLeadPartner}">You are providing these details as the lead on behalf of the overall project.</p>
+<p th:unless="${model.userLeadPartner}">The lead has provided these details on behalf of the overall project.</p>
 
     <table id="project-details">
         <thead>
