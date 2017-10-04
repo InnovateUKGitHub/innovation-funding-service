@@ -120,6 +120,8 @@ items:
   kind: Route
   metadata:
     name: idp
+    annotations:
+      haproxy.router.openshift.io/balance: roundrobin
   spec:
     host: <<SHIB-IDP-ADDRESS>>
     port:
