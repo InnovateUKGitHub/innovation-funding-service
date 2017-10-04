@@ -85,12 +85,10 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
                                                                                CompetitionSetupSection section) {
 
         CompetitionSetupViewModel viewModel = null;
-        GeneralSetupViewModel generalViewModel = populateGeneralModelAttributes(competitionResource, section);
-
         CompetitionSetupSectionModelPopulator populator = modelPopulators.get(section);
 
         if(populator != null) {
-            viewModel = populator.populateModel(generalViewModel, competitionResource);
+            viewModel = populator.populateModel(populateGeneralModelAttributes(competitionResource, section), competitionResource);
         }
 
         return viewModel;

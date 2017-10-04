@@ -42,7 +42,9 @@ public class ApplicationLandingModelPopulator implements CompetitionSetupSection
 		List<QuestionResource> questionResources = questionService.findByCompetition(competitionResource.getId());
         List<SectionResource> generalSections = sections.stream().filter(sectionResource -> sectionResource.getType() == SectionType.GENERAL).collect(Collectors.toList());
         List<SectionResource> parentSections = generalSections.stream().filter(sectionResource -> sectionResource.getParentSection() == null).collect(Collectors.toList());
-        return new ApplicationLandingViewModel(generalViewModel, getSortedQuestions(questionResources, parentSections), getSortedProjectDetails(questionResources, parentSections));
+        return new ApplicationLandingViewModel(generalViewModel,
+                getSortedQuestions(questionResources, parentSections),
+                getSortedProjectDetails(questionResources, parentSections));
     }
 
 	private List<QuestionResource> getSortedQuestions(List<QuestionResource> questionResources, List<SectionResource> parentSections) {

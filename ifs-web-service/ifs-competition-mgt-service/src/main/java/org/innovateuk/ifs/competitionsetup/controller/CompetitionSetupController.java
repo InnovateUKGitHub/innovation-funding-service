@@ -336,7 +336,7 @@ public class CompetitionSetupController {
             return "redirect:/competition/setup/" + competitionId;
         }
 
-        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(model, competition));
+        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
 
         return "competition/manage-innovation-leads-find";
     }
@@ -353,7 +353,7 @@ public class CompetitionSetupController {
             return "redirect:/competition/setup/" + competitionId;
         }
 
-        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(model, competition));
+        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
 
         return "competition/manage-innovation-leads-overview";
     }
@@ -372,7 +372,7 @@ public class CompetitionSetupController {
         }
 
         competitionService.addInnovationLead(competitionId, innovationLeadUserId);
-        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(model, competition));
+        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
 
         return "competition/manage-innovation-leads-find";
     }
@@ -391,7 +391,7 @@ public class CompetitionSetupController {
         }
 
         competitionService.removeInnovationLead(competitionId, innovationLeadUserId);
-        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(model, competition));
+        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
 
         return "competition/manage-innovation-leads-overview";
     }

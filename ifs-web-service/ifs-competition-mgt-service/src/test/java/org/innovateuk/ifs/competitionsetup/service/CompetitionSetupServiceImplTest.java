@@ -1,29 +1,31 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
+import org.innovateuk.ifs.competitionsetup.service.modelpopulator.InitialDetailsModelPopulator;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
+import org.innovateuk.ifs.competitionsetup.viewmodel.*;
+import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.ui.ExtendedModelMap;
-import org.springframework.ui.Model;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -42,7 +44,6 @@ public class CompetitionSetupServiceImplTest {
 
     @Test
     public void testPopulateCompetitionSectionModelAttributesNoMatchingFormPopulator() {
-        Model model = new ExtendedModelMap();
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withCompetitionCode("code")
@@ -50,20 +51,23 @@ public class CompetitionSetupServiceImplTest {
                 .withSetupComplete(false)
                 .build();
 
-        service.setCompetitionSetupSectionModelPopulators(asList());
+        CompetitionSetupSectionModelPopulator matchingPopulator = mock(InitialDetailsModelPopulator.class);
+        when(matchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.INITIAL_DETAILS);
+        when(matchingPopulator.populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class)))
+                .thenReturn(new InitialDetailsViewModel(getBasicGeneralSetupView(CompetitionSetupSection.INITIAL_DETAILS, competition),
+                        emptyList(), emptyList(), emptyList(), emptyList(), emptyList()));
+        service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
         CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
 
-        List<CompetitionSetupSection> completedSections = new ArrayList<>();
-        service.populateCompetitionSectionModelAttributes(competition, section);
+        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, section);
 
-        verifyCommonModelAttributes(model, competition, section, completedSections);
-        assertEquals("section-initial", model.asMap().get("currentSectionFragment"));
+        verifyCommonModelAttributes(viewModel, competition, section);
+        assertEquals("section-initial", viewModel.getGeneral().getCurrentSectionFragment());
     }
 
     @Test
     public void testPopulateCompetitionSectionModelAttributesEligibility() {
-        Model model = new ExtendedModelMap();
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("code")
                 .withSetupComplete(false)
@@ -72,6 +76,9 @@ public class CompetitionSetupServiceImplTest {
 
         CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
         when(matchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.ELIGIBILITY);
+        when(matchingPopulator.populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class)))
+                .thenReturn(new EligibilityViewModel(getBasicGeneralSetupView(CompetitionSetupSection.ELIGIBILITY, competition), new ResearchParticipationAmount[]{},
+                new CollaborationLevel[]{}, emptyList(), "", emptyList(), ""));
         CompetitionSetupSectionModelPopulator notMatchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
         when(notMatchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.MILESTONES);
 
@@ -79,28 +86,25 @@ public class CompetitionSetupServiceImplTest {
 
         CompetitionSetupSection section = CompetitionSetupSection.ELIGIBILITY;
 
-        List<CompetitionSetupSection> completedSections = new ArrayList<>();
+        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, section);
 
-        service.populateCompetitionSectionModelAttributes(competition, section);
+        verifyCommonModelAttributes(viewModel, competition, section);
+        assertEquals("section-eligibility", viewModel.getGeneral().getCurrentSectionFragment());
 
-        verifyCommonModelAttributes(model, competition, section, completedSections);
-        assertEquals("section-eligibility", model.asMap().get("currentSectionFragment"));
-
-        verify(matchingPopulator).populateModel(model, competition);
-        verify(notMatchingPopulator, never()).populateModel(model, competition);
+        verify(matchingPopulator).populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class));
+        verify(notMatchingPopulator, never()).populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class));
     }
 
-    private void verifyCommonModelAttributes(Model model, CompetitionResource competition,
-                                             CompetitionSetupSection section, List<CompetitionSetupSection> completedSections) {
-        assertEquals(9, model.asMap().size());
-        assertEquals(Boolean.FALSE, model.asMap().get("isInitialComplete"));
-        assertEquals(Boolean.TRUE, model.asMap().get("editable"));
-        assertEquals(competition, model.asMap().get("competition"));
-        assertEquals(section, model.asMap().get("currentSection"));
-        assertArrayEquals(CompetitionSetupSection.values(), (Object[]) model.asMap().get("allSections"));
-        assertEquals(Boolean.FALSE, model.asMap().get("preventEdit"));
-        assertEquals(Boolean.FALSE, model.asMap().get("isSetupAndLive"));
-        assertEquals(Boolean.FALSE, model.asMap().get("setupComplete"));
+    private void verifyCommonModelAttributes(CompetitionSetupViewModel viewModel, CompetitionResource competition,
+                                             CompetitionSetupSection section) {
+        assertEquals(Boolean.FALSE, viewModel.getGeneral().isInitialComplete());
+        assertEquals(Boolean.TRUE, viewModel.getGeneral().isEditable());
+        assertEquals(competition, viewModel.getGeneral().getCompetition());
+        assertEquals(section, viewModel.getGeneral().getCurrentSection());
+        assertArrayEquals(CompetitionSetupSection.values(), viewModel.getGeneral().getAllSections());
+        assertEquals(Boolean.FALSE, viewModel.getGeneral().getState().isPreventEdit());
+        assertEquals(Boolean.FALSE, viewModel.getGeneral().getState().isSetupAndLive());
+        assertEquals(Boolean.FALSE, viewModel.getGeneral().getState().isSetupComplete());
     }
 
     @Test
@@ -286,16 +290,9 @@ public class CompetitionSetupServiceImplTest {
 
     @Test
     public void testPopulateModel() {
-        Model model = new ExtendedModelMap();
-
         ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
 
         CompetitionSetupSection competitionSetupSection = CompetitionSetupSection.ADDITIONAL_INFO;
-
-        CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
-        when(matchingPopulator.sectionToPopulateModel()).thenReturn(competitionSetupSection);
-
-        service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
         CompetitionResource competition = newCompetitionResource()
                 .withSetupComplete(true)
@@ -303,26 +300,26 @@ public class CompetitionSetupServiceImplTest {
                 .withFundersPanelDate(yesterday)
                 .build();
 
-        service.populateCompetitionSectionModelAttributes(competition, competitionSetupSection);
+        CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
+        when(matchingPopulator.sectionToPopulateModel()).thenReturn(competitionSetupSection);
+        when(matchingPopulator.populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class)))
+                .thenReturn(new AdditionalModelViewModel(getBasicGeneralSetupView(competitionSetupSection, competition)));
 
-        assertEquals(true, model.asMap().get("preventEdit"));
-        assertEquals(true, model.asMap().get("isSetupAndLive"));
-        assertEquals(true, model.asMap().get("setupComplete"));
+        service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
+
+        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, competitionSetupSection);
+
+        assertEquals(false, viewModel.getGeneral().getState().isPreventEdit());
+        assertEquals(false, viewModel.getGeneral().getState().isSetupAndLive());
+        assertEquals(false, viewModel.getGeneral().getState().isSetupComplete());
     }
 
     @Test
     public void testPopulateModel_competitionNotSetupAndLive() {
-        Model model = new ExtendedModelMap();
-
         ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
         ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
         CompetitionSetupSection competitionSetupSection = CompetitionSetupSection.ADDITIONAL_INFO;
-
-        CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
-        when(matchingPopulator.sectionToPopulateModel()).thenReturn(competitionSetupSection);
-
-        service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
         CompetitionResource competition = newCompetitionResource()
                 .withSetupComplete(false)
@@ -330,11 +327,18 @@ public class CompetitionSetupServiceImplTest {
                 .withStartDate(yesterday)
                 .build();
 
-        service.populateCompetitionSectionModelAttributes(competition, competitionSetupSection);
+        CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
+        when(matchingPopulator.sectionToPopulateModel()).thenReturn(competitionSetupSection);
+        when(matchingPopulator.populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class)))
+                .thenReturn(new AdditionalModelViewModel(getBasicGeneralSetupView(competitionSetupSection, competition)));
 
-        assertEquals(false, model.asMap().get("preventEdit"));
-        assertEquals(false, model.asMap().get("isSetupAndLive"));
-        assertEquals(false, model.asMap().get("setupComplete"));
+        service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
+
+        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, competitionSetupSection);
+
+        assertEquals(false, viewModel.getGeneral().getState().isPreventEdit());
+        assertEquals(false, viewModel.getGeneral().getState().isSetupAndLive());
+        assertEquals(false, viewModel.getGeneral().getState().isSetupComplete());
     }
 
     @Test
@@ -374,5 +378,13 @@ public class CompetitionSetupServiceImplTest {
             service.autoSaveCompetitionSetupSection(competition, section, fieldName, value, objectId);
             verify(saver).autoSaveSectionField(competition, form, fieldName, value, objectId);
         }
+    }
+
+    private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionSetupSection section, CompetitionResource competition) {
+        GeneralSetupViewModel generalSetupView = new GeneralSetupViewModel(Boolean.TRUE, competition, section, CompetitionSetupSection.values(), Boolean.FALSE);
+        generalSetupView.setCurrentSectionFragment("section-" + section.getPath());
+        generalSetupView.setState(new CompetitionStateSetupViewModel(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE));
+
+        return generalSetupView;
     }
 }

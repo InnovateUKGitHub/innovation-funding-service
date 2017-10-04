@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSubsectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.application.ApplicationDetailsViewModel;
-import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
