@@ -316,9 +316,13 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
 
     @Test
     public void markAsIneligible() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(
+        when(applicationLookupStrategy.getApplicationResource(1L)).thenReturn(newApplicationResource().build());
+
+        assertAccessDenied(
                 () -> classUnderTest.markAsIneligible(1L, newIneligibleOutcome().build()),
-                COMP_ADMIN, PROJECT_FINANCE, INNOVATION_LEAD
+                () -> {
+                    verify(applicationRules).markAsInelgibileAllowedBeforeAssesment(isA(ApplicationResource.class), isA(UserResource.class));
+                }
         );
     }
 

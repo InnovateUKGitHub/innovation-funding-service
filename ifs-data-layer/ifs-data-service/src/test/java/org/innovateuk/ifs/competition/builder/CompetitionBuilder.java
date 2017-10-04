@@ -156,12 +156,18 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
             return withSetupComplete(true)
                     .withStartDate(now.minusDays(4L))
                     .withEndDate(now.minusDays(3L))
+                    .withAssessorAcceptsDate(now.minusDays(1L))
                     .withFundersPanelDate(now.minusDays(2L))
+                    .withAssessorsNotifiedDate(now.minusDays(3L))
+                    .withAssessmentClosedDate(now.minusDays(2L))
                     .withFundersPanelEndDate(now.minusDays(1L));
         } else if(PROJECT_SETUP.equals(status)) {
             return withSetupComplete(true)
                     .withStartDate(now.minusDays(5L))
                     .withEndDate(now.minusDays(4L))
+                    .withAssessorAcceptsDate(now.minusDays(1L))
+                    .withAssessorsNotifiedDate(now.minusDays(3L))
+                    .withAssessmentClosedDate(now.minusDays(2L))
                     .withFundersPanelDate(now.minusDays(3L))
                     .withFundersPanelEndDate(now.minusDays(2L))
                     .withAssessorFeedbackDate(now.minusDays(1L));

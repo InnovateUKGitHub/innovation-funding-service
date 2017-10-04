@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.security;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
@@ -14,9 +16,13 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
@@ -29,6 +35,9 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private CompetitionRepository competitionRepository;
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The consortium can see the participation percentage for their applications")
     public boolean consortiumCanSeeTheResearchParticipantPercentage(final ApplicationResource applicationResource, UserResource user) {
@@ -217,6 +226,16 @@ public class ApplicationPermissionRules extends BasePermissionRules {
             particularBusinessState = "Competition is in Open state")
     public boolean userCanCreateNewApplication(CompetitionResource competition, UserResource user) {
         return competition.isOpen() && (user.hasRole(APPLICANT) || user.hasRole(SYSTEM_REGISTRATION_USER));
+    }
+
+    @PermissionRule(value = "MARK_AS_INELIGIBLE", description = "Application can be marked as ineligible only until ", particularBusinessState = "Competition is in assessment state")
+    public boolean markAsInelgibileAllowedBeforeAssesment(ApplicationResource application, UserResource user){
+        Competition competition = competitionRepository.findOne(application.getCompetition());
+        return (isInternalAdmin(user) || isInnovationLead(user)) && !isCompetitionBeyondAssessment(competition);
+    }
+
+    private boolean isCompetitionBeyondAssessment(final Competition competition) {
+        return EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competition.getCompetitionStatus());
     }
 }
 
