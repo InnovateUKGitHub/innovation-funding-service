@@ -105,7 +105,7 @@
             <!--/* view  */-->
             <dl class="readonly-data">
                 <dt th:text="${formInput.description}">Turnover (&pound;)</dt>
-                <dd th:text="'£ '+ *{#numbers.formatInteger(formInput[__${formInput.id}__],0,'COMMA')}">&pound; 100,000,000</dd>
+                <dd th:text="'£ '+ *{formInput[__${formInput.id}__] != null ? #numbers.formatInteger(formInput[__${formInput.id}__],0,'COMMA') : '0'}">&pound; 100,000,000</dd>
             </dl>
         </th:block>
     </th:block>
