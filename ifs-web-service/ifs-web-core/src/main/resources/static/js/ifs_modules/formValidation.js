@@ -827,8 +827,13 @@ IFS.core.formValidation = (function () {
       var id = IFS.core.formValidation.removeHash(jQuery(el).attr('href'))
       var target = jQuery('[id="' + id + '"]')
       var targetVisible = IFS.core.formValidation.isVisible(target)
-
+      var closedCollapsible = target.closest(IFS.core.collapsible.settings.collapsibleEl).not('.' + IFS.core.collapsible.settings.expandedClass)
       if (targetVisible) {
+        target.first().focus()
+      } else if (closedCollapsible.length) {
+        // it is within a collapsible element and we open it and then put focus on it
+        var stateless = closedCollapsible.hasClass(IFS.core.collapsible.settings.statelessClass)
+        IFS.core.collapsible.toggleCollapsible(closedCollapsible.find('button[aria-controls]'), stateless)
         target.first().focus()
       } else {
         // if the target is invisible we put focus on an element that has the same label as the target
