@@ -74,7 +74,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     private static final String WEB_CONTEXT = "/assessment";
     private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
-    private static final DateTimeFormatter detailsFormatter = ofPattern("dd MMM yyyy");
+    private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
 
     @Autowired
     private CompetitionInviteRepository competitionInviteRepository;

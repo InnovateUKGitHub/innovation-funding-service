@@ -43,6 +43,14 @@ items:
             failureThreshold: 1
           imagePullPolicy: Always
           env:
+          - name: JAVA_OPTS
+            value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
+          - name: NEW_RELIC_APP_NAME
+            value: "ifs-idp-service (<<NEWRELIC-ENVIRONMENT>>)"
+          - name: NEW_RELIC_LICENSE_KEY
+            value: "<<NEWRELIC-LICENCE-KEY>>"
+          - name: NEW_RELIC_LOG
+            value: "STDOUT"
           - name: IDP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"
           - name: IDP_PROXY_CACERTIFICATE
@@ -51,26 +59,26 @@ items:
             value: "<<SSLKEY>>"
           - name: SP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"
-          - name: SPHOST
+          - name: SP_DOMAIN
             value: <<SHIB-ADDRESS>>
-          - name: IDPHOST
+          - name: IDP_DOMAIN
             value: <<SHIB-IDP-ADDRESS>>
-          - name: HTTPSPORT
+          - name: HTTPS_PORT
             value: "9443"
-          - name: HTTPPORT
+          - name: HTTP_PORT
             value: "9080"
-          - name: LDAPURL
+          - name: LDAP_URL
             value: "ldaps://ldap:389"
-          - name: LDAPRURL
-            value: "ldaps://ldap:389"
-          - name: LDAPPORT
+          - name: LDAP_PORT
             value: "389"
           ports:
           - containerPort: 9443
           - containerPort: 9080
           resources:
+            requests:
+              memory: 500M
             limits:
-              memory: 1024M
+              memory: 2048M
           test: false
   triggers:
   - type: ConfigChange

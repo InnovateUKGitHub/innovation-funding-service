@@ -37,7 +37,7 @@ ${openCompetitionBusinessRTO_name}      Home and industrial efficiency programme
 ${openCompetitionBusinessRTO}           ${competition_ids['${openCompetitionBusinessRTO_name}']}
 ${openCompetitionBusinessRTO_overview}  ${SERVER}/competition/${openCompetitionBusinessRTO}/overview/
 
-${openCompetitionPublicSector_name}  Photonics for RTO
+${openCompetitionPublicSector_name}  Photonics for Public
 ${openCompetitionPublicSector}       ${competition_ids['${openCompetitionPublicSector_name}']}
 
 ${openCompetitionResearch_name}  Photonics for Research
@@ -74,7 +74,7 @@ ${FUNDERS_PANEL_APPLICATION_1_TITLE}      Sensing & Control network using the li
 ${FUNDERS_PANEL_APPLICATION_1_NUMBER}     ${application_ids['${FUNDERS_PANEL_APPLICATION_1_TITLE}']}
 ${FUNDERS_PANEL_APPLICATION_2_TITLE}      Matter - Planning for Web
 ${FUNDERS_PANEL_APPLICATION_2_NUMBER}     ${application_ids['${FUNDERS_PANEL_APPLICATION_2_TITLE}']}
-${FUNDERS_PANEL_APPLICATION_1_PROJECT}    12
+${FUNDERS_PANEL_APPLICATION_1_PROJECT}    14
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    ${EMPIRE_LTD_NAME}
 ${IN_ASSESSMENT_COMPETITION_NAME}         Sustainable living models for the future
 ${IN_ASSESSMENT_COMPETITION}              ${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']}

@@ -15,6 +15,4 @@ include 'ifs-web-service:ifs-front-door-service'
 include 'ifs-auth-service:ifs-ldap-service'
 include 'ifs-auth-service:ifs-sp-service'
 include 'ifs-auth-service:ifs-idp-service'
-include 'ifs-auth-service:ifs-registration-service'
-
-
+include 'ifs-registration-service'

@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
@@ -37,7 +37,7 @@ public interface CompetitionService {
 
     List<CompetitionResource> getAllCompetitionsNotInSetup();
 
-    List<ApplicationResource> findUnsuccessfulApplications(Long competitionId);
+    ApplicationPageResource findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField);
 
     List<CompetitionTypeResource> getAllCompetitionTypes();
 
