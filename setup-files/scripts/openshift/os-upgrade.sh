@@ -31,14 +31,13 @@ function upgradeServices {
     oc apply -f os-files-tmp/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f os-files-tmp/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f os-files-tmp/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f os-files-tmp/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
 
     # shib & idp
     if $(isNamedEnvironment $TARGET); then
-        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/56-idp.yml
-        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/5-shib.yml
+        oc apply -f os-files-tmp/shib/named-envs/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
     else
-        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/56-idp.yml
-        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/5-shib.yml
+        oc apply -f os-files-tmp/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
     watchStatus
