@@ -63,7 +63,7 @@ Mark application details as incomplete
 
 the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=img.complete[alt*="Application details"]
-    Run Keyword If  '${status}' == 'FAIL'  the applicant completes the application details
+    Run Keyword If  '${status}' == 'FAIL'  the applicant completes the application details  Application details
 
 the applicant completes the application details
     [Arguments]   ${Application_details}
@@ -103,8 +103,8 @@ the user selects Research category
     the user clicks the button/link   jQuery=button:contains("Save")
 
 the user marks the finances as complete
-    [Arguments]  ${Application}
-    the user fills in the project costs     ${Application}
+    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
+    the user fills in the project costs  ${overheadsCost}  ${totalCosts}
     the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
@@ -112,10 +112,10 @@ the user marks the finances as complete
     the user should see the element  jQuery=li:contains("Your finances") > .task-status-complete
 
 the user fills in the project costs
-    [Arguments]     ${Application_name}
+    [Arguments]  ${overheadsCost}  ${totalCosts}
     the user clicks the button/link  link=Your project costs
     the user fills in Labour
-    the user fills in Overhead costs  ${Application_name}
+    the user fills in Overhead costs  ${overheadsCost}  ${totalCosts}
     the user fills in Material
     the user fills in Capital usage
     the user fills in Subcontracting costs
@@ -142,20 +142,21 @@ the user fills in Labour
     the user clicks the button/link            jQuery=button:contains("Labour")
 
 the user fills in Overhead costs
-    [Arguments]  ${Application_name}
-    ${STATUS}  ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  Should Be Equal As Strings  Evolution of the global phosphorus cycle  ${Application_name}
-    run keyword if  '${status}'=='PASS'  the user chooses Calculate overheads option
-    run keyword if  '${status}'=='FAIL'  the user chooses 20% overheads option
+    [Arguments]  ${overheadsCost}  ${totalCosts}
+    run keyword if  '${overheadsCost}'=='Calculate'  the user chooses Calculate overheads option  ${totalCosts}
+    run keyword if  '${overheadsCost}'=='labour costs'  the user chooses 20% overheads option
+#    run keyword if  '${overheadsCost}'=='No overhead'  the user chooses No overhead costs
 
 the user chooses Calculate overheads option
-    the user clicks the button/link                         jQuery=button:contains("Overhead costs")
+    [Arguments]  ${totalCosts}
+    the user expands the section  Overhead costs
     the user clicks the button/link                         jQuery=label:contains("Calculate overheads")
     the user should see the element                         jQuery=h3:contains("Calculate overheads")
     the user uploads the file                               css=#overheadfile   ${excel_file}
     wait for autosave
     the user enters text to a text field                    css=input[name^="overheads-total"][id^="cost-overheads"]   40
     wait for autosave
-    the total overhead costs should reflect rate entered    css=#total-cost  £ 185,997
+    the total overhead costs should reflect rate entered    css=#total-cost  £ ${totalCosts}
 
 the total overhead costs should reflect rate entered
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
@@ -335,7 +336,7 @@ Newly invited collaborator can create account and sign in
 
 the user completes the new account creation
     [Arguments]    ${email}
-    the user selects the radio button           organisationType    radio-4
+    the user selects the radio button           organisationType    radio-${PUBLIC_SECTOR_TYPE_ID}
     the user clicks the button/link             jQuery=button:contains("Continue")
     the user should see the element             jQuery=span:contains("Create your account")
     the user enters text to a text field        id=organisationSearchName    innovate
