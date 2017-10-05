@@ -6,7 +6,7 @@
     <form th:action="@{(${model.general.editable} ? '' : 'eligibility/edit')}" method="post"
           th:object="${competitionSetupForm}" novalidate="novalidate"
           th:attr="data-competition=${model.general.competition.id}"
-          data-autosave="${!model.general.state.setupComplete}?compSetup" data-section="eligibility">
+          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="eligibility">
 
         <fieldset th:if="${model.general.editable}" id="section-3-edit">
 

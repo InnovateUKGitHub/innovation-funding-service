@@ -24,7 +24,7 @@
           method="post"
           th:object="${competitionSetupForm}"
           th:action="@{'/competition/setup/{competitionId}/section/application/question/{questionId}/edit'(competitionId=${model.general.competition.id}, questionId=${competitionSetupForm.question.questionId})}" novalidate="novalidate"
-          data-autosave="${!model.general.state.setupComplete}?compSetup"
+          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           data-th-attr="data-competition=${model.general.competition.id}, data-objectId=${competitionSetupForm.question.questionId},
           data-subsection=${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE ? 'project' : 'question'}"
           data-section="application">

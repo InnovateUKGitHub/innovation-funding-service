@@ -15,6 +15,7 @@ import org.innovateuk.ifs.competitionsetup.form.application.ApplicationProjectFo
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.service.populator.CompetitionSetupPopulator;
 import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
@@ -61,6 +62,9 @@ public class CompetitionSetupApplicationController {
 
     @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;
+
+    @Autowired
+    private CompetitionSetupPopulator competitionSetupPopulator;
 
     @Autowired
     @Qualifier("mvcValidator")
@@ -337,7 +341,7 @@ public class CompetitionSetupApplicationController {
 
         CompetitionSetupSubsectionViewModel subsectionViewModel = competitionSetupService.populateCompetitionSubsectionModelAttributes(competition, section,
                 subsection, questionId);
-        GeneralSetupViewModel generalViewModel = competitionSetupService.populateGeneralModelAttributes(competition, section);
+        GeneralSetupViewModel generalViewModel = competitionSetupPopulator.populateGeneralModelAttributes(competition, section);
 
         return new QuestionSetupViewModel(generalViewModel, subsectionViewModel, competition.getName(), isEditable);
     }

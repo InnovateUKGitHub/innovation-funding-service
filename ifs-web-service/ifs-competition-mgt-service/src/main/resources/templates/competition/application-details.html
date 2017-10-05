@@ -23,7 +23,7 @@
     <p>These are the default questions included in the application details section.</p>
 
     <form th:if="${model.editable}"
-          data-autosave="${!model.general.state.setupComplete}?compSetup"
+          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
           th:object="${competitionSetupForm}" method="post"
           data-th-attr="data-competition=${model.general.competition.id}"

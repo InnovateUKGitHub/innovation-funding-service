@@ -24,7 +24,7 @@
     <div class="panel">
         Each partner is required to complete the following finance sections, selected by the template for this competition.
     </div>
-    <form th:if="${model.editable}" data-autosave="${!model.general.state.setupComplete}?compSetup" method="POST"
+    <form th:if="${model.editable}" th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup" method="POST"
           th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
           th:object="${competitionSetupForm}"
           novalidate="novalidate"

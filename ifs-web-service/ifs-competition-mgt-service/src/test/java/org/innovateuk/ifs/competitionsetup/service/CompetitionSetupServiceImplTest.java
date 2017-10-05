@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsFo
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.InitialDetailsModelPopulator;
+import org.innovateuk.ifs.competitionsetup.service.populator.CompetitionSetupPopulator;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
 import org.innovateuk.ifs.competitionsetup.viewmodel.*;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
@@ -41,6 +42,9 @@ public class CompetitionSetupServiceImplTest {
 
     @Mock
     private CompetitionService competitionService;
+
+    @Mock
+    private CompetitionSetupPopulator competitionSetupPopulator;
 
     @Test
     public void testPopulateCompetitionSectionModelAttributesNoMatchingFormPopulator() {
