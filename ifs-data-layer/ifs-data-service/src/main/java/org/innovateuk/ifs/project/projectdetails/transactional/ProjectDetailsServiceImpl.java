@@ -9,6 +9,7 @@ import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -27,6 +28,8 @@ import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectD
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
@@ -48,19 +51,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -111,6 +107,9 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
 
+    @Autowired
+    private StatusService statusService;
+
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -123,7 +122,7 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Transactional
     public ServiceResult<Void> setProjectManager(Long projectId, Long projectManagerUserId) {
         return getProject(projectId).
-                andOnSuccess(this::validateIfProjectAlreadySubmitted).
+                andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
                 andOnSuccess(project -> validateProjectManager(project, projectManagerUserId).
                         andOnSuccess(leadPartner -> createOrUpdateProjectManagerForProject(project, leadPartner)));
     }
@@ -132,9 +131,40 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Transactional
     public ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate) {
         return validateProjectStartDate(projectStartDate).
+                andOnSuccess(() -> validateIfStartDateCanBeChanged(projectId)).
                 andOnSuccess(() -> getProject(projectId)).
-                andOnSuccess(this::validateIfProjectAlreadySubmitted).
                 andOnSuccessReturnVoid(project -> project.setTargetStartDate(projectStartDate));
+    }
+
+    private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
+
+        if (date.getDayOfMonth() != 1) {
+            return serviceFailure(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH);
+        }
+
+        if (date.isBefore(LocalDate.now())) {
+            return serviceFailure(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> validateIfStartDateCanBeChanged(Long projectId) {
+
+        if (isSpendProfileIsGenerated(projectId)) {
+            return serviceFailure(PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED);
+        }
+
+        return serviceSuccess();
+    }
+
+    private boolean isSpendProfileIsGenerated(Long projectId) {
+        List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
+        return !spendProfiles.isEmpty();
+    }
+
+    private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
+        return spendProfileRepository.findByProjectId(projectId);
     }
 
     @Override
@@ -150,48 +180,32 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     @Override
     @Transactional
     public ServiceResult<Void> updateProjectAddress(Long organisationId, Long projectId, OrganisationAddressType organisationAddressType, AddressResource address) {
+        return getProject(projectId).
+                andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_ADDRESS_CANNOT_BE_UPDATED_IF_GOL_GENERATED)).
+                andOnSuccess(() ->
+                        find(getProject(projectId), getOrganisation(organisationId)).
+                                andOnSuccess((project, organisation) -> {
+                                    if (address.getId() != null && addressRepository.exists(address.getId())) {
+                                        Address existingAddress = addressRepository.findOne(address.getId());
+                                        project.setAddress(existingAddress);
+                                    } else {
+                                        Address newAddress = addressMapper.mapToDomain(address);
+                                        if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
+                                            AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
+                                            List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(organisation.getId(), addressType);
+                                            existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
+                                            OrganisationAddress organisationAddress = new OrganisationAddress(organisation, newAddress, addressType);
+                                            organisationAddressRepository.save(organisationAddress);
+                                        }
+                                        project.setAddress(newAddress);
+                                    }
 
-        Project project = projectRepository.findOne(projectId);
-        Organisation leadOrganisation = organisationRepository.findOne(organisationId);
-
-        if (address.getId() != null && addressRepository.exists(address.getId())) {
-            Address existingAddress = addressRepository.findOne(address.getId());
-            project.setAddress(existingAddress);
-        } else {
-            Address newAddress = addressMapper.mapToDomain(address);
-            if (address.getOrganisations() == null || address.getOrganisations().size() == 0) {
-                AddressType addressType = addressTypeRepository.findOne(organisationAddressType.getOrdinal());
-                List<OrganisationAddress> existingOrgAddresses = organisationAddressRepository.findByOrganisationIdAndAddressType(leadOrganisation.getId(), addressType);
-                existingOrgAddresses.forEach(oA -> organisationAddressRepository.delete(oA));
-                OrganisationAddress organisationAddress = new OrganisationAddress(leadOrganisation, newAddress, addressType);
-                organisationAddressRepository.save(organisationAddress);
-            }
-            project.setAddress(newAddress);
-        }
-
-        return getCurrentlyLoggedInPartner(project).andOnSuccessReturn(user ->
-                projectDetailsWorkflowHandler.projectAddressAdded(project, user)).andOnSuccess(workflowResult ->
-                workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> submitProjectDetails(final Long projectId, ZonedDateTime date) {
-
-        return getProject(projectId).andOnSuccess(project ->
-                getCurrentlyLoggedInPartner(project).andOnSuccess(projectUser -> {
-
-                    if (projectDetailsWorkflowHandler.submitProjectDetails(project, projectUser)) {
-                        return serviceSuccess();
-                    } else {
-                        return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE);
-                    }
-                }));
-    }
-
-    @Override
-    public ServiceResult<Boolean> isSubmitAllowed(Long projectId) {
-        return getProject(projectId).andOnSuccessReturn(this::doIsSubmissionAllowed);
+                                    return getCurrentlyLoggedInPartner(project).andOnSuccess(user -> {
+                                        projectDetailsWorkflowHandler.projectAddressAdded(project, user);
+                                        return serviceSuccess();
+                                    });
+                                })
+                );
     }
 
     @Override
@@ -205,16 +219,14 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
     public ServiceResult<Void> inviteProjectManager(Long projectId, InviteProjectResource inviteResource) {
 
         return getProject(projectId)
-                .andOnSuccess(this::validateIfProjectAlreadySubmitted)
+                .andOnSuccess(project -> validateGOLGenerated(project, PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED))
                 .andOnSuccess(() -> inviteContact(projectId, inviteResource, Notifications.INVITE_PROJECT_MANAGER));
     }
 
-    private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
-
-        if (projectDetailsWorkflowHandler.isSubmitted(project)) {
-            return serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED);
+    private ServiceResult<Project> validateGOLGenerated(Project project, CommonFailureKeys failKey){
+        if (project.getGrantOfferLetter() != null){
+            return serviceFailure(failKey);
         }
-
         return serviceSuccess(project);
     }
 
@@ -257,28 +269,16 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
             return serviceSuccess();
         });
 
-        return setProjectManagerResult.andOnSuccessReturn(result ->
-                projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser)).andOnSuccess(workflowResult ->
-                workflowResult ? serviceSuccess() : serviceFailure(PROJECT_SETUP_CANNOT_PROGRESS_WORKFLOW));
+        return setProjectManagerResult.andOnSuccess(result -> {
+            projectDetailsWorkflowHandler.projectManagerAdded(project, leadPartnerUser);
+            return serviceSuccess();
+        });
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {
         List<ProjectUser> projectUsers = project.getProjectUsers();
         List<ProjectUser> projectManagers = simpleFilter(projectUsers, pu -> pu.getRole().isProjectManager());
         return getOnlyElementOrEmpty(projectManagers);
-    }
-
-    private ServiceResult<Void> validateProjectStartDate(LocalDate date) {
-
-        if (date.getDayOfMonth() != 1) {
-            return serviceFailure(PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH);
-        }
-
-        if (date.isBefore(LocalDate.now())) {
-            return serviceFailure(PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE);
-        }
-
-        return serviceSuccess();
     }
 
     private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
@@ -330,10 +330,6 @@ public class ProjectDetailsServiceImpl extends AbstractProjectServiceImpl implem
         existingFinanceContactForOrganisation.forEach(project::removeProjectUser);
         project.addProjectUser(newFinanceContact);
         return serviceSuccess();
-    }
-
-    private boolean doIsSubmissionAllowed(Project project) {
-        return projectDetailsWorkflowHandler.isSubmissionAllowed(project);
     }
 
     private ServiceResult<Void> inviteContact(Long projectId, InviteProjectResource projectResource, Notifications kindOfNotification) {

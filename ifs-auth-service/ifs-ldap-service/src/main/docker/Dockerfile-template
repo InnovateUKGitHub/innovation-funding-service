@@ -49,7 +49,6 @@ RUN apt-get update --fix-missing && \
 RUN apt-get update --fix-missing && \
   apt-get -y install grep mysql-client net-tools rsync && \
   apt-get autoclean && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
-  /usr/sbin/slapadd -c -l testentries.ldif && \
   rm -f ppolicy*.ldif
 
 USER openldap

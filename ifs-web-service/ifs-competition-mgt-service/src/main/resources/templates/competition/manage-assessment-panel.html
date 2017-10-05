@@ -53,7 +53,7 @@
         <h2 class="heading-medium">Panel navigation</h2>
 
         <ul class="link-list">
-            <li><a class="disabled" aria-disabled="true">Invite assessors to attend</a></li>
+            <li><a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Invite assessors to attend</a></li>
             <li><a class="disabled" aria-disabled="true">Assign applications to panel</a></li>
             <li><a class="disabled" aria-disabled="true">Allocate applications to assessors</a></li>
         </ul>
