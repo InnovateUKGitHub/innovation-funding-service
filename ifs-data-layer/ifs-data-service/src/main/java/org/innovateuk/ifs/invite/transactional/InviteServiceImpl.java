@@ -386,17 +386,15 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private InviteOrganisation buildNewInviteOrganisation(InviteOrganisationResource inviteOrganisationResource) {
-        InviteOrganisation newInviteOrganisation = new InviteOrganisation(
+        return new InviteOrganisation(
                 inviteOrganisationResource.getOrganisationName(),
                 null,
                 null);
-        return newInviteOrganisation;
     }
 
     private InviteOrganisation buildNewInviteOrganisationForOrganisation(InviteOrganisationResource inviteOrganisationResource, Organisation organisation) {
-        InviteOrganisation newInviteOrganisation = new InviteOrganisation(inviteOrganisationResource.getOrganisationName(),
+        return new InviteOrganisation(inviteOrganisationResource.getOrganisationName(),
                 organisation,null);
-        return newInviteOrganisation;
     }
 
     private List<ApplicationInvite> saveInviteOrganisationWithInvites(InviteOrganisation inviteOrganisation, List<ApplicationInviteResource> applicationInviteResources) {
