@@ -8,6 +8,9 @@ import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsFo
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.service.populator.CompetitionSetupPopulator;
+import org.innovateuk.ifs.competitionsetup.viewmodel.QuestionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,11 +21,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -34,8 +39,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionTy
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -62,6 +66,9 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Mock
     private CompetitionSetupQuestionService competitionSetupQuestionService;
+
+    @Mock
+    private CompetitionSetupPopulator competitionSetupPopulator;
 
     @Override
     protected CompetitionSetupApplicationController supplyControllerUnderTest() { return new CompetitionSetupApplicationController(); }
@@ -138,11 +145,18 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupPopulator.populateGeneralModelAttributes(competition, CompetitionSetupSection.APPLICATION_FORM))
+                .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.FALSE));
 
-        mockMvc.perform(get(URL_PREFIX + "/question/finance"))
+        ModelMap model = mockMvc.perform(get(URL_PREFIX + "/question/finance"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("competition/finances"))
-                .andExpect(model().attribute("editable", false));
+                .andReturn().getModelAndView().getModelMap();
+
+        assertEquals(QuestionSetupViewModel.class, model.get("model").getClass());
+        QuestionSetupViewModel viewModel = (QuestionSetupViewModel) model.get("model");
+
+        assertEquals(Boolean.FALSE, viewModel.isEditable());
     }
 
     @Test
@@ -160,7 +174,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         ArgumentCaptor<Model> model = ArgumentCaptor.forClass(Model.class);
         ArgumentCaptor<CompetitionResource> competitionResource = ArgumentCaptor.forClass(CompetitionResource.class);
         ArgumentCaptor<CompetitionSetupSection> competitionSetupSection = ArgumentCaptor.forClass(CompetitionSetupSection.class);
-        verify(competitionSetupService, atLeastOnce()).populateCompetitionSectionModelAttributes(model.capture(), competitionResource.capture(), competitionSetupSection.capture());
+        verify(competitionSetupService, atLeastOnce()).populateCompetitionSectionModelAttributes(competitionResource.capture(), competitionSetupSection.capture());
         verify(competitionService, never()).update(competition);
     }
 
@@ -242,8 +256,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(competitionSetupPopulator.populateGeneralModelAttributes(any(CompetitionResource.class), any(CompetitionSetupSection.class)))
+                .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
 
-        mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
+        Map<String, Object> model = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.type", ASSESSED_QUESTION.name())
                 .param("question.questionId", questionId.toString())
                 .param("question.title", "My Title")
@@ -262,8 +278,13 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("guidanceRows[0].scoreTo", "")
                 .param("guidanceRows[0].justification", ""))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("editable", true))
-                .andExpect(view().name("competition/setup/question"));
+                .andExpect(view().name("competition/setup/question"))
+                .andReturn().getModelAndView().getModel();
+
+        assertEquals(QuestionSetupViewModel.class, model.get("model").getClass());
+        QuestionSetupViewModel viewModel = (QuestionSetupViewModel) model.get("model");
+
+        assertEquals(Boolean.TRUE, viewModel.getGeneral().isEditable());
 
         verify(competitionSetupQuestionService, never()).updateQuestion(question);
     }
@@ -301,7 +322,6 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("guidanceRows[0].subject", "")
                 .param("guidanceRows[0].justification", ""))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("editable", true))
                 .andExpect(view().name("competition/setup/question"));
 
         verify(competitionSetupQuestionService, never()).updateQuestion(question);
@@ -362,6 +382,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(competitionSetupPopulator.populateGeneralModelAttributes(any(CompetitionResource.class), any(CompetitionSetupSection.class)))
+                .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
 
         MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
@@ -374,10 +396,13 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("guidanceRows[0].scoreTo", "")
                 .param("guidanceRows[0].justification", ""))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(model().attribute("editable", true))
                 .andReturn();
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
+        assertEquals(QuestionSetupViewModel.class, result.getModelAndView().getModel().get("model").getClass());
+        QuestionSetupViewModel viewModel = (QuestionSetupViewModel)result.getModelAndView().getModel().get("model");
+
+        assertEquals(Boolean.TRUE, viewModel.getGeneral().isEditable());
 
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.scoreTotal").getCode());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.assessmentGuidanceTitle").getCode());
@@ -410,7 +435,6 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("guidanceRows[0].scoreTo", "")
                 .param("guidanceRows[0].justification", ""))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(model().attribute("editable", true))
                 .andReturn();
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
@@ -435,6 +459,9 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(competitionSetupPopulator.populateGeneralModelAttributes(any(CompetitionResource.class), any(CompetitionSetupSection.class)))
+                .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
+
 
         MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
@@ -445,10 +472,15 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.guidanceRows[0].subject", "")
                 .param("question.guidanceRows[0].justification", ""))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(model().attribute("editable", true))
                 .andReturn();
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
+        Map<String, Object> model = result.getModelAndView().getModel();
+
+        assertEquals(QuestionSetupViewModel.class, model.get("model").getClass());
+        QuestionSetupViewModel viewModel = (QuestionSetupViewModel) model.get("model");
+
+        assertEquals(Boolean.TRUE, viewModel.isEditable());
 
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.scoreTotal").getCode());
         assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.assessmentGuidanceTitle").getCode());
@@ -469,6 +501,8 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+        when(competitionSetupPopulator.populateGeneralModelAttributes(competition, CompetitionSetupSection.APPLICATION_FORM))
+                .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
 
         MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId + "/edit")
                 .param("question.questionId", questionId.toString())
@@ -479,10 +513,15 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.guidanceRows[0].subject", "")
                 .param("question.guidanceRows[0].justification", ""))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(model().attribute("editable", true))
                 .andReturn();
 
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
+
+        Map<String, Object> model = result.getModelAndView().getModel();
+        assertEquals(QuestionSetupViewModel.class, model.get("model").getClass());
+
+        QuestionSetupViewModel viewModel = (QuestionSetupViewModel) model.get("model");
+        assertEquals(Boolean.TRUE, viewModel.isEditable());
 
         assertNull(bindingResult.getFieldError("question.scoreTotal"));
         assertNull(bindingResult.getFieldError("question.assessmentGuidanceTitle"));
@@ -534,14 +573,28 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupPopulator.populateGeneralModelAttributes(competition, CompetitionSetupSection.APPLICATION_FORM))
+                .thenReturn(getBasicGeneralViewModel(CompetitionSetupSection.APPLICATION_FORM, competition, Boolean.TRUE));
 
-        mockMvc.perform(get(URL_PREFIX + "/detail/edit"))
+        MvcResult result = mockMvc.perform(get(URL_PREFIX + "/detail/edit"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/application-details"))
-                .andExpect(model().attribute("editable", true));
+                .andReturn();
+
+        ModelMap model = result.getModelAndView().getModelMap();
+        assertTrue(model.containsAttribute("model"));
+        assertEquals(model.get("model").getClass(), QuestionSetupViewModel.class);
+        QuestionSetupViewModel viewModel = (QuestionSetupViewModel) model.get("model");
+
+        assertEquals(Boolean.TRUE, viewModel.getGeneral().isEditable());
+        assertEquals(CompetitionSetupSection.APPLICATION_FORM, viewModel.getGeneral().getCurrentSection());
 
         verify(competitionService, never()).update(competition);
         verify(competitionService).setSetupSectionMarkedAsIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
+    }
+
+    private GeneralSetupViewModel getBasicGeneralViewModel(CompetitionSetupSection section, CompetitionResource competition, Boolean editable) {
+        return new GeneralSetupViewModel(editable, competition, section, CompetitionSetupSection.values(), Boolean.TRUE);
     }
 
     @Test
@@ -574,7 +627,6 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         mockMvc.perform(get(URL_PREFIX + "/detail"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/application-details"))
-                .andExpect(model().attribute("editable", false))
                 .andExpect(model().attribute("competitionSetupForm", form));
 
         verify(competitionService, never()).update(competition);

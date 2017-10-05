@@ -10,11 +10,11 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You are not eligible to apply',size='heading-large'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You are not eligible to start an application',size='heading-large'" />
 
     <p>
-        Your organisation type is not eligible to start an application in this competition.
-        <br>Please refer back to the eligibility criteria on the competition page.
+        The application must be started by the lead applicant. Your organisation is not eligible to be the lead applicant in this competition.
+        <br>Please refer back to the eligibility criteria on the competition page. The eligibility criteria will inform you whether you are able to participate as a collaborator via an invite from the lead applicant.
     </p>
     <p>
         You can <a th:href="@{/}">return to your dashboard</a> or go back to the <a href="https://www.gov.uk/government/organisations/innovate-uk">Innovate UK homepage</a>.

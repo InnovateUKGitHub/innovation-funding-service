@@ -8,6 +8,8 @@ import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CategoryFormatter;
+import org.innovateuk.ifs.competitionsetup.viewmodel.EligibilityViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
@@ -15,8 +17,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.ui.ExtendedModelMap;
-import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,6 @@ public class EligibilityModelPopulatorTest {
 
 	@Test
 	public void testPopulateModel() {
-		Model model = new ExtendedModelMap();
 		CompetitionResource competition = newCompetitionResource()
 				.withCompetitionCode("code")
 				.withName("name")
@@ -72,13 +71,17 @@ public class EligibilityModelPopulatorTest {
                 .withVisibleInSetup(Boolean.TRUE, Boolean.TRUE, Boolean.FALSE)
                 .build(3)));
 
-		populator.populateModel(model, competition);
+		EligibilityViewModel viewModel = (EligibilityViewModel) populator.populateModel(getBasicGeneralSetupView(competition), competition);
 
-		assertEquals(6, model.asMap().size());
-		assertArrayEquals(ResearchParticipationAmount.values(), (Object[])model.asMap().get("researchParticipationAmounts"));
-		assertArrayEquals(CollaborationLevel.values(), (Object[])model.asMap().get("collaborationLevels"));
-		assertEquals(researchCategories, model.asMap().get("researchCategories"));
-		assertEquals("Business, Research", model.asMap().get("leadApplicantTypesText"));
-        assertEquals("formattedcategories", model.asMap().get("researchCategoriesFormatted"));
+		assertArrayEquals(ResearchParticipationAmount.values(), viewModel.getResearchParticipationAmounts());
+		assertArrayEquals(CollaborationLevel.values(), viewModel.getCollaborationLevels());
+		assertEquals(researchCategories, viewModel.getResearchCategories());
+		assertEquals("Business, Research", viewModel.getLeadApplicantTypesText());
+        assertEquals("formattedcategories", viewModel.getResearchCategoriesFormatted());
+        assertEquals(CompetitionSetupSection.ELIGIBILITY, viewModel.getGeneral().getCurrentSection());
+	}
+
+	private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
+		return new GeneralSetupViewModel(Boolean.FALSE, competition, CompetitionSetupSection.ELIGIBILITY, CompetitionSetupSection.values(), Boolean.TRUE);
 	}
 }
