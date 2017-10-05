@@ -4,7 +4,9 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-31 Assessment panels - Invite assessors to panel- Find and Invite Tabs
 ...
 ...               IFS-1560 Assessment panels - Invite assessors to panel - Invite assessors
+...
 ...               IFS-1564 Assessment panels - Invite assessors to panel - Key statistics
+
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
