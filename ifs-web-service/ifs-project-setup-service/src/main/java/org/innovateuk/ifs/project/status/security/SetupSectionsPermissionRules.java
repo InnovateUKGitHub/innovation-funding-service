@@ -171,6 +171,9 @@ public class SetupSectionsPermissionRules {
         } catch (ForbiddenActionException e) {
             LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup");
             return false;
+        } catch (Exception e) {
+            LOG.error("An exception occurred whilst checking project setup permissions. Denying access to Project Setup");
+            return false;
         }
     }
 
