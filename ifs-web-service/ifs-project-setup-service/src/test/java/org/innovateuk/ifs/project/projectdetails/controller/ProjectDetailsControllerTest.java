@@ -135,9 +135,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertTrue(model.isUserLeadPartner());
         assertTrue(model.isSpendProfileGenerated());
         assertFalse(model.isReadOnly());
-        assertTrue(model.isProjectManagerEditable());
-        assertTrue(model.isAddressEditable());
-        assertTrue(model.isFinanceContactEditable());
+        assertFalse(model.isGrantOfferLetterGenerated());
     }
 
     @Test
@@ -187,9 +185,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertTrue(model.isUserLeadPartner());
         assertFalse(model.isSpendProfileGenerated());
         assertTrue(model.isReadOnly());
-        assertFalse(model.isProjectManagerEditable());
-        assertFalse(model.isAddressEditable());
-        assertFalse(model.isFinanceContactEditable());
+        assertTrue(model.isGrantOfferLetterGenerated());
     }
 
     @Test
@@ -309,8 +305,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .andReturn();
 
         ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
-        assertFalse(model.isProjectManagerEditable());
-        assertFalse(model.isAddressEditable());
+        assertTrue(model.isGrantOfferLetterGenerated());
     }
 
     @Test
@@ -868,9 +863,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(projectManagerProjectUsers.get(0), model.getProjectManager());
         assertFalse(model.isSpendProfileGenerated());
         assertTrue(model.isReadOnly());
-        assertFalse(model.isProjectManagerEditable());
-        assertFalse(model.isAddressEditable());
-        assertFalse(model.isFinanceContactEditable());
+        assertTrue(model.isGrantOfferLetterGenerated());
     }
 }
 
