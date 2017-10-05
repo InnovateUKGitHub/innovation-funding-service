@@ -53,12 +53,10 @@ Applicant Applies to Public content leading Competition
 
 Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-1724
-    [Tags]  CompAdnin
+    [Tags]  CompAdmin
     [Setup]  log in as a different user  &{internal_finance_credentials}
     Given the competition is now in Project Setup
-    When the user navigates to the finances page
-
-    And the us
+    Then the project finance is able to download the Overheads file
 
 *** Keywords ***
 Custom Suite Setup
@@ -145,7 +143,8 @@ moving competition to Project Setup
     the user navigates to the page   ${compPublicPage}
     the user clicks the button/link  jQuery=.button-large:contains("Release feedback")
 
-the user navigates to the finances page
-    the user navigates to the page   ${server}/project-setup-management/competition/${compPublicPage}/status
-    the user clicks the button/link  jQuery=th:contains("${publicLeadApp}") ~ td.action a:contains("Review")
-    the user clicks the button/link
+the project finance is able to download the Overheads file
+    ${projectId} =  get project id by name  ${publicLeadApp}
+    ${organisationId} =  get organisation id by name  Dreambit
+    the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${projectId}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
+    remove the file from the operating system  ${excel_file}
