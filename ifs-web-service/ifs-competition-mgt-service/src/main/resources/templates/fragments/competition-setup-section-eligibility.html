@@ -3,12 +3,12 @@
 <th:block th:fragment="section-content">
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Eligibility',size='heading-xlarge'" />
 
-    <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post"
+    <form th:action="@{(${model.general.editable} ? '' : 'eligibility/edit')}" method="post"
           th:object="${competitionSetupForm}" novalidate="novalidate"
-          th:attr="data-competition=${competition.id}"
-          data-autosave="compSetup" data-section="eligibility">
+          th:attr="data-competition=${model.general.competition.id}"
+          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="eligibility">
 
-        <fieldset th:if="${editable}" id="section-3-edit">
+        <fieldset th:if="${model.general.editable}" id="section-3-edit">
 
             <legend class="visuallyhidden">Eligibility</legend>
             <input type="hidden" th:field="*{multipleStream}" />
@@ -20,7 +20,7 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
-                    <div class="multiple-choice" th:each="collaborationLevel : ${collaborationLevels}">
+                    <div class="multiple-choice" th:each="collaborationLevel : ${model.collaborationLevels}">
                         <input th:id="${'single-or-collaborative-' + collaborationLevel.code}"
                                name="singleOrCollaborative"
                                th:value="${collaborationLevel.code}"
@@ -45,7 +45,7 @@
                         </th:block>
                     </legend>
 
-                    <div class="multiple-choice" th:each="researchCategory : ${researchCategories}" >
+                    <div class="multiple-choice" th:each="researchCategory : ${model.researchCategories}" >
                         <input th:value="${researchCategory.id}"
                                 type="checkbox"
                                 name="researchCategoryId"
@@ -69,7 +69,7 @@
                        </th:block>
                     </legend>
 
-                     <div class="multiple-choice" th:each="leadApplicantType : ${leadApplicantTypes}">
+                     <div class="multiple-choice" th:each="leadApplicantType : ${model.leadApplicantTypes}">
                         <input th:id="${'lead-applicant-type-' + leadApplicantType.id}"
                                name="leadApplicantTypes"
                                th:value="${leadApplicantType.id}"
@@ -96,7 +96,7 @@
                             id="researchParticipation"
                             required="required"
                             th:attr="data-required-errormessage=#{validation.eligibilityform.researchparticipationamountId.required}">
-                        <option th:each="researchParticipationAmount : ${researchParticipationAmounts}" th:text="${researchParticipationAmount.name}" th:value="${researchParticipationAmount.id}" th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">Research participation</option>
+                        <option th:each="researchParticipationAmount : ${model.researchParticipationAmounts}" th:text="${researchParticipationAmount.name}" th:value="${researchParticipationAmount.id}" th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">Research participation</option>
                     </select>
                 </fieldset>
             </div>
@@ -138,7 +138,7 @@
             <button class="button">Done</button>
         </fieldset>
 
-        <fieldset th:if="${!editable}" id="section-3-">
+        <fieldset th:unless="${model.general.editable}" id="section-3-">
 
             <dl class="standard-definition-list">
                 <!-- INFUND-5682 : Competition streams options have been hidden rather than removed, since they will be required when new competition types are added -->
@@ -153,16 +153,16 @@
                 </div>
 
                 <dt>Project type</dt>
-                <dd th:each="(collaborationLevel : ${collaborationLevels})" th:if="${collaborationLevel.code == competitionSetupForm.singleOrCollaborative}" th:text="${collaborationLevel.name}">Collaboration level</dd>
+                <dd th:each="(collaborationLevel : ${model.collaborationLevels})" th:if="${collaborationLevel.code == competitionSetupForm.singleOrCollaborative}" th:text="${collaborationLevel.name}">Collaboration level</dd>
 
                 <dt>Research categories</dt>
-                <dd th:text="${researchCategoriesFormatted}"></dd>
+                <dd th:text="${model.researchCategoriesFormatted}"></dd>
 
                 <dt>Lead applicant</dt>
-                <dd th:text="${leadApplicantTypesText}"></dd>
+                <dd th:text="${model.leadApplicantTypesText}"></dd>
 
                 <dt>Research participation</dt>
-                <dd th:each="(researchParticipationAmount : ${researchParticipationAmounts})" th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}" th:text="${researchParticipationAmount.name}">Research category</dd>
+                <dd th:each="(researchParticipationAmount : ${model.researchParticipationAmounts})" th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}" th:text="${researchParticipationAmount.name}">Research category</dd>
 
                 <dt>Are resubmissions allowed?</dt>
                 <dd th:text="${#strings.capitalize(competitionSetupForm.resubmission)}"></dd>
@@ -175,13 +175,13 @@
     </form>
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='additional')}">
+            <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='additional')}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Funding Information</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='milestones')}">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='milestones')}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Milestones</span>
             </a>

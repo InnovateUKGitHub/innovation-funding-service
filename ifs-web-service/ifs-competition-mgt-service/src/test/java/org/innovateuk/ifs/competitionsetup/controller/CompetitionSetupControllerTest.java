@@ -21,7 +21,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
@@ -179,7 +178,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(view().name("competition/setup"))
                 .andExpect(model().attribute("competitionSetupForm", compSetupForm));
 
-        verify(competitionSetupService).populateCompetitionSectionModelAttributes(isA(Model.class), eq(competition), eq(CompetitionSetupSection.INITIAL_DETAILS));
+        verify(competitionSetupService).populateCompetitionSectionModelAttributes(eq(competition), eq(CompetitionSetupSection.INITIAL_DETAILS));
     }
 
     @Test
@@ -859,7 +858,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/competition/setup/" + COMPETITION_ID));
 
-        verify(manageInnovationLeadsModelPopulator, never()).populateModel(any(), any());
+        verify(manageInnovationLeadsModelPopulator, never()).populateModel(any());
     }
 
     @Test
@@ -875,7 +874,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-innovation-leads-find"));
 
-        verify(manageInnovationLeadsModelPopulator).populateModel(any(), any());
+        verify(manageInnovationLeadsModelPopulator).populateModel(any());
     }
 
     @Test
@@ -889,7 +888,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/competition/setup/" + COMPETITION_ID));
 
-        verify(manageInnovationLeadsModelPopulator, never()).populateModel(any(), any());
+        verify(manageInnovationLeadsModelPopulator, never()).populateModel(any());
     }
 
     @Test
@@ -905,7 +904,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/manage-innovation-leads-overview"));
 
-        verify(manageInnovationLeadsModelPopulator).populateModel(any(), any());
+        verify(manageInnovationLeadsModelPopulator).populateModel(any());
     }
 
     @Test
@@ -921,7 +920,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(view().name("redirect:/competition/setup/" + COMPETITION_ID));
 
         verify(competitionService, never()).addInnovationLead(COMPETITION_ID, innovationLeadUserId);
-        verify(manageInnovationLeadsModelPopulator, never()).populateModel(any(), any());
+        verify(manageInnovationLeadsModelPopulator, never()).populateModel(any());
     }
 
     @Test
@@ -939,7 +938,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(view().name("competition/manage-innovation-leads-find"));
 
         verify(competitionService).addInnovationLead(COMPETITION_ID, innovationLeadUserId);
-        verify(manageInnovationLeadsModelPopulator).populateModel(any(), any());
+        verify(manageInnovationLeadsModelPopulator).populateModel(any());
     }
 
     @Test
@@ -955,7 +954,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(view().name("redirect:/competition/setup/" + COMPETITION_ID));
 
         verify(competitionService, never()).removeInnovationLead(COMPETITION_ID, innovationLeadUserId);
-        verify(manageInnovationLeadsModelPopulator, never()).populateModel(any(), any());
+        verify(manageInnovationLeadsModelPopulator, never()).populateModel(any());
     }
 
     @Test
@@ -973,6 +972,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(view().name("competition/manage-innovation-leads-overview"));
 
         verify(competitionService).removeInnovationLead(COMPETITION_ID, innovationLeadUserId);
-        verify(manageInnovationLeadsModelPopulator).populateModel(any(), any());
+        verify(manageInnovationLeadsModelPopulator).populateModel(any());
     }
 }

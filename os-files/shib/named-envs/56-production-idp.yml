@@ -92,7 +92,7 @@ items:
           - name: LDAP_AUTHENTICATOR
             value: "bindSearchAuthenticator"
           - name: GOOGLEANALYTICS_TRACKINGID
-            value: "UA-3837161-32"
+            value: "GTM-MJZM7B3"
           ports:
           - containerPort: 9443
           - containerPort: 9080
@@ -122,6 +122,8 @@ items:
   kind: Route
   metadata:
     name: idp
+    annotations:
+      haproxy.router.openshift.io/balance: roundrobin
   spec:
     host: <<SHIB-IDP-ADDRESS>>
     port:
