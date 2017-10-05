@@ -38,7 +38,6 @@ CompAdmin can add an assessor to invite list
     And the user clicks the button/link      link=Find
     And the user should not see the element  jQuery=td:contains("Benjamin Nixon")
 
-
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-1560
     [Tags]
