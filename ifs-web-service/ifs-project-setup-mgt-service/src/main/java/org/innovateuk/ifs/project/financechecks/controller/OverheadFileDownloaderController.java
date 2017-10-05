@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.ExecutionException;
 
 @RestController
@@ -27,15 +26,13 @@ public  class OverheadFileDownloaderController {
 
     @GetMapping(value = "/{overheadId}")
     public ResponseEntity<ByteArrayResource> downloadOverheadFile(
-            @PathVariable("overheadId") final Long overheadId,
-            HttpServletRequest request) throws ExecutionException, InterruptedException {
-
-        final ByteArrayResource resource = overheadFileRestService.getOverheadFile(overheadId).getSuccessObjectOrThrowException();
-        final FileEntryResource fileEntryResource = overheadFileRestService.getOverheadFileDetails(overheadId).getSuccessObjectOrThrowException();
+            @PathVariable("overheadId") final Long overheadId) throws ExecutionException, InterruptedException {
+        final ByteArrayResource resource = overheadFileRestService.getOverheadFileUsingProjectFinanceRowId(overheadId).getSuccessObjectOrThrowException();
+        final FileEntryResource fileEntryResource = overheadFileRestService.getOverheadFileDetailsUsingProjectFinanceRowId(overheadId).getSuccessObjectOrThrowException();
         return getFileResponseEntity(resource, fileEntryResource);
     }
 
-    public static ResponseEntity<ByteArrayResource> getFileResponseEntity(ByteArrayResource resource, FileEntryResource fileEntry) {
+    private static ResponseEntity<ByteArrayResource> getFileResponseEntity(ByteArrayResource resource, FileEntryResource fileEntry) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentLength(resource.contentLength());
         httpHeaders.setContentType(MediaType.parseMediaType(fileEntry.getMediaType()));

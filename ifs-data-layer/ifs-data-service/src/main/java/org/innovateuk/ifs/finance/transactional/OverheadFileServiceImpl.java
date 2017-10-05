@@ -11,9 +11,11 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaValue;
+import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.method.P;
@@ -37,6 +39,9 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private ApplicationFinanceRowRepository financeRowRepository;
+
+    @Autowired
+    private ProjectFinanceRowRepository projectFinanceRowRepository;
 
     @Autowired
     private FinanceRowMetaValueRepository financeRowMetaValueRepository;
@@ -64,6 +69,16 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<FileAndContents> getFileEntryContents(long overheadId) {
+        return getApplicationFileEntryContents(overheadId);
+    }
+
+    @Override
+    public ServiceResult<FileAndContents> getProjectFileEntryContents(long overheadId) {
+        ProjectFinanceRow financeRow = projectFinanceRowRepository.findOne(overheadId);
+        return getApplicationFileEntryContents(financeRow.getApplicationRowId());
+    }
+
+    private ServiceResult<FileAndContents> getApplicationFileEntryContents(long overheadId){
         return findMetaValueByFinanceRow(overheadId).andOnSuccess(metaValue ->
                 find(fileEntryRepository.findOne(Long.valueOf(metaValue.getValue())), notFoundError(FileEntry.class, metaValue.getValue())).andOnSuccess(fileEntry ->
                         fileService.getFileByFileEntryId(fileEntry.getId()).andOnSuccessReturn(fileContentsResult ->
@@ -72,6 +87,16 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
 
     @Override
     public ServiceResult<FileEntryResource> getFileEntryDetails(long overheadId) {
+        return getApplicationFileEntryDetails(overheadId);
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getProjectFileEntryDetails(long overheadId) {
+        ProjectFinanceRow financeRow = projectFinanceRowRepository.findOne(overheadId);
+        return getApplicationFileEntryDetails(financeRow.getApplicationRowId());
+    }
+
+    private ServiceResult<FileEntryResource> getApplicationFileEntryDetails(long overheadId){
         return findMetaValueByFinanceRow(overheadId).andOnSuccess(metaValue ->
                 find(fileEntryRepository.findOne(Long.valueOf(metaValue.getValue())), notFoundError(FileEntry.class, metaValue.getValue())).andOnSuccess(fileEntry ->
                         serviceSuccess(fileEntryMapper.mapToResource(fileEntry))));
@@ -86,7 +111,7 @@ public class OverheadFileServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<Void> deleteFileEntry(long overheadId) {
-        return findMetaValueByFinanceRow(overheadId).andOnSuccess(metaValue -> deleteMetaValueAndFileByMetaValue(metaValue));
+        return findMetaValueByFinanceRow(overheadId).andOnSuccess(this::deleteMetaValueAndFileByMetaValue);
     }
 
     private ServiceResult<Void> deleteMetaValueAndFileByMetaValue(FinanceRowMetaValue metaValue) {
