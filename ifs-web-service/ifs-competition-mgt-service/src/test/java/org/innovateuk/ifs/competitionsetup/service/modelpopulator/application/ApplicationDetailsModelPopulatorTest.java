@@ -4,13 +4,12 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competitionsetup.viewmodel.application.ApplicationDetailsViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.ui.ExtendedModelMap;
-import org.springframework.ui.Model;
 
 import java.util.Optional;
 
@@ -38,17 +37,13 @@ public class ApplicationDetailsModelPopulatorTest {
 	
 	@Test
 	public void testPopulateModel() {
-
-		Model model = new ExtendedModelMap();
 		CompetitionResource competitionResource = newCompetitionResource()
 				.withCompetitionCode("code")
 				.withName("name")
 				.withId(8L)
 				.build();
 
-		populator.populateModel(model, competitionResource, Optional.empty());
-		assertEquals(2, model.asMap().size());
-		assertEquals("name", model.asMap().get("competitionName"));
-		assertEquals(8L, model.asMap().get("competitionId"));
+		ApplicationDetailsViewModel viewModel = (ApplicationDetailsViewModel) populator.populateModel(competitionResource, Optional.empty());
+		assertEquals(ApplicationDetailsViewModel.class, viewModel.getClass());
 	}
 }
