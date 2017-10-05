@@ -130,34 +130,28 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         compWithNoInnovationLead = repository.save(compWithNoInnovationLead);
         Milestone openDateMilestoneNoInnovationLead = newMilestone().withCompetition(compWithNoInnovationLead).withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now().minusHours(10L)).build();
         milestoneRepository.save(openDateMilestoneNoInnovationLead);
-        Application appWithNoInnovationLead = newApplication().withCompetition(compWithNoInnovationLead).withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(ZonedDateTime.now()).build();
-        applicationRepository.save(appWithNoInnovationLead);
 
         Competition compInPreparation = newCompetition().withName("compInPreparation").withSetupComplete(false).withLeadTechnologist(leadTechnologist).withId(++compId).build();
         compInPreparation = repository.save(compInPreparation);
         Milestone openDateMilestoneInPreparation = newMilestone().withCompetition(compInPreparation).withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now().minusHours(20L)).build();
         milestoneRepository.save(openDateMilestoneInPreparation);
-        Application appInPreparation = newApplication().withCompetition(compInPreparation).withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(ZonedDateTime.now()).build();
-        applicationRepository.save(appInPreparation);
 
         Competition compReadyToOpen = newCompetition().withName("compReadyToOpen").withSetupComplete(true).withLeadTechnologist(leadTechnologist).withId(++compId).build();
         compReadyToOpen = repository.save(compReadyToOpen);
         Milestone openDateMilestoneReadyToOpen = newMilestone().withCompetition(compReadyToOpen).withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now().plusHours(12L)).build();
         milestoneRepository.save(openDateMilestoneReadyToOpen);
 
+        Competition compInInform = newCompetition().withName("compInInform").withSetupComplete(true).withLeadTechnologist(leadTechnologist).withId(++compId).build();
+        compInInform = repository.save(compInInform);
+        Milestone openDateMilestoneInInform = newMilestone().withCompetition(compInInform).withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now().minusDays(1L).minusHours(12L)).build();
+        milestoneRepository.save(openDateMilestoneInInform);
+
         Competition compInProjectSetup = newCompetition().withName("compInProjectSetup").withSetupComplete(true).withLeadTechnologist(leadTechnologist).withId(++compId).build();
         compInProjectSetup = repository.save(compInProjectSetup);
         Milestone openDateMilestoneInProjectSetup = newMilestone().withCompetition(compInProjectSetup).withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now().minusDays(2L)).build();
         milestoneRepository.save(openDateMilestoneInProjectSetup);
-        Application appInProjectSetup = newApplication().withCompetition(compInProjectSetup).withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(ZonedDateTime.now()).build();
-        applicationRepository.save(appInProjectSetup);
-
-        Competition earlyOpenCompUnfunded = newCompetition().withName("earlyOpenCompUnfunded").withSetupComplete(true).withLeadTechnologist(leadTechnologist).withId(++compId).build();
-        earlyOpenCompUnfunded = repository.save(earlyOpenCompUnfunded);
-        Milestone openDateMilestoneUnfunded = newMilestone().withCompetition(earlyOpenCompUnfunded).withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now().minusDays(1L)).build();
-        milestoneRepository.save(openDateMilestoneUnfunded);
-        Application appUnfunded = newApplication().withCompetition(earlyOpenCompUnfunded).withFundingDecision(FundingDecisionStatus.UNFUNDED).withManageFundingEmailDate(ZonedDateTime.now()).build();
-        applicationRepository.save(appUnfunded);
+        Milestone feedbackReleasedMilestoneInProjectSetup = newMilestone().withCompetition(compInProjectSetup).withType(MilestoneType.FEEDBACK_RELEASED).withDate(ZonedDateTime.now().minusDays(1L)).build();
+        milestoneRepository.save(feedbackReleasedMilestoneInProjectSetup);
 
         flushAndClearSession();
 
@@ -168,7 +162,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Assert.assertEquals(7, filteredSearchResults.size());
         Assert.assertEquals("earliestOpenComp", filteredSearchResults.get(0).getName());
         Assert.assertEquals("compInProjectSetup", filteredSearchResults.get(1).getName());
-        Assert.assertEquals("earlyOpenCompUnfunded", filteredSearchResults.get(2).getName());
+        Assert.assertEquals("compInInform", filteredSearchResults.get(2).getName());
         Assert.assertEquals("compInPreparation", filteredSearchResults.get(3).getName());
         Assert.assertEquals("compWithNoInnovationLead", filteredSearchResults.get(4).getName());
         Assert.assertEquals("openComp", filteredSearchResults.get(5).getName());
@@ -178,15 +172,16 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Competition> filteredLeadTechnologistSearchResults = leadTechnologistSearchResults.getContent().stream().filter(r -> existingSearchResults.stream().filter(er -> er.getId().equals(r.getId())).count() == 0L).collect(Collectors.toList());
         Assert.assertEquals(3, filteredLeadTechnologistSearchResults.size());
         Assert.assertEquals("earliestOpenComp", filteredLeadTechnologistSearchResults.get(0).getName());
-        Assert.assertEquals("earlyOpenCompUnfunded", filteredLeadTechnologistSearchResults.get(1).getName());
+        Assert.assertEquals("compInInform", filteredLeadTechnologistSearchResults.get(1).getName());
         Assert.assertEquals("openComp", filteredLeadTechnologistSearchResults.get(2).getName());
 
         Page<Competition> supportUserSearchResults = repository.searchForSupportUser("%o%", pageable);
         List<Competition> filteredSupportUserSearchResults = supportUserSearchResults.getContent().stream().filter(r -> existingSearchResults.stream().filter(er -> er.getId().equals(r.getId())).count() == 0L).collect(Collectors.toList());
-        Assert.assertEquals(4, filteredSupportUserSearchResults.size());
+        Assert.assertEquals(5, filteredSupportUserSearchResults.size());
         Assert.assertEquals("earliestOpenComp", filteredSupportUserSearchResults.get(0).getName());
-        Assert.assertEquals("earlyOpenCompUnfunded", filteredSupportUserSearchResults.get(1).getName());
-        Assert.assertEquals("openComp", filteredSupportUserSearchResults.get(2).getName());
-        Assert.assertEquals("compReadyToOpen", filteredSupportUserSearchResults.get(3).getName());
+        Assert.assertEquals("compInInform", filteredSupportUserSearchResults.get(1).getName());
+        Assert.assertEquals("compWithNoInnovationLead", filteredSupportUserSearchResults.get(2).getName());
+        Assert.assertEquals("openComp", filteredSupportUserSearchResults.get(3).getName());
+        Assert.assertEquals("compReadyToOpen", filteredSupportUserSearchResults.get(4).getName());
     }
 }

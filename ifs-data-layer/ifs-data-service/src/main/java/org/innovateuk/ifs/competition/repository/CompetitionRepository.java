@@ -47,11 +47,11 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "ORDER BY m.date";
 
-    /* Innovation leads should not access competitions in states: In preparation, Ready to open, Project setup, */
+    /* Innovation leads should not access competitions in states: In preparation, Ready to open, Project setup */
     public static final String SEARCH_QUERY_LEAD_TECHNOLOGIST = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct LEFT JOIN c.leadTechnologist u " +
             "WHERE (m.type = 'OPEN_DATE' AND m.date < NOW()) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "AND (c.setupComplete IS NOT NULL AND c.setupComplete != FALSE) " +
-            "AND NOT EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = c.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
+            "AND NOT EXISTS (SELECT m.id FROM Milestone m WHERE m.competition.id = c.id AND m.type='FEEDBACK_RELEASED') " +
             "AND u.id = :leadTechnologistUserId " +
             "ORDER BY m.date";
 
@@ -59,7 +59,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     public static final String SEARCH_QUERY_SUPPORT_USER = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct " +
             "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "AND (c.setupComplete IS NOT NULL AND c.setupComplete != FALSE) " +
-            "AND NOT EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = c.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
+            "AND NOT EXISTS (SELECT m.id FROM Milestone m WHERE m.competition.id = c.id AND m.type='FEEDBACK_RELEASED') " +
             "ORDER BY m.date";
 
     public static final String NON_IFS_QUERY = "SELECT c FROM Competition c WHERE nonIfs = TRUE";
