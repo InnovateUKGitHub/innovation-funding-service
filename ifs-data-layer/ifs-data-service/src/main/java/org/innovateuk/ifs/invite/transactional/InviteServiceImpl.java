@@ -7,6 +7,7 @@ import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
@@ -45,6 +46,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Consumer;
@@ -115,6 +117,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     LocalValidatorFactoryBean validator;
 
@@ -311,14 +316,14 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return find(applicationInviteMapper.mapIdToDomain(applicationInviteId), notFoundError(ApplicationInvite.class))
                 .andOnSuccessReturnVoid(applicationInvite -> {
                     ProcessRole leadApplicantProcessRole = applicationInvite.getTarget().getLeadApplicantProcessRole();
-                    Long applicationId = applicationInvite.getTarget().getId();
+                    Application application = applicationInvite.getTarget();
 
                     List<ProcessRole> collaboratorProcessRoles = processRoleRepository.findByUserAndApplicationId(
                             applicationInvite.getUser(),
-                            applicationInvite.getTarget().getId()
+                            application.getId()
                     );
 
-                    reassignCollaboratorResponsesAndQuestionStatuses(applicationId, leadApplicantProcessRole, collaboratorProcessRoles);
+                    reassignCollaboratorResponsesAndQuestionStatuses(application.getId(), leadApplicantProcessRole, collaboratorProcessRoles);
 
                     processRoleRepository.delete(collaboratorProcessRoles);
 
@@ -326,7 +331,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
 
                     if (inviteOrganisation.getInvites().size() < 2) {
                         inviteOrganisationRepository.delete(inviteOrganisation);
-                        deleteOrganisationsApplicationData(inviteOrganisation.getOrganisation(), applicationInvite.getTarget());
+                        deleteOrganisationsApplicationData(inviteOrganisation.getOrganisation(), application);
+
                     } else {
                         inviteOrganisation.getInvites().remove(applicationInvite);
                         inviteOrganisationRepository.save(inviteOrganisation);
@@ -341,6 +347,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 applicationFinanceRepository.delete(finance);
             }
         }
+
+        BigDecimal completion = applicationService
+                .getProgressPercentageBigDecimalByApplicationId(application.getId())
+                .getSuccessObject();
+        application.setCompletion(completion);
     }
 
     protected Supplier<ServiceResult<ApplicationInvite>> invite(final String hash) {
