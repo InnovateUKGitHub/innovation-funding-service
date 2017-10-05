@@ -228,7 +228,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return competition.isOpen() && (user.hasRole(APPLICANT) || user.hasRole(SYSTEM_REGISTRATION_USER));
     }
 
-    @PermissionRule(value = "MARK_AS_INELIGIBLE", description = "Application can be marked as ineligible only until ", particularBusinessState = "Competition is in assessment state")
+    @PermissionRule(value = "MARK_AS_INELIGIBLE", description = "Application can be marked as ineligible by internal admin user and innovation lead only until ", particularBusinessState = "competition is in assessment state")
     public boolean markAsInelgibileAllowedBeforeAssesment(ApplicationResource application, UserResource user){
         Competition competition = competitionRepository.findOne(application.getCompetition());
         return (isInternalAdmin(user) || isInnovationLead(user)) && !isCompetitionBeyondAssessment(competition);
