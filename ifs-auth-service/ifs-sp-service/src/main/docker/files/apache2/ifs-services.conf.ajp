@@ -19,7 +19,7 @@ ShibCompatValidUser On
   Header set X-XSS-Protection "1; mode=block"
   Header set X-Content-Type-Options "nosniff"
   Header set Access-Control-Allow-Origin "https://${IDP_DOMAIN}"
-  Header set Content-Security-Policy-Report-Only "default-src 'none'; img-src 'self' https://assets.publishing.service.gov.uk; script-src 'self' 'unsafe-inline' data: https://ajax.googleapis.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'"
+  Header set Content-Security-Policy-Report-Only "default-src 'none'; img-src 'self' https://assets.publishing.service.gov.uk; script-src 'self' 'unsafe-inline' data: https://ajax.googleapis.com https://www.google-analytics.com https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'"
 
   DocumentRoot /var/www/html
 
