@@ -452,7 +452,7 @@ Application: Finances
     [Setup]  the user navigates to the page  ${landingPage}
     Given the user clicks the button/link    link=Finances
     Then the user should see the element     jQuery=h1:contains("Application finances")
-    And the user should see the element      jQuery=.panel:contains("Each partner is required to complete the following finance sections, selected by the template for this competition.")
+    And the user should see the element      jQuery=.panel:contains("The competition template will select the following finance sections for each partner.")
     When the user clicks the button/link     jQuery=.button:contains("Edit this question")
     Then the user should see the element     css=input:checked ~ label[for="full-application-finance-yes"]
     And the user should see the element      css=label[for="full-application-finance-no"]
