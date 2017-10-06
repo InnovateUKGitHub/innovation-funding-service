@@ -15,7 +15,7 @@ COPY idp/build.xml /idp/
 RUN apt-get update --fix-missing && \
   echo "noclobber = off" >> wgetrc && \
   echo "dir_prefix = ." >> wgetrc && \
-  echo "verbose = on" >> wgetrc && \
+  echo "verbose = off" >> wgetrc && \
   echo "progress = dot:mega" >> wgetrc && \
   echo "tries = 5" >> wgetrc && \
 # Oracle JDK \
