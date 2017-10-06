@@ -14,10 +14,13 @@ import static com.google.common.primitives.Longs.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -183,5 +186,34 @@ public class AssessmentPanelInviteControllerTest extends BaseControllerMockMVCTe
                 .andExpect(status().isOk());
 
         verify(assessmentPanelInviteServiceMock, only()).inviteUsers(existingUserStagedInvites);
+    }
+
+    @Test
+    public void sendAllInvites() throws Exception {
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
+
+        when(assessmentPanelInviteServiceMock.sendAllInvites(COMPETITION_ID, assessorInviteSendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/assessmentpanelinvite/sendAllInvites/{competitionId}", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
+                .andExpect(status().isOk());
+
+        verify(assessmentPanelInviteServiceMock).sendAllInvites(COMPETITION_ID, assessorInviteSendResource);
+    }
+
+    @Test
+    public void getAllInvitesToSend() throws Exception {
+        AssessorInvitesToSendResource resource = newAssessorInvitesToSendResource().build();
+
+        when(assessmentPanelInviteServiceMock.getAllInvitesToSend(COMPETITION_ID)).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesToSend/{competitionId}", COMPETITION_ID).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(assessmentPanelInviteServiceMock, only()).getAllInvitesToSend(COMPETITION_ID);
     }
 }

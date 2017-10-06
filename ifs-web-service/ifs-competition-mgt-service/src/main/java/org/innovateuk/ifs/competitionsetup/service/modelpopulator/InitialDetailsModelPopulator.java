@@ -6,11 +6,13 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.InitialDetailsViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +38,13 @@ public class InitialDetailsModelPopulator implements CompetitionSetupSectionMode
 	}
 
     @Override
-	public void populateModel(Model model, CompetitionResource competitionResource) {
-		model.addAttribute("competitionExecutiveUsers", userService.findUserByType(UserRoleType.COMP_ADMIN));
-		model.addAttribute("innovationSectors", categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException());
-		model.addAttribute("innovationAreas", addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException()));
-		model.addAttribute("competitionTypes", competitionService.getAllCompetitionTypes());
-		model.addAttribute("innovationLeadTechUsers", userService.findUserByType(UserRoleType.INNOVATION_LEAD));
+	public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
+		return new InitialDetailsViewModel(generalViewModel,
+                userService.findUserByType(UserRoleType.COMP_ADMIN),
+				categoryRestService.getInnovationSectors().getSuccessObjectOrThrowException(),
+				addAllInnovationAreaOption(categoryRestService.getInnovationAreas().getSuccessObjectOrThrowException()),
+                competitionService.getAllCompetitionTypes(),
+                userService.findUserByType(UserRoleType.INNOVATION_LEAD));
 	}
 
 	private List<InnovationAreaResource> addAllInnovationAreaOption(List<InnovationAreaResource> innovationAreas) {

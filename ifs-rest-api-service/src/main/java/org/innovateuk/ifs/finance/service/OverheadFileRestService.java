@@ -17,6 +17,10 @@ public interface OverheadFileRestService {
 
     RestResult<ByteArrayResource> getOverheadFile(Long overheadId);
 
+    RestResult<ByteArrayResource> getOverheadFileUsingProjectFinanceRowId(Long projectFinanceRowId);
+
+    RestResult<FileEntryResource> getOverheadFileDetailsUsingProjectFinanceRowId(Long overheadId);
+
     RestResult<FileEntryResource> getOverheadFileDetails(Long overheadId);
 
 }
