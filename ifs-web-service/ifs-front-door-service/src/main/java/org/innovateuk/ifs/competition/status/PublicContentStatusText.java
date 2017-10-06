@@ -45,7 +45,7 @@ public enum PublicContentStatusText {
     }
 
     public static Predicate<PublicContentItemResource> openingDateIsInPastAndClosingDateIsLessThanTwoWeeksAway() {
-        return content -> content.getCompetitionCloseDate().isBefore(ZonedDateTime.now().plusDays(14))
-                || content.getCompetitionCloseDate().equals(ZonedDateTime.now().plusDays(14));
+        return content -> content.getCompetitionOpenDate().isBefore(ZonedDateTime.now()) &&
+                (content.getCompetitionCloseDate().isBefore(ZonedDateTime.now().plusDays(14)) || content.getCompetitionCloseDate().equals(ZonedDateTime.now().plusDays(14)));
     }
 }

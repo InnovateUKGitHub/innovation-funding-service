@@ -99,6 +99,8 @@ items:
   kind: Route
   metadata:
     name: shib
+    annotations:
+      haproxy.router.openshift.io/balance: roundrobin
   spec:
     host: <<SHIB-ADDRESS>>
     port:
