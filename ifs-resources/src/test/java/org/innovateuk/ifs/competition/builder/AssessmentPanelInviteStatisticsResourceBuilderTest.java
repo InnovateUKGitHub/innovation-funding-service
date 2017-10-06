@@ -21,7 +21,6 @@ public class AssessmentPanelInviteStatisticsResourceBuilderTest {
                 .withAssessorsInvited(expectedAssessorInvites)
                 .withAssessorsAccepted(expectedAssessorsAccepted)
                 .withAssessorsRejected(expectedAssessorsRejected)
-                .withAssessorsPending(expectedAssessorsPending)
                 .build();
 
         assertEquals(expectedAssessorInvites, inviteStatisticsResource.getInvited());
@@ -41,7 +40,6 @@ public class AssessmentPanelInviteStatisticsResourceBuilderTest {
                 .withAssessorsInvited(expectedAssessorInvites)
                 .withAssessorsAccepted(expectedAssessorsAccepted)
                 .withAssessorsRejected(expectedAssessorsRejected)
-                .withAssessorsPending(expectedAssessorsPending)
                 .build(2);
 
         for (int i = 0; i < inviteStatisticsResources.size(); i++) {

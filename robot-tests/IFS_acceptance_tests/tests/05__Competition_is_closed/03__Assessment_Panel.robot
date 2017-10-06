@@ -4,6 +4,9 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-31 Assessment panels - Invite assessors to panel- Find and Invite Tabs
 ...
 ...               IFS-1560 Assessment panels - Invite assessors to panel - Invite assessors
+...
+...               IFS-1564 Assessment panels - Invite assessors to panel - Key statistics
+
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -45,11 +48,13 @@ Cancel sending invite returns to the invite tab
     Then the user should see the element      jQuery=td:contains("Benjamin Nixon")
 
 Assessor recieves the invite to panel
-    [Documentation]  IFS-1560
+    [Documentation]  IFS-1560  IFS-1564
     [Tags]
     Given the user clicks the button/link     link=Review and send invites
     When the user clicks the button/link      jQuery=button:contains("Send invite")
     And the user reads his email              benjamin.nixon@gmail.com  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
+    And the user should see the element      jQuery=.column-quarter:contains("1") small:contains("Invited")
+    And the user should see the element      jQuery=.column-quarter:contains("1") small:contains("Pending")
 
 Bulk add assessor to invite list
     [Documentation]  IFS-31
