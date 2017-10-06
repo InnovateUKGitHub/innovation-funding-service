@@ -280,6 +280,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         Organisation organisation = invite.getInviteOrganisation().getOrganisation();
         ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisation.getId());
         processRoleRepository.save(processRole);
+        application.addProcessRole(processRole);
+        updateApplicationProgress(application);
     }
 
     private ApplicationInviteResource mapInviteToInviteResource(ApplicationInvite invite) {
@@ -348,11 +350,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 applicationFinanceRepository.delete(finance);
             }
         }
-
-        BigDecimal completion = applicationService
-                .getProgressPercentageBigDecimalByApplicationId(application.getId())
-                .getSuccessObject();
-        application.setCompletion(completion);
+        updateApplicationProgress(application);
     }
 
     protected Supplier<ServiceResult<ApplicationInvite>> invite(final String hash) {
@@ -568,5 +566,12 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                         .andOnSuccess(inviteOrganisation -> serviceSuccess(inviteOrganisation))
                         .andOnFailure(() -> serviceSuccess(buildNewInviteOrganisationForOrganisation(inviteOrganisationResource, organisation)))
                 );
+    }
+
+    private void updateApplicationProgress(Application application) {
+        BigDecimal completion = applicationService
+                .getProgressPercentageBigDecimalByApplicationId(application.getId())
+                .getSuccessObject();
+        application.setCompletion(completion);
     }
 }

@@ -158,6 +158,10 @@ public class Application implements ProcessActivity {
         processRoles.removeAll(processRolesToRemove);
     }
 
+    public void addProcessRole(ProcessRole processRole) {
+        processRoles.add(processRole);
+    }
+
     public Competition getCompetition() {
         return competition;
     }
