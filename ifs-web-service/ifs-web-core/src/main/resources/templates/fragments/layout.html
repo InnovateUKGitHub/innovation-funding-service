@@ -189,10 +189,14 @@
 <!-- =========================== Element : subheader =========================== -->
 <th:block th:fragment="header-sub">
     <div class="sub-header">
+
+
+
         <nav>
             <a th:if="${linkTitle != null and linkUrl != null}"
                th:class="${linkClass != null ? linkClass : ''}"
                th:href="${linkUrl}"
+               th:attr="data-javascript-back-link=${javascriptBackLink}"
                th:text="${linkTitle}" />
         </nav>
         <div class="deadline" th:if="${currentCompetition != null && currentCompetition.open}"><th:block th:text="${currentCompetition.getDaysLeft()}" /> days left to submit</div>
