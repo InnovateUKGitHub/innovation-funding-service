@@ -178,7 +178,5 @@ User sends the notification to enable release feedback
     the user clicks the button/link    jQuery=a:contains("Manage funding notifications")
     the user selects the checkbox     app-row-${application_ids['Electric Drive']}
     the user clicks the button/link    jQuery=button:contains("Write and send email")
-    the user enters text to a text field    css=.editor    Text
-    the user clicks the button/link    jQuery=button:contains("Send email to all applicants")
-    the user clicks the button/link    jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the internal sends the descision notification email to all applicants  EmailTextBody
     the user clicks the button/link    jQuery=.link-back:contains("Competition")

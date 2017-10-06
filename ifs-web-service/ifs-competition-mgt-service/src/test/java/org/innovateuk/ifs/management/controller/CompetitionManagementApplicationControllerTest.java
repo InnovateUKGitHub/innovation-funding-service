@@ -198,7 +198,64 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 .build());
 
         ApplicationOverviewIneligibilityViewModel expectedIneligibility = new ApplicationOverviewIneligibilityViewModel(
-                "Removed by", now, "Reason for removal...");
+                false, "Removed by", now, "Reason for removal...");
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("applicationReadyForSubmit", false))
+                .andExpect(model().attribute("isCompManagementDownload", true))
+                .andExpect(model().attribute("responses", new HashMap<>()))
+                .andExpect(model().attribute("ineligibility", expectedIneligibility))
+                .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/all"));
+    }
+
+    @Test
+    public void readOnlyIneligibleViewModelAttrDependsOnCompetitionState() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.setupEmptyResponses();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+        this.setupResearchCategories();
+        setupApplicantResource();
+
+        ZonedDateTime now = ZonedDateTime.now();
+
+        applications.get(0).setApplicationState(ApplicationState.INELIGIBLE);
+        applications.get(0).setIneligibleOutcome(newIneligibleOutcomeResource()
+                .withReason("Reason for removal...")
+                .withRemovedBy("Removed by")
+                .withRemovedOn(now)
+                .build());
+
+        // Competition is beyond assessment (in panel)
+
+        competitionResource.setCompetitionStatus(CompetitionStatus.FUNDERS_PANEL);
+
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+
+        ApplicationOverviewIneligibilityViewModel expectedIneligibility = new ApplicationOverviewIneligibilityViewModel(
+                true, "Removed by", now, "Reason for removal...");
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("applicationReadyForSubmit", false))
+                .andExpect(model().attribute("isCompManagementDownload", true))
+                .andExpect(model().attribute("responses", new HashMap<>()))
+                .andExpect(model().attribute("ineligibility", expectedIneligibility))
+                .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/all"));
+
+        // Competition still in assessment state
+
+        competitionResource.setCompetitionStatus(CompetitionStatus.IN_ASSESSMENT);
+
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+
+        expectedIneligibility = new ApplicationOverviewIneligibilityViewModel(
+                false, "Removed by", now, "Reason for removal...");
 
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
