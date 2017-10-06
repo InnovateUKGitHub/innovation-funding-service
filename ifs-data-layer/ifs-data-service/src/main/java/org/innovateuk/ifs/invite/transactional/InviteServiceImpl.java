@@ -326,6 +326,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                     reassignCollaboratorResponsesAndQuestionStatuses(application.getId(), leadApplicantProcessRole, collaboratorProcessRoles);
 
                     processRoleRepository.delete(collaboratorProcessRoles);
+                    application.removeProcessRoles(collaboratorProcessRoles);
 
                     InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
 
