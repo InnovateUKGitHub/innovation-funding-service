@@ -24,6 +24,7 @@ import org.mockito.InjectMocks;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static java.util.Arrays.asList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -56,6 +57,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
 
     private ProjectResource project = projectBuilder.build();
     private OrganisationResource organisationResource = newOrganisationResource().build();
+    private OrganisationResource partnerOrganisationResource = newOrganisationResource().build();
 
     private BankDetailsResource bankDetailsResource = newBankDetailsResource().build();
     private RestResult<BankDetailsResource> bankDetailsFoundResult = restSuccess(bankDetailsResource);
@@ -784,14 +786,6 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         project = newProjectResource().withApplication(application).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
         setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
 
-        /*List<ProjectUserResource> projectUsers = newProjectUserResource()
-                .withUser(loggedInUser.getId(), loggedInUser.getId())
-                .withOrganisation(organisationResource.getId(), organisationResource.getId())
-                .withRoleName(PARTNER, PROJECT_MANAGER)
-                .build(2);
-
-        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);*/
-
         SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
         assertPartnerStatusFlagsCorrect(viewModel,
                 Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
@@ -894,6 +888,33 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertFalse(viewModel.isProjectComplete());
     }
 
+    @Test
+    public void testViewProjectSetupStatusCollaborationAgreementNotNeeded() throws Exception {
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectPartnerStatusResource()
+                        .withOrganisationId(organisationResource.getId())
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withIsLeadPartner(true)
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(COMPLETE)
+                        .build(1))
+                .build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
+        when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(asList(organisationResource));
+
+        SetupStatusViewModel viewModel = performPopulateView(project.getId(), loggedInUser);
+
+        assertStatuses(viewModel);
+
+        assertEquals(false, viewModel.isCollaborationAgreementRequired());
+
+        assertFalse(viewModel.isProjectComplete());
+
+    }
+
     private SetupStatusViewModel performPopulateView(Long projectId, UserResource loggedInUser) throws Exception {
         return populator.populateViewModel(projectId, loggedInUser);
     }
@@ -919,6 +940,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         when(projectService.getProjectManager(project.getId())).thenReturn(Optional.of(pmUser));
         when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsResult);
         when(statusService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+        when(projectService.getPartnerOrganisationsForProject(project.getId())).thenReturn(asList(organisationResource, partnerOrganisationResource));
     }
 
     private void assertStandardViewModelValuesCorrect(SetupStatusViewModel viewModel, boolean existingMonitoringOfficerExpected) {
@@ -927,6 +949,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertEquals(competition.getName(), viewModel.getCompetitionName());
         assertEquals(application.getId(), viewModel.getApplicationId());
         assertEquals(organisationResource.getId(), viewModel.getOrganisationId());
+        assertEquals(true, viewModel.isCollaborationAgreementRequired());
 
         if (existingMonitoringOfficerExpected) {
             assertEquals(monitoringOfficer.getFullName(), viewModel.getMonitoringOfficerName());
@@ -951,5 +974,4 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertTrue(partnerStatusFlagChecks.get("otherDocumentsStatus") == viewModel.getOtherDocumentsStatus());
         assertTrue(partnerStatusFlagChecks.get("grantOfferLetterStatus") == viewModel.getGrantOfferLetterStatus());
     }
-
 }

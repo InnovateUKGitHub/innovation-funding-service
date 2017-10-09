@@ -157,6 +157,22 @@
     </div>
 </th:block>
 
+<!-- save partner document -->
+<th:block th:fragment="modal-partner-document">
+    <div class="modal-partner-document" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="heading-medium no-margin">Submit document</h2>
+        <p>Are you sure that you wish to submit your document to Innovate UK?</p>
+        <hr />
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}+'/submit'}" method="post">
+            <div>
+                <button class="button" name="submit-other-documents" type="submit">Submit</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
+            </div>
+        </form>
+    </div>
+</th:block>
+
 <!-- change bank details as internal user -->
 <th:block th:fragment="modal-partner-change-bank-details">
     <div class="modal-partner-change-bank-details" role="dialog" aria-hidden="true">
@@ -199,6 +215,21 @@
     </div>
 </th:block>
 
+<!-- Accept Document On Review -->
+<th:block th:fragment="modal-accept-doc">
+    <div class="modal-accept-doc" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="heading-medium no-margin">Accept document</h2>
+        <p>Once the document is accepted, the project team can complete any remaining stages of the project set up
+            process.</p>
+        <hr />
+        <div>
+            <button class="button" name="approved" value="true">Accept Document</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
 <!-- Reject Documents On Review -->
 <th:block th:fragment="modal-reject-docs">
     <div class="modal-reject-docs warning-modal" role="dialog" aria-hidden="true">
@@ -211,6 +242,23 @@
         <hr />
         <div>
             <button class="button" name="approved" value="false">Reject Documents</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
+        </div>
+    </div>
+</th:block>
+
+<!-- Reject Document On Review -->
+<th:block th:fragment="modal-reject-doc">
+    <div class="modal-reject-doc warning-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Reject document</h2>
+            <p>If these document is rejected, the Project Manager will be informed along with the reason for rejection.
+                They will then need to provide a new version of the document before the project can begin.</p>
+        </div>
+        <hr />
+        <div>
+            <button class="button" name="approved" value="false">Reject Document</button>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>

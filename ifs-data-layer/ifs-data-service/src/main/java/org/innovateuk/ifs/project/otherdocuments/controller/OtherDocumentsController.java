@@ -62,7 +62,6 @@ public class OtherDocumentsController {
         return otherDocumentsService.getCollaborationAgreementFileEntryDetails(projectId).toGetResponse();
     }
 
-
     @PutMapping(value = "/{projectId}/collaboration-agreement", produces = "application/json")
     public RestResult<Void> updateCollaborationAgreementDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
@@ -130,9 +129,8 @@ public class OtherDocumentsController {
 
     @PostMapping("/{projectId}/partner/documents/approved/{approved}")
     public RestResult<Void> acceptOrRejectOtherDocuments(@PathVariable("projectId") long projectId, @PathVariable("approved") Boolean approved) {
-        //TODO INFUND-7493
+        //TODO IFS-471
         return otherDocumentsService.acceptOrRejectOtherDocuments(projectId, approved).toPostResponse();
-
     }
 
     @GetMapping("/{projectId}/partner/documents/ready")

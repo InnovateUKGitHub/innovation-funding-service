@@ -89,7 +89,7 @@ public class OtherDocumentsController {
                 projectManagerName, projectManagerTelephone, projectManagerEmail,
                 collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
-                partnerOrganisationNames, project.getOtherDocumentsApproved());
+                partnerOrganisationNames, project.getOtherDocumentsApproved(), partnerOrganisationNames.size() > 1);
     }
 
     private Optional<ProjectUserResource> getProjectManagerResource(ProjectResource project) {

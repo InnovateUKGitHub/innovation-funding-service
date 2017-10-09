@@ -47,6 +47,8 @@ public class OtherDocumentsViewModelPopulator {
             exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
             partnerOrganisationNames, rejectionReasons,
             isProjectManager, otherDocumentsSubmitted, otherDocumentsApproved,
-            isSubmitAllowed, project.getDocumentsSubmittedDate());
+            isSubmitAllowed,
+            project.getDocumentsSubmittedDate(),
+            partnerOrganisations.size() > 1);
     }
 }

@@ -161,7 +161,9 @@
                     <!-- TODO: INFUND - 6376 Prototype mentions Project manager should submit. Needs verification -->
                     <p>Your Project Manager will need to upload the following:</p>
                     <ul class="list list-bullet">
-                        <li>a collaboration agreement</li>
+                        <th:block th:if="${model.collaborationAgreementRequired}">
+                            <li>a collaboration agreement</li>
+                        </th:block>
                         <li>exploitation plan</li>
                     </ul>
                 </div>

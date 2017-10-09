@@ -73,10 +73,15 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
 
     private ServiceResult<List<FileEntryResource>> retrieveUploadedDocuments(Long projectId) {
 
-        ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(projectId);
         ServiceResult<FileEntryResource> exploitationPlanFile = getExploitationPlanFileEntryDetails(projectId);
-
-        return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
+        return getProject(projectId).andOnSuccess(project -> {
+            if (project.getPartnerOrganisations().size() > 1) {
+                ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(projectId);
+                return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
+            } else {
+                return aggregate(asList(exploitationPlanFile));
+            }
+            }).andOnFailure(() -> aggregate(asList(exploitationPlanFile)));
     }
 
     @Override
@@ -115,14 +120,21 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     @Override
     public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
 
-        ServiceResult<Project> project = getProject(projectId);
-        Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
+        return getProject(projectId).andOnSuccess(project -> {
+            Optional<ProjectUser> projectManager = getExistingProjectManager(project);
+            if (project.getPartnerOrganisations().size() > 1) {
 
-        return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
-                failure -> serviceSuccess(false),
-                success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getSuccessObject().getDocumentsSubmittedDate() == null ?
-                        serviceSuccess(true) :
-                        serviceSuccess(false));
+                return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
+                        failure -> serviceSuccess(false),
+                        success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getDocumentsSubmittedDate() == null ?
+                                serviceSuccess(true) :
+                                serviceSuccess(false));
+            } else {
+                return getExploitationPlan(project).handleSuccessOrFailure(
+                        failure -> serviceSuccess(false),
+                        success -> serviceSuccess(true));
+            }
+        }).andOnFailure(() -> serviceSuccess(false));
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {
@@ -276,7 +288,7 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     @Override
     @Transactional
     public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approval) {
-        //TODO INFUND-7493
+        //TODO IFS-471
         if (approval == null) {
             return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED);
         }
