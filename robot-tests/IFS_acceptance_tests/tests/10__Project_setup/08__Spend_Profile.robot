@@ -546,7 +546,7 @@ Project Finance is able to see Spend Profile approval page
     Then the user should see the element    css=#accept-profile
     And the user should see the element    jQuery=#content .button.button.button-warning:contains("Reject")
 
-Check if project manager, project address and and finance contact fields are still editable
+Check if project details are editable
    [Documentation]    IFS-1577, IFS-1578, IFS-1579
    [Tags]
    Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
@@ -848,6 +848,8 @@ check if project manager can be changed
     the user selects the radio button  projectManager  projectManager1
     the user clicks the button/link  jQuery=button:contains("Save")
 
+# Finance contact is changed below and switched back to original value so that
+# the tests which follow this are not impacted by permissions error
 check if finance contact can be changed
     the user clicks the button/link  jQuery=a:contains("Katz")
     the user selects the radio button  financeContact  financeContact2
