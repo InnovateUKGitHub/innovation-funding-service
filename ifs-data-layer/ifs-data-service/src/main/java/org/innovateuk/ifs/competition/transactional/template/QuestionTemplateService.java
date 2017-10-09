@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 
@@ -19,7 +20,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
-public class QuestionTemplateService {
+public class QuestionTemplateService implements BaseTemplateService<List<Question>, Section> {
     @Autowired
     private QuestionRepository questionRepository;
 
@@ -35,35 +36,52 @@ public class QuestionTemplateService {
     @Autowired
     private DefaultApplicationQuestionFactory defaultApplicationQuestionFactory;
 
-    @Transactional
-    public ServiceResult<Question> addDefaultQuestionToCompetition(Competition competition) {
+    public ServiceResult<List<Question>> createDefaultForApplicationSection(Competition competition) {
         Section applicationQuestionsSection = sectionRepository.findByCompetitionIdAndName(competition.getId(), "Application questions");
         Question question = defaultApplicationQuestionFactory.buildQuestion(competition);
-        return serviceSuccess(createQuestionFunction(competition, applicationQuestionsSection).apply(question));
+        question.setSection(applicationQuestionsSection);
+
+        return createByTemplate(Arrays.asList(question));
     }
 
     @Transactional
-    public List<Question> createQuestions(Competition competition, Section section, List<Question> questions) {
-        return simpleMap(questions, createQuestionFunction(competition, section));
+    public ServiceResult<List<Question>> createByTemplate(List<Question> questions) {
+        return serviceSuccess(simpleMap(questions, createQuestionFunction()));
     }
 
     @Transactional
-    public void cleanForCompetition(Competition competition) {
-        formInputTemplateService.cleanForCompetition(competition);
+    public List<Question> createByRequisite(Section section) {
+        return simpleMap(section.getQuestions(), createQuestionFunction(section));
+    }
 
-        List<Question> questions = questionRepository.findByCompetitionId(competition.getId());
+    @Transactional
+    public void cleanForRequisite(Section section) {
+        formInputTemplateService.cleanForCompetition(section.getCompetition());
+
+        List<Question> questions = questionRepository.findByCompetitionId(section.getCompetition().getId());
         questionRepository.delete(questions);
     }
 
-    private Function<Question, Question> createQuestionFunction(Competition competition, Section section) {
+    private Function<Question, Question> createQuestionFunction() {
         return (Question question) -> {
             entityManager.detach(question);
-            question.setCompetition(competition);
+            question.setId(null);
+            questionRepository.save(question);
+
+            question.setFormInputs(formInputTemplateService.createByRequisite(question));
+            return question;
+        };
+    }
+
+    private Function<Question, Question> createQuestionFunction(Section section) {
+        return (Question question) -> {
+            entityManager.detach(question);
+            question.setCompetition(section.getCompetition());
             question.setSection(section);
             question.setId(null);
             questionRepository.save(question);
 
-            question.setFormInputs(formInputTemplateService.createFormInputs(competition, question, question.getFormInputs()));
+            question.setFormInputs(formInputTemplateService.createByRequisite(question));
             return question;
         };
     }

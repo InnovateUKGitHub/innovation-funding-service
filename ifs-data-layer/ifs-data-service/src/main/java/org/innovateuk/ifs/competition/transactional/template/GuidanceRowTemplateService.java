@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.application.domain.GuidanceRow;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +14,11 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.function.Function;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
-public class GuidanceRowTemplateService  {
+public class GuidanceRowTemplateService implements BaseTemplateService<List<GuidanceRow>, FormInput> {
     @Autowired
     private GuidanceRowRepository guidanceRowRepository;
 
@@ -24,8 +26,13 @@ public class GuidanceRowTemplateService  {
     private EntityManager entityManager;
 
     @Transactional
-    public List<GuidanceRow> createFormInputGuidanceRows(FormInput formInput, List<GuidanceRow> guidanceRows) {
-        return simpleMap(guidanceRows, createFormInputGuidanceRow(formInput));
+    public List<GuidanceRow> createByRequisite(FormInput formInput) {
+        return simpleMap(formInput.getGuidanceRows(), createFormInputGuidanceRow(formInput));
+    }
+
+    @Override
+    public ServiceResult<List<GuidanceRow>> createByTemplate(List<GuidanceRow> guidanceRows) {
+        return ServiceResult.serviceFailure(forbiddenError());
     }
 
     private Function<GuidanceRow, GuidanceRow> createFormInputGuidanceRow(FormInput formInput) {

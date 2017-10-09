@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.commons.error.CommonErrors;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
@@ -20,7 +22,7 @@ import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATIO
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
-public class FormInputTemplateService {
+public class FormInputTemplateService implements BaseTemplateService<List<FormInput>, Question> {
     @Autowired
     private FormInputRepository formInputRepository;
 
@@ -30,8 +32,13 @@ public class FormInputTemplateService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<FormInput> createFormInputs(Competition competition, Question question, List<FormInput> formInputTemplates) {
-        return simpleMap(formInputTemplates, createFormInput(competition, question));
+    public List<FormInput> createByRequisite(Question question) {
+        return simpleMap(question.getFormInputs(), createFunction(question));
+    }
+
+    @Override
+    public ServiceResult<List<FormInput>> createByTemplate(List<FormInput> formInput) {
+        return ServiceResult.serviceFailure(CommonErrors.forbiddenError());
     }
 
     public void cleanForCompetition(Competition competition) {
@@ -41,19 +48,19 @@ public class FormInputTemplateService {
         formInputRepository.delete(formInputs);
     }
 
-    private Function<FormInput, FormInput> createFormInput(Competition competition, Question question) {
+    public Function<FormInput, FormInput> createFunction(Question question) {
         return (FormInput formInput) -> {
             // Extract the validators into a new Set as the hibernate Set contains persistence information which alters
             // the original FormValidator
             Set<FormValidator> copy = new HashSet<>(formInput.getFormValidators());
             entityManager.detach(formInput);
-            formInput.setCompetition(competition);
+            formInput.setCompetition(question.getCompetition());
             formInput.setQuestion(question);
             formInput.setId(null);
             formInput.setFormValidators(copy);
-            formInput.setActive(isSectorCompetitionWithScopeQuestion(competition, question, formInput) ? false : formInput.getActive());
+            formInput.setActive(isSectorCompetitionWithScopeQuestion(question.getCompetition(), question, formInput) ? false : formInput.getActive());
             formInputRepository.save(formInput);
-            formInput.setGuidanceRows(guidanceRowTemplateService.createFormInputGuidanceRows(formInput, formInput.getGuidanceRows()));
+            formInput.setGuidanceRows(guidanceRowTemplateService.createByRequisite(formInput));
             return formInput;
         };
     }
