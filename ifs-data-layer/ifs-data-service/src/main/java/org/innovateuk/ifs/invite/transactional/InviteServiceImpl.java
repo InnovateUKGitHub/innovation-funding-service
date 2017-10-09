@@ -182,7 +182,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             notificationArguments.put("applicationName", invite.getTarget().getName());
         }
         notificationArguments.put("sentByName", loggedInUser.getName());
-        notificationArguments.put("applicationId", invite.getTarget().getId());
+        notificationArguments.put("applicationId", invite.getTarget().getId().toString());
         notificationArguments.put("competitionName", invite.getTarget().getCompetition().getName());
         notificationArguments.put("competitionUrl", getCompetitionDetailsUrl(baseUrl, invite));
         notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite));
