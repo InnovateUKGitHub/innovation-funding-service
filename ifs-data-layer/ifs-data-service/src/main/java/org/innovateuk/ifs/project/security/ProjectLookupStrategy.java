@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.security;
 
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
@@ -26,6 +27,15 @@ public class ProjectLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public ProjectResource getProjectResource(Long projectId) {
-        return projectMapper.mapToResource(projectRepository.findOne(projectId));
+        //return projectMapper.mapToResource(projectRepository.findOne(projectId));
+
+        Project project = projectRepository.findOne(projectId);
+
+        if (project != null) {
+            return projectMapper.mapToResource(project);
+        } else {
+            throw new ObjectNotFoundException("Project not found", null);
+        }
+
     }
 }
