@@ -7,11 +7,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SetupStatusRepository extends PagingAndSortingRepository<SetupStatus, Long> {
-    List<SetupStatus> findByTargetIdAndTargetClassName(Long targetId, String targetClassName);
+    List<SetupStatus> findByTargetClassNameAndTargetId(String targetClassName, Long targetId);
 
-    List<SetupStatus> findByTargetClassNameAndParentId(String targetClassName, Long parentId);
+    List<SetupStatus> findByClassNameAndParentId(String className, Long parentId);
 
     List<SetupStatus> findByTargetClassNameAndTargetIdAndParentId(String targetClassName, Long targetId, Long parentId);
 
-    Optional<SetupStatus> findByClassPkAndClassName(Long classPk, String className);
+    Optional<SetupStatus> findByClassNameAndClassPk(String className, Long classPk);
 }

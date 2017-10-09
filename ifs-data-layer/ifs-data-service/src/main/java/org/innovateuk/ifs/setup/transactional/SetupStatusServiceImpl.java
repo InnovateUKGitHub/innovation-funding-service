@@ -8,6 +8,7 @@ import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -22,25 +23,29 @@ public class SetupStatusServiceImpl implements SetupStatusService {
     private SetupStatusMapper setupStatusMapper;
 
     @Override
-    public ServiceResult<Iterable<SetupStatusResource>> findByTargetIdAndTargetClassName(Long targetId, String targetClassName) {
-        return ServiceResult.serviceSuccess(setupStatusMapper
+    public ServiceResult<List<SetupStatusResource>> findByTargetClassNameAndTargetId(String targetClassName, Long targetId) {
+        return ServiceResult.serviceSuccess((List<SetupStatusResource>) setupStatusMapper
                 .mapToResource(setupStatusRepository
-                        .findByTargetIdAndTargetClassName(targetId, targetClassName)));
+                        .findByTargetClassNameAndTargetId(targetClassName, targetId)));
     }
 
     @Override
-    public ServiceResult<Iterable<SetupStatusResource>> findByTargetClassNameAndTargetIdAndParentId(String targetClassName, Long targetId, Long parentId) {
-        return ServiceResult.serviceSuccess(setupStatusMapper.mapToResource(setupStatusRepository.findByTargetClassNameAndTargetIdAndParentId(targetClassName, targetId, parentId)));
+    public ServiceResult<List<SetupStatusResource>> findByTargetClassNameAndTargetIdAndParentId(String targetClassName, Long targetId, Long parentId) {
+        return ServiceResult.serviceSuccess((List<SetupStatusResource>) setupStatusMapper
+                .mapToResource(setupStatusRepository
+                        .findByTargetClassNameAndTargetIdAndParentId(targetClassName, targetId, parentId)));
     }
 
     @Override
-    public ServiceResult<Iterable<SetupStatusResource>> findByTargetClassNameAndParentId(String targetClassName, Long parentId) {
-        return ServiceResult.serviceSuccess(setupStatusMapper.mapToResource(setupStatusRepository.findByTargetClassNameAndParentId(targetClassName, parentId)));
+    public ServiceResult<List<SetupStatusResource>> findByClassNameAndParentId(String className, Long parentId) {
+        return ServiceResult.serviceSuccess((List<SetupStatusResource>) setupStatusMapper
+                .mapToResource(setupStatusRepository
+                        .findByClassNameAndParentId(className, parentId)));
     }
 
     @Override
-    public ServiceResult<SetupStatusResource> findSetupStatus(Long classPk, String className) {
-        Optional<SetupStatus> setupStatusOpt = setupStatusRepository.findByClassPkAndClassName(classPk, className);
+    public ServiceResult<SetupStatusResource> findSetupStatus(String className, Long classPk) {
+        Optional<SetupStatus> setupStatusOpt = setupStatusRepository.findByClassNameAndClassPk(className, classPk);
         if(setupStatusOpt.isPresent()) {
             return ServiceResult.serviceSuccess(setupStatusMapper.mapToResource(setupStatusOpt.get()));
         } else {

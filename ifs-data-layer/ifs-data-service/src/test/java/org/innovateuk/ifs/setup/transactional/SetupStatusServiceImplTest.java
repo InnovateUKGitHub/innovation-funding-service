@@ -51,10 +51,10 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
                 .withTargetClassName(targetClassName)
                 .build(1);
 
-        when(setupStatusRepository.findByTargetIdAndTargetClassName(targetId, targetClassName)).thenReturn(setupStatus);
+        when(setupStatusRepository.findByTargetClassNameAndTargetId(targetClassName, targetId)).thenReturn(setupStatus);
         when(setupStatusMapper.mapToResource(setupStatus)).thenReturn(setupStatusResource);
 
-        ServiceResult<Iterable<SetupStatusResource>> serviceResult = service.findByTargetIdAndTargetClassName(targetId, targetClassName);
+        ServiceResult<List<SetupStatusResource>> serviceResult = service.findByTargetClassNameAndTargetId(targetClassName, targetId);
 
         assertTrue(serviceResult.isSuccess());
         assertEquals(setupStatusResource, serviceResult.getSuccessObject());
@@ -62,24 +62,24 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
 
     @Test
     public void testFindByTargetClassNameAndParentId() {
-        final String targetClassName = Competition.class.getName();
+        final String className = Competition.class.getName();
         final Long parentId = 8234L;
 
         List<SetupStatus> setupStatuses = newSetupStatus()
                 .withId(1L, 2L)
-                .withTargetClassName(targetClassName, targetClassName)
+                .withTargetClassName(className, className)
                 .withParentId(parentId, parentId)
                 .build(2);
 
         List<SetupStatusResource> setupStatusResources = newSetupStatusResource()
                 .withId(1L, 2L)
-                .withTargetClassName(targetClassName, targetClassName)
+                .withTargetClassName(className, className)
                 .withParentId(parentId, parentId)
                 .build(2);
-        when(setupStatusRepository.findByTargetClassNameAndParentId(targetClassName, parentId)).thenReturn(setupStatuses);
+        when(setupStatusRepository.findByClassNameAndParentId(className, parentId)).thenReturn(setupStatuses);
         when(setupStatusMapper.mapToResource(setupStatuses)).thenReturn(setupStatusResources);
 
-        ServiceResult<Iterable<SetupStatusResource>> serviceResult = service.findByTargetClassNameAndParentId(targetClassName, parentId);
+        ServiceResult<List<SetupStatusResource>> serviceResult = service.findByClassNameAndParentId(className, parentId);
 
         assertTrue(serviceResult.isSuccess());
         assertEquals(setupStatusResources, serviceResult.getSuccessObject());
@@ -107,7 +107,7 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
         when(setupStatusRepository.findByTargetClassNameAndTargetIdAndParentId(targetClassName, targetId, parentId)).thenReturn(setupStatuses);
         when(setupStatusMapper.mapToResource(setupStatuses)).thenReturn(setupStatusResources);
 
-        ServiceResult<Iterable<SetupStatusResource>> serviceResult = service.findByTargetClassNameAndTargetIdAndParentId(targetClassName, targetId, parentId);
+        ServiceResult<List<SetupStatusResource>> serviceResult = service.findByTargetClassNameAndTargetIdAndParentId(targetClassName, targetId, parentId);
 
         assertTrue(serviceResult.isSuccess());
         assertEquals(setupStatusResources, serviceResult.getSuccessObject());
@@ -131,10 +131,10 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
                 .withClassName(className)
                 .build();
 
-        when(setupStatusRepository.findByClassPkAndClassName(classPk, className)).thenReturn(Optional.of(setupStatus));
+        when(setupStatusRepository.findByClassNameAndClassPk(className, classPk)).thenReturn(Optional.of(setupStatus));
         when(setupStatusMapper.mapToResource(setupStatus)).thenReturn(setupStatusResource);
 
-        ServiceResult<SetupStatusResource> serviceResult = service.findSetupStatus(classPk, className);
+        ServiceResult<SetupStatusResource> serviceResult = service.findSetupStatus(className, classPk);
 
         assertTrue(serviceResult.isSuccess());
         assertEquals(setupStatusResource, serviceResult.getSuccessObject());
@@ -144,9 +144,9 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
     public void findSetupStatusNotFound() {
         final Long classPk = 32L;
         final String className = Question.class.getName();
-        when(setupStatusRepository.findByClassPkAndClassName(classPk, className)).thenReturn(Optional.empty());
+        when(setupStatusRepository.findByClassNameAndClassPk(className, classPk)).thenReturn(Optional.empty());
 
-        ServiceResult<SetupStatusResource> serviceResult = service.findSetupStatus(classPk, className);
+        ServiceResult<SetupStatusResource> serviceResult = service.findSetupStatus(className, classPk);
 
         assertTrue(serviceResult.isFailure());
     }

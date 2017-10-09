@@ -1,27 +1,33 @@
 package org.innovateuk.ifs.setup.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.documentation.SetupStatusResourceDocs;
 import org.innovateuk.ifs.setup.controller.SetupStatusController;
+import org.innovateuk.ifs.setup.resource.SetupStatusResource;
+import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
-import java.util.List;
-
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.AddressDocs.addressResourceBuilder;
+import static org.innovateuk.ifs.documentation.SetupStatusResourceDocs.setupStatusResourceBuilder;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 
 public class SetupStatusControllerDocumentation extends BaseControllerMockMVCTest<SetupStatusController> {
     private RestDocumentationResultHandler document;
+
+    @Mock
+    private SetupStatusService setupStatusService;
 
     @Override
     protected SetupStatusController supplyControllerUnderTest() {
@@ -30,71 +36,107 @@ public class SetupStatusControllerDocumentation extends BaseControllerMockMVCTes
 
     @Before
     public void setup(){
-        this.document = document("address/{method-name}",
+        this.document = document("setupStatus/{method-name}",
                 preprocessResponse(prettyPrint()));
     }
 
     @Test
-    public void validate() throws Exception {
-        String postCode = "BA12LN";
+    public void findByTarget() throws Exception {
+        final String targetClassName = "org.domain.Competition";
+        final Long targetId = 925L;
 
-        when(addressLookupServiceMock.validatePostcode(postCode)).thenReturn(serviceSuccess(true));
+        when(setupStatusService.findByTargetClassNameAndTargetId(targetClassName, targetId))
+                .thenReturn(serviceSuccess(setupStatusResourceBuilder.build(1)));
 
-        mockMvc.perform(get("/address/validatePostcode/?postcode=" +  postCode))
-                .andDo(this.document.snippets(
-                        requestParameters(
-                                parameterWithName("postcode").description("Postcode to validate")
-                        )
-                ));
-    }
-
-
-    @Test
-    public void lookup() throws Exception {
-        int numberOfAddresses = 2;
-        String postCode = "BS348XU";
-        List<AddressResource> addressResources = addressResourceBuilder.build(numberOfAddresses);
-
-        when(addressLookupServiceMock.doLookup(postCode)).thenReturn(serviceSuccess(addressResources));
-
-        mockMvc.perform(get("/address/doLookup/?lookup=" + postCode))
-                .andDo(this.document.snippets(
-                        requestParameters(
-                                parameterWithName("lookup").description("Postcode to look up")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]id").description("Address Id"),
-                                fieldWithPath("[]addressLine1").description("Address line1"),
-                                fieldWithPath("[]addressLine2").description("Address line2"),
-                                fieldWithPath("[]addressLine3").description("Address Line3"),
-                                fieldWithPath("[]town").description("Town"),
-                                fieldWithPath("[]county").description("County"),
-                                fieldWithPath("[]postcode").description("Postcode"),
-                                fieldWithPath("[]organisations[]").description("List of Organisations with this address")
-                        )
-                ));
-    }
-    @Test
-    public void findOne() throws Exception {
-        long id = 1;
-        AddressResource addressResource = addressResourceBuilder.build();
-        when(addressService.getById(id)).thenReturn(serviceSuccess(addressResource));
-
-        mockMvc.perform(get("/address/{id}", id))
+        mockMvc.perform(get("/questionSetupStatus/findByTarget/{targetClassName}/{targetId}", targetClassName, targetId))
                 .andDo(this.document.snippets(
                         pathParameters(
-                                parameterWithName("id").description("Id of Address to find")
+                                parameterWithName("targetClassName").description("Classname of the target object"),
+                                parameterWithName("targetId").description("Id of the target object")
                         ),
                         responseFields(
-                                fieldWithPath("id").description("Address Id"),
-                                fieldWithPath("addressLine1").description("Address line1"),
-                                fieldWithPath("addressLine2").description("Address line2"),
-                                fieldWithPath("addressLine3").description("Address Line3"),
-                                fieldWithPath("town").description("Town"),
-                                fieldWithPath("county").description("County"),
-                                fieldWithPath("postcode").description("Postcode"),
-                                fieldWithPath("organisations[]").description("List of Organisations with this address")
+                                SetupStatusResourceDocs.setupStatusListFields
                         )
+                ));
+    }
+
+
+    @Test
+    public void findByTargetAndParent() throws Exception {
+        final String targetClassName = "org.domain.Competition";
+        final Long targetId = 925L;
+        final Long parentId = 2414L;
+
+        when(setupStatusService.findByTargetClassNameAndTargetIdAndParentId(targetClassName, targetId, parentId))
+                .thenReturn(serviceSuccess(setupStatusResourceBuilder.build(1)));
+
+        mockMvc.perform(get("/questionSetupStatus/findByTargetAndParent/{targetClassName}/{targetId}/{parentId}",
+                targetClassName, targetId, parentId))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("targetClassName").description("Classname of the target object"),
+                                parameterWithName("targetId").description("Id of the target object"),
+                                parameterWithName("parentId").description("Id of the parent setup status")
+                        ),
+                        responseFields(
+                                SetupStatusResourceDocs.setupStatusListFields
+                        )
+                ));
+    }
+
+    @Test
+    public void findByClassAndParent() throws Exception {
+        String className = "org.domain.Question";
+        Long parentId = 925L;
+
+        when(setupStatusService.findByClassNameAndParentId(className, parentId))
+                .thenReturn(serviceSuccess(setupStatusResourceBuilder.build(1)));
+
+        mockMvc.perform(get("/questionSetupStatus/findByClassAndParent/{className}/{parentId}", className, parentId))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("className").description("Classname of the object"),
+                                parameterWithName("parentId").description("Id of the parent setup status")
+                        ),
+                        responseFields(
+                                SetupStatusResourceDocs.setupStatusListFields
+                        )
+                ));
+    }
+
+    @Test
+    public void findSetupStatus() throws Exception {
+        String className = "org.domain.Competition";
+        Long classPk = 925L;
+
+        when(setupStatusService.findSetupStatus(className, classPk))
+                .thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
+
+        mockMvc.perform(get("/questionSetupStatus/findSetupStatus/{className}/{classPk}",className, classPk))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("className").description("Classname of the target object"),
+                                parameterWithName("classPk").description("Id of the target object")
+                        ),
+                        responseFields(
+                                SetupStatusResourceDocs.setupStatusResourceFields
+                        )
+                ));
+    }
+
+    @Test
+    public void saveSetupStatus() throws  Exception {
+        SetupStatusResource savedResult = setupStatusResourceBuilder.build();
+
+        when(setupStatusService.saveSetupStatus(any(SetupStatusResource.class))).thenReturn(serviceSuccess(savedResult));
+
+        mockMvc.perform(post("/questionSetupStatus/save")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(setupStatusResourceBuilder.build())))
+                .andDo(this.document.snippets(
+                    responseFields(
+                            SetupStatusResourceDocs.setupStatusResourceFields
+                    )
                 ));
     }
 
