@@ -19,25 +19,25 @@
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
                         <span class="heading-large" th:text="${model.assessorsInvited}">60</span><br/>
-                        <small>invited</small>
+                        <small>Invited</small>
                     </div>
                 </div>
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
                         <span class="heading-large" th:text="${model.assessorsAccepted}">23</span><br/>
-                        <small>accepted</small>
+                        <small>Accepted</small>
                     </div>
                 </div>
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
                         <span class="heading-large" th:text="${model.assessorsDeclined}">3</span><br/>
-                        <small>declined</small>
+                        <small>Declined</small>
                     </div>
                 </div>
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
                         <span class="heading-large" th:text="${model.assessorsStaged}">6</span><br/>
-                        <small>pending</small>
+                        <small>Pending</small>
                     </div>
                 </div>
             </div>
@@ -76,9 +76,10 @@
                     <div class="column-half">
                         <h2 class="heading-small">Invite list</h2>
                     </div>
-                    <!--<div class="column-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">-->
-                        <!--<a th:href="@{/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>-->
-                    <!--</div>-->
+
+                    <div class="column-half alignright" th:if="${!#lists.isEmpty(model.assessors)}">
+                        <a th:href="@{/panel/competition/{competitionId}/assessors/invite/send(competitionId=${model.competitionId})}" class="button">Review and send invites</a>
+                    </div>
                 </div>
 
                 <div class="table-overflow">

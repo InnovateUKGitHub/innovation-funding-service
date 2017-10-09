@@ -34,6 +34,7 @@ Blue flag shows after marking a question as incomplete
 
 Green check shows when finances are marked as complete
     [Documentation]    INFUND-1733
-    [Tags]          Pending
+    [Tags]  Pending
     Given the Application details are completed
-    Then the user marks the finances as complete
+    And the user navigates to Your-finances page  Robot test application
+    Then the user marks the finances as complete  Robot test application  labour costs  n/a

@@ -8,7 +8,6 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.util.Comparator;
 import java.util.List;
@@ -23,7 +22,7 @@ public class ManageInnovationLeadsModelPopulator {
     @Autowired
     private UserService userService;
 
-    public void populateModel(Model model, CompetitionResource competition) {
+    public ManageInnovationLeadsViewModel populateModel(CompetitionResource competition) {
 
         List<UserResource> availableInnovationLeads = userService.findUserByType(UserRoleType.INNOVATION_LEAD);
         List<UserResource> innovationLeadsAssignedToCompetition = competitionService.findInnovationLeads(competition.getId());
@@ -33,10 +32,10 @@ public class ManageInnovationLeadsModelPopulator {
         availableInnovationLeads.remove(leadTechnologistAssignedToCompetition);
         innovationLeadsAssignedToCompetition.remove(leadTechnologistAssignedToCompetition);
 
-        model.addAttribute("model", new ManageInnovationLeadsViewModel(competition.getId(), competition.getName(),
+        return new ManageInnovationLeadsViewModel(competition.getId(), competition.getName(),
                 competition.getLeadTechnologistName(), competition.getExecutiveName(), competition.getInnovationSectorName(),
                 competition.getInnovationAreaNames(), sortByName(innovationLeadsAssignedToCompetition),
-                sortByName(availableInnovationLeads)));
+                sortByName(availableInnovationLeads));
 
     }
 
