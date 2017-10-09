@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.security;
 
-import jdk.nashorn.internal.runtime.regexp.joni.Option;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
@@ -30,15 +29,6 @@ public class ProjectLookupStrategy {
 
     @PermissionEntityLookupStrategy
     public ProjectResource getProjectResource(Long projectId) {
-        //return projectMapper.mapToResource(projectRepository.findOne(projectId));
-
-/*        Project project = projectRepository.findOne(projectId);
-
-        if (project != null) {
-            return projectMapper.mapToResource(project);
-        } else {
-            throw new ObjectNotFoundException("Project not found", null);
-        }*/
 
         return projectMapper.mapToResource(Optional.ofNullable(projectRepository.findOne(projectId))
                 .orElseThrow(() -> new ObjectNotFoundException("Project not found", null)));
