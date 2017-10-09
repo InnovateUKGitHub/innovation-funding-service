@@ -180,6 +180,10 @@ function tailorAppInstance() {
         export SHIBBOLETH_IDP_MEMORY_REQUEST="500M"
         export SHIBBOLETH_IDP_MEMORY_LIMIT="2048M"
         export GA_TRACKING_ID=
+        export LDAP_USE_SSL="true"
+        export LDAP_BASEDN="dc=nodomain"
+        export LDAP_BINDDN="cn=admin,dc=nodomain"
+        export LDAP_AUTHENTICATOR="anonSearchAuthenticator"
 
         # for the SP and IDP
         export SHIBBOLETH_MEMCACHE_ENDPOINT=
@@ -241,6 +245,10 @@ function tailorAppInstance() {
     substituteOptionalEnvVariable SHIBBOLETH_IDP_MEMORY_REQUEST "<<SHIBBOLETH_IDP_MEMORY_REQUEST>>"
     substituteMandatoryEnvVariable SHIBBOLETH_IDP_MEMORY_LIMIT "<<SHIBBOLETH_IDP_MEMORY_LIMIT>>"
     substituteOptionalEnvVariable GA_TRACKING_ID "<<GA-TRACKING-ID>>"
+    substituteMandatoryEnvVariable LDAP_USE_SSL "<<LDAP_USE_SSL>>"
+    substituteMandatoryEnvVariable LDAP_BASEDN "<<LDAP_BASEDN>>"
+    substituteMandatoryEnvVariable LDAP_BINDDN "<<LDAP_BINDDN>>"
+    substituteMandatoryEnvVariable LDAP_AUTHENTICATOR "<<LDAP_AUTHENTICATOR>>"
 
     # for the SP and IDP
     substituteOptionalEnvVariable SHIBBOLETH_MEMCACHE_ENDPOINT "<<SHIBBOLETH-MEMCACHE-ENDPOINT>>"

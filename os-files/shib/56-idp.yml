@@ -76,11 +76,11 @@ items:
           - name: LDAP_USESTARTTLS
             value: "false"
           - name: LDAP_USESSL
-            value: "false"
+            value: "<<LDAP_USE_SSL>>"
           - name: LDAP_BASEDN
-            value: "dc=int,dc=g2g3digital,dc=net"
+            value: "<<LDAP_BASEDN>>"
           - name: LDAP_BINDDN
-            value: "cn=admin,dc=int,dc=g2g3digital,dc=net"
+            value: "<<LDAP_BINDDN>>"
           - name: LDAP_BINDDNCREDENTIAL
             value: "<<LDAP-PASSWORD>>"
           - name: LDAP_USERFILTER
@@ -90,7 +90,7 @@ items:
           - name: LDAP_RETURNATTRIBUTES
             value: "mail,uid"
           - name: LDAP_AUTHENTICATOR
-            value: "bindSearchAuthenticator"
+            value: "<<LDAP_AUTHENTICATOR>>"
           - name: GOOGLEANALYTICS_TRACKINGID
             value: "<<GA-TRACKING-ID>>"
           ports:
