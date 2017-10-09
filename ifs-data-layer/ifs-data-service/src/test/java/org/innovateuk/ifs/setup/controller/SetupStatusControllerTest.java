@@ -1,17 +1,19 @@
 package org.innovateuk.ifs.setup.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.setup.resource.SetupStatusResource;
+import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.junit.Test;
+import org.mockito.Mock;
 
-import java.util.List;
-
-import static org.hamcrest.Matchers.hasSize;
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.mockito.Mockito.when;
+import static org.innovateuk.ifs.documentation.SetupStatusResourceDocs.setupStatusResourceBuilder;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SetupStatusControllerTest extends BaseControllerMockMVCTest<SetupStatusController> {
 
@@ -20,38 +22,79 @@ public class SetupStatusControllerTest extends BaseControllerMockMVCTest<SetupSt
         return new SetupStatusController();
     }
 
+    @Mock
+    private SetupStatusService setupStatusService;
+
     @Test
-    public void doLookupShouldReturnAddresses() throws Exception {
-        int numberOfAddresses = 4;
-        String postCode = "BS348XU";
-        List<AddressResource> addressResources = newAddressResource().build(numberOfAddresses);
+    public void testFindByTarget() throws Exception {
+        final String targetClassName = "org.domain.Competition";
+        final Long targetId = 925L;
 
-        when(addressLookupServiceMock.doLookup(postCode)).thenReturn(serviceSuccess(addressResources));
+        when(setupStatusService.findByTargetClassNameAndTargetId(targetClassName, targetId))
+                .thenReturn(serviceSuccess(setupStatusResourceBuilder.build(1)));
 
-        mockMvc.perform(get("/address/doLookup?lookup=" + postCode))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(numberOfAddresses)));
+        mockMvc.perform(get("/questionSetupStatus/findByTarget/{targetClassName}/{targetId}", targetClassName, targetId))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(setupStatusService, times(1)).findByTargetClassNameAndTargetId(targetClassName, targetId);
+    }
+
+
+    @Test
+    public void testFindByTargetAndParent() throws Exception {
+        final String targetClassName = "org.domain.Competition";
+        final Long targetId = 925L;
+        final Long parentId = 2414L;
+
+        when(setupStatusService.findByTargetClassNameAndTargetIdAndParentId(targetClassName, targetId, parentId))
+                .thenReturn(serviceSuccess(setupStatusResourceBuilder.build(1)));
+
+        mockMvc.perform(get("/questionSetupStatus/findByTargetAndParent/{targetClassName}/{targetId}/{parentId}",
+                targetClassName, targetId, parentId))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(setupStatusService, times(1)).findByTargetClassNameAndTargetIdAndParentId(targetClassName, targetId, parentId);
     }
 
     @Test
-    public void doLookupWithSpecialCharacters() throws Exception {
-        int numberOfAddresses = 4;
-        String postCode = "!@£ !@£$";
-        List<AddressResource> addressResources = newAddressResource().build(numberOfAddresses);
+    public void testFindByClassAndParent() throws Exception {
+        String className = "org.domain.Question";
+        Long parentId = 925L;
 
-        when(addressLookupServiceMock.doLookup(postCode)).thenReturn(serviceSuccess(addressResources));
+        when(setupStatusService.findByClassNameAndParentId(className, parentId))
+                .thenReturn(serviceSuccess(setupStatusResourceBuilder.build(1)));
 
-        mockMvc.perform(get("/address/doLookup?lookup=" + postCode))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(numberOfAddresses)));
+        mockMvc.perform(get("/questionSetupStatus/findByClassAndParent/{className}/{parentId}", className, parentId))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(setupStatusService, times(1)).findByClassNameAndParentId(className, parentId);
     }
 
     @Test
-    public void getByIdShouldReturnAddress() throws Exception {
-        AddressResource addressResource = newAddressResource().build();
-        when(addressService.getById(addressResource.getId())).thenReturn(serviceSuccess(addressResource));
-        mockMvc.perform(get("/address/{id}", addressResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(content().string(objectMapper.writeValueAsString(addressResource)));;
+    public void testFindSetupStatus() throws Exception {
+        String className = "org.domain.Competition";
+        Long classPk = 925L;
+
+        when(setupStatusService.findSetupStatus(className, classPk))
+                .thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
+
+        mockMvc.perform(get("/questionSetupStatus/findSetupStatus/{className}/{classPk}", className, classPk))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(setupStatusService, times(1)).findSetupStatus(className, classPk);
+    }
+
+    @Test
+    public void saveSetupStatus() throws Exception {
+        SetupStatusResource savedResult = setupStatusResourceBuilder.build();
+
+        when(setupStatusService.saveSetupStatus(any(SetupStatusResource.class))).thenReturn(serviceSuccess(savedResult));
+
+        mockMvc.perform(post("/questionSetupStatus/save")
+                .contentType(APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(setupStatusResourceBuilder.build())))
+                .andExpect(status().is2xxSuccessful());
+
+        verify(setupStatusService, times(1)).saveSetupStatus(any(SetupStatusResource.class));
     }
 }
