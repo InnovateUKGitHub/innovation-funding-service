@@ -156,8 +156,8 @@ Applicant chooses Calculate overheads option
     [Setup]  log in as a different user                     &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
     When the user navigates to Your-finances page           ${applicationName}
-    Then the user fills in the project costs                ${applicationName}
-    And wait until element is not visible without screenshots   css=.task-list li:nth-of-type(1) .task-status-incomplete
+    Then the user fills in the project costs                Calculate  185,997
+    And wait until element is not visible without screenshots  css=.task-list li:nth-of-type(1) .task-status-incomplete
     When the user clicks the button/link                    link=Your project costs
     Then the user should see the text in the page           ${excel_file}
     And the user clicks the button/link                     jQuery=button:contains("Edit your project costs")

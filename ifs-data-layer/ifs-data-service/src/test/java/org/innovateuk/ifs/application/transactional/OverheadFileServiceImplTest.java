@@ -28,11 +28,10 @@ import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEn
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.newApplicationFinanceRow;
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldBuilder.newFinanceRowMetaField;
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaValueBuilder.newFinanceRowMetaValue;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceRowBuilder.newProjectFinanceRow;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFileServiceImpl> {
 
@@ -45,8 +44,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
 
     @Override
     protected OverheadFileServiceImpl supplyServiceUnderTest() {
-        OverheadFileServiceImpl overheadFileService = new OverheadFileServiceImpl();
-        return overheadFileService;
+        return new OverheadFileServiceImpl();
     }
 
     @Test
@@ -61,8 +59,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField().build();
         when(financeRowMetaFieldRepositoryMock.findByTitle(fileMetaFieldType)).thenReturn(financeRowMetaField);
 
-        FinanceRowMetaValue financeRowMetaValue = null;
-        when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(overhead.getId(), financeRowMetaField.getId())).thenReturn(financeRowMetaValue);
+        when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(overhead.getId(), financeRowMetaField.getId())).thenReturn(null);
 
         FileEntry createdFileEntry = newFileEntry().build();
         ServiceResult<Pair<File, FileEntry>> successfulFileCreationResult = serviceSuccess(Pair.of(new File("createdfile"), createdFileEntry));
@@ -87,7 +84,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         assertEquals(expectedFinanceRowMetaValue.getId(), actualFinanceRowMetaValue.getId());
         assertEquals(expectedFinanceRowMetaValue.getFinanceRowId(), actualFinanceRowMetaValue.getFinanceRowId());
         assertEquals(expectedFinanceRowMetaValue.getFinanceRowMetaField(), actualFinanceRowMetaValue.getFinanceRowMetaField());
-        assertEquals(expectedFinanceRowMetaValue.getValue(), actualFinanceRowMetaValue.getValue().toString());
+        assertEquals(expectedFinanceRowMetaValue.getValue(), actualFinanceRowMetaValue.getValue());
     }
 
     @Test
@@ -105,7 +102,7 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField().build();
         when(financeRowMetaFieldRepositoryMock.findByTitle(fileMetaFieldType)).thenReturn(financeRowMetaField);
 
-        FinanceRowMetaValue financeRowMetaValue = newFinanceRowMetaValue().withValue(fileEntry.getId().toString()).build();;
+        FinanceRowMetaValue financeRowMetaValue = newFinanceRowMetaValue().withValue(fileEntry.getId().toString()).build();
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(overhead.getId(), financeRowMetaField.getId())).thenReturn(financeRowMetaValue);
 
         ServiceResult<Supplier<InputStream>> successfulFileCreationResult = serviceSuccess(inputStreamSupplier);
@@ -126,8 +123,47 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
     }
 
     @Test
-    public void getFileEntryDetails() throws Exception {
+    public void getProjectFileEntryContents() throws Exception {
+
         Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        long overheadId = 1L;
+        long projectOverheadId = 2L;
+
+        ApplicationFinanceRow overhead = newApplicationFinanceRow().withId(overheadId).build();
+
+        when(projectFinanceRowRepositoryMock.findOne(projectOverheadId)).thenReturn(newProjectFinanceRow().withOriginalApplicationFinanceRow(overhead).build());
+
+        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(overhead);
+
+        FileEntry fileEntry = newFileEntry().build();
+        when(fileEntryRepositoryMock.findOne(fileEntry.getId())).thenReturn(fileEntry);
+
+        FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField().build();
+        when(financeRowMetaFieldRepositoryMock.findByTitle(fileMetaFieldType)).thenReturn(financeRowMetaField);
+
+        FinanceRowMetaValue financeRowMetaValue = newFinanceRowMetaValue().withValue(fileEntry.getId().toString()).build();
+        when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(overhead.getId(), financeRowMetaField.getId())).thenReturn(financeRowMetaValue);
+
+        ServiceResult<Supplier<InputStream>> successfulFileCreationResult = serviceSuccess(inputStreamSupplier);
+        when(fileServiceMock.getFileByFileEntryId(fileEntry.getId())).thenReturn(successfulFileCreationResult);
+
+        FileEntryResource createdFileEntryResource = newFileEntryResource().withId(fileEntry.getId()).build();
+        when(fileEntryMapperMock.mapToResource(fileEntry)).thenReturn(createdFileEntryResource);
+
+        ServiceResult<FileAndContents> result = service.getProjectFileEntryContents(projectOverheadId);
+
+        assertTrue(result.isSuccess());
+        assertThat(result.getSuccessObject(), is(instanceOf(BasicFileAndContents.class)));
+
+        verify(fileServiceMock).getFileByFileEntryId(fileEntry.getId());
+
+        assertEquals(fileEntry.getId(), result.getSuccessObject().getFileEntry().getId());
+        assertEquals(inputStreamSupplier, result.getSuccessObject().getContentsSupplier());
+    }
+
+    @Test
+    public void getFileEntryDetails() throws Exception {
         long overheadId = 1L;
 
         ApplicationFinanceRow overhead = newApplicationFinanceRow().build();
@@ -139,13 +175,44 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField().build();
         when(financeRowMetaFieldRepositoryMock.findByTitle(fileMetaFieldType)).thenReturn(financeRowMetaField);
 
-        FinanceRowMetaValue financeRowMetaValue = newFinanceRowMetaValue().withValue(fileEntry.getId().toString()).build();;
+        FinanceRowMetaValue financeRowMetaValue = newFinanceRowMetaValue().withValue(fileEntry.getId().toString()).build();
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(overhead.getId(), financeRowMetaField.getId())).thenReturn(financeRowMetaValue);
 
         FileEntryResource retrievedFileEntryResource = newFileEntryResource().withId(fileEntry.getId()).build();
         when(fileEntryMapperMock.mapToResource(fileEntry)).thenReturn(retrievedFileEntryResource);
 
         ServiceResult<FileEntryResource> result = service.getFileEntryDetails(overheadId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(result.getSuccessObject(), retrievedFileEntryResource);
+
+        verify(fileEntryRepositoryMock).findOne(fileEntry.getId());
+    }
+
+    @Test
+    public void getProjectFileEntryDetails() throws Exception {
+        long overheadId = 1L;
+        long projectOverheadId = 2L;
+
+        ApplicationFinanceRow overhead = newApplicationFinanceRow().withId(overheadId).build();
+
+        when(projectFinanceRowRepositoryMock.findOne(projectOverheadId)).thenReturn(newProjectFinanceRow().withOriginalApplicationFinanceRow(overhead).build());
+
+        when(applicationFinanceRowRepositoryMock.findById(overheadId)).thenReturn(overhead);
+
+        FileEntry fileEntry = newFileEntry().build();
+        when(fileEntryRepositoryMock.findOne(fileEntry.getId())).thenReturn(fileEntry);
+
+        FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField().build();
+        when(financeRowMetaFieldRepositoryMock.findByTitle(fileMetaFieldType)).thenReturn(financeRowMetaField);
+
+        FinanceRowMetaValue financeRowMetaValue = newFinanceRowMetaValue().withValue(fileEntry.getId().toString()).build();
+        when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(overhead.getId(), financeRowMetaField.getId())).thenReturn(financeRowMetaValue);
+
+        FileEntryResource retrievedFileEntryResource = newFileEntryResource().withId(fileEntry.getId()).build();
+        when(fileEntryMapperMock.mapToResource(fileEntry)).thenReturn(retrievedFileEntryResource);
+
+        ServiceResult<FileEntryResource> result = service.getProjectFileEntryDetails(projectOverheadId);
 
         assertTrue(result.isSuccess());
         assertEquals(result.getSuccessObject(), retrievedFileEntryResource);
@@ -181,8 +248,6 @@ public class OverheadFileServiceImplTest extends BaseServiceUnitTest<OverheadFil
         assertEquals(createdFileEntryResource, result.getSuccessObject());
 
         verify(fileServiceMock).updateFile(fileEntryToCreate, inputStreamSupplier);
-
-        FinanceRowMetaValue expectedFinanceRowMetaValue = new FinanceRowMetaValue(overhead, financeRowMetaField, successfulFileCreationResult.getSuccessObject().getValue().getId().toString());
 
         ArgumentCaptor<FinanceRowMetaValue> metaValueArgumentCaptor = ArgumentCaptor.forClass(FinanceRowMetaValue.class);
         verify(financeRowMetaValueRepositoryMock, never()).save(metaValueArgumentCaptor.capture());

@@ -74,6 +74,19 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
                 COMP_ADMIN, PROJECT_FINANCE);
     }
 
+    @Test
+    public void getAllInvitesToSend() throws Exception {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllInvitesToSend(1L),
+                COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
+    public void sendAllInvites() throws Exception {
+        AssessorInviteSendResource assessorInviteSendResource = new AssessorInviteSendResource();
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.sendAllInvites(1L, assessorInviteSendResource),
+                COMP_ADMIN, PROJECT_FINANCE);
+    }
+
     public static class TestAssessmentPanelInviteService implements AssessmentPanelInviteService {
 
         @Override
@@ -93,6 +106,16 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
 
         @Override
         public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
             return null;
         }
     }
