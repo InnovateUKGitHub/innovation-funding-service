@@ -13,8 +13,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.ui.ExtendedModelMap;
-import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -85,7 +83,6 @@ public class ManageInnovationLeadsModelPopulatorTest {
     @Test
     public void testPopulateModel() {
         Long competitionId = 1L;
-        Model model = new ExtendedModelMap();
 
         CompetitionResource competitionResource = newCompetitionResource()
                 .withId(competitionId)
@@ -101,26 +98,25 @@ public class ManageInnovationLeadsModelPopulatorTest {
         when(competitionService.findInnovationLeads(competitionId)).thenReturn(innovationLeadsAssignedToCompetition);
         when(userService.findById(competitionResource.getLeadTechnologist())).thenReturn(innLead4);
 
-        populator.populateModel(model, competitionResource);
-        ManageInnovationLeadsViewModel returnedModel = (ManageInnovationLeadsViewModel) model.asMap().get("model");
+        ManageInnovationLeadsViewModel viewModel = populator.populateModel(competitionResource);
 
         // Only two innovation leads should be available
-        assertEquals(2, returnedModel.getAvailableInnovationLeads().size());
+        assertEquals(2, viewModel.getAvailableInnovationLeads().size());
 
         // Should be sorted by their names
-        assertEquals(innLead3, returnedModel.getAvailableInnovationLeads().get(0));
-        assertEquals(innLead1, returnedModel.getAvailableInnovationLeads().get(1));
+        assertEquals(innLead3, viewModel.getAvailableInnovationLeads().get(0));
+        assertEquals(innLead1, viewModel.getAvailableInnovationLeads().get(1));
 
         // One should be assigned to competition
-        assertEquals(1, returnedModel.getInnovationLeadsAssignedToCompetition().size());
-        assertEquals(innLead2, returnedModel.getInnovationLeadsAssignedToCompetition().get(0));
+        assertEquals(1, viewModel.getInnovationLeadsAssignedToCompetition().size());
+        assertEquals(innLead2, viewModel.getInnovationLeadsAssignedToCompetition().get(0));
 
-        assertEquals(competitionId, returnedModel.getCompetitionId());
-        assertEquals(competitionResource.getName(), returnedModel.getCompetitionName());
-        assertEquals(competitionResource.getLeadTechnologistName(), returnedModel.getLeadTechnologistName());
-        assertEquals(competitionResource.getExecutiveName(), returnedModel.getExecutiveName());
-        assertEquals(competitionResource.getInnovationSectorName(), returnedModel.getInnovationSectorName());
-        assertEquals(competitionResource.getInnovationAreaNames(), returnedModel.getInnovationAreaNames());
+        assertEquals(competitionId, viewModel.getCompetitionId());
+        assertEquals(competitionResource.getName(), viewModel.getCompetitionName());
+        assertEquals(competitionResource.getLeadTechnologistName(), viewModel.getLeadTechnologistName());
+        assertEquals(competitionResource.getExecutiveName(), viewModel.getExecutiveName());
+        assertEquals(competitionResource.getInnovationSectorName(), viewModel.getInnovationSectorName());
+        assertEquals(competitionResource.getInnovationAreaNames(), viewModel.getInnovationAreaNames());
     }
 }
 

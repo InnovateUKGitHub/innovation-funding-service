@@ -7,6 +7,8 @@ import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
+import org.innovateuk.ifs.competitionsetup.viewmodel.InitialDetailsViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserService;
@@ -16,8 +18,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.ui.ExtendedModelMap;
-import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,6 @@ public class InitialDetailsModelPopulatorTest {
 	
 	@Test
 	public void testPopulateModel() {
-		Model model = new ExtendedModelMap();
 		CompetitionResource competition = newCompetitionResource()
 				.withCompetitionCode("code")
 				.withName("name")
@@ -71,15 +70,18 @@ public class InitialDetailsModelPopulatorTest {
 		when(competitionService.getAllCompetitionTypes()).thenReturn(competitionTypes);
 		List<UserResource> leadTechs = new ArrayList<>();
 		when(userService.findUserByType(UserRoleType.INNOVATION_LEAD)).thenReturn(leadTechs);
+
+        InitialDetailsViewModel viewModel = (InitialDetailsViewModel) populator.populateModel(getBasicGeneralSetupView(competition), competition);
 		
-		populator.populateModel(model, competition);
-		
-		assertEquals(5, model.asMap().size());
-		assertEquals(compExecs, model.asMap().get("competitionExecutiveUsers"));
-		assertEquals(innovationSectors, model.asMap().get("innovationSectors"));
-        List<InnovationAreaResource> resultAreas = (List<InnovationAreaResource>) model.asMap().get("innovationAreas");
-		assertTrue(resultAreas.containsAll(innovationAreas));
-		assertEquals(competitionTypes, model.asMap().get("competitionTypes"));
-		assertEquals(leadTechs, model.asMap().get("innovationLeadTechUsers"));
+		assertEquals(compExecs, viewModel.getCompetitionExecutiveUsers());
+		assertEquals(innovationSectors, viewModel.getInnovationSectors());
+		assertTrue(viewModel.getInnovationAreas().containsAll(innovationAreas));
+		assertEquals(competitionTypes, viewModel.getCompetitionTypes());
+		assertEquals(leadTechs, viewModel.getInnovationLeadTechUsers());
+        assertEquals(CompetitionSetupSection.INITIAL_DETAILS, viewModel.getGeneral().getCurrentSection());
+	}
+
+	private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
+		return new GeneralSetupViewModel(Boolean.FALSE, competition, CompetitionSetupSection.INITIAL_DETAILS, CompetitionSetupSection.values(), Boolean.TRUE);
 	}
 }

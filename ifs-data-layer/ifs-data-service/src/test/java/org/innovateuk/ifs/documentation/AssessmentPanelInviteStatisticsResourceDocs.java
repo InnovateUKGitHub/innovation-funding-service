@@ -18,6 +18,5 @@ public class AssessmentPanelInviteStatisticsResourceDocs {
             newAssessmentPanelInviteStatisticsResource()
                     .withAssessorsInvited(11)
                     .withAssessorsAccepted(3)
-                    .withAssessorsRejected(2)
-                    .withAssessorsPending(6);
+                    .withAssessorsRejected(2);
 }
