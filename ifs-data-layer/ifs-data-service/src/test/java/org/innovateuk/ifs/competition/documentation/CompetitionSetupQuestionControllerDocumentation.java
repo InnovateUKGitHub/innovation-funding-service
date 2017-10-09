@@ -63,7 +63,7 @@ public class CompetitionSetupQuestionControllerDocumentation extends BaseControl
     public void save() throws Exception {
         final Long questionId = 1L;
         CompetitionSetupQuestionResource resource = competitionSetupQuestionResourceBuilder.build();
-        when(competitionSetupQuestionService.save(resource)).thenReturn(serviceSuccess(resource));
+        when(competitionSetupQuestionService.update(resource)).thenReturn(serviceSuccess(resource));
 
         mockMvc.perform(put(baseUrl + "/{id}", questionId)
 

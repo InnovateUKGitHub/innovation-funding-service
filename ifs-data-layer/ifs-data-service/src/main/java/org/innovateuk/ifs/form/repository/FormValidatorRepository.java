@@ -15,4 +15,5 @@ public interface FormValidatorRepository extends PagingAndSortingRepository<Form
 	@Override
     List<FormValidator> findAll();
     FormValidator findById(@Param("id") Long id);
+    FormValidator findByClazzName(@Param("title") String title);
 }

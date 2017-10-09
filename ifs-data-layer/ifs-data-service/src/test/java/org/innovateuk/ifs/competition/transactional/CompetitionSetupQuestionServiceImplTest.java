@@ -194,7 +194,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         doNothing().when(guidanceRowRepository).delete(writtenFeedbackFormInput.getGuidanceRows());
         when(guidanceRowRepository.save(writtenFeedbackFormInput.getGuidanceRows())).thenReturn(writtenFeedbackFormInput.getGuidanceRows());
 
-        ServiceResult<CompetitionSetupQuestionResource> result = service.save(resource);
+        ServiceResult<CompetitionSetupQuestionResource> result = service.update(resource);
 
         assertTrue(result.isSuccess());
         assertNotEquals(question.getQuestionNumber(), number);
