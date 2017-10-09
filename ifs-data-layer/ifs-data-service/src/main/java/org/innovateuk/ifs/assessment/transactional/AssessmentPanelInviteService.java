@@ -2,20 +2,31 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.method.P;
+import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
+import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.innovateuk.ifs.invite.resource.*;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
+
 
 /**
  * Service for managing {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite}s.
  */
+
 public interface AssessmentPanelInviteService {
+
+
+    @SecuredBySpring(value = "GET_ALL_CREATED_INVITES",
+            description = "Competition Admins and Project Finance users can get all invites that have been created for an assessment panel on a competition")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId);
+
+    @SecuredBySpring(value = "SEND_ALL_INVITES",
+            description = "The Competition Admins and Project Finance users can send all assessment panel invites")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInvitesToSendResource);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_ASSESSORS_BY_COMPETITION",
@@ -38,4 +49,5 @@ public interface AssessmentPanelInviteService {
     @SecuredBySpring(value = "INVITE_EXISTING_USERS",
             description = "The Competition Admin user and Project Finance users can create assessment panel invites for existing users")
     ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInvites);
+
 }

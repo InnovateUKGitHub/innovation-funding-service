@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -163,6 +164,10 @@ public class UserResource {
 
     public boolean hasRoles(UserRoleType... acceptedRoles) {
         return roles.stream().map(role -> UserRoleType.fromName(role.getName())).collect(toList()).containsAll(Sets.newHashSet(acceptedRoles));
+    }
+
+    public boolean hasAnyRoles(UserRoleType... acceptedRoles) {
+        return !Collections.disjoint(roles.stream().map(role -> UserRoleType.fromName(role.getName())).collect(toList()), Sets.newHashSet(acceptedRoles));
     }
 
     public Gender getGender() {

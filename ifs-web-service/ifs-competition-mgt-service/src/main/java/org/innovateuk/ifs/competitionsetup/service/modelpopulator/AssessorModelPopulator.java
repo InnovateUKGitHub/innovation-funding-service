@@ -3,9 +3,11 @@ package org.innovateuk.ifs.competitionsetup.service.modelpopulator;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competitionsetup.viewmodel.AssessorViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 /**
  * populates the model for the assessor competition setup section.
@@ -22,9 +24,10 @@ public class AssessorModelPopulator implements CompetitionSetupSectionModelPopul
 	}
 
 	@Override
-	public void populateModel(Model model, CompetitionResource competitionResource) {
-		model.addAttribute("assessorOptions", competitionService.getAssessorOptionsForCompetitionType(competitionResource.getCompetitionType()));
-		model.addAttribute("isAssessmentClosed", competitionResource.isAssessmentClosed());
-		model.addAttribute("isSetupAndAfterNotifications", competitionResource.isSetupAndAfterNotifications());
+	public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
+		return new AssessorViewModel(generalViewModel,
+                competitionService.getAssessorOptionsForCompetitionType(competitionResource.getCompetitionType()),
+                competitionResource.isAssessmentClosed(),
+                competitionResource.isSetupAndAfterNotifications());
 	}
 }

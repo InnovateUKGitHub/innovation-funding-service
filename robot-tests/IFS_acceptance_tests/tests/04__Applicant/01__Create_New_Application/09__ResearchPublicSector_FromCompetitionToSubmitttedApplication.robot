@@ -6,12 +6,15 @@ Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 
+# This Suite moves competition Photonics for Public to Project Setup
+
 *** Variables ***
 ${compResearch}     Research can lead
 ${compPublic}       Public Sector can lead
 ${researchLeadApp}  Research Leading Application
 ${publicLeadApp}    Public Sector leading Application
 ${collaborator}     ${test_mailbox_one}+amy@gmail.com
+${compPublicPage}   ${server}/management/competition/${openCompetitionPublicSector}
 
 *** Test Cases ***
 Comp Admin Creates Competitions where Research or Public sector can lead
@@ -44,8 +47,15 @@ Applicant Applies to Public content leading Competition
     Then the user fills in the Application details        ${publicLeadApp}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
     And the user marks every section but one as complete  ${publicLeadApp}
     When the user navigates to Your-finances page         ${publicLeadApp}
-    Then the user marks the finances as complete          ${publicLeadApp}
+    Then the user marks the finances as complete          ${publicLeadApp}  Calculate  52,214
     And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  becky.mason@gmail.com
+
+Project Finance is able to see the Overheads costs file
+    [Documentation]  IFS-1724
+    [Tags]  CompAdmin
+    [Setup]  log in as a different user  &{internal_finance_credentials}
+    Given the competition is now in Project Setup
+    Then the project finance is able to download the Overheads file
 
 *** Keywords ***
 Custom Suite Setup
@@ -95,7 +105,7 @@ the collaborator accepts and fills in his part in the application
     the user reads his email and clicks the link  ${collaborator}  Invitation to collaborate in ${competition}  You are invited by  2
     the user is able to confirm the invite        ${collaborator}  ${short_password}
     the user navigates to Your-finances page      ${application}
-    the user marks the finances as complete       ${application}
+    the user marks the finances as complete       ${application}  Calculate  52,214
 
 the lead is able to submit the application
     [Arguments]  ${user}  ${application}
@@ -107,3 +117,33 @@ the lead is able to submit the application
     the user clicks the button/link  css=button[type="submit"][data-submitted-text]
     the user clicks the button/link  link=Finished
 
+the competition is now in Project Setup
+    moving competition to Closed
+    making the application a successful project
+    moving competition to Project Setup
+
+moving competition to Closed
+    Connect to Database  @{database}
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2017-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${openCompetitionPublicSector}';
+
+making the application a successful project
+    the user navigates to the page   ${compPublicPage}
+    the user clicks the button/link  jQuery=.button-large:contains("Notify assessors")
+    the user clicks the button/link  jQuery=.button-large:contains("Close assessment")
+    the user navigates to the page   ${compPublicPage}/funding
+    the user clicks the button/link  jQuery=tr:contains("${publicLeadApp}") label
+    the user clicks the button/link  css=[type="submit"][value="FUNDED"]
+    the user navigates to the page   ${compPublicPage}/manage-funding-applications
+    the user clicks the button/link  jQuery=tr:contains("${publicLeadApp}") label
+    the user clicks the button/link  css=[name="write-and-send-email"]
+    the internal sends the descision notification email to all applicants  Successful!
+
+moving competition to Project Setup
+    the user navigates to the page   ${compPublicPage}
+    the user clicks the button/link  jQuery=.button-large:contains("Release feedback")
+
+the project finance is able to download the Overheads file
+    ${projectId} =  get project id by name  ${publicLeadApp}
+    ${organisationId} =  get organisation id by name  Dreambit
+    the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${projectId}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
+    remove the file from the operating system  ${excel_file}

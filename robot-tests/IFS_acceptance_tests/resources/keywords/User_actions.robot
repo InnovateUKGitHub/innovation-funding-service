@@ -188,3 +188,9 @@ the user collapses the section
     [Arguments]  ${section}
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("${section}")[aria-expanded="true"]
     run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("${section}")[aria-expanded="true"]
+
+the internal sends the descision notification email to all applicants
+    [Arguments]  ${email}
+    the user enters text to a text field  css=.editor  ${email}
+    the user clicks the button/link       css=.button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       css=button[name="send-emails"]

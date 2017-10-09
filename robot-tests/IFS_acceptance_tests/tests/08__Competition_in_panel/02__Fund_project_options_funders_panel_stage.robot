@@ -64,10 +64,8 @@ Proj Finance user can send Fund Decision notification
     When the user clicks the button/link     css=button[data-js-modal="send-to-all-applicants-modal"]
     When the user clicks the button/link     jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
     Then the user should see a field and summary error  Please enter the email message.
-    When the user cancels the process needs to re-select the reciepients
-    And the user enters text to a text field   css=.editor  ${onHoldMessage}
-    And the user clicks the button/link        jQuery=button:contains("Send email to all applicants")
-    When the user clicks the button/link       jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
+    And the user cancels the process needs to re-select the reciepients
+    When the internal sends the descision notification email to all applicants  ${onHoldMessage}
     Then the user should see the element       jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") ~ td:contains("Sent") ~ td:contains("${today}")
 
 Internal user can filter notified applications
