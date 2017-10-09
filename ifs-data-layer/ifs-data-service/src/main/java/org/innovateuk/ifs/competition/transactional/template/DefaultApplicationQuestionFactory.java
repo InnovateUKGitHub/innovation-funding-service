@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competition.transactional;
+package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.application.domain.GuidanceRow;
 import org.innovateuk.ifs.application.domain.Question;
@@ -22,7 +22,7 @@ public class DefaultApplicationQuestionFactory {
     @Autowired
     private FormValidatorRepository formValidatorRepository;
 
-    public Question buildDefaultQuestion(Competition competition) {
+    public Question buildQuestion(Competition competition) {
         FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.toString());
         FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.toString());
 
@@ -35,7 +35,7 @@ public class DefaultApplicationQuestionFactory {
         question.setCompetition(competition);
         question.setFormInputs(Arrays.asList(maxWordCountInput, questionScoreInput, feedbackInput, appendixInput));
 
-        return new Question();
+        return question;
     }
 
     private FormInput buildMaxWordCountInput(Competition competition, FormValidator notEmptyValidator, FormValidator wordCountValidator) {
@@ -98,17 +98,17 @@ public class DefaultApplicationQuestionFactory {
         justificationRow1.setPriority(4);
         justificationRow1.setSubject("1,2");
         GuidanceRow justificationRow2 = new GuidanceRow();
-        justificationRow1.setPriority(3);
-        justificationRow1.setSubject("3,4");
+        justificationRow2.setPriority(3);
+        justificationRow2.setSubject("3,4");
         GuidanceRow justificationRow3 = new GuidanceRow();
-        justificationRow1.setPriority(2);
-        justificationRow1.setSubject("4,6");
+        justificationRow3.setPriority(2);
+        justificationRow3.setSubject("4,6");
         GuidanceRow justificationRow4 = new GuidanceRow();
-        justificationRow1.setPriority(1);
-        justificationRow1.setSubject("7,8");
+        justificationRow4.setPriority(1);
+        justificationRow4.setSubject("7,8");
         GuidanceRow justificationRow5 = new GuidanceRow();
-        justificationRow1.setPriority(0);
-        justificationRow1.setSubject("9,10");
+        justificationRow5.setPriority(0);
+        justificationRow5.setSubject("9,10");
 
         input.setInputValidators(Stream.of(notEmptyValidator, wordCountValidator).collect(Collectors.toSet()));
         input.setGuidanceRows(Arrays.asList(justificationRow1, justificationRow2, justificationRow3, justificationRow4, justificationRow5));
