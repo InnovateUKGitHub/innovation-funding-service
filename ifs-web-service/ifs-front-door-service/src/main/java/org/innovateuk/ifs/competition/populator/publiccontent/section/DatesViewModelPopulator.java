@@ -14,9 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import static org.innovateuk.ifs.competition.resource.MilestoneType.SUBMISSION_DATE;
 
 /**
  * Populates a public content eligibility view model.
@@ -46,23 +43,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
                 .getSuccessObjectOrThrowException();
 
         List<DateViewModel> milestonesMapped = mapMilestoneToDateViewModel(milestones, nonIFS);
-        if (nonIFS) {
-            milestonesMapped.add(addRegistrationCloseDateForNonIFSComp(
-                    milestones.stream().filter(resource -> SUBMISSION_DATE.equals(resource.getType())).findFirst()));
-        }
-
         return milestonesMapped;
-    }
-
-    private DateViewModel addRegistrationCloseDateForNonIFSComp(Optional<MilestoneResource> competitionCloseDateMilestone) {
-        DateViewModel registrationClosesDate = new DateViewModel();
-        if (competitionCloseDateMilestone.isPresent()) {
-            registrationClosesDate.setMustBeStrong(false);
-            registrationClosesDate.setContent("Registration closes");
-            registrationClosesDate.setDateTime(competitionCloseDateMilestone.get().getDate().minusDays(7));
-        }
-
-        return registrationClosesDate;
     }
 
     private List<DateViewModel> mapMilestoneToDateViewModel(List<MilestoneResource> milestonesNeeded, Boolean nonIfs) {
@@ -77,6 +58,9 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
                 case OPEN_DATE:
                     publicContentDate.setContent("Competition opens");
                     publicContentDate.setMustBeStrong(Boolean.TRUE);
+                    break;
+                case REGISTRATION_DATE:
+                    publicContentDate.setContent("Registration closes");
                     break;
                 case SUBMISSION_DATE:
                     publicContentDate.setContent("Competition closes");
