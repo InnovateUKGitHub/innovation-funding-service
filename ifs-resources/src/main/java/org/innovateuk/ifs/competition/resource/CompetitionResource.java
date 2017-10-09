@@ -28,6 +28,7 @@ public class CompetitionResource {
     private String name;
     private ZonedDateTime startDate;
     private ZonedDateTime endDate;
+    private ZonedDateTime registrationDate;
     private ZonedDateTime assessorAcceptsDate;
     private ZonedDateTime assessorDeadlineDate;
     private ZonedDateTime releaseFeedbackDate;
@@ -85,11 +86,12 @@ public class CompetitionResource {
         // no-arg constructor
     }
 
-    public CompetitionResource(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public CompetitionResource(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.registrationDate = registrationDate;
     }
 
     @JsonIgnore
@@ -147,6 +149,14 @@ public class CompetitionResource {
 
     public void setEndDate(ZonedDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public ZonedDateTime getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(ZonedDateTime registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     public ZonedDateTime getStartDate() {
@@ -555,6 +565,7 @@ public class CompetitionResource {
                 .append(name, that.name)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
+                .append(registrationDate, that.registrationDate)
                 .append(assessorAcceptsDate, that.assessorAcceptsDate)
                 .append(assessorDeadlineDate, that.assessorDeadlineDate)
                 .append(releaseFeedbackDate, that.releaseFeedbackDate)
@@ -603,6 +614,7 @@ public class CompetitionResource {
                 .append(name)
                 .append(startDate)
                 .append(endDate)
+                .append(registrationDate)
                 .append(assessorAcceptsDate)
                 .append(assessorDeadlineDate)
                 .append(releaseFeedbackDate)

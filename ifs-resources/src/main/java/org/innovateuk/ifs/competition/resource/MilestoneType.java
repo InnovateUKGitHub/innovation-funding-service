@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 public enum MilestoneType {
     OPEN_DATE("1. Open date"),
     BRIEFING_EVENT("2. Briefing event"),
+    REGISTRATION_DATE("Registration date"),
     SUBMISSION_DATE("3. Submission date"),
     ALLOCATE_ASSESSORS("4. Allocate assessors"),
     ASSESSOR_BRIEFING("5. Assessor briefing"),
