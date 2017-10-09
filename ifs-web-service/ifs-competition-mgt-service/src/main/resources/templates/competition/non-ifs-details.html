@@ -93,6 +93,8 @@
                             th:attr="data-date-invalid-errormessage=${'Competition opens: Please enter a valid date.'}">
                                    <!-- TODO not sure if something similar to this will be required so leaving it commented out for now. REMOVE IF NOT REQUIRED
                                    data-date-future-errormessage=${'Opening date: Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}"-->
+                            <input type="hidden"
+                                   th:field="${form.openDate.milestoneType}" />
                             <th scope="row">Competition opens</th>
                             <td class="time"></td>
                             <td class="js-addWeekDay">Wed</td>
@@ -172,6 +174,8 @@
                             th:attr="data-date-invalid-errormessage=${'Competition closes: Please enter a valid date.'}">
                             <!-- TODO not sure if something similar to this will be required so leaving it commented out for now. REMOVE IF NOT REQUIRED
                             data-date-future-errormessage=${'Competition closes: Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}"-->
+                            <input type="hidden"
+                                   th:field="${form.closeDate.milestoneType}" />
                             <th scope="row">Competition closes</th>
                             <td class="time">
                                 <select id="closeDate-time"
@@ -234,6 +238,8 @@
                             th:attr="data-date-invalid-errormessage=${'Applicants notified: Please enter a valid date.'}">
                             <!-- TODO not sure if something similar to this will be required so leaving it commented out for now. REMOVE IF NOT REQUIRED
                             data-date-future-errormessage=${'Applicants notified: Please enter a future date' + (milestoneEntry.value.firstMilestone ? '' : ' that is after the previous milestone') + '.'}"-->
+                            <input type="hidden"
+                                   th:field="${form.applicantNotifiedDate.milestoneType}" />
                             <th scope="row">Applicants notified (optional)</th>
                             <td class="time"></td>
                             <td class="js-addWeekDay">-</td>
@@ -243,10 +249,8 @@
                                        th:errorclass="form-control-error"
                                        type="number"
                                        placeholder="DD"
-                                       required="required"
                                        min="1"
                                        max="31"
-                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
                                        th:field="${form.applicantNotifiedDate.day}" />
                             </td>
                             <td class="month">
@@ -255,10 +259,8 @@
                                        class="form-control width-small"
                                        type="number"
                                        placeholder="MM"
-                                       required="required"
                                        min="1"
                                        max="12"
-                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
                                        th:field="${form.applicantNotifiedDate.month}" />
                             </td>
                             <td class="year">
@@ -267,17 +269,15 @@
                                        class="form-control width-small"
                                        type="number"
                                        placeholder="YYYY"
-                                       required="required"
                                        min="2000"
                                        max="9999"
-                                       th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
                                        th:field="${form.applicantNotifiedDate.year}" />
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </fieldset>
-        
+
             <div class="form-group" th:classappend="${#fields.hasErrors('url')} ? 'form-group-error'">
                 <label class="form-label" for="url">
                     <span class="form-label-bold">Competition URL</span>

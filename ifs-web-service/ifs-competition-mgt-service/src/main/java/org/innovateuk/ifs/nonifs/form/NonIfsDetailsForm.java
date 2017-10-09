@@ -25,8 +25,7 @@ public class NonIfsDetailsForm {
     @Valid
     @NotNull(message = "{validation.nonifs.detailsform.closedate.required}")
     private MilestoneRowForm closeDate;
-    @Valid
-    @NotNull(message = "{validation.nonifs.detailsform.notified.required}")
+    //@Valid
     private MilestoneRowForm applicantNotifiedDate;
     @NotEmpty(message= "{validation.nonifs.detailsform.url.required}")
     private String url;
