@@ -38,6 +38,7 @@ import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_HAS_SOLE_PARTNER;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -59,9 +60,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocumentsService> {
 
@@ -275,7 +274,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
 
         Long projectId = 1L;
 
-        Project projectInDB = newProject().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).build();
+        Project projectInDB = newProject().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).withPartnerOrganisations(asList(leadPartnerOrganisation, partnerPartnerOrganisation)).build();
         FileEntry entry = newFileEntry().build();
         FileEntryResource entryResource = newFileEntryResource().build();
         Supplier<InputStream> input = () -> null;
@@ -292,7 +291,6 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
 
         assertEquals(ApprovalType.UNSET, projectInDB.getOtherDocumentsApproved());
         verify(fileServiceMock).updateFile(entryResource, input);
-
     }
 
     @Test
@@ -301,6 +299,24 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
                 project::getCollaborationAgreement,
                 (fileToCreate, inputStreamSupplier) ->
                         service.createCollaborationAgreementFileEntry(123L, fileToCreate, inputStreamSupplier));
+    }
+
+    @Test
+    public void testCreateCollaborationAgreementFileEntryForSolePartner() {
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).withPartnerOrganisations(asList(leadPartnerOrganisation)).build();
+        FileEntryResource entryResource = newFileEntryResource().build();
+        Supplier<InputStream> input = () -> null;
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        ServiceResult<FileEntryResource> result = service.createCollaborationAgreementFileEntry(projectId, entryResource, input);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_HAS_SOLE_PARTNER));
+
+        verify(fileServiceMock, never()).createFile(entryResource, input);
     }
 
     @Test
@@ -323,6 +339,25 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
 
+    }
+
+    @Test
+    public void testUpdateCollaborationAgreementFileEntryForSolePartner() {
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).withPartnerOrganisations(asList(leadPartnerOrganisation)).build();
+        FileEntryResource entryResource = newFileEntryResource().build();
+        Supplier<InputStream> input = () -> null;
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectWorkflowHandlerMock.getState(projectInDB)).thenReturn(ProjectState.SETUP);
+
+        ServiceResult<Void> result = service.updateCollaborationAgreementFileEntry(projectId, entryResource, input);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_HAS_SOLE_PARTNER));
+
+        verify(fileServiceMock, never()).updateFile(entryResource, input);
     }
 
     @Test

@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_HAS_SOLE_PARTNER;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED;
@@ -74,14 +75,15 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     private ServiceResult<List<FileEntryResource>> retrieveUploadedDocuments(Long projectId) {
 
         ServiceResult<FileEntryResource> exploitationPlanFile = getExploitationPlanFileEntryDetails(projectId);
-        return getProject(projectId).andOnSuccess(project -> {
-            if (project.getPartnerOrganisations().size() > 1) {
-                ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(projectId);
-                return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
-            } else {
-                return aggregate(asList(exploitationPlanFile));
-            }
-            }).andOnFailure(() -> aggregate(asList(exploitationPlanFile)));
+        return getProject(projectId).
+                andOnSuccess(project -> {
+                    return validateProjectNeedsCollaborationAgreement(project).
+                            andOnSuccess(() -> {
+                                ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(projectId);
+                                return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
+                            }).
+                    andOnFailure(() -> aggregate(asList(exploitationPlanFile)));
+                });
     }
 
     @Override
@@ -147,6 +149,7 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     @Transactional
     public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
+                andOnSuccess(this::validateProjectNeedsCollaborationAgreement).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturn(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
     }
@@ -182,15 +185,23 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     public ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(this::validateProjectIsInSetup).
+                andOnSuccess(this::validateProjectNeedsCollaborationAgreement).
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturnVoid(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
     }
 
     private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
-        if(!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
+        if (!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
             return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
         }
 
+        return serviceSuccess(project);
+    }
+
+    private ServiceResult<Project> validateProjectNeedsCollaborationAgreement(final Project project) {
+        if (project.getPartnerOrganisations().size() <= 1) {
+            return serviceFailure(PROJECT_HAS_SOLE_PARTNER);
+        }
         return serviceSuccess(project);
     }
 
