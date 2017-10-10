@@ -76,7 +76,7 @@ items:
           - name: LDAP_USESTARTTLS
             value: "false"
           - name: LDAP_USESSL
-            value: "<<LDAP_USE_SSL>>"
+            value: "<<LDAP_USESSL>>"
           - name: LDAP_BASEDN
             value: "<<LDAP_BASEDN>>"
           - name: LDAP_BINDDN
