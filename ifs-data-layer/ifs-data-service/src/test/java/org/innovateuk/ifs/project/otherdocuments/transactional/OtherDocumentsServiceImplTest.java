@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
@@ -368,10 +369,40 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
     }
 
     @Test
+    public void testGetCollaborationAgreementFileEntryDetailsSolePartner() {
+        Project project = newProject().
+                withId(projectId).
+                withApplication(application).
+                withPartnerOrganisations(asList(leadPartnerOrganisation)).
+                build();
+
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+
+        ServiceResult<FileEntryResource> result =  service.getCollaborationAgreementFileEntryDetails(123L);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_HAS_SOLE_PARTNER));
+    }
+
+    @Test
     public void testGetCollaborationAgreementFileContents() {
         assertGetFileContents(
                 project::setCollaborationAgreement,
                 () -> service.getCollaborationAgreementFileContents(123L));
+    }
+
+    @Test
+    public void testGetCollaborationAgreementFileContentsSolePartner() {
+        Project project = newProject().
+                withId(projectId).
+                withApplication(application).
+                withPartnerOrganisations(asList(leadPartnerOrganisation)).
+                build();
+
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+
+        ServiceResult<FileAndContents> result =  service.getCollaborationAgreementFileContents(123L);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_HAS_SOLE_PARTNER));
     }
 
     @Test
@@ -460,14 +491,39 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
                 project::setExploitationPlan,
                 () -> service.deleteExploitationPlanFile(123L));
     }
+    @Test
+    public void testDeleteExploitationPlanFileProjectLive() {
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
+
+        ServiceResult<Void> result = service.deleteExploitationPlanFile(123L);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
+    }
 
     @Test
-    public void testFailureDeleteExploitationPlanFileProjectLive() {
+    public void testFailureDeleteCollaborationAgreementFileProjectLive() {
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
 
         ServiceResult<Void> result = service.deleteCollaborationAgreementFile(123L);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
+    }
+
+    @Test
+    public void testFailureDeleteCollaborationAgreementFileSolePartner() {
+        Project project = newProject().
+                withId(projectId).
+                withApplication(application).
+                withPartnerOrganisations(asList(leadPartnerOrganisation)).
+                build();
+
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
+
+        ServiceResult<Void> result = service.deleteCollaborationAgreementFile(123L);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_HAS_SOLE_PARTNER));
     }
 
     @Test
@@ -623,7 +679,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
     }
 
     @Test
-    public void testFilesCanBeSubmittedBySinglePartner() {
+    public void testFilesCanBeSubmittedBySolePartner() {
         Project project = newProject().
                           withId(projectId).
                           withApplication(application).
@@ -672,7 +728,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
     }
 
     @Test
-    public void testFilesCannotBeSubmittedBySinglePartnerWithoutExploitationPlan() {
+    public void testFilesCannotBeSubmittedBySolePartnerWithoutExploitationPlan() {
         project = newProject().
                 withId(projectId).
                 withApplication(application).

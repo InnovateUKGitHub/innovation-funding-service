@@ -88,7 +88,9 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
+        return getProject(projectId).
+                andOnSuccess(this::validateProjectNeedsCollaborationAgreement).
+                andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getCollaborationAgreement();
 
@@ -167,7 +169,9 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     public ServiceResult<FileAndContents> getCollaborationAgreementFileContents(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
+        return getProject(projectId).
+                andOnSuccess(this::validateProjectNeedsCollaborationAgreement).
+                andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getCollaborationAgreement();
 
@@ -210,6 +214,7 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     public ServiceResult<Void> deleteCollaborationAgreementFile(Long projectId) {
         return getProject(projectId).
                 andOnSuccess(this::validateProjectIsInSetup).
+                andOnSuccess(this::validateProjectNeedsCollaborationAgreement).
                 andOnSuccess(project ->
                 getCollaborationAgreement(project).andOnSuccess(fileEntry ->
                         fileService.deleteFileIgnoreNotFound(fileEntry.getId()).andOnSuccessReturnVoid(() ->
