@@ -13,6 +13,7 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -150,12 +151,12 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<AssessmentPanelKeyStatisticsResource> getAssessmentPanelKeyStatistics(long competitionId) {
         AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource = new AssessmentPanelKeyStatisticsResource();
-        assessmentPanelKeyStatisticsResource.setApplicationsInPanel(
-                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, IN_PANEL));
         List<Long> assessmentPanelInviteIds = simpleMap(assessmentPanelInviteRepository.getByCompetitionId(competitionId), Invite::getId);
 
+        assessmentPanelKeyStatisticsResource.setApplicationsInPanel(
+                applicationRepository.countByCompetitionIdAndApplicationProcessActivityStateState(competitionId, IN_PANEL));
         assessmentPanelKeyStatisticsResource.setAssessorsAccepted(getParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, assessmentPanelInviteIds));
-        assessmentPanelKeyStatisticsResource.setAssessorsPending(getParticipantCountStatistic(competitionId, ParticipantStatus.PENDING, assessmentPanelInviteIds));
+        assessmentPanelKeyStatisticsResource.setAssessorsPending(assessmentPanelInviteRepository.countByCompetitionIdAndStatusIn(competitionId, Collections.singleton(InviteStatus.SENT)));
 
         return serviceSuccess(assessmentPanelKeyStatisticsResource);
     }
@@ -163,12 +164,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<AssessmentPanelInviteStatisticsResource> getAssessmentPanelInviteStatistics(long competitionId) {
         AssessmentPanelInviteStatisticsResource statisticsResource = new AssessmentPanelInviteStatisticsResource();
-        statisticsResource.setInvited(assessmentPanelInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
         List<Long> assessmentPanelInviteIds = simpleMap(assessmentPanelInviteRepository.getByCompetitionId(competitionId), Invite::getId);
 
+        statisticsResource.setInvited(assessmentPanelInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
         statisticsResource.setAccepted(getParticipantCountStatistic(competitionId, ParticipantStatus.ACCEPTED, assessmentPanelInviteIds));
         statisticsResource.setDeclined(getParticipantCountStatistic(competitionId, ParticipantStatus.REJECTED, assessmentPanelInviteIds));
-        statisticsResource.setPending(getParticipantCountStatistic(competitionId, ParticipantStatus.PENDING, assessmentPanelInviteIds));
 
         return serviceSuccess(statisticsResource);
     }

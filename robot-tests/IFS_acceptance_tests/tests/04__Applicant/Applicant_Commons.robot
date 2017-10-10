@@ -60,7 +60,6 @@ Mark application details as incomplete
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
     the user should see the element       jQuery=li:contains("Application details") > .action-required
 
-
 the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=img.complete[alt*="Application details"]
     Run Keyword If  '${status}' == 'FAIL'  the applicant completes the application details  Application details
@@ -68,6 +67,7 @@ the Application details are completed
 the applicant completes the application details
     [Arguments]   ${Application_details}
     the user clicks the button/link       link=${Application_details}
+    the user moves Application details in Edit mode
     the user clicks the button/link       jQuery=button:contains("research category")
     the user clicks the button twice      jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
     the user clicks the button/link       jQuery=button:contains("Save")
@@ -80,6 +80,10 @@ the applicant completes the application details
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user should see the element       jQuery=button:contains("Edit")
     the user should not see the element   css=input
+
+the user moves Application details in Edit mode
+     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=.buttonlink[name="mark_as_incomplete"]
+     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=.buttonlink[name="mark_as_incomplete"]
 
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}

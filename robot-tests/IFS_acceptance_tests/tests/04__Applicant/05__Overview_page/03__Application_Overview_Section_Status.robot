@@ -30,11 +30,11 @@ Blue flag shows after marking a question as incomplete
     And the user should not see the element  jQuery=button:contains("Economic benefit") *:contains("Complete")
     And the user clicks the button/link    link=4. Economic benefit
     And the applicant edits the "economic benefit" question
-    And The user navigates to the overview page of the Robot test application
 
 Green check shows when finances are marked as complete
     [Documentation]    INFUND-1733
-    [Tags]  Pending
+    [Tags]
+    [Setup]  The user navigates to the overview page of the Robot test application
     Given the Application details are completed
     And the user navigates to Your-finances page  Robot test application
     Then the user marks the finances as complete  Robot test application  labour costs  n/a
