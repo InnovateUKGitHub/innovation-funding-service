@@ -10,7 +10,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm operating address',subTitle='Create your account',size='heading-xlarge'" />
 
     <div class="message-alert">

@@ -10,10 +10,16 @@ IFS.core.backLink = (function () {
     },
     init: function () {
       settings = this.settings
-      // Handle click on back link
-      jQuery('body').on('click', settings.element, function (e) {
-        IFS.core.backLink.handleClick(e)
-      })
+
+      if (document.referrer) {
+        // Replace href with url from referrer
+        jQuery(settings.element).attr('href', document.referrer)
+      } else {
+        // Handle click on back link
+        jQuery('body').on('click', settings.element, function (e) {
+          IFS.core.backLink.handleClick(e)
+        })
+      }
     },
     handleClick: function (event) {
       event.preventDefault()
