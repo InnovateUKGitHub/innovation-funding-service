@@ -15,6 +15,7 @@ import org.innovateuk.ifs.workflow.domain.ActivityType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -64,7 +65,7 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     }
 
     public ApplicationBuilder withProcessRoles(ProcessRole... processRoles) {
-        return with(application -> application.setProcessRoles(asList(processRoles)));
+        return with(application -> application.setProcessRoles(new ArrayList<>(asList(processRoles))));
     }
 
     public ApplicationBuilder withName(String... names) {

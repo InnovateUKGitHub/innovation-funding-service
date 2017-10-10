@@ -44,3 +44,24 @@ include::{snippets}/assessmentpanelinvite/invite-users/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/assessmentpanelinvite/invite-users/curl-request.adoc[]
+
+=== Send invites to chosen assessors for a panel
+==== Request
+include::{snippets}/assessmentpanelinvite/send-all-invites/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/send-all-invites/path-parameters.adoc[]
+include::{snippets}/assessmentpanelinvite/send-all-invites/request-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/send-all-invites/curl-request.adoc[]
+
+=== Get all invites to send
+==== Request
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/curl-request.adoc[]

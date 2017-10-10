@@ -53,7 +53,7 @@ Applicant has read only view on review and submit page
     When the applicant completes the application details  Application details
     And the user clicks the button/link                   link=Return to application overview
     And the user clicks the button/link                   link=Your finances
-    And the user marks the finances as complete           ${application_bus_name}
+    And the user marks the finances as complete           ${application_bus_name}  labour costs  n/a
     And the user clicks the button/link                   link=Review and submit
     Then the user should not see the element              css=input
 

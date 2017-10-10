@@ -1,5 +1,4 @@
 *** Settings ***
-Resource    ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource    ../../resources/defaultResources.robot
 
 
@@ -209,11 +208,10 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     ${update_comp}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery=h2:contains("Set up your project") ~ ul a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     run keyword if    '${update_comp}' == 'PASS'  the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user   &{lead_applicant_credentials}
+    Set Suite Variable  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}
     the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
     ${project_details}  ${completed}=  Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=ul li.complete a:contains("Project details")
     run keyword if  '${project_details}' == 'PASS'  lead partner navigates to project and fills project details
-    Set Suite Variable  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}
-
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user              &{internal_finance_credentials}
     the user navigates to the page          ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding
@@ -230,9 +228,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user moves focus to the element     css=label[for="app-row-104"]
     the user selects the checkbox           app-row-104
     the user clicks the button/link         jQuery=.button:contains("Write and send email")
-    the user enters text to a text field    css=[labelledby="message"]      testMessage
-    the user clicks the button/link         jQuery=button:contains("Send email to all applicants")
-    the user clicks the button/link         jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the internal sends the descision notification email to all applicants  EmailTextBody
     the user should see the text in the page    Manage funding applications
 
 lead partner navigates to project and fills project details

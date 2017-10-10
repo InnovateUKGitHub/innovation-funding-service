@@ -4,14 +4,13 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competitionsetup.viewmodel.application.ApplicationFinanceViewModel;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.ui.ExtendedModelMap;
-import org.springframework.ui.Model;
 
 import java.util.Optional;
 
@@ -47,13 +46,9 @@ public class ApplicationFinanceModelPopulatorTest {
 				.withCompetitionTypeName("programme")
 				.build();
 
-		Model model = new ExtendedModelMap();
-		// Method under test
-		populator.populateModel(model, cr, Optional.empty());
-		// Assertions
-		// First check that there is not more than we expect
-		assertEquals(2, model.asMap().size());
-		assertEquals(competitionId, model.asMap().get("competitionId"));
-		assertEquals(false, model.asMap().get("isSectorCompetition"));
+		ApplicationFinanceViewModel viewModel = (ApplicationFinanceViewModel) populator.populateModel(cr, Optional.empty());
+
+		assertEquals(ApplicationFinanceViewModel.class, viewModel.getClass());
+		assertEquals(false, viewModel.isSectorCompetition());
 	}
 }

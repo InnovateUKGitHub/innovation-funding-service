@@ -150,13 +150,12 @@ the research user finds org in company house
     the user clicks the button/link       jQuery=.button:contains("Save and continue")
 
 The user navigates to the summary page of the Robot test application
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
-    And the user clicks the button/link    link=Review and submit
+    ${id} =  get application id by name  Robot test application
+    the user navigates to the page       ${server}/application/${id}/summary
 
 The user navigates to the overview page of the Robot test application
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
+    ${id} =  get application id by name  Robot test application
+    the user navigates to the page       ${server}/application/${id}
 
 The user navigates to the academic application finances
     When the user navigates to the page    ${DASHBOARD_URL}

@@ -4,13 +4,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSubsectionModelPopulator;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.application.ApplicationFinanceViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.util.Optional;
-
-import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
 
 /**
  * populates the model for the Finances sub-section under the Application of competition setup section.
@@ -27,9 +26,7 @@ public class ApplicationFinanceModelPopulator implements CompetitionSetupSubsect
 	}
 
 	@Override
-	public void populateModel(Model model, CompetitionResource competitionResource, Optional<Long> objectId) {
-
-		model.addAttribute("isSectorCompetition", "sector".equalsIgnoreCase(competitionResource.getCompetitionTypeName()));
-		model.addAttribute(COMPETITION_ID_KEY, competitionResource.getId());
-	}
+	public CompetitionSetupSubsectionViewModel populateModel(CompetitionResource competitionResource, Optional<Long> objectId) {
+        return new ApplicationFinanceViewModel("sector".equalsIgnoreCase(competitionResource.getCompetitionTypeName()));
+    }
 }

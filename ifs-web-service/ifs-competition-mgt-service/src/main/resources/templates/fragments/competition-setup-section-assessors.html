@@ -8,9 +8,9 @@
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment',size='heading-xlarge'" />
 
-    <form th:action="@{(${editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
-          th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="assessors">
-        <th:block th:if="${editable}" id="section-assessors-edit">
+    <form th:action="@{(${model.general.editable} ? '' : 'assessors/edit')}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate"
+          th:attr="data-competition=${model.general.competition.id},data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="assessors">
+        <th:block th:if="${model.general.editable}" id="section-assessors-edit">
             <div class="form-group" th:classappend="${#fields.hasErrors('assessorCount')} ? 'form-group-error'">
                 <fieldset class="inline">
                     <legend class="heading-small">
@@ -19,11 +19,11 @@
                               <span class="error-message"  th:each="err : ${#fields.errors('assessorCount')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
-                    <div class="multiple-choice" th:each="assessorOption : ${assessorOptions}">
+                    <div class="multiple-choice" th:each="assessorOption : ${model.assessorOptions}">
                         <input th:id="${'assessors-' + '__${assessorOption.id}__'}" name="assessorCount"
                                th:value="${assessorOption.optionValue}" type="radio"
                                th:checked="${assessorOption.optionValue == competitionSetupForm.assessorCount}"
-                               th:disabled="${isSetupAndAfterNotifications and (assessorOption.optionValue != competitionSetupForm.assessorCount)}"/>
+                               th:disabled="${model.setupAndAfterNotifications and (assessorOption.optionValue != competitionSetupForm.assessorCount)}"/>
                         <label th:for="${'assessors-' + '__${assessorOption.id}__'}">
                             <th:block th:text="${assessorOption.optionName}" />
                         </label>
@@ -38,13 +38,13 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
                     </th:block>
                 </label>
-                <input class="form-control width-medium" required="required" id="assessorPay" name="assessorPay" type="number" min="0" max="99999999"
-                        th:value="${#fields.hasErrors('assessorPay') ? competitionSetupForm.assessorPay : competitionSetupForm.assessorPay != null ? #numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')  : ''}"
+                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" max="99999999"
+                        th:value="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0)}"
                        data-th-attr="data-max-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
                                      data-min-errormessage=#{validation.assessorsform.assessorPay.min},
                                      data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
                        th:errorclass="form-control-error"
-                       th:readonly="${isSetupAndLive}"/>
+                       th:readonly="${model.general.state.setupAndLive}"/>
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('hasAssessmentPanel')} ? 'form-group-error'">
                 <fieldset class="inline">
@@ -118,7 +118,7 @@
             <button class="button">Done</button>
         </th:block>
 
-       <th:block th:if="${!editable}" id="section-assessors-readonly">
+       <th:block th:unless="${model.general.editable}" id="section-assessors-readonly">
             <dl class="standard-definition-list">
                 <dt>How many assessors are required for each application?</dt>
                 <dd th:text="${competitionSetupForm.assessorCount}"></dd>
@@ -133,7 +133,7 @@
                 <dd th:text="${competitionSetupForm.hasInterviewStage} ? 'Yes' : 'No' "/>
             </dl>
 
-           <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
+           <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
         </th:block>
     </form>
 
@@ -141,13 +141,13 @@
     <ul class="pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to prev part"
-               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='application')}">
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application')}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Application</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{sectionPath}/{competitionId}(competitionId=${competition.id},sectionPath='public-content')}">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{sectionPath}/{competitionId}(competitionId=${model.general.competition.id},sectionPath='public-content')}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Public content</span>
             </a>

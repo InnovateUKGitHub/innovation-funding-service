@@ -56,7 +56,7 @@ Contribution to project and funding sought should not be negative number
     [Tags]  HappyPath
     [Setup]  log in as a different user                       &{lead_applicant_credentials}
     When the user navigates to Your-finances page             ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    And the user fills in the project costs                   ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    And the user fills in the project costs                   labour costs  n/a
     And the user fills in the organisation information        ${OPEN_COMPETITION_APPLICATION_2_NAME}  ${SMALL_ORGANISATION_SIZE}
     And the user checks your funding section for the project  ${OPEN_COMPETITION_APPLICATION_2_NAME}
     Then the contribution to project and funding sought should be 0 and not a negative number
@@ -101,7 +101,7 @@ Collaborator marks finances as complete
     [Tags]  HappyPath
     log in as a different user                     &{collaborator1_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}
+    the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}  labour costs  n/a
     [Teardown]  logout as user
 
 Alert shows If the academic research participation is too high

@@ -48,17 +48,15 @@
     <meta property="og:image" content="/images/opengraph-image.png" th:content="${@mvcResourceUrlProvider.getForLookupPath('/images/opengraph-image.png')}"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <script type="text/javascript" th:inline="javascript"  th:if="${GoogleAnalyticsTrackingID}">
-    /*<![CDATA[*/
-      (function(i,f,s,t,e,a,m){i['GoogleAnalyticsObject']=e;i[e]=i[e]||function(){
-      (i[e].q=i[e].q||[]).push(arguments)},i[e].l=1*new Date();a=f.createElement(s),
-      m=f.getElementsByTagName(s)[0];a.async=1;a.src=t;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-      ga('create', /*[[${GoogleAnalyticsTrackingID}]]*/, 'auto');
-      ga('send', 'pageview');
-       ga('set', 'anonymizeIp', true);
-    /*]]>*/
+    <!-- Google Tag Manager -->
+    <script type="text/javascript" th:inline="javascript" th:if="${GoogleAnalyticsTrackingID}">
+        (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+        new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer',/*[[${GoogleAnalyticsTrackingID}]]*/);
     </script>
+    <!-- End Google Tag Manager -->
 
 </th:block>
 
@@ -67,7 +65,9 @@
 <th:block th:fragment="body-start">
     <!--/* Changes body class from no-js to js when js is enabled */-->
     <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js-enabled')})(document.documentElement)</script>
-
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe th:src="'https://www.googletagmanager.com/ns.html?id='+${GoogleAnalyticsTrackingID}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
     <th:block th:insert="fragments/elements :: skiplink-container" />
     <th:block th:insert="fragments/elements :: global-cookie-message" />
     <th:block th:insert="fragments/elements :: global-alert-message" />
