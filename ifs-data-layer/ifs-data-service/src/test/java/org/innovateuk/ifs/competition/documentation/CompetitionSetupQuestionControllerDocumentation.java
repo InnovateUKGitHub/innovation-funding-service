@@ -4,11 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.controller.CompetitionSetupQuestionController;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionService;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionSetupQuestionResourceDocs.competitionSetupQuestionResourceBuilder;
@@ -17,8 +15,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -29,18 +25,12 @@ public class CompetitionSetupQuestionControllerDocumentation extends BaseControl
 
     @Mock
     CompetitionSetupQuestionService competitionSetupQuestionService;
-    private RestDocumentationResultHandler document;
+
     private static String baseUrl = "/competition-setup-question";
 
     @Override
     protected CompetitionSetupQuestionController supplyControllerUnderTest() {
         return new CompetitionSetupQuestionController();
-    }
-
-    @Before
-    public void setup() {
-        this.document = document("competition-setup-question/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -51,7 +41,7 @@ public class CompetitionSetupQuestionControllerDocumentation extends BaseControl
 
         mockMvc.perform(get(baseUrl + "/{id}", questionId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competition-setup-question/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the question to be retrieved")
                         ),
@@ -70,7 +60,7 @@ public class CompetitionSetupQuestionControllerDocumentation extends BaseControl
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(resource)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competition-setup-question/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the question to be saved")
                         ),

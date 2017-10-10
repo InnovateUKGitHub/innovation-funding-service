@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -491,6 +492,22 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     assertTrue(rules.userCanCreateNewApplication(competition, user));
                 } else {
                     assertFalse(rules.userCanCreateNewApplication(competition, user));
+                }
+            });
+        });
+    }
+
+    @Test
+    public void testMarkAsInelgibileAllowedBeforeAssesment() {
+        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+            allGlobalRoleUsers.forEach(user -> {
+                Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
+                ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
+                when(competitionRepositoryMock.findOne(application.getCompetition())).thenReturn(competition);
+                if(!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competitionStatus) && user.hasAnyRoles(PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD)){
+                    assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
+                } else {
+                    assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
                 }
             });
         });

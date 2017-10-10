@@ -5,9 +5,7 @@ import org.innovateuk.ifs.assessment.controller.CompetitionParticipantController
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
 
@@ -16,8 +14,6 @@ import static org.innovateuk.ifs.documentation.CompetitionParticipantResourceDoc
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -26,17 +22,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class CompetitionParticipantControllerDocumentation extends BaseControllerMockMVCTest<CompetitionParticipantController> {
 
-    private RestDocumentationResultHandler document;
-
     @Override
     protected CompetitionParticipantController supplyControllerUnderTest() {
         return new CompetitionParticipantController();
-    }
-
-    @Before
-    public void setup() {
-        this.document = document("competitionparticipant/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -51,7 +39,7 @@ public class CompetitionParticipantControllerDocumentation extends BaseControlle
 
         mockMvc.perform(get("/competitionparticipant/user/{userId}/role/{role}", userId, role, status))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competitionparticipant/{method-name}",
                         pathParameters(
                                 parameterWithName("userId").description("User id of the competition participant"),
                                 parameterWithName("role").description("Role of the user")
