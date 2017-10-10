@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.service.AssessorCountOptionsRestService;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.*;
 public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionService> {
 
     @Mock
-    private CompetitionsRestService competitionsRestService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private PublicContentItemRestService publicContentItemRestService;
@@ -63,7 +63,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void getById() throws Exception {
         CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
 
-        when(competitionsRestService.getCompetitionById(1L)).thenReturn(restSuccess(competitionResource));
+        when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(competitionResource));
 
         final CompetitionResource found = service.getById(1L);
         assertEquals(Long.valueOf(1L), found.getId());
@@ -73,7 +73,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void create() throws Exception {
         CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
 
-        when(competitionsRestService.create()).thenReturn(restSuccess(competitionResource));
+        when(competitionRestService.create()).thenReturn(restSuccess(competitionResource));
 
         final CompetitionResource found = service.create();
         assertEquals(Long.valueOf(1L), found.getId());
@@ -84,7 +84,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void createNonIfs() throws Exception {
         CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
 
-        when(competitionsRestService.createNonIfs()).thenReturn(restSuccess(competitionResource));
+        when(competitionRestService.createNonIfs()).thenReturn(restSuccess(competitionResource));
 
         final CompetitionResource found = service.createNonIfs();
         assertEquals(Long.valueOf(1L), found.getId());
@@ -97,7 +97,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         CompetitionResource comp2 = newCompetitionResource().withName("Competition 2").withId(2L).build();
 
         final List<CompetitionResource> expected = new ArrayList<>(asList(comp1, comp2));
-        when(competitionsRestService.getAll()).thenReturn(restSuccess(expected));
+        when(competitionRestService.getAll()).thenReturn(restSuccess(expected));
 
         final List<CompetitionResource> found = service.getAllCompetitions();
         assertEquals(2, found.size());
@@ -112,7 +112,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         CompetitionResource comp2 = newCompetitionResource().withName("Competition 2").withId(2L).build();
 
         final List<CompetitionResource> expected = new ArrayList<>(asList(comp1, comp2));
-        when(competitionsRestService.getAll()).thenReturn(restSuccess(expected));
+        when(competitionRestService.getAll()).thenReturn(restSuccess(expected));
 
         final List<CompetitionResource> found = service.getAllCompetitionsNotInSetup();
         assertEquals(1, found.size());
@@ -127,11 +127,11 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         String sortField = "id";
 
         ApplicationPageResource applicationPage = new ApplicationPageResource();
-        when(competitionsRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField)).thenReturn(restSuccess(applicationPage));
+        when(competitionRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField)).thenReturn(restSuccess(applicationPage));
 
         ApplicationPageResource result = service.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField);
         assertEquals(applicationPage, result);
-        verify(competitionsRestService, only()).findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField);
+        verify(competitionRestService, only()).findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField);
     }
 
     @Test
@@ -142,7 +142,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         final List<CompetitionTypeResource> expected = new ArrayList<>(asList(type1, type2));
 
-        when(competitionsRestService.getCompetitionTypes()).thenReturn(restSuccess(expected));
+        when(competitionRestService.getCompetitionTypes()).thenReturn(restSuccess(expected));
 
         final List<CompetitionTypeResource> found = service.getAllCompetitionTypes();
         assertEquals(2, found.size());
@@ -155,17 +155,17 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
 
-        when(competitionsRestService.updateCompetitionInitialDetails(competitionResource)).thenReturn(restSuccess());
+        when(competitionRestService.updateCompetitionInitialDetails(competitionResource)).thenReturn(restSuccess());
 
         ServiceResult<Void> result = service.updateCompetitionInitialDetails(competitionResource);
         assertTrue(result.isSuccess());
-        verify(competitionsRestService, only()).updateCompetitionInitialDetails(competitionResource);
+        verify(competitionRestService, only()).updateCompetitionInitialDetails(competitionResource);
     }
 
     @Test
     public void generateCompetitionCode() throws Exception {
         final String expected = "201606-01";
-        when(competitionsRestService.generateCompetitionCode(1L, ZonedDateTime.of(2016, 6, 16, 0, 0, 0, 0, ZoneId.systemDefault()))).thenReturn(restSuccess(expected));
+        when(competitionRestService.generateCompetitionCode(1L, ZonedDateTime.of(2016, 6, 16, 0, 0, 0, 0, ZoneId.systemDefault()))).thenReturn(restSuccess(expected));
 
         final String found = service.generateCompetitionCode(1L, ZonedDateTime.of(2016, 6, 16, 0, 0, 0, 0, ZoneId.systemDefault()));
         assertEquals(expected, found);
@@ -176,7 +176,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void initApplicationFormByCompetitionType() throws Exception {
         Long competitionId = Long.MAX_VALUE;
         Long competitionTypeId = Long.MIN_VALUE;
-        when(competitionsRestService.initApplicationForm(competitionId, competitionTypeId)).thenReturn(restSuccess());
+        when(competitionRestService.initApplicationForm(competitionId, competitionTypeId)).thenReturn(restSuccess());
 
         service.initApplicationFormByCompetitionType(competitionId, competitionTypeId);
     }
@@ -184,7 +184,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void markAsSetup() throws Exception {
         Long competitionId = Long.MAX_VALUE;
-        when(competitionsRestService.markAsSetup(competitionId)).thenReturn(restSuccess());
+        when(competitionRestService.markAsSetup(competitionId)).thenReturn(restSuccess());
 
         service.markAsSetup(competitionId);
     }
@@ -192,7 +192,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void returnToSetup() throws Exception {
         Long competitionId = Long.MAX_VALUE;
-        when(competitionsRestService.returnToSetup(competitionId)).thenReturn(restSuccess());
+        when(competitionRestService.returnToSetup(competitionId)).thenReturn(restSuccess());
 
         service.returnToSetup(competitionId);
     }
@@ -214,19 +214,19 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void closeAssessment() throws Exception {
         Long competitionId = Long.MAX_VALUE;
-        when(competitionsRestService.closeAssessment(competitionId)).thenReturn(restSuccess());
+        when(competitionRestService.closeAssessment(competitionId)).thenReturn(restSuccess());
 
         service.closeAssessment(competitionId);
-        verify(competitionsRestService, only()).closeAssessment(competitionId);
+        verify(competitionRestService, only()).closeAssessment(competitionId);
     }
 
     @Test
     public void notifyAssessors() throws Exception {
         Long competitionId = Long.MAX_VALUE;
-        when(competitionsRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
+        when(competitionRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
 
         service.notifyAssessors(competitionId);
-        verify(competitionsRestService, only()).notifyAssessors(competitionId);
+        verify(competitionRestService, only()).notifyAssessors(competitionId);
     }
 
     @Test
@@ -244,41 +244,41 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void releaseFeedback() throws Exception {
         Long competitionId = Long.MAX_VALUE;
-        when(competitionsRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
+        when(competitionRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
 
         service.releaseFeedback(competitionId);
-        verify(competitionsRestService, only()).releaseFeedback(competitionId);
+        verify(competitionRestService, only()).releaseFeedback(competitionId);
     }
 
     @Test
     public void findInnovationLeads() throws Exception {
         Long competitionId = 1L;
         List<UserResource> userResources = Collections.emptyList();
-        when(competitionsRestService.findInnovationLeads(competitionId)).thenReturn(restSuccess(userResources));
+        when(competitionRestService.findInnovationLeads(competitionId)).thenReturn(restSuccess(userResources));
 
         List<UserResource> result = service.findInnovationLeads(competitionId);
         assertEquals(userResources, result);
-        verify(competitionsRestService, only()).findInnovationLeads(competitionId);
+        verify(competitionRestService, only()).findInnovationLeads(competitionId);
     }
 
     @Test
     public void addInnovationLead() throws Exception {
         Long competitionId = 1L;
         Long innovationLeadUserId = 2L;
-        when(competitionsRestService.addInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
+        when(competitionRestService.addInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
 
         service.addInnovationLead(competitionId, innovationLeadUserId);
-        verify(competitionsRestService, only()).addInnovationLead(competitionId, innovationLeadUserId);
+        verify(competitionRestService, only()).addInnovationLead(competitionId, innovationLeadUserId);
     }
 
     @Test
     public void removeInnovationLead() throws Exception {
         Long competitionId = 1L;
         Long innovationLeadUserId = 2L;
-        when(competitionsRestService.removeInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
+        when(competitionRestService.removeInnovationLead(competitionId, innovationLeadUserId)).thenReturn(restSuccess());
 
         service.removeInnovationLead(competitionId, innovationLeadUserId);
-        verify(competitionsRestService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
+        verify(competitionRestService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
     }
 
 }

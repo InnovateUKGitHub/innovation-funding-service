@@ -51,7 +51,7 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
     public ResponseEntity<ByteArrayResource> getFileDetails(Model model,
                                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                                            @PathVariable("contentGroupId") long contentGroupId) {
-        CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
         if (!competition.isNonIfs() && !competition.isInitialDetailsComplete()) {
@@ -64,7 +64,7 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
     }
 
     protected String saveAndFileAction(long competitionId, Model model, F form, ValidationHandler validationHandler, Supplier<ServiceResult<Void>> action) {
-        CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
         if (!competition.isNonIfs() && !competition.isInitialDetailsComplete()) {

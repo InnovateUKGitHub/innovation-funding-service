@@ -206,10 +206,6 @@ include::formInputResponse.adoc[]
 == SIL stubbing endpoints
 include::silstub.adoc[]
 
-[[setupStatus]]
-== Setup status
-include::setupStatus.adoc[]
-
 [[project]]
 == Project
 include::project.adoc[]

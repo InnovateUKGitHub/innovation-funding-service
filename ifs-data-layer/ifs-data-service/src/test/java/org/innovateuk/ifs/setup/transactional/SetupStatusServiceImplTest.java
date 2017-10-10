@@ -14,7 +14,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.setup.builder.SetupStatusBuilder.newSetupStatus;
 import static org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder.newSetupStatusResource;
@@ -114,7 +113,7 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
     }
 
     @Test
-    public void findSetupStatusFound() {
+    public void findSetupStatus() {
         final Long classPk = 32L;
         final String className = Question.class.getName();
         final SetupStatus setupStatus = newSetupStatus()
@@ -131,7 +130,7 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
                 .withClassName(className)
                 .build();
 
-        when(setupStatusRepository.findByClassNameAndClassPk(className, classPk)).thenReturn(Optional.of(setupStatus));
+        when(setupStatusRepository.findByClassNameAndClassPk(className, classPk)).thenReturn(setupStatus);
         when(setupStatusMapper.mapToResource(setupStatus)).thenReturn(setupStatusResource);
 
         ServiceResult<SetupStatusResource> serviceResult = service.findSetupStatus(className, classPk);
@@ -141,14 +140,37 @@ public class SetupStatusServiceImplTest extends BaseServiceUnitTest<SetupStatusS
     }
 
     @Test
-    public void findSetupStatusNotFound() {
+    public void findSetupStatusAndTarget() {
         final Long classPk = 32L;
         final String className = Question.class.getName();
-        when(setupStatusRepository.findByClassNameAndClassPk(className, classPk)).thenReturn(Optional.empty());
+        final Long targetId = 492L;
+        final String targetClassName = Competition.class.getName();
 
-        ServiceResult<SetupStatusResource> serviceResult = service.findSetupStatus(className, classPk);
+        final SetupStatus setupStatus = newSetupStatus()
+                .withId(1L)
+                .withCompleted(Boolean.FALSE)
+                .withClassPk(classPk)
+                .withClassName(className)
+                .withTargetClassName(targetClassName)
+                .withTargetId(targetId)
+                .build();
 
-        assertTrue(serviceResult.isFailure());
+        final SetupStatusResource setupStatusResource = newSetupStatusResource()
+                .withId(1L)
+                .withCompleted(Boolean.FALSE)
+                .withClassPk(classPk)
+                .withClassName(className)
+                .withTargetClassName(targetClassName)
+                .withTargetId(targetId)
+                .build();
+
+        when(setupStatusRepository.findByClassNameAndClassPkAndTargetClassNameAndTargetId(className, classPk, targetClassName, targetId)).thenReturn(setupStatus);
+        when(setupStatusMapper.mapToResource(setupStatus)).thenReturn(setupStatusResource);
+
+        ServiceResult<SetupStatusResource> serviceResult = service.findSetupStatusAndTarget(className, classPk, targetClassName, targetId);
+
+        assertTrue(serviceResult.isSuccess());
+        assertEquals(setupStatusResource, serviceResult.getSuccessObject());
     }
 
     @Test

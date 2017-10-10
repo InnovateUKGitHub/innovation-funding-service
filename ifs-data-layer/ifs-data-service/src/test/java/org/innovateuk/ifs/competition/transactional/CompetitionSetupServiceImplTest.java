@@ -18,11 +18,13 @@ import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
@@ -35,6 +37,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
@@ -44,13 +47,14 @@ import static org.innovateuk.ifs.application.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.competition.builder.AssessorCountOptionBuilder.newAssessorCountOption;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.INITIAL_DETAILS;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
+import static org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder.newSetupStatusResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupServiceImplTest {
@@ -79,12 +83,34 @@ public class CompetitionSetupServiceImplTest {
 	private CompetitionFunderService competitionFunderService;
 	@Mock
 	private CompetitionParticipantRepository competitionParticipantRepository;
+	@Mock
+    private SetupStatusService setupStatusService;
 
     @Before
 	public void setup() {
         when(formInputRepository.findByCompetitionId(anyLong())).thenReturn(new ArrayList());
         when(questionRepository.findByCompetitionId(anyLong())).thenReturn(new ArrayList());
         when(sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(anyLong())).thenReturn(new ArrayList());
+    }
+
+    @Test
+	public void testGetSectionStatuses() {
+        final Long competitionId = 6939L;
+
+        when(setupStatusService.findByTargetClassNameAndTargetId(Competition.class.getName(), competitionId))
+                .thenReturn(ServiceResult.serviceSuccess(newSetupStatusResource().withId(23L)
+                        .withTargetClassName(Competition.class.getName())
+                        .withTargetId(competitionId)
+                        .withClassPk(INITIAL_DETAILS.getId())
+                        .withClassName(INITIAL_DETAILS.getClass().getName())
+                        .withCompleted(Boolean.TRUE)
+                        .build(1)));
+
+        Map<CompetitionSetupSection, Boolean> resultMap = service.getSectionStatuses(competitionId).getSuccessObjectOrThrowException();
+
+        assertTrue(resultMap.containsKey(CompetitionSetupSection.HOME));
+        assertEquals(Boolean.TRUE, resultMap.get(INITIAL_DETAILS));
+        assertEquals(Boolean.FALSE, resultMap.get(APPLICATION_FORM));
     }
 
     @Test

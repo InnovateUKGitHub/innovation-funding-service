@@ -101,13 +101,6 @@ public class Competition implements ProcessActivity {
             inverseJoinColumns = @JoinColumn(name = "organisation_type_id", referencedColumnName = "id"))
     private List<OrganisationType> leadApplicantTypes;
 
-    @ElementCollection
-    @JoinTable(name = "competition_setup_status", joinColumns = @JoinColumn(name = "competition_id"))
-    @MapKeyEnumerated(EnumType.STRING)
-    @MapKeyColumn(name = "section")
-    @Column(name = "status")
-    private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
-
     private boolean fullApplicationFinance = true;
     private Boolean setupComplete;
 
@@ -522,10 +515,6 @@ public class Competition implements ProcessActivity {
 
     public void setLeadApplicantTypes(List<OrganisationType> leadApplicantTypes) {
         this.leadApplicantTypes = leadApplicantTypes;
-    }
-
-    public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
-        return sectionSetupStatus;
     }
 
     public String getActivityCode() {

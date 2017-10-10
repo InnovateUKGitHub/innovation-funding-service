@@ -9,6 +9,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
@@ -20,6 +22,7 @@ import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSe
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupViewModel;
+import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -38,6 +41,12 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Autowired
 	private CompetitionService competitionService;
+
+	@Autowired
+	private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private CompetitionSetupRestService competitionSetupRestService;
 
 	@Autowired
     private CompetitionSetupPopulator competitionSetupPopulator;
@@ -192,7 +201,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 		return saver.saveSection(competitionResource, competitionSetupForm).andOnSuccess(() -> {
 			if (competitionSetupForm.isMarkAsCompleteAction()) {
-				return competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), section);
+				return competitionSetupRestService.markSectionComplete(competitionResource.getId(), section).toServiceResult();
 			}
 			return serviceSuccess();
 		});
@@ -237,7 +246,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 			return false;
 		}
 		Optional<CompetitionSetupSection> notDoneSection = getRequiredSectionsForReadyToOpen().stream().filter(section ->
-				(!competitionResource.getSectionSetupStatus().containsKey(section) ||
+				(competitionSetupRestService.!competitionResource.getSectionSetupStatus().contains(section.getId()) ||
 						!competitionResource.getSectionSetupStatus().get(section))).findFirst();
 
 		return !notDoneSection.isPresent();
@@ -251,7 +260,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		}
 
 		if (isCompetitionReadyToOpen(competitionResource)) {
-			return competitionService.markAsSetup(competitionId);
+			return competitionSetupRestService.markAsSetup(competitionId).toServiceResult();
 		} else {
 			LOG.error("Requesting to set a competition (id:" + competitionId + ") as Read to Open, But the competition is not ready to open yet. " +
 					"Please check all the madatory sections are done");
@@ -261,7 +270,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Override
 	public ServiceResult<Void> setCompetitionAsCompetitionSetup(Long competitionId) {
-		return competitionService.returnToSetup(competitionId);
+		return competitionSetupRestService.returnToSetup(competitionId).toServiceResult();
 	}
 
 	private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {

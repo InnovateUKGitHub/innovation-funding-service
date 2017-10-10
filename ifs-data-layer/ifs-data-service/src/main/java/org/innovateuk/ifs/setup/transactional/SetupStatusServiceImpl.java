@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
-
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 
 @Service
 public class SetupStatusServiceImpl implements SetupStatusService {
@@ -45,12 +42,12 @@ public class SetupStatusServiceImpl implements SetupStatusService {
 
     @Override
     public ServiceResult<SetupStatusResource> findSetupStatus(String className, Long classPk) {
-        Optional<SetupStatus> setupStatusOpt = setupStatusRepository.findByClassNameAndClassPk(className, classPk);
-        if(setupStatusOpt.isPresent()) {
-            return ServiceResult.serviceSuccess(setupStatusMapper.mapToResource(setupStatusOpt.get()));
-        } else {
-            return ServiceResult.serviceFailure(notFoundError(SetupStatus.class, classPk, className));
-        }
+        return ServiceResult.serviceSuccess(setupStatusMapper.mapToResource(setupStatusRepository.findByClassNameAndClassPk(className, classPk)));
+    }
+
+    @Override
+    public ServiceResult<SetupStatusResource> findSetupStatusAndTarget(String className, Long classPk, String targetClassName, Long targetId) {
+        return ServiceResult.serviceSuccess(setupStatusMapper.mapToResource(setupStatusRepository.findByClassNameAndClassPkAndTargetClassNameAndTargetId(className, classPk, targetClassName, targetId)));
     }
 
     @Override

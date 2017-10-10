@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.competition.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
@@ -12,11 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionTypeResourceListType;
 
 /**
  * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link CompetitionResource}.
@@ -24,10 +20,8 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.com
  * through a REST call.
  */
 @Service
-public class CompetitionsRestServiceImpl extends BaseRestService implements CompetitionsRestService {
+public class CompetitionRestServiceImpl extends BaseRestService implements CompetitionRestService {
 
-    @SuppressWarnings("unused")
-    private static final Log LOG = LogFactory.getLog(CompetitionsRestServiceImpl.class);
     private String competitionsRestURL = "/competition";
     private String competitionsTypesRestURL = "/competition-type";
 
@@ -114,73 +108,7 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
-    public RestResult<CompetitionResource> create() {
-        return postWithRestResult(competitionsRestURL + "", CompetitionResource.class);
-    }
-
-
-    @Override
-    public RestResult<Void> update(CompetitionResource competition) {
-        return putWithRestResult(competitionsRestURL + "/" + competition.getId(), competition, Void.class);
-    }
-
-    @Override
-    public RestResult<Void> updateCompetitionInitialDetails(CompetitionResource competition) {
-        return putWithRestResult(competitionsRestURL + "/" + competition.getId() + "/update-competition-initial-details", competition, Void.class);
-    }
-
-    @Override
-    public RestResult<Void> markSectionComplete(long competitionId, CompetitionSetupSection section) {
-        return getWithRestResult(String.format("%s/sectionStatus/complete/%s/%s", competitionsRestURL, competitionId, section), Void.class);
-    }
-
-    @Override
-    public RestResult<Void> markSectionInComplete(long competitionId, CompetitionSetupSection section) {
-        return getWithRestResult(String.format("%s/sectionStatus/incomplete/%s/%s", competitionsRestURL, competitionId, section), Void.class);
-    }
-
-    @Override
-    public RestResult<String> generateCompetitionCode(long competitionId, ZonedDateTime openingDate) {
-        return postWithRestResult(String.format("%s/generateCompetitionCode/%s", competitionsRestURL, competitionId), openingDate, String.class);
-    }
-
-    @Override
-    public RestResult<Void> initApplicationForm(long competitionId, long competitionTypeId) {
-        return postWithRestResult(String.format("%s/%s/initialise-form/%s", competitionsRestURL, competitionId, competitionTypeId), Void.class);
-    }
-
-    @Override
-    public RestResult<Void> markAsSetup(long competitionId) {
-        return postWithRestResult(String.format("%s/%s/mark-as-setup", competitionsRestURL, competitionId), Void.class);
-    }
-
-    @Override
-    public RestResult<Void> returnToSetup(long competitionId) {
-        return postWithRestResult(String.format("%s/%s/return-to-setup", competitionsRestURL, competitionId), Void.class);
-    }
-
-    @Override
     public RestResult<Void> closeAssessment(long competitionId) {
         return putWithRestResult(String.format("%s/%s/close-assessment", competitionsRestURL, competitionId), Void.class);
-    }
-
-    @Override
-    public RestResult<Void> notifyAssessors(long competitionId) {
-        return putWithRestResult(String.format("%s/%s/notify-assessors", competitionsRestURL, competitionId), Void.class);
-    }
-
-    @Override
-    public RestResult<Void> releaseFeedback(long competitionId) {
-        return putWithRestResult(String.format("%s/%s/release-feedback", competitionsRestURL, competitionId), Void.class);
-    }
-
-    @Override
-    public RestResult<CompetitionResource> createNonIfs() {
-        return postWithRestResult(competitionsRestURL + "/non-ifs", CompetitionResource.class);
-    }
-
-    @Override
-    public RestResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
-        return getWithRestResult(competitionsRestURL +  "/feedback-released", competitionSearchResultItemListType());
     }
 }

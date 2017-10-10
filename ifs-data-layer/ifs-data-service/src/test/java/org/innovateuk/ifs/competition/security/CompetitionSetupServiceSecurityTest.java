@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -147,6 +148,11 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
         @Override
         public ServiceResult<CompetitionResource> createNonIfs() {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Map<CompetitionSetupSection, Boolean>> getSectionStatuses(Long competitionId) {
             return null;
         }
 

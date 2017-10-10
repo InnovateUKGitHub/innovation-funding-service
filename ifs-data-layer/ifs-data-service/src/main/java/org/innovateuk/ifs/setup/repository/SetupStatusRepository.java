@@ -4,7 +4,6 @@ import org.innovateuk.ifs.setup.domain.SetupStatus;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface SetupStatusRepository extends PagingAndSortingRepository<SetupStatus, Long> {
     List<SetupStatus> findByTargetClassNameAndTargetId(String targetClassName, Long targetId);
@@ -13,5 +12,7 @@ public interface SetupStatusRepository extends PagingAndSortingRepository<SetupS
 
     List<SetupStatus> findByTargetClassNameAndTargetIdAndParentId(String targetClassName, Long targetId, Long parentId);
 
-    Optional<SetupStatus> findByClassNameAndClassPk(String className, Long classPk);
+    SetupStatus findByClassNameAndClassPk(String className, Long classPk);
+
+    SetupStatus findByClassNameAndClassPkAndTargetClassNameAndTargetId(String className, Long classPk, String targetClassName, Long targetId);
 }

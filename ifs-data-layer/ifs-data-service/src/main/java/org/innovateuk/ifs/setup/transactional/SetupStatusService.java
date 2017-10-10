@@ -25,6 +25,10 @@ public interface SetupStatusService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<SetupStatusResource> findSetupStatus(String className, Long classPk);
 
+    @SecuredBySpring(value = "READ", description = "Only comp admins or projectfinances users can read the status related to setup")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<SetupStatusResource> findSetupStatusAndTarget(String className, Long classPk, String targetClassName, Long targetId);
+
     @SecuredBySpring(value = "UPDATE", description = "Only comp admins or projectfinances users can update the status related to setup")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<SetupStatusResource> saveSetupStatus(SetupStatusResource setupStatusResource);

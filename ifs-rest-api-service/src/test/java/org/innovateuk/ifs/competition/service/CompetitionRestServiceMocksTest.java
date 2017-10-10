@@ -10,8 +10,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -25,13 +23,13 @@ import static org.junit.Assert.*;
 /**
  *
  */
-public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionsRestServiceImpl> {
+public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionRestServiceImpl> {
 
     private static final String competitionsRestURL = "/competition";
 
     @Override
-    protected CompetitionsRestServiceImpl registerRestServiceUnderTest() {
-        return new CompetitionsRestServiceImpl();
+    protected CompetitionRestServiceImpl registerRestServiceUnderTest() {
+        return new CompetitionRestServiceImpl();
     }
 
     @Test
@@ -109,64 +107,6 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         assertNotNull(response);
         assertEquals(2, response.size());
         assertEquals(returnedResponse, response);
-    }
-
-    @Test
-    public void create() {
-        CompetitionResource competition = new CompetitionResource();
-
-        setupPostWithRestResultExpectations(competitionsRestURL + "", CompetitionResource.class, null, competition, HttpStatus.CREATED);
-
-        CompetitionResource response = service.create().getSuccessObject();
-        assertNotNull(response);
-        Assert.assertEquals(competition, response);
-    }
-
-    @Test
-    public void createNonIfs() {
-        CompetitionResource competition = new CompetitionResource();
-
-        setupPostWithRestResultExpectations(competitionsRestURL + "/non-ifs", CompetitionResource.class, null, competition, HttpStatus.CREATED);
-
-        CompetitionResource response = service.createNonIfs().getSuccessObject();
-        assertNotNull(response);
-        Assert.assertEquals(competition, response);
-    }
-
-
-    @Test
-    public void update() {
-        CompetitionResource competition = new CompetitionResource();
-        competition.setId(1L);
-
-        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competition.getId(), Void.class, competition, null, HttpStatus.OK);
-
-        service.update(competition).getSuccessObject();
-    }
-
-    @Test
-    public void updateCompetitionInitialDetails() {
-
-        CompetitionResource competition = new CompetitionResource();
-        competition.setId(1L);
-
-        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competition.getId() + "/update-competition-initial-details", Void.class, competition, null, HttpStatus.OK);
-
-        RestResult<Void> response = service.updateCompetitionInitialDetails(competition);
-        assertTrue(response.isSuccess());
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
-
-    @Test
-    public void generateCompetitionCode() {
-        ZonedDateTime openingDate = ZonedDateTime.of(2016, 2, 1, 0, 0, 0, 0, ZoneId.systemDefault());
-        Long competitionId = Long.MAX_VALUE;
-        String competitionCode = "1602-1";
-        setupPostWithRestResultExpectations(String.format("%s/generateCompetitionCode/%s", competitionsRestURL, competitionId), String.class, openingDate, competitionCode, HttpStatus.OK);
-
-        String response = service.generateCompetitionCode(competitionId, openingDate).getSuccessObject();
-        assertNotNull(response);
-        assertEquals(competitionCode, response);
     }
 
     @Test
@@ -262,60 +202,11 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void markAsSetup() {
-        long competitionId = 1L;
-        setupPostWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/mark-as-setup", HttpStatus.OK);
-
-        RestResult<Void> result = service.markAsSetup(competitionId);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void returnToSetup() {
-        long competitionId = 1L;
-        setupPostWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/return-to-setup", HttpStatus.OK);
-
-        RestResult<Void> result = service.returnToSetup(competitionId);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
     public void closeAssessment() {
         long competitionId = 1L;
         setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/close-assessment",HttpStatus.OK);
 
         RestResult<Void> result = service.closeAssessment(competitionId);
         assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void notifyAssessors() {
-        long competitionId = 1L;
-        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/notify-assessors", HttpStatus.OK);
-
-        RestResult<Void> result = service.notifyAssessors(competitionId);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void releaseFeedback() {
-        long competitionId = 1L;
-        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/release-feedback", HttpStatus.OK);
-
-        RestResult<Void> result = service.releaseFeedback(competitionId);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void findFeedbackReleasedCompetitions() {
-
-        List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null, null, null));
-
-        setupGetWithRestResultExpectations(competitionsRestURL + "/feedback-released", competitionSearchResultItemListType(), returnedResponse);
-
-        List<CompetitionSearchResultItem> responses = service.findFeedbackReleasedCompetitions().getSuccessObject();
-        assertNotNull(responses);
-        assertEquals(returnedResponse, responses);
     }
 }

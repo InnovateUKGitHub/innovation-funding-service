@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 
 public interface CompetitionSetupService {
 
@@ -59,4 +60,8 @@ public interface CompetitionSetupService {
     @SecuredBySpring(value = "CREATE", description = "Only those with either comp admin or project finance roles can create a non IFS competition")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<CompetitionResource> createNonIfs();
+
+    @SecuredBySpring(value = "READ", description = "Only comp admins or projectfinances users can read the status related to competition setup")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    ServiceResult<Map<CompetitionSetupSection,Boolean>> getSectionStatuses(Long competitionId);
 }
