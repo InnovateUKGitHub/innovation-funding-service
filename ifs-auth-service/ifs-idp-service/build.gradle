@@ -37,36 +37,6 @@ task getNewRelicAgent {
     }
 }
 
-task prepareDockerFileBase {
-    def inputDir = project.file("$project.buildDir/docker-base")
-
-    doFirst {
-        copy {
-            from 'src/main/docker/'
-            into inputDir
-            include 'Dockerfile-base-template'
-            rename 'Dockerfile-base-template', 'Dockerfile'
-        }
-
-        copy {
-            from fileTree('src/main/docker/idp')
-            into "${inputDir}/idp"
-        }
-
-        copy {
-            from file('src/main/docker/idp/default-jre-headless-dummy_1.0_all.deb')
-            into "${inputDir}/idp"
-        }
-    }
-}
-
-task buildDockerBaseImage(type: DockerBuildImage) {
-    dependsOn prepareDockerFileBase
-
-    tag = 'ifshibdev/idp-base:latest'
-    inputDir = project.file("$project.buildDir/docker-base")
-}
-
 task prepareDockerFile {
     dependsOn ':ifs-auth-service:prepareSecrets'
     dependsOn getNewRelicAgent

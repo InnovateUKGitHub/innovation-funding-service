@@ -171,7 +171,7 @@ Review the application
     [Teardown]    The user goes back to the previous page
 
 View the available assessors
-    [Documentation]    INFUND-7233\\
+    [Documentation]    INFUND-7233
     [Tags]
     Then the user should see the element  jQuery=.column-two-thirds:contains("Assessors")
     And the user clicks the button/link   jQuery=.pagination-label:contains("Next")
