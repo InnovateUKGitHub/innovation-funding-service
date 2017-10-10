@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.repository.SectionRepository;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,23 +15,18 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
-public class SectionTemplateService implements BaseTemplateService<List<Section>, Competition> {
+public class SectionTemplatePersistorService implements BaseChainedTemplatePersistorService<List<Section>, Competition> {
     @Autowired
     private SectionRepository sectionRepository;
 
     @Autowired
-    private QuestionTemplateService questionTemplateService;
+    private QuestionTemplatePersistor questionTemplatePersistorService;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @Transactional
-    public ServiceResult<List<Section>> createByTemplate(List<Section> section) {
-        return null;
-    }
-
-    @Transactional
-    public List<Section> createByRequisite(Competition competition) {
+    public List<Section> persistByPrecedingEntity(Competition competition) {
         if (competition.getSections() == null) {
             return null;
         }
@@ -60,7 +54,7 @@ public class SectionTemplateService implements BaseTemplateService<List<Section>
                 competition.getSections().add(section);
             }
 
-            section.setQuestions(questionTemplateService.createByRequisite(section));
+            section.setQuestions(questionTemplatePersistorService.persistByPrecedingEntity(section));
 
             createChildSectionsRecursively(competition, section);
 
@@ -72,9 +66,10 @@ public class SectionTemplateService implements BaseTemplateService<List<Section>
         };
     }
 
-    public void cleanForCompetition(Competition competition) {
-        List<Section> sections = sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(competition.getId());
-        competition.setSections(new ArrayList());
+    public void cleanForPrecedingEntity(Competition competition) {
+        List<Section> sections = competition.getSections();
+        sections.stream().forEach(section -> questionTemplatePersistorService.cleanForPrecedingEntity(section));
+
         sectionRepository.delete(sections);
     }
 }

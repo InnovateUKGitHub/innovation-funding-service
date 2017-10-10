@@ -2,8 +2,6 @@ package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.application.domain.GuidanceRow;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,12 +11,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 import java.util.function.Function;
-
-import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import java.util.stream.Collectors;
 
 @Service
-public class GuidanceRowTemplateService implements BaseTemplateService<List<GuidanceRow>, FormInput> {
+public class GuidanceRowTemplatePersistorService implements BaseChainedTemplatePersistorService<List<GuidanceRow>, FormInput> {
     @Autowired
     private GuidanceRowRepository guidanceRowRepository;
 
@@ -26,13 +22,8 @@ public class GuidanceRowTemplateService implements BaseTemplateService<List<Guid
     private EntityManager entityManager;
 
     @Transactional
-    public List<GuidanceRow> createByRequisite(FormInput formInput) {
-        return simpleMap(formInput.getGuidanceRows(), createFormInputGuidanceRow(formInput));
-    }
-
-    @Override
-    public ServiceResult<List<GuidanceRow>> createByTemplate(List<GuidanceRow> guidanceRows) {
-        return ServiceResult.serviceFailure(forbiddenError());
+    public List<GuidanceRow> persistByPrecedingEntity(FormInput formInput) {
+        return formInput.getGuidanceRows().stream().map(createFormInputGuidanceRow(formInput)).collect(Collectors.toList());
     }
 
     private Function<GuidanceRow, GuidanceRow> createFormInputGuidanceRow(FormInput formInput) {
@@ -45,8 +36,8 @@ public class GuidanceRowTemplateService implements BaseTemplateService<List<Guid
         };
     }
 
-    public void cleanForCompetition(Competition competition) {
-        List<GuidanceRow> scoreRows = guidanceRowRepository.findByFormInputQuestionCompetitionId(competition.getId());
+    public void cleanForPrecedingEntity(FormInput formInput) {
+        List<GuidanceRow> scoreRows = formInput.getGuidanceRows();
         guidanceRowRepository.delete(scoreRows);
     }
 }

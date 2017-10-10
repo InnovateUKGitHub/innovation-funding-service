@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.commons.error.CommonErrors;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
@@ -22,29 +20,24 @@ import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATIO
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
-public class FormInputTemplateService implements BaseTemplateService<List<FormInput>, Question> {
+public class FormInputTemplatePersistorService implements BaseChainedTemplatePersistorService<List<FormInput>, Question> {
     @Autowired
     private FormInputRepository formInputRepository;
 
     @Autowired
-    private GuidanceRowTemplateService guidanceRowTemplateService;
+    private GuidanceRowTemplatePersistorService guidanceRowTemplateService;
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<FormInput> createByRequisite(Question question) {
+    public List<FormInput> persistByPrecedingEntity(Question question) {
         return simpleMap(question.getFormInputs(), createFunction(question));
     }
 
-    @Override
-    public ServiceResult<List<FormInput>> createByTemplate(List<FormInput> formInput) {
-        return ServiceResult.serviceFailure(CommonErrors.forbiddenError());
-    }
+    public void cleanForPrecedingEntity(Question question) {
+        List<FormInput> formInputs = question.getFormInputs();
 
-    public void cleanForCompetition(Competition competition) {
-        guidanceRowTemplateService.cleanForCompetition(competition);
-
-        List<FormInput> formInputs = formInputRepository.findByCompetitionId(competition.getId());
+        formInputs.stream().forEach(formInput -> guidanceRowTemplateService.cleanForPrecedingEntity(formInput));
         formInputRepository.delete(formInputs);
     }
 
@@ -60,7 +53,7 @@ public class FormInputTemplateService implements BaseTemplateService<List<FormIn
             formInput.setFormValidators(copy);
             formInput.setActive(isSectorCompetitionWithScopeQuestion(question.getCompetition(), question, formInput) ? false : formInput.getActive());
             formInputRepository.save(formInput);
-            formInput.setGuidanceRows(guidanceRowTemplateService.createByRequisite(formInput));
+            formInput.setGuidanceRows(guidanceRowTemplateService.persistByPrecedingEntity(formInput));
             return formInput;
         };
     }
