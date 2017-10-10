@@ -114,7 +114,7 @@ Initial details - User enters valid values and marks as done
     And the user should see the text in the page     Yes
     And the user should see the element              jQuery=.button:contains("Edit")
 
-Initial details - Inovation sector of Open should be visible
+Initial details - Innovation sector of Open should be visible
     [Documentation]    INFUND-9152
     [Tags]    HappyPath
     Given the user clicks the button/link                               jQuery=.button:contains("Edit")

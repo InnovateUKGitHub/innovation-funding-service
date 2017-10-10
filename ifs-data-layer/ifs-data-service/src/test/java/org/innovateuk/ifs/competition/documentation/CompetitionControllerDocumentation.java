@@ -13,11 +13,9 @@ import org.innovateuk.ifs.documentation.CompetitionCountResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionSearchResultDocs;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +31,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -47,17 +43,10 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     CompetitionService competitionService;
     @Mock
     CompetitionSetupService competitionSetupService;
-    private RestDocumentationResultHandler document;
 
     @Override
     protected CompetitionController supplyControllerUnderTest() {
         return new CompetitionController();
-    }
-
-    @Before
-    public void setup() {
-        this.document = document("competition/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
