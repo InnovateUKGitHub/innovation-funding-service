@@ -2,8 +2,10 @@ from logging import warn
 from robot.libraries.BuiltIn import BuiltIn
 s2l = BuiltIn().get_library_instance('Selenium2Library')
 
-currently_waiting_for_keyword_to_succeed = False
-
+# Use of an auto incremental integer to track the waiting per request in a dictionary
+# When currently_waiting_for_keyword_to_succeed[int] is True, wait for this request.
+currently_waiting_for_keyword_to_succeed = {}
+auto_increment_id = 0
 
 
 # a decorator that sets and unsets a special flag when performing "Wait until" keywords and enforces that the
@@ -11,17 +13,20 @@ currently_waiting_for_keyword_to_succeed = False
 def setting_wait_until_flag(func):
 
   def decorator(*args):
-
+    global auto_increment_id
     global currently_waiting_for_keyword_to_succeed
+    auto_increment_id += 1
+    local_auto_increment = auto_increment_id
 
-    currently_waiting_for_keyword_to_succeed = True
+    currently_waiting_for_keyword_to_succeed[local_auto_increment] = True
     try:
       result = func(*args)
     except:
-      capture_page_screenshot_on_failure()
+      capture_page_screenshot_on_failure(local_auto_increment)
       raise
     finally:
-      currently_waiting_for_keyword_to_succeed = False
+      currently_waiting_for_keyword_to_succeed[local_auto_increment] = False
+      del currently_waiting_for_keyword_to_succeed[local_auto_increment]
     return result
 
   return decorator
@@ -82,8 +87,8 @@ def run_keyword_and_return_status_without_screenshots(keyword, *args):
   return BuiltIn().run_keyword_and_return_status(keyword, *args)
 
 
-def capture_page_screenshot_on_failure():
-  if not currently_waiting_for_keyword_to_succeed:
+def capture_page_screenshot_on_failure(flag = 0):
+  if not currently_waiting_for_keyword_to_succeed[flag]:
     capture_large_screenshot()
 
 
