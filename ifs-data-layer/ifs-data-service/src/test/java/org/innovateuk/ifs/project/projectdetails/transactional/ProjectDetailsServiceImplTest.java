@@ -361,6 +361,26 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
+    public void testUpdateFinanceContactWhenGOLAlreadyGenerated() {
+
+        FileEntry golFileEntry = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+
+        Project project = newProject()
+                .withId(123L)
+                .withGrantOfferLetter(golFileEntry)
+                .build();
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+
+        ServiceResult<Void> updateResult = service.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 5L), 7L);
+
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED));
+
+        verify(processRoleRepositoryMock, never()).save(isA(ProcessRole.class));
+    }
+
+    @Test
     public void testUpdateFinanceContactButUserIsNotExistingPartner() {
 
         Project project = newProject().withId(123L).build();
@@ -430,31 +450,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         assertEquals(1, organisationFinanceContacts.size());
         assertEquals(anotherUser, organisationFinanceContacts.get(0).getUser());
-    }
-
-    @Test
-    public void testUpdateFinanceContactNotAllowedWhenProjectLive() {
-
-        User anotherUser = newUser().build();
-        Project existingProject = newProject().build();
-        when(projectRepositoryMock.findOne(existingProject.getId())).thenReturn(existingProject);
-        when(projectWorkflowHandlerMock.getState(existingProject)).thenReturn(ProjectState.LIVE);
-
-        Organisation organisation = newOrganisation().build();
-        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
-
-        newProjectUser().
-                withOrganisation(organisation).
-                withUser(user, anotherUser).
-                withProject(existingProject).
-                withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).build(2);
-
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
-
-        ServiceResult<Void> updateResult = service.updateFinanceContact(new ProjectOrganisationCompositeId(existingProject.getId(), organisation.getId()), anotherUser.getId());
-
-        assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
     }
 
     @Test
@@ -595,6 +590,34 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testInviteFinanceContactWhenGOLAlreadyGenerated() {
+
+        Long projectId = 1L;
+
+        InviteProjectResource inviteResource = newInviteProjectResource()
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation(17L)
+                .withInviteOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
+        FileEntry golFileEntry = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withId(projectId)
+                .withGrantOfferLetter(golFileEntry)
+                .build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        ServiceResult<Void> result = service.inviteFinanceContact(projectId, inviteResource);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED));
     }
 
     @Test
