@@ -7,9 +7,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.controller.StatusController;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,8 +25,6 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -37,13 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class StatusControllerDocumentation extends BaseControllerMockMVCTest<StatusController> {
-
-    private RestDocumentationResultHandler document;
-
-    @Before
-    public void setup(){
-        this.document = document("project/{method-name}", preprocessResponse(prettyPrint()));
-    }
 
     @Test
     public void getCompetitionStatus() throws Exception {
@@ -69,7 +58,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
         when(statusServiceMock.getCompetitionStatus(competitionId)).thenReturn(serviceSuccess(competitionProjectsStatusResource));
 
         mockMvc.perform(get("/project/competition/{id}", competitionId))
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the competition for which project status details are being requested")
                         ),
@@ -84,7 +73,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
         mockMvc.perform(get("/project/{projectId}/team-status", 123L)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectTeamStatusResource))).
-                andDo(this.document.snippets(
+                andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
                         ),
@@ -99,7 +88,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
                 param("filterByUserId", "456")).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectTeamStatusResource))).
-                andDo(this.document.snippets(
+                andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
                         ),
@@ -119,7 +108,7 @@ public class StatusControllerDocumentation extends BaseControllerMockMVCTest<Sta
         when(statusServiceMock.getProjectStatusByProjectId(projectId)).thenReturn(serviceSuccess(projectStatusResource));
 
         mockMvc.perform(get("/project/{id}/status", projectId))
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the project that is being requested")
                         ),

@@ -5,10 +5,8 @@ import org.innovateuk.ifs.project.queries.controller.ProjectFinanceQueriesContro
 import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
@@ -24,8 +22,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -33,15 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectFinanceQueriesControllerDocumentation extends BaseControllerMockMVCTest<ProjectFinanceQueriesController> {
-
-    private RestDocumentationResultHandler document;
-
-    @Before
-    public void setup() {
-        this.document = document("project/finance/queries/{method-name}",
-                preprocessResponse(prettyPrint()));
-    }
-
 
     @Test
     public void findOne() throws Exception {
@@ -53,7 +40,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
         mockMvc.perform(get("/project/finance/queries/{queryId}", queryId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(query)))
-                .andDo(this.document.snippets(
+                .andDo(document("project/finance/queries/{method-name}",
                         pathParameters(parameterWithName("queryId").description("Id of the Query to be fetched")),
                         responseFields(queryResourceFields())));
     }
@@ -68,7 +55,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
         mockMvc.perform(get("/project/finance/queries/all/{projectFinanceId}", contextId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(asList(query))))
-                .andDo(this.document.snippets(
+                .andDo(document("project/finance/queries/{method-name}",
                         responseFields(fieldWithPath("[]").description("List of Queries the authenticated user has access to")),
                         pathParameters(parameterWithName("projectFinanceId").description("The id of the project finance under which the expected queries live."))));
     }
@@ -84,7 +71,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
                 .contentType(APPLICATION_JSON)
                 .content(toJson(post)))
                 .andExpect(status().isCreated())
-                .andDo(this.document.snippets(
+                .andDo(document("project/finance/queries/{method-name}",
                         pathParameters(parameterWithName("queryId").description("Id of the Query to which the Post is to be added to."))));
     }
 
@@ -100,7 +87,8 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
                 .content(objectMapper.writeValueAsString(query)))
                 .andExpect(content().string(objectMapper.writeValueAsString(55L)))
                 .andExpect(status().isCreated())
-                .andDo(this.document.snippets(requestFields(queryResourceFields())));
+                .andDo(document("project/finance/queries/{method-name}",
+                        requestFields(queryResourceFields())));
     }
 
     @Override
