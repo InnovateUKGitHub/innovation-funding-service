@@ -7,5 +7,6 @@ public interface CompetitionSetupQuestionRestService {
 
     RestResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId);
     RestResult<Void> save(CompetitionSetupQuestionResource competitionSetupQuestionResource);
-
+    RestResult<CompetitionSetupQuestionResource> addDefaultToCompetition(Long competitionId);
+    RestResult<Void> deleteById(Long questionId);
 }

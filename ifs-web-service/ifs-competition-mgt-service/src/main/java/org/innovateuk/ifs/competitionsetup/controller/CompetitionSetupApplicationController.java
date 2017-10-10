@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionSetupQuestionRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
 import org.innovateuk.ifs.competitionsetup.form.LandingPageForm;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -39,6 +41,8 @@ import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.AP
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
+import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 /**
  * Controller to manage the Application Questions and it's sub-sections in the
@@ -67,8 +71,48 @@ public class CompetitionSetupApplicationController {
     private CompetitionSetupPopulator competitionSetupPopulator;
 
     @Autowired
+    private CompetitionSetupQuestionRestService competitionSetupQuestionRestService;
+
+    @Autowired
     @Qualifier("mvcValidator")
     private Validator validator;
+
+    @PostMapping(value = "/landing-page", params = "createQuestion")
+    public String createQuestion(Model model,
+                                @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                 ValidationHandler validationHandler) {
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        ServiceResult<CompetitionSetupQuestionResource> restResult = competitionSetupQuestionService.createDefaultQuestion(competitionId);
+
+
+        Function<CompetitionSetupQuestionResource, String> successViewFunction =
+                (questionId) -> String.format("redirect:/question/{questionId}", questionId.getQuestionId());
+        Supplier<String> successView = () -> successViewFunction.apply(restResult.getSuccessObject());
+        Supplier<String> failureView = () -> "/landing-page";
+
+        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, APPLICATION_FORM));
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, new LandingPageForm());
+
+        return validationHandler.addAnyErrors(restResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                failNowOrSucceedWith(failureView, successView);
+    }
+
+    @PostMapping(value = "/landing-page", params = "deleteQuestion")
+    public String deleteQuestion(Model model,
+                                 @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                @RequestAttribute("deleteQuestion") long questionId,
+                                 ValidationHandler validationHandler) {
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+        ServiceResult<Void> restResult = competitionSetupQuestionService.deleteQuestion(questionId);
+
+        Supplier<String> view = () -> "/landing-page";
+
+        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, APPLICATION_FORM));
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, new LandingPageForm());
+
+        return validationHandler.addAnyErrors(restResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                failNowOrSucceedWith(view, view);
+    }
 
     @GetMapping("/landing-page")
     public String applicationProcessLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {

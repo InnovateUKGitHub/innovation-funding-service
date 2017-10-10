@@ -51,7 +51,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupApplicationControllerTest extends BaseControllerMockMVCTest<CompetitionSetupApplicationController> {
-
     private static final Long COMPETITION_ID = 12L;
     private static final Long QUESTION_ID = 1L;
     private static final String URL_PREFIX = "/competition/setup/"+COMPETITION_ID+"/section/application";
@@ -696,5 +695,25 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         verify(competitionSetupQuestionService, never()).getQuestion(QUESTION_ID);
         verify(competitionService, never()).update(UNEDITABLE_COMPETITION);
+    }
+
+    @Test
+    public void createQuestion() throws Exception {
+        CompetitionResource competition = newCompetitionResource().build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+
+        mockMvc.perform(post(URL_PREFIX + "/landing-page")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("deleteQuestion", "1"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("redirect:"));
+
+        verify(competitionService).setSetupSectionMarkedAsIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
+    }
+
+    @Test
+    public void deleteQuestion() throws Exception {
     }
 }

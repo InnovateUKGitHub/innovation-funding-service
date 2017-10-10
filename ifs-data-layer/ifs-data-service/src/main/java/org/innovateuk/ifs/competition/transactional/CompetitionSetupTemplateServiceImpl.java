@@ -29,13 +29,15 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private DefaultApplicationQuestionFactory defaultApplicationQuestionFactory;
 
     @Autowired
-    private CompetitionTemplatePersistorService competitionSetupPersistor;
+    private CompetitionTemplatePersistorService competitionTemplatePersistor;
 
     @Autowired
     private QuestionTemplatePersistorService questionTemplatePersistorService;
 
     @Override
     public ServiceResult<Competition> createCompetitionByCompetitionTemplate(Competition competition, Competition template) {
+        //Perform checks
+
         if (competition == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
@@ -46,11 +48,15 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         template.setId(competition.getId());
 
-        return serviceSuccess(competitionSetupPersistor.persistByEntity(competition));
+        competitionTemplatePersistor.cleanByEntityId(competition.getId());
+
+        return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
     }
 
     @Override
     public ServiceResult<Question> createDefaultForApplicationSection(Competition competition) {
+        //Perform checks
+
         Section applicationQuestionsSection = sectionRepository.findByCompetitionIdAndName(competition.getId(), "Application questions");
         Question question = defaultApplicationQuestionFactory.buildQuestion(competition);
         question.setSection(applicationQuestionsSection);
@@ -60,6 +66,8 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     @Override
     public ServiceResult<Void> deleteQuestionInApplicationSection(Long questionId) {
+        //Perform checks
+
         questionTemplatePersistorService.deleteEntityById(questionId);
 
         return serviceSuccess();

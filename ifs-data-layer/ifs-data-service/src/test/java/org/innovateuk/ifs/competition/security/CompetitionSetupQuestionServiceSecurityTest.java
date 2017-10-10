@@ -114,6 +114,16 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
      */
     public static class TestCompetitionService implements CompetitionSetupQuestionService {
 
+        @Override
+        public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(Long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> delete(Long questionId) {
+            return null;
+        }
+
         public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
             return null;
         }
