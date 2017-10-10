@@ -14,13 +14,15 @@ import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetu
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSubsectionModelPopulator;
+import org.innovateuk.ifs.competitionsetup.service.populator.CompetitionSetupPopulator;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSaver;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.util.*;
 import java.util.function.Function;
@@ -37,6 +39,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	@Autowired
 	private CompetitionService competitionService;
 
+	@Autowired
+    private CompetitionSetupPopulator competitionSetupPopulator;
+
     private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;
     private Map<CompetitionSetupSubsection, CompetitionSetupSubsectionFormPopulator> subsectionFormPopulators;
 
@@ -46,8 +51,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	private Map<CompetitionSetupSection, CompetitionSetupSectionModelPopulator> modelPopulators;
 	private Map<CompetitionSetupSubsection, CompetitionSetupSubsectionModelPopulator> subsectionModelPopulators;
 
-
-	@Autowired
+    @Autowired
 	public void setCompetitionSetupFormPopulators(Collection<CompetitionSetupFormPopulator> populators) {
 		formPopulators = populators.stream().collect(Collectors.toMap(CompetitionSetupFormPopulator::sectionToFill, Function.identity()));
 	}
@@ -78,30 +82,33 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	}
 
 	@Override
-    public void populateCompetitionSectionModelAttributes(Model model, CompetitionResource competitionResource,
-                                                          CompetitionSetupSection section) {
+    public CompetitionSetupViewModel populateCompetitionSectionModelAttributes(CompetitionResource competitionResource,
+                                                                               CompetitionSetupSection section) {
 
-        populateGeneralModelAttributes(model, competitionResource, section);
-
+        CompetitionSetupViewModel viewModel = null;
         CompetitionSetupSectionModelPopulator populator = modelPopulators.get(section);
 
         if(populator != null) {
-            populator.populateModel(model, competitionResource);
+            viewModel = populator.populateModel(competitionSetupPopulator.populateGeneralModelAttributes(competitionResource, section), competitionResource);
         }
+
+        return viewModel;
     }
 
     @Override
-    public void populateCompetitionSubsectionModelAttributes(Model model, CompetitionResource competitionResource,
-                                                             CompetitionSetupSection section, CompetitionSetupSubsection subsection,
-                                                             Optional<Long> objectId) {
+    public CompetitionSetupSubsectionViewModel populateCompetitionSubsectionModelAttributes(CompetitionResource competitionResource,
+                                                                                            CompetitionSetupSection section, CompetitionSetupSubsection subsection,
+                                                                                            Optional<Long> objectId) {
 
-        checkIfSubsectionIsInSection(section, subsection);
-        populateGeneralModelAttributes(model, competitionResource, section);
+        CompetitionSetupSubsectionViewModel viewModel = null;
+	    checkIfSubsectionIsInSection(section, subsection);
         CompetitionSetupSubsectionModelPopulator populator = subsectionModelPopulators.get(subsection);
 
         if(populator != null) {
-            populator.populateModel(model, competitionResource, objectId);
+            viewModel = populator.populateModel(competitionResource, objectId);
         }
+
+        return viewModel;
     }
 
 
@@ -258,41 +265,15 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	}
 
 	private List<CompetitionSetupSection> getRequiredSectionsForReadyToOpen() {
-		List<CompetitionSetupSection> requiredSections = new ArrayList<>();
-		requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
-		requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
-		requiredSections.add(CompetitionSetupSection.ELIGIBILITY);
-		requiredSections.add(CompetitionSetupSection.MILESTONES);
-		requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
-		requiredSections.add(CompetitionSetupSection.CONTENT);
-		return requiredSections;
-	}
-
-	private void populateGeneralModelAttributes(Model model, CompetitionResource competitionResource, CompetitionSetupSection section) {
-		boolean editable = (!competitionResource.getSectionSetupStatus().containsKey(section)
-				|| !competitionResource.getSectionSetupStatus().get(section))
-				&& !section.preventEdit(competitionResource);
-		model.addAttribute("editable", editable);
-
-		model.addAttribute("competition", competitionResource);
-		model.addAttribute("currentSection", section);
-
-		if (section.hasDisplayableSetupFragment()) {
-			model.addAttribute("currentSectionFragment", "section-" + section.getPath());
-		}
-
-		model.addAttribute("allSections", CompetitionSetupSection.values());
-        model.addAttribute("isInitialComplete", competitionResource.isInitialDetailsComplete());
-
-		populateCompetitionStateModelAttributes(model, competitionResource, section);
-	}
-
-	private void populateCompetitionStateModelAttributes(Model model, CompetitionResource competitionResource, CompetitionSetupSection section) {
-		model.addAttribute("preventEdit", section.preventEdit(competitionResource));
-		model.addAttribute("isSetupAndLive", competitionResource.isSetupAndLive());
-		model.addAttribute("setupComplete", competitionResource.getSetupComplete());
-	}
-
+        List<CompetitionSetupSection> requiredSections = new ArrayList<>();
+        requiredSections.add(CompetitionSetupSection.INITIAL_DETAILS);
+        requiredSections.add(CompetitionSetupSection.ADDITIONAL_INFO);
+        requiredSections.add(CompetitionSetupSection.ELIGIBILITY);
+        requiredSections.add(CompetitionSetupSection.MILESTONES);
+        requiredSections.add(CompetitionSetupSection.APPLICATION_FORM);
+        requiredSections.add(CompetitionSetupSection.CONTENT);
+        return requiredSections;
+    }
 
 	private void checkIfSubsectionIsInSection(CompetitionSetupSection section, CompetitionSetupSubsection subsection) {
         if(!section.getSubsections().contains(subsection)) {

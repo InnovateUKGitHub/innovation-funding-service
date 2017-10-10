@@ -10,7 +10,6 @@ public class AssessmentPanelInviteStatisticsResource {
     private int invited;
     private int accepted;
     private int declined;
-    private int pending;
 
     public int getInvited() {
         return invited;
@@ -37,12 +36,9 @@ public class AssessmentPanelInviteStatisticsResource {
     }
 
     public int getPending() {
-        return pending;
+        return invited - (accepted + declined);
     }
 
-    public void setPending(int pending) {
-        this.pending = pending;
-    }
 
     @Override
     public boolean equals(Object o) {
@@ -56,7 +52,6 @@ public class AssessmentPanelInviteStatisticsResource {
                 .append(invited, that.invited)
                 .append(accepted, that.accepted)
                 .append(declined, that.declined)
-                .append(pending, that.pending)
                 .isEquals();
     }
 
@@ -66,7 +61,6 @@ public class AssessmentPanelInviteStatisticsResource {
                 .append(invited)
                 .append(accepted)
                 .append(declined)
-                .append(pending)
                 .toHashCode();
     }
 }

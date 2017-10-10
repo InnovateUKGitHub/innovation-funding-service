@@ -51,8 +51,8 @@ public class CompetitionSetupController {
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String SECTION_PATH_KEY = "sectionPath";
     private static final String SUBSECTION_PATH_KEY = "subsectionPath";
-    public static final String COMPETITION_NAME_KEY = "competitionName";
     public static final String PUBLIC_CONTENT_LANDING_REDIRECT = "redirect:/competition/setup/public-content/";
+    private static final String MODEL = "model";
 
     @Autowired
     private CompetitionService competitionService;
@@ -83,7 +83,7 @@ public class CompetitionSetupController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
-        competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
+        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
         model.addAttribute(SETUP_READY_KEY, competitionSetupService.isCompetitionReadyToOpen(competition));
         model.addAttribute(READY_TO_OPEN_KEY, competition.getCompetitionStatus().equals(CompetitionStatus.READY_TO_OPEN));
         return "competition/setup";
@@ -140,8 +140,8 @@ public class CompetitionSetupController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
-        model.addAttribute("competitionSetupForm", competitionSetupService.getSectionFormData(competition, section));
+        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, section));
 
         checkRestrictionOfInitialDetails(section, competition, model);
 
@@ -336,7 +336,7 @@ public class CompetitionSetupController {
             return "redirect:/competition/setup/" + competitionId;
         }
 
-        manageInnovationLeadsModelPopulator.populateModel(model, competition);
+        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
 
         return "competition/manage-innovation-leads-find";
     }
@@ -353,7 +353,7 @@ public class CompetitionSetupController {
             return "redirect:/competition/setup/" + competitionId;
         }
 
-        manageInnovationLeadsModelPopulator.populateModel(model, competition);
+        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
 
         return "competition/manage-innovation-leads-overview";
     }
@@ -372,7 +372,7 @@ public class CompetitionSetupController {
         }
 
         competitionService.addInnovationLead(competitionId, innovationLeadUserId);
-        manageInnovationLeadsModelPopulator.populateModel(model, competition);
+        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
 
         return "competition/manage-innovation-leads-find";
     }
@@ -391,7 +391,7 @@ public class CompetitionSetupController {
         }
 
         competitionService.removeInnovationLead(competitionId, innovationLeadUserId);
-        manageInnovationLeadsModelPopulator.populateModel(model, competition);
+        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
 
         return "competition/manage-innovation-leads-overview";
     }
@@ -425,7 +425,7 @@ public class CompetitionSetupController {
 
         Supplier<String> successView = () -> "redirect:/competition/setup/" + competition.getId() + "/section/" + section.getPath();
         Supplier<String> failureView = () -> {
-            competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
+            model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
             return "competition/setup";
         };
 

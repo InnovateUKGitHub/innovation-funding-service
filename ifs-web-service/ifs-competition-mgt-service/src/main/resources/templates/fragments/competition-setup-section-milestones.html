@@ -13,11 +13,11 @@
         Define the competition milestones. Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
     </div>
 
-    <form th:action="@{(${editable} ? '' : 'milestones/edit')}"
-          th:attrappend="data-autosave=${setupComplete != true}?compSetup"
-          th:attr="data-competition=${competition.id}" data-section="milestones"
+    <form th:action="@{(${model.general.editable} ? '' : 'milestones/edit')}"
+          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
+          th:attr="data-competition=${model.general.competition.id}" data-section="milestones"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
-        <fieldset th:if="${editable}" id="section-4-edit">
+        <fieldset th:if="${model.general.editable}" id="section-4-edit">
 
 
             <legend class="visuallyhidden">Milestones</legend>
@@ -116,7 +116,7 @@
 
         </fieldset>
 
-        <th:block th:unless="${editable}">
+        <th:block th:unless="${model.general.editable}">
             <table>
                 <thead>
                     <tr>
@@ -139,21 +139,21 @@
                     </tr>
                 </tbody>
             </table>
-            <button th:unless="${preventEdit}" type="submit" class="button extra-margin">Edit</button>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button extra-margin">Edit</button>
         </th:block>
     </form>
 
     <ul class="pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to next part"
-               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='eligibility')}">
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='eligibility')}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Eligibility</span>
             </a>
         </li>
         <li class="next">
             <a rel="next" title="Navigate to next part"
-               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='application')}">
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application')}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Application</span>
             </a>
