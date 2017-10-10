@@ -2,8 +2,6 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -17,15 +15,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import java.time.ZonedDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.AssessorCountOptionResourceBuilder.newAssessorCountOptionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -66,27 +61,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(competitionResource));
 
         final CompetitionResource found = service.getById(1L);
-        assertEquals(Long.valueOf(1L), found.getId());
-    }
-
-    @Test
-    public void create() throws Exception {
-        CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
-
-        when(competitionRestService.create()).thenReturn(restSuccess(competitionResource));
-
-        final CompetitionResource found = service.create();
-        assertEquals(Long.valueOf(1L), found.getId());
-    }
-
-
-    @Test
-    public void createNonIfs() throws Exception {
-        CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
-
-        when(competitionRestService.createNonIfs()).thenReturn(restSuccess(competitionResource));
-
-        final CompetitionResource found = service.createNonIfs();
         assertEquals(Long.valueOf(1L), found.getId());
     }
 
@@ -151,53 +125,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void updateCompetitionInitialDetails() throws Exception {
-
-        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
-
-        when(competitionRestService.updateCompetitionInitialDetails(competitionResource)).thenReturn(restSuccess());
-
-        ServiceResult<Void> result = service.updateCompetitionInitialDetails(competitionResource);
-        assertTrue(result.isSuccess());
-        verify(competitionRestService, only()).updateCompetitionInitialDetails(competitionResource);
-    }
-
-    @Test
-    public void generateCompetitionCode() throws Exception {
-        final String expected = "201606-01";
-        when(competitionRestService.generateCompetitionCode(1L, ZonedDateTime.of(2016, 6, 16, 0, 0, 0, 0, ZoneId.systemDefault()))).thenReturn(restSuccess(expected));
-
-        final String found = service.generateCompetitionCode(1L, ZonedDateTime.of(2016, 6, 16, 0, 0, 0, 0, ZoneId.systemDefault()));
-        assertEquals(expected, found);
-    }
-
-
-    @Test
-    public void initApplicationFormByCompetitionType() throws Exception {
-        Long competitionId = Long.MAX_VALUE;
-        Long competitionTypeId = Long.MIN_VALUE;
-        when(competitionRestService.initApplicationForm(competitionId, competitionTypeId)).thenReturn(restSuccess());
-
-        service.initApplicationFormByCompetitionType(competitionId, competitionTypeId);
-    }
-
-    @Test
-    public void markAsSetup() throws Exception {
-        Long competitionId = Long.MAX_VALUE;
-        when(competitionRestService.markAsSetup(competitionId)).thenReturn(restSuccess());
-
-        service.markAsSetup(competitionId);
-    }
-
-    @Test
-    public void returnToSetup() throws Exception {
-        Long competitionId = Long.MAX_VALUE;
-        when(competitionRestService.returnToSetup(competitionId)).thenReturn(restSuccess());
-
-        service.returnToSetup(competitionId);
-    }
-
-    @Test
     public void testGetAssessorOptionsForCompetitionType() throws Exception {
         AssessorCountOptionResource expectedResource = newAssessorCountOptionResource()
                 .withId(1L).withAssessorOptionName("1").withAssessorOptionValue(1).withDefaultOption(Boolean.FALSE).build();
@@ -221,15 +148,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void notifyAssessors() throws Exception {
-        Long competitionId = Long.MAX_VALUE;
-        when(competitionRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
-
-        service.notifyAssessors(competitionId);
-        verify(competitionRestService, only()).notifyAssessors(competitionId);
-    }
-
-    @Test
     public void getPublicContentOfCompetition() throws Exception {
         Long competitionId = 12314L;
         PublicContentItemResource expected = newPublicContentItemResource().build();
@@ -239,15 +157,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         PublicContentItemResource result = service.getPublicContentOfCompetition(competitionId);
 
         assertEquals(expected, result);
-    }
-
-    @Test
-    public void releaseFeedback() throws Exception {
-        Long competitionId = Long.MAX_VALUE;
-        when(competitionRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
-
-        service.releaseFeedback(competitionId);
-        verify(competitionRestService, only()).releaseFeedback(competitionId);
     }
 
     @Test

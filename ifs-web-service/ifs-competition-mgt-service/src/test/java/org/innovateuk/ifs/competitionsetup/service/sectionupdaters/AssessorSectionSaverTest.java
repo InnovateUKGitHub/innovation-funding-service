@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.AssessorsForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.junit.Test;
@@ -29,7 +30,10 @@ public class AssessorSectionSaverTest {
 	
 	@Mock
 	private CompetitionService competitionService;
-	
+
+	@Mock
+	private CompetitionSetupRestService competitionSetupRestService;
+
 	@Test
 	public void testSaveSection() {
 		AssessorsForm competitionSetupForm = new AssessorsForm();
@@ -56,7 +60,7 @@ public class AssessorSectionSaverTest {
 		assertEquals(Boolean.FALSE, competition.isHasInterviewStage());
 
         verify(competitionService).getAssessorOptionsForCompetitionType(competition.getCompetitionType());
-		verify(competitionService).update(competition);
+		verify(competitionSetupRestService).update(competition);
 	}
 
 	@Test
@@ -100,12 +104,12 @@ public class AssessorSectionSaverTest {
 
 		ArgumentCaptor<CompetitionResource> argumentCaptor = ArgumentCaptor.forClass(CompetitionResource.class);
 		verify(competitionService).getAssessorOptionsForCompetitionType(competition.getCompetitionType());
-		verify(competitionService).update(argumentCaptor.capture());
+		verify(competitionSetupRestService).update(argumentCaptor.capture());
 
 		assertEquals(oldAssessorPay, argumentCaptor.getValue().getAssessorPay());
 		assertEquals(newAssessorCount, argumentCaptor.getValue().getAssessorCount());
 
-		verify(competitionService).update(competition);
+		verify(competitionSetupRestService).update(competition);
 	}
 
 	@Test
@@ -130,6 +134,6 @@ public class AssessorSectionSaverTest {
 
 		assertTrue(saver.saveSection(competition, assessorsForm).isFailure());
 
-		verify(competitionService, never()).update(competition);
+		verify(competitionSetupRestService, never()).update(competition);
 	}
 }

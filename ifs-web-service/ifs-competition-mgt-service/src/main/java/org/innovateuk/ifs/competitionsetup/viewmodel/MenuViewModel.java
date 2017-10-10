@@ -4,15 +4,21 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 
 import java.time.ZonedDateTime;
+import java.util.Map;
 
 public class MenuViewModel extends CompetitionSetupViewModel {
+
     private ZonedDateTime publishDate;
     private boolean isPublicContentPublished;
+    private Map<CompetitionSetupSection, Boolean> statuses;
 
-    public MenuViewModel(GeneralSetupViewModel generalSetupViewModel, ZonedDateTime publishDate, boolean isPublicContentPublished) {
+    public MenuViewModel(GeneralSetupViewModel generalSetupViewModel, ZonedDateTime publishDate,
+                         boolean isPublicContentPublished,
+                         Map<CompetitionSetupSection, Boolean> statuses) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.publishDate = publishDate;
         this.isPublicContentPublished = isPublicContentPublished;
+        this.statuses = statuses;
     }
 
     public ZonedDateTime getPublishDate() {
@@ -32,7 +38,7 @@ public class MenuViewModel extends CompetitionSetupViewModel {
     }
 
     public boolean sectionCompleteAndCompetitionNotLive(CompetitionSetupSection setupSection) {
-        return setupSection.isComplete(generalSetupViewModel.getCompetition()) && !generalSetupViewModel.getCompetition().isSetupAndLive();
+        return statuses.getOrDefault(setupSection, Boolean.FALSE) && !generalSetupViewModel.getCompetition().isSetupAndLive();
     }
 
     public boolean sectionIsNotHome(CompetitionSetupSection setupSection) {

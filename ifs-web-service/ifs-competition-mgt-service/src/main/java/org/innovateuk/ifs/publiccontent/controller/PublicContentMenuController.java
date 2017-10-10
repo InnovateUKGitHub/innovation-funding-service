@@ -2,6 +2,7 @@ package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.publiccontent.form.PublishForm;
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentMenuPopulator;
@@ -39,6 +40,9 @@ public class PublicContentMenuController {
     @Autowired
     private CompetitionRestService competitionRestService;
 
+    @Autowired
+    private CompetitionSetupService competitionSetupService;
+
     @GetMapping("/{competitionId}")
     public String publicContentMenu(Model model,
                                     @PathVariable(COMPETITION_ID_KEY) long competitionId,
@@ -46,7 +50,7 @@ public class PublicContentMenuController {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        if (!competition.isNonIfs() && !competition.isInitialDetailsComplete()) {
+        if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsComplete(competitionId)) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -63,7 +67,7 @@ public class PublicContentMenuController {
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        if (!competition.isNonIfs() && !competition.isInitialDetailsComplete()) {
+        if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsComplete(competitionId)) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 

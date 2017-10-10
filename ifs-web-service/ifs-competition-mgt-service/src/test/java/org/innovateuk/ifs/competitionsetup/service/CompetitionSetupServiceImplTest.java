@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
@@ -42,6 +44,9 @@ public class CompetitionSetupServiceImplTest {
 
     @Mock
     private CompetitionService competitionService;
+
+    @Mock
+    private CompetitionSetupRestService competitionSetupRestService;
 
     @Mock
     private CompetitionSetupPopulator competitionSetupPopulator;
@@ -138,11 +143,12 @@ public class CompetitionSetupServiceImplTest {
     public void testSaveSection() {
         CompetitionSetupForm competitionSetupForm = new AdditionalInfoForm();
         CompetitionResource competitionResource = newCompetitionResource()
-                .withSectionSetupStatus(asMap(
-                        CompetitionSetupSection.INITIAL_DETAILS, true,
-                        CompetitionSetupSection.ADDITIONAL_INFO, false
-                ))
+                .withId(23L)
                 .build();
+
+        when(competitionSetupRestService.getSectionStatuses(competitionResource.getId())).thenReturn(RestResult.restSuccess(asMap(
+                CompetitionSetupSection.INITIAL_DETAILS, true,
+                CompetitionSetupSection.ADDITIONAL_INFO, false)));
 
         CompetitionSetupSectionSaver matchingSaver = mock(CompetitionSetupSectionSaver.class);
         when(matchingSaver.sectionToSave()).thenReturn(CompetitionSetupSection.ADDITIONAL_INFO);
@@ -219,7 +225,7 @@ public class CompetitionSetupServiceImplTest {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withStartDate(ZonedDateTime.now().plusDays(1)).build();
-        competitionResource.setSectionSetupStatus(testSectionStatus);
+//        competitionResource.setSectionSetupStatus(testSectionStatus);
 
         assertTrue(service.isCompetitionReadyToOpen(competitionResource));
     }
@@ -236,7 +242,7 @@ public class CompetitionSetupServiceImplTest {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withStartDate(ZonedDateTime.now().plusDays(1)).build();
-        competitionResource.setSectionSetupStatus(testSectionStatus);
+//        competitionResource.setSectionSetupStatus(testSectionStatus);
 
         assertFalse(service.isCompetitionReadyToOpen(competitionResource));
     }
@@ -264,11 +270,11 @@ public class CompetitionSetupServiceImplTest {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
-        competitionResource.setSectionSetupStatus(testSectionStatus);
+//        competitionResource.setSectionSetupStatus(testSectionStatus);
 
         when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
         service.setCompetitionAsReadyToOpen(id);
-        verify(competitionService).markAsSetup(id);
+        verify(competitionSetupRestService).markAsSetup(id);
 
     }
 
@@ -284,7 +290,7 @@ public class CompetitionSetupServiceImplTest {
         CompetitionResource competitionResource = newCompetitionResource()
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
-        competitionResource.setSectionSetupStatus(testSectionStatus);
+//        competitionResource.setSectionSetupStatus(testSectionStatus);
 
         when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
         service.setCompetitionAsReadyToOpen(2L);
@@ -347,10 +353,12 @@ public class CompetitionSetupServiceImplTest {
 
     @Test
     public void autoSaveCompetitionSetupSection_restrictedField() throws Exception {
-        CompetitionResource competition = newCompetitionResource()
-                .withSectionSetupStatus(asMap(
+        CompetitionResource competition = newCompetitionResource().withId(23L).build();
+        when(competitionSetupRestService.getSectionStatuses(competition.getId())).thenReturn(RestResult.restSuccess(asMap(
                         CompetitionSetupSection.INITIAL_DETAILS, true,
-                        CompetitionSetupSection.ADDITIONAL_INFO, false)).build();
+                        CompetitionSetupSection.ADDITIONAL_INFO, false)));
+
+
         CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
         String[] restrictedFieldNames = new String[]{"competitionTypeId", "openingDate"};
         String[] unrestrictedFieldNames = new String[]{"title", "innovationSectorCategoryId",

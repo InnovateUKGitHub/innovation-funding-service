@@ -238,4 +238,8 @@ public final class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<List<ApplicationSummaryResource>> competitionSummaryResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationSummaryResource>>() {};
     }
+
+    public static ParameterizedTypeReference<Map<CompetitionSetupSection, Boolean>> competitionSetupSectionStatusMap() {
+        return new ParameterizedTypeReference<Map<CompetitionSetupSection, Boolean>>() {};
+    }
 }

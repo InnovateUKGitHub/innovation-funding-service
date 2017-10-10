@@ -6,6 +6,9 @@ import org.innovateuk.ifs.competition.resource.*;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
+import java.util.Map;
+
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSetupSectionStatusMap;
 
 /**
  * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link CompetitionResource}.
@@ -65,5 +68,10 @@ public class CompetitionSetupRestServiceImpl extends BaseRestService implements 
     @Override
     public RestResult<CompetitionResource> createNonIfs() {
         return postWithRestResult(competitionSetupRestURL + "/non-ifs", CompetitionResource.class);
+    }
+
+    @Override
+    public RestResult<Map<CompetitionSetupSection, Boolean>> getSectionStatuses(long competitionId) {
+        return getWithRestResult(String.format("%s/sectionStatus/%s", competitionSetupRestURL, competitionId), competitionSetupSectionStatusMap());
     }
 }

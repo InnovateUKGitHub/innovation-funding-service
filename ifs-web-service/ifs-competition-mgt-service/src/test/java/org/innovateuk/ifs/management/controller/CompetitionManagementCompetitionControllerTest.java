@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionFeedbackRestService;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
@@ -31,14 +32,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Class for testing public functions of {@link CompetitionManagementCompetitionController}
@@ -56,6 +53,9 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
 
     @Mock
     private MilestoneRestService milestoneRestService;
+
+    @Mock
+    private CompetitionFeedbackRestService competitionFeedbackRestService;
 
     @Mock
     private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
@@ -192,13 +192,13 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     public void notifyAssessors() throws Exception {
         long competitionId = 1L;
 
-        when(competitionService.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
+        when(competitionFeedbackRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/notify-assessors", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s", competitionId)));
 
-        verify(competitionService).notifyAssessors(competitionId);
+        verify(competitionFeedbackRestService).notifyAssessors(competitionId);
         verifyNoMoreInteractions(competitionService);
     }
 
@@ -206,13 +206,13 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     public void releaseFeedback() throws Exception {
         long competitionId = 1L;
 
-        doNothing().when(competitionService).releaseFeedback(competitionId);
+        when(competitionFeedbackRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/release-feedback", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard/project-setup"));
 
-        verify(competitionService).releaseFeedback(competitionId);
+        verify(competitionFeedbackRestService).releaseFeedback(competitionId);
         verifyNoMoreInteractions(competitionService);
     }
 }

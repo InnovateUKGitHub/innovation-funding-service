@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
 import org.innovateuk.ifs.competitionsetup.form.LandingPageForm;
@@ -61,6 +62,9 @@ public class CompetitionSetupApplicationController {
     private CompetitionService competitionService;
 
     @Autowired
+    private CompetitionSetupRestService competitionSetupRestService;
+
+    @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
     @Autowired
@@ -78,7 +82,7 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -95,8 +99,8 @@ public class CompetitionSetupApplicationController {
                                                   ValidationHandler validationHandler) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
-        if (!competitionResource.isInitialDetailsComplete()) {
-            return "redirect:/competition/setup/" + competitionResource.getId();
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)) {
+            return "redirect:/competition/setup/" + competitionId;
         }
 
         Supplier<String> failureView = () -> {
@@ -119,7 +123,7 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -136,7 +140,7 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -152,7 +156,7 @@ public class CompetitionSetupApplicationController {
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -174,7 +178,7 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -202,7 +206,7 @@ public class CompetitionSetupApplicationController {
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -227,7 +231,7 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -247,7 +251,7 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -263,7 +267,7 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -279,7 +283,7 @@ public class CompetitionSetupApplicationController {
                                            Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -365,7 +369,7 @@ public class CompetitionSetupApplicationController {
             LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competition.getId(), CompetitionSetupSection.APPLICATION_FORM));
             return "redirect:/dashboard";
         } else {
-            competitionService.setSetupSectionMarkedAsIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
+            competitionSetupRestService.markSectionInComplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
             return successAction.get();
         }
     }

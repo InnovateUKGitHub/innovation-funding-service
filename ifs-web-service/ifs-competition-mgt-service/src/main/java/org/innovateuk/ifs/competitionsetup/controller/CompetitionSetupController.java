@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.*;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
@@ -58,6 +59,9 @@ public class CompetitionSetupController {
     private CompetitionService competitionService;
 
     @Autowired
+    private CompetitionSetupRestService competitionSetupRestService;
+
+    @Autowired
     private CompetitionSetupService competitionSetupService;
 
     @Autowired
@@ -104,11 +108,11 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
         }
 
-        if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section).getSuccessObjectOrThrowException();
+        competitionSetupRestService.markSectionInComplete(competitionId, section).getSuccessObjectOrThrowException();
         if (!competition.isSetupAndLive()) {
             competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
         }
@@ -123,7 +127,7 @@ public class CompetitionSetupController {
         CompetitionResource competition = competitionService.getById(competitionId);
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
 
-        if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -242,7 +246,8 @@ public class CompetitionSetupController {
 
         if (request.getParameterMap().containsKey("generate-code")) {
             if (competition.getStartDate() != null) {
-                String competitionCode = competitionService.generateCompetitionCode(competitionId, competition.getStartDate());
+                String competitionCode = competitionSetupRestService.generateCompetitionCode(competitionId, competition.getStartDate())
+                        .getSuccessObjectOrThrowException();
                 competitionSetupForm.setCompetitionCode(competitionCode);
                 competitionSetupForm.setMarkAsCompleteAction(false);
             }
@@ -332,7 +337,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competition.isInitialDetailsComplete()){
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -349,7 +354,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competition.isInitialDetailsComplete()){
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -367,7 +372,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competition.isInitialDetailsComplete()){
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -386,7 +391,7 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competition.isInitialDetailsComplete()){
+        if (!competitionSetupService.isInitialDetailsComplete(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -404,7 +409,8 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
         if (competition.getStartDate() != null) {
-            return this.createJsonObjectNode(true, competitionService.generateCompetitionCode(competitionId, competition.getStartDate()));
+            return this.createJsonObjectNode(true, competitionSetupRestService.generateCompetitionCode(competitionId, competition.getStartDate())
+                    .getSuccessObjectOrThrowException());
         } else {
             return this.createJsonObjectNode(false, "Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section");
         }
@@ -419,7 +425,7 @@ public class CompetitionSetupController {
             return "redirect:/non-ifs-competition/setup/" + competition.getId();
         }
 
-        if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.isInitialDetailsComplete(competition.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -457,7 +463,7 @@ public class CompetitionSetupController {
                                                   CompetitionResource competitionResource,
                                                   Model model) {
         if (section == CompetitionSetupSection.INITIAL_DETAILS &&
-                competitionResource.isInitialDetailsComplete()) {
+                competitionSetupService.isInitialDetailsComplete(competitionResource.getId())) {
             model.addAttribute(RESTRICT_INITIAL_DETAILS_EDIT, Boolean.TRUE);
         }
     }

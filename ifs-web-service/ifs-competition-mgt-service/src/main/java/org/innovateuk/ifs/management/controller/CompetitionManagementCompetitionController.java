@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionFeedbackRestService;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class CompetitionManagementCompetitionController {
 
     @Autowired
     private CompetitionService competitionService;
+
+    @Autowired
+    private CompetitionFeedbackRestService competitionFeedbackRestService;
 
     @Autowired
     private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
@@ -50,13 +54,13 @@ public class CompetitionManagementCompetitionController {
 
     @PostMapping("/{competitionId}/notify-assessors")
     public String notifyAssessors(@PathVariable("competitionId") Long competitionId) {
-        competitionService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
+        competitionFeedbackRestService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
         return "redirect:/competition/" + competitionId;
     }
 
     @PostMapping("/{competitionId}/release-feedback")
     public String releaseFeedback(@PathVariable("competitionId") Long competitionId) {
-        competitionService.releaseFeedback(competitionId);
+        competitionFeedbackRestService.releaseFeedback(competitionId);
         return "redirect:/dashboard/project-setup";
     }
 }

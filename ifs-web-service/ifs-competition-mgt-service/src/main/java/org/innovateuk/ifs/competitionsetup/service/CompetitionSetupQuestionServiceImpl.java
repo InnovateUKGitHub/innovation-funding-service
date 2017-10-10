@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competitionsetup.service;
 
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -11,15 +10,14 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.service.CompetitionSetupQuestionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.application.ApplicationDetailsFormPopulator;
+import org.innovateuk.ifs.competitionsetup.service.formpopulator.application.ApplicationFinanceFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.application.ApplicationProjectFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.application.ApplicationQuestionFormPopulator;
-import org.innovateuk.ifs.competitionsetup.service.formpopulator.application.ApplicationFinanceFormPopulator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -37,8 +35,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 @Service
 public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQuestionService {
 
-	private static final Log LOG = LogFactory.getLog(CompetitionSetupQuestionServiceImpl.class);
-
 	@Autowired
 	private CompetitionSetupQuestionRestService competitionSetupQuestionRestService;
 
@@ -49,7 +45,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     private SectionService sectionService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionSetupRestService competitionSetupRestService;
 
     @Autowired
     @Qualifier("mvcValidator")
@@ -112,7 +108,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
         if(bindingResult.hasErrors()) {
             return serviceFailure(Collections.emptyList());
         } else {
-            return competitionService.setSetupSectionMarkedAsComplete(competitionResource.getId(), CompetitionSetupSection.APPLICATION_FORM);
+            return competitionSetupRestService.markSectionComplete(competitionResource.getId(), CompetitionSetupSection.APPLICATION_FORM).toServiceResult();
         }
 
 

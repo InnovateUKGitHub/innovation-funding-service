@@ -9,7 +9,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
@@ -22,7 +21,6 @@ import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSe
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupViewModel;
-import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -41,9 +39,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 	@Autowired
 	private CompetitionService competitionService;
-
-	@Autowired
-	private CompetitionRestService competitionRestService;
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -119,7 +114,6 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
         return viewModel;
     }
-
 
 	@Override
 	public CompetitionSetupForm getSectionFormData(CompetitionResource competitionResource,
@@ -226,13 +220,13 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     }
 
     private void checkCompetitionInitialDetailsComplete(CompetitionResource competitionResource, CompetitionSetupSection section) {
-        if (!competitionResource.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (isInitialDetailsComplete(competitionResource.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             throw new IllegalStateException("'Initial Details' section must be completed first");
         }
     }
 
     private void checkIfInitialDetailsFieldIsRestricted(CompetitionResource competitionResource, CompetitionSetupSection competitionSetupSection, String fieldName) {
-        if (competitionResource.isInitialDetailsComplete() &&
+        if (isInitialDetailsComplete(competitionResource.getId()) &&
                 competitionSetupSection == CompetitionSetupSection.INITIAL_DETAILS) {
             if (fieldName.equals("competitionTypeId") || fieldName.equals("openingDate")) {
                 throw new IllegalStateException("Cannot update an initial details field that is disabled");
@@ -240,14 +234,23 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         }
     }
 
+    @Override
+    public boolean isInitialDetailsComplete(Long competitionId) {
+        Map<CompetitionSetupSection, Boolean> statuses = competitionSetupRestService.getSectionStatuses(competitionId).getSuccessObjectOrThrowException();
+        return statuses.getOrDefault(CompetitionSetupSection.INITIAL_DETAILS, Boolean.FALSE);
+    }
+
 	@Override
 	public boolean isCompetitionReadyToOpen(CompetitionResource competitionResource) {
 		if (competitionResource.getCompetitionStatus() != CompetitionStatus.COMPETITION_SETUP) {
 			return false;
 		}
-		Optional<CompetitionSetupSection> notDoneSection = getRequiredSectionsForReadyToOpen().stream().filter(section ->
-				(competitionSetupRestService.!competitionResource.getSectionSetupStatus().contains(section.getId()) ||
-						!competitionResource.getSectionSetupStatus().get(section))).findFirst();
+
+        Map<CompetitionSetupSection, Boolean> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId()).getSuccessObjectOrThrowException();
+		
+		Optional<CompetitionSetupSection> notDoneSection = getRequiredSectionsForReadyToOpen().stream()
+                .filter(section -> (!statuses.containsKey(section) || !statuses.get(section)))
+                .findFirst();
 
 		return !notDoneSection.isPresent();
 	}

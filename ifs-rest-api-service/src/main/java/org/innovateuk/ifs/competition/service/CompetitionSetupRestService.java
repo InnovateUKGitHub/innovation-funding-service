@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 
 import java.time.ZonedDateTime;
+import java.util.Map;
 
 
 /**
@@ -30,4 +31,6 @@ public interface CompetitionSetupRestService {
     RestResult<Void> returnToSetup(long competitionId);
 
     RestResult<CompetitionResource> createNonIfs();
+
+    RestResult<Map<CompetitionSetupSection, Boolean>> getSectionStatuses(long competitionId);
 }
