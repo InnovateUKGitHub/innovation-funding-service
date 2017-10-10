@@ -2,8 +2,6 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
-import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.AssessorCountOption;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -15,8 +13,6 @@ import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
-import org.innovateuk.ifs.competition.transactional.template.CompetitionSetupTemplateService;
-import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -57,12 +53,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private CompetitionFunderService competitionFunderService;
     @Autowired
     private AssessorCountOptionRepository assessorCountOptionRepository;
-    @Autowired
-    private QuestionRepository questionRepository;
-    @Autowired
-    private GuidanceRowRepository guidanceRowRepository;
-    @Autowired
-    private FormInputRepository formInputRepository;
     @Autowired
     private PublicContentService publicContentService;
     @Autowired
@@ -156,7 +146,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         }
 
         return serviceSuccess();
-
     }
 
     private boolean doesLeadTechnologistAlreadyExist(Competition competition) {

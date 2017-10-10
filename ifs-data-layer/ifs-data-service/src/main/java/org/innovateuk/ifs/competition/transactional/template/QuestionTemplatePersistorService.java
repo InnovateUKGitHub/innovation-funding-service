@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competition.transactional.template;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +15,7 @@ import java.util.function.Function;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
-public class QuestionTemplatePersistor implements BaseChainedTemplatePersistorService<List<Question>, Section>, BaseTemplatePersistorService<List<Question>> {
+public class QuestionTemplatePersistorService implements BaseChainedTemplatePersistorService<List<Question>, Section>, BaseTemplatePersistorService<List<Question>> {
     @Autowired
     private QuestionRepository questionRepository;
 

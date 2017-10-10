@@ -20,7 +20,7 @@ public class SectionTemplatePersistorService implements BaseChainedTemplatePersi
     private SectionRepository sectionRepository;
 
     @Autowired
-    private QuestionTemplatePersistor questionTemplatePersistorService;
+    private QuestionTemplatePersistorService questionTemplatePersistorServiceService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -54,7 +54,7 @@ public class SectionTemplatePersistorService implements BaseChainedTemplatePersi
                 competition.getSections().add(section);
             }
 
-            section.setQuestions(questionTemplatePersistorService.persistByPrecedingEntity(section));
+            section.setQuestions(questionTemplatePersistorServiceService.persistByPrecedingEntity(section));
 
             createChildSectionsRecursively(competition, section);
 
@@ -68,7 +68,7 @@ public class SectionTemplatePersistorService implements BaseChainedTemplatePersi
 
     public void cleanForPrecedingEntity(Competition competition) {
         List<Section> sections = competition.getSections();
-        sections.stream().forEach(section -> questionTemplatePersistorService.cleanForPrecedingEntity(section));
+        sections.stream().forEach(section -> questionTemplatePersistorServiceService.cleanForPrecedingEntity(section));
 
         sectionRepository.delete(sections);
     }
