@@ -14,7 +14,7 @@
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" data-ignore-errors="true" aria-labelledby="error-summary-heading" tabindex="-1">
               <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
-                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+              <p>Please correct the errors in the form below.</p>
             </div>
               <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your declaration of interest',size='heading-xlarge extra-margin-bottom'" />
             <p>We need to record if you, or an immediate family member, is connected to a body which has any financial interests.</p>
