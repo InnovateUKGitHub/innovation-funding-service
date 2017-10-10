@@ -36,6 +36,13 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "AND competitionParticipant.role = 'ASSESSOR' " +
             "AND competitionParticipant.status IN :status";
 
+    String BY_COMP_AND_STATUS_ON_PANEL = "SELECT competitionParticipant " +
+            "FROM CompetitionParticipant competitionParticipant " +
+            "WHERE competitionParticipant.competition.id = :competitionId " +
+            "AND competitionParticipant.role = 'ASSESSOR' " +
+            "AND competitionParticipant.status IN :status " +
+            "AND competitionParticipant.user.id IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
+
     String BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT = "SELECT competitionParticipant " +
             "FROM CompetitionParticipant competitionParticipant " +
             "LEFT JOIN Profile profile ON profile.id = competitionParticipant.user.profileId " +
@@ -108,6 +115,17 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
     @Query(BY_COMP_AND_STATUS)
     List<CompetitionParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
                                                                             @Param("status") List<ParticipantStatus> status);
+
+
+    @Query(BY_COMP_AND_STATUS_ON_PANEL)
+    Page<CompetitionParticipant> getPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+                                                                                 @Param("status") List<ParticipantStatus> status,
+                                                                                 Pageable pageable);
+
+    @Query(BY_COMP_AND_STATUS_ON_PANEL)
+    List<CompetitionParticipant> getPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+                                                                                 @Param("status") List<ParticipantStatus> status);
+
 
     @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
     Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,

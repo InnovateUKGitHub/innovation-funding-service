@@ -50,4 +50,13 @@ public interface AssessmentPanelInviteService {
             description = "The Competition Admin user and Project Finance users can create assessment panel invites for existing users")
     ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInvites);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
+            description = "Competition Admins and Project Finance users can retrieve assessment panel invitation overview by competition")
+    ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId, Pageable pageable);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
+            description = "Competition Admins and Project Finance users can retrieve invited assessor invite ids by competition")
+    ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId);
 }

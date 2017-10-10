@@ -62,4 +62,18 @@ public class AssessmentPanelInviteController {
             @PathVariable long competitionId) {
         return assessmentPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
     }
+
+    @GetMapping(value = "/getNonAcceptedAssessorInviteIds/{competitionId}")
+    public RestResult<List<Long>> getNonAcceptedAssessorInviteIds(
+            @PathVariable long competitionId) {
+        return assessmentPanelInviteService.getNonAcceptedAssessorInviteIds(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/getInvitationOverview/{competitionId}")
+    public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(
+            @PathVariable long competitionId,
+            @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "invite.name", direction = Sort.Direction.ASC) Pageable pageable
+    ) {
+        return assessmentPanelInviteService.getInvitationOverview(competitionId, pageable).toGetResponse();
+    }
 }

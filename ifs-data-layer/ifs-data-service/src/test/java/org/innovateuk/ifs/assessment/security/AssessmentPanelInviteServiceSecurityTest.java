@@ -75,6 +75,12 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
     }
 
     @Test
+    public void getNonAcceptedAssessorInviteIds() throws Exception {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getNonAcceptedAssessorInviteIds(1L),
+                COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
     public void getAllInvitesToSend() throws Exception {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllInvitesToSend(1L),
                 COMP_ADMIN, PROJECT_FINANCE);
@@ -87,6 +93,13 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
                 COMP_ADMIN, PROJECT_FINANCE);
     }
 
+    @Test
+    public void getInvitationOverview() {
+        Pageable pageable = new PageRequest(0, 20);
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L, pageable), COMP_ADMIN,PROJECT_FINANCE);
+    }
+
     public static class TestAssessmentPanelInviteService implements AssessmentPanelInviteService {
 
         @Override
@@ -96,6 +109,16 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
 
         @Override
         public ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInviteResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId, Pageable pageable) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
             return null;
         }
 

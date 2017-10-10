@@ -24,4 +24,7 @@ public interface AssessmentPanelInviteRestService {
 
     RestResult<List<Long>> getAvailableAssessorIds(long competitionId);
 
+    RestResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId);
+
+    RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId, int page);
 }
