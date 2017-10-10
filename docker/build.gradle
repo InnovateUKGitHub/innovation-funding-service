@@ -1,0 +1,8 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
+subprojects {
+  task buildDocker(type: DockerBuildImage) {
+    tag = "innovateuk/${project.name}"
+    inputDir = project.projectDir
+  }
+}
