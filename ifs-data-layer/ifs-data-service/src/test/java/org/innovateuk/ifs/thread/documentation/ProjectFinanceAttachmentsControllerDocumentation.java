@@ -29,8 +29,6 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -39,7 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProjectFinanceAttachmentsControllerDocumentation extends BaseControllerMockMVCTest<ProjectFinanceAttachmentsController> {
 
     private static final String identifier = "project/finance/attachments/{method-name}";
-
 
     @Test
     public void findOne() throws Exception {
@@ -66,7 +63,7 @@ public class ProjectFinanceAttachmentsControllerDocumentation extends BaseContro
 
         assertGetFileContents("/project/finance/attachments/download/{attachmentId}", new Object[]{id},
                 emptyMap(), projectFinanceAttachmentServiceMock, serviceCallToDownload)
-                .andDo(documentFileGetContentsMethod(document(identifier, preprocessResponse(prettyPrint()))));
+                .andDo(documentFileGetContentsMethod(identifier));
     }
 
     @Test

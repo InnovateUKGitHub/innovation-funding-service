@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.handler;
 
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
@@ -46,7 +47,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a bunch of things in setApplicationFinanceDetails.  We should find a better way to handle this.
         if(applicationFinance!=null) {
             applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
-            setApplicationFinanceDetails(applicationFinanceResource);
+            setApplicationFinanceDetails(applicationFinanceResource, applicationFinance.getApplication().getCompetition());
         }
         return applicationFinanceResource;
     }
@@ -60,7 +61,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a bunch of things in setApplicationFinanceDetails.  We should find a better way to handle this.
         for(ApplicationFinance applicationFinance : applicationFinances) {
             ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
-            setApplicationFinanceDetails(applicationFinanceResource);
+            setApplicationFinanceDetails(applicationFinanceResource, applicationFinance.getApplication().getCompetition());
             applicationFinanceResources.add(applicationFinanceResource);
         }
         return applicationFinanceResources;
@@ -74,7 +75,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         for(ApplicationFinance applicationFinance : applicationFinances) {
             ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
-            EnumMap<FinanceRowType, FinanceRowCostCategory> costs = new EnumMap<>(organisationFinanceHandler.getOrganisationFinanceTotals(applicationFinanceResource.getId(), applicationFinance.getApplication().getCompetition()));
+            EnumMap<FinanceRowType, FinanceRowCostCategory> costs = new EnumMap<>(organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId(), applicationFinance.getApplication().getCompetition()));
             applicationFinanceResource.setFinanceOrganisationDetails(costs);
             applicationFinanceResources.add(applicationFinanceResource);
         }
@@ -105,10 +106,10 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         return researchParticipation.setScale(2, BigDecimal.ROUND_CEILING);
     }
 
-    private void setApplicationFinanceDetails(ApplicationFinanceResource applicationFinanceResource) {
+    private void setApplicationFinanceDetails(ApplicationFinanceResource applicationFinanceResource, Competition competition) {
         Organisation organisation = organisationRepository.findOne(applicationFinanceResource.getOrganisation());
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(organisation.getOrganisationType().getId());
-        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId());
+        Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinanceResource.getId(), competition);
         applicationFinanceResource.setFinanceOrganisationDetails(costs);
     }
 }

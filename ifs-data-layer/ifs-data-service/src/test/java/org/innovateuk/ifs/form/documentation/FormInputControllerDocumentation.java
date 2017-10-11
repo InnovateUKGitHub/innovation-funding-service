@@ -3,9 +3,7 @@ package org.innovateuk.ifs.form.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.form.controller.FormInputController;
 import org.innovateuk.ifs.form.resource.FormInputResource;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
 
@@ -17,8 +15,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -27,17 +23,9 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<FormInputController> {
     private static final String baseURI = "/forminput";
 
-    private RestDocumentationResultHandler document;
-
     @Override
     protected FormInputController supplyControllerUnderTest() {
         return new FormInputController();
-    }
-
-    @Before
-    public void setup() {
-        this.document = document("forminput/{method-name}",
-            preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -46,7 +34,7 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         when(formInputServiceMock.findFormInput(1L)).thenReturn(serviceSuccess(testResource));
 
         mockMvc.perform(get(baseURI + "/{id}", 1L))
-            .andDo(this.document.snippets(
+            .andDo(document("forminput/{method-name}",
                 pathParameters(
                     parameterWithName("id").description("id of the forminput to be fetched")
                 ),
@@ -62,7 +50,7 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         when(formInputServiceMock.findByQuestionId(1L)).thenReturn(serviceSuccess(testResource));
 
         mockMvc.perform(get(baseURI + "/findByQuestionId/{id}", 1L))
-            .andDo(this.document.snippets(
+            .andDo(document("forminput/{method-name}",
                 pathParameters(
                     parameterWithName("id").description("id of the question")
                 ),
@@ -78,7 +66,7 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         when(formInputServiceMock.findByCompetitionId(1L)).thenReturn(serviceSuccess(testResource));
 
         mockMvc.perform(get(baseURI + "/findByCompetitionId/{id}", 1L))
-            .andDo(this.document.snippets(
+            .andDo(document("forminput/{method-name}",
                 pathParameters(
                     parameterWithName("id").description("id of the competition")
                 ),
@@ -96,7 +84,7 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         mockMvc.perform(put(baseURI + "/")
                     .contentType(APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(testResource)))
-                .andDo(this.document.snippets(
+                .andDo(document("forminput/{method-name}",
                         responseFields(formInputResourceFields)
                 ));
     }
@@ -106,7 +94,7 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         when(formInputServiceMock.delete(1L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(delete(baseURI + "/{id}", 1L))
-                .andDo(this.document.snippets(
+                .andDo(document("forminput/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the forminput")
                         )

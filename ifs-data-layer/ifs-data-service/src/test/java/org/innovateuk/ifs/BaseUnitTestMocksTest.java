@@ -176,6 +176,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentWorkflowHandler assessmentWorkflowHandlerMock;
 
     @Mock
+    protected AssessmentPanelInviteRepository assessmentPanelInviteRepositoryMock;
+
+    @Mock
+    protected AssessmentPanelInviteService assessmentPanelInviteServiceMock;
+
+    @Mock
     protected AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
 
     @Mock

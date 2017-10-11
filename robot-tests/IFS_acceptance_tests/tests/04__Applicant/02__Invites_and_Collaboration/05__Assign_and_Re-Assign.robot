@@ -193,7 +193,7 @@ Lead marks finances as complete
     Then the user should see the element                 link=Your project costs
     And the user should see the element                  link=Your organisation
     And the user should see the element                  jQuery=h3:contains("Your funding")
-    When the user fills in the project costs             Assign test
+    When the user fills in the project costs             labour costs  n/a
     And the user navigates to Your-finances page         Assign test
     Then the user fills in the organisation information  Assign test  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the funding information        Assign test
@@ -252,7 +252,7 @@ the collaborator edits the 'public description' question
     the user reloads the page
 
 the collaborator is able to edit the finances
-    the user fills in the project costs             Assign test
+    the user fills in the project costs             labour costs  n/a
     the user navigates to Your-finances page        Assign test
     the user fills in the organisation information  Assign test  ${SMALL_ORGANISATION_SIZE}
     the user fills in the funding information       Assign test
@@ -268,5 +268,5 @@ Steve smith assigns a question to the collaborator
     When the applicant assigns the question to the collaborator  Jessica Doe
 
 the user fills out the research category
-    the user clicks the button/link    jQuery=label[for="researchCategoryChoice-33"]
+    the user clicks the button/link    css=label[for="researchCategoryChoice-33"]
     the user clicks the button/link    jQuery=button:contains(Save)

@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
 
 /*
   Provides the Permission Rules to manage Queries' Attachments under the context of a ProjectFinance.

@@ -25,26 +25,26 @@ Before Monitoring Officer is assigned
     [Setup]    Log in as a different user               &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     And the user should see the text in the page    We will assign the project a Monitoring Officer.
-    And the user should not see the element    jQuery=ul li.complete:nth-child(3)
-    And the user should see the element    jQuery=ul li.waiting:nth-child(3)
+    And the user should not see the element    css=ul li.complete:nth-child(3)
+    And the user should see the element    css=ul li.waiting:nth-child(3)
     When the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
     And the user should not see the text in the page    A Monitoring Officer has been assigned.
     When the user navigates to the page    ${project_in_setup_team_status_page}
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(2)
+    And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(2)
 
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
     [Tags]      HappyPath
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_competition_status}
-    Then the user should see the element   jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok       # Project details
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.action   # MO
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status          # Bank details are not yet provided by any partner yet
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action   # Finance checks-always action flag for private beta
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(5).status          # Spend Profile
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.waiting  # Other Docs
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(7).status          # GOL
+    Then the user should see the element   css=#table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok       # Project details
+    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.action   # MO
+    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status          # Bank details are not yet provided by any partner yet
+    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action   # Finance checks-always action flag for private beta
+    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(5).status          # Spend Profile
+    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.waiting  # Other Docs
+    And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(7).status          # GOL
 
 Comp admin can view the Supporting information details on MO page
     [Documentation]    INFUND-2630
@@ -125,10 +125,10 @@ MO details can be added
     And the user should see the text in the page    A Monitoring Officer has been assigned.
     Then Log in as a different user       &{lead_applicant_credentials}
     And the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    jQuery=ul li.complete:nth-child(3)
-    And the user should see the text in the element    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Abbey Abigail.
+    And the user should see the element    css=ul li.complete:nth-child(3)
+    And the user should see the text in the element    css=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Abbey Abigail.
     And the user clicks the button/link    link=status of my partners
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
+    And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 MO details(email step)
     [Documentation]    INFUND-2630, INFUND-2632, INFUND-2633
@@ -147,15 +147,15 @@ MO details can be edited and viewed in the Project setup status page
     And the user can see the changed MO details
     When Log in as a different user        &{lead_applicant_credentials}
     Then the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    jQuery=ul li.complete:nth-child(3)
-    And the user should see the text in the element    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
+    And the user should see the element    css=ul li.complete:nth-child(3)
+    And the user should see the text in the element    css=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    We have assigned a Monitoring Officer to your project.
     And the user should see the text in the page    Grace Harper
     And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
     When the user navigates to the page    ${project_in_setup_team_status_page}
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 MO details edit(email step)
     [Documentation]    INFUND-2630, INFUND-2634
@@ -169,26 +169,26 @@ MO details accessible/seen by all partners
     [Tags]    HappyPath
     Given Log in as a different user       &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=ul li.complete:nth-child(3)
-    And the user should see the text in the element    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
+    Then the user should see the element    css=ul li.complete:nth-child(3)
+    And the user should see the text in the element    css=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    We have assigned a Monitoring Officer to your project.
     And the user should see the text in the page    Grace Harper
     And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
     When the user navigates to the page    ${project_in_setup_team_status_page}
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
     When Log in as a different user       &{lead_applicant_credentials}
     And the user navigates to the page    ${project_in_setup_page}
-    Then the user should see the element    jQuery=ul li.complete:nth-child(3)
-    And the user should see the text in the element    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
+    Then the user should see the element    css=ul li.complete:nth-child(3)
+    And the user should see the text in the element    css=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Grace Harper.
     And the user clicks the button/link    link=Monitoring Officer
     Then the user should see the text in the page    We have assigned a Monitoring Officer to your project.
     And the user should see the text in the page    Grace Harper
     And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
     When the user navigates to the page    ${project_in_setup_team_status_page}
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
@@ -196,7 +196,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     [Tags]      HappyPath
     [Setup]    Log in as a different user  &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    jQuery=ul li.complete:nth-child(1)
+    And the user should see the element    css=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     Then the user should see the element    link = Monitoring Officer
     And the user should see the element    link = Finance checks
@@ -268,8 +268,6 @@ the lead partner fills in project details
     the user clicks the button/link    link=Project Manager
     the user selects the radio button    projectManager  projectManager2
     the user clicks the button/link    jQuery=.button:contains("Save")
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link    jQuery=.button:contains("Submit")
     the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     the user selects the radio button    financeContact  financeContact2
     the user clicks the button/link    jQuery=.button:contains("Save")
@@ -278,7 +276,6 @@ internal user can see that MO can be assigned
     log in as a different user   &{internal_finance_credentials}
     the user navigates to the page   ${Successful_Monitoring_Officer_Page}
     the user should not see an error in the page
-
 
 the academic partner fills in their finance contact
     log in as a different user    &{collaborator2_credentials}

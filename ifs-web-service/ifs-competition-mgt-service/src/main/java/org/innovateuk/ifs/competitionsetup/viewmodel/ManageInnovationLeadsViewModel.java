@@ -5,7 +5,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import java.util.List;
 import java.util.Set;
 
-public class ManageInnovationLeadsViewModel {
+public class ManageInnovationLeadsViewModel extends CompetitionSetupViewModel {
 
     private Long competitionId;
     private String competitionName;

@@ -18,18 +18,30 @@ import java.util.List;
  */
 public interface CompetitionParticipantRepository extends PagingAndSortingRepository<CompetitionParticipant, Long> {
 
+    String USERS_WITH_ASSESSMENT_PANEL_INVITE = "SELECT invite.user.id " +
+            "FROM AssessmentPanelInvite invite " +
+            "WHERE invite.competition.id = :competitionId " +
+            "AND invite.user IS NOT NULL";
+
+    String PARTICIPANTS_NOT_ON_PANEL = "SELECT competitionParticipant " +
+            "FROM CompetitionParticipant competitionParticipant " +
+            "WHERE competitionParticipant.competition.id = :competitionId " +
+            "AND competitionParticipant.role = 'ASSESSOR' " +
+            "AND competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
+            "AND competitionParticipant.user.id NOT IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
+
     String BY_COMP_AND_STATUS = "SELECT competitionParticipant " +
             "FROM CompetitionParticipant competitionParticipant " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND (:status IS NULL OR competitionParticipant.status = :status)";
+            "AND competitionParticipant.status IN :status";
 
     String BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT = "SELECT competitionParticipant " +
             "FROM CompetitionParticipant competitionParticipant " +
             "LEFT JOIN Profile profile ON profile.id = competitionParticipant.user.profileId " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND (:status IS NULL OR competitionParticipant.status = :status) " +
+            "AND competitionParticipant.status IN :status " +
             "AND (:innovationAreaId IS NULL " +
             "   OR EXISTS(" +
             "       SELECT profile.id " +
@@ -89,16 +101,25 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
     CompetitionParticipant getByCompetitionIdAndUserIdAndRole(Long competitionId, Long userId, CompetitionParticipantRole role);
 
     @Query(BY_COMP_AND_STATUS)
-    Page<CompetitionParticipant> getAssessorsByCompetitionAndStatus(@Param("competitionId") long competitionId,
-                                                                    @Param("status") ParticipantStatus status,
+    Page<CompetitionParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+                                                                    @Param("status") List<ParticipantStatus> status,
                                                                     Pageable pageable);
 
+    @Query(BY_COMP_AND_STATUS)
+    List<CompetitionParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+                                                                            @Param("status") List<ParticipantStatus> status);
+
     @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
-    Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(@Param("competitionId") long competitionId,
+    Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
                                                                                                  @Param("innovationAreaId") Long innovationAreaId,
-                                                                                                 @Param("status") ParticipantStatus status,
+                                                                                                 @Param("status") List<ParticipantStatus> status,
                                                                                                  @Param("isCompliant") Boolean isCompliant,
                                                                                                  Pageable pageable);
+    @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
+    List<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
+                                                                                                         @Param("innovationAreaId") Long innovationAreaId,
+                                                                                                         @Param("status") List<ParticipantStatus> status,
+                                                                                                         @Param("isCompliant") Boolean isCompliant);
 
     List<CompetitionParticipant> getByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
@@ -110,6 +131,11 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
 
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
+    int countByCompetitionIdAndRoleAndStatusAndInviteIdIn(long competitionId,
+                                                          CompetitionParticipantRole role,
+                                                          ParticipantStatus status,
+                                                          List<Long> inviteIds);
+
     @Query(PARTICIPANTS_WITHOUT_ASSESSMENTS)
     Page<CompetitionParticipant> findParticipantsWithoutAssessments(@Param("compId") long competitionId,
                                                                     @Param("role") CompetitionParticipantRole role,
@@ -120,8 +146,14 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
 
     @Query(PARTICIPANTS_WITH_ASSESSMENTS)
     List<CompetitionParticipant> findParticipantsWithAssessments(
-            @Param("compId") Long competitionId,
+            @Param("compId") long competitionId,
             @Param("role") CompetitionParticipantRole role,
             @Param("status") ParticipantStatus status,
-            @Param("appId") Long applicationId);
+            @Param("appId") long applicationId);
+
+    @Query(PARTICIPANTS_NOT_ON_PANEL)
+    Page<CompetitionParticipant> findParticipantsNotOnPanel(@Param("competitionId") long competitionId, Pageable pageable);
+
+    @Query(PARTICIPANTS_NOT_ON_PANEL)
+    List<CompetitionParticipant> findParticipantsNotOnPanel(@Param("competitionId") long competitionId);
 }

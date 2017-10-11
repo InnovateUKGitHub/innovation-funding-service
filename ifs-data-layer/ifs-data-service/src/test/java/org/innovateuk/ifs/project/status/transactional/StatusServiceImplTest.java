@@ -313,9 +313,9 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(projectUsersHelperMock.getPartnerOrganisations(projects.get(1).getId())).thenReturn(organisations);
         when(projectUsersHelperMock.getPartnerOrganisations(projects.get(2).getId())).thenReturn(organisations);
 
-        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(projects.get(0).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
-        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(projects.get(1).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
-        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(projects.get(2).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
+        when(spendProfileServiceMock.getSpendProfileStatus(projects.get(0).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
+        when(spendProfileServiceMock.getSpendProfileStatus(projects.get(1).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
+        when(spendProfileServiceMock.getSpendProfileStatus(projects.get(2).getId())).thenReturn(serviceSuccess(ApprovalType.EMPTY));
 
         ServiceResult<CompetitionProjectsStatusResource> result = service.getCompetitionStatus(competitionId);
 
@@ -775,14 +775,13 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
-        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(ApprovalType.EMPTY));
         when(projectUsersHelperMock.getPartnerOrganisations(project.getId())).thenReturn(asList(organisation));
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(bankDetail);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(), organisation.getId())).thenReturn(Optional.of(spendprofile));
         when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
         when(organisationRepositoryMock.findOne(processRole.getOrganisationId())).thenReturn(organisation);
 
-        when(spendProfileServiceMock.getSpendProfileStatusByProjectId(projectId)).thenReturn(serviceSuccess(spendProfileStatus));
+        when(spendProfileServiceMock.getSpendProfileStatus(projectId)).thenReturn(serviceSuccess(spendProfileStatus));
         when(golWorkflowHandlerMock.isApproved(project)).thenReturn(golIsApproved);
         if (!golIsApproved) {
             when(golWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(golReadyToApprove);

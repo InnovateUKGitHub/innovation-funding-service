@@ -31,10 +31,10 @@ Project Finance can see Bank details requiring action
     [Setup]  log in as a different user   &{internal_finance_credentials}
     Given the user navigates to the page  ${server}/management/dashboard/project-setup
     When the user clicks the button/link  link=${PS_EF_Competition_Name}
-    Then the user should see the element  jQuery=#table-project-status tr:nth-child(1) td:nth-child(2).status.ok
-    And the user should see the element   jQuery=#table-project-status tr:nth-child(1) td:nth-child(3).status.action
-    And the user should see the element   jQuery=#table-project-status tr:nth-child(1) td:nth-child(4).status.action
-    Then the user clicks the button/link  jQuery=#table-project-status tr:nth-child(1) td:nth-child(4).status.action a
+    Then the user should see the element  css=#table-project-status tr:nth-child(3) td:nth-child(2).status.ok
+    And the user should see the element   css=#table-project-status tr:nth-child(3) td:nth-child(3).status.action
+    And the user should see the element   css=#table-project-status tr:nth-child(3) td:nth-child(4).status.action
+    Then the user clicks the button/link  css=#table-project-status tr:nth-child(3) td:nth-child(4).status.action a
     And the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
 
 Project Finance can see the company name with score
@@ -173,10 +173,10 @@ Lead partner can see that bank details has been approved
     [Tags]    HappyPath
     [Setup]    log in as a different user          ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
     When the user clicks the button/link           link=${PS_EF_APPLICATION_TITLE}
-    Then the user should see the element           jQuery=ul li.complete:nth-child(4)
+    Then the user should see the element           css=ul li.complete:nth-child(4)
     When the user clicks the button/link           link=status of my partners
     And the user should see the text in the page   Project team status
-    And the user should see the element            jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+    And the user should see the element            css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
 Other internal users cannot access this page
     [Documentation]    INFUND-3763

@@ -20,8 +20,22 @@ bin/
 
 
 #Ignore generated docker files
-ifs-**/Dockerfile
-ifs-**/Dockerfile-base
+
+/ifs-auth-service/ifs-idp-service/src/main/docker/Dockerfile
+/ifs-auth-service/ifs-ldap-service/src/main/docker/Dockerfile
+/ifs-auth-service/ifs-sp-service/src/main/docker/Dockerfile
+
+
+/ifs-web-service/ifs-application-service/src/main/docker/Dockerfile
+/ifs-web-service/ifs-assessment-service/src/main/docker/Dockerfile
+/ifs-web-service/ifs-competition-mgt-service/src/main/docker/Dockerfile
+/ifs-web-service/ifs-front-door-service/src/main/docker/Dockerfile
+/ifs-web-service/ifs-project-setup-mgt-service/src/main/docker/Dockerfile
+/ifs-web-service/ifs-project-setup-service/src/main/docker/Dockerfile
+
+/ifs-data-layer/ifs-data-service/src/main/docker/Dockerfile
+**/Dockerfile-base
+
 
 
 # ignore properties
@@ -107,7 +121,7 @@ jmeter/jmeter.log
 **/docker/shibImages/*
 !**/docker/shibImages/PUT_SHIB_IMAGE_HERE.txt
 /.gradletasknamecache
-
+robot-tests-tmp
 classes/
 
 #Node modules, except styledocco as we've made changes in that one.

@@ -4,6 +4,7 @@ Suite Setup       The guest user opens the browser
 Suite Teardown    Close browser and delete emails
 Force Tags        Applicant  Email
 Resource          ../../../resources/defaultResources.robot
+Resource          ../Applicant_Commons.robot
 
 *** Variables ***
 # research partners
@@ -25,7 +26,7 @@ Business invites other business from same organisation in his application and th
     And the user changes the application name  ${bCollaborator}'s Application
     And the user logs out if they are logged in
     And the user reads his email and clicks the link  ${bCollaborator}  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You are invited by  2
-    Then the user is able to confirm the invite  ${bCollaborator}
+    Then the user is able to confirm the invite  ${bCollaborator}  ${correct_password}
     And the user sees the application he was invited for on his dashboard  ${bCollaborator}'s Application
     [Teardown]  logout as user
 
@@ -46,15 +47,6 @@ the user invites collaborator by email address
     The user enters text to a text field  name=stagedInvite.name  research collab
     The user enters text to a text field  name=stagedInvite.email  ${COLLAB_USER_EMAIL}
     the user clicks the button/link       jQuery=button:contains("Invite")
-
-the user is able to confirm the invite
-    [Arguments]  ${email}
-    the user clicks the button/link                 jQuery=.button:contains("Continue or sign in")
-    The guest user inserts user email and password  ${email}  ${correct_password}
-    The guest user clicks the log-in button
-    the user should see the text in the page        Confirm your organisation
-    the user should see the element                 link=email the lead applicant
-    the user clicks the button/link                 jQuery=.button:contains("Confirm and accept invitation")
 
 the user changes the application name
     [Arguments]    ${application_name}
@@ -121,7 +113,7 @@ New Research user applies to Competition and starts application
     the user creates new account and organisation  radio-2  ${openCompetitionResearch}
     the user inserts the address of his research organisation  p.o. box 42  coventry  cv4 7al
     the user enters text to a text field    email  ${bob}
-    the user fills the create account form  Bob  Minion
+    the invited user fills the create account form  Bob  Minion
     the user verifies account and starts his application  ${bob}
     logout as user
 
@@ -129,7 +121,7 @@ Another Research user applies to Competition and starts application
     the user creates new account and organisation  radio-2  ${openCompetitionResearch}
     the user inserts the address of his research organisation  P.O. BOX 42  Coventry  CV4 7AL
     the user enters text to a text field    email  ${stuart}
-    the user fills the create account form  Stuart  Minion
+    the invited user fills the create account form  Stuart  Minion
     the user verifies account and starts his application  ${stuart}
 
 The latter researcher is able to invite the first one to his application
@@ -137,5 +129,5 @@ The latter researcher is able to invite the first one to his application
     the user updates his organisation inviting the user  Bob  ${bob}
     logout as user
     the user reads his email and clicks the link  ${bob}  Invitation to collaborate in ${openCompetitionResearch_name}  You will be joining as part of the organisation  2
-    the user is able to confirm the invite  ${bob}
+    the user is able to confirm the invite  ${bob}  ${correct_password}
     the user sees the application he was invited for on his dashboard  ${bob}'s Application

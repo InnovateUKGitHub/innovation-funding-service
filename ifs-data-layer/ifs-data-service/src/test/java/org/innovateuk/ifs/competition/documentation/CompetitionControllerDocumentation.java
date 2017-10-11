@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -12,11 +13,9 @@ import org.innovateuk.ifs.documentation.CompetitionCountResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionSearchResultDocs;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +31,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -46,17 +43,10 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     CompetitionService competitionService;
     @Mock
     CompetitionSetupService competitionSetupService;
-    private RestDocumentationResultHandler document;
 
     @Override
     protected CompetitionController supplyControllerUnderTest() {
         return new CompetitionController();
-    }
-
-    @Before
-    public void setup() {
-        this.document = document("competition/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -195,6 +185,31 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                                 fieldWithPath("[]").description("list of non ifs competitions the authenticated user has access to")
                         )
                 ));
+    }
+
+    @Test
+    public void findUnsuccessfulApplications() throws Exception {
+        final Long competitionId = 1L;
+        int pageIndex = 0;
+        int pageSize = 20;
+        String sortField = "id";
+
+        ApplicationPageResource applicationPage = new ApplicationPageResource();
+
+        when(competitionService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
+
+        mockMvc.perform(get("/competition/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}", competitionId, pageIndex, pageSize, sortField))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(applicationPage)))
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("The competition for which unsuccessful applications need to be found")
+                        )
+                ));
+
+        verify(competitionService, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
+
     }
 
     @Test
@@ -379,4 +394,19 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         )
                 );
     }
+
+    @Test
+    public void feedbackReleased() throws Exception {
+        when(competitionService.findFeedbackReleasedCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
+
+        mockMvc.perform(get("/competition/feedback-released"))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        responseFields(
+                                fieldWithPath("[]").description("list of competitions, which have had feedback released, that the authenticated user has access to")
+                        )
+                ));
+    }
+
 }

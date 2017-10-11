@@ -4,7 +4,7 @@ Documentation     INFUND-43 As an applicant and I am on the application form on 
 ...               INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
 ...
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
-Suite Setup       Run keywords    log in and create new application if there is not one already
+Suite Setup       Run keywords    log in and create new application if there is not one already  Robot test application
 ...               AND    Applicant goes to the application details page of the Robot application
 Suite Teardown    The user closes the browser
 Force Tags        Applicant

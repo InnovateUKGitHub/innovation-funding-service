@@ -248,6 +248,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         when(idpServiceMock.createUserRecordWithUid(isA(String.class), isA(String.class))).thenAnswer(
                 user -> serviceSuccess(UUID.randomUUID().toString()));
         when(idpServiceMock.activateUser(isA(String.class))).thenAnswer(uuid -> serviceSuccess(uuid));
+        when(idpServiceMock.deactivateUser(isA(String.class))).thenAnswer(uuid -> serviceSuccess(uuid));
 
         when(emailServiceMock.sendEmail(isA(EmailAddress.class), isA(List.class), isA(String.class), isA(String.class), isA(String.class))).
                 thenReturn(serviceSuccess(emptyList()));
@@ -322,9 +323,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         UnaryOperator<ProjectDataBuilder> setProjectAddressIfNecessary =
                 builder -> line.projectAddressAdded ? builder.withProjectAddressOrganisationAddress() : builder;
 
-        UnaryOperator<ProjectDataBuilder> submitProjectDetailsIfNecessary =
-                builder -> line.projectDetailsSubmitted ? builder.submitProjectDetails() : builder;
-
         UnaryOperator<ProjectDataBuilder> setMonitoringOfficerIfNecessary =
                 builder -> !isBlank(line.moFirstName) ?
                         builder.withMonitoringOfficer(line.moFirstName, line.moLastName, line.moEmail, line.moPhoneNumber) : builder;
@@ -354,7 +352,6 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         testService.doWithinTransaction(() ->
             assignProjectManagerIfNecessary.
                     andThen(setProjectAddressIfNecessary).
-                    andThen(submitProjectDetailsIfNecessary).
                     andThen(setMonitoringOfficerIfNecessary).
                     andThen(selectFinanceContactsIfNecessary).
                     andThen(submitBankDetailsIfNecessary).
@@ -1020,9 +1017,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         Function<S, S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber);
 
-        Function<S, S> verifyEmailIfNecessary = builder -> line.emailVerified ? builder.verifyEmail() : builder;
+        Function<S, S> verifyEmail = builder -> builder.verifyEmail();
 
-        createOrgIfNecessary.andThen(registerUserIfNecessary).andThen(verifyEmailIfNecessary).apply(baseBuilder).build();
+        Function<S, S> inactivateUserIfNecessary = builder -> !(line.emailVerified) ? builder.deactivateUser() : builder;
+
+        createOrgIfNecessary.andThen(registerUserIfNecessary).andThen(verifyEmail).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
     }
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {

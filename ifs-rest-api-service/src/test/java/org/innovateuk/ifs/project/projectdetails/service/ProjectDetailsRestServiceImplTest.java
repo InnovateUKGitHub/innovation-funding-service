@@ -6,7 +6,6 @@ import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -41,28 +40,6 @@ public class ProjectDetailsRestServiceImplTest extends BaseRestServiceUnitTest<P
 
         assertTrue(result.isSuccess());
 
-    }
-
-    @Test
-    public void testSetApplicationDetailsSubmitted() {
-        setupPostWithRestResultExpectations(projectRestURL + "/" + 123L + "/setApplicationDetailsSubmitted", null, OK);
-
-        RestResult<Void> result = service.setApplicationDetailsSubmitted(123L);
-
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testIsSubmitAllowed() {
-        Boolean isAllowed = true;
-
-        setupGetWithRestResultExpectations(projectRestURL + "/" + 123L + "/isSubmitAllowed", Boolean.class, isAllowed);
-
-        RestResult<Boolean> result = service.isSubmitAllowed(123L);
-
-        assertTrue(result.isSuccess());
-
-        Assert.assertEquals(isAllowed, result.getSuccessObject());
     }
 
     @Test

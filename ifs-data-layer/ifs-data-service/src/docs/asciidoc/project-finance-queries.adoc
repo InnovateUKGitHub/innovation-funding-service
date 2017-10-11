@@ -43,3 +43,30 @@ include::{snippets}/project/finance/queries/add-post/http-response.adoc[]
 
 ===== Curl Example
 include::{snippets}/project/finance/queries/add-post/curl-request.adoc[]
+
+
+=== Get project overhead costs calcuation spreadsheet contents
+==== Success
+===== Request
+include::{snippets}/overheadcalculation/get-project-file-contents-test/http-request.adoc[]
+include::{snippets}/overheadcalculation/get-project-file-contents-test/request-parameters.adoc[]
+
+===== Response
+include::{snippets}/overheadcalculation/get-project-file-contents-test/http-response.adoc[]
+include::{snippets}/overheadcalculation/get-project-file-contents-test/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/overheadcalculation/get-project-file-contents-test/curl-request.adoc[]
+
+=== Get project overhead costs calcuation spreadsheet file details
+==== Success
+===== Request
+include::{snippets}/overheadcalculation/get-project-file-details-test/http-request.adoc[]
+include::{snippets}/overheadcalculation/get-project-file-details-test/request-parameters.adoc[]
+
+===== Response
+include::{snippets}/overheadcalculation/get-project-file-details-test/http-response.adoc[]
+include::{snippets}/overheadcalculation/get-project-file-details-test/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/overheadcalculation/get-project-file-details-test/curl-request.adoc[]

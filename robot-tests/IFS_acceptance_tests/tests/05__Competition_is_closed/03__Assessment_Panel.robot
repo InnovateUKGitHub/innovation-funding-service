@@ -1,5 +1,12 @@
 *** Settings ***
-Documentation     IFS-786
+Documentation     IFS-786 Assessment panels - Manage assessment panel link on competition dashboard
+...
+...               IFS-31 Assessment panels - Invite assessors to panel- Find and Invite Tabs
+...
+...               IFS-1560 Assessment panels - Invite assessors to panel - Invite assessors
+...
+...               IFS-1564 Assessment panels - Invite assessors to panel - Key statistics
+
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -14,12 +21,50 @@ Assement panel link is deactivated if the assessment panel is not set
     Given The user clicks the button/link  link=${CLOSED_COMPETITION_NAME}
     Then the user should see the element   jQuery=.disabled:contains("Manage assessment panel")
 
-Assement panel link is active if the assesment panel is set
+Assessment panel links are active if the assessment panel has been set
     [Documentation]  IFS-786
     [Tags]
     [Setup]  enable assessment panel for the competition
     Given the user clicks the button/link  link=Manage assessment panel
-    Then the user navigates to the page  ${assessment_panel}
+    When the user clicks the button/link   link=Invite assessors to attend
+    Then the user should see the element   jQuery=h1:contains("Invite assessors to panel")
+
+CompAdmin can add an assessor to invite list
+    [Documentation]  IFS-31
+    [Tags]
+    Given the user clicks the button/link    jQuery=tr:contains("Benjamin Nixon") label
+    When the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
+    Then the user should see the element     jQuery=td:contains("Benjamin Nixon") + td:contains("benjamin.nixon@gmail.com")
+    And the user clicks the button/link      link=Find
+    And the user should not see the element  jQuery=td:contains("Benjamin Nixon")
+
+Cancel sending invite returns to the invite tab
+    [Documentation]  IFS-1560
+    [Tags]
+    [Setup]  the user clicks the button/link  link=Invite
+    Given the user clicks the button/link     link=Review and send invites
+    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("Benjamin Nixon")
+    When the user clicks the button/link      link=Cancel
+    Then the user should see the element      jQuery=td:contains("Benjamin Nixon")
+
+Assessor recieves the invite to panel
+    [Documentation]  IFS-1560  IFS-1564
+    [Tags]
+    Given the user clicks the button/link     link=Review and send invites
+    When the user clicks the button/link      jQuery=button:contains("Send invite")
+    And the user reads his email              benjamin.nixon@gmail.com  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
+    And the user should see the element      jQuery=.column-quarter:contains("1") small:contains("Invited")
+    And the user should see the element      jQuery=.column-quarter:contains("1") small:contains("Pending")
+
+Bulk add assessor to invite list
+    [Documentation]  IFS-31
+    [Tags]
+    [Setup]  the user clicks the button/link   link=Find
+    Given the user selects the checkbox     select-all-check
+    And the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
+    And the user should see the element     jQuery=td:contains("Joel George") + td:contains("joel.george@gmail.com")
+    When the user clicks the button/link    link=Find
+    Then the user should see the element    jQuery=td:contains("No available assessors found")
 
 *** Keywords ***
 
