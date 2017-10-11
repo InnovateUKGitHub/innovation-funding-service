@@ -5,17 +5,13 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.controller.CompetitionTypeController;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -23,17 +19,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CompetitionTypeControllerDocumentation extends BaseControllerMockMVCTest<CompetitionTypeController> {
     @Mock
     CompetitionSetupService competitionSetupService;
-    private RestDocumentationResultHandler document;
 
     @Override
     protected CompetitionTypeController supplyControllerUnderTest() {
         return new CompetitionTypeController();
-    }
-
-    @Before
-    public void setup() {
-        this.document = document("competition-type/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -42,7 +31,7 @@ public class CompetitionTypeControllerDocumentation extends BaseControllerMockMV
 
         mockMvc.perform(get("/competition-type/findAll"))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competition-type/{method-name}",
                     responseFields(
                             fieldWithPath("[].id").description("id of the competition type"),
                             fieldWithPath("[].name").description("name of the competition type"),

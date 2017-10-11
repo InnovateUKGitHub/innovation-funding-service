@@ -248,6 +248,7 @@ function tailorAppInstance() {
     if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
+        sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/5-front-door-service.yml
     fi
 
     if [[ ${TARGET} == "local" ]]
