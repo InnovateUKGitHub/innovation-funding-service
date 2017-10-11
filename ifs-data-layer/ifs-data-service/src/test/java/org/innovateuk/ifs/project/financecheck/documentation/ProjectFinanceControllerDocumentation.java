@@ -9,9 +9,7 @@ import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceControl
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.restdocs.payload.PayloadDocumentation;
 
 import java.math.BigDecimal;
@@ -42,8 +40,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -51,17 +47,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVCTest<ProjectFinanceController> {
-    private RestDocumentationResultHandler document;
 
     @Override
     protected ProjectFinanceController supplyControllerUnderTest() {
         return new ProjectFinanceController();
-    }
-
-    @Before
-    public void setup() {
-        this.document = document("project/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -82,7 +71,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/viability", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedViabilityResource)))
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which viability is being retrieved"),
                                 parameterWithName("organisationId").description("Organisation Id for which viability is being retrieved")
@@ -106,7 +95,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}/{viabilityRagStatus}", projectId, organisationId, viability, viabilityRagStatus)
         )
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which viability is being saved"),
                                 parameterWithName("organisationId").description("Organisation Id for which viability is being saved"),
@@ -177,7 +166,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(get(url, 123L, 234L)).
                 andExpect(status().isOk()).
                 andExpect(content().string("true")).
-                andDo(this.document.snippets(
+                andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the credit report flag is linked"),
                                 parameterWithName("organisationId").description("Id of the organisation to which the credit report flag is linked")
@@ -191,7 +180,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         when(financeCheckServiceMock.saveCreditReport(123L, 234L, Boolean.TRUE)).thenReturn(serviceSuccess());
         mockMvc.perform(post(url, 123L, 234L, Boolean.TRUE)).
                 andExpect(status().isOk()).
-                andDo(this.document.snippets(
+                andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the credit report flag is linked"),
                                 parameterWithName("organisationId").description("Id of the organisation to which the credit report flag is linked"),
@@ -284,7 +273,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(get("/project/{projectId}/project-finances", projectId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedFinances)))
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which finance totals are being retrieved")
                         ),

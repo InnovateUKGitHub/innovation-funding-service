@@ -9,7 +9,6 @@ import org.innovateuk.ifs.project.monitoringofficer.transactional.SaveMonitoring
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
@@ -22,16 +21,12 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class MonitoringOfficerControllerDocumentation extends BaseControllerMockMVCTest<MonitoringOfficerController> {
-
-    private RestDocumentationResultHandler document;
 
     private MonitoringOfficerResource monitoringOfficerResource;
 
@@ -51,12 +46,6 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
     @Override
     protected MonitoringOfficerController supplyControllerUnderTest() {
         return new MonitoringOfficerController();
-    }
-
-    @Before
-    public void setup(){
-        this.document = document("project/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -81,7 +70,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
                 .andExpect(status().isBadRequest())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
                         ),
@@ -107,7 +96,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
                 .andExpect(status().isBadRequest())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
                         ),
@@ -135,7 +124,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
                 .andExpect(status().isInternalServerError())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
                         ),
@@ -162,7 +151,7 @@ public class MonitoringOfficerControllerDocumentation extends BaseControllerMock
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project to which the Monitoring Officer is assigned")
                         ),
