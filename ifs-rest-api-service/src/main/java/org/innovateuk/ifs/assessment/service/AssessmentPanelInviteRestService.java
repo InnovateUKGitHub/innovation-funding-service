@@ -14,7 +14,11 @@ public interface AssessmentPanelInviteRestService {
 
     RestResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId);
 
+    RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds);
+
     RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource);
+
+    RestResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource);
 
     RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page);
 

@@ -31,10 +31,22 @@ public class AssessmentPanelInviteController {
         return assessmentPanelInviteService.getAllInvitesToSend(competitionId).toGetResponse();
     }
 
+    @GetMapping("/getAllInvitesToResend/{competitionId}")
+    public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(
+            @PathVariable long competitionId,
+            @RequestParam List<Long> inviteIds) {
+        return assessmentPanelInviteService.getAllInvitesToResend(competitionId, inviteIds).toGetResponse();
+    }
+
     @PostMapping("/sendAllInvites/{competitionId}")
     public RestResult<Void> sendAllInvites(@PathVariable long competitionId,
                                            @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
         return assessmentPanelInviteService.sendAllInvites(competitionId, assessorInviteSendResource).toPostResponse();
+    }
+
+    @PostMapping("/resendInvites")
+    public RestResult<Void> resendInvites(@RequestParam List<Long> inviteIds, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+        return assessmentPanelInviteService.resendInvites(inviteIds, assessorInviteSendResource).toPostWithBodyResponse();
     }
 
     @GetMapping("/getCreatedInvites/{competitionId}")

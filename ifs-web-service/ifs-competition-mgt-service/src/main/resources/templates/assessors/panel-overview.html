@@ -85,7 +85,7 @@
             </div>
 
             <form method="POST"
-                  th:action="@{/competition/{competitionId}/assessors/invite/reviewResend(competitionId=${model.competitionId})}"
+                  th:action="@{/panel/competition/{competitionId}/assessors/invite/reviewResend(competitionId=${model.competitionId})}"
                   th:object="${assessorPanelOverviewSelectionForm}"
                   data-multipage-select=""
                   th:attr="data-total-checkboxes=${model.pagination.totalCount}">
