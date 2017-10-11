@@ -24,3 +24,4 @@
 &{lead_applicant_alternative_user_credentials}    email=${test_mailbox_one}+mario@gmail.com    password=Passw0rd
 &{collaborator1_alternative_user_credentials}     email=kevin.summers@ludlow.co.uk    password=Passw0rd
 &{collaborator2_alternative_user_credentials}     email=casey.evans@egg.com    password=Passw0rd
+&{lead_applicant2_credentials}            email=jerry.mcdonald@example.com  password=${short_password}

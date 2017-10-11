@@ -145,6 +145,21 @@ ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}   ${collaborator2_credenti
 ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_NAME}    HIVE IT LIMITED
 ${PROJECT_SETUP_APPLICATION_1_ADDITIONAL_PARTNER_EMAIL}   ewan+1@hiveit.co.uk
 
+${PROJECT_SETUP_APPLICATION_2_TITLE}  Office Chair for Life
+${PROJECT_SETUP_APPLICATION_2}        ${application_ids["${PROJECT_SETUP_APPLICATION_2_TITLE}"]}
+${PROJECT_SETUP_APPLICATION_2_NUMBER}    ${PROJECT_SETUP_APPLICATION_2}
+${PROJECT_SETUP_APPLICATION_2_HEADER}    ${PROJECT_SETUP_APPLICATION_2_TITLE}
+${PROJECT_SETUP_APPLICATION_2_PROJECT}   ${project_ids["${PROJECT_SETUP_APPLICATION_2_TITLE}"]}
+${GUITAR_GODS_NAME}  Guitar Gods Ltd
+${GUITAR_GODS_ID}  33
+${PROJECT_SETUP_APPLICATION_2_LEAD_ORGANISATION_ID}    ${GUITAR_GODS_ID}
+${PROJECT_SETUP_APPLICATION_2_LEAD_ORGANISATION_NAME}    ${GUITAR_GODS_NAME}
+${PROJECT_SETUP_APPLICATION_2_LEAD_ORGANISATION_COMPANY_NUMBER}    72989329
+${PROJECT_SETUP_APPLICATION_2_LEAD_COMPANY_TURNOVER}    4560000
+${PROJECT_SETUP_APPLICATION_2_LEAD_COMPANY_HEADCOUNT}    1230
+${PROJECT_SETUP_APPLICATION_2_LEAD_PARTNER_EMAIL}  ${lead_applicant2_credentials["email"]}
+${PROJECT_SETUP_APPLICATION_2_PM_EMAIL}    aaron.powell@example.com
+
 ${project_in_setup_page}                ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
 ${project_in_setup_details_page}        ${project_in_setup_page}/details
 ${project_in_setup_team_status_page}    ${project_in_setup_page}/team-status
@@ -152,6 +167,12 @@ ${project_start_date_page}              ${project_in_setup_details_page}/start-d
 ${project_address_page}                 ${project_in_setup_details_page}/project-address
 ${internal_competition_status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 ${notified_application_competition_status}   ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
+
+${project_in_setup2_page}               ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_2_PROJECT}
+${project_in_setup2_details_page}       ${project_in_setup2_page}/details
+${project_in_setup2_team_status_page}   ${project_in_setup2_page}/team-status
+${project2_start_date_page}             ${project_in_setup2_details_page}/start-date
+${project2_address_page}                ${project_in_setup2_details_page}/project-address
 
 
 #Bank details
