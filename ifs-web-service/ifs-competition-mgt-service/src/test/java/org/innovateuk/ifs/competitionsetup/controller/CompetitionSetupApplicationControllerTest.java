@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
@@ -30,6 +31,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -42,6 +44,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -699,21 +702,68 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void createQuestion() throws Exception {
-        CompetitionResource competition = newCompetitionResource().build();
+        Long competitionId = 1L;
+        CompetitionSetupQuestionResource competitionSetupQuestionResource = newCompetitionSetupQuestionResource().withQuestionId(10L).build();
 
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupQuestionService.createDefaultQuestion(competitionId)).thenReturn(serviceSuccess(competitionSetupQuestionResource));
 
-        mockMvc.perform(post(URL_PREFIX + "/landing-page")
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("deleteQuestion", "1"))
-                .andExpect(status().isOk())
-                .andExpect(view().name("redirect:"));
+        mockMvc.perform(post("/competition/setup/"+ competitionId +"/section/application/landing-page")
+                .param("createQuestion", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/question/10"));
 
-        verify(competitionService).setSetupSectionMarkedAsIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
+        verify(competitionSetupQuestionService).createDefaultQuestion(competitionId);
     }
 
     @Test
-    public void deleteQuestion() throws Exception {
+    public void createQuestion_serviceErrorResultsInInternalServerErrorResponse() throws Exception {
+        Long competitionId = 1L;
+        Error error = Error.globalError("Something is wrong.");
+
+        when(competitionSetupQuestionService.createDefaultQuestion(competitionId)).thenReturn(serviceFailure(error));
+
+        mockMvc.perform(post("/competition/setup/"+ competitionId +"/section/application/landing-page")
+                .param("createQuestion", "true"))
+                .andExpect(status().is5xxServerError());
+
+        verify(competitionSetupQuestionService).createDefaultQuestion(competitionId);
+    }
+
+    @Test
+    public void testDeleteQuestion() throws Exception {
+        Long questionId = 1L;
+
+        CompetitionResource competition = newCompetitionResource().build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupQuestionService.deleteQuestion(questionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/landing-page")
+                .param("questionId", questionId.toString()))
+                .andExpect(status().isOk())
+                .andExpect(model().hasNoErrors())
+                .andExpect(view().name("/landing-page"));
+
+        verify(competitionSetupQuestionService).deleteQuestion(questionId);
+    }
+
+    @Test
+    public void testDeleteQuestion_serviceErrorsAreBoundToModel() throws Exception {
+        Long questionId = 1L;
+
+        CompetitionResource competition = newCompetitionResource().build();
+
+        Error error = fieldError("questionId", questionId, BAD_REQUEST.toString());
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupQuestionService.deleteQuestion(questionId)).thenReturn(serviceFailure(error));
+
+        mockMvc.perform(post(URL_PREFIX + "/landing-page")
+                .param("questionId", questionId.toString()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasFieldErrorCode("deleteQuestion", "questionId", BAD_REQUEST.toString()))
+                .andExpect(view().name("/landing-page"));
+
+        verify(competitionSetupQuestionService).deleteQuestion(questionId);
     }
 }
