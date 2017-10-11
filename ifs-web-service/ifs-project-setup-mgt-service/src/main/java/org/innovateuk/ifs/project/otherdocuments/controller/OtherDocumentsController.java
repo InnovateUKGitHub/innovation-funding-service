@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.otherdocuments.form.OtherDocumentsForm;
 import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewModel;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -69,7 +70,13 @@ public class OtherDocumentsController {
     private OtherDocumentsViewModel getOtherDocumentsViewModel(OtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
 
         ProjectResource project = projectService.getById(projectId);
-        Optional<FileEntryResource> collaborationAgreement = otherDocumentsService.getCollaborationAgreementFileDetails(projectId);
+        List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+        boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
+
+        Optional<FileEntryResource> collaborationAgreement = null;
+        if (collaborationAgreementRequired) {
+            collaborationAgreement = otherDocumentsService.getCollaborationAgreementFileDetails(projectId);
+        }
         Optional<FileEntryResource> exploitationPlan = otherDocumentsService.getExploitationPlanFileDetails(projectId);
 
         OrganisationResource leadPartnerOrganisation = projectService.getLeadOrganisation(projectId);
@@ -80,16 +87,16 @@ public class OtherDocumentsController {
         String projectManagerTelephone = projectManager.map(ProjectUserResource::getPhoneNumber).orElse("");
         String projectManagerEmail = projectManager.map(ProjectUserResource::getEmail).orElse("");
 
-        List<String> partnerOrganisationNames = projectService.getPartnerOrganisationsForProject(projectId).stream()
+        List<String>partnerOrganisationNames = partnerOrganisations.stream()
                 .filter(org -> !org.getId().equals(leadPartnerOrganisation.getId()))
                 .map(OrganisationResource::getName)
                 .collect(Collectors.toList());
 
         return new OtherDocumentsViewModel(projectId, applicationResource.getId(), project.getName(), applicationResource.getCompetition(), leadPartnerOrganisation.getName(),
                 projectManagerName, projectManagerTelephone, projectManagerEmail,
-                collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
+                collaborationAgreementRequired ? collaborationAgreement.map(FileDetailsViewModel::new).orElse(null) : null,
                 exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
-                partnerOrganisationNames, project.getOtherDocumentsApproved(), partnerOrganisationNames.size() > 1);
+                partnerOrganisationNames, project.getOtherDocumentsApproved(), collaborationAgreementRequired);
     }
 
     private Optional<ProjectUserResource> getProjectManagerResource(ProjectResource project) {
