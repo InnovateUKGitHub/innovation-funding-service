@@ -84,7 +84,8 @@ public class SetupStatusViewModelPopulator {
 
         return new SetupStatusViewModel(project, competition, monitoringOfficer, organisation, isLeadPartner,
                 companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess, bankDetailsAccess, financeChecksAccess, spendProfileAccess, otherDocumentsAccess, grantOfferAccess,
-                projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferStatus, partnerOrganisationCount > 1);
+                projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferStatus,
+                partnerOrganisationCount > 1, isProjectManager);
     }
 
     public boolean checkLeadPartnerProjectDetailsProcessCompleted(ProjectTeamStatusResource teamStatus) {

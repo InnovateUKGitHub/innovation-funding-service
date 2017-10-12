@@ -38,7 +38,7 @@ Non-lead partner cannot upload either document
     Given Log in as a different user   &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager needs to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
     And the user should see the text in the page   Only the Project Manager can upload and submit additional documents
@@ -49,7 +49,7 @@ Lead partner cannot upload either document
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager needs to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
     And the user should see the text in the page   Only the Project Manager can upload and submit additional documents
@@ -318,7 +318,7 @@ CompAdmin rejects other documents
     And the user clicks the button/link    jQuery=.modal-reject-docs button:contains("Cancel")
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=button:contains("Reject documents")
-    And the user clicks the button/link    jQuery=.modal-reject-docs .button:contains("Reject Documents")
+    And the user clicks the button/link    jQuery=.modal-reject-docs .button:contains("Reject documents")
     Then the user should see the text in the page    These documents have been reviewed and rejected. We have returned them to the Project Manager.
 
 
@@ -356,7 +356,7 @@ After rejection, lead partner cannot upload either document
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager needs to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -423,7 +423,7 @@ After rejection, non-lead partner cannot upload either document
     [Setup]    log in as a different user   &{collaborator1_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager needs to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -550,7 +550,7 @@ CompAdmin approves other documents
     And the user clicks the button/link    jQuery=.modal-accept-docs button:contains("Cancel")
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=button:contains("Accept documents")
-    And the user clicks the button/link    jQuery=.modal-accept-docs .button:contains("Accept Documents")
+    And the user clicks the button/link    jQuery=.modal-accept-docs .button:contains("Accept documents")
     Then the user should see the text in the page    The documents provided have been approved.
 
 Partners can see the documents approved

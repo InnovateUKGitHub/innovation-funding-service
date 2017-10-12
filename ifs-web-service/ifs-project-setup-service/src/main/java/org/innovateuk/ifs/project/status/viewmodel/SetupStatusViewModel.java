@@ -44,19 +44,21 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     private SectionStatus otherDocumentsStatus;
     private SectionStatus grantOfferLetterStatus;
     private boolean collaborationAgreementRequired;
+    private boolean projectManager;
 
     public SetupStatusViewModel() {}
 
     public SetupStatusViewModel(ProjectResource project, CompetitionResource competition,
-                                       Optional<MonitoringOfficerResource> monitoringOfficerResource, OrganisationResource organisation, boolean leadPartner,
-                                       SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
-                                       SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,
-                                       SectionAccess financeChecksSection, SectionAccess spendProfileSection,
-                                       SectionAccess otherDocumentsSection, SectionAccess grantOfferLetterSection,
-                                       SectionStatus projectDetailsStatus, SectionStatus monitoringOfficerStatus,
-                                       SectionStatus bankDetailsStatus, SectionStatus financeChecksStatus,
-                                       SectionStatus spendProfileStatus, SectionStatus otherDocumentsStatus,
-                                       SectionStatus grantOfferLetterStatus, boolean collaborationAgreementRequired) {
+                                Optional<MonitoringOfficerResource> monitoringOfficerResource, OrganisationResource organisation, boolean leadPartner,
+                                SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
+                                SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,
+                                SectionAccess financeChecksSection, SectionAccess spendProfileSection,
+                                SectionAccess otherDocumentsSection, SectionAccess grantOfferLetterSection,
+                                SectionStatus projectDetailsStatus, SectionStatus monitoringOfficerStatus,
+                                SectionStatus bankDetailsStatus, SectionStatus financeChecksStatus,
+                                SectionStatus spendProfileStatus, SectionStatus otherDocumentsStatus,
+                                SectionStatus grantOfferLetterStatus, boolean collaborationAgreementRequired,
+                                boolean projectManager) {
         this.projectId = project.getId();
         this.projectName = project.getName();
         this.applicationId = project.getApplication();
@@ -88,6 +90,7 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
                 && spendProfileStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
                 && grantOfferLetterStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus());
         this.collaborationAgreementRequired = collaborationAgreementRequired;
+        this.projectManager = projectManager;
     }
 
     public Long getProjectId() {
@@ -197,4 +200,6 @@ public class SetupStatusViewModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isCollaborationAgreementRequired() { return collaborationAgreementRequired; }
+
+    public boolean isProjectManager() { return projectManager; }
 }

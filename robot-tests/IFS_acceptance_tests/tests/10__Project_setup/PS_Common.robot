@@ -320,7 +320,7 @@ project finance approves other documents
     log in as a different user       &{internal_finance_credentials}
     the user navigates to the page   ${SERVER}/project-setup-management/project/${project}/partner/documents
     the user clicks the button/link  jQuery=.button:contains("Accept documents")
-    the user clicks the button/link  jQuery=.modal-accept-docs .button:contains("Accept Documents")
+    the user clicks the button/link  jQuery=.modal-accept-docs .button:contains("Accept documents")
 
 project finance generates the Spend Profile
     [Arguments]  ${lead}  ${partner}  ${academic_partner}  ${project}

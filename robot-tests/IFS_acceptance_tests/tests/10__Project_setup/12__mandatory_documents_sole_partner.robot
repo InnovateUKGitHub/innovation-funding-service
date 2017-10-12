@@ -37,7 +37,7 @@ Lead partner cannot upload exploitation plan
     [Setup]    log in as a different user   &{lead_applicant2_credentials}
     Given the user navigates to the page    ${project_in_setup2_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager needs to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
     And the user should see the text in the page   Only the Project Manager can upload and submit the exploitation plan
@@ -221,7 +221,7 @@ CompAdmin rejects exploitation plan
     And the user clicks the button/link    jQuery=.modal-reject-doc button:contains("Cancel")
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=button:contains("Reject document")
-    And the user clicks the button/link    jQuery=.modal-reject-doc .button:contains("Reject Document")
+    And the user clicks the button/link    jQuery=.modal-reject-doc .button:contains("Reject document")
     Then the user should see the text in the page    This document has been reviewed and rejected. We have returned it to the Project Manager.
 
 Partner can see the exploitation plan rejected
@@ -251,7 +251,7 @@ After rejection, lead partner cannot upload exploitation plan
     [Setup]    log in as a different user   &{lead_applicant2_credentials}
     Given the user navigates to the page    ${project_in_setup2_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager will need to upload the following
+    And The user should see the text in the page    Your Project Manager needs to upload the following
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -386,7 +386,7 @@ CompAdmin approves other documents
     And the user clicks the button/link    jQuery=.modal-accept-doc button:contains("Cancel")
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=button:contains("Accept document")
-    And the user clicks the button/link    jQuery=.modal-accept-doc .button:contains("Accept Document")
+    And the user clicks the button/link    jQuery=.modal-accept-doc .button:contains("Accept document")
     Then the user should see the text in the page    The document provided has been approved.
 
 Partner can see the exploitation plan approved

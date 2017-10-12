@@ -92,7 +92,7 @@
                     Agreement website</a>.</p>
                 <p>The uploaded collaboration agreement must:</p>
                 <ul class="list list-bullet">
-                    <li>be in a Portable Document Format (.pdf)</li>
+                    <li>be in portable document format (PDF)</li>
                     <li>be legible at 100% magnification</li>
                     <li>be less than 1mb in file size</li>
                 </ul>
@@ -133,8 +133,8 @@
 
     <div class="upload-section">
         <h2 class="heading-medium no-margin">Exploitation plan</h2>
-        <p class="form-hint">The plan aims to confirm the benefits realisation that the project hopes to achieve. You
-            should describe the partner activities that will exploit the results of the project.</p>
+        <p class="form-hint">This is a confirmation of the business plan that your project hopes to achieve.
+            You should describe the partner activities that will exploit the results of the project.</p>
         <details>
             <summary><span class="summary">What should I include in the exploitation plan?</span></summary>
             <div class="panel">
@@ -147,10 +147,10 @@
                     <li>exploitation can be monitored by the stakeholders</li>
                 </ul>
 
-                <p>A framework of the exploitation plan is available for <a href="/files/exploitation_plan.doc">download</a></p>
+                <p>A framework of the exploitation plan is available for <a href="/files/exploitation_plan.doc">download</a>.</p>
                 <p>The uploaded exploitation plan must:</p>
                 <ul class="list list-bullet">
-                    <li>be in a Portable Document Format (.pdf)</li>
+                    <li>be in portable document format (PDF)</li>
                     <li>be legible at 100% magnification</li>
                     <li>be less than 1mb in file size</li>
                 </ul>
@@ -190,10 +190,20 @@
         </th:block>
     </div>
     <th:block th:if="${model.collaborationAgreementRequired}">
-        <p>The Project Manager needs to upload the documents and submit them to us.</p>
+        <th:block th:if="${model.projectManager}">
+            <p>You need to upload the documents and submit them to us.</p>
+        </th:block>
+        <th:block th:unless="${model.projectManager}">
+            <p>Your Project Manager needs to upload the documents and submit them to us.</p>
+        </th:block>
     </th:block>
     <th:block th:unless="${model.collaborationAgreementRequired}">
-        <p>The Project Manager needs to upload the document and submit it to us.</p>
+        <th:block th:if="${model.projectManager}">
+            <p>You need to upload the document and submit it to us.</p>
+        </th:block>
+        <th:block th:unless="${model.projectManager}">
+            <p>Your Project Manager needs to upload the document and submit it to us.</p>
+        </th:block>
     </th:block>
 
     <th:block th:if="${model.isShowSubmitDocumentsButton()}">

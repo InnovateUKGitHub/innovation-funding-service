@@ -137,6 +137,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
                 Pair.of("otherDocumentsStatus", SectionStatus.FLAG));
 
         assertFalse(viewModel.isProjectComplete());
+        assertTrue(viewModel.isProjectManager());
     }
 
     @Test
@@ -278,6 +279,7 @@ public class SetupStatusViewModelPopulatorTest extends BaseUnitTest {
         assertEquals(SectionAccess.ACCESSIBLE, viewModel.getFinanceChecksSection());
 
         assertFalse(viewModel.isProjectComplete());
+        assertFalse(viewModel.isProjectManager());
     }
 
     @Test
