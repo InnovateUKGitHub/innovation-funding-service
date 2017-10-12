@@ -8,9 +8,7 @@ import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStat
 import org.innovateuk.ifs.project.grantofferletter.controller.GrantOfferLetterController;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.function.BiFunction;
@@ -25,8 +23,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -37,13 +33,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  **/
 public class GrantOfferLetterControllerDocumentation extends BaseControllerMockMVCTest<GrantOfferLetterController> {
 
-    private RestDocumentationResultHandler document;
-
-    @Before
-    public void setup() {
-        this.document = document("project/{method-name}",
-                preprocessResponse(prettyPrint()));
-    }
 
     @Override
     protected GrantOfferLetterController supplyControllerUnderTest() {
@@ -59,7 +48,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
                 (service, fileToUpload) -> service.createSignedGrantOfferLetterFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
         assertFileUploadProcess("/project/" + projectId + "/signed-grant-offer", grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileUploadMethod(document));
+                andDo(documentFileUploadMethod("project/{method-name}"));
     }
 
     @Test
@@ -71,7 +60,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
 
         mockMvc.perform(delete("/project/{projectId}/grant-offer", projectId)).
                 andExpect(status().isNoContent())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which Grant Offer Letter needs to be removed")
                         )
@@ -87,7 +76,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
 
         mockMvc.perform(delete("/project/{projectId}/signed-grant-offer-letter", projectId)).
                 andExpect(status().isNoContent())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which Signed Grant Offer Letter needs to be removed")
                         )
@@ -103,7 +92,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
                 (service, fileToUpload) -> service.createGrantOfferLetterFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
         assertFileUploadProcess("/project/" + projectId + "/grant-offer", grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileUploadMethod(document));
+                andDo(documentFileUploadMethod("project/{method-name}"));
     }
 
     @Test
@@ -115,7 +104,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
                 (service, fileToUpload) -> service.createAdditionalContractFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
         assertFileUploadProcess("/project/" + projectId + "/additional-contract", grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileUploadMethod(document));
+                andDo(documentFileUploadMethod("project/{method-name}"));
     }
 
     @Test
@@ -128,7 +117,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
 
         assertGetFileDetails("/project/{projectId}/signed-grant-offer/details", new Object[]{projectId}, emptyMap(),
                 grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileGetDetailsMethod(document));
+                andDo(documentFileGetDetailsMethod("project/{method-name}"));
     }
 
     @Test
@@ -141,7 +130,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
 
         assertGetFileDetails("/project/{projectId}/grant-offer/details", new Object[]{projectId}, emptyMap(),
                 grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileGetDetailsMethod(document));
+                andDo(documentFileGetDetailsMethod("project/{method-name}"));
     }
 
 
@@ -155,7 +144,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
 
         assertGetFileDetails("/project/{projectId}/additional-contract/details", new Object[]{projectId}, emptyMap(),
                 grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileGetDetailsMethod(document));
+                andDo(documentFileGetDetailsMethod("project/{method-name}"));
     }
 
     @Test
@@ -168,7 +157,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
 
         assertGetFileContents("/project/{projectId}/additional-contract", new Object[]{projectId},
                 emptyMap(), grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileGetContentsMethod(document));
+                andDo(documentFileGetContentsMethod("project/{method-name}"));
     }
 
     @Test
@@ -182,7 +171,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
 
         assertGetFileContents("/project/{projectId}/signed-grant-offer", new Object[]{projectId},
                 emptyMap(), grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileGetContentsMethod(document));
+                andDo(documentFileGetContentsMethod("project/{method-name}"));
     }
 
     @Test
@@ -196,7 +185,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
 
         assertGetFileContents("/project/{projectId}/grant-offer", new Object[]{projectId},
                 emptyMap(), grantOfferLetterServiceMock, serviceCallToUpload).
-                andDo(documentFileGetContentsMethod(document));
+                andDo(documentFileGetContentsMethod("project/{method-name}"));
     }
 
     @Test
@@ -206,7 +195,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
         when(grantOfferLetterServiceMock.submitGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{id}/grant-offer/submit", projectId))
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the project whos offer letter is being submitted")
                         )
@@ -218,7 +207,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
         when(grantOfferLetterServiceMock.sendGrantOfferLetter(123L)).thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/grant-offer/send", 123L))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
                         )));
@@ -229,7 +218,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
         when(grantOfferLetterServiceMock.isSendGrantOfferLetterAllowed(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
         MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/is-send-grant-offer-letter-allowed", 123L))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
                         )))
@@ -242,7 +231,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
         when(grantOfferLetterServiceMock.isGrantOfferLetterAlreadySent(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
         MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/is-grant-offer-letter-already-sent", 123L))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the documents are being submitted to.")
                         )))
@@ -255,7 +244,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
         when(grantOfferLetterServiceMock.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED)).thenReturn(ServiceResult.serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/signed-grant-offer-letter/approval/{approvalType}", 123L, ApprovalType.APPROVED))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the signed Grant Offer Letter is being approved/rejected."),
                                 parameterWithName("approvalType").description("Approval or rejection.")
@@ -268,7 +257,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
         when(grantOfferLetterServiceMock.isSignedGrantOfferLetterApproved(123L)).thenReturn(ServiceResult.serviceSuccess(Boolean.TRUE));
         MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/signed-grant-offer-letter/approval", 123L))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the approval status of the signed Grant Offer Letter is requested.")
                         )))
