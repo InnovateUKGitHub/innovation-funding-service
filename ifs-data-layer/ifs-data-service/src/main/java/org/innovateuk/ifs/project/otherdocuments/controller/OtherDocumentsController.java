@@ -129,7 +129,7 @@ public class OtherDocumentsController {
 
     @PostMapping("/{projectId}/partner/documents/approved/{approved}")
     public RestResult<Void> acceptOrRejectOtherDocuments(@PathVariable("projectId") long projectId, @PathVariable("approved") Boolean approved) {
-        //TODO IFS-471
+        //TODO IFS-471 use workflow for approving other documents
         return otherDocumentsService.acceptOrRejectOtherDocuments(projectId, approved).toPostResponse();
     }
 

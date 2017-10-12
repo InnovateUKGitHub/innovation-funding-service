@@ -304,7 +304,7 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     @Override
     @Transactional
     public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approval) {
-        //TODO IFS-471
+        //TODO IFS-471 use workflow for approving other documents
         if (approval == null) {
             return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED);
         }
