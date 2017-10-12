@@ -5,10 +5,8 @@ import org.innovateuk.ifs.application.controller.ApplicationFundingDecisionContr
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.util.MapFunctions;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.Map;
 
@@ -18,8 +16,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
@@ -28,17 +24,9 @@ import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 
 public class ApplicationFundingDecisionControllerDocumentation extends BaseControllerMockMVCTest<ApplicationFundingDecisionController> {
 
-    private RestDocumentationResultHandler document;
-
     @Override
     protected ApplicationFundingDecisionController supplyControllerUnderTest() {
         return new ApplicationFundingDecisionController();
-    }
-
-    @Before
-    public void setup(){
-        this.document = document("applicationfunding/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
     
     @Test
@@ -51,7 +39,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
         mockMvc.perform(put("/applicationfunding/1")
         			.contentType(MediaType.APPLICATION_JSON)
         			.content(objectMapper.writeValueAsString(decision)))
-        		.andDo( this.document.snippets());
+        		.andDo( document("applicationfunding/{method-name}"));
     }
 
     @Test
@@ -65,7 +53,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
         mockMvc.perform(post("/applicationfunding/sendNotifications")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(notification)))
-                .andDo( this.document.snippets(
+                .andDo( document("applicationfunding/{method-name}",
                         requestFields(fundingNotificationResourceFields)
                 ));
     }

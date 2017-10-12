@@ -55,9 +55,6 @@ public class ApplicationOverviewModelPopulator {
     private AssignButtonsPopulator assignButtonsPopulator;
 
     @Autowired
-    private ApplicationService applicationService;
-
-    @Autowired
     private CompetitionService competitionService;
 
     @Autowired
@@ -99,7 +96,7 @@ public class ApplicationOverviewModelPopulator {
         ApplicationOverviewSectionViewModel sectionViewModel = getSections(competition, application, userId);
         Long yourFinancesSectionId = getYourFinancesSectionId(application);
 
-        Integer completedQuestionsPercentage = application.getCompletion() == null ? 0 : application.getCompletion().intValue();
+        int completedQuestionsPercentage = application.getCompletion() == null ? 0 : application.getCompletion().intValue();
 
         List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccessObjectOrThrowException();
 
@@ -142,7 +139,6 @@ public class ApplicationOverviewModelPopulator {
                 assignButtonViewModels.put(questionResource.getQuestion().getId(), assignButtonsPopulator.populate(applicantSectionResource, questionResource, questionResource.isCompleteByApplicant(applicantSectionResource.getCurrentApplicant())));
             });
         });
-
 
         return new ApplicationOverviewSectionViewModel(sections, subSections, sectionQuestions, financeSections, hasFinanceSection, financeSectionId, assignButtonViewModels);
     }
@@ -208,8 +204,8 @@ public class ApplicationOverviewModelPopulator {
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = getCombinedMarkedAsCompleteSections(completedSectionsByOrganisation);
 
-        Boolean allQuestionsCompleted = sectionService.allSectionsMarkedAsComplete(application.getId());
-        Boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation, completedSectionsByOrganisation);
+        boolean allQuestionsCompleted = sectionService.allSectionsMarkedAsComplete(application.getId());
+        boolean userFinanceSectionCompleted = isUserFinanceSectionCompleted(application, userOrganisation.get(), completedSectionsByOrganisation);
 
         ApplicationOverviewCompletedViewModel viewModel = new ApplicationOverviewCompletedViewModel(sectionsMarkedAsComplete, allQuestionsCompleted, markedAsComplete, userFinanceSectionCompleted);
         userOrganisation.ifPresent(org -> viewModel.setCompletedSections(completedSectionsByOrganisation.get(org.getId())));
@@ -227,38 +223,32 @@ public class ApplicationOverviewModelPopulator {
     }
 
 
-    private Boolean isUserFinanceSectionCompleted(ApplicationResource application, Optional<OrganisationResource> userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        List<SectionResource> eachOrganisationFinanceSections = getSectionsByType(allSections, FINANCE);
+    private boolean isUserFinanceSectionCompleted(ApplicationResource application, OrganisationResource userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
 
-        Long eachCollaboratorFinanceSectionId = null;
-        if(!eachOrganisationFinanceSections.isEmpty()) {
-            eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
-        }
-        return completedSectionsByOrganisation.get(userOrganisation.get().getId()).contains(eachCollaboratorFinanceSectionId);
+        return sectionService.getAllByCompetitionId(application.getCompetition())
+                .stream()
+                .filter(section -> section.getType().equals(FINANCE))
+                .map(SectionResource::getId)
+                .anyMatch(id -> completedSectionsByOrganisation.get(userOrganisation.getId()).contains(id));
     }
 
     private Long getYourFinancesSectionId(ApplicationResource application) {
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
 
-        Long financeSectionId = null;
-        if (!financeSections.isEmpty()) {
-            financeSectionId = financeSections.get(0).getId();
-        }
-
-        return financeSectionId;
+        return sectionService.getAllByCompetitionId(application.getCompetition())
+                .stream()
+                .filter(section -> section.getType().equals(FINANCE))
+                .findFirst()
+                .map(SectionResource::getId)
+                .orElse(null);
     }
 
-    private List<SectionResource> getSectionsByType(List<SectionResource> list, SectionType type){
-        return simpleFilter(list, s -> type.equals(s.getType()));
-    }
 
     private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Long organisationId = 0L;
-        if(userOrganisation.isPresent()) {
-            organisationId = userOrganisation.get().getId();
-        }
+
+        Long organisationId = userOrganisation
+                .map(OrganisationResource::getId)
+                .orElse(0L);
+
         return questionService.getMarkedAsComplete(application.getId(), organisationId);
     }
 }
