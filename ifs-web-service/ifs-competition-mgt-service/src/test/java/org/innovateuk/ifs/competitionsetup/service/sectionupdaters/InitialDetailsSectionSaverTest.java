@@ -76,7 +76,7 @@ public class InitialDetailsSectionSaverTest {
 
     @Before
     public void setup(){
-        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(false);
+        when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(false);
     }
 
     @Test

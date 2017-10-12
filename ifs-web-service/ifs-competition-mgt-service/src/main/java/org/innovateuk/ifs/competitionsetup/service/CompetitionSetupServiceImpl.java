@@ -220,13 +220,13 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     }
 
     private void checkCompetitionInitialDetailsComplete(CompetitionResource competitionResource, CompetitionSetupSection section) {
-        if (!isInitialDetailsComplete(competitionResource.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!isInitialDetailsCompleteOrTouched(competitionResource.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             throw new IllegalStateException("'Initial Details' section must be completed first");
         }
     }
 
     private void checkIfInitialDetailsFieldIsRestricted(CompetitionResource competitionResource, CompetitionSetupSection competitionSetupSection, String fieldName) {
-        if (isInitialDetailsComplete(competitionResource.getId()) &&
+        if (isInitialDetailsCompleteOrTouched(competitionResource.getId()) &&
                 competitionSetupSection == CompetitionSetupSection.INITIAL_DETAILS) {
             if (fieldName.equals("competitionTypeId") || fieldName.equals("openingDate")) {
                 throw new IllegalStateException("Cannot update an initial details field that is disabled");
@@ -235,9 +235,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     }
 
     @Override
-    public boolean isInitialDetailsComplete(Long competitionId) {
+    public boolean isInitialDetailsCompleteOrTouched(Long competitionId) {
         Map<CompetitionSetupSection, Boolean> statuses = competitionSetupRestService.getSectionStatuses(competitionId).getSuccessObjectOrThrowException();
-        return statuses.getOrDefault(CompetitionSetupSection.INITIAL_DETAILS, Boolean.FALSE);
+        return statuses.containsKey(CompetitionSetupSection.INITIAL_DETAILS);
     }
 
 	@Override

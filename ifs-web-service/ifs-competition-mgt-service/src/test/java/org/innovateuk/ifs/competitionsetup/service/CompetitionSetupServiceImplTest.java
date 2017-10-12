@@ -189,7 +189,7 @@ public class CompetitionSetupServiceImplTest {
         Optional<Long> objectId = Optional.of(1L);
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
-                .thenReturn(RestResult.restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Boolean.FALSE)));
+                .thenReturn(RestResult.restSuccess(asMap()));
 
         service.autoSaveCompetitionSetupSection(competition, section, fieldName, value, objectId);
     }
@@ -204,7 +204,7 @@ public class CompetitionSetupServiceImplTest {
         Optional<Long> objectId = Optional.of(1L);
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
-                .thenReturn(RestResult.restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Boolean.FALSE)));
+                .thenReturn(RestResult.restSuccess(asMap()));
 
         service.autoSaveCompetitionSetupSubsection(competition, section, subsection, fieldName, value, objectId);
     }
@@ -216,7 +216,7 @@ public class CompetitionSetupServiceImplTest {
         CompetitionSetupSection section = CompetitionSetupSection.ADDITIONAL_INFO;
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
-                .thenReturn(RestResult.restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Boolean.FALSE)));
+                .thenReturn(RestResult.restSuccess(asMap()));
 
         service.saveCompetitionSetupSection(competitionSetupForm, competition, section);
     }
@@ -230,7 +230,7 @@ public class CompetitionSetupServiceImplTest {
         CompetitionSetupSubsection subsection = CompetitionSetupSubsection.APPLICATION_DETAILS;
 
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
-                .thenReturn(RestResult.restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Boolean.FALSE)));
+                .thenReturn(RestResult.restSuccess(asMap()));
 
         service.saveCompetitionSetupSubsection(competitionSetupForm, competition, section, subsection);
     }

@@ -26,7 +26,7 @@ public class CompetitionSetupPermissionRulesTest extends BasePermissionRulesTest
         UserResource loggedInUser = new UserResource();
 
         when(competitionServiceMock.getById(competitionId)).thenReturn(competitionResource);
-        when(competitionSetupService.isInitialDetailsComplete(competitionId)).thenReturn(Boolean.TRUE);
+        when(competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)).thenReturn(Boolean.TRUE);
         assertTrue(rules.manageInnovationLead(competitionId, loggedInUser));
     }
 

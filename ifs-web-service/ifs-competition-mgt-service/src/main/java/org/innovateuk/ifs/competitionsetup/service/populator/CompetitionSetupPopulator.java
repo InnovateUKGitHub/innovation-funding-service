@@ -31,7 +31,7 @@ public class CompetitionSetupPopulator {
                 && !section.preventEdit(competitionResource);
 
         GeneralSetupViewModel viewModel = new GeneralSetupViewModel(editable, competitionResource, section, CompetitionSetupSection.values(),
-                competitionSetupService.isInitialDetailsComplete(competitionResource.getId()));
+                competitionSetupService.isInitialDetailsCompleteOrTouched(competitionResource.getId()));
 
         if (section.hasDisplayableSetupFragment()) {
             viewModel.setCurrentSectionFragment("section-" + section.getPath());

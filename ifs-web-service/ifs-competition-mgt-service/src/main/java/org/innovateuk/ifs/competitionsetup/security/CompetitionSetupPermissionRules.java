@@ -23,6 +23,6 @@ public class CompetitionSetupPermissionRules {
     }
 
     private boolean competitionInitialDetailsSet(Long competitionId) {
-        return competitionSetupService.isInitialDetailsComplete(competitionId);
+        return competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId);
     }
 }

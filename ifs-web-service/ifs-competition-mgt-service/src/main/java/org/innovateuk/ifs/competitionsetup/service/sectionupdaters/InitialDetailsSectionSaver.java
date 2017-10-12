@@ -103,7 +103,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
     }
 
     private boolean applicationFormHasNotBeenInitialised(CompetitionResource competition) {
-        return !competitionSetupService.isInitialDetailsComplete(competition.getId());
+        return !competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId());
     }
 
     private List<Error> doSetupComplete(final CompetitionResource competition, final InitialDetailsForm initialDetailsForm) {

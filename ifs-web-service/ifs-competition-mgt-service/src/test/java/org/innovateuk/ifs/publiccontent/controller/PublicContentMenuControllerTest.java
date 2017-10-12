@@ -53,7 +53,7 @@ public class PublicContentMenuControllerTest extends BaseControllerMockMVCTest<P
     public void testGetPublicContentMenu() throws Exception {
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(defaultCompetition));
         when(publicContentMenuPopulator.populate(COMPETITION_ID, WEB_BASE_URL)).thenReturn(new PublicContentMenuViewModel());
-        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(true);
+        when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(true);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID))
                 .andExpect(status().is2xxSuccessful())
@@ -64,7 +64,7 @@ public class PublicContentMenuControllerTest extends BaseControllerMockMVCTest<P
     public void testPublishPublicContentSuccess() throws Exception {
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(defaultCompetition));
         when(publicContentService.publishByCompetitionId(COMPETITION_ID)).thenReturn(serviceSuccess());
-        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(true);
+        when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(true);
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID))
                 .andExpect(status().is3xxRedirection())
@@ -78,7 +78,7 @@ public class PublicContentMenuControllerTest extends BaseControllerMockMVCTest<P
         when(competitionRestService.getCompetitionById(COMPETITION_ID)).thenReturn(restSuccess(defaultCompetition));
         when(publicContentService.publishByCompetitionId(COMPETITION_ID)).thenReturn(serviceFailure(PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH));
         when(publicContentMenuPopulator.populate(COMPETITION_ID, WEB_BASE_URL)).thenReturn(new PublicContentMenuViewModel());
-        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(true);
+        when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(true);
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID))
                 .andExpect(status().is2xxSuccessful())

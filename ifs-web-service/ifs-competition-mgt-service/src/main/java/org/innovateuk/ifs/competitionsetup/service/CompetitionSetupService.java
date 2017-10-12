@@ -42,9 +42,9 @@ public interface CompetitionSetupService {
 	ServiceResult<Void> saveCompetitionSetupSubsection(CompetitionSetupForm competitionSetupForm,
 											   CompetitionResource competitionResource, CompetitionSetupSection section, CompetitionSetupSubsection subsection);
 
-    boolean isInitialDetailsComplete(Long competitionId);
+    boolean isInitialDetailsCompleteOrTouched(Long competitionId);
 
-    boolean isCompetitionReadyToOpen(CompetitionResource competitionResource);
+	boolean isCompetitionReadyToOpen(CompetitionResource competitionResource);
 
 	ServiceResult<Void> setCompetitionAsReadyToOpen(Long competitionId);
 

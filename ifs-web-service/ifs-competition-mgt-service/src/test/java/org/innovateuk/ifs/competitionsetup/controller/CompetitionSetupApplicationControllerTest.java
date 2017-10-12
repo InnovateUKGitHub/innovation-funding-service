@@ -85,7 +85,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         validator.afterPropertiesSet();
         ReflectionTestUtils.setField(controller, "validator", validator);
 
-        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(true);
+        when(competitionSetupService.isInitialDetailsCompleteOrTouched(COMPETITION_ID)).thenReturn(true);
     }
 
     @Test
