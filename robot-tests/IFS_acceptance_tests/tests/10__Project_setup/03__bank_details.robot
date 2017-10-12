@@ -332,10 +332,10 @@ the project finance user downloads the bank details
 
 the user opens the excel and checks the content
     ${contents}=                    read csv file  ${DOWNLOAD_FOLDER}/bank_details.csv
-    ${vitruvius_details}=           get from list  ${contents}  9
+    ${vitruvius_details}=           get from list  ${contents}  3
     ${vitruvius}=                   get from list  ${vitruvius_details}  0
     should be equal                 ${vitruvius}  ${Vitruvius_Name}
-    ${Armstrong_Butler_details}=    get from list  ${contents}  10
+    ${Armstrong_Butler_details}=    get from list  ${contents}  5
     ${Armstrong_Butler}=            get from list  ${Armstrong_Butler_details}  0
     should be equal                 ${Armstrong_Butler}  ${Armstrong_Butler_Name}
     ${application_number}=          get from list  ${vitruvius_details}  1

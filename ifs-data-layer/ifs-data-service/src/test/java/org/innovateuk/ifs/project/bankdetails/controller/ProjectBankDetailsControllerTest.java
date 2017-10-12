@@ -6,9 +6,7 @@ import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -19,23 +17,13 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static java.util.Arrays.asList;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
   public class ProjectBankDetailsControllerTest extends BaseControllerMockMVCTest<ProjectBankDetailsController> {
-      private RestDocumentationResultHandler document;
-
-      @Before
-      public void setUpDocumentation() throws Exception {
-          this.document = document("project/bank-details/{method-name}",
-                  preprocessResponse(prettyPrint()));
-      }
 
       @Override
       protected ProjectBankDetailsController supplyControllerUnderTest() {
