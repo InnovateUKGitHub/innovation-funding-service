@@ -27,7 +27,7 @@
                 <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1">save form</button>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('organisationName')} ? 'form-group-error'">
-                    <label class="form-label-bold" th:for="${#ids.next('organisationName')}">
+                    <label class="form-label-bold" for="organisationName">
                         <span>Organisation name</span>
                         <th:block th:if="${#fields.hasErrors('organisationName')}">
                             <span class="error-message" th:each="err : ${#fields.errors('organisationName')}" th:text="${err}"></span>

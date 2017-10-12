@@ -62,7 +62,7 @@
 
                         <tr th:if="*{stagedInvite}" class="repeatable-row">
                             <td class="form-group" th:classappend="${#fields.hasErrors('stagedInvite.name')} ? 'form-group-error'">
-                                <label th:for="${#ids.next('stagedInvite.name')}">
+                                <label for="stagedInvite.name">
                                     <span class="visually-hidden">Applicant name</span>
                                     <th:block th:if="${#fields.hasErrors('stagedInvite.name')}">
                                         <span th:each="err : ${#fields.errors('stagedInvite.name')}"
@@ -78,7 +78,7 @@
                                        th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                             </td>
                             <td class="form-group" th:classappend="${#fields.hasErrors('stagedInvite.email')} ? 'form-group-error'">
-                                <label th:for="${#ids.next('stagedInvite.email')}">
+                                <label for="stagedInvite.email">
                                     <span class="visually-hidden">Applicant email</span>
                                     <th:block th:if="${#fields.hasErrors('stagedInvite.email')}">
                                         <span th:each="err : ${#fields.errors('stagedInvite.email')}"
