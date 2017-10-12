@@ -29,14 +29,12 @@ public class ProjectDetailsViewModel {
     private CompetitionResource competition;
     private boolean projectDetailsCompleteAndAllFinanceContactsAssigned;
     private boolean spendProfileGenerated;
+    private boolean grantOfferLetterGenerated;
     private ProjectUserResource projectManager;
     private boolean readOnlyView;
 
     private Map<Long, ProjectUserResource> financeContactsByOrganisationId;
     private boolean userLeadPartner;
-
-    private boolean projectManagerEditable;
-    private boolean addressEditable;
 
     public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
                                    List<Long> usersPartnerOrganisations,
@@ -49,9 +47,8 @@ public class ProjectDetailsViewModel {
                                    boolean projectDetailsCompleteAndAllFinanceContactsAssigned,
                                    ProjectUserResource projectManager,
                                    boolean spendProfileGenerated,
-                                   boolean readOnlyView,
-                                   boolean projectManagerEditable,
-                                   boolean addressEditable) {
+                                   boolean grantOfferLetterGenerated,
+                                   boolean readOnlyView) {
         this.project = project;
         this.currentUser = currentUser;
         this.usersPartnerOrganisations = usersPartnerOrganisations;
@@ -61,13 +58,12 @@ public class ProjectDetailsViewModel {
         this.competition = competition;
         this.projectDetailsCompleteAndAllFinanceContactsAssigned = projectDetailsCompleteAndAllFinanceContactsAssigned;
         this.spendProfileGenerated = spendProfileGenerated;
+        this.grantOfferLetterGenerated = grantOfferLetterGenerated;
         this.projectManager = projectManager;
         this.readOnlyView = readOnlyView;
         List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
         this.financeContactsByOrganisationId = simpleToMap(financeRoles, ProjectUserResource::getOrganisation, Function.identity());
         this.userLeadPartner = userIsLeadPartner;
-        this.projectManagerEditable = projectManagerEditable;
-        this.addressEditable = addressEditable;
     }
 
     public ProjectResource getProject() {
@@ -124,15 +120,11 @@ public class ProjectDetailsViewModel {
         return spendProfileGenerated;
     }
 
+    public boolean isGrantOfferLetterGenerated() {
+        return grantOfferLetterGenerated;
+    }
+
     public ProjectUserResource getProjectManager() {
         return projectManager;
-    }
-
-    public boolean isProjectManagerEditable() {
-        return projectManagerEditable;
-    }
-
-    public boolean isAddressEditable() {
-        return addressEditable;
     }
 }

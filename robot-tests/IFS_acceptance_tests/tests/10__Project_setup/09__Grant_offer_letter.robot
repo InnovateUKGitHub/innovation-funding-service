@@ -32,6 +32,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-1577 Allow change of Project address until generation of GOL
 ...
 ...               IFS-1578 Allow change of Project Manager until generation of GOL
+...
+...               IFS-1579 Allow change of Finance Contact until generation of GOL
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup    Upload
@@ -103,11 +105,12 @@ Lead should not be able to see GOL until it is sent by IUK
     When the user clicks the button/link             link=Project setup status
     Then the user should not see the element         link=Grant offer letter
 
-Lead cannot change project manager and project address after GOL generation
-    [Documentation]  INFUND-1577, IFS-1578
+Lead cannot change project manager, project address and finance contact after GOL generation
+    [Documentation]  INFUND-1577, IFS-1578, IFS-1579
     [Tags]
     Given the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/details/project-manager  ${403_error_message}
     When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/details/project-address  ${403_error_message}
+    Then the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/details/finance-contact?organisation=${Gabtype_Id}  ${403_error_message}
 
 Non lead should not be able to see GOL until it is sent by IUK
     [Documentation]  INFUND-7027

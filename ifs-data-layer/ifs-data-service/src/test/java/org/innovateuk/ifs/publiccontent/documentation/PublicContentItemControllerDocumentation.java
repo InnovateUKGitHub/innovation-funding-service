@@ -5,10 +5,8 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPa
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.publiccontent.controller.PublicContentItemController;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentItemService;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -22,8 +20,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,17 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PublicContentItemControllerDocumentation extends BaseControllerMockMVCTest<PublicContentItemController> {
     @Mock
     private PublicContentItemService publicContentItemService;
-    private RestDocumentationResultHandler document;
 
     @Override
     protected PublicContentItemController supplyControllerUnderTest() {
         return new PublicContentItemController();
-    }
-
-    @Before
-    public void setup() {
-        this.document = document("public-content/items/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -59,7 +48,7 @@ public class PublicContentItemControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/public-content/items/find-by-filter?innovationAreaId=1&searchString=keyword&pageNumber=2&pageSize=20"))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("public-content/items/{method-name}",
                         requestParameters(
                                 parameterWithName("innovationAreaId").description("Id of innovationArea where should be filtered on (Optional)"),
                                 parameterWithName("searchString").description("Keywords where should be filtered on (Optional)"),
@@ -84,7 +73,7 @@ public class PublicContentItemControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/public-content/items/by-competition-id/{id}", id))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("public-content/items/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("The competition id of the required public content item")
                         ),

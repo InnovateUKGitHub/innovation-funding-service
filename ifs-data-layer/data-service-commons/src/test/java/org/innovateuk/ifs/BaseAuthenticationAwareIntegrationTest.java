@@ -2,6 +2,7 @@ package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.security.SecurityRuleUtil;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -58,6 +59,8 @@ public abstract class BaseAuthenticationAwareIntegrationTest extends BaseIntegra
     protected UserResource getByEmail(String email) {
         return userMapper.mapToResource(userRepository.findByEmail(email).get());
     }
+
+    protected User getUserByEmail(String email) {return userRepository.findByEmail(email).get();}
 
     protected void loginSteveSmith() {
         setLoggedInUser(getSteveSmith());
