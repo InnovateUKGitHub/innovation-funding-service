@@ -147,8 +147,13 @@ hr {
   clear: both;
 }
 
-.no-js {
-  [data-javascript-back-link="true"] {
-    display: none;
+button {
+  &.link-back {
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    padding-right: 0;
+    cursor: pointer;
   }
 }
