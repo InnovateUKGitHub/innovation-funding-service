@@ -18,8 +18,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     TRAVEL("travel", true, "Travel and subsistence"),
     OTHER_COSTS("other_costs", true, "Other costs"),
     YOUR_FINANCE("your_finance"),
-    FINANCE("finance", true, "Finance"),
-    OTHER_FUNDING("other_funding", true, "Other Funding"),
+    FINANCE("finance", false, "Finance"),
+    OTHER_FUNDING("other_funding", false, "Other Funding"),
     ACADEMIC("academic");
 
     private String type;
