@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="spend-profile">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -17,7 +17,7 @@
             Please review
             <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
-        
+
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${project.name},size='heading-xlarge'" />
         <form th:object="${form}" th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST" >
 
