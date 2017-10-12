@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 
 @Service
 public class SetupStatusServiceImpl implements SetupStatusService {
@@ -42,12 +45,21 @@ public class SetupStatusServiceImpl implements SetupStatusService {
 
     @Override
     public ServiceResult<SetupStatusResource> findSetupStatus(String className, Long classPk) {
-        return ServiceResult.serviceSuccess(setupStatusMapper.mapToResource(setupStatusRepository.findByClassNameAndClassPk(className, classPk)));
+        Optional<SetupStatus> resultOpt = setupStatusRepository.findByClassNameAndClassPk(className, classPk);
+        if(resultOpt.isPresent()) {
+            return ServiceResult.serviceSuccess(setupStatusMapper.mapToResource(resultOpt.get()));
+        }
+        return ServiceResult.serviceFailure(notFoundError(SetupStatus.class, classPk, className));
     }
 
     @Override
     public ServiceResult<SetupStatusResource> findSetupStatusAndTarget(String className, Long classPk, String targetClassName, Long targetId) {
-        return ServiceResult.serviceSuccess(setupStatusMapper.mapToResource(setupStatusRepository.findByClassNameAndClassPkAndTargetClassNameAndTargetId(className, classPk, targetClassName, targetId)));
+        Optional<SetupStatus> resultOpt = setupStatusRepository.findByClassNameAndClassPkAndTargetClassNameAndTargetId(className, classPk, targetClassName, targetId);
+
+        if(resultOpt.isPresent()) {
+            return ServiceResult.serviceSuccess(setupStatusMapper.mapToResource(resultOpt.get()));
+        }
+        return ServiceResult.serviceFailure(notFoundError(SetupStatus.class, classPk, className));
     }
 
     @Override
