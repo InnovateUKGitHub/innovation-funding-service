@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-187: As an applicant in the application form, I should be able to format my text in a basic way (bold, underline and bullets), so I can style my text properly
-Suite Setup       log in and create new application if there is not one already
+Suite Setup       log in and create new application if there is not one already  Robot test application
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot

@@ -50,6 +50,11 @@ input {
       @extend %read-only-boxed;
     }
   }
+
+  &[type="number"] {
+    line-height: 1.43;
+    padding: 4px;
+  }
 }
 
 .form-group {

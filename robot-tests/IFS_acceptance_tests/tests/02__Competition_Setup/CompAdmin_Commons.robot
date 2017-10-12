@@ -5,13 +5,17 @@ Resource    ../../resources/defaultResources.robot
 #CA = Competition Administration
 ${CA_UpcomingComp}   ${server}/management/dashboard/upcoming
 ${CA_Live}           ${server}/management/dashboard/live
+${compType_Programme}  Programme
+${compType_Sector}     Sector
+${compType_Generic}    Generic
+
 
 *** Keywords ***
 the user edits the assessed question information
     the user enters text to a text field    id=question.maxWords    100
     the user enters text to a text field    id=question.scoreTotal    100
     the user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
-    the user clicks the button/link    jQuery=Button:contains("+Add guidance row")
+    the user clicks the button/link    jQuery=button:contains("+Add guidance row")
     the user enters text to a text field    id=guidancerow-5-scorefrom    11
     the user enters text to a text field    id=guidancerow-5-scoreto    12
     the user enters text to a text field    id=guidancerow-5-justification    This is a justification
@@ -30,10 +34,10 @@ the user sees the correct assessed question information
     the user should not see the text in the page    The business opportunity is plausible
 
 the user fills in the CS Initial details
-    [Arguments]  ${compTitle}  ${month}  ${nextyear}
+    [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}
     the user clicks the button/link                      link=Initial details
     the user enters text to a text field                 css=#title  ${compTitle}
-    the user selects the option from the drop-down menu  Programme  id=competitionTypeId
+    the user selects the option from the drop-down menu  ${compType}  id=competitionTypeId
     the user selects the option from the drop-down menu  Emerging and enabling  id=innovationSectorCategoryId
     the user selects the option from the drop-down menu  Robotics and autonomous systems  css=select[id^=innovationAreaCategory]
     the user enters text to a text field                 css=#openingDateDay  1
@@ -44,6 +48,7 @@ the user fills in the CS Initial details
     the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup
     the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete
+
 
 the user fills in the CS Funding Information
     the user clicks the button/link       link=Funding information
@@ -60,15 +65,14 @@ the user fills in the CS Funding Information
     the user should see the element       jQuery=div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Eligibility
-    the user clicks the button/link  link=Eligibility
-    the user clicks the button/link  jQuery=label[for="single-or-collaborative-collaborative"]
-    the user clicks the button/link  jQuery=label[for="single-or-collaborative-collaborative"]
-    the user clicks the button/link  jQuery=label[for="research-categories-33"]
-    the user clicks the button/link  jQuery=label[for="research-categories-33"]
-    the user clicks the button twice  jQuery=label[for="lead-applicant-type-1"]
+    [Arguments]  ${organisationType}
+    the user clicks the button/link   link=Eligibility
+    the user clicks the button twice  css=label[for="single-or-collaborative-collaborative"]
+    the user clicks the button twice  css=label[for="research-categories-33"]
+    the user clicks the button twice  css=label[for="lead-applicant-type-${organisationType}"]
     the user selects the option from the drop-down menu  1  researchParticipation
-    the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
-    the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
+    the user clicks the button/link  css=label[for="comp-resubmissions-yes"]
+    the user clicks the button/link  css=label[for="comp-resubmissions-yes"]
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element   jQuery=div:contains("Eligibility") ~ .task-status-complete
@@ -119,30 +123,42 @@ the user fills in the CS Milestones
     the user should see the element       jQuery=div:contains("Milestones") ~ .task-status-complete
 
 the user marks the Application as done
+    [Arguments]  ${growthTable}
     the user clicks the button/link  link=Application
+    the user fills in the Finances questions  ${growthTable}
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
+the user fills in the Finances questions
+    [Arguments]  ${growthTable}
+    the user clicks the button/link       link=Finances
+    the user clicks the button/link       jQuery=.button:contains("Edit this question")
+    the user selects the radio button     includeGrowthTable  include-growth-table-${growthTable}
+    the user enters text to a text field  css=.editor  Those are the rules that apply to Finances
+    the user clicks the button/link       css=button[type="submit"]
+
 the user fills in the CS Assessors
     the user clicks the button/link   link=Assessors
-    the user selects the radio button  assessorCount  3
+    the user clicks the button twice  jQuery=label[for^="assessors"]:contains("3")
     the user should see the element   css=#assessorPay[value="100"]
     the user selects the radio button  hasAssessmentPanel  0
     the user selects the radio button  hasInterviewStage  0
     the user clicks the button/link   jQuery=button:contains("Done")
-    the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
+#    the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
+# Plz uncomment this line TODO due to IFS-1527
     the user clicks the button/link   link=Competition setup
     the user should see the element   jQuery=div:contains("Assessors") ~ .task-status-complete
 
 the user fills in the Public content and publishes
+    [Arguments]  ${extraKeyword}
     # Fill in the Competition information and search
     the user clicks the button/link         link=Competition information and search
     the user enters text to a text field    id=short-description  Short public description
     the user enters text to a text field    id=funding-range  Up to £1million
     the user enters text to a text field    css=[labelledby="eligibility-summary"]  Summary of eligiblity
     the user selects the radio button       publishSetting  public
-    the user enters text to a text field    id=keywords  Search, Testing, Robot
+    the user enters text to a text field    id=keywords  Search, Testing, Robot, ${extraKeyword}
     the user clicks the button/link         jQuery=button:contains("Save and review")
     the user clicks the button/link         jQuery=.button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Competition information and search") ~ .task-status-complete
@@ -176,14 +192,14 @@ the user fills in the Public content and publishes
     # Fill in the How to apply
     the user clicks the button/link         link=How to apply
     the user enters text to a text field    id=heading-0    Heading 1
-    the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
+    the user enters text to a text field    css=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and review")
     the user clicks the button/link         jQuery=.button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("How to apply") ~ .task-status-complete
     # Fill in the Supporting information
     the user clicks the button/link         link=Supporting information
     the user enters text to a text field    id=heading-0    Heading 1
-    the user enters text to a text field    jQuery=div.editor:first-of-type  Content 1
+    the user enters text to a text field    css=div.editor:first-of-type  Content 1
     the user clicks the button/link         jQuery=button:contains("Save and review")
     the user clicks the button/link         jQuery=.button:contains("Return to public content")
     the user should see the element         jQuery=div:contains("Supporting information") ~ .task-status-complete
@@ -204,6 +220,12 @@ Change the close date of the Competition in the database to a fortnight
     [Arguments]  ${competition}
     ${fortnight} =  get fortnight
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${fortnight}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
+
+Change the close date of the Competition in the database to fifteen days
+    [Arguments]  ${competition}
+    ${fifteen} =  get fifteen days
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${fifteen}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
+
 
 Change the close date of the Competition in the database to thirteen days
     [Arguments]  ${competition}

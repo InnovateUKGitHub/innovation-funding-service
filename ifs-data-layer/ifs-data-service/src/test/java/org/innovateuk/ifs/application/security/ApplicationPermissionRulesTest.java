@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -68,6 +69,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource user3;
     private UserResource assessor;
     private UserResource compAdmin;
+    private UserResource projectFinance;
 
     private RoleResource innovationLeadRole = newRoleResource().withType(INNOVATION_LEAD).build();
     private Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
@@ -88,6 +90,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         user3 = newUserResource().build();
         compAdmin = compAdminUser();
         assessor = assessorUser();
+        projectFinance = projectFinanceUser();
 
         processRole1 = newProcessRole().withRole(leadApplicantRole).build();
         processRole2 = newProcessRole().withRole(applicantRole).build();
@@ -468,6 +471,14 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void testProjectFinanceCanUpdateApplicationState() throws Exception {
+        assertTrue(rules.projectFinanceCanUpdateApplicationState(applicationResource1, projectFinance));
+        assertFalse(rules.projectFinanceCanUpdateApplicationState(applicationResource1, compAdmin));
+        assertFalse(rules.projectFinanceCanUpdateApplicationState(applicationResource1, leadOnApplication1));
+        assertFalse(rules.projectFinanceCanUpdateApplicationState(applicationResource1, user2));
+    }
+
+    @Test
     public void testUserCanCreateNewApplication() {
         // For each possible Competition Status...
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
@@ -481,6 +492,22 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     assertTrue(rules.userCanCreateNewApplication(competition, user));
                 } else {
                     assertFalse(rules.userCanCreateNewApplication(competition, user));
+                }
+            });
+        });
+    }
+
+    @Test
+    public void testMarkAsInelgibileAllowedBeforeAssesment() {
+        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+            allGlobalRoleUsers.forEach(user -> {
+                Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
+                ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
+                when(competitionRepositoryMock.findOne(application.getCompetition())).thenReturn(competition);
+                if(!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competitionStatus) && user.hasAnyRoles(PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD)){
+                    assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
+                } else {
+                    assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
                 }
             });
         });

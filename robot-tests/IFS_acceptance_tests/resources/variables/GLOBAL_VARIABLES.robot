@@ -37,6 +37,14 @@ ${openCompetitionBusinessRTO_name}      Home and industrial efficiency programme
 ${openCompetitionBusinessRTO}           ${competition_ids['${openCompetitionBusinessRTO_name}']}
 ${openCompetitionBusinessRTO_overview}  ${SERVER}/competition/${openCompetitionBusinessRTO}/overview/
 
+${openCompetitionPublicSector_name}  Photonics for Public
+${openCompetitionPublicSector}       ${competition_ids['${openCompetitionPublicSector_name}']}
+
+${openCompetitionResearch_name}  Photonics for Research
+${openCompetitionResearch}       ${competition_ids['${openCompetitionResearch_name}']}
+
+${openGenericCompetition}  Generic innovation
+
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}    Aerospace technology investment sector
 ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}    ${competition_ids['${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}']}
 
@@ -66,7 +74,6 @@ ${FUNDERS_PANEL_APPLICATION_1_TITLE}      Sensing & Control network using the li
 ${FUNDERS_PANEL_APPLICATION_1_NUMBER}     ${application_ids['${FUNDERS_PANEL_APPLICATION_1_TITLE}']}
 ${FUNDERS_PANEL_APPLICATION_2_TITLE}      Matter - Planning for Web
 ${FUNDERS_PANEL_APPLICATION_2_NUMBER}     ${application_ids['${FUNDERS_PANEL_APPLICATION_2_TITLE}']}
-${FUNDERS_PANEL_APPLICATION_1_PROJECT}    12
 ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}    ${EMPIRE_LTD_NAME}
 ${IN_ASSESSMENT_COMPETITION_NAME}         Sustainable living models for the future
 ${IN_ASSESSMENT_COMPETITION}              ${competition_ids['${IN_ASSESSMENT_COMPETITION_NAME}']}
@@ -82,6 +89,10 @@ ${IN_ASSESSMENT_APPLICATION_5_TITLE}      Products and Services Personalised
 ${IN_ASSESSMENT_APPLICATION_5_NUMBER}     ${application_ids['${IN_ASSESSMENT_APPLICATION_5_TITLE}']}
 ${IN_ASSESSMENT_APPLICATION_5_LEAD_PARTNER_EMAIL}    paula.fuller@example.com
 ${INFORM_COMPETITION_NAME}                Integrated delivery programme - low carbon vehicles
+${INFORM_COMPETITION_NAME_1}              Climate control solution
+${INFORM_COMPETITION_NAME_1_NUMBER}       ${application_ids['${INFORM_COMPETITION_NAME_1}']}
+${INFORM_COMPETITION_NAME_2}              High Performance Gasoline Stratified
+${INFORM_COMPETITION_NAME_2_NUMBER}       ${application_ids['${INFORM_COMPETITION_NAME_2}']}
 ${NON_IFS_COMPETITION_NAME}     Transforming big data
 ${DASHBOARD_URL}    ${SERVER}/applicant/dashboard
 ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/summary
@@ -162,6 +173,7 @@ ${database_password}    password
 ${database_host}    ifs-database
 ${database_port}    3306
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
+${CLOSED_COMPETITION}  ${competition_ids['${CLOSED_COMPETITION_NAME}']}
 ${CLOSED_COMPETITION_APPLICATION_TITLE}   Neural networks to optimise freight train routing
 ${CLOSED_COMPETITION_APPLICATION}   ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme

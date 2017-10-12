@@ -7,7 +7,7 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='All competitions',size='heading-large'" />
         </div>
         <div class="column-half alignright">
-            <div class="form-search">
+            <div class="form-search" th:if="${showSearch == null || showSearch == true}">
                 <label class="visuallyhidden" for="searchQuery">Search for:</label>
                 <input type="search" th:value="${searchQuery}" name="searchQuery" id="searchQuery" class="search-query"
                        placeholder="Search competitions"/>
@@ -35,8 +35,8 @@
             <a th:href="@{'/dashboard/project-setup'}" th:text="'Project setup ('+${counts.projectSetupCount}+')'"></a>
         </li>
 
-        <li id="section-5" th:class="${selectedTab == 'complete' ? 'selected' : ''}" th:unless="${supportView}">
-            <a th:href="@{'/dashboard/complete'}" th:text="'Complete ('+${counts.completedCount}+')'"></a>
+        <li id="section-5" th:class="${selectedTab == 'previous' ? 'selected' : ''}" th:unless="${supportView}">
+            <a th:href="@{'/dashboard/previous'}" th:text="'Previous ('+${counts.feedbackReleasedCount}+')'"></a>
         </li>
     </ul>
 </div>
@@ -49,19 +49,29 @@
                 <th:block th:insert="competition/dashboard :: competition-name" />
             </a>
             <th:block th:unless="${nonIfs}">
-                <a th:href="@{'/competition/setup/'+${competition.id}}"
-                   th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}">
-                    <th:block th:insert="competition/dashboard :: competition-name" />
-                </a>
-                <th:block th:if="${competition.competitionStatus.inFlight}">
-                    <a th:href="@{${competition.topLevelNavigationLink}}">
+                <th:block th:if="${customLink}">
+                    <a th:href="@{${customLink}}">
                         <th:block th:insert="competition/dashboard :: competition-name" />
                     </a>
                 </th:block>
-                <a th:href="${'/project-setup-management/competition/'+competition.id+'/status'}"
-                   th:if="${T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP == competition.competitionStatus}">
-                    <th:block th:insert="competition/dashboard :: competition-name" />
-                </a>
+                <th:block th:unless="${customLink}">
+                    <th:block th:if="${projectSetup}">
+                        <a th:href="${'/project-setup-management/competition/'+competition.id+'/status'}">
+                            <th:block th:insert="competition/dashboard :: competition-name" />
+                        </a>
+                    </th:block>
+                    <th:block th:unless="${projectSetup}">
+                        <a th:href="@{'/competition/setup/'+${competition.id}}"
+                           th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}">
+                            <th:block th:insert="competition/dashboard :: competition-name" />
+                        </a>
+                        <th:block th:if="${competition.competitionStatus.inFlight}">
+                            <a th:href="@{${competition.topLevelNavigationLink}}">
+                                <th:block th:insert="competition/dashboard :: competition-name" />
+                            </a>
+                        </th:block>
+                    </th:block>
+                </th:block>
             </th:block>
         </h3>
     </div>

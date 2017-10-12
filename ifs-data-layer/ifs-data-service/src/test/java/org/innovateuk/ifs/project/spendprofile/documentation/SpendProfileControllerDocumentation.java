@@ -11,9 +11,7 @@ import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -43,8 +41,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -53,16 +49,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTest<SpendProfileController> {
-    private RestDocumentationResultHandler document;
 
     @Override
     protected SpendProfileController supplyControllerUnderTest() {
         return new SpendProfileController();
-    }
-
-    @Before
-    public void setup() {
-        this.document = document("project/{method-name}", preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -72,7 +62,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(post("/project/{projectId}/spend-profile/generate", 123L)).
                 andExpect(status().isCreated()).
-                andDo(this.document.snippets(
+                andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the " +
                                         "Spend Profile information is being generated")
@@ -87,7 +77,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
                 .thenReturn(serviceSuccess());
         mockMvc.perform(post("/project/{projectId}/spend-profile/approval/{approvalType}", 123L, ApprovalType.APPROVED))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the " +
                                         "Spend Profile information is being approved or rejected"),
@@ -106,7 +96,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get("/project/{projectId}/spend-profile/approval", 123L))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(ApprovalType.APPROVED)))
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the " +
                                         "Spend Profile status is requested")
@@ -133,7 +123,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(table)))
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
@@ -162,7 +152,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-csv", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(spendProfileCSVResource)))
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
@@ -180,7 +170,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
                 thenReturn(serviceFailure(notFoundError(SpendProfileResource.class, projectId, organisationId)));
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-csv", projectId, organisationId))
                 .andExpect(status().isNotFound())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
@@ -197,7 +187,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
                 thenReturn(serviceFailure(SPEND_PROFILE_CSV_GENERATION_FAILURE));
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-csv", projectId, organisationId))
                 .andExpect(status().is5xxServerError())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
@@ -218,7 +208,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
                 .andExpect(status().isNotFound())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
@@ -245,7 +235,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(spendProfileResource)))
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
@@ -268,7 +258,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
         )
                 .andExpect(status().isNotFound())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being retrieved")
@@ -296,7 +286,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(table)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being saved"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being saved")
@@ -319,7 +309,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete", projectId, organisationId)
         )
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being marked as complete"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being marked as complete")
@@ -340,7 +330,7 @@ public class SpendProfileControllerDocumentation extends BaseControllerMockMVCTe
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete", projectId, organisationId)
         )
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being marked as incomplete"),
                                 parameterWithName("organisationId").description("Organisation Id for which the Spend Profile data is being marked as incomplete")

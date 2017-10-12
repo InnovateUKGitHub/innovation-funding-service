@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.service.modelpopulator;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.springframework.ui.Model;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
 
 import java.util.Optional;
 
@@ -13,5 +13,5 @@ public interface CompetitionSetupSubsectionModelPopulator {
 
 	CompetitionSetupSubsection sectionToPopulateModel();
 	
-	void populateModel(Model model, CompetitionResource competitionResource, Optional<Long> objectId);
+	CompetitionSetupSubsectionViewModel populateModel(CompetitionResource competitionResource, Optional<Long> objectId);
 }

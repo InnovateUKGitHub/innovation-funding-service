@@ -28,7 +28,7 @@ Resource          ../../resources/defaultResources.robot
 *** Variables ***
 ${Molecular_id}        ${application_ids['Molecular tree breeding']}
 ${Virtual_Reality_id}  ${application_ids['Living with Virtual Reality']}
-${Paul_Plum_id}        169
+${Paul_Plum_id}        171
 
 *** Test Cases ***
 View the list of the applications
@@ -171,7 +171,7 @@ Review the application
     [Teardown]    The user goes back to the previous page
 
 View the available assessors
-    [Documentation]    INFUND-7233\\
+    [Documentation]    INFUND-7233
     [Tags]
     Then the user should see the element  jQuery=.column-two-thirds:contains("Assessors")
     And the user clicks the button/link   jQuery=.pagination-label:contains("Next")

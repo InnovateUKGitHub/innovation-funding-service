@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage assessment panel'" />
+</head>
+
+<body th:with="context='comp-management'" class="competition-management">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{id}(id=${model.competitionId})})" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage assessment panel',subTitle=|${model.competitionId}: ${model.competitionName}, competition ${#strings.toLowerCase(model.competitionStatus.displayName)} |,size='heading-xlarge'" />
+
+    <div class="no-constrain-width justify-left">
+        <!--/*
+        <p class="form-hint">If you make any changes on this page, you must confirm them in order to make them visible on the assessors' dashboards.</p>
+
+        <div class="grid-row">
+            <div class="column-quarter">
+                <button class="button width-full" th:disabled="${param.action == null}">Confirm actions</button>
+            </div>
+            <div class="column-quarter">
+                <div class="highlight-panel highlight-panel--tall">
+                    <span class="heading-large" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
+                </div>
+            </div>
+        </div>
+                */-->
+
+        <h2 class="heading-medium">Key statistics</h2>
+
+        <ul class="grid-row">
+            <li class="column-quarter">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="heading-large" th:text="${model.assessorsInvited}"></span><br /><small>Assessors pending</small>
+                </div>
+            </li>
+
+            <li class="column-quarter">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="heading-large" th:text="${model.assessorsAccepted}"></span><br /><small>Assessors accepted</small>
+                </div>
+            </li>
+
+            <li class="column-quarter">
+                <div class="highlight-panel highlight-panel-padded">
+                    <span class="heading-large" th:text="${model.applicationsInPanel}"></span><br /><small>Applications assigned to panel</small>
+                </div>
+            </li>
+        </ul>
+
+        <h2 class="heading-medium">Panel navigation</h2>
+
+        <ul class="link-list">
+            <li><a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Invite assessors to attend</a></li>
+            <li><a class="disabled" aria-disabled="true">Assign applications to panel</a></li>
+            <li><a class="disabled" aria-disabled="true">Allocate applications to assessors</a></li>
+        </ul>
+    </div>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
+

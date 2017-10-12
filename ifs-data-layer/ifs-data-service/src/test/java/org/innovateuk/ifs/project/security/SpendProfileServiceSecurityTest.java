@@ -233,6 +233,11 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
         }
 
         @Override
+        public ServiceResult<ApprovalType> getSpendProfileStatus(Long projectId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<SpendProfileTableResource> getSpendProfileTable(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
             return null;
         }

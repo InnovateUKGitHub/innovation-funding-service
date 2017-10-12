@@ -35,13 +35,14 @@
 
 %icon-tick {
   background-image: url('../images/field/tick-icon.png');
-  background-size: 14px;
   background-repeat: no-repeat;
+  background-position: center left;
 }
 
 %icon-cross {
   background-image: url('../images/field/cross-icon.png');
   background-repeat: no-repeat;
+  background-position: center left;
 }
 
 %icon-assigned-to-me {
@@ -80,8 +81,7 @@
       font-weight: 300;
       font-size: 16px;
       color: $grey-1;
-      padding-left: 20px;
-      padding-right: 0;
+      padding: 3px 5px 0 20px;
       text-align: left;
       color: $button-colour;
       font-weight: bold;

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.assessment.domain.Assessment;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.*;
@@ -66,6 +68,9 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private CompetitionMapper competitionMapper;
+
     private static final Long COMPETITION_ID = 1L;
 
     private static final String COMPETITION_NAME_UPDATED = "Competition name updated";
@@ -122,7 +127,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
         checkExistingCompetition(competition);
     }
-
 
     @Test
     public void createCompetition() throws Exception {
@@ -312,7 +316,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         retrievedCompetition.getCompetitionStatus();
     }
 
-
     @Test
     public void updateCompetitionCoFunders() throws Exception {
         checkCompetitionCount(2);
@@ -465,6 +468,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         CompetitionResource comp = controller.create().getSuccessObjectOrThrowException();
         comp.setName(specialChar);
         controller.saveCompetition(comp, comp.getId()).getSuccessObjectOrThrowException();
+        milestoneRepository.save(createNewMilestones(comp, oneDayAhead, twoDaysAhead, threeDaysAhead, fourDaysAhead, fiveDaysAhead, sixDaysAhead, sevenDaysAhead));
 
         CompetitionSearchResult pageOneResult = controller.search(specialChar, pageOne, size).getSuccessObjectOrThrowException();
         assertThat(pageOneResult.getNumber(), equalTo(pageOne));
@@ -496,6 +500,9 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
         CompetitionResource projectSetup = createWithDates(eightDaysAgo, sevenDaysAgo, sixDaysAgo, fiveDaysAgo, fourDaysAgo, threeDaysAgo, twoDaysAgo, oneDayAgo);
         assertThat(projectSetup.getCompetitionStatus(), equalTo(CompetitionStatus.PROJECT_SETUP));
+
+        Application app = newApplication().withManageFundingEmailDate(ZonedDateTime.now()).withFundingDecision(FundingDecisionStatus.FUNDED).withCompetition(competitionMapper.mapToDomain(projectSetup)).build();
+        applicationRepository.save(app);
 
         CompetitionCountResource counts = controller.count().getSuccessObjectOrThrowException();
 
@@ -554,8 +561,22 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
             }
         });
 
-    }
+        List<CompetitionSearchResultItem> previousCompetitions = controller.feedbackReleased().getSuccessObjectOrThrowException();
 
+        Set<Long> previousCompetitionIds = newHashSet(projectSetup.getId());
+        Set<Long> notPreviousCompetitionIds = newHashSet(notStartedCompetition.getId(), openCompetition.getId(),
+                closedCompetition.getId(), inAssessmentCompetition.getId(), inPanelCompetition.getId(),
+                assessorFeedbackCompetition.getId());
+
+        assertThat(previousCompetitions.size(), equalTo(previousCompetitionIds.size()));
+        assertThat(counts.getProjectSetupCount(), equalTo((long) previousCompetitionIds.size()));
+
+        previousCompetitions.forEach(competitionResource -> {
+            assertTrue(previousCompetitionIds.contains(competitionResource.getId()));
+            assertFalse(notPreviousCompetitionIds.contains(competitionResource.getId()));
+        });
+
+    }
 
     @Test
     public void initApplicationFormByType() throws Exception {

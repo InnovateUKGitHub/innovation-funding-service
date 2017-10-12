@@ -48,7 +48,7 @@ Queries section is linked to from the main finance check summary page
     [Documentation]    INFUND-4840
     [Tags]
     [Setup]  the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6)
+    When the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(6)
     Then the user should see the text in the page    Raise finance queries to the organisation in this section
 
 Queries section contains finance contact name, email and telephone
@@ -177,7 +177,7 @@ New query can be posted
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
     Then the user should not see the element  jQuery=.button:contains("Post Query")
     And the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
-    And the user should see the element  jQuery=#post-new-response
+    And the user should see the element  css=#post-new-response
 
 Query sections are no longer editable
     [Documentation]    INFUND-4840
@@ -198,7 +198,7 @@ Finance contact receives an email when new query is posted
 Project finance user can add another query
     [Documentation]    INFUND-4840
     [Tags]
-    Given the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6)
+    Given the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(6)
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
     And the user enters text to a text field    id=queryTitle    a viability query's title
     And the user selects the option from the drop-down menu    VIABILITY    id=section
@@ -374,7 +374,7 @@ Project finance user can view the response
     [Tags]
     [Setup]    log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6)
+    When the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(6)
     Then the user should see the text in the page    this is some response text
 
 Project finance user can view the finance contact's uploaded files
@@ -412,7 +412,7 @@ Link to notes from viability section
     [Tags]
     Given log in as a different user    &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2)
+    And the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(2)
     And the user clicks the button/link    jQuery=.button:contains("Notes")
     Then the user should see the text in the page    Use this section to make notes related to the finance checks
     And the user should see the element    jQuery=.button:contains("Create a new note")
@@ -429,7 +429,7 @@ Link to notes from main finance checks summary page
     [Documentation]    INFUND-4845
     [Tags]
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(7)
+    And the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(7)
     Then the user should see the text in the page    Use this section to make notes related to the finance checks
     And the user should see the element    jQuery=.button:contains("Create a new note")
 

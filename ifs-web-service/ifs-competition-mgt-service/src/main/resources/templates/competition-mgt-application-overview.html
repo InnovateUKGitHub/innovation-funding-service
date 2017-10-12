@@ -30,7 +30,7 @@
 
         <h2 class="heading-small">Reason for removal</h2>
         <p th:text="${ineligibility.reasonForRemoval}"></p>
-        <th:block th:unless="${readOnly}">
+        <th:block th:if="${canReinstate}" th:unless="${ineligibility.readOnly}">
             <div class="extra-margin">
                 <a th:href="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication/confirm(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})}"
                    class="button button-secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
@@ -88,7 +88,8 @@
 
     <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED && !readOnly}"
          class="extra-margin collapsible collapsible-eligibility collapsible-stateless"
-         th:classappend="${#fields.hasErrors('${form.*}')} ? 'collapsible-expanded'">
+         th:classappend="${#fields.hasErrors('${form.*}')} ? 'collapsible-expanded'"
+         th:unless="${ineligibility.readOnly}">
         <h2>Mark application as ineligible</h2>
         <div>
             <form th:action="@{~__${#httpServletRequest.requestURI} + '?' + ${#httpServletRequest.queryString}__}"
@@ -106,11 +107,12 @@
                               maxlength="5000"
                               data-max_words="400"
                               data-maxwordslength="400"
-                              th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5,000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}"
+                              required="required"
+                              th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5,000')}, data-maxwordslength-errormessage=#{validation.field.max.word.count(null, '400')}, data-required-errormessage=#{validation.field.must.not.be.blank}"
                               th:errorclass="form-control-error"
                               rows="10"
                               th:field="*{ineligibleReason}"></textarea>
-                    <div class="textarea-footer" th:with="content=*{ineligibleReason}">
+                    <div class="textarea-footer" th:with="content=*{ineligibleReason}" aria-live="polite" aria-atomic="true" role="status">
                         <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=400, currentWordsLeft=${#ifsUtil.wordsRemaining(400, content)})" />
                     </div>
                 </div>

@@ -9,11 +9,11 @@
     </div>
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding information',size='heading-xlarge'" />
 
-    <form th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="additional"
-          th:action="@{(${editable} ? '' : 'additional/edit')}"
+    <form th:attr="data-competition=${model.general.competition.id},data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="additional"
+          th:action="@{(${model.general.editable} ? '' : 'additional/edit')}"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
-        <fieldset th:if="${editable}">
+        <fieldset th:if="${model.general.editable}">
             <legend class="visuallyhidden">Funding information</legend>
             <div class="grid-row">
                 <div class="column-half">
@@ -149,14 +149,14 @@
                            required="required"
                            th:attr="data-required-errormessage=#{validation.additionalinfoform.competitioncode.required}"
                            data-autosave-disabled="data-autosave-disabled"/>
-                    <button class="button button-secondary" th:disabled="${isSetupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${competition.id}">Generate code</button>
+                    <button class="button button-secondary" th:disabled="${model.general.state.setupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${model.general.competition.id}">Generate code</button>
                 </div>
             </fieldset>
 
             <button class="button">Done</button>
         </fieldset>
 
-        <fieldset th:if="${!editable}" id="section-2-">
+        <fieldset th:if="${!model.general.editable}" id="section-2-">
             <table>
                 <thead>
                 <tr>
@@ -195,19 +195,19 @@
                 <dd th:text="${competitionSetupForm.competitionCode}">Competition Code</dd>
             </dl>
 
-            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='initial')}">
+            <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='initial')}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Initial details</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='eligibility')}">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='eligibility')}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Eligibility</span>
             </a>

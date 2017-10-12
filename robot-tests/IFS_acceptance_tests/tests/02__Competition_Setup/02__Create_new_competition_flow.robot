@@ -75,15 +75,16 @@ User can create a new competition
     [Tags]    HappyPath
     Given the user navigates to the page       ${CA_UpcomingComp}
     When the user clicks the button/link       jQuery=.button:contains("Create competition")
-    And The user should not see the element    jQuery('.button:contains("Complete")
+    And The user should not see the element    jQuery= button:contains("Complete")
     And The user should not see the element    link=Funding information
     And The user should not see the element    link=Eligibility
     And The user should not see the element    link=Milestones
     And The user should not see the element    link=Application
     And The user should not see the element    link=Assessors
     And The user should not see the element    link=Public content
-    And The user should see the element    link=Initial details
+    And The user should see the element        link=Initial details
     And The user should not see the element    link=Stakeholders
+    And The user should see the element        jQuery=p:contains("Once you complete, this competition will be ready to open.")
 
 New competition shows in Preparation section
     [Documentation]    INFUND-2980
@@ -113,7 +114,7 @@ Initial details - User enters valid values and marks as done
     And the user should see the text in the page     Yes
     And the user should see the element              jQuery=.button:contains("Edit")
 
-Initial details - Inovation sector of Open should be visible
+Initial details - Innovation sector of Open should be visible
     [Documentation]    INFUND-9152
     [Tags]    HappyPath
     Given the user clicks the button/link                               jQuery=.button:contains("Edit")
@@ -169,13 +170,12 @@ Initial details - Comp Type and Date should not be editable
     And the user should see the text in the page    Creative industries
     And the user should see the text in the page    Yes
 
-
 Initial details - should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    jQuery=li:nth-child(1) .task-status-complete
-    And the user should not see the element    jQuery=.button:contains("Complete")
+    Then the user should see the element    css=li:nth-child(1) .task-status-complete
+    And the user should not see the element    jQuery=button:contains("Complete")
 
 User should have access to all the sections
     [Documentation]    INFUND-4725, IFS-1104
@@ -243,7 +243,7 @@ Funding information: can be saved
     And the user should see the text in the page    2004
     And the user should see the text in the page    4242
     And the user should see the text in the page    1812-1
-    And the user should see the element    jQuery=.button:contains("Edit")
+    And the user should see the element    jQuery=button:contains("Edit")
 
 Funding information: can be edited
     [Documentation]    INFUND-3002
@@ -258,11 +258,11 @@ Funding information: should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    jQuery=li:nth-child(2) .task-status-complete
-    And the user should not see the element    jQuery=.button:contains("Complete")
+    Then the user should see the element    css=li:nth-child(2) .task-status-complete
+    And the user should not see the element    jQuery=button:contains("Complete")
 
 Eligibility: Contain the correct options
-    [Documentation]    INFUND-2989 INFUND-2990 INFUND-9225
+    [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Eligibility
@@ -270,7 +270,9 @@ Eligibility: Contain the correct options
     Then the user should see the element    jQuery=label:contains("Single or Collaborative")
     When the user should see the element    jQuery=label:contains("Collaborative")
     And the user should see the element    jQuery=label:contains("Business")
+    And the user should see the element    jQuery=label[for="lead-applicant-type-2"]:contains("Research")
     And the user should see the element    jQuery=label:contains("Research and technology organisation")
+    And the user should see the element    jQuery=label:contains("Public sector")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("Yes")
     And the user should see the element    jQuery=div:nth-child(7) label:contains("No")
     And the user should see the element    jQuery=label:contains("Feasibility studies")
@@ -308,8 +310,8 @@ Eligibility: Should have a Green Check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    jQuery=li:nth-child(3) .task-status-complete
-    And the user should not see the element    jQuery=.button:contains("Complete")
+    Then the user should see the element    css=li:nth-child(3) .task-status-complete
+    And the user should not see the element    jQuery=button:contains("Complete")
 
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
@@ -344,7 +346,7 @@ Milestones: Green check should show
     [Tags]
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(4) .task-status-complete
-    And the user should not see the element    jQuery=.button:contains("Complete")
+    And the user should not see the element    jQuery=button:contains("Complete")
 
 Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
@@ -413,7 +415,6 @@ Application: Scope
     Then The user should see the text in the page    Scope
     And the user checks the question fields
 
-
 Application: Scope Assessment questions
     [Documentation]    INFUND-5631    INFUND-6044  INFUND-6283
     Given the user clicks the button/link    jQuery=a:contains("Edit this question")
@@ -439,7 +440,7 @@ Application: Project Summary
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user fills the empty question fields
-    And The user clicks the button/link    jQuery=.button[value="Save and close"]
+    And The user clicks the button/link    css=.button[value="Save and close"]
     And the user clicks the button/link    link=Project summary
     Then The user should see the text in the page    Project summary
     And the user checks the question fields
@@ -451,7 +452,7 @@ Application: Finances
     [Setup]  the user navigates to the page  ${landingPage}
     Given the user clicks the button/link    link=Finances
     Then the user should see the element     jQuery=h1:contains("Application finances")
-    And the user should see the element      jQuery=.panel:contains("Each partner is required to complete the following finance sections, selected by the template for this competition.")
+    And the user should see the element      jQuery=.panel:contains("The competition template will select the following finance sections for each partner.")
     When the user clicks the button/link     jQuery=.button:contains("Edit this question")
     Then the user should see the element     css=input:checked ~ label[for="full-application-finance-yes"]
     And the user should see the element      css=label[for="full-application-finance-no"]
@@ -470,17 +471,32 @@ Application: Mark as done should display green tick
     Given The user clicks the button/link       jQuery=button:contains(Done)
     Then The user should not see the element    jQuery=button:contains(Done)
     And The user clicks the button/link         link=Competition setup
-    Then the user should see the element        jQuery=li:nth-child(5) .task-status-complete
+    Then the user should see the element        css=li:nth-child(5) .task-status-complete
+
+Complete button disabled when sections are edited
+    [Documentation]  IFs-648
+    [Tags]
+    When the user clicks the button/link  link=Eligibility
+    And the user clicks the button/link   jQuery=button:contains("Edit")
+    And the user clicks the button/link   link=Competition setup
+    Then the user should see the element  css=#compCTA[disabled="disabled"]
+    When the user clicks the button/link  link=Eligibility
+    And the user clicks the button/link   jQuery=button:contains("Done")
+    And the user clicks the button/link   link=Competition setup
+#    The following steps will move the comp from "In preparation" to "Ready to Open" state
+    Then the user clicks the button/link  jQuery=a:contains("Complete")
+    And the user clicks the button/link   jQuery=a:contains("Done")
 
 Application: Edit again should mark as incomplete
     [Documentation]    INFUND-5964
+    [Tags]
     [Setup]    the user navigates to the page   ${landingPage}
     Given the user clicks the button/link       link=Application details
     When the user clicks the button/link        jQuery=a:contains("Edit this question")
     And The user clicks the button/link         jQuery=button:contains("Save and close")
     Then The user should see the element        jQuery=button:contains(Done)
     And The user clicks the button/link         link=Competition setup
-    Then the user should not see the element    jQuery=li:nth-child(5) .task-status-complete
+    Then the user should not see the element    css=li:nth-child(5) .task-status-complete
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
@@ -500,7 +516,7 @@ User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
     [Tags]  Pending
     # TODO Pending due to IFS-493
-    When the user clicks the button/link   jQuery=.button:contains("Complete")
+    When the user clicks the button/link   jQuery=button:contains("Complete")
     Then the user clicks the button/link   jQuery=button:contains("Done")
     And the user should see the text in the page  Setup of this competition has now been completed and will automatically open on the date set.
     When the user clicks the button/link   link=All competitions
@@ -576,7 +592,7 @@ the total should be correct
     [Arguments]    ${Total}
     mouse out    css=input
     Focus    jQuery=button:contains("Done")
-    Wait Until Element Contains Without Screenshots    jQuery=p.no-margin    ${Total}
+    Wait Until Element Contains Without Screenshots    css=p.no-margin    ${Total}
 
 the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10
@@ -669,7 +685,7 @@ The competition should show in the correct section
     Element should contain    ${SECTION}    ${COMP_NAME}
 
 the user fills the scope assessment questions
-    The user clicks the button/link    jQuery=Button:contains("+Add guidance row")
+    The user clicks the button/link    jQuery=button:contains("+Add guidance row")
     The user enters text to a text field    id=guidancerow-2-subject    New subject
     The user enters text to a text field    id=guidancerow-2-justification    This is a justification
     The user enters text to a text field    id=question.assessmentGuidance    Guidance for assessing scope section

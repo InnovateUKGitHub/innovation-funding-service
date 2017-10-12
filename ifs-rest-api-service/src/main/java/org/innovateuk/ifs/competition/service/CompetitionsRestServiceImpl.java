@@ -2,12 +2,15 @@ package org.innovateuk.ifs.competition.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -56,6 +59,13 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
         return getWithRestResult(competitionsRestURL + "/non-ifs", competitionSearchResultItemListType());
+    }
+
+    @Override
+    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        String uriWithParams = buildPaginationUri(competitionsRestURL +  "/" + competitionId + "/unsuccessful-applications", pageNumber, pageSize, sortField, params);
+        return getWithRestResult(uriWithParams, ApplicationPageResource.class);
     }
 
     @Override
@@ -167,5 +177,10 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<CompetitionResource> createNonIfs() {
         return postWithRestResult(competitionsRestURL + "/non-ifs", CompetitionResource.class);
+    }
+
+    @Override
+    public RestResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
+        return getWithRestResult(competitionsRestURL +  "/feedback-released", competitionSearchResultItemListType());
     }
 }

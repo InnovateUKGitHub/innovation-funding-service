@@ -43,7 +43,7 @@
                             th:errorclass="field-error"
                             rows="4"
                             th:field="*{skillAreas}"></textarea>
-                        <div class="textarea-footer" th:with="skillAreas=*{skillAreas}">
+                        <div class="textarea-footer" th:with="skillAreas=*{skillAreas}" aria-live="polite" aria-atomic="true" role="status">
                             <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, skillAreas)})" />
                         </div>
                     </div>

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -27,7 +28,6 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     protected CompetitionController supplyControllerUnderTest() {
         return new CompetitionController();
     }
-
 
     @Test
     public void getCompetitionsByUserId() throws Exception {
@@ -131,6 +131,25 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(status().isOk());
 
         verify(competitionServiceMock, only()).removeInnovationLead(competitionId, innovationLeadUserId);
+
+    }
+
+    @Test
+    public void findUnsuccessfulApplications() throws Exception {
+        final Long competitionId = 1L;
+        int pageIndex = 0;
+        int pageSize = 20;
+        String sortField = "id";
+
+        ApplicationPageResource applicationPage = new ApplicationPageResource();
+
+        when(competitionServiceMock.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
+
+        mockMvc.perform(get("/competition/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}", competitionId, pageIndex, pageSize, sortField))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(applicationPage)));
+
+        verify(competitionServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
 
     }
 

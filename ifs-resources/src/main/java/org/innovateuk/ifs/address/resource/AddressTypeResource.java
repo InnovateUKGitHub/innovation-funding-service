@@ -16,6 +16,10 @@ public class AddressTypeResource {
     public AddressTypeResource() {
     }
 
+    public AddressTypeResource(Long id) {
+        this.id = id;
+    }
+
     public AddressTypeResource(Long id, String name) {
         this.id = id;
         this.name = name;

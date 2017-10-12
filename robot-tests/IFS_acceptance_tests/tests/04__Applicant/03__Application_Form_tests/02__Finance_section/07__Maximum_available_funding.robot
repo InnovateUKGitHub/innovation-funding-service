@@ -23,7 +23,7 @@ Maximum funding level available for lead business
     And the user clicks the button/link                      link=Begin application
     And the applicant completes the application details      Application details  Experimental development
     And the user fills the organisation details with Project growth table     ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
-    When the user fills in the project costs                 ${Application_name_business}
+    When the user fills in the project costs                 labour costs  n/a
     And the user clicks the button/link                      link=Your funding
     Then the user should see the text in the page            Enter your funding level (maximum 45%).
     And the correct funding displayed for lead applicant     Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}  60%
@@ -37,7 +37,7 @@ Lead applicant invites a Charity member
     Given Invite a non-existing collaborator                                liamCharity@innovateuk.com  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}
     When the user clicks the button/link                                    link=${Application_name_business}
     And the user fills the organisation details with Project growth table   ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
-    And the user fills in the project costs                                 ${Application_name_business}
+    And the user fills in the project costs                                 labour costs  n/a
     Then the funding displayed is as expected
 
 Invite existing academic collaborator
@@ -64,7 +64,7 @@ Maximum funding level available for RTO lead
     And the user clicks the button/link                                     link=Begin application
     And the applicant completes the application details for RTO lead appln  Application details  Experimental development
     And the user fills in the organisation information                      ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
-    And the user fills in the project costs                                 ${Application_name_RTO}
+    And the user fills in the project costs                                 labour costs  n/a
     When the user clicks the button/link                                    link=Your funding
     Then the user should see the text in the page                           Enter your funding level (maximum 100%).
     And the correct funding displayed for lead applicant                    Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}  100%
@@ -78,7 +78,7 @@ Lead RTO applicant invites a Charity member
     Given Invite a non-existing collaborator            liamRTO@innovateuk.com  ${openCompetitionRTO_name}
     When the user clicks the button/link                link=${Application_name_RTO}
     And the user fills in the organisation information  ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
-    And the user fills in the project costs             ${Application_name_RTO}
+    And the user fills in the project costs             labour costs  n/a
     Then the funding displayed is as expected
     And the user marks your funding section as complete
 
@@ -155,8 +155,7 @@ the user fills the other application details questions
     the user clicks the button/link       jQuery=button:contains("research category")
     the user clicks the button twice      jQuery=label[for^="researchCategoryChoice"]:contains("${Research_category}")
     the user clicks the button/link       jQuery=button:contains(Save)
-    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
-    the user clicks the button/link       jQuery=label[for="application.resubmission-no"]
+    the user clicks the button twice      css=label[for="application.resubmission-no"]
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
     The user enters text to a text field  id=application_details-startdate_month  11

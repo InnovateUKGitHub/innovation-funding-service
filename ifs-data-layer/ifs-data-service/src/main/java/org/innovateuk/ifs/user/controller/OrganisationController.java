@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.user.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.organisation.transactional.OrganisationInitialCreationService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +22,9 @@ public class OrganisationController {
     @Autowired
     private OrganisationService organisationService;
 
+    @Autowired
+    private OrganisationInitialCreationService organisationCreationService;
+
     @GetMapping("/findByApplicationId/{applicationId}")
     public RestResult<Set<OrganisationResource>> findByApplicationId(@PathVariable("applicationId") final Long applicationId) {
         return organisationService.findByApplicationId(applicationId).toGetResponse();
@@ -38,6 +40,17 @@ public class OrganisationController {
         return organisationService.getPrimaryForUser(userId).toGetResponse();
     }
 
+    @PostMapping("/createOrMatch")
+    public RestResult<OrganisationResource> createOrMatch(@RequestBody OrganisationResource organisation) {
+        return organisationCreationService.createOrMatch(organisation).toPostCreateResponse();
+    }
+
+    @PostMapping("/createAndLinkByInvite")
+    public RestResult<OrganisationResource> createAndLinkByInvite(@RequestBody OrganisationResource organisation,
+                                                          @RequestParam("inviteHash") String inviteHash) {
+        return organisationCreationService.createAndLinkByInvite(organisation, inviteHash).toPostCreateResponse();
+    }
+
     @PostMapping("/create")
     public RestResult<OrganisationResource> create(@RequestBody OrganisationResource organisation) {
         return organisationService.create(organisation).toPostCreateResponse();
@@ -51,11 +64,5 @@ public class OrganisationController {
     @PostMapping("/updateNameAndRegistration/{organisationId}")
     public RestResult<OrganisationResource> updateNameAndRegistration(@PathVariable("organisationId") Long organisationId, @RequestParam(value = "name") String name, @RequestParam(value = "registration") String registration) {
         return organisationService.updateOrganisationNameAndRegistration(organisationId, name, registration).toPostCreateResponse();
-    }
-
-    // TODO DW - INFUND-1555 - do we want to be returning an OrganisationResource from this call?
-    @PostMapping("/addAddress/{organisationId}")
-    public RestResult<OrganisationResource> addAddress(@PathVariable("organisationId") final Long organisationId, @RequestParam("addressType") final OrganisationAddressType addressType, @RequestBody AddressResource address) {
-        return organisationService.addAddress(organisationId, addressType, address).toPutWithBodyResponse();
     }
 }

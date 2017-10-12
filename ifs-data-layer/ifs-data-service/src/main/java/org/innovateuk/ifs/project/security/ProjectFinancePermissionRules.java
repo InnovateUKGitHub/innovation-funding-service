@@ -9,9 +9,9 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isCompAdmin;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
 
 /**
  * Defines the permissions for interaction with project finances.

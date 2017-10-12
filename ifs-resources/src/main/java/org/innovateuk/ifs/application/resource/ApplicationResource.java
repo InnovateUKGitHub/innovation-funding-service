@@ -79,6 +79,8 @@ public class ApplicationResource {
 
     private IneligibleOutcomeResource ineligibleOutcome;
 
+    private String leadOrganisationName;
+
     public Long getId() {
         return id;
     }
@@ -158,6 +160,14 @@ public class ApplicationResource {
         this.ineligibleOutcome = ineligibleOutcome;
     }
 
+    public String getLeadOrganisationName() {
+        return leadOrganisationName;
+    }
+
+    public void setLeadOrganisationName(String leadOrganisationName) {
+        this.leadOrganisationName = leadOrganisationName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -174,6 +184,7 @@ public class ApplicationResource {
                 .append(applicationState, that.applicationState)
                 .append(ineligibleOutcome, that.ineligibleOutcome)
                 .append(competition, that.competition)
+                .append(leadOrganisationName, that.leadOrganisationName)
                 .isEquals();
     }
 
@@ -187,6 +198,7 @@ public class ApplicationResource {
                 .append(applicationState)
                 .append(ineligibleOutcome)
                 .append(competition)
+                .append(leadOrganisationName)
                 .toHashCode();
     }
 

@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelInviteStatisticsResource;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.competition.controller.CompetitionKeyStatisticsController;
 import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
@@ -9,6 +11,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionReadyToOpenKeyStatisti
 import org.junit.Test;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.AssessmentPanelInviteStatisticsResourceDocs.assessmentPanelInviteStatisticsResourceBuilder;
+import static org.innovateuk.ifs.documentation.AssessmentPanelInviteStatisticsResourceDocs.assessmentPanelInviteStatisticsResourceFields;
+import static org.innovateuk.ifs.documentation.AssessmentPanelKeyStatisticsResourceDocs.assessmentPanelKeyStatisticsResourceBuilder;
+import static org.innovateuk.ifs.documentation.AssessmentPanelKeyStatisticsResourceDocs.assessmentPanelKeyStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionClosedKeyStatisticsResourceDocs.competitionClosedKeyStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionClosedKeyStatisticsResourceDocs.competitionClosedKeyStatisticsResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInAssessmentKeyStatisticsResourceDocs.competitionInAssessmentKeyStatisticsResourceBuilder;
@@ -100,4 +106,35 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
 
     }
 
+    @Test
+    public void getInAssessmentPanelKeyStatistics() throws Exception {
+        long competitionId = 1L;
+        AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource = assessmentPanelKeyStatisticsResourceBuilder.build();
+
+        when(assessmentServiceMock.getAssessmentPanelKeyStatistics(competitionId)).thenReturn(serviceSuccess(assessmentPanelKeyStatisticsResource));
+        mockMvc.perform(get("/competitionStatistics/{id}/panel", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document("competitionStatistics/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the competition the stats are for")
+                        ),
+                        responseFields(assessmentPanelKeyStatisticsResourceFields)
+                ));
+    }
+
+    @Test
+    public void getInAssessmentInviteKeyStatistics() throws Exception {
+        long competitionId = 1L;
+        AssessmentPanelInviteStatisticsResource assessmentPanelInviteStatisticsResource = assessmentPanelInviteStatisticsResourceBuilder.build();
+
+        when(assessmentServiceMock.getAssessmentPanelInviteStatistics(competitionId)).thenReturn(serviceSuccess(assessmentPanelInviteStatisticsResource));
+        mockMvc.perform(get("/competitionStatistics/{id}/panelInvites", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document("competitionStatistics/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the competition the stats are for")
+                        ),
+                        responseFields(assessmentPanelInviteStatisticsResourceFields)
+                ));
+    }
 }
