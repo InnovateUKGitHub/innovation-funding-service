@@ -11,7 +11,7 @@ jar {
 }
 
 dependencies {
-    compile project(":ifs-resources")
+    compile project(":ifs-commons")
     compile "org.springframework:spring-web"
     compile 'javax.mail:mail:1.4.7'
 }
