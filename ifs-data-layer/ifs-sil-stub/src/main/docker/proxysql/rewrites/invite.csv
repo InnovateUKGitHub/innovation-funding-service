@@ -1,3 +1,0 @@
-email|EMAIL('x')
-hash|UUID('x')
-name|REPLACE('Invitee name. ')

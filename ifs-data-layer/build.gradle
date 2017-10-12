@@ -9,7 +9,7 @@ subprojects {
     ext.ifsWebSystemUserId="8394d970-b250-4b15-9621-3534325691b4"
 
     // data-service-commons is not a docker project.
-    if (it.name != 'data-service-commons') {
+    if (it.name != 'data-service-commons' && it.name != 'ifs-sil-stub') {
 
         task getNewRelicAgent {
             if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() || 

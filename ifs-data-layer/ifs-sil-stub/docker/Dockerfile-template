@@ -1,0 +1,20 @@
+FROM davidcaste/alpine-java-unlimited-jce:jdk8
+MAINTAINER David Soff <dsoff@worth.systems>
+EXPOSE 8080
+EXPOSE 8090
+EXPOSE 8081
+EXPOSE 8000
+EXPOSE 12345
+ENV JAVA_OPTS -Xmx300m
+ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
+RUN apk --update add curl
+
+WORKDIR /
+VOLUME /tmp
+
+ADD newrelic.jar /
+ADD newrelic.yml /
+ADD coscale-monitoring.sh /root/coscale-monitoring.sh
+ADD ifs-sil-stub-@version@.jar app.jar
+
+ENTRYPOINT exec java $JAVA_OPTS $JMX_OPTS -jar app.jar
