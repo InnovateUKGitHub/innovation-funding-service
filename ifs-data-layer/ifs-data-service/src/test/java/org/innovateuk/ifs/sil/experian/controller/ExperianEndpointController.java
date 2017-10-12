@@ -22,6 +22,7 @@ import static org.hibernate.jpa.internal.QueryImpl.LOG;
 @RestController
 @RequestMapping("/silstub")
 @Profile("local")
+// TODO qqRP should this stay here - or should the integration tests require a running stub service?
 public class ExperianEndpointController {
     public static HashMap<SILBankDetails, ValidationResultWrapper> validationErrors;
     public static HashMap<SILBankDetails, SilExperianError> otherErrorsDuringValidation;

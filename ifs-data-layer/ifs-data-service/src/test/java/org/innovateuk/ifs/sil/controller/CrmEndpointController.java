@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.sil.crm.controller;
+package org.innovateuk.ifs.sil.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -20,6 +20,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 @RestController
 @RequestMapping("/silstub")
 @Profile("!crm")
+// TODO qqRP should this stay here - or should the integration tests require a running stub service?
 public class CrmEndpointController {
     private static final Log LOG = LogFactory.getLog(CrmEndpointController.class);
 

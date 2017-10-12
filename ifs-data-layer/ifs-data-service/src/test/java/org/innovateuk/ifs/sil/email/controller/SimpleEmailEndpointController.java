@@ -33,6 +33,7 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
 @RestController
 @RequestMapping("/silstub/sendmail")
 @Profile({"local", "integration-test"})
+// TODO qqRP should this stay here - or should the integration tests require a running stub service?
 public class SimpleEmailEndpointController {
 
     private static final Log LOG = LogFactory.getLog(SimpleEmailEndpointController.class);
