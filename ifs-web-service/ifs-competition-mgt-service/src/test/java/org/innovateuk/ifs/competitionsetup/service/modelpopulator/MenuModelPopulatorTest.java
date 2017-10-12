@@ -3,6 +3,8 @@ package org.innovateuk.ifs.competitionsetup.service.modelpopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competitionsetup.viewmodel.MenuViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
@@ -10,14 +12,12 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.ui.ExtendedModelMap;
-import org.springframework.ui.Model;
 
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -39,7 +39,6 @@ public class MenuModelPopulatorTest {
 	
 	@Test
 	public void testPopulateModel() {
-		Model model = new ExtendedModelMap();
 		CompetitionResource competition = newCompetitionResource()
 				.withCompetitionCode("code")
 				.withName("name")
@@ -51,16 +50,15 @@ public class MenuModelPopulatorTest {
 		PublicContentResource publicContentResource = newPublicContentResource().withPublishDate(today).build();
 		when(publicContentService.getCompetitionById(any(Long.class))).thenReturn(publicContentResource);
 
-		populator.populateModel(model, competition);
-		
-		assertEquals(2, model.asMap().size());
-		assertEquals(today, model.asMap().get("publishDate"));
-		assertEquals(true, model.asMap().get("isPublicContentPublished"));
+        MenuViewModel viewModel = (MenuViewModel) populator.populateModel(getBasicGeneralSetupView(competition), competition);
+
+        assertEquals(today, viewModel.getPublishDate());
+        assertEquals(Boolean.TRUE, viewModel.isPublicContentPublished());
+        assertEquals(CompetitionSetupSection.HOME, viewModel.getGeneral().getCurrentSection());
 	}
 
 	@Test
 	public void testPopulateModelWithUnpublishedContent() {
-		Model model = new ExtendedModelMap();
 		CompetitionResource competition = newCompetitionResource()
 				.withCompetitionCode("code")
 				.withName("name")
@@ -71,10 +69,14 @@ public class MenuModelPopulatorTest {
 		PublicContentResource publicContentResource = newPublicContentResource().withPublishDate(null).build();
 		when(publicContentService.getCompetitionById(any(Long.class))).thenReturn(publicContentResource);
 
-		populator.populateModel(model, competition);
+        MenuViewModel viewModel = (MenuViewModel) populator.populateModel(getBasicGeneralSetupView(competition), competition);
 
-		assertEquals(2, model.asMap().size());
-		assertEquals(null, model.asMap().get("publishDate"));
-		assertEquals(false, model.asMap().get("isPublicContentPublished"));
+		assertEquals(null, viewModel.getPublishDate());
+		assertEquals(Boolean.FALSE, viewModel.isPublicContentPublished());
+        assertEquals(CompetitionSetupSection.HOME, viewModel.getGeneral().getCurrentSection());
 	}
+
+	private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionResource competition) {
+	    return new GeneralSetupViewModel(Boolean.FALSE, competition, CompetitionSetupSection.HOME, CompetitionSetupSection.values(), Boolean.TRUE);
+    }
 }

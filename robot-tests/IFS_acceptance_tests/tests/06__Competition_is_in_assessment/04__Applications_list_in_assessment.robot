@@ -145,9 +145,6 @@ Both calculations in the page should show the same
     ${APPLICATIONS_NUMBER_LIST}=    Get text    css=.column-half span
     Should Be Equal As Integers    ${APPLICATIONS_NUMBER_LIST}    ${APPLICATIONS_NUMBER_SUMMARY}
 
-the admin downloads the excel
-    the user downloads the file    ${Comp_admin1_credentials["email"]}    ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/download    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
-
 User opens the excel and checks the content
     ${Excel1}    Open Excel File    ${DOWNLOAD_FOLDER}/submitted_applications.xlsx
     ${APPLICATION_ID_1}=    Get Cell Value By Sheet Name    ${Excel1}    Submitted Applications    A2

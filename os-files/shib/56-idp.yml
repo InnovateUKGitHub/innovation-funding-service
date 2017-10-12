@@ -67,18 +67,40 @@ items:
             value: "9443"
           - name: HTTP_PORT
             value: "9080"
+          - name: MEMCACHE_ENDPOINT
+            value: "<<SHIBBOLETH-MEMCACHE-ENDPOINT>>"
           - name: LDAP_URL
-            value: "ldaps://ldap:389"
+            value: "<<LDAP-URL>>"
           - name: LDAP_PORT
             value: "389"
+          - name: LDAP_USESTARTTLS
+            value: "false"
+          - name: LDAP_USESSL
+            value: "<<LDAP_USESSL>>"
+          - name: LDAP_BASEDN
+            value: "<<LDAP_BASEDN>>"
+          - name: LDAP_BINDDN
+            value: "<<LDAP_BINDDN>>"
+          - name: LDAP_BINDDNCREDENTIAL
+            value: "<<LDAP-PASSWORD>>"
+          - name: LDAP_USERFILTER
+            value: "(&(mail={user})(!(employeeType=inactive)))"
+          - name: LDAP_ATTRIBUTE_SEARCHFILTER
+            value: "(mail=$resolutionContext.principal)"
+          - name: LDAP_RETURNATTRIBUTES
+            value: "mail,uid"
+          - name: LDAP_AUTHENTICATOR
+            value: "<<LDAP_AUTHENTICATOR>>"
+          - name: GOOGLEANALYTICS_TRACKINGID
+            value: "<<GA-TRACKING-ID>>"
           ports:
           - containerPort: 9443
           - containerPort: 9080
           resources:
             requests:
-              memory: 500M
+              memory: "<<SHIBBOLETH_IDP_MEMORY_REQUEST>>"
             limits:
-              memory: 2048M
+              memory: "<<SHIBBOLETH_IDP_MEMORY_LIMIT>>"
           test: false
   triggers:
   - type: ConfigChange
@@ -100,6 +122,8 @@ items:
   kind: Route
   metadata:
     name: idp
+    annotations:
+      haproxy.router.openshift.io/balance: roundrobin
   spec:
     host: <<SHIB-IDP-ADDRESS>>
     port:

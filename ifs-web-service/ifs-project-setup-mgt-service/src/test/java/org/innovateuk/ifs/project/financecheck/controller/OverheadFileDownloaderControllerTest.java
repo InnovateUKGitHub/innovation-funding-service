@@ -33,15 +33,15 @@ public class OverheadFileDownloaderControllerTest extends BaseControllerMockMVCT
 
         MultipartFile file = new MockMultipartFile(fileName+extension, fileName.getBytes());
         FileEntryResource fileEntryResource = newFileEntryResource().withId(overheadId).withFilesizeBytes(file.getSize()).build();
-        given(overheadFileRestServiceMock.getOverheadFile(
+        given(overheadFileRestServiceMock.getOverheadFileUsingProjectFinanceRowId(
                 overheadId)).willReturn(RestResult.restSuccess(new ByteArrayResource(file.getBytes())));
-        given(overheadFileRestServiceMock.getOverheadFileDetails(
+        given(overheadFileRestServiceMock.getOverheadFileDetailsUsingProjectFinanceRowId(
                 overheadId)).willReturn(RestResult.restSuccess(fileEntryResource));
 
         MvcResult result = mockMvc.perform(get("/download/overheadfile/" + overheadId))
                 .andExpect(status().isOk())
                 .andReturn();
-        verify(overheadFileRestServiceMock).getOverheadFileDetails(projectId);
+        verify(overheadFileRestServiceMock).getOverheadFileDetailsUsingProjectFinanceRowId(projectId);
         assertThat(fileName).isEqualTo(result.getResponse().getContentAsString());
     }
 

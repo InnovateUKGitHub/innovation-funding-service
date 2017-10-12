@@ -52,9 +52,8 @@ input {
   }
 
   &[type="number"] {
-    &::-moz-placeholder {
-      letter-spacing: 3px;
-    }
+    line-height: 1.43;
+    padding: 4px;
   }
 }
 
