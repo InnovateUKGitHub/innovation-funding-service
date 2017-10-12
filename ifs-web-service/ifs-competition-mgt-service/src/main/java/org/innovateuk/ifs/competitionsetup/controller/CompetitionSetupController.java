@@ -211,8 +211,7 @@ public class CompetitionSetupController {
             @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
             ValidationHandler validationHandler,
             @PathVariable(COMPETITION_ID_KEY) long competitionId,
-            Model model
-    ) {
+            Model model) {
         return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, model);
     }
 

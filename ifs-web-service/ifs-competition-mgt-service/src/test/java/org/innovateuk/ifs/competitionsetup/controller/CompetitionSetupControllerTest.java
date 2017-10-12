@@ -46,12 +46,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeResourceBuilder.newCompetitionTypeResource;
-import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
-import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.SETUP_READY_KEY;
-import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.READY_TO_OPEN_KEY;
+import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.*;
 import static org.innovateuk.ifs.competitionsetup.service.sectionupdaters.InitialDetailsSectionSaver.OPENINGDATE_FIELDNAME;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
@@ -192,6 +189,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(Boolean.FALSE);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/application"))
                 .andExpect(status().is3xxRedirection())
@@ -550,6 +548,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
+        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(Boolean.FALSE);
+
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSection(isA(CompetitionSetupForm.class), eq(competition), eq(CompetitionSetupSection.INITIAL_DETAILS))).thenReturn(serviceSuccess());
 
@@ -577,6 +577,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(Boolean.FALSE);
 
         List<CompetitionSetupSection> sections = asList(
                 CompetitionSetupSection.ADDITIONAL_INFO,
@@ -596,6 +597,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     @Test
     public void submitSectionEligibilityWithErrors() throws Exception {
         CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
@@ -726,6 +728,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .withId(COMPETITION_ID)
                 .build();
 
+        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(Boolean.FALSE);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial"))
@@ -738,9 +741,11 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     @Test
     public void testSubmitAssessorsSectionDetailsWithErrors() throws Exception {
         CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
+        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(TRUE);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors"))
@@ -774,9 +779,11 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     @Test
     public void testSubmitAssessorsSectionDetailsWithInvalidAssessorCount() throws Exception {
         CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
+        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(Boolean.TRUE);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors")
@@ -792,6 +799,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     @Test
     public void testSubmitAssessorsSectionDetailsWithInvalidAssessorPay() throws Exception {
         CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
@@ -810,9 +818,11 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     @Test
     public void testSubmitAssessorsSectionDetailsWithInvalidAssessorPay_Bignumber() throws Exception {
         CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
+        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(TRUE);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors")
@@ -828,9 +838,12 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     @Test
     public void testSubmitAssessorsSectionDetailsWithInvalidAssessorPay_NegativeNumber() throws Exception {
         CompetitionResource competition = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .withNonIfs(FALSE)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
+        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(Boolean.TRUE);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/assessors")
@@ -845,10 +858,12 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
     @Test
     public void manageInnovationLeadWhenInitialDetailsNotComplete() throws Exception {
-
-        CompetitionResource competitionResource = newCompetitionResource().build();
+        CompetitionResource competitionResource = newCompetitionResource()
+                .withId(COMPETITION_ID)
+                .build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(FALSE);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/manage-innovation-leads/find"))
                 .andExpect(status().is3xxRedirection())
@@ -878,6 +893,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competitionResource = newCompetitionResource().build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(Boolean.FALSE);
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID + "/manage-innovation-leads/overview"))
                 .andExpect(status().is3xxRedirection())
@@ -907,6 +923,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competitionResource = newCompetitionResource().build();
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(Boolean.FALSE);
 
         Long innovationLeadUserId = 2L;
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/add-innovation-lead/" + innovationLeadUserId))
@@ -939,6 +956,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         CompetitionResource competitionResource = newCompetitionResource().build();
 
+        when(competitionSetupService.isInitialDetailsComplete(COMPETITION_ID)).thenReturn(Boolean.FALSE);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
 
         Long innovationLeadUserId = 2L;

@@ -220,7 +220,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     }
 
     private void checkCompetitionInitialDetailsComplete(CompetitionResource competitionResource, CompetitionSetupSection section) {
-        if (isInitialDetailsComplete(competitionResource.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!isInitialDetailsComplete(competitionResource.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             throw new IllegalStateException("'Initial Details' section must be completed first");
         }
     }

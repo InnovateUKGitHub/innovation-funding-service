@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
@@ -51,6 +52,7 @@ public class AssessorSectionSaverTest {
                 .build(3);
 
         when(competitionService.getAssessorOptionsForCompetitionType(competition.getCompetitionType())).thenReturn(assessorCounts);
+        when(competitionSetupRestService.update(competition)).thenReturn(RestResult.restSuccess());
 
         saver.saveSection(competition, competitionSetupForm);
 
@@ -99,6 +101,7 @@ public class AssessorSectionSaverTest {
                 .build(3);
 
 		when(competitionService.getAssessorOptionsForCompetitionType(competition.getCompetitionType())).thenReturn(assessorCounts);
+		when(competitionSetupRestService.update(competition)).thenReturn(RestResult.restSuccess());
 
 		saver.saveSection(competition, assessorsForm);
 

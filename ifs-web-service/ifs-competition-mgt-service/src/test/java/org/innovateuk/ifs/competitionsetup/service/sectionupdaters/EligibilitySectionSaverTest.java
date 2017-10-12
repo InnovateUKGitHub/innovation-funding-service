@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -41,9 +40,6 @@ public class EligibilitySectionSaverTest {
 	private MilestoneRestService milestoneRestService;
 	
 	@Mock
-	private CompetitionService competitionService;
-
-	@Mock
 	private CompetitionSetupRestService competitionSetupRestService;
 	
 	@Test
@@ -58,6 +54,7 @@ public class EligibilitySectionSaverTest {
 		competitionSetupForm.setSingleOrCollaborative("collaborative");
 		
 		CompetitionResource competition = newCompetitionResource().build();
+		when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
 
 		service.saveSection(competition, competitionSetupForm);
 
