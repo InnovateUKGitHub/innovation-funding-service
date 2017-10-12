@@ -5,11 +5,9 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.controller.PublicContentController;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.PublicContentResourceDocs.publicContentResourceBuilder;
@@ -19,8 +17,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
@@ -30,17 +26,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PublicContentControllerDocumentation extends BaseControllerMockMVCTest<PublicContentController> {
     @Mock
     PublicContentService publicContentService;
-    private RestDocumentationResultHandler document;
 
     @Override
     protected PublicContentController supplyControllerUnderTest() {
         return new PublicContentController();
-    }
-
-    @Before
-    public void setup() {
-        this.document = document("public-content/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -51,7 +40,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
 
         mockMvc.perform(get("/public-content/find-by-competition-id/{competitionId}", competitionId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("public-content/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("The competition id of the required public content")
                         ),
@@ -67,7 +56,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
 
         mockMvc.perform(post("/public-content/publish-by-competition-id/{competitionId}", competitionId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("public-content/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("The competition id the public content to publish")
                         )
@@ -84,7 +73,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(resource)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("public-content/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("The id of the public content to update"),
                                 parameterWithName("section").description("The section of the public content to update")
@@ -104,7 +93,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(resource)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("public-content/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("The id of the public content to update"),
                                 parameterWithName("section").description("The section of the public content to update")

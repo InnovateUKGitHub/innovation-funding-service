@@ -3,8 +3,9 @@ package org.innovateuk.ifs.competitionsetup.service.modelpopulator.application;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSubsectionModelPopulator;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.application.ApplicationQuestionViewModel;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ public class ApplicationQuestionModelPopulator implements CompetitionSetupSubsec
 	}
 
 	@Override
-	public void populateModel(Model model, CompetitionResource competitionResource, Optional<Long> objectId) {
+	public CompetitionSetupSubsectionViewModel populateModel(CompetitionResource competitionResource, Optional<Long> objectId) {
+        return new ApplicationQuestionViewModel();
     }
 }

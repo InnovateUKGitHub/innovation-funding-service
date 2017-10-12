@@ -115,4 +115,30 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
         assertTrue(restResult.isSuccess());
     }
 
+    @Test
+    public void sendAllInvites() {
+        long competitionId = 1L;
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
+
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "sendAllInvites", competitionId), assessorInviteSendResource, OK);
+        assertTrue(service.sendAllInvites(competitionId, assessorInviteSendResource).isSuccess());
+        setupPostWithRestResultVerifications(format("%s/%s/%s", restUrl, "sendAllInvites", competitionId), Void.class, assessorInviteSendResource);
+    }
+
+    @Test
+    public void getAllInvitesToSend() throws Exception {
+        long competitionId = 1L;
+
+        AssessorInvitesToSendResource expected = newAssessorInvitesToSendResource()
+                .withRecipients(asList("James", "John"))
+                .build();
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAllInvitesToSend", competitionId), AssessorInvitesToSendResource.class, expected);
+        AssessorInvitesToSendResource actual = service.getAllInvitesToSend(competitionId).getSuccessObject();
+        assertEquals(expected, actual);
+    }
+
 }
