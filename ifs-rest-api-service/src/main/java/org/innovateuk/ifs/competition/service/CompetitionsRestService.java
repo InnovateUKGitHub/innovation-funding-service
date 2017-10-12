@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.service;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
@@ -46,4 +47,5 @@ public interface CompetitionsRestService {
     RestResult<CompetitionResource> createNonIfs();
     RestResult<List<OrganisationTypeResource>> getCompetitionOrganisationType(long id);
     RestResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
+    RestResult<List<CompetitionOpenQueryResource>> getCompetitionOpenQueries(long competitionId);
 }

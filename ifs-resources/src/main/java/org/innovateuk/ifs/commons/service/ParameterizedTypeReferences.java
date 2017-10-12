@@ -16,6 +16,7 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -237,5 +238,9 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ApplicationSummaryResource>> competitionSummaryResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationSummaryResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryResourceListType() {
+        return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
     }
 }

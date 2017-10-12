@@ -59,3 +59,15 @@
         <td th:case="*"></td><!--/* just in case there is a different status we put out an empty td to not break the table */-->
     </th:block>
 </th:block>
+
+<div th:fragment="project-dashboard-navigation(selectedTab, competitionId)">
+    <ul class="inline-nav cf">
+        <li id="section-1" th:class="${selectedTab == 'all' ? 'selected' : ''}">
+            <a th:href="@{'/competition/{competitionId}/status/all'}" th:text="All projects"></a>
+        </li>
+
+        <li id="section-2" th:class="${selectedTab == 'queries' ? 'selected' : ''}">
+            <a th:href="@{'/competition/{competitionId}/status/queries'}" th:text="Finance query responses"></a>
+        </li>
+    </ul>
+</div>

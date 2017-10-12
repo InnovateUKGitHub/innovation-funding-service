@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.finance.service;
 
-
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
@@ -36,4 +35,5 @@ public interface ProjectFinanceRestService {
     RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long applicationId);
 
     RestResult<ProjectFinanceResource> addProjectFinanceForOrganisation(Long projectId, Long organisationId);
+
 }

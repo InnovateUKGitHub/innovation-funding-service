@@ -12,6 +12,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.PathParam;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -200,6 +201,11 @@ public class CompetitionController {
     @GetMapping("/feedback-released")
     public RestResult<List<CompetitionSearchResultItem>> feedbackReleased() {
         return competitionService.findFeedbackReleasedCompetitions().toGetResponse();
+    }
+
+    @GetMapping("/{competitionId}/queries/open")
+    public RestResult<List<CompetitionOpenQueryResource>> getOpenQueries(@PathParam("competitionId") Long competitionId) {
+        return competitionService.findAllOpenQueries(competitionId).toGetResponse();
     }
 
 }

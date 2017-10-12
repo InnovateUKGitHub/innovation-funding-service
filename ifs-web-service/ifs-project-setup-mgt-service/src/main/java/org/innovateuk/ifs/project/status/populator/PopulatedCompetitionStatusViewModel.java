@@ -14,7 +14,7 @@ import java.util.Map;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 /**
- * This class represents a populated CompetitionProjectStatusViewModel.
+ * This class represents a populated CompetitionStatusViewModel.
  */
 public class PopulatedCompetitionStatusViewModel {
     private final UserResource user;

@@ -11,6 +11,9 @@
   <th:block th:insert="fragments/layout :: main-content-start" />
     <div class="grid-container">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}"/>
+
+    <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber})" />
+
     <div class="grid-row">
       <div class="column-two-thirds">
           <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionProjectsStatusResource.competitionName},subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: Innovate UK|,size='heading-xlarge'" />

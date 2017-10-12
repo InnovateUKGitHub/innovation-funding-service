@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+</head>
+<body class="project-management">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content" class="full-width">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <div class="grid-container">
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
+
+        <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'queries'}, competitionId=${model.competitionId})" />
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionName},subTitle=|${model.competitionNumber}: Innovate UK|,size='heading-xlarge'" />
+            </div>
+        </div>
+    </div>
+    <div class="grid-container constrain-width">
+        <th:block th:if="${model.openQueries.size > 0}">
+            <div class="table-overflow">
+                <table id="table-project-status">
+                    <thead>
+                        <tr>
+                            <th scope="col">Application number</th>
+                            <th scope="col">Project title</th>
+                            <th scope="col">Query responses</th>
+                        </tr>
+                    </thead>
+                    <tbody class="cell-border-right">
+                        <tr th:each="query : ${model.openQueries}">
+                            <td th:text="${query.applicationId}" />
+                            <td th:text="${query.projectName}"/>
+                            <td><a th:text="${query.organisationName}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${query.projectId},organisationId=${query.organisationId})}" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </th:block>
+        <th:block th:unless="${model.openQueries.size > 0}">
+            There are no outstanding queries.
+        </th:block>
+        <th:block th:insert="fragments/layout :: main-content-end" />
+    </div>
+</main>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
