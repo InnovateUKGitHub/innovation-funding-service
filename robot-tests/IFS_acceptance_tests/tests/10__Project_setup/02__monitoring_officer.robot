@@ -92,7 +92,7 @@ MO server-side validation
     and the user clicks the button/link    jQuery=[role="dialog"] .button:contains("Assign Monitoring Officer")
     Then the user should see an error    Please enter a first name.
     And the user should see an error    Please enter a last name.
-    And the user should see an error    Please enter your email address.
+    And the user should see an error    Please enter an email address.
     And the user should see an error    Please enter a phone number.
     And the user should see an error    Please enter a valid phone number.
 
