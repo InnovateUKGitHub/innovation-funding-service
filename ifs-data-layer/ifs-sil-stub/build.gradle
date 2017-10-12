@@ -1,0 +1,21 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+def targetBuild = hasProperty('profile') ? profile : 'docker';
+apply from: targetBuild+"-build.gradle";
+
+configurations {
+    providedRuntime
+}
+
+jar {
+    baseName = 'ifs-sil-stub'
+}
+
+dependencies {
+    compile project(":ifs-resources")
+    compile "org.springframework:spring-web"
+    compile 'javax.mail:mail:1.4.7'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.0'
+}
