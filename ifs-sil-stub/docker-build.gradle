@@ -1,0 +1,17 @@
+//
+// The production application will use the SIL to send emails out.  For non-production environments, the IFS application
+// can talk to a SIL stub within the IFS application itself.  The below configuration allows you to configure whether or
+// not the stub will attempt to send emails out via an SMTP server, or simply log the emails being sent (it does this
+// regardless)
+//
+ext.ifsSendMailLocally=true
+ext.ifsSmtpHost="mail"
+ext.ifsSmtpPort=8025
+ext.ifsSmtpUser="smtp"
+ext.ifsSmtpAuth=false
+ext.ifsSmtpPassword="smtp"
+ext.ifsSmtpTlsEnabled=false
+ext.ifsMailTimeoutMillis=10000
+
+ext.serverPort=8080
+ext.activeProfile="local"
