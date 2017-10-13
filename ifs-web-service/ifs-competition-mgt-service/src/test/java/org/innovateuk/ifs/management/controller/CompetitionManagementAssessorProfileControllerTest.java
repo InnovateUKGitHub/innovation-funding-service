@@ -29,6 +29,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSES
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
+import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
@@ -116,8 +117,30 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
     }
 
     @Test
-    public void displayAssessorProfile_AssessorFindOrigin() throws Exception {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN, PROJECT_FINANCE).build())).build());
+    public void displayAssessorProfileAsCompAdmin_AssessorFindOrigin() throws Exception {
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
+
+        Long assessorId = 1L;
+
+        AddressResource expectedAddress = getExpectedAddress();
+        List<InnovationAreaResource> expectedInnovationAreas = getInnovationAreas();
+        AssessorProfileResource expectedProfile = getAssessorProfile(expectedAddress, expectedInnovationAreas);
+
+        when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
+
+        String expectedBackUrl = "/competition/" + competition.getId() + "/assessors/find";
+
+        mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}", competition.getId(), assessorId)
+                .param("origin", "ASSESSOR_FIND"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("assessors/profile"))
+                .andExpect(model().attribute("backUrl", expectedBackUrl));
+    }
+
+    @Test
+    public void displayAssessorProfileAsProjectFinance_AssessorFindOrigin() throws Exception {
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
+
         Long assessorId = 1L;
 
         AddressResource expectedAddress = getExpectedAddress();
