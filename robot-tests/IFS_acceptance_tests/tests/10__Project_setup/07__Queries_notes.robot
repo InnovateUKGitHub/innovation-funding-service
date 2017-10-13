@@ -140,6 +140,7 @@ Post new query server side validations
 Post new query client side validations
     [Documentation]    INFUND-4840
     [Tags]
+    When the user moves focus to the element    link=Sign out
     When the user enters text to a text field    id=queryTitle    an eligibility query's title
     Then the user should not see the element    jQuery=label[for="queryTitle"] .error-message:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some query text
@@ -502,6 +503,7 @@ Create new note server side validations
 Create new note client side validations
     [Documentation]    INFUND-4845
     [Tags]
+    When the user moves focus to the element    link=Sign out
     When the user enters text to a text field    id=noteTitle    an eligibility query's title
     Then the user should not see the element    jQuery=label[for="noteTitle"] .error-message:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some note text
