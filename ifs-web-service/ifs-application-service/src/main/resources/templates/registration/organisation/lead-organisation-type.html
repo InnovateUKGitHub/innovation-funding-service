@@ -14,7 +14,12 @@
 
     <div th:if="${#fields.hasErrors('${organisationForm.organisationTypeId}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
       <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes</h2>
-      <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+      <ul class="error-summary-list">
+          <li th:each="err : ${#fields.detailedErrors('${organisationForm.organisationTypeId}')}">
+              <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
+              <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
+          </li>
+      </ul>
     </div>
 
     <h1 class="heading-xlarge">
