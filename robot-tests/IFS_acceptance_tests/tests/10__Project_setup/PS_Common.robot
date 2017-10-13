@@ -153,13 +153,6 @@ ${project_address_page}                 ${project_in_setup_details_page}/project
 ${internal_competition_status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 ${notified_application_competition_status}   ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
 
-${project_in_setup2_page}               ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_2_PROJECT}
-${project_in_setup2_details_page}       ${project_in_setup2_page}/details
-${project_in_setup2_team_status_page}   ${project_in_setup2_page}/team-status
-${project2_start_date_page}             ${project_in_setup2_details_page}/start-date
-${project2_address_page}                ${project_in_setup2_details_page}/project-address
-
-
 #Bank details
 ${account_one}   51406795
 ${sortCode_one}  404745
