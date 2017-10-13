@@ -3,9 +3,7 @@ package org.innovateuk.ifs.project.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.controller.ProjectController;
 import org.innovateuk.ifs.project.resource.*;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
 
@@ -17,8 +15,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -27,17 +23,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<ProjectController> {
 
-    private RestDocumentationResultHandler document;
-
     @Override
     protected ProjectController supplyControllerUnderTest() {
         return new ProjectController();
-    }
-
-    @Before
-    public void setup(){
-        this.document = document("project/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -48,7 +36,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         when(projectServiceMock.getProjectById(project1Id)).thenReturn(serviceSuccess(testProjectResource1));
 
         mockMvc.perform(get("/project/{id}", project1Id))
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the project that is being requested")
                         ),
@@ -64,7 +52,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(get("/project/").contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andDo(
-                        this.document.snippets(
+                        document("project/{method-name}",
                                 responseFields(
                                         fieldWithPath("[]").description("List of projects the user is allowed to see")
                                 )
@@ -81,7 +69,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
         mockMvc.perform(get("/project/{projectId}/project-users", 123L)).
                 andExpect(status().isOk()).
                 andExpect(content().json(toJson(projectUsers))).
-                andDo(this.document.snippets(
+                andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
                         ),

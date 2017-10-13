@@ -23,14 +23,28 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
     @Test
     public void testViewFinanceContact() {
         assertSecured(() -> classUnderTest.viewFinanceContact(123L, null, null, null, null),
-                permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class)));
+                permissionRules -> permissionRules.partnerCanAccessFinanceContactPage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
     public void testUpdateFinanceContact() {
 
         assertSecured(() -> classUnderTest.updateFinanceContact(123L, null, null, null, null, null),
-                permissionRules -> permissionRules.partnerCanAccessProjectDetailsSection(eq(123L), isA(UserResource.class)));
+                permissionRules -> permissionRules.partnerCanAccessFinanceContactPage(eq(123L), isA(UserResource.class)));
+    }
+
+    @Test
+    public void testInviteFinanceContact() {
+
+        assertSecured(() -> classUnderTest.inviteFinanceContact(null, 123L, 123L, null, null, null, null),
+                permissionRules -> permissionRules.partnerCanAccessFinanceContactPage(eq(123L), isA(UserResource.class)));
+    }
+
+    @Test
+    public void testInviteProjectManager() {
+
+        assertSecured(() -> classUnderTest.inviteProjectManager(null, 123L, null, null, null, null),
+                permissionRules -> permissionRules.leadCanAccessProjectManagerPage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
@@ -64,14 +78,14 @@ public class ProjectDetailsControllerSecurityTest extends BaseProjectSetupContro
     }
 
     @Test
-    public void testSearchAddress() {
-        assertSecured(() -> classUnderTest.searchAddress(123L, null, null, null),
+    public void testUpdateAddress() {
+        assertSecured(() -> classUnderTest.updateAddress(123L, null, null, null, null),
                 permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(123L), isA(UserResource.class)));
     }
 
     @Test
-    public void testUpdateAddress() {
-        assertSecured(() -> classUnderTest.updateAddress(123L, null, null, null, null),
+    public void testSearchAddress() {
+        assertSecured(() -> classUnderTest.searchAddress(123L, null, null, null),
                 permissionRules -> permissionRules.leadCanAccessProjectAddressPage(eq(123L), isA(UserResource.class)));
     }
 
