@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelInviteStatisticsResource;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -12,8 +11,9 @@ import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.management.form.OverviewAssessorsFilterForm;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
-import org.innovateuk.ifs.management.model.PanelInviteAssessorsOverviewModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.*;
+import org.innovateuk.ifs.management.viewmodel.InviteAssessorsOverviewViewModel;
+import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
+import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -22,7 +22,6 @@ import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,13 +35,11 @@ import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.competition.builder.AssessmentPanelInviteStatisticsResourceBuilder.newAssessmentPanelInviteStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
-import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
@@ -56,20 +53,20 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class CompetitionManagementInviteAssessorsOverviewControllerTest extends BaseControllerMockMVCTest<CompetitionManagementPanelInviteAssessorsOverviewController> {
+public class CompetitionManagementInviteAssessorsOverviewControllerTest extends BaseControllerMockMVCTest<CompetitionManagementInviteAssessorsOverviewController> {
 
     @Spy
     @InjectMocks
-    private PanelInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
+    private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
     @Override
-    protected CompetitionManagementPanelInviteAssessorsOverviewController supplyControllerUnderTest() {
-        return new CompetitionManagementPanelInviteAssessorsOverviewController();
+    protected CompetitionManagementInviteAssessorsOverviewController supplyControllerUnderTest() {
+        return new CompetitionManagementInviteAssessorsOverviewController();
     }
 
     private CompetitionResource competition;
 
-    private AssessmentPanelInviteStatisticsResource inviteStatistics;
+    private CompetitionInviteStatisticsResource inviteStatistics;
 
     @Override
     @Before
@@ -84,20 +81,63 @@ public class CompetitionManagementInviteAssessorsOverviewControllerTest extends 
                 .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
                 .build();
 
-        inviteStatistics = newAssessmentPanelInviteStatisticsResource()
-                .withAssessorsInvited(5)
-                .withAssessorsAccepted(1)
-                .withAssessorsRejected(1)
+        inviteStatistics = newCompetitionInviteStatisticsResource()
+                .withAccepted(46)
+                .withInvited(23)
+                .withInviteList(10)
+                .withDeclined(52)
                 .build();
 
         when(competitionRestService.getCompetitionById(competition.getId())).thenReturn(restSuccess(competition));
-        when(competitionKeyStatisticsRestServiceMock.getAssessmentPanelInviteStatisticsByCompetition(competition.getId())).thenReturn(restSuccess(inviteStatistics));
+        when(competitionInviteRestService.getInviteStatistics(competition.getId())).thenReturn(restSuccess(inviteStatistics));
+    }
+
+    @Test
+    public void overview_defaultParams() throws Exception {
+        List<AssessorInviteOverviewResource> assessorInviteOverviewResources = setUpAssessorInviteOverviewResources();
+
+        AssessorInviteOverviewPageResource pageResource = newAssessorInviteOverviewPageResource()
+                .withContent(assessorInviteOverviewResources)
+                .build();
+
+        List<Long> inviteIds = asList(1L, 2L);
+        List<ParticipantStatusResource> statuses = Arrays.asList(REJECTED, PENDING);
+
+        when(categoryRestServiceMock.getInnovationAreas()).thenReturn(restSuccess(newInnovationAreaResource().build(4)));
+        when(competitionInviteRestService.getInvitationOverview(competition.getId(), 0, empty(), statuses, empty()))
+                .thenReturn(restSuccess(pageResource));
+        when(competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competition.getId(), empty(), statuses, empty())).thenReturn(restSuccess(inviteIds));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/overview", competition.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/overview"))
+                .andReturn();
+
+        OverviewAssessorsFilterForm filterForm = (OverviewAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
+
+        assertEquals(empty(), filterForm.getCompliant());
+        assertEquals(empty(), filterForm.getInnovationArea());
+        assertEquals(empty(), filterForm.getStatus());
+
+        assertCompetitionDetails(competition, result);
+        assertInviteOverviews(assessorInviteOverviewResources, result);
+
+        InOrder inOrder = inOrder(competitionRestService, categoryRestServiceMock, competitionInviteRestService);
+        inOrder.verify(competitionInviteRestService).getAssessorsNotAcceptedInviteIds(competition.getId(), empty(), statuses, empty());
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(categoryRestServiceMock).getInnovationAreas();
+        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), 0, empty(), statuses, empty());
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void overview() throws Exception {
         int page = 1;
+        Optional<Long> innovationArea = of(10L);
+        Optional<Boolean> compliant = of(TRUE);
         List<Long> inviteIds = asList(1L, 2L);
+        List<ParticipantStatusResource> status = singletonList(PENDING);
 
         List<AssessorInviteOverviewResource> assessorInviteOverviewResources = setUpAssessorInviteOverviewResources();
 
@@ -105,24 +145,35 @@ public class CompetitionManagementInviteAssessorsOverviewControllerTest extends 
                 .withContent(assessorInviteOverviewResources)
                 .build();
 
-        when(assessmentPanelInviteRestService.getInvitationOverview(competition.getId(), page))
+        when(categoryRestServiceMock.getInnovationAreas()).thenReturn(restSuccess(newInnovationAreaResource().build(4)));
+        when(competitionInviteRestService.getInvitationOverview(competition.getId(), page, innovationArea, status, compliant))
                 .thenReturn(restSuccess(pageResource));
-        when(assessmentPanelInviteRestService.getNonAcceptedAssessorInviteIds(competition.getId())).thenReturn(restSuccess(inviteIds));
+        when(competitionInviteRestService.getAssessorsNotAcceptedInviteIds(competition.getId(),innovationArea, status,compliant)).thenReturn(restSuccess(inviteIds));
 
-        MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}/assessors/overview", competition.getId())
-                .param("page", "1"))
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/overview", competition.getId())
+                .param("page", "1")
+                .param("status", "PENDING")
+                .param("innovationArea", "10")
+                .param("compliant", "TRUE"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessors/panel-overview"))
+                .andExpect(view().name("assessors/overview"))
                 .andReturn();
+
+        OverviewAssessorsFilterForm filterForm = (OverviewAssessorsFilterForm) result.getModelAndView().getModel().get("filterForm");
+
+        assertEquals(of(PENDING), filterForm.getStatus());
+        assertEquals(of(TRUE), filterForm.getCompliant());
+        assertEquals(of(10L), filterForm.getInnovationArea());
 
         assertCompetitionDetails(competition, result);
         assertInviteOverviews(assessorInviteOverviewResources, result);
 
-        InOrder inOrder = inOrder(competitionRestService, assessmentPanelInviteRestService);
-        inOrder.verify(assessmentPanelInviteRestService).getNonAcceptedAssessorInviteIds(competition.getId());
+        InOrder inOrder = inOrder(competitionRestService, categoryRestServiceMock, competitionInviteRestService);
+        inOrder.verify(competitionInviteRestService).getAssessorsNotAcceptedInviteIds(competition.getId(), innovationArea, status, compliant);
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(assessmentPanelInviteRestService).getInvitationOverview(competition.getId(), page);
+        inOrder.verify(categoryRestServiceMock).getInnovationAreas();
+        inOrder.verify(competitionInviteRestService).getInvitationOverview(competition.getId(), page, innovationArea, status, compliant);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -140,34 +191,34 @@ public class CompetitionManagementInviteAssessorsOverviewControllerTest extends 
     }
 
     private void assertCompetitionDetails(CompetitionResource expectedCompetition, MvcResult result) {
-        PanelInviteAssessorsViewModel model = (PanelInviteAssessorsViewModel) result.getModelAndView().getModel().get("model");
+        InviteAssessorsViewModel model = (InviteAssessorsViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals((long) expectedCompetition.getId(), model.getCompetitionId());
+        assertEquals(expectedCompetition.getId(), model.getCompetitionId());
         assertEquals(expectedCompetition.getName(), model.getCompetitionName());
         assertInnovationSectorAndArea(expectedCompetition, model);
         assertStatistics(model);
     }
 
-    private void assertInnovationSectorAndArea(CompetitionResource expectedCompetition, PanelInviteAssessorsViewModel model) {
+    private void assertInnovationSectorAndArea(CompetitionResource expectedCompetition, InviteAssessorsViewModel model) {
         assertEquals(expectedCompetition.getInnovationSectorName(), model.getInnovationSector());
         assertEquals(StringUtils.join(expectedCompetition.getInnovationAreaNames(), ", "), model.getInnovationArea());
     }
 
-    private void assertStatistics(PanelInviteAssessorsViewModel model) {
+    private void assertStatistics(InviteAssessorsViewModel model) {
         assertEquals(inviteStatistics.getInvited(), model.getAssessorsInvited());
         assertEquals(inviteStatistics.getAccepted(), model.getAssessorsAccepted());
         assertEquals(inviteStatistics.getDeclined(), model.getAssessorsDeclined());
-        assertEquals(inviteStatistics.getPending(), model.getAssessorsStaged());
+        assertEquals(inviteStatistics.getInviteList(), model.getAssessorsStaged());
     }
 
     private void assertInviteOverviews(List<AssessorInviteOverviewResource> expectedInviteOverviews, MvcResult result) {
-        assertTrue(result.getModelAndView().getModel().get("model") instanceof PanelInviteAssessorsOverviewViewModel);
-        PanelInviteAssessorsOverviewViewModel model = (PanelInviteAssessorsOverviewViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof InviteAssessorsOverviewViewModel);
+        InviteAssessorsOverviewViewModel model = (InviteAssessorsOverviewViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedInviteOverviews.size(), model.getAssessors().size());
 
         forEachWithIndex(expectedInviteOverviews, (i, inviteOverviewResource) -> {
-            PanelOverviewAssessorRowViewModel overviewAssessorRowViewModel = model.getAssessors().get(i);
+            OverviewAssessorRowViewModel overviewAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(inviteOverviewResource.getName(), overviewAssessorRowViewModel.getName());
             assertEquals(formatInnovationAreas(inviteOverviewResource.getInnovationAreas()), overviewAssessorRowViewModel.getInnovationAreas());
             assertEquals(inviteOverviewResource.isCompliant(), overviewAssessorRowViewModel.isCompliant());
