@@ -36,8 +36,8 @@ public class Post {
     @Column(nullable = false, updatable = false)
     private ZonedDateTime createdOn;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "thread_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "thread_id", nullable = false)
     private Thread thread;
 
     public Post(){}

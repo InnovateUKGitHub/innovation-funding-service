@@ -131,16 +131,19 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     @Query( "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name, MAX(p.createdOn)) " +
             "FROM Thread t " +
-            "JOIN Post p ON p.thread.id = t.id " +
-            "JOIN ProjectFinance pf ON pf.id = t.classPk " +
-            "JOIN Project pr ON pr.id = pf.project.id " +
-            "JOIN Organisation o ON o.id = pf.organisation.id " +
-            "JOIN UserRole ur ON ur.user_id = p.author.id " +
-            "JOIN Role r ON r.id = ur.role_id " +
-            "JOIN Application a ON a.id = pr.application.id " +
+            "JOIN t.posts p " +
+            "INNER JOIN ProjectFinance pf ON pf.id = t.classPk " +
+            "INNER JOIN Project pr ON pr.id = pf.project.id " +
+            "INNER JOIN Organisation o ON o.id = pf.organisation.id " +
+            "INNER JOIN UserRole ur ON ur.user_id = p.author.id " +
+            "INNER JOIN Role r ON r.id = ur.role_id " +
+            "INNER JOIN Application a ON a.id = pr.application.id " +
             "WHERE t.className='org.innovateuk.ifs.finance.domain.ProjectFinance' AND r.name != 'project_finance' " +
             "AND a.competition.id = :competitionId " +
             "GROUP BY pr.application.id, o.id, o.name, pr.id, pr.name " +
             "ORDER BY pr.application.id, o.name")
     List<CompetitionOpenQueryResource> getOpenQueryByCompetition(@Param("competitionId") long competitionId);
+
+    //@Query()
+    //Long countOpenQueries(@Param("competitionId") long competitionId);
 }
