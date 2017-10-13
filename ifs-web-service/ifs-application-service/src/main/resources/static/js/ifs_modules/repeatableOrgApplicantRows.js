@@ -116,9 +116,9 @@ IFS.application.repeatableOrgApplicantRows = (function () {
         })
       })
     },
-    removeRowButton: function () {
-      var addRowButton = jQuery("[name='addStagedInvite']")
-      addRowButton.remove()
+    showHideAddRowButton: function (state) {
+      var addRowButton = jQuery('[name="addStagedInvite"]')
+      addRowButton.attr('aria-hidden', !state)
     }
   }
 })()
