@@ -62,6 +62,7 @@ services:
     links:
       - mail
       - mysql:ifs-database
+      - sil-stub
     volumes:
       - ./robot-tests/upload_files/:/tmp/ifs-local
     ports:
@@ -69,6 +70,16 @@ services:
       - "9006:8000"
     environment:
       - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+
+  sil-stub:
+      hostname: sil-stub
+      links:
+        - mail
+      ports:
+        - "8089:8080"
+        - "9009:8000"
+      environment:
+        - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   mail:
     image: davidrums/local-webmail-sink
