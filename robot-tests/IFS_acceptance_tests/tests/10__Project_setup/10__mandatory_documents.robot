@@ -24,12 +24,17 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-5490 document upload non-user
 ...
 ...               IFS-218 After rejection of mandatory documents, lead partner has a submit button
+...
+...               IFS-1864 Sole applicants do not have to provide a collaboration agreement document
 Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
 *** Variables ***
+
+${PROJ_WITH_SOLE_APPLICANT}  ${project_ids["High-speed rail and its effects on soil compaction"]}
+${USER_BECKY}  becky.mason@gmail.com
 
 *** Test Cases ***
 Non-lead partner cannot upload either document
@@ -578,7 +583,6 @@ CompAdmin can see Project status updated
     Then the user should see the element    jQuery=tr:nth-child(2):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(6)
 
-
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 , INFUND-5543
     [Tags]    Experian    HappyPath
@@ -589,6 +593,48 @@ Status updates correctly for internal user's table
     And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status
     And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action
     And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.ok
+
+Sole applicant uploads only exploitation plan and submits
+    [Documentation]  IFS-1864
+    [Tags]  HappyPath
+    [Setup]  log in as a different user  ${USER_BECKY}  ${short_password}
+    When the user navigates to the page  ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
+    And the user clicks the button/link  link=Other documents
+    Then the user should not see the text in the page  Collaboration
+    And the user should see the element  jQuery=h2:contains("Exploitation plan")
+    And the user should not see the element  jQuery=.button.enabled:contains("Submit document")
+    When choose file  name=exploitationPlan  ${upload_folder}/${valid_pdf}  # This line uploads valid pdf file as exploitation plan
+    And the user clicks the button/link  jQuery=.button:contains("Submit document")
+    And the user clicks the button/link  jQuery=.button:contains("Submit")
+
+Sole applicant sees correct status on exploitation plan submission
+    [Documentation]  IFS-1864
+    [Tags]  HappyPath
+    When the user clicks the button/link  link=Project setup status
+    Then the user should see the element   css=ul li.waiting:nth-child(7)
+
+CompAdmin sees uploaded file and approves it
+    [Documentation]    IFS-1864
+    [Tags]    HappyPath
+    [Setup]    Log in as a different user  &{Comp_admin1_credentials}
+    When the user navigates to the page    ${server}/project-setup-management/project/${PROJ_WITH_SOLE_APPLICANT}/partner/documents
+    Then the user should not see the text in the page  Collaboration
+    And the user should see the element   jQuery=h2:contains("Exploitation plan")
+    When the user clicks the button/link  css=.uploaded-file:nth-of-type(1)
+    Then the user should see the file without error
+    When the user clicks the button/link  jQuery=button:contains("Accept document")
+    And the user clicks the button/link  jQuery=.modal-accept-doc .button:contains("Accept document")
+    Then the user should see the text in the page  The document provided has been approved.
+
+Sole applicant can see docuemnts approval
+    [Documentation]    IFS-1864
+    [Tags]    HappyPath
+    [Setup]  log in as a different user   ${USER_BECKY}  ${short_password}
+    When the user navigates to the page   ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
+    Then the user should see the element  css=ul li.complete:nth-child(7)
+    When the user clicks the button/link  link=Other documents
+    Then the user should see the element  jQuery=.success-alert h2:contains("This document has been approved by Innovate UK.")
+
 
 *** Keywords ***
 
