@@ -89,6 +89,7 @@ MO server-side validation
     [Tags]    HappyPath
     Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    and the user clicks the button/link    jQuery=[role="dialog"] .button:contains("Assign Monitoring Officer")
     Then the user should see an error    Please enter a first name.
     And the user should see an error    Please enter a last name.
     And the user should see an error    Please enter an email address.

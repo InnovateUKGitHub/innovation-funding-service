@@ -25,14 +25,22 @@
         <h2 class="heading-medium no-margin">Operating address</h2>
         <p class="form-hint">This is the address your organisation works from</p>
 
-        <div class="form-group" th:classappend="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'form-group-error'">
-            <div class="multiple-choice" data-target="manual-company-input" data-target-inverted="true">
-                <input id="address-same" th:field="*{useSearchResultAddress}" type="checkbox" value="yes" />
-                <label for="address-same">
-                    The operating address is the same as the registered organisation address
-                </label>
-            </div>
-        </div>
+        <fieldset>
+          <legend id="useSearchResultAddress">
+              <span class="visuallyhidden">Operating address</span>
+              <th:block th:if="${#fields.hasErrors('*{useSearchResultAddress}')}">
+                  <span class="error-message" th:each="err : ${#fields.errors('*{useSearchResultAddress}')}" th:text="${err}"></span>
+              </th:block>
+          </legend>
+          <div class="form-group" th:classappend="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'form-group-error'">
+              <div class="multiple-choice" data-target="manual-company-input" data-target-inverted="true">
+                  <input id="address-same" th:field="*{useSearchResultAddress}" type="checkbox" value="yes" />
+                  <label for="address-same">
+                      The operating address is the same as the registered organisation address
+                  </label>
+              </div>
+          </div>
+        </fieldset>
 
         <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm},addressType=${'operating address'}" />
         <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Continue</button>

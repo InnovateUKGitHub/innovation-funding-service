@@ -378,7 +378,7 @@
                            maxlength="255"  />
                 </td>
                 <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-grossAnnualSalary]}')} ? 'form-group-error'">
-                    <label th:for="${'cost-labour-'+costIdentifier+'-labourGrossSalary'}">
+                    <label th:for="|formInput[cost-${costIdentifier}-grossAnnualSalary]|">
                         <span class="visuallyhidden">Gross annual salary</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-grossAnnualSalary'})" />
                     </label>

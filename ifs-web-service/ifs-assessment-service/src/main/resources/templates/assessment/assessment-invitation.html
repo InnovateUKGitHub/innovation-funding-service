@@ -51,7 +51,7 @@
             <form th:action="@{/{assessmentId}/assignment/respond(assessmentId=${model.assessmentId})}" method="post" novalidate="novalidate" th:object="${form}">
                 <div class="form-group" th:classappend="${#fields.hasErrors('assessmentAccept')} ? 'form-group-error'">
                     <fieldset>
-                        <legend>
+                        <legend id="assessmentAccept">
                             <span class="heading-medium">Select your ability to assess this application</span>
                             <th:block th:if="${#fields.hasErrors('assessmentAccept')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('assessmentAccept')}" th:text="${err}" />

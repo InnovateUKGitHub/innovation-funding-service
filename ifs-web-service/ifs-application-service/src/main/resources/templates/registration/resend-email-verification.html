@@ -18,7 +18,7 @@
     </p>
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate" th:object="${resendEmailVerificationForm}" method="POST">
             <div class="form-group" th:classappend="${#fields.hasErrors('email')} ? 'form-group-error'">
-                <label class="form-label" th:for="${#ids.next('email')}">
+                <label class="form-label" for="email">
                     <span class="form-label-bold">Enter Email Address</span>
                     <th:block th:if="${#fields.hasErrors('email')}">
                           <span class="error-message"  th:each="err : ${#fields.errors('email')}" th:text="${err}"></span>

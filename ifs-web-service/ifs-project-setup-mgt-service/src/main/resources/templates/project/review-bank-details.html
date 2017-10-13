@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Review bank details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Review bank details',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="project-management review-bank-details">
 

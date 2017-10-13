@@ -64,7 +64,7 @@
                     <span class="error-message" th:each="err : ${#fields.errors('emailAddress')}" th:text="${err}"></span>
                 </th:block>
             </label>
-            <input type="email" th:errorclass="form-control-error" required="required" th:attr="data-required-errormessage=#{validation.standard.email.required}" class="form-control width-full" th:readonly="${readonly}" th:field="*{emailAddress}" />
+            <input type="email" th:errorclass="form-control-error" required="required" th:attr="data-required-errormessage=#{validation.invite.email.required}" class="form-control width-full" th:readonly="${readonly}" th:field="*{emailAddress}" />
         </div>
 
         <div class="form-group" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">

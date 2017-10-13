@@ -17,7 +17,7 @@
       <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We are unable to save your bank account details:</h2>
       <th:block th:insert="fragments/elements :: error-summary-list(form)" />
       <!-- /* only show underneath messages if there are global errors, which in this case are experian errors.
-              Stub values can be found in bank details acc tests. */-->
+              Stub values for the inputs can be found in bank details acceptance tests. */-->
       <ul class="list-bullet" th:if="${#fields.hasErrors('${form}')}">
           <li>please check your account number</li>
           <li>please check your sort code</li>
