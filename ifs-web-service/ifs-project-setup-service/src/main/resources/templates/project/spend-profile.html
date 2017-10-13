@@ -2,10 +2,10 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <th:block th:if="${form != null}">
-      <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </th:block>
     <th:block th:if="${form == null}">
-      <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile',hasFormErrors=${#lists.isEmpty(model.table.validationMessages.errors) == false}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile',hasFormErrors=${#lists.isEmpty(model.table.validationMessages.errors) == false}" />
     </th:block>
 </head>
 
@@ -14,7 +14,7 @@
 <th:block th:insert="fragments/layout :: global-header" />
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/modals :: modal-confirm-spend-profile-submit" />
-<th:block th:insert="fragments/modals :: modal-confirm-allow-spend-profile-edits (orgName=${model.organisationName})"/>
+<th:block th:insert="fragments/modals :: modal-confirm-allow-spend-profile-edits (orgName=${model.organisationName})" />
 
 <main tabindex="-1" id="content" class="no-grid">
     <div class="grid-container">
@@ -70,13 +70,13 @@
         <dl class="standard-definition-list">
             <dt>Project start date</dt>
             <dd>
-                <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'd MMMM yyyy')}"/>
+                <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'd MMMM yyyy')}" />
             </dd>
             <dt>Duration</dt>
-            <dd><th:block th:text="${model.durationInMonths}"/> months</dd>
+            <dd><th:block th:text="${model.durationInMonths}" /> months</dd>
         </dl>
 
-        <h2 class="heading-medium"><th:block th:text="${model.organisationName}"/> - Spend profile</h2>
+        <h2 class="heading-medium"><th:block th:text="${model.organisationName}" /> - Spend profile</h2>
         <p>We have reviewed and approved your project costs. Each organisation should now edit their spend profile costs to reflect your proposed project costs.</p>
     </div>
 
@@ -90,9 +90,9 @@
                         <colgroup>
                             <col/>
                             <th:block th:each="month : ${model.table.getMonths()}">
-                                <col th:class="${#temporals.month(month.localDate) == 3 ? 'year':''}"/>
+                                <col th:class="${#temporals.month(month.localDate) == 3 ? 'year':''}" />
                             </th:block>
-                            <col class="total"/>
+                            <col class="total" />
                         </colgroup>
                         <thead>
                         <tr>
@@ -158,7 +158,7 @@
                                             th:value="${cost != null ? #numbers.formatInteger(cost,1,'NONE') : ''}"
                                             type="number"
                                             min="0"
-                                            required="required"/>
+                                            required="required" />
                                     </td>
                                     <td class="fix-right"
                                         th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
@@ -168,12 +168,12 @@
                                             readonly="readonly"
                                             th:id="|row-total-${row.key}|"
                                             th:attr="data-calculation-fields=${'[aria-labelledby^=row-'+row.key+']'},
-                                                     data-calculation-rawvalue=${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'NONE')}"/>
+                                                     data-calculation-rawvalue=${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'NONE')}" />
                                     </td>
                                     <td class="fix-right">
                                         <input readonly="readonly"
                                                th:value="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'COMMA')}"
-                                               th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}"/>
+                                               th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}" />
                                     </td>
                                 </tr>
                             </th:block>
@@ -220,7 +220,7 @@
                                                        th:value="${#numbers.formatInteger(cost,1,'NONE')}"
                                                        type="number"
                                                        min="0"
-                                                       required="required"/>
+                                                       required="required" />
                                             </td>
                                             <td class="fix-right"
                                                 th:classappend="${model.table.validationMessages.hasFieldErrors(row.key) ? 'cell-error' : ''}">
@@ -228,12 +228,12 @@
                                                        th:value="${'&pound; '+#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'COMMA')}"
                                                        data-calculation-operations="+"
                                                        th:id="${'row-total-'+#strings.replace(#strings.replace(row.key,' ','-'),'&amp;','')}"
-                                                       th:attr="data-calculation-fields=${'[aria-labelledby^=row-'+row.key+']'},data-calculation-rawvalue=${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'NONE')}"/>
+                                                       th:attr="data-calculation-fields=${'[aria-labelledby^=row-'+row.key+']'},data-calculation-rawvalue=${#numbers.formatInteger(model.categoryToActualTotal.get(row.key),1,'NONE')}" />
                                             </td>
                                             <td class="fix-right">
                                                 <input readonly="readonly"
                                                        th:value="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'COMMA')}"
-                                                       th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}"/>
+                                                       th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.table.eligibleCostPerCategoryMap.get(row.key),1,'NONE')}" />
                                             </td>
                                         </tr>
                                     </th:block>
@@ -258,12 +258,12 @@
                                     readonly="readonly"
                                     data-calculation-operations="+"
                                     id="spend-profile-total-total"
-                                    data-calculation-fields="input[id*=row-total-]"/>
+                                    data-calculation-fields="input[id*=row-total-]" />
                             </td>
                             <td class="fix-right">
                                 <input readonly="readonly"
                                        th:value="${'&pound; '+#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'COMMA')}"
-                                       th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'NONE')}"/>
+                                       th:attr="data-calculation-rawvalue=${#numbers.formatInteger(model.totalOfAllEligibleTotals,1,'NONE')}" />
                             </td>
                         </tr>
                         </tfoot>
