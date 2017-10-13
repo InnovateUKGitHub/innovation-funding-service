@@ -80,8 +80,8 @@ IFS.competitionManagement.repeater = (function () {
       // new row attribute
       newRow.prop('id', 'innovation-row-' + idCount)
       // fix label link
-      newRow.find('[id^="innovationAreaCategoryId"]').prop('id', 'innovationAreaCategoryId-' + idCount)
-      newRow.find('[for^="innovationAreaCategoryId"]').prop('for', 'innovationAreaCategoryId-' + idCount)
+      newRow.find('[id^="innovationAreaCategoryIds"]').prop('id', 'innovationAreaCategoryIds[' + idCount + ']')
+      newRow.find('[for^="innovationAreaCategoryIds"]').prop('for', 'innovationAreaCategoryIds[' + idCount + ']')
 
       // set the first please select as selected
       newRow.find('[selected]').removeAttr('selected')

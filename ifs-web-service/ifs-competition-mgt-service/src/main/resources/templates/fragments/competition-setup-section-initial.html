@@ -79,7 +79,7 @@
                 </legend>
             <th:block th:each="innovationAreaCategoryId,status : ${competitionSetupForm.innovationAreaCategoryIds}">
                 <div class="form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')} ? 'form-group-error'" th:id="innovation-row-__${status.index}__">
-                    <label class="form-label" th:for="innovationAreaCategoryId-__${status.index}__">
+                    <label class="form-label" th:for="innovationAreaCategoryIds[__${status.index}__]">
                         <span class="form-label-bold" th:classappend="${status.index > 0} ? 'visuallyhidden': ''">Innovation area</span>
                         <th:block th:if="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')}">
                               <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
@@ -88,7 +88,7 @@
                     <select th:disabled="${model.general.state.setupAndLive}"
                             class="form-control width-x-large"
                             th:name="innovationAreaCategoryIds[__${status.index}__]"
-                            th:id="innovationAreaCategoryId-__${status.index}__"
+                            th:id="innovationAreaCategoryIds[__${status.index}__]"
                             required="required"
                             data-autosave-disabled=""
                             th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationareacategoryid.required}">
@@ -102,7 +102,7 @@
             </fieldset>
             <th:block th:if="${competitionSetupForm.innovationAreaCategoryIds == null or competitionSetupForm.innovationAreaCategoryIds.size() == 0}">
                 <div class="form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryIds')}? 'form-group-error'" th:id="innovation-row-0">
-                    <label class="form-label" th:for="innovationAreaCategoryId-0">
+                    <label class="form-label" th:for="innovationAreaCategoryIds[0]">
                         <span class="form-label-bold">Innovation area</span>
                         <th:block th:if="${#fields.hasErrors('innovationAreaCategoryIds')}">
                               <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryIds')}" th:text="${err}"></span>
@@ -111,7 +111,7 @@
                     <select th:disabled="${model.general.state.setupAndLive}"
                             class="form-control width-x-large"
                             name="innovationAreaCategoryIds[0]"
-                            id="innovationAreaCategoryId-0"
+                            id="innovationAreaCategoryIds[0]"
                             required="required"
                             data-autosave-disabled=""
                             th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationareacategoryid.required}">
