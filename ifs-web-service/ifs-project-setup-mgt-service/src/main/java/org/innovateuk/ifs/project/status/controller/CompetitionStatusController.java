@@ -55,7 +55,9 @@ public class CompetitionStatusController {
     public String viewCompetitionStatusAll(Model model, UserResource loggedInUser,
                                            @PathVariable Long competitionId) {
         model.addAttribute("model",
-                new PopulatedCompetitionStatusViewModel(statusRestService.getCompetitionStatus(competitionId).getSuccessObjectOrThrowException(), loggedInUser).get());
+                new PopulatedCompetitionStatusViewModel(statusRestService.getCompetitionStatus(competitionId).getSuccessObjectOrThrowException(),
+                        loggedInUser,
+                        competitionsRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException()).get());
         return "project/competition-status-all";
     }
 
@@ -64,7 +66,9 @@ public class CompetitionStatusController {
     public String viewCompetitionStatusQueries(Model model, UserResource loggedInUser,
                                               @PathVariable Long competitionId) {
         model.addAttribute("model",
-                new CompetitionOpenQueriesViewModel(competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException(), competitionsRestService.getCompetitionOpenQueries(competitionId).getSuccessObjectOrThrowException()));
+                new CompetitionOpenQueriesViewModel(competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException(),
+                        competitionsRestService.getCompetitionOpenQueries(competitionId).getSuccessObjectOrThrowException(),
+                        competitionsRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException()));
         return "project/competition-status-queries";
     }
 

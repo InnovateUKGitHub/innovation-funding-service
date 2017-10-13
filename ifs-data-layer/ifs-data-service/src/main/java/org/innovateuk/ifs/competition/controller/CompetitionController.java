@@ -208,4 +208,9 @@ public class CompetitionController {
         return competitionService.findAllOpenQueries(competitionId).toGetResponse();
     }
 
+    @GetMapping("/{competitionId}/queries/open/count")
+    public RestResult<Long> countOpenQueries(@PathParam("competitionId") Long competitionId) {
+        return competitionService.countAllOpenQueries(competitionId).toGetResponse();
+    }
+
 }

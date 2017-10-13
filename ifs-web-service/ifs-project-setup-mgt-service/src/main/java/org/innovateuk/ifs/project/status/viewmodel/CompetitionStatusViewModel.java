@@ -13,11 +13,13 @@ public class CompetitionStatusViewModel {
     private CompetitionProjectsStatusResource competitionProjectsStatusResource;
     private Map<Long, StatusPermission> statusPermissions;
     private boolean canExportBankDetails;
+    private long openQueryCount;
 
-    public CompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatusResource, boolean canExportBankDetails, Map<Long, StatusPermission> projectStatusPermissionsMap) {
+    public CompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatusResource, boolean canExportBankDetails, Map<Long, StatusPermission> projectStatusPermissionsMap, long openQueryCount) {
         this.competitionProjectsStatusResource = competitionProjectsStatusResource;
         this.canExportBankDetails = canExportBankDetails;
         this.statusPermissions = projectStatusPermissionsMap;
+        this.openQueryCount = openQueryCount;
     }
 
     public CompetitionProjectsStatusResource getCompetitionProjectsStatusResource() {
@@ -31,4 +33,6 @@ public class CompetitionStatusViewModel {
     public boolean isCanExportBankDetails() {
         return canExportBankDetails;
     }
+
+    public long getOpenQueryCount() { return openQueryCount; }
 }

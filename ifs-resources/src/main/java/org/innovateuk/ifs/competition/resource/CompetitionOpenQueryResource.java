@@ -7,7 +7,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.time.ZonedDateTime;
 
 /**
- * Represents open Queries of a Partner Organisation
+ * Represents open Queries of a Competition
  */
 public class CompetitionOpenQueryResource {
 
@@ -23,7 +23,8 @@ public class CompetitionOpenQueryResource {
 
     ZonedDateTime createdOn;
 
-    public CompetitionOpenQueryResource(Long applicationId, Long organisationId, String organisationName, Long projectId, String projectName, ZonedDateTime createdOn) {
+    // constructor compatible with SQL types
+    public CompetitionOpenQueryResource(long applicationId, long organisationId, String organisationName, long projectId, String projectName, ZonedDateTime createdOn) {
         this.applicationId = applicationId;
         this.organisationId = organisationId;
         this.organisationName = organisationName;
@@ -33,54 +34,31 @@ public class CompetitionOpenQueryResource {
         this.createdOn = createdOn;
     }
 
-    public Long getApplicationId() {
+    public CompetitionOpenQueryResource() {}
 
-        return applicationId;
-    }
+    public Long getApplicationId() { return applicationId; }
 
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
-    }
+    public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
 
-    public Long getOrganisationId() {
-        return organisationId;
-    }
+    public Long getOrganisationId() { return organisationId; }
 
-    public void setOrganisationId(Long organisationId) {
-        this.organisationId = organisationId;
-    }
+    public void setOrganisationId(Long organisationId) { this.organisationId = organisationId; }
 
-    public String getOrganisationName() {
-        return organisationName;
-    }
+    public String getOrganisationName() { return organisationName; }
 
-    public void setOrganisationName(String organisationName) {
-        this.organisationName = organisationName;
-    }
+    public void setOrganisationName(String organisationName) { this.organisationName = organisationName; }
 
-    public Long getProjectId() {
-        return projectId;
-    }
+    public Long getProjectId() { return projectId; }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
+    public void setProjectId(Long projectId) { this.projectId = projectId; }
 
-    public String getProjectName() {
-        return projectName;
-    }
+    public String getProjectName() { return projectName; }
 
-    public void setProjectName(String projectName) {
-        this.projectName = projectName;
-    }
+    public void setProjectName(String projectName) { this.projectName = projectName; }
 
-    public ZonedDateTime getCreatedOn() {
-        return createdOn;
-    }
+    public ZonedDateTime getCreatedOn() { return createdOn; }
 
-    public void setCreatedOn(ZonedDateTime createdOn) {
-        this.createdOn = createdOn;
-    }
+    public void setCreatedOn(ZonedDateTime createdOn) { this.createdOn = createdOn; }
 
     @Override
     public boolean equals(Object o) {

@@ -12,7 +12,7 @@
     <div class="grid-container">
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}"/>
 
-    <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber})" />
+    <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount})" />
 
     <div class="grid-row">
       <div class="column-two-thirds">

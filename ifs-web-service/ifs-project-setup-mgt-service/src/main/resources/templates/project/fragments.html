@@ -60,14 +60,14 @@
     </th:block>
 </th:block>
 
-<div th:fragment="project-dashboard-navigation(selectedTab, competitionId)">
+<div th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount)">
     <ul class="inline-nav cf">
         <li id="section-1" th:class="${selectedTab == 'all' ? 'selected' : ''}">
             <a th:href="@{'/competition/{competitionId}/status/all'}" th:text="All projects"></a>
         </li>
 
         <li id="section-2" th:class="${selectedTab == 'queries' ? 'selected' : ''}">
-            <a th:href="@{'/competition/{competitionId}/status/queries'}" th:text="Query responses ()"></a>
+            <a th:href="@{'/competition/{competitionId}/status/queries'}" th:text="Query responses (${openQueryCount})"></a>
         </li>
     </ul>
 </div>

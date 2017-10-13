@@ -30,8 +30,8 @@ public abstract class Thread {
     @Size(max = 255)
     private String title;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "thread")
-    //@JoinColumn(name = "thread_id", referencedColumnName = "id", nullable = false)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "thread_id", referencedColumnName = "id", nullable = false)
     @OrderBy("created_on ASC")
     private List<Post> posts;
 

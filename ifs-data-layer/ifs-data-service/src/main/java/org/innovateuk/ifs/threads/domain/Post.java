@@ -36,10 +36,6 @@ public class Post {
     @Column(nullable = false, updatable = false)
     private ZonedDateTime createdOn;
 
-    @ManyToOne
-    @JoinColumn(name = "thread_id", nullable = false)
-    private Thread thread;
-
     public Post(){}
     public Post(Long id, User author, String body, List<Attachment> attachments, ZonedDateTime createdOn) {
         this.id = id;

@@ -83,4 +83,8 @@ public interface CompetitionService {
     @PreAuthorize("hasAnyAuthority('project_finance')")
     @SecuredBySpring(value = "GET_OPEN_QUERIES", description = "Project finance users can see all open queries for a competition")
     ServiceResult<List<CompetitionOpenQueryResource>> findAllOpenQueries(Long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('project_finance')")
+    @SecuredBySpring(value = "GET_OPEN_QUERIES", description = "Project finance users can count open queries for a competition")
+    ServiceResult<Long> countAllOpenQueries(Long competitionId);
 }
