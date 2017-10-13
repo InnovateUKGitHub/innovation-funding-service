@@ -2,33 +2,20 @@ package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteService;
-import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.method.P;
 
 import java.util.List;
-import java.util.Optional;
 
-import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
-import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
-import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
-import static org.mockito.Mockito.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurityTest<AssessmentPanelInviteService> {
 
@@ -91,6 +78,16 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
         AssessorInviteSendResource assessorInviteSendResource = new AssessorInviteSendResource();
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.sendAllInvites(1L, assessorInviteSendResource),
                 COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
+    public void getResendInvites() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAllInvitesToResend(1L, singletonList(2L)), COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
+    public void resendInvites() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.resendInvites(singletonList(2L), newAssessorInviteSendResource().build()), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test

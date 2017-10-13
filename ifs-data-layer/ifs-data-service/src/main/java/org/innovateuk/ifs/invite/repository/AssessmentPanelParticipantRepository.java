@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.invite.repository;
 
 import org.innovateuk.ifs.invite.domain.AssessmentPanelParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,4 +37,7 @@ public interface AssessmentPanelParticipantRepository extends PagingAndSortingRe
     @Query(BY_COMP_AND_STATUS_ON_PANEL)
     List<AssessmentPanelParticipant> getPanelAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
                                                                                  @Param("status") List<ParticipantStatus> status);
+
+    @Override
+    List<AssessmentPanelParticipant> findAll();
 }

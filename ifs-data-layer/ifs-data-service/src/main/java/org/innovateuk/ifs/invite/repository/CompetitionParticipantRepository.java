@@ -36,13 +36,6 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "AND competitionParticipant.role = 'ASSESSOR' " +
             "AND competitionParticipant.status IN :status";
 
-    String BY_COMP_AND_STATUS_ON_PANEL = "SELECT competitionParticipant " +
-            "FROM CompetitionParticipant competitionParticipant " +
-            "WHERE competitionParticipant.competition.id = :competitionId " +
-            "AND competitionParticipant.role = 'ASSESSOR' " +
-            "AND competitionParticipant.status IN :status " +
-            "AND competitionParticipant.user.id IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
-
     String BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT = "SELECT competitionParticipant " +
             "FROM CompetitionParticipant competitionParticipant " +
             "LEFT JOIN Profile profile ON profile.id = competitionParticipant.user.profileId " +

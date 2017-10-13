@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs
 import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs.availableAssessorPageResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.availableAssessorResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
-import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.assessorInvitesToSendResourceFields;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -186,5 +186,51 @@ public class AssessmentPanelInviteControllerDocumentation extends BaseController
                 ));
 
         verify(assessmentPanelInviteServiceMock, only()).getAllInvitesToSend(competitionId);
+    }
+
+    @Test
+    public void getAllInvitesToResend() throws Exception {
+        long competitionId = 1L;
+        List<Long> inviteIds = asList(1L, 2L);
+        AssessorInvitesToSendResource assessorInvitesToSendResource = assessorInvitesToSendResourceBuilder.build();
+
+        when(assessmentPanelInviteServiceMock.getAllInvitesToResend(competitionId, inviteIds)).thenReturn(serviceSuccess(assessorInvitesToSendResource));
+
+        mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesToResend/{competitionId}", competitionId)
+                .param("inviteIds", simpleJoiner(inviteIds, ",")))
+                .andExpect(status().isOk())
+                .andDo(document("assessmentpanelinvite/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition to get invites for")
+                        ),
+                        requestParameters(
+                                parameterWithName("inviteIds")
+                                        .description("Ids of invites to resend")
+                        ),
+                        responseFields(assessorInvitesToSendResourceFields)
+                ));
+
+        verify(assessmentPanelInviteServiceMock, only()).getAllInvitesToResend(competitionId, inviteIds);
+    }
+
+    @Test
+    public void resendInvites() throws Exception {
+        List<Long> inviteIds = asList(1L, 2L);
+
+        AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
+        when(assessmentPanelInviteServiceMock.resendInvites(inviteIds, assessorInviteSendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/assessmentpanelinvite/resendInvites")
+                .param("inviteIds", simpleJoiner(inviteIds, ","))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
+                .andExpect(status().isOk())
+                .andDo(document("assessmentpanelinvite/{method-name}",
+                        requestParameters(
+                                parameterWithName("inviteIds")
+                                        .description("Ids of invites to resend")
+                        ),
+                        requestFields(assessorInviteSendResourceFields)
+                ));
     }
 }
