@@ -216,4 +216,38 @@ public class AssessmentPanelInviteControllerTest extends BaseControllerMockMVCTe
 
         verify(assessmentPanelInviteServiceMock, only()).getAllInvitesToSend(COMPETITION_ID);
     }
+
+    @Test
+    public void getAllInvitesToResend() throws Exception {
+        AssessorInvitesToSendResource resource = newAssessorInvitesToSendResource().build();
+        List<Long> inviteIds = asList(1L, 2L);
+
+        when(assessmentPanelInviteServiceMock.getAllInvitesToResend(COMPETITION_ID, inviteIds)).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesToResend/{competitionId}", COMPETITION_ID).contentType(MediaType.APPLICATION_JSON)
+                .param("inviteIds", simpleJoiner(inviteIds, ",")))
+                .andExpect(status().isOk());
+
+        verify(assessmentPanelInviteServiceMock, only()).getAllInvitesToResend(COMPETITION_ID, inviteIds);
+    }
+
+    @Test
+    public void resendInvites() throws Exception {
+        List<Long> inviteIds = asList(1L, 2L);
+
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
+
+        when(assessmentPanelInviteServiceMock.resendInvites(inviteIds, assessorInviteSendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/assessmentpanelinvite/resendInvites")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessorInviteSendResource))
+                .param("inviteIds", simpleJoiner(inviteIds, ",")))
+                .andExpect(status().isOk());
+
+        verify(assessmentPanelInviteServiceMock).resendInvites(inviteIds, assessorInviteSendResource);
+    }
 }

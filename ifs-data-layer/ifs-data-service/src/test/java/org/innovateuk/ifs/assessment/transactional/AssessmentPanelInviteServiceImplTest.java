@@ -44,7 +44,6 @@ import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBui
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL;
-import static org.innovateuk.ifs.assessment.transactional.CompetitionInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -81,10 +80,10 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<AssessmentPanelInviteServiceImpl> {
     private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
     private static final String INVITE_HASH = "inviteHash";
+    private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
 
     private InnovationArea innovationArea;
     private Role assessorRole;
-
 
     @Override
     protected AssessmentPanelInviteServiceImpl supplyServiceUnderTest() {
@@ -111,8 +110,11 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
         innovationArea = newInnovationArea().build();
         CompetitionInvite competitionInvite = setUpCompetitionInvite(competition, SENT, innovationArea);
-
         CompetitionParticipant competitionParticipant = new CompetitionParticipant(competitionInvite);
+
+        AssessmentPanelInvite assessmentPanelInvite = setUpAssessmentPanelInvite(competition, SENT);
+        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentPanelInvite);
+
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
         Profile profile = newProfile().withId(profileId).build();
@@ -493,10 +495,12 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         ServiceResult<Void> serviceResult = service.sendAllInvites(competition.getId(), assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        InOrder inOrder = inOrder(competitionRepositoryMock, assessmentPanelInviteRepositoryMock, userRepositoryMock, roleRepositoryMock, competitionParticipantRepositoryMock, notificationSenderMock);
+        InOrder inOrder = inOrder(competitionRepositoryMock, assessmentPanelInviteRepositoryMock, userRepositoryMock, roleRepositoryMock, assessmentPanelParticipantRepositoryMock, notificationSenderMock);
         inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
         inOrder.verify(assessmentPanelInviteRepositoryMock).getByCompetitionIdAndStatus(competition.getId(), CREATED);
+        inOrder.verify(assessmentPanelParticipantRepositoryMock).save(createAssessmentPanelParticipantExpectations(invites.get(0)));
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
+        inOrder.verify(assessmentPanelParticipantRepositoryMock).save(createAssessmentPanelParticipantExpectations(invites.get(1)));
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
 
         inOrder.verifyNoMoreInteractions();
@@ -556,12 +560,140 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         inOrder.verifyNoMoreInteractions();
     }
 
+    @Test
+    public void getAllInvitesToResend() throws Exception {
+        List<String> emails = asList("john@email.com", "peter@email.com");
+        List<String> names = asList("John Barnes", "Peter Jones");
+        List<Long> inviteIds = asList(1L, 2L);
+
+        ZonedDateTime acceptsDate = ZonedDateTime.of(2016, 12, 20, 12, 0,0,0, ZoneId.systemDefault());
+        ZonedDateTime deadlineDate = ZonedDateTime.of(2017, 1, 17, 12, 0,0,0, ZoneId.systemDefault());
+
+        Competition competition = newCompetition()
+                .withName("my competition")
+                .withAssessorAcceptsDate(acceptsDate)
+                .withAssessorDeadlineDate(deadlineDate)
+                .build();
+
+        List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
+                .withCompetition(competition)
+                .withEmail(emails.get(0), emails.get(1))
+                .withHash(Invite.generateInviteHash())
+                .withName(names.get(0), names.get(1))
+                .withStatus(SENT)
+                .withUser(newUser())
+                .build(2);
+
+        Map<String, Object> expectedNotificationArguments = asMap(
+                "competitionName", competition.getName()
+        );
+
+        NotificationTarget notificationTarget = new ExternalUserNotificationTarget("", "");
+
+        String templatePath = "invite_assessors_to_assessors_panel_text.txt";
+
+        when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
+        when(assessmentPanelInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
+        when(notificationTemplateRendererMock.renderTemplate(systemNotificationSourceMock, notificationTarget, templatePath,
+                expectedNotificationArguments)).thenReturn(serviceSuccess("content"));
+
+        AssessorInvitesToSendResource expectedAssessorInviteToSendResource = newAssessorInvitesToSendResource()
+                .withContent("content")
+                .withCompetitionId(competition.getId())
+                .withCompetitionName(competition.getName())
+                .withRecipients(names)
+                .build();
+
+        AssessorInvitesToSendResource result = service.getAllInvitesToResend(competition.getId(), inviteIds).getSuccessObjectOrThrowException();
+        assertEquals(expectedAssessorInviteToSendResource, result);
+
+        InOrder inOrder = inOrder(competitionRepositoryMock, assessmentPanelInviteRepositoryMock, notificationTemplateRendererMock);
+        inOrder.verify(competitionRepositoryMock).findOne(competition.getId());
+        inOrder.verify(assessmentPanelInviteRepositoryMock).getByIdIn(inviteIds);
+        inOrder.verify(notificationTemplateRendererMock).renderTemplate(systemNotificationSourceMock, notificationTarget,
+                templatePath, expectedNotificationArguments);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void resendInvites() throws Exception {
+        List<String> emails = asList("john@email.com", "peter@email.com");
+        List<String> names = asList("John Barnes", "Peter Jones");
+        List<Long> inviteIds = asList(1L, 2L);
+
+        Competition competition = newCompetition()
+                .withName("my competition")
+                .withAssessorAcceptsDate(ZonedDateTime.parse("2017-05-24T12:00:00+01:00"))
+                .withAssessorDeadlineDate(ZonedDateTime.parse("2017-05-30T12:00:00+01:00"))
+                .build();
+
+        List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
+                .withCompetition(competition)
+                .withEmail(emails.get(0), emails.get(1))
+                .withHash(Invite.generateInviteHash())
+                .withName(names.get(0), names.get(1))
+                .withStatus(SENT)
+                .withUser(newUser().build())
+                .build(2);
+
+        AssessorInviteSendResource assessorInviteSendResource = setUpAssessorInviteSendResource();
+
+        Map<String, Object> expectedNotificationArguments1 = asMap(
+                "subject", assessorInviteSendResource.getSubject(),
+                "name", invites.get(0).getName(),
+                "competitionName", invites.get(0).getTarget().getName(),
+                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "customTextPlain", "content",
+                "customTextHtml", "content"
+        );
+        Map<String, Object> expectedNotificationArguments2 = asMap(
+                "subject", assessorInviteSendResource.getSubject(),
+                "name", invites.get(1).getName(),
+                "competitionName", invites.get(1).getTarget().getName(),
+                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "customTextPlain", "content",
+                "customTextHtml", "content"
+        );
+
+        SystemNotificationSource from = systemNotificationSourceMock;
+        NotificationTarget to1 = new ExternalUserNotificationTarget(names.get(0), emails.get(0));
+        NotificationTarget to2 = new ExternalUserNotificationTarget(names.get(1), emails.get(1));
+
+        List<Notification> notifications = newNotification()
+                .withSource(from, from)
+                .withMessageKey(INVITE_ASSESSOR_GROUP_TO_PANEL, INVITE_ASSESSOR_GROUP_TO_PANEL)
+                .withTargets(singletonList(to1), singletonList(to2))
+                .withGlobalArguments(expectedNotificationArguments1, expectedNotificationArguments2)
+                .build(2);
+
+        when(assessmentPanelInviteRepositoryMock.getByIdIn(inviteIds)).thenReturn(invites);
+        when(notificationSenderMock.sendNotification(notifications.get(0))).thenReturn(serviceSuccess(notifications.get(0)));
+        when(notificationSenderMock.sendNotification(notifications.get(1))).thenReturn(serviceSuccess(notifications.get(1)));
+
+        ServiceResult<Void> serviceResult = service.resendInvites(inviteIds, assessorInviteSendResource);
+        assertTrue(serviceResult.isSuccess());
+
+        InOrder inOrder = inOrder(assessmentPanelInviteRepositoryMock, notificationSenderMock);
+        inOrder.verify(assessmentPanelInviteRepositoryMock).getByIdIn(inviteIds);
+        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
+        inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
+        inOrder.verifyNoMoreInteractions();
+    }
+
     private CompetitionInvite setUpCompetitionInvite(Competition competition, InviteStatus status, InnovationArea innovationArea) {
         return newCompetitionInvite()
                 .withCompetition(competition)
                 .withHash(Invite.generateInviteHash())
                 .withStatus(status)
                 .withInnovationArea(innovationArea)
+                .build();
+    }
+
+    private AssessmentPanelInvite setUpAssessmentPanelInvite(Competition competition, InviteStatus status) {
+        return newAssessmentPanelInvite()
+                .withCompetition(competition)
+                .withHash(Invite.generateInviteHash())
+                .withStatus(status)
                 .build();
     }
 
@@ -574,6 +706,16 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                     assertFalse(invite.getHash().isEmpty());
                 }
         );
+    }
+
+    private AssessmentPanelParticipant createAssessmentPanelParticipantExpectations(AssessmentPanelInvite assessmentPanelInvite) {
+        return createLambdaMatcher(assessmentPanelParticipant -> {
+            assertNull(assessmentPanelParticipant.getId());
+            assertEquals(assessmentPanelInvite.getTarget(), assessmentPanelParticipant.getProcess());
+            assertEquals(assessmentPanelInvite, assessmentPanelParticipant.getInvite());
+            assertEquals(ASSESSOR, assessmentPanelParticipant.getRole());
+            assertEquals(assessmentPanelInvite.getUser(), assessmentPanelParticipant.getUser());
+        });
     }
 
     private AssessorInviteSendResource setUpAssessorInviteSendResource() {

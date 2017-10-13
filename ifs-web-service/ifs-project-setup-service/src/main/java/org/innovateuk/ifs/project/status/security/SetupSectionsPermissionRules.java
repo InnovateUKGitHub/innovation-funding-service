@@ -53,20 +53,26 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessProjectDetailsSection);
     }
 
+    @PermissionRule(value = "ACCESS_FINANCE_CONTACT_PAGE", description = "A partner can access the Finance Contact " +
+            "page when their Companies House data is complete or not required, and the Grant Offer Letter has not yet been generated")
+    public boolean partnerCanAccessFinanceContactPage(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessFinanceContactPage);
+    }
+
     @PermissionRule(value = "ACCESS_PROJECT_MANAGER_PAGE", description = "A lead can access the Project Manager " +
-            "page when their Companies House data is complete or not required, and the Project Details have not been submitted")
+            "page when their Companies House data is complete or not required, and the Grant Offer Letter has not yet been generated")
     public boolean leadCanAccessProjectManagerPage(Long projectId, UserResource user) {
         return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage);
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_START_DATE_PAGE", description = "A lead can access the Project Start Date " +
-            "page when their Companies House data is complete or not required, and the Project Details have not been submitted")
+            "page when their Companies House data is complete or not required, and the Spend Profile has not yet been generated")
     public boolean leadCanAccessProjectStartDatePage(Long projectId, UserResource user) {
         return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::leadCanAccessProjectStartDatePage);
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_ADDRESS_PAGE", description = "A lead can access the Project Address " +
-            "page when their Companies House data is complete or not required, and the Project Details have not been submitted")
+            "page when their Companies House data is complete or not required, and the Grant Offer Letter has not yet been generated")
     public boolean leadCanAccessProjectAddressPage(Long projectId, UserResource user) {
         return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage);
     }

@@ -50,7 +50,7 @@ public class CrmServiceImpl implements CrmService {
                     return serviceFailure(CommonErrors.notFoundError(Organisation.class));
                 }
                 SilContact silContact = toSilContact(user, organisations.get(0));
-                LOG.error("Updating CRM contact " + silContact.getEmail());
+                LOG.info("Updating CRM contact " + silContact.getEmail());
                 return silCrmEndpoint.updateContact(silContact);
             }
             return serviceSuccess();

@@ -19,7 +19,7 @@ ${compPublicPage}   ${server}/management/competition/${openCompetitionPublicSect
 *** Test Cases ***
 Comp Admin Creates Competitions where Research or Public sector can lead
     [Documentation]  IFS-1012
-    [Tags]  CompAdmin  Failing
+    [Tags]  CompAdmin
     Given Logging in and Error Checking                   &{Comp_admin1_credentials}
     Then The competition admin creates a competition for  ${RTO_TYPE_ID}  ${compResearch}  Research
     And The competition admin creates a competition for   ${PUBLIC_SECTOR_TYPE_ID}  ${compPublic}  Public
@@ -27,7 +27,7 @@ Comp Admin Creates Competitions where Research or Public sector can lead
 
 Applicant Applies to Research leading Competition
     [Documentation]  IFS-1012
-    [Tags]  Applicant  HappyPath  Failing
+    [Tags]  Applicant  HappyPath
     [Setup]  Logging in and Error Checking                antonio.jenkins@jabbertype.example.com  ${short_password}
     Given logged in user applies to competition           ${openCompetitionResearch_name}
     When the user clicks the button/link                  link=Application details
@@ -41,8 +41,7 @@ Applicant Applies to Research leading Competition
 Applicant Applies to Public content leading Competition
     [Documentation]  IFS-1012
     [Tags]  Applicant  HappyPath
-#    [Setup]  log in as a different user                   becky.mason@gmail.com  ${short_password}
-    logging in and error checking  becky.mason@gmail.com  ${short_password}
+    [Setup]  log in as a different user                   becky.mason@gmail.com  ${short_password}
     Given logged in user applies to competition           ${openCompetitionPublicSector_name}
     When the user clicks the button/link                  link=Application details
     Then the user fills in the Application details        ${publicLeadApp}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
