@@ -12,7 +12,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.PathParam;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -204,12 +203,12 @@ public class CompetitionController {
     }
 
     @GetMapping("/{competitionId}/queries/open")
-    public RestResult<List<CompetitionOpenQueryResource>> getOpenQueries(@PathParam("competitionId") Long competitionId) {
+    public RestResult<List<CompetitionOpenQueryResource>> getOpenQueries(@PathVariable("competitionId") Long competitionId) {
         return competitionService.findAllOpenQueries(competitionId).toGetResponse();
     }
 
     @GetMapping("/{competitionId}/queries/open/count")
-    public RestResult<Long> countOpenQueries(@PathParam("competitionId") Long competitionId) {
+    public RestResult<Long> countOpenQueries(@PathVariable("competitionId") Long competitionId) {
         return competitionService.countAllOpenQueries(competitionId).toGetResponse();
     }
 
