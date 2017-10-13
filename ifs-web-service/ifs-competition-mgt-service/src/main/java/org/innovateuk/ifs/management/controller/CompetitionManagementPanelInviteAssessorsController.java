@@ -4,16 +4,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
-import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.form.*;
-import org.innovateuk.ifs.management.model.*;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsFindViewModel;
+import org.innovateuk.ifs.management.form.AssessorPanelSelectionForm;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsAcceptedModelPopulator;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsFindModelPopulator;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsFindViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,15 +24,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -60,6 +54,10 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
 
     @Autowired
     private PanelInviteAssessorsInviteModelPopulator panelInviteAssessorsInviteModelPopulator;
+
+    @Autowired
+    private PanelInviteAssessorsAcceptedModelPopulator panelInviteAssessorsAcceptedModelPopulator;
+
 
     protected String getCookieName() {
         return SELECTION_FORM;
@@ -235,6 +233,22 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
         model.addAttribute("originQuery", originQuery);
 
         return "assessors/panel-invite";
+    }
+
+    @GetMapping("/accepted")
+    public String accepted(Model model,
+                           @PathVariable("competitionId") long competitionId,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam MultiValueMap<String, String> queryParams) {
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_ACCEPTED, queryParams);
+
+        model.addAttribute("model", panelInviteAssessorsAcceptedModelPopulator.populateModel(
+                competitionId,
+                page,
+                originQuery
+        ));
+
+        return "assessors/accepted";
     }
 
     private String redirectToInvite(long competitionId, int page) {
