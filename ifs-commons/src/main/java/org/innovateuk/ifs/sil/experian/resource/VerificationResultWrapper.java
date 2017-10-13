@@ -12,11 +12,11 @@ public class VerificationResultWrapper {
         this.verificationResult = verificationResult;
     }
 
-    public org.innovateuk.ifs.sil.experian.resource.VerificationResult getVerificationResult() {
+    public VerificationResult getVerificationResult() {
         return verificationResult;
     }
 
-    public void setVerificationResult(org.innovateuk.ifs.sil.experian.resource.VerificationResult verificationResult) {
+    public void setVerificationResult(VerificationResult verificationResult) {
         this.verificationResult = verificationResult;
     }
 }

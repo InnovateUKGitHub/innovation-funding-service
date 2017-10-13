@@ -14,11 +14,11 @@ public class ValidationResultWrapper {
         this.validationResult = validationResult;
     }
 
-    public org.innovateuk.ifs.sil.experian.resource.ValidationResult getValidationResult() {
+    public ValidationResult getValidationResult() {
         return validationResult;
     }
 
-    public void setValidationResult(org.innovateuk.ifs.sil.experian.resource.ValidationResult validationResult) {
+    public void setValidationResult(ValidationResult validationResult) {
         this.validationResult = validationResult;
     }
 }
