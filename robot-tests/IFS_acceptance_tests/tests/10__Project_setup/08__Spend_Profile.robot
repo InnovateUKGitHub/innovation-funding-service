@@ -185,7 +185,7 @@ Lead partner can edit his spend profile with invalid values and see the error me
     Then the user should see the element       jQuery=.error-summary:contains("Your total costs are higher than the eligible project costs.")
     When the user clicks the button/link       jQuery=.button:contains("Edit spend profile")
     Then the user enters text to a text field  jQuery=th:contains("Labour") + td input  10
-#    And the user should not see the element   jQuery=.form-group-error th:contains("Labour")  # TODO IFS-1120
+    And the user should not see the element   jQuery=.form-group-error th:contains("Labour")
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  -55
     And the user moves focus to the element    jQuery=th:contains("Overheads") ~ td:nth-child(5)
     Then the user should see the element       jQuery=.error-summary-list li:contains("This field should be 0 or higher")
