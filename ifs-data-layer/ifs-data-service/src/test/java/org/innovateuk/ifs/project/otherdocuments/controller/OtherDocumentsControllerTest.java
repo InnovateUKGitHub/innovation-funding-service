@@ -6,9 +6,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,21 +23,11 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<OtherDocumentsController> {
-
-    private RestDocumentationResultHandler document;
-
-    @Before
-    public void setUpDocumentation() throws Exception {
-        this.document = document("project/{method-name}",
-                preprocessResponse(prettyPrint()));
-    }
 
     @Override
     protected OtherDocumentsController supplyControllerUnderTest() {
@@ -55,7 +43,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 (service, fileToUpload) -> service.createCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
         assertFileUploadProcess("/project/" + projectId + "/collaboration-agreement", otherDocumentsServiceMock, serviceCallToUpload).
-                andDo(documentFileUploadMethod(document));
+                andDo(documentFileUploadMethod("project/{method-name}"));
     }
 
     @Test
@@ -67,7 +55,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 (service, fileToUpload) -> service.updateCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
         assertFileUpdateProcess("/project/" + projectId + "/collaboration-agreement", otherDocumentsServiceMock, serviceCallToUpload).
-                andDo(documentFileUpdateMethod(document));
+                andDo(documentFileUpdateMethod("project/{method-name}"));
     }
 
     @Test
@@ -80,7 +68,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
         assertGetFileDetails("/project/{projectId}/collaboration-agreement/details", new Object[] {projectId}, emptyMap(),
                 otherDocumentsServiceMock, serviceCallToUpload).
-                andDo(documentFileGetDetailsMethod(document));
+                andDo(documentFileGetDetailsMethod("project/{method-name}"));
     }
 
     @Test
@@ -93,7 +81,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
         assertGetFileContents("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
                 emptyMap(), otherDocumentsServiceMock, serviceCallToUpload).
-                andDo(documentFileGetContentsMethod(document));
+                andDo(documentFileGetContentsMethod("project/{method-name}"));
     }
 
     @Test
@@ -106,7 +94,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
         assertDeleteFile("/project/{projectId}/collaboration-agreement", new Object[] {projectId},
                 emptyMap(), otherDocumentsServiceMock, serviceCallToDelete).
-                andDo(documentFileDeleteMethod(document));
+                andDo(documentFileDeleteMethod("project/{method-name}"));
     }
 
     @Test
@@ -118,7 +106,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 (service, fileToUpload) -> service.createExploitationPlanFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
         assertFileUploadProcess("/project/" + projectId + "/exploitation-plan", otherDocumentsServiceMock, serviceCallToUpload).
-                andDo(documentFileUploadMethod(document));
+                andDo(documentFileUploadMethod("project/{method-name}"));
     }
 
     @Test
@@ -130,7 +118,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
                 (service, fileToUpload) -> service.updateExploitationPlanFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
         assertFileUpdateProcess("/project/" + projectId + "/exploitation-plan", otherDocumentsServiceMock, serviceCallToUpload).
-                andDo(documentFileUpdateMethod(document));
+                andDo(documentFileUpdateMethod("project/{method-name}"));
     }
 
     @Test
@@ -143,7 +131,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
         assertGetFileDetails("/project/{projectId}/exploitation-plan/details", new Object[] {projectId}, emptyMap(),
                 otherDocumentsServiceMock, serviceCallToUpload).
-                andDo(documentFileGetDetailsMethod(document));
+                andDo(documentFileGetDetailsMethod("project/{method-name}"));
     }
 
     @Test
@@ -156,7 +144,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
         assertGetFileContents("/project/{projectId}/exploitation-plan", new Object[] {projectId},
                 emptyMap(), otherDocumentsServiceMock, serviceCallToUpload).
-                andDo(documentFileGetContentsMethod(document));
+                andDo(documentFileGetContentsMethod("project/{method-name}"));
     }
 
     @Test
@@ -169,7 +157,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
         assertDeleteFile("/project/{projectId}/exploitation-plan", new Object[] {projectId},
                 emptyMap(), otherDocumentsServiceMock, serviceCallToDelete).
-                andDo(documentFileDeleteMethod(document));
+                andDo(documentFileDeleteMethod("project/{method-name}"));
     }
 
     @Test
@@ -178,7 +166,8 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
         mockMvc.perform(post("/project/1/partner/documents/approved/{approved}", true).
                 contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+        .andDo(document("project/{method-name}"));
 
         verify(otherDocumentsServiceMock).acceptOrRejectOtherDocuments(1L, true);
     }
@@ -199,6 +188,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
         mockMvc.perform(mainRequest)
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
+                .andDo(document("project/{method-name}"))
                 .andReturn();
     }
 }
