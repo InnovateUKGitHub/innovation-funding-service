@@ -95,7 +95,7 @@ public class CompetitionManagementPanelInviteAssessorsOverviewControllerTest ext
                 .withContent(assessorInviteOverviewResources)
                 .build();
 
-        when(assessmentPanelInviteRestService.getInvitationOverview(competition.getId(), page))
+        when(assessmentPanelInviteRestService.getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING)))
                 .thenReturn(restSuccess(pageResource));
         when(assessmentPanelInviteRestService.getNonAcceptedAssessorInviteIds(competition.getId())).thenReturn(restSuccess(inviteIds));
 
@@ -112,7 +112,7 @@ public class CompetitionManagementPanelInviteAssessorsOverviewControllerTest ext
         InOrder inOrder = inOrder(competitionRestService, assessmentPanelInviteRestService);
         inOrder.verify(assessmentPanelInviteRestService).getNonAcceptedAssessorInviteIds(competition.getId());
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
-        inOrder.verify(assessmentPanelInviteRestService).getInvitationOverview(competition.getId(), page);
+        inOrder.verify(assessmentPanelInviteRestService).getInvitationOverview(competition.getId(), page, asList(REJECTED, PENDING));
         inOrder.verifyNoMoreInteractions();
     }
 

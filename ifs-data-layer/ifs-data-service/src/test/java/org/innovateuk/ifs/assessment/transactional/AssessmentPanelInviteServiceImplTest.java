@@ -43,6 +43,7 @@ import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
+import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelParticipantBuilder.newAssessmentPanelParticipant;
 import static org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -61,6 +62,7 @@ import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newReject
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
@@ -678,6 +680,57 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(0));
         inOrder.verify(notificationSenderMock).sendNotification(notifications.get(1));
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getInvitationOverview() throws Exception {
+        long competitionId = 1L;
+        Pageable pageable = new PageRequest(0, 5);
+        List<AssessmentPanelParticipant> expectedParticipants = newAssessmentPanelParticipant()
+                .withInvite(
+                        newAssessmentPanelInvite()
+                                .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
+                                .withSentOn(now())
+                                .withStatus(SENT)
+                                .buildArray(5, AssessmentPanelInvite.class)
+                )
+                .withStatus(PENDING)
+                .build(5);
+
+        Page<AssessmentPanelParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
+
+        when(assessmentPanelParticipantRepositoryMock.getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable))
+                .thenReturn(pageResult);
+        when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
+
+        ServiceResult<AssessorInviteOverviewPageResource> result = service.getInvitationOverview(competitionId, pageable, singletonList(PENDING));
+
+        verify(assessmentPanelParticipantRepositoryMock).getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable);
+        verify(participantStatusMapperMock, times(5)).mapToResource(PENDING);
+
+        assertTrue(result.isSuccess());
+
+        AssessorInviteOverviewPageResource pageResource = result.getSuccessObjectOrThrowException();
+
+        assertEquals(0, pageResource.getNumber());
+        assertEquals(5, pageResource.getSize());
+        assertEquals(2, pageResource.getTotalPages());
+        assertEquals(10, pageResource.getTotalElements());
+
+        List<AssessorInviteOverviewResource> content = pageResource.getContent();
+        assertEquals("Name 1", content.get(0).getName());
+        assertEquals("Name 2", content.get(1).getName());
+        assertEquals("Name 3", content.get(2).getName());
+        assertEquals("Name 4", content.get(3).getName());
+        assertEquals("Name 5", content.get(4).getName());
+
+        content.forEach(this::assertNotExistingAssessorUser);
+    }
+
+    private void assertNotExistingAssessorUser(AssessorInviteOverviewResource assessorInviteOverviewResource) {
+        assertNull(assessorInviteOverviewResource.getId());
+        assertNull(assessorInviteOverviewResource.getBusinessType());
+        assertFalse(assessorInviteOverviewResource.isCompliant());
     }
 
     private CompetitionInvite setUpCompetitionInvite(Competition competition, InviteStatus status, InnovationArea innovationArea) {

@@ -2,10 +2,8 @@ package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessmentPanelInviteController;
-import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -15,14 +13,20 @@ import org.springframework.http.MediaType;
 import java.util.List;
 
 import static com.google.common.primitives.Longs.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInvitePageResourceDocs.assessorCreatedInvitePageResourceBuilder;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInvitePageResourceDocs.assessorCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInviteResourceDocs.assessorCreatedInviteResourceFields;
+import static org.innovateuk.ifs.documentation.AssessorInviteOverviewPageResourceDocs.assessorInviteOverviewPageResourceFields;
+import static org.innovateuk.ifs.documentation.AssessorInviteOverviewResourceDocs.assessorInviteOverviewResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs.availableAssessorPageResourceBuilder;
 import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs.availableAssessorPageResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.availableAssessorResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -232,5 +236,47 @@ public class AssessmentPanelInviteControllerDocumentation extends BaseController
                         ),
                         requestFields(assessorInviteSendResourceFields)
                 ));
+    }
+
+    @Test
+    public void getInvitationOverview() throws Exception {
+        long competitionId = 1L;
+        List<ParticipantStatus> status = singletonList(PENDING);
+
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
+
+        List<AssessorInviteOverviewResource> content = newAssessorInviteOverviewResource().build(2);
+        AssessorInviteOverviewPageResource expectedPageResource = newAssessorInviteOverviewPageResource()
+                .withContent(content)
+                .build();
+
+        when(assessmentPanelInviteServiceMock.getInvitationOverview(competitionId, pageable, status))
+                .thenReturn(serviceSuccess(expectedPageResource));
+
+        mockMvc.perform(get("/assessmentpanelinvite/getInvitationOverview/{competitionId}", 1L)
+                .param("size", "20")
+                .param("page", "0")
+                .param("sort", "invite.name,asc")
+                .param("statuses", "PENDING"))
+                .andExpect(status().isOk())
+                .andDo(document("competitioninvite/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition")
+                        ),
+                        requestParameters(
+                                parameterWithName("size").optional()
+                                        .description("Maximum number of elements in a single page. Defaults to 20."),
+                                parameterWithName("page").optional()
+                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
+                                parameterWithName("sort").optional()
+                                        .description("The property to sort the elements on. For example `sort=invite.name,asc`. Defaults to `invite.name,asc`"),
+                                parameterWithName("statuses")
+                                        .description("Participant statuses to filter assessors by. Can be a single status or a combination of 'ACCEPTED', 'PENDING' or 'REJECTED'")
+                        ),
+                        responseFields(assessorInviteOverviewPageResourceFields)
+                                .andWithPrefix("content[].", assessorInviteOverviewResourceFields)
+                ));
+
+        verify(assessmentPanelInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status);
     }
 }
