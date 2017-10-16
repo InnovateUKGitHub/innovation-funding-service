@@ -626,7 +626,7 @@ CompAdmin sees uploaded file and approves it
     Then the user should see the file without error
     When the user clicks the button/link  jQuery=button:contains("Accept document")
     And the user clicks the button/link  jQuery=.modal-accept-doc .button:contains("Accept document")
-    Then the user should see the element  jQuery=h2:contains("The document provided has been approved.")
+    Then the user should see the element  jQuery=p:contains("The document provided has been approved.")
 
 Sole applicant can see documents approval
     [Documentation]    IFS-1864
