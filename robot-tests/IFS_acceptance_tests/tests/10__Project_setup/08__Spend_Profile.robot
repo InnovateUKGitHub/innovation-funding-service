@@ -349,8 +349,9 @@ Academic partner spend profile server side validations
     When the user enters text to a text field        css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    -1    # Directly incurredStaff
     And the user enters text to a text field         css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    3306  # Travel and subsistence
     And the user moves focus to the element          css=.spend-profile-table tbody .form-group-row:nth-child(7) td:nth-of-type(6) input
-    And the user clicks the button/link              jQuery=.button:contains("Save and return to spend profile overview")
-    And the user should see the text in the page     This field should be 0 or higher.
+    Then the user should see the text in the page    Your total costs are higher than your eligible costs.
+    When the user clicks the button/link              jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should see the text in the page     This field should be 0 or higher.
 
 Academic partner spend profile client side validations
     [Documentation]    INFUND-5846
