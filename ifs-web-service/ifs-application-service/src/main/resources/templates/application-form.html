@@ -19,7 +19,7 @@
                 <ul class="error-summary-list">
                     <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
                         <th:block th:if="${err.global || err.fieldName == 'formInput[cost]'}" th:text="${err.message}">Non-field specific message</th:block>
-                        <th:block th:unless="${err.global}" th:if="${err.fieldName != 'formInput[cost]'}">
+                        <th:block th:unless="${err.global || err.fieldName == 'formInput[cost]'}">
                           <th:block th:if="${err.fieldName != null && err.fieldName == ''}" th:text="${err.message}">The error message</th:block>
                           <a th:unless="${#strings.isEmpty(err.fieldName)}" th:href="|#${err.fieldName}|" th:text="${err.message}">The error message</a>
                         </th:block>
