@@ -76,7 +76,7 @@ the applicant completes the application details
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
     The user enters text to a text field  id=application_details-startdate_month  11
-    The user enters text to a text field  id=application_details-duration  20
+    The user enters text to a text field  css=[id="application.durationInMonths"]  20
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user should see the element       jQuery=button:contains("Edit")
     the user should not see the element   css=input
@@ -92,7 +92,7 @@ the user fills in the Application details
     the user enters text to a text field  css=#application_details-startdate_day  ${tomorrowday}
     the user enters text to a text field  css=#application_details-startdate_month  ${month}
     the user enters text to a text field  css=#application_details-startdate_year  ${nextyear}
-    the user enters text to a text field  css=#application_details-duration  24
+    the user enters text to a text field  css=[id="application.durationInMonths]  24
     the user clicks the button twice      css=label[for="application.resubmission-no"]
     the user selects Research category    ${res_category}
     the user should not see the element   link=Choose your innovation area

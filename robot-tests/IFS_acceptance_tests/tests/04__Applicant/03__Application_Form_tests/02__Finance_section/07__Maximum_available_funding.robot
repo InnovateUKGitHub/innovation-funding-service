@@ -159,7 +159,7 @@ the user fills the other application details questions
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
     The user enters text to a text field  id=application_details-startdate_month  11
-    The user enters text to a text field  id=application_details-duration  20
+    The user enters text to a text field  css=[id="application.durationInMonths"]  20
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user clicks the button/link       link=Application overview
 
