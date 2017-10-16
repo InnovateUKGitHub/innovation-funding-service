@@ -75,6 +75,45 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
+    public static final String COUNT_OPEN_QUERIES = "SELECT COUNT(DISTINCT t.classPk) " +
+            "FROM Post post " +
+            "JOIN Thread t ON t.id = post.thread.id " +
+            "JOIN post.author u " +
+            "JOIN u.roles roles " +
+            "INNER JOIN ProjectFinance pf ON pf.id = t.classPk " +
+            "INNER JOIN Project pr ON pr.id = pf.project.id " +
+            "INNER JOIN Application a ON a.id = pr.application.id " +
+            "WHERE t.className='org.innovateuk.ifs.finance.domain.ProjectFinance' " +
+            "    AND TYPE(t) = Query " +
+            "    AND roles.name != 'project_finance' " +
+            "    AND a.competition.id = :competitionId " +
+            "    AND (post.thread.id, post.createdOn) IN ( " +
+            "        SELECT p.thread.id, MAX(p.createdOn) " +
+            "        FROM Post p " +
+            "        WHERE p.thread.id = t.id " +
+            "        GROUP BY p.thread.id)";
+
+    public static final String GET_OPEN_QUERIES = "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name) " +
+            "FROM Post post " +
+            "JOIN Thread t ON t.id = post.thread.id " +
+            "JOIN post.author u " +
+            "JOIN u.roles roles " +
+            "INNER JOIN ProjectFinance pf ON pf.id = t.classPk " +
+            "INNER JOIN Project pr ON pr.id = pf.project.id " +
+            "INNER JOIN Application a ON a.id = pr.application.id " +
+            "INNER JOIN Organisation o ON o.id = pf.organisation.id " +
+            "WHERE t.className='org.innovateuk.ifs.finance.domain.ProjectFinance' " +
+            "    AND TYPE(t) = Query " +
+            "    AND roles.name != 'project_finance' " +
+            "    AND a.competition.id = :competitionId " +
+            "    AND (post.thread.id, post.createdOn) IN ( " +
+            "        SELECT p.thread.id, MAX(p.createdOn) " +
+            "        FROM Post p " +
+            "        WHERE p.thread.id = t.id " +
+            "        GROUP BY p.thread.id) " +
+            "GROUP BY pr.application.id, o.id, o.name, pr.id, pr.name " +
+            "ORDER BY pr.application.id, o.name";
+
     @Query(LIVE_QUERY)
     List<Competition> findLive();
 
@@ -129,39 +168,10 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(FEEDBACK_RELEASED_COUNT_QUERY)
     Long countFeedbackReleased();
 
-    @Query( "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name, MAX(p.createdOn)) " +
-            "FROM Thread t " +
-            "JOIN t.posts p " +
-            "INNER JOIN ProjectFinance pf ON pf.id = t.classPk " +
-            "INNER JOIN Project pr ON pr.id = pf.project.id " +
-            "INNER JOIN Organisation o ON o.id = pf.organisation.id " +
-            "INNER JOIN User u ON u.id = p.author.id " +
-            "JOIN u.roles roles " +
-            "INNER JOIN Application a ON a.id = pr.application.id " +
-            "WHERE t.className='org.innovateuk.ifs.finance.domain.ProjectFinance' " +
-            "AND roles.name != 'project_finance'" +
-            "AND a.competition.id = :competitionId " +
-            "GROUP BY pr.application.id, o.id, o.name, pr.id, pr.name " +
-            "ORDER BY pr.application.id, o.name"
-    )
+    @Query(COUNT_OPEN_QUERIES)
+    Long countOpenQueries(@Param("competitionId") Long competitionId);
+
+    @Query(GET_OPEN_QUERIES)
     List<CompetitionOpenQueryResource> getOpenQueryByCompetition(@Param("competitionId") long competitionId);
 
-    // HQL doesn't allow SELECT in FROM clause
-    @Query( value = "SELECT COUNT(*) FROM ( " +
-            "SELECT pr.application_id, o.id AS org_id, pr.id AS proj_id, MAX(p.created_on)  " +
-            "FROM thread AS t " +
-            "JOIN post AS p ON p.thread_id = t.id " +
-            "INNER JOIN project_finance AS pf ON pf.id = t.class_pk " +
-            "INNER JOIN project AS pr ON pr.id = pf.project_id " +
-            "INNER JOIN organisation AS o ON o.id = pf.organisation_id " +
-            "INNER JOIN user AS u ON u.id = p.author_id " +
-            "JOIN user_role AS ur ON ur.user_id=u.id " +
-            "JOIN role AS r ON r.id = ur.role_id " +
-            "INNER JOIN application AS a ON a.id = pr.application_id " +
-            "WHERE t.class_name='org.innovateuk.ifs.finance.domain.ProjectFinance' " +
-            "AND r.name != 'project_finance'" +
-            "AND a.competition = :competitionId " +
-            "GROUP BY pr.application_id, o.id, pr.id " +
-            ") a", nativeQuery = true)
-    Long countOpenQueries(@Param("competitionId") long competitionId);
 }

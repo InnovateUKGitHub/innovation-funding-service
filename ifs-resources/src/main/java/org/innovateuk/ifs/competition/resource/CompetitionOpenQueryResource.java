@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.competition.resource;
 
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.time.ZonedDateTime;
 
 /**
  * Represents open Queries of a Competition
@@ -21,17 +18,14 @@ public class CompetitionOpenQueryResource {
 
     private String projectName;
 
-    ZonedDateTime createdOn;
-
     // constructor compatible with SQL types
-    public CompetitionOpenQueryResource(long applicationId, long organisationId, String organisationName, long projectId, String projectName, ZonedDateTime createdOn) {
+    public CompetitionOpenQueryResource(long applicationId, long organisationId, String organisationName, long projectId, String projectName) {
         this.applicationId = applicationId;
         this.organisationId = organisationId;
         this.organisationName = organisationName;
 
         this.projectId = projectId;
         this.projectName = projectName;
-        this.createdOn = createdOn;
     }
 
     public CompetitionOpenQueryResource() {}
@@ -56,10 +50,6 @@ public class CompetitionOpenQueryResource {
 
     public void setProjectName(String projectName) { this.projectName = projectName; }
 
-    public ZonedDateTime getCreatedOn() { return createdOn; }
-
-    public void setCreatedOn(ZonedDateTime createdOn) { this.createdOn = createdOn; }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -75,7 +65,6 @@ public class CompetitionOpenQueryResource {
                 .append(organisationName, that.organisationName)
                 .append(projectId, that.projectId)
                 .append(projectName, that.projectName)
-                .append(createdOn, that.createdOn)
                 .isEquals();
     }
 
@@ -88,7 +77,6 @@ public class CompetitionOpenQueryResource {
                 .append(organisationName)
                 .append(projectId)
                 .append(projectName)
-                .append(createdOn)
                 .toHashCode();
     }
 }

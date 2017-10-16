@@ -1,32 +1,28 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Setup Dashboard: Navigation'" />
 </head>
 <body class="project-management">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content" class="full-width">
-  <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
     <div class="grid-container">
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}"/>
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
 
-    <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount})" />
-
-    <div class="grid-row">
-      <div class="column-two-thirds">
-          <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionProjectsStatusResource.competitionName},subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: Innovate UK|,size='heading-xlarge'" />
-      </div>
-        <div class="column-third alignright extra-margin">
-          <h2 class="bold-small blue-block">Projects in setup</h2>
-      </div>
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionProjectsStatusResource.competitionName},subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: Innovate UK|,size='heading-xlarge'" />
+            </div>
+        </div>
+        <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount})" />
+        <div th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
+            <hr />
+            <div class="warning-alert"><p>There are currently no active projects in this competition.</p></div>
+        </div>
     </div>
-    <div th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
-      <hr />
-      <div class="warning-alert"><p>There are currently no active projects in this competition.</p></div>
-    </div>
-  </div>
   <div class="grid-container constrain-width">
     <div class="table-overflow" th:unless="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
       <table id="table-project-status" class="icon-table">
