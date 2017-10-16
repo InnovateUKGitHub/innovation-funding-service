@@ -172,7 +172,7 @@ Economic Benefit: word count
     Given I open one of the application questions          link=4. Economic benefit
     And I should see word count underneath feedback form   Words remaining: 100
     When I enter feedback of words                         102
-    When the user clicks the button/link                   jQuery=button:contains("Save and return to assessment overview")
+    And the user clicks the button/link                    jQuery=button:contains("Save and return to assessment overview")
     Then the user should see a summary error               Maximum word count exceeded. Please reduce your word count to 100.
     When I enter feedback of words                         10
     Then I should see word count underneath feedback form  Words remaining: 90

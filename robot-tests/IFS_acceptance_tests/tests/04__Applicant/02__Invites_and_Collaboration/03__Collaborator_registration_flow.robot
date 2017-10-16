@@ -79,7 +79,7 @@ Research and technology organisations (RTO) search (empty, invalid & valid input
     And the user enters text to a text field       name=organisationName    Digital Catapult
     When the user clicks the button/link           jQuery=.button:contains("Find UK address")
     And the user should see the text in the page   Please enter a UK postcode
-    When the user moves focus to the element       css=[name="manual-address"]
+    And the user moves focus to the element        css=[name="manual-address"]
     When the user enters text to a text field      name=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link            jQuery=.button:contains("Find UK address")
     And the user clicks the button/link            jQuery=.button:contains("Use selected address")
