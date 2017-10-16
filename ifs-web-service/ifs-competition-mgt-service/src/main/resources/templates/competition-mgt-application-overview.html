@@ -92,7 +92,8 @@
         <div>
             <form th:action="@{~__${#httpServletRequest.requestURI} + '?' + ${#httpServletRequest.queryString}__}"
                   th:object="${form}"
-                  method="POST">
+                  method="POST"
+                  novalidate="novalidate">
 
                 <div class="form-group word-count" th:classappend="${#fields.hasErrors('ineligibleReason')} ? 'form-group-error'">
                     <label class="form-label" th:for="ineligibleReason">
