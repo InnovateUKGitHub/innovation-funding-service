@@ -193,5 +193,5 @@ Log in and create a new application for the Aerospace competition
 
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title    Aerospace test application
+    And the user enters text to a text field    css=[id="application.name"]    Aerospace test application
     And the user clicks the button/link    jQuery=button:contains("Save and return")

@@ -15,9 +15,9 @@ Title field client side
     [Documentation]    INFUND-43, INFUND-2843
     [Tags]    HappyPath
     Given the user should see the text in the page    Application details
-    When the user enters text to a text field    id=application_details-title    ${EMPTY}
+    When the user enters text to a text field    css=[id="application.name"]    ${EMPTY}
     And the user should see an error    Please enter the full title of the project
-    And the user enters text to a text field    id=application_details-title    Robot test application
+    And the user enters text to a text field    css=[id="application.name"]    Robot test application
     And the applicant should not see the validation error any more
 
 Day field client side
@@ -59,7 +59,7 @@ Year field client side
     ...
     ...    INFUND-2843
     [Tags]    HappyPath
-    [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
+    [Setup]    Run keywords    the user enters text to a text field    css=[id="application.name"]    Robot test application
     ...    AND    the user enters text to a text field    id=application_details-duration    15
     ...    AND    Run Keyword And Ignore Error Without Screenshots    Focus    jQuery=Button:contains("Mark as complete")
     When the applicant inserts an invalid date
@@ -74,7 +74,7 @@ Duration field client side
     ...
     ...    INFUND-2843
     [Tags]
-    [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
+    [Setup]    Run keywords    the user enters text to a text field    css=[id="application.name"]    Robot test application
     ...    AND    the applicant inserts a valid date
     When the user enters text to a text field    id=application_details-duration    0
     Then the user should see an error    Your project should last between 1 and 36 months.
@@ -94,7 +94,7 @@ Application details server side
     [Tags]
     Given the user should see the text in the page    Application details
     When the user clicks the button/link    jQuery=label:contains(Yes)
-    And the user enters text to a text field    id=application_details-title    ${EMPTY}
+    And the user enters text to a text field    css=[id="application.name"]    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_month    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
@@ -107,7 +107,7 @@ Application details server side
     And the user should see an error    Please enter the full title of the project.
     And the user should see an error    Please select a research category.
     And the user should see the element    css=.error-summary-list
-    [Teardown]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
+    [Teardown]    Run keywords    the user enters text to a text field    css=[id="application.name"]    Robot test application
     ...    AND    Focus    jQuery=button:contains("Save and return to application overview")
 
 Empty text area

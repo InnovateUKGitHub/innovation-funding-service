@@ -138,7 +138,7 @@ the user navigates to the competition overview
 the applicant completes the application details
     [Arguments]   ${Application_details}         ${Research_category}
     the user clicks the button/link              link=${Application_details}
-    the user enters text to a text field         id=application_details-title  ${Application_name_business}
+    the user enters text to a text field         css=[id="application.name"]  ${Application_name_business}
     the user clicks the button/link              jQuery=button:contains("Choose your innovation area")
     the user clicks the button twice             jQuery=label[for^="innovationAreaChoice-22"]:contains("Digital manufacturing")
     the user clicks the button/link              jQuery=button:contains(Save)
@@ -147,7 +147,7 @@ the applicant completes the application details
 the applicant completes the application details for RTO lead appln
     [Arguments]   ${Application_details}   ${Research_category}
     the user clicks the button/link             link=${Application_details}
-    the user enters text to a text field        id=application_details-title  ${Application_name_RTO}
+    the user enters text to a text field        css=[id="application.name"]  ${Application_name_RTO}
     the user fills the other application details questions   ${Research_category}
 
 the user fills the other application details questions
