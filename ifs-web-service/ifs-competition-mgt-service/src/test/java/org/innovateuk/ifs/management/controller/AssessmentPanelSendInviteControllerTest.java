@@ -137,7 +137,7 @@ public class AssessmentPanelSendInviteControllerTest extends BaseControllerMockM
                 .param("subject", "Subject...")
                 .param("content", "Editable content..."))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/invite", competitionId)));
+                .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/overview", competitionId)));
 
         InOrder inOrder = inOrder(assessmentPanelInviteRestService);
         inOrder.verify(assessmentPanelInviteRestService).sendAllInvites(competitionId, expectedAssessorInviteSendResource);

@@ -13,28 +13,26 @@ import java.util.List;
 /**
  * Service for managing {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite}s.
  */
-
 public interface AssessmentPanelInviteService {
 
-
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GET_ALL_CREATED_INVITES",
             description = "Competition Admins and Project Finance users can get all invites that have been created for an assessment panel on a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GET_ALL_INVITES_TO_RESEND",
             description = "Competition Admins and Project Finance users can get all invites to be resent for an assessment panel on a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "SEND_ALL_INVITES",
             description = "The Competition Admins and Project Finance users can send all assessment panel invites")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInvitesToSendResource);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "RESEND_INVITES",
             description = "The Competition Admins and Project Finance users can resend assessment panel invites")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

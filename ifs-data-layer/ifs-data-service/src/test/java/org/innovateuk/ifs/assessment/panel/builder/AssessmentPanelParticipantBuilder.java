@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
- * Builder for {@link CompetitionParticipant}s.
+ * Builder for {@link AssessmentPanelParticipant}s.
  */
 public class AssessmentPanelParticipantBuilder extends BaseBuilder<AssessmentPanelParticipant, AssessmentPanelParticipantBuilder> {
 

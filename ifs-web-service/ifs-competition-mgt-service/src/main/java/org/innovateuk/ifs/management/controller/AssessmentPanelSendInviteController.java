@@ -166,6 +166,6 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
     }
 
     private String redirectToPanelOverviewTab(long competitionId) {
-        return format("redirect:/assessment/panel/competition/%s/assessors/invite", competitionId);
+        return format("redirect:/assessment/panel/competition/%s/assessors/overview", competitionId);
     }
 }
