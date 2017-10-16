@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -55,30 +54,8 @@ public class UnsavedFieldsManager {
 
 	public Map<String,List<FinanceFormField>> separateGroups(List<FinanceFormField> fields) {
 
-		Map<String,List<FinanceFormField>> grouped = fields.stream()
+		return fields.stream()
 				.filter(f -> !(StringUtils.isEmpty(f.getValue())))
-				//.collect(Collectors.groupingBy(f -> f.getFieldName()));
-				.collect(Collectors.groupingBy(f -> f.getFieldName(), HashMap::new, Collectors.toList()));
-
-
-		return grouped;
-
-/*		int largest = largestValue(grouped);
-
-		List<List<FinanceFormField>> result = new ArrayList<>();
-
-		for(int i = 0; i < largest; i++) {
-
-			List<FinanceFormField> resultEntry = new ArrayList<>();
-			for(Entry<String, List<FinanceFormField>> entry: grouped.entrySet()) {
-				if(i < entry.getValue().size()) {
-					resultEntry.add(entry.getValue().get(i));
-				}
-			}
-			if(!resultEntry.isEmpty()) {
-				result.add(resultEntry);
-			}
-		}
-		return result;*/
+				.collect(Collectors.groupingBy(f -> f.getFieldName()));
 	}
 }

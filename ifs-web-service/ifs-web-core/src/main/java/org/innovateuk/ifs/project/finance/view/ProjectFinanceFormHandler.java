@@ -106,11 +106,8 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
                 List<FinanceFormField> fields = entry.getValue();
 
                 if(id == -1L) {
-                    //List<List<FinanceFormField>> fieldsSeparated = unsavedFieldsManager.separateFields(fields);
                     Map<String,List<FinanceFormField>> grouped = unsavedFieldsManager.separateGroups(fields);
 
-
-                    //for(List<FinanceFormField> fieldGroup: fieldsSeparated) {
                     for(Map.Entry<String, List<FinanceFormField>> groupedEntry : grouped.entrySet()) {
 
                         List<FinanceFormField> fieldGroup = groupedEntry.getValue();
