@@ -60,7 +60,7 @@ Year field client side
     ...    INFUND-2843
     [Tags]    HappyPath
     [Setup]    Run keywords    the user enters text to a text field    css=[id="application.name"]    Robot test application
-    ...    AND    the user enters text to a text field    id=application_details-duration    15
+    ...    AND    the user enters text to a text field    css=[id="application.durationInMonths"]    15
     ...    AND    Run Keyword And Ignore Error Without Screenshots    Focus    jQuery=Button:contains("Mark as complete")
     When the applicant inserts an invalid date
     Then the user should see an error    Please enter a future date.
@@ -76,13 +76,13 @@ Duration field client side
     [Tags]
     [Setup]    Run keywords    the user enters text to a text field    css=[id="application.name"]    Robot test application
     ...    AND    the applicant inserts a valid date
-    When the user enters text to a text field    id=application_details-duration    0
+    When the user enters text to a text field    css=[id="application.durationInMonths"]    0
     Then the user should see an error    Your project should last between 1 and 36 months.
-    When the user enters text to a text field    id=application_details-duration    -1
+    When the user enters text to a text field    css=[id="application.durationInMonths"]    -1
     Then the user should see an error    Your project should last between 1 and 36 months.
-    When the user enters text to a text field    id=application_details-duration    ${EMPTY}
+    When the user enters text to a text field    css=[id="application.durationInMonths"]    ${EMPTY}
     Then the user should see an error    This field cannot be left blank.
-    And the user enters text to a text field    id=application_details-duration    15
+    And the user enters text to a text field    css=[id="application.durationInMonths"]    15
     And the applicant should not see the validation error of the duration any more
 
 Application details server side
@@ -98,7 +98,7 @@ Application details server side
     And the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_month    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
-    And the user enters text to a text field    id=application_details-duration    ${EMPTY}
+    And the user enters text to a text field    css=[id="application.durationInMonths"]    ${EMPTY}
     And the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then The user should see an error    Please enter the full title of the project.
     And the user should see an error    Please enter a future date.

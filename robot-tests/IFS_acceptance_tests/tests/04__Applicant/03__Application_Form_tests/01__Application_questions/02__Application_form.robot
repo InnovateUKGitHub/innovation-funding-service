@@ -30,7 +30,7 @@ Application details: Previous submission
     And the user should see the text in the page    Previous application number
     And the user should see the text in the page    Previous application title
     When the user clicks the button/link    jQuery=label:contains(No)
-    Then The user should not see the element    id=application_details-previousapplicationnumber
+    Then The user should not see the element    css=[id="application.previousApplicationNumber"]
 
 Application details: Research category
     [Documentation]    INFUND-6823
