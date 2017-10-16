@@ -240,7 +240,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam(defaultValue = "0") int page,
                            @RequestParam MultiValueMap<String, String> queryParams) {
-        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_ACCEPTED, queryParams);
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_ACCEPTED, queryParams);
 
         model.addAttribute("model", panelInviteAssessorsAcceptedModelPopulator.populateModel(
                 competitionId,
@@ -248,7 +248,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
                 originQuery
         ));
 
-        return "assessors/accepted";
+        return "assessors/panel-accepted";
     }
 
     private String redirectToInvite(long competitionId, int page) {

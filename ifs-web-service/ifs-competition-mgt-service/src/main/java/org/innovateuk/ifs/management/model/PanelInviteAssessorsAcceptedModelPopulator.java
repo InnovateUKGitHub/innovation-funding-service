@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.management.model;
 
-import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -26,7 +25,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class PanelInviteAssessorsAcceptedModelPopulator extends PanelInviteAssessorsModelPopulator<PanelInviteAssessorsAcceptedViewModel> {
 
     @Autowired
-    private CompetitionInviteRestService competitionInviteRestService;
+    private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
 
     @Autowired
     private CategoryRestService categoryRestService;
@@ -43,12 +42,10 @@ public class PanelInviteAssessorsAcceptedModelPopulator extends PanelInviteAsses
 
         PanelInviteAssessorsAcceptedViewModel model = super.populateModel(competition);
 
-        AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
+        AssessorInviteOverviewPageResource pageResource = assessmentPanelInviteRestService.getInvitationOverview(
                 competition.getId(),
                 page,
-                empty(),
-                singletonList(ACCEPTED),
-                empty()
+                singletonList(ACCEPTED)
         )
                 .getSuccessObjectOrThrowException();
 
