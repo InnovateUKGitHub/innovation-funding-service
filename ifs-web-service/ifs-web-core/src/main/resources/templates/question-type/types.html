@@ -166,8 +166,8 @@
     <th:block th:fragment="application_details(model)" th:with="formInput=${model.formInput}, question=${model.question}, competition=${model.competition}">
         <th:block th:unless="${model.readonly}">
         <!--/* start of edit template */-->
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'error'">
-                <label for="application_details-title">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'form-group-error'">
+                <label for="application.name">
                     <span class="form-label form-label-bold">Application title</span>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint='Enter the full title of your proposed project.')" />
                 </label>
@@ -175,15 +175,15 @@
                 <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
                 <input class="form-control width-full"
                      type="text"
-                     id="application_details-title"
+                     id="application.name"
                      th:field="*{__application.name__}"
                      th:attr="data-required-errormessage=#{validation.project.name.must.not.be.empty}"
                      required="required"
                      th:errorclass="field-error" />
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'form-group-error'">
                 <fieldset>
-                    <legend>
+                    <legend id="application.startDate">
                         <span class="heading-medium">Estimated timescales</span>
                         <span class="form-hint">When do you wish to start your project?</span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')"  />
@@ -192,11 +192,13 @@
                     <th:block th:insert="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" />
                 </fieldset>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.durationInMonths__}')} ? 'error'">
-                <th:block th:insert="question-type/form-elements :: form-label (name='Duration in months',id=${id},bold=false)" />
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.durationInMonths__}')} ? 'form-group-error'">
+                <label for="application.durationInMonths">
+                    <span>Duration in months</span>
+                </label>
                 <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')"  />
                 <input class="form-control width-extra-small"
-                       id="application_details-duration"
+                       id="application.durationInMonths"
                        th:field="*{__application.durationInMonths__}"
                        th:errorclass="field-error"
                        type="text"
@@ -208,7 +210,7 @@
             </div>
 
             <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.researchCategory__}')} ? 'form-group-error'">
-                <label for="researchCategory">
+                <label for="application.researchCategory">
                     <span class="heading-medium">Research category</span>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategory')" />
@@ -219,7 +221,7 @@
                     <!--/* Input is used here to easily check if a Research Category has been selected for mark as complete validation */-->
                     <input type="hidden" th:field="*{__application.researchCategory.name__}" value="Research category has been selected"/>
                 </div>
-                <button id="researchCategory" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}" type="submit">
+                <button id="application.researchCategory" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}" type="submit">
                     <span th:text="${model.researchCategoryText}">Choose your research category</span>
                 </button>
             </div>
@@ -249,7 +251,7 @@
 
             <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'form-group-error'">
                 <fieldset>
-                    <legend>
+                    <legend id="application.resubmission">
                         <span class="form-label form-label-bold">Is this application a resubmission?</span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this application has been previously submitted to Innovate UK.')" />
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
@@ -283,26 +285,26 @@
             <div id="resubmission-details">
                 <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'form-group-error'">
                     <h2 class="heading-medium no-margin-top">Please provide the details of this previous application</h2>
-                    <label for="application_details-previousapplicationnumber">
+                    <label for="application.previousApplicationNumber">
                         <span class="form-label form-label-bold">Previous application number</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')"  />
                     </label>
                     <input class="form-control width-full"
                                type="text"
-                               id="application_details-previousapplicationnumber"
+                               id="application.previousApplicationNumber"
                                th:field="*{__application.previousApplicationNumber__}"
                                required="required"
                                th:errorclass="form-control-error"
                                th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}" />
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'error'">
-                    <label for="application_details-previousapplicationtitle">
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'form-group-error'">
+                    <label for="application.previousApplicationTitle">
                         <span class="form-label form-label-bold">Previous application title</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationTitle')" />
                     </label>
                     <input class="form-control width-full"
                            type="text"
-                           id="application_details-previousapplicationtitle"
+                           id="application.previousApplicationTitle"
                            th:field="*{__application.previousApplicationTitle__}"
                            required="required"
                            th:errorclass="form-control-error"
