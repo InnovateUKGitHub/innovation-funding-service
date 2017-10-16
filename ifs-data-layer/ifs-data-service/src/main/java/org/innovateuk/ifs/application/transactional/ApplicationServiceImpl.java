@@ -413,7 +413,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             Competition competition = application.getCompetition();
 
             notificationArguments.put("applicationName", application.getName());
-            notificationArguments.put("applicationId", application.getId());
             notificationArguments.put("competitionName", competition.getName());
             notificationArguments.put("webBaseUrl", webBaseUrl);
 
