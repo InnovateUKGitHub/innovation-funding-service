@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
 public class CompetitionManagementAssessorProfileController {
 
     @Autowired
@@ -29,7 +29,9 @@ public class CompetitionManagementAssessorProfileController {
         ASSESSOR_OVERVIEW("/competition/{competitionId}/assessors/overview"),
         ASSESSOR_ACCEPTED("/competition/{competitionId}/assessors/accepted"),
         MANAGE_ASSESSORS("/assessment/competition/{competitionId}/assessors"),
-        ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}");
+        ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}"),
+        PANEL_FIND("/assessment/panel/competition/{competitionId}/assessors/find"),
+        PANEL_INVITE("/assessment/panel/competition/{competitionId}/assessors/invite");
 
         private String baseOriginUrl;
 

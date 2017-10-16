@@ -7,15 +7,19 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.project.builder.ProjectBuilder;
+import org.innovateuk.ifs.project.builder.SpendProfileBuilder;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectState;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
@@ -30,7 +34,6 @@ import org.mockito.Mock;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,17 +48,10 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.PROJEC
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
@@ -63,6 +59,7 @@ import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MA
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.organisation.builder.OrganisationAddressBuilder.newOrganisationAddress;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
@@ -142,6 +139,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 withId(projectId).
                 withApplication(application).
                 withProjectUsers(singletonList(leadPartnerProjectUser)).
+                withGrantOfferLetter(null).
                 build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
@@ -156,25 +154,26 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void testInvalidProjectManagerProvided() {
-
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
         ServiceResult<Void> result = service.setProjectManager(projectId, otherUserId);
         assertFalse(result.isSuccess());
         assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER));
     }
 
     @Test
-    public void testSetProjectManagerWhenProjectDetailsAlreadySubmitted() {
+    public void testSetProjectManagerWhenGOLAlreadyGenerated() {
 
-        Project existingProject = newProject().build();
+        FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+        Project existingProject = newProject().withId(projectId).withGrantOfferLetter(golFile).build();
 
         assertTrue(existingProject.getProjectUsers().isEmpty());
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(existingProject);
-        when(projectDetailsWorkflowHandlerMock.isSubmitted(existingProject)).thenReturn(true);
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.COMPLETE).build()));
 
         ServiceResult<Void> result = service.setProjectManager(projectId, userId);
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
+        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED));
 
         assertTrue(existingProject.getProjectUsers().isEmpty());
     }
@@ -185,6 +184,8 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(roleRepositoryMock.findOneByName(PROJECT_MANAGER.getName())).thenReturn(projectManagerRole);
 
         when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
+
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
@@ -221,6 +222,8 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(projectDetailsWorkflowHandlerMock.projectManagerAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
+
         setLoggedInUser(newUserResource().withId(leadPartnerProjectUser.getId()).build());
 
         ServiceResult<Void> result = service.setProjectManager(projectId, userId);
@@ -235,39 +238,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 build();
 
         assertEquals(expectedProjectManager, project.getProjectUsers().get(project.getProjectUsers().size() - 1));
-
-        verify(projectDetailsWorkflowHandlerMock).projectManagerAdded(project, leadPartnerProjectUser);
-    }
-
-    @Test
-    public void testUpdateProjectStartDate() {
-
-        LocalDate now = LocalDate.now();
-        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
-
-        Project existingProject = newProject().build();
-        assertNull(existingProject.getTargetStartDate());
-
-        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
-
-        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
-        assertTrue(updateResult.isSuccess());
-
-        verify(projectRepositoryMock).findOne(123L);
-        assertEquals(validDate, existingProject.getTargetStartDate());
-    }
-
-    @Test
-    public void testUpdateProjectStartDateButProjectDoesntExist() {
-
-        LocalDate now = LocalDate.now();
-        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
-
-        when(projectRepositoryMock.findOne(123L)).thenReturn(null);
-
-        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
-        assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, 123L)));
     }
 
     @Test
@@ -309,7 +279,43 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateProjectStartDateWhenProjectDetailsAlreadySubmitted() {
+    public void testUpdateProjectStartDateWhenSpendProfileHasAlreadyBeenGenerated() {
+
+        LocalDate now = LocalDate.now();
+        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
+        Project existingProject = newProject().build();
+        assertNull(existingProject.getTargetStartDate());
+
+        List<SpendProfile> spendProfiles = SpendProfileBuilder.newSpendProfile().build(2);
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+        when(spendProfileRepositoryMock.findByProjectId(123L)).thenReturn(spendProfiles);
+
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_START_DATE_CANNOT_BE_CHANGED_ONCE_SPEND_PROFILE_HAS_BEEN_GENERATED));
+
+        verify(projectRepositoryMock, never()).findOne(123L);
+        verify(spendProfileRepositoryMock).findByProjectId(123L);
+        assertNull(existingProject.getTargetStartDate());
+    }
+
+    @Test
+    public void testUpdateProjectStartDateButProjectDoesntExist() {
+
+        LocalDate now = LocalDate.now();
+        LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(null);
+
+        ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(notFoundError(Project.class, 123L)));
+    }
+
+    @Test
+    public void testUpdateProjectStartDateSuccess() {
 
         LocalDate now = LocalDate.now();
         LocalDate validDate = LocalDate.of(now.getYear(), now.getMonthValue(), 1).plusMonths(1);
@@ -319,14 +325,11 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
 
-        when(projectDetailsWorkflowHandlerMock.isSubmitted(existingProject)).thenReturn(true);
-
         ServiceResult<Void> updateResult = service.updateProjectStartDate(123L, validDate);
-        assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
+        assertTrue(updateResult.isSuccess());
 
         verify(projectRepositoryMock).findOne(123L);
-        assertNull(existingProject.getTargetStartDate());
+        assertEquals(validDate, existingProject.getTargetStartDate());
     }
 
     @Test
@@ -355,6 +358,26 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                         projectUser.getRole().equals(PROJECT_FINANCE_CONTACT));
 
         assertEquals(1, foundFinanceContacts.size());
+    }
+
+    @Test
+    public void testUpdateFinanceContactWhenGOLAlreadyGenerated() {
+
+        FileEntry golFileEntry = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+
+        Project project = newProject()
+                .withId(123L)
+                .withGrantOfferLetter(golFileEntry)
+                .build();
+
+        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+
+        ServiceResult<Void> updateResult = service.updateFinanceContact(new ProjectOrganisationCompositeId(123L, 5L), 7L);
+
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED));
+
+        verify(processRoleRepositoryMock, never()).save(isA(ProcessRole.class));
     }
 
     @Test
@@ -430,31 +453,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testUpdateFinanceContactNotAllowedWhenProjectLive() {
-
-        User anotherUser = newUser().build();
-        Project existingProject = newProject().build();
-        when(projectRepositoryMock.findOne(existingProject.getId())).thenReturn(existingProject);
-        when(projectWorkflowHandlerMock.getState(existingProject)).thenReturn(ProjectState.LIVE);
-
-        Organisation organisation = newOrganisation().build();
-        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
-
-        newProjectUser().
-                withOrganisation(organisation).
-                withUser(user, anotherUser).
-                withProject(existingProject).
-                withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).build(2);
-
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
-
-        ServiceResult<Void> updateResult = service.updateFinanceContact(new ProjectOrganisationCompositeId(existingProject.getId(), organisation.getId()), anotherUser.getId());
-
-        assertTrue(updateResult.isFailure());
-        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
-    }
-
-    @Test
     public void testInviteProjectManagerWhenProjectNotInDB() {
 
         Long projectId = 1L;
@@ -493,24 +491,27 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
     }
 
     @Test
-    public void testInviteProjectManagerWhenProjectDetailsAlreadySubmitted() {
+    public void testInviteProjectManagerWhenGOLAlreadyGenerated() {
 
         Long projectId = 1L;
 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .build();
 
+        FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+
         Project projectInDB = ProjectBuilder.newProject()
                 .withId(projectId)
+                .withGrantOfferLetter(golFile)
                 .build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
-        when(projectDetailsWorkflowHandlerMock.isSubmitted(projectInDB)).thenReturn(true);
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.COMPLETE).build()));
 
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_UPDATED_IF_ALREADY_SUBMITTED));
+        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_MANAGER_CANNOT_BE_UPDATED_IF_GOL_GENERATED));
     }
 
     @Test
@@ -527,6 +528,7 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .build();
 
         Project projectInDB = ProjectBuilder.newProject()
+                .withId(projectId)
                 .withName("Project 1")
                 .withApplication(application)
                 .build();
@@ -543,6 +545,8 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 thenReturn(serviceFailure(new Error(NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE)));
 
         when(inviteProjectMapperMock.mapToDomain(inviteResource)).thenReturn(newProjectInvite().withEmail("a@b.com").withName("A B").build());
+
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
@@ -564,11 +568,14 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
                 .build();
 
         Project projectInDB = ProjectBuilder.newProject()
+                .withId(projectId)
                 .withName("Project 1")
                 .withApplication(application)
                 .build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         NotificationTarget to = new ExternalUserNotificationTarget("A B", "a@b.com");
         Map<String, Object> globalArgs = new HashMap<>();
@@ -583,6 +590,34 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         ServiceResult<Void> result = service.inviteProjectManager(projectId, inviteResource);
 
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testInviteFinanceContactWhenGOLAlreadyGenerated() {
+
+        Long projectId = 1L;
+
+        InviteProjectResource inviteResource = newInviteProjectResource()
+                .withName("Abc Xyz")
+                .withEmail("Abc.xyz@gmail.com")
+                .withLeadOrganisation(17L)
+                .withInviteOrganisationName("Invite Organisation 1")
+                .withHash("sample/url")
+                .build();
+
+        FileEntry golFileEntry = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
+
+        Project projectInDB = ProjectBuilder.newProject()
+                .withId(projectId)
+                .withGrantOfferLetter(golFileEntry)
+                .build();
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        ServiceResult<Void> result = service.inviteFinanceContact(projectId, inviteResource);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_FINANCE_CONTACT_CANNOT_BE_UPDATED_IF_GOL_GENERATED));
     }
 
     @Test
@@ -623,8 +658,6 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
 
     @Test
     public void testUpdateProjectAddressToBeRegisteredAddress() {
-
-        Organisation leadOrganisation = newOrganisation().withId(1L).build();
         AddressResource existingRegisteredAddressResource = newAddressResource().build();
         Address registeredAddress = newAddress().build();
 
@@ -634,18 +667,16 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(addressRepositoryMock.exists(existingRegisteredAddressResource.getId())).thenReturn(true);
         when(addressRepositoryMock.findOne(existingRegisteredAddressResource.getId())).thenReturn(registeredAddress);
 
-        when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
-        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), REGISTERED, existingRegisteredAddressResource);
+        ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), REGISTERED, existingRegisteredAddressResource);
         assertTrue(result.isSuccess());
     }
 
     @Test
     public void testUpdateProjectAddressToBeOperatingAddress() {
-
-        Organisation leadOrganisation = newOrganisation().withId(1L).build();
         AddressResource existingOperatingAddressResource = newAddressResource().build();
         Address operatingAddress = newAddress().build();
 
@@ -655,11 +686,11 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(addressRepositoryMock.exists(existingOperatingAddressResource.getId())).thenReturn(true);
         when(addressRepositoryMock.findOne(existingOperatingAddressResource.getId())).thenReturn(operatingAddress);
 
-        when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
-        ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), OPERATING, existingOperatingAddressResource);
+        ServiceResult<Void> result = service.updateProjectAddress(organisation.getId(), project.getId(), OPERATING, existingOperatingAddressResource);
         assertTrue(result.isSuccess());
     }
 
@@ -680,42 +711,13 @@ public class ProjectDetailsServiceImplTest extends BaseServiceUnitTest<ProjectDe
         when(addressTypeRepositoryMock.findOne(PROJECT.getOrdinal())).thenReturn(projectAddressType);
         when(organisationAddressRepositoryMock.findByOrganisationIdAndAddressType(leadOrganisation.getId(), projectAddressType)).thenReturn(emptyList());
         when(organisationAddressRepositoryMock.save(organisationAddress)).thenReturn(organisationAddress);
-
+        when(statusServiceMock.getProjectStatusByProject(any(Project.class))).thenReturn(serviceSuccess(newProjectStatusResource().withSpendProfileStatus(ProjectActivityStates.PENDING).build()));
         when(projectDetailsWorkflowHandlerMock.projectAddressAdded(project, leadPartnerProjectUser)).thenReturn(true);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         ServiceResult<Void> result = service.updateProjectAddress(leadOrganisation.getId(), project.getId(), PROJECT, newAddressResource);
         assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testSubmitProjectDetails() {
-
-        ZonedDateTime now = ZonedDateTime.now();
-
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(projectDetailsWorkflowHandlerMock.submitProjectDetails(project, leadPartnerProjectUser)).thenReturn(true);
-
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
-
-        ServiceResult<Void> result = service.submitProjectDetails(project.getId(), now);
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testSubmitProjectDetailsButSubmissionNotAllowed() {
-
-        ZonedDateTime now = ZonedDateTime.now();
-
-        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
-        when(projectDetailsWorkflowHandlerMock.submitProjectDetails(project, leadPartnerProjectUser)).thenReturn(false);
-
-        setLoggedInUser(newUserResource().withId(user.getId()).build());
-
-        ServiceResult<Void> result = service.submitProjectDetails(project.getId(), now);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
     }
 
     @Test

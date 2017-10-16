@@ -27,6 +27,7 @@ import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.status.StatusService;
+import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.status.security.SetupSectionAccessibilityHelper;
@@ -93,6 +94,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
 
+    @Autowired
+    private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
+
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details")
     public String viewProjectDetails(@PathVariable("projectId") final Long projectId, Model model,
@@ -106,17 +110,18 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<OrganisationResource> partnerOrganisations
                 = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
-        boolean isSubmissionAllowed = projectDetailsService.isSubmitAllowed(projectId).getSuccessObject();
 
         ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
         SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
-        boolean projectDetailsSubmitted = statusAccessor.isProjectDetailsSubmitted();
+        boolean spendProfileGenerated = statusAccessor.isSpendProfileGenerated();
+
+        boolean projectDetailsCompleteAndAllFinanceContactsAssigned = setupStatusViewModelPopulator.checkLeadPartnerProjectDetailsProcessCompleted(teamStatus);
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
-                projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsSubmitted,
-                getProjectManager(projectResource.getId()).orElse(null), isSubmissionAllowed, false));
+                projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsCompleteAndAllFinanceContactsAssigned,
+                getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, statusAccessor.isGrantOfferLetterGenerated(), false));
 
         return "project/detail";
     }
@@ -134,37 +139,20 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
         List<OrganisationResource> partnerOrganisations
                 = new PrioritySorting<>(getPartnerOrganisations(projectUsers), leadOrganisation, OrganisationResource::getName).unwrap();
+        ProjectTeamStatusResource teamStatus = statusService.getProjectTeamStatus(projectId, Optional.empty());
+        SetupSectionAccessibilityHelper statusAccessor = new SetupSectionAccessibilityHelper(teamStatus);
+        boolean spendProfileGenerated = statusAccessor.isSpendProfileGenerated();
 
         model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, leadOrganisation, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), true,
-                getProjectManager(projectResource.getId()).orElse(null), false, true));
+                getProjectManager(projectResource.getId()).orElse(null), spendProfileGenerated, true, true));
 
         return "project/detail";
     }
 
-
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @GetMapping("/{projectId}/confirm-project-details")
-    public String projectDetailConfirmSubmit(@PathVariable("projectId") final Long projectId, Model model,
-                                UserResource loggedInUser) {
-
-        ProjectResource project = projectService.getById(projectId);
-
-        Boolean isSubmissionAllowed = projectDetailsService.isSubmitAllowed(projectId).getSuccessObject();
-        if (!isSubmissionAllowed) {
-            return "redirect:/project/" + projectId + "/details";
-        }
-
-        model.addAttribute("projectId", projectId);
-        model.addAttribute("projectName", project.getName());
-        model.addAttribute("applicationId", project.getApplication());
-        model.addAttribute("currentUser", loggedInUser);
-        return "project/confirm-project-details";
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CONTACT_PAGE')")
     @GetMapping("/{projectId}/details/finance-contact")
     public String viewFinanceContact(@PathVariable("projectId") final Long projectId,
                                      @RequestParam(value="organisation",required=false) Long organisation,
@@ -174,7 +162,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, true, false);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CONTACT_PAGE')")
     @PostMapping(value = "/{projectId}/details/finance-contact", params = SAVE_FC)
     public String updateFinanceContact(@PathVariable("projectId") final Long projectId,
                                        Model model,
@@ -192,7 +180,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CONTACT_PAGE')")
     @PostMapping(value = "/{projectId}/details/finance-contact", params = INVITE_FC)
     public String inviteFinanceContact(Model model, @PathVariable("projectId") final Long projectId,
                                        @RequestParam(value="organisation") Long organisation,
@@ -433,13 +421,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         addressForm.setManualAddress(true);
         ProjectResource project = projectService.getById(projectId);
         return viewCurrentAddressForm(model, form, project);
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
-    @PostMapping("/{projectId}/details/submit")
-    public String submitProjectDetails(@PathVariable("projectId") Long projectId) {
-        projectDetailsService.setApplicationDetailsSubmitted(projectId).getSuccessObjectOrThrowException();
-        return redirectToProjectDetails(projectId);
     }
 
     private String doViewProjectStartDate(Model model, ProjectResource projectResource, ProjectDetailsStartDateForm form) {

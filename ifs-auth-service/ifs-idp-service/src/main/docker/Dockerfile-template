@@ -1,92 +1,139 @@
-FROM ifshibdev/idp-base:1.1.11
+FROM debian:jessie-slim
 
 ENV DEBIAN_FRONTEND=noninteractive \
-  HTTPPORT=9080 \
-  HTTPSPORT=9443 \
   JAVAVER=8 \
+  JAVAUPD=144 \
+  JAVABLD=01 \
+  JAVASIG=090f390dda5b47b9b721c7dfaa008135 \
+  IDPVER="3.3.1"
+
+ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
+
+# packages and stuff \
+COPY idp/default-jre-headless-dummy_1.0_all.deb /idp/
+COPY idp/build.xml /idp/
+RUN apt-get update --fix-missing && \
+  echo "noclobber = off" >> wgetrc && \
+  echo "dir_prefix = ." >> wgetrc && \
+  echo "verbose = off" >> wgetrc && \
+  echo "progress = dot:mega" >> wgetrc && \
+  echo "tries = 5" >> wgetrc && \
+# Oracle JDK \
+  apt-get -y install ca-certificates java-common openssl unzip curl wget apt-transport-https bsdtar && \
+  WGETRC=wgetrc wget --continue -O- --ca-certificate /etc/ssl/certs/GeoTrust_Global_CA.pem --header "Cookie: oraclelicense=accept-securebackup-cookie;" \
+    "http://download.oracle.com/otn-pub/java/jdk/${JAVAVER}u${JAVAUPD}-b${JAVABLD}/${JAVASIG}/jdk-${JAVAVER}u${JAVAUPD}-linux-x64.tar.gz" | bsdtar -C /tmp -xf - && \
+  mkdir -p /usr/lib/jvm && mv /tmp/jdk1.${JAVAVER}.0_${JAVAUPD} ${JAVA_HOME} && \
+  WGETRC=wgetrc wget --continue --header "Cookie: oraclelicense=accept-securebackup-cookie" -O /tmp/unlimited_jce_policy.zip "http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip" && \
+  unzip -jo -d ${JAVA_HOME}/jre/lib/security /tmp/unlimited_jce_policy.zip && \
+  find ${JAVA_HOME} -name "*src.zip" -delete && \
+  find ${JAVA_HOME}/jre/lib -name "*ws*" -delete && \
+  find ${JAVA_HOME}/jre/lib -name "*fx*" -delete && \
+  rm ${JAVA_HOME}/jre/lib/deploy.jar && \
+  rm -Rf ${JAVA_HOME}/db ${JAVA_HOME}/lib/missioncontrol ${JAVA_HOME}/lib/visualvm \
+         ${JAVA_HOME}/man ${JAVA_HOME}/jre/plugin ${JAVA_HOME}/jre/lib/deploy && \
+  update-alternatives --install "/usr/bin/java" "java" "${JAVA_HOME}/jre/bin/java" 1 && \
+  update-alternatives --install "/usr/bin/javac" "javac" "${JAVA_HOME}/bin/javac" 1 && \
+  update-alternatives --set java "${JAVA_HOME}/jre/bin/java" && \
+  update-alternatives --set javac "${JAVA_HOME}/bin/javac" && \
+# default-jre-headless-dummy_1.0_all.deb prevents openjdk being installed and saves 100MB or so \
+  dpkg -i --force-depends /idp/default-jre-headless-dummy_1.0_all.deb && rm -f /idp/default-jre-headless-dummy_1.0_all.deb && \
+# tomcat for IDP. Permission changes here due to https://github.com/docker-library/tomcat/issues/35#issuecomment-238014866 \
+  apt-get -y install tomcat8 libtcnative-1 tomcat8-common libtomcat8-java libecj-java ucf && \
+  rm -Rf /var/lib/tomcat8/webapps/ROOT/ && \
+  chown -R www-data:0 /var/cache/tomcat8 && \
+  chmod -R u=rwX,g=rwX,o= /var/cache/tomcat8 && \
+# jstl lib for IDP status page \
+  WGETRC=wgetrc wget --continue https://build.shibboleth.net/nexus/service/local/repositories/thirdparty/content/javax/servlet/jstl/1.2/jstl-1.2.jar && \
+  mv jstl-1.2.jar /usr/share/tomcat8/lib/ && \
+# Shibboleth IDP \
+  WGETRC=wgetrc wget --continue -O- http://shibboleth.net/downloads/identity-provider/$IDPVER/shibboleth-identity-provider-$IDPVER.tar.gz | bsdtar -C /root -xf - && \
+  sed "s/3\.3\.1/$IDPVER/" /idp/build.xml > /root/shibboleth-identity-provider-$IDPVER/bin/build.xml && rm -f /idp/build.xml && \
+  (cd /root/shibboleth-identity-provider-$IDPVER/bin; ./install.sh) && rm -rf /root/shibboleth-identity-provider-$IDPVER && \
+# apache. not strictly needed \
+  apt-get -y install grep lsof net-tools ldap-utils apache2 && \
+  apt-get autoclean && apt-get remove --purge --auto-remove -y unzip wget && apt-get --purge -y autoremove && rm -rf /var/lib/apt/lists/* && \
+  rm -rf /tmp/* /var/tmp/* /idp
+
+ENV HTTP_PORT=9080 \
+  HTTPS_PORT=9443 \
+  IDP_DOMAIN=idp \
+  SP_DOMAIN=ifs.local-dev \
+
   JAVA_KEYSTORE_PASSWORD="@java_keystore_password@" \
-  LDAPURL="ldaps://ldap:8389" \
-  LDAPPORT="8389" \
-  LDAPUSESTARTTLS=false \
-  LDAPUSESSL=true \
-  LDAPBASEDN="dc=nodomain" \
-  LDAPBINDDN="cn=admin,dc=nodomain" \
-  LDAPBINDDNCRED="default" \
-  LDAPPPOLICYDN="cn=PPolicy,ou=Policies" \
-  LDAPPPOLICY="true" \
-  LDAPUSERFILTER="(&(mail={user})(!(employeeType=inactive)))" \
-  LDAPRURL="%{idp.authn.LDAP.ldapURL}" \
-  LDAPAUTHENTICATOR="anonSearchAuthenticator" \
-  LDAPRBASEDN="%{idp.authn.LDAP.baseDN:undefined}" \
-  LDAPRBINDDN="%{idp.authn.LDAP.bindDN:undefined}" \
-  LDAPRBINDDNCRED="%{idp.authn.LDAP.bindDNCredential:undefined}" \
-  LDAPRUSESTARTTLS="%{idp.authn.LDAP.useStartTLS:true}" \
-  LDAPRTRUSTCERT="/opt/shibboleth-idp/credentials/ldap-encryption.crt" \
-  LDAPRSEARCHFILTER="(mail=\$resolutionContext.principal)" \
-  LDAPRRETURNATTRIBUTE="mail,uid" \
-  LDAPVALIDATEPERIOD="PT20S" \
-  REGAPIKEY=@auth_idp_regapikey@ \
+
+  LDAP_URL="ldaps://ldap:8389" \
+  LDAP_PORT="8389" \
+  LDAP_USESTARTTLS=false \
+  LDAP_USESSL=true \
+  LDAP_BASEDN="dc=nodomain" \
+  LDAP_BINDDN="cn=admin,dc=nodomain" \
+  LDAP_BINDDNCREDENTIAL="default" \
+  LDAP_RETURNATTRIBUTES="mail,uid" \
+  LDAP_PPOLICYDN="cn=PPolicy,ou=Policies" \
+  LDAP_PPOLICY="true" \
+  LDAP_USERFILTER="(&(mail={user})(!(employeeType=inactive)))" \
+  LDAP_AUTHENTICATOR="anonSearchAuthenticator" \
+  LDAP_ATTRIBUTE_SEARCHFILTER="(mail=\$resolutionContext.principal)" \
+  LDAP_VALIDATEPERIOD="PT20S" \
+
   GOOGLEANALYTICS_TRACKINGID="#" \
   IDP_PROXY_KEY="@auth_idp_proxy_key@" \
   IDP_PROXY_CERTIFICATE="@auth_idp_proxy_certificate@" \
   IDP_PROXY_CACERTIFICATE="@auth_idp_proxy_cacertificate@" \
   SP_PROXY_CERTIFICATE="@auth_sp_proxy_certificate@" \
-  IDP_SIGNING_KEY="@auth_idp_signing_key@" \
-  IDP_SIGNING_CERTIFICATE="@auth_idp_signing_certificate@" \
-  IDP_ENCRYPTION_KEY="@auth_idp_encryption_key@" \
-  IDP_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@" \
+  IDP_SAML_SIGNING_KEY="@auth_idp_signing_key@" \
+  IDP_SAML_SIGNING_CERTIFICATE="@auth_idp_signing_certificate@" \
+  IDP_SAML_ENCRYPTION_KEY="@auth_idp_encryption_key@" \
+  IDP_SAML_ENCRYPTION_CERTIFICATE="@auth_idp_encryption_certificate@" \
   LDAP_ENCRYPTION_CERTIFICATE="@auth_ldap_encryption_certificate@" \
+
   JAVA_OPTS="-Xms384M -Xmx768M" \
   MEMCACHE_ENDPOINT=
 
-ENV JAVA_HOME=/usr/lib/jvm/java-${JAVAVER}-oracle
-ENV JRE_HOME=${JAVA_HOME}/jre
-
-# packages and stuff \
+# shibboleth configuration files \
 COPY idp/* /idp/
+COPY newrelic.jar /
+COPY newrelic.yml /
 # Apache layer
 COPY apache /apache/
 RUN  mkdir /etc/apache2/certs && \
 # configure apache \
-  mv /apache/ssl.conf /etc/apache2/mods-available/ssl.conf && \
-  mv /apache/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
   rm -f /etc/apache2/sites-enabled/000-default.conf && \
   a2enmod socache_shmcb ssl status proxy_ajp proxy headers rewrite proxy_http reqtimeout && \
   a2disconf other-vhosts-access-log && \
+  sed -i -e 's/Listen 80/Listen ${HTTP_PORT}/' -e 's/Listen 443/Listen ${HTTPS_PORT}/' /etc/apache2/ports.conf && \
+  mv /apache/z-defaults.conf /etc/apache2/conf-available/ && a2enconf z-defaults.conf && \
+
+# put error pages in place \
   mv /apache/locking /var/www/html/ && \
+
+# configure idp virtual host \
+  mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
+  a2ensite idpproxy && \
 
 # run apache as its own user \
   mkdir -p /var/run/apache2 /run/lock/apache2 && \
   chown -R www-data:0 /etc/apache2 /var/cache/apache2 /run/lock /var/run/apache2 /var/www/html && \
   chmod -R u=rwX,g=rwX,o= /etc/apache2 /var/cache/apache2 /run/lock /var/run/apache2 /var/www/html/ && \
 
-  rm -rf /apache /tmp/* /var/tmp/*
+  rm -rf /apache
 
-RUN mv /idp/idpproxy.conf /etc/apache2/sites-available/ && \
-  a2ensite idpproxy && \
-# directory for certificates, added in entrypoint \
-  mkdir /etc/tomcat8/certs && \
+RUN mkdir /etc/tomcat8/certs && \
+# see also certificates and substitutions in entrypoint script \
   mv /idp/server.xml /etc/tomcat8/ && \
-  mv /idp/ifs-registration-service-@version@.war /var/lib/tomcat8/webapps/shibboleth-api.war && \
-  sed -i -e 's#%{idp.signing.key}#/opt/shibboleth-idp/credentials/idp-signing.key#g' \
-         -e 's#%{idp.signing.cert}#/opt/shibboleth-idp/credentials/idp-signing.crt#g' \
-         -e 's#%{idp.encryption.key}#/opt/shibboleth-idp/credentials/idp-encryption.key#g' \
-         -e 's#%{idp.encryption.cert}#/opt/shibboleth-idp/credentials/idp-encryption.crt#g' /opt/shibboleth-idp/conf/credentials.xml && \
+  mv /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
   mkdir /etc/shibboleth && \
   mv /idp/metadata.xml /etc/shibboleth/ && \
-  cd /opt/shibboleth-idp/conf/ && \
-  mv /idp/*.properties . && \
-  mv /idp/*.xml . && \
-  mv /idp/sealer.* /opt/shibboleth-idp/credentials/ && \
-  mv /opt/shibboleth-idp/war/idp.war /var/lib/tomcat8/webapps/ && \
-  mkdir /var/log/shibboleth && rm -rf /opt/shibboleth-idp/logs && ln -s /var/log/shibboleth /opt/shibboleth-idp/logs && \
-  mkdir -p /var/run/tomcat8 && \
-  chown -R www-data:0 /etc/shibboleth /etc/apache2 /opt/shibboleth-idp /var/run/tomcat8 /usr/local/bin \
-                      /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JRE_HOME"/lib/security/cacerts && \
-  chmod -R u=rwX,g=rwX,o= /etc/shibboleth /etc/apache2 /opt/shibboleth-idp /var/run/tomcat8 /usr/local/bin \
-                          /etc/tomcat8 /var/log/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JRE_HOME"/lib/security/cacerts && \
+  mv /idp/idp.properties /idp/ldap.properties /idp/*.xml /opt/shibboleth-idp/conf/ && \
 
-  rm -rf /idp /tmp/* /var/tmp/*
+# run tomcat/idp as its own user
+  mkdir -p /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp && \
+  chown -R www-data:0 /etc/shibboleth /opt/shibboleth-idp /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp /usr/local/bin \
+                      /etc/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JAVA_HOME"/jre/lib/security/cacerts && \
+  chmod -R u=rwX,g=rwX,o= /etc/shibboleth /opt/shibboleth-idp /var/run/tomcat8 /tmp/tomcat8-tomcat8-tmp /usr/local/bin \
+                          /etc/tomcat8 /var/lib/tomcat8 /usr/share/tomcat8 /var/cache/tomcat8 "$JAVA_HOME"/jre/lib/security/cacerts && \
+
+  rm -rf /idp
 
 # start and other useful scripts
 COPY scripts/* /usr/local/bin/

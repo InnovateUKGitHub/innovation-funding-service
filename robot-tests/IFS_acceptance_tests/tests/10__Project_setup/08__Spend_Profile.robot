@@ -60,7 +60,10 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-7422 On rejection non-lead partners should still see a tick instead of an hourglass, until edit rights have been returned to them
 ...
 ...               INFUND-7685 Broken link on spend profile page
-
+...
+...               IFS-1576 Allow changes to Target start date until generation of Spend Profile
+...
+...               IFS-1579 Allow change of Finance Contact until generation of GOL
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -75,6 +78,16 @@ ${project_duration}    36
 &{collaborator2_credentials_sp}   email=${PS_SP_APPLICATION_ACADEMIC_EMAIL}  password=${short_password}
 
 *** Test Cases ***
+Check if target start date can be changed until SP approval
+    [Documentation]    IFS-1576
+    [Tags]
+    Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
+    When the user navigates to the page  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details
+    And the user changes the start date  2021
+    Then the user should see the element  jQuery=#start-date:contains("1 Jun 2021")
+    When the user changes the start date  2020
+    Then the user should see the element  jQuery=#start-date:contains("1 Jun 2020")
+
 Project Finance user generates the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]    HappyPath
@@ -84,7 +97,6 @@ Project Finance user generates the Spend Profile
     And the user should see the element     jQuery=a.eligibility-1:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
     Then the user should see the element    css=.generate-spend-profile-main-button
-
 
 Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
@@ -100,7 +112,7 @@ Project Finance generates the Spend Profile
     And the user clicks the button/link     css=#generate-spend-profile-modal-button
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(5) td:nth-of-type(4).ok
     And the user reads his email            ${PS_SP_APPLICATION_PM_EMAIL}  Your spend profile is available  The finance checks for all partners in the project have now been completed
 
 Lead partner can view spend profile page
@@ -517,7 +529,7 @@ Project Finance is able to see Spend Profile approval page
     [Tags]    HappyPath
     [Setup]    Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    And the user clicks the button/link      css=#table-project-status tbody tr:nth-child(3) td.status.action:nth-child(6) a
+    And the user clicks the button/link      css=#table-project-status tbody tr:nth-child(5) td.status.action:nth-child(6) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     And the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been approved")
@@ -533,6 +545,12 @@ Project Finance is able to see Spend Profile approval page
     When the user selects the checkbox    approvedByLeadTechnologist
     Then the user should see the element    css=#accept-profile
     And the user should see the element    jQuery=#content .button.button.button-warning:contains("Reject")
+
+Check if project details are editable
+   [Documentation]    IFS-1577, IFS-1578, IFS-1579
+   [Tags]
+   Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
+   Then check if project manager, project address and finance contact fields are editable  ${PS_SP_APPLICATION_PROJECT}
 
 Comp Admin is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-6226, INFUND-5549
@@ -575,14 +593,14 @@ Status updates correctly for internal user's table
     [Tags]    Experian    HappyPath
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element     css=#table-project-status tr:nth-of-type(3) td:nth-of-type(1).status.ok         # Project details
-    And the user should see the element      css=#table-project-status tr:nth-of-type(3) td:nth-of-type(2).status.ok         # MO
-    And the user should see the element      css=#table-project-status tr:nth-of-type(3) td:nth-of-type(3).status.ok         # Bank details
-    And the user should see the element      css=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).status.ok         # Finance checks
-    And the user should see the element      css=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action     # Spend Profile
-    And the user should see the element      css=#table-project-status tr:nth-of-type(3) td:nth-of-type(6).status.ok         # Other Docs
-    And the user should see the element      css=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status            # GOL
-    And the user should not see the element    css=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
+    Then the user should see the element     css=#table-project-status tr:nth-of-type(5) td:nth-of-type(1).status.ok         # Project details
+    And the user should see the element      css=#table-project-status tr:nth-of-type(5) td:nth-of-type(2).status.ok         # MO
+    And the user should see the element      css=#table-project-status tr:nth-of-type(5) td:nth-of-type(3).status.ok         # Bank details
+    And the user should see the element      css=#table-project-status tr:nth-of-type(5) td:nth-of-type(4).status.ok         # Finance checks
+    And the user should see the element      css=#table-project-status tr:nth-of-type(5) td:nth-of-type(5).status.action     # Spend Profile
+    And the user should see the element      css=#table-project-status tr:nth-of-type(5) td:nth-of-type(6).status.ok         # Other Docs
+    And the user should see the element      css=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status            # GOL
+    And the user should not see the element    css=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
@@ -601,7 +619,7 @@ Status updates to a cross for the internal user's table
     [Documentation]    INFUND-6977
     [Tags]
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.rejected
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(5) td:nth-of-type(5).status.rejected
 
 Lead partner can see that the spend profile has been rejected
     [Documentation]    INFUND-6977
@@ -717,8 +735,8 @@ Status updates correctly for internal user's table after approval
     [Documentation]    INFUND-5543
     [Tags]
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.ok
-    And the user should see the element     css=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.action   # GOL
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(5) td:nth-of-type(5).status.ok
+    And the user should see the element     css=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action   # GOL
 
 Project Finance still has a link to the spend profile after approval
     [Documentation]    INFUND-6046
@@ -735,6 +753,13 @@ Project finance user cannot access external users' spend profile page
     [Tags]
     When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile    ${403_error_message}
 
+Target start date cannot be changed after SP approval
+    [Documentation]    IFS-1576
+    [Tags]
+    Given Log in as a different user  ${PS_SP_APPLICATION_PM_EMAIL}  ${short_password}
+    When the user navigates to the page  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details
+    Then the user should not see the element  jQuery=a:contains("Target start date")
+    When the user navigates to the page and gets a custom error message  ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/details/project-address  ${403_error_message}
 
 *** Keywords ***
 the user uploads the file
@@ -797,3 +822,39 @@ the user returns edit rights for the organisation
     the user clicks the button/link  jQuery=.button:contains("Allow edits")
     the user clicks the button/link  jQuery=.button:contains("Allow partner to edit")
     the user should see the text in the page    In progress
+
+check if project manager, project address and finance contact fields are editable
+    [Arguments]  ${project}
+    the user navigates to the page  ${server}/project-setup/project/${project}/details
+    check if project address can be changed
+    check if project manager can be changed
+    check if finance contact can be changed
+
+check if project address can be changed
+    the user clicks the button/link  jQuery=a:contains("Project address")
+    the user selects the radio button  addressType  address-use-operating
+    the user clicks the button/link  jQuery=button:contains("Save")
+    the user clicks the button/link  jQuery=a:contains("Project address")
+    the user sees that the radio button is selected  addressType  address-use-operating
+    the user selects the radio button  addressType  address-use-org
+    the user clicks the button/link  jQuery=button:contains("Save")
+
+check if project manager can be changed
+    the user clicks the button/link  jQuery=a:contains("Project Manager")
+    the user selects the radio button  projectManager  projectManager2
+    the user clicks the button/link  jQuery=button:contains("Save")
+    the user clicks the button/link  jQuery=a:contains("Project Manager")
+    the user sees that the radio button is selected  projectManager  projectManager2
+    the user selects the radio button  projectManager  projectManager1
+    the user clicks the button/link  jQuery=button:contains("Save")
+
+# Finance contact is changed below and switched back to original value so that
+# the tests which follow this are not impacted by permissions error
+check if finance contact can be changed
+    the user clicks the button/link  jQuery=a:contains("Katz")
+    the user selects the radio button  financeContact  financeContact2
+    the user clicks the button/link  jQuery=button:contains("Save")
+    the user clicks the button/link  jQuery=a:contains("Katz")
+    the user sees that the radio button is selected  financeContact  financeContact2
+    the user selects the radio button  financeContact  financeContact1
+    the user clicks the button/link  jQuery=button:contains("Save")

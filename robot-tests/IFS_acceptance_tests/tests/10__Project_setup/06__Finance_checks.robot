@@ -220,13 +220,13 @@ Project finance user can view finances summary for the consortium
     And the Categories Are Verified For Finances Summary Section    1    £ 200,903    30%    £ 60,271    £ 2,468    £ 138,164
     #Check finances summary for academic user
     When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    Then the Categories Are Verified For Finances Summary Section    2    £ 990    0%    £ 0    £ 0    £ 990
+    Then the Categories Are Verified For Finances Summary Section    2    £ 990    100%    £ 990    £ 0    £ 0
     #Check finances summary for non lead partner
     When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     Then the Categories Are Verified For Finances Summary Section    3    £ 200,903    30%    £ 60,271    £ 2,468    £ 138,164
     #Check total
     When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1    £ 402,797    £ 120,542    £ 4,936    £ 277,319
+    And The Total Calculation For Finances Summary Are Verified    1    £ 402,797    £ 121,532    £ 4,936    £ 276,329
 
 Project finance can see finance breakdown for different categories
     [Documentation]    INFUND-4846
@@ -829,13 +829,13 @@ Project finance user can view updated finances summary for the consortium
     And the Categories Are Verified For Finances Summary Section   1   £ 172,034   30%     £ 51,610    £ 2,468     £ 117,956
     #check breakdown for academic user
     When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    Then the Categories Are Verified For Finances Summary Section   2   £ 990   0%  £ 0     £ 0     £ 990
+    Then the Categories Are Verified For Finances Summary Section   2   £ 990   100%  £ 990     £ 0     £ 0
     #check breakdown for non lead partner
     When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     Then the Categories Are Verified For Finances Summary Section   3   £ 172,034  30%     £ 51,610    £ 2,468     £ 117,956
     #check total
     And the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1   £ 345,059   £ 103,221    £ 4,936     £ 236,902
+    And The Total Calculation For Finances Summary Are Verified    1   £ 345,059   £ 104,211    £ 4,936     £ 235,912
 
 Project finance user can view Lead Partner's changes to finances
     [Documentation]    INFUND-4837
@@ -1212,12 +1212,12 @@ Project finance user amends labour details in eligibility for lead
     When the user clears the text from the element  css=[name^="labour-labourDaysYearly"]
     And the user enters text to a text field        css=[name^="labour-labourDaysYearly"]    230
     And the user adds data into labour row          1  test  120000  100
-    Then verify percentage and total                1    20%    £ 53,648
+    Then verify percentage and total                1    21%    £ 53,648
     When the user clicks the button/link            jQuery=section:nth-of-type(1) button:contains("Add another role")
     And the user adds data into labour row          7    test    14500    100
-    Then verify percentage and total                1    22%    £ 59,952
+    Then verify percentage and total                1    23%    £ 59,952
     When the user clicks the button/link            css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(5) button
-    Then verify percentage and total                1    22%    £ 59,430
+    Then verify percentage and total                1    23%    £ 59,430
     When the user clicks the button/link            css=section:nth-of-type(1) button[name=save-eligibility]
     Then verify total costs of project              £ 257,252
     And the user should see the element             jQuery=section:nth-of-type(1) a:contains("Edit")

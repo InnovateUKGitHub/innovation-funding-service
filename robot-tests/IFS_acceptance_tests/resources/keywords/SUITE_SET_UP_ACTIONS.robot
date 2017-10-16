@@ -111,44 +111,51 @@ create new submit application
 
 Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Academic robot test application
-    When the user clicks the button/link    link=view and manage contributors and collaborators
-    And the user clicks the button/link    jQuery=a:contains("Add a collaborator organisation")
-    And the user enters text to a text field    name=organisationName    Academic Test
-    And the user enters text to a text field    name=applicants[0].name    Arsene Wenger
-    And the user enters text to a text field    name=applicants[0].email    ${test_mailbox_one}+academictest@gmail.com
-    And the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
-    And logout as user
-    When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}    2
-    And the user clicks the button/link    jQuery=.button:contains("Yes, accept invitation")
-    When the user selects the radio button    organisationType    2
-    And the user clicks the button/link    jQuery=.button:contains("Continue")
-    When the user enters text to a text field    id=organisationSearchName    Liv
-    And the user clicks the button/link    jQuery=.button:contains("Search")
-    When the user clicks the button/link    link= University of Liverpool
-    When the user clicks the button/link    jQuery=button:contains("Enter address manually")
-    And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine1    The East Wing
-    And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine2    Popple Manor
-    And the user enters text to a text field    id=addressForm.selectedPostcode.addressLine3    1, Popple Boulevard
-    And the user enters text to a text field    id=addressForm.selectedPostcode.town    Poppleton
-    And the user enters text to a text field    id=addressForm.selectedPostcode.county    Poppleshire
-    And the user enters text to a text field    id=addressForm.selectedPostcode.postcode    POPPS123
-    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
-    And the user clicks the button/link    jQuery=.button:contains("Save and continue")
-    And the user fills the create account form    Arsene    Wenger
+    Given the user navigates to the page                ${DASHBOARD_URL}
+    And the user clicks the button/link                 link=Academic robot test application
+    the user fills in the inviting steps                ${test_mailbox_one}+academictest@gmail.com
+    logout as user
+    When the user reads his email and clicks the link   ${recipient}    ${subject}    ${pattern}    2
+    And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
+    When the user selects the radio button              organisationType    2
+    And the user clicks the button/link                 jQuery=.button:contains("Continue")
+    the research user finds org in company house
+    And the invited user fills the create account form  Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    We now need you to verify your email address
-    And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And Logging in and Error Checking      ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
+    And the user clicks the button/link                 jQuery=.button:contains("Sign in")
+    And Logging in and Error Checking                   ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
+
+the user fills in the inviting steps
+    [Arguments]  ${email}
+    the user clicks the button/link       link=view and manage contributors and collaborators
+    the user clicks the button/link       link=Add a collaborator organisation
+    the user enters text to a text field  css=#organisationName  New Organisation's Name
+    the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
+    the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
+    the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
+
+# The search results are specific to Research Organisation type
+the research user finds org in company house
+    the user enters text to a text field  id=organisationSearchName  Liv
+    the user clicks the button/link       jQuery=.button:contains("Search")
+    the user clicks the button/link       link= University of Liverpool
+    the user clicks the button/link       jQuery=button:contains("Enter address manually")
+    the user enters text to a text field  id=addressForm.selectedPostcode.addressLine1    The East Wing
+    the user enters text to a text field  id=addressForm.selectedPostcode.addressLine2    Popple Manor
+    the user enters text to a text field  id=addressForm.selectedPostcode.addressLine3    1, Popple Boulevard
+    the user enters text to a text field  id=addressForm.selectedPostcode.town    Poppleton
+    the user enters text to a text field  id=addressForm.selectedPostcode.county    Poppleshire
+    the user enters text to a text field  id=addressForm.selectedPostcode.postcode    POPPS123
+    the user clicks the button/link       jQuery=.button:contains("Save organisation and continue")
+    the user clicks the button/link       jQuery=.button:contains("Save and continue")
 
 The user navigates to the summary page of the Robot test application
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
-    And the user clicks the button/link    link=Review and submit
+    ${id} =  get application id by name  Robot test application
+    the user navigates to the page       ${server}/application/${id}/summary
 
 The user navigates to the overview page of the Robot test application
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
+    ${id} =  get application id by name  Robot test application
+    the user navigates to the page       ${server}/application/${id}
 
 The user navigates to the academic application finances
     When the user navigates to the page    ${DASHBOARD_URL}
@@ -169,17 +176,17 @@ The user marks the academic application finances as incomplete
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
-    the user navigates to the page                           ${openCompetitionBusinessRTO_overview}
-    the user follows the flow to register their organisation    ${BUSINESS_TYPE_ID}
+    the user navigates to the page                             ${openCompetitionBusinessRTO_overview}
+    the user follows the flow to register their organisation   ${BUSINESS_TYPE_ID}
     the user verifies email                                    Stuart   Anderson    ${EMAIL_LEAD}
-    the user clicks the button/link    link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
-    the user clicks the button/link    jQuery=a:contains("Add a collaborator organisation")
-    the user enters text to a text field    name=organisationName    innovate
-    the user enters text to a text field    name=applicants[0].name    Partner name
-    the user enters text to a text field    name=applicants[0].email    ${EMAIL_INVITED}
-    the user clicks the button/link    jQuery=button:contains("Add organisation and invite applicants")
-    the user clicks the button/link    jQuery=a:contains("Begin application")
-    the user should see the text in the page    Application overview
+    the user clicks the button/link                            link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user clicks the button/link                            link=Add a collaborator organisation
+    the user enters text to a text field                       css=#organisationName  New Organisation's Name
+    the user enters text to a text field                       css=input[id="applicants0.name"]  Partner's name
+    the user enters text to a text field                       css=input[id="applicants0.email"]  ${EMAIL_INVITED}
+    the user clicks the button/link                            jQuery=button:contains("Add organisation and invite applicants")
+    the user clicks the button/link                            jQuery=a:contains("Begin application")
+    the user should see the text in the page                   Application overview
     the user closes the browser
     the guest user opens the browser
 
@@ -225,7 +232,7 @@ the user enters the details and clicks the create account
     the user selects the checkbox    allowMarketingEmails
     Submit Form
 
-the user fills the create account form
+the invited user fills the create account form
     [Arguments]    ${NAME}    ${LAST_NAME}
     Input Text    id=firstName    ${NAME}
     Input Text    id=lastName    ${LAST_NAME}

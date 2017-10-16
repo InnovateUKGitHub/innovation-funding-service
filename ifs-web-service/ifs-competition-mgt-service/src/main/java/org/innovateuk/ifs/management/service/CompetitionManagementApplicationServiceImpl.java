@@ -109,7 +109,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         model.addAttribute("form", form);
         model.addAttribute("applicationReadyForSubmit", false);
         model.addAttribute("isCompManagementDownload", true);
-        model.addAttribute("ineligibility", applicationOverviewIneligibilityModelPopulator.populateModel(application));
+        model.addAttribute("ineligibility", applicationOverviewIneligibilityModelPopulator.populateModel(application, competition));
         model.addAttribute("showApplicationTeamLink", applicationService.showApplicationTeam(application.getId(), user.getId()));
 
         model.addAttribute("backUrl", buildBackUrl(origin, application.getId(), competitionId, assessorId, queryParams));
@@ -209,7 +209,8 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         APPLICATION_PROGRESS("/assessment/competition/{competitionId}/application/{applicationId}/assessors"),
         MANAGE_ASSESSMENTS("/assessment/competition/{competitionId}"),
         ASSESSOR_PROGRESS("/assessment/competition/{competitionId}/assessors/{assessorId}"),
-        PROJECT_SETUP_MANAGEMENT_STATUS("/project-setup-management/competition/{competitionId}/status");
+        PROJECT_SETUP_MANAGEMENT_STATUS("/project-setup-management/competition/{competitionId}/status"),
+        UNSUCCESSFUL_APPLICATIONS("/competition/{competitionId}/applications/unsuccessful");
 
         private String baseOriginUrl;
 

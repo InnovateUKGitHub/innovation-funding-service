@@ -48,7 +48,5 @@ public class SecurityRuleUtil {
         return DefaultPermissionMethodHandler.getAnonymous();
     }
 
-    public static boolean isInnovationLead(UserResource user) { return user.hasRole(INNOVATION_LEAD); }
-
     public static boolean isInnovationLead(User user) { return user.hasRole(INNOVATION_LEAD); }
 }

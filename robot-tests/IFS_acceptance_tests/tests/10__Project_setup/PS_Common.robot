@@ -1,5 +1,4 @@
 *** Settings ***
-Resource    ../../resources/variables/GLOBAL_VARIABLES.robot
 Resource    ../../resources/defaultResources.robot
 
 
@@ -206,14 +205,13 @@ finance contacts are selected and bank details are approved
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     The user logs-in in new browser  &{lead_applicant_credentials}
-    ${update_comp}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery=h2:contains("Set up your project") ~ ul a:contains("Sensing & Control network using the lighting infrastructure")
+    ${update_comp}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery=h2:contains("Set up your project") ~ ul a:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}")
     run keyword if    '${update_comp}' == 'PASS'  the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user   &{lead_applicant_credentials}
+    Set Suite Variable  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}
     the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
     ${project_details}  ${completed}=  Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=ul li.complete a:contains("Project details")
     run keyword if  '${project_details}' == 'PASS'  lead partner navigates to project and fills project details
-    Set Suite Variable  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}
-
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user              &{internal_finance_credentials}
     the user navigates to the page          ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding
@@ -230,9 +228,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user moves focus to the element     css=label[for="app-row-104"]
     the user selects the checkbox           app-row-104
     the user clicks the button/link         jQuery=.button:contains("Write and send email")
-    the user enters text to a text field    css=[labelledby="message"]      testMessage
-    the user clicks the button/link         jQuery=button:contains("Send email to all applicants")
-    the user clicks the button/link         jQuery=.send-to-all-applicants-modal button:contains("Send email to all applicants")
+    the internal sends the descision notification email to all applicants  EmailTextBody
     the user should see the text in the page    Manage funding applications
 
 lead partner navigates to project and fills project details
@@ -248,8 +244,6 @@ project lead submits project details
     the user selects the radio button  projectManager  projectManager2
     the user clicks the button/link    jQuery=.button:contains("Save")
     the user navigates to the page     ${server}/project-setup/project/${project_id}/details
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link    jQuery=.button:contains("Submit")
 
 partners submit their finance contacts
     the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
@@ -378,3 +372,9 @@ project finance approves bank details for ${PS_GOL_APPLICATION_TITLE}
     the project finance user approves bank details for  ${Gabtype_Name}  ${PS_GOL_APPLICATION_PROJECT}
     the project finance user approves bank details for  ${Kazio_Name}  ${PS_GOL_APPLICATION_PROJECT}
     the project finance user approves bank details for  ${Cogilith_Name}  ${PS_GOL_APPLICATION_PROJECT}
+
+the user changes the start date
+    [Arguments]  ${year}
+    the user clicks the button/link  link=Target start date
+    the user enters text to a text field  id=projectStartDate_year  ${year}
+    the user clicks the button/link  jQuery=.button:contains("Save")

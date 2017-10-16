@@ -47,9 +47,32 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "ORDER BY m.date";
 
+    /* Innovation leads should not access competitions in states: In preparation, Ready to open, Project setup */
+    public static final String SEARCH_QUERY_LEAD_TECHNOLOGIST = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct LEFT JOIN c.leadTechnologist u " +
+            "WHERE (m.type = 'OPEN_DATE' AND m.date < NOW()) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
+            "AND (c.setupComplete IS NOT NULL AND c.setupComplete != FALSE) " +
+            "AND NOT EXISTS (SELECT m.id FROM Milestone m WHERE m.competition.id = c.id AND m.type='FEEDBACK_RELEASED') " +
+            "AND u.id = :leadTechnologistUserId " +
+            "ORDER BY m.date";
+
+    /* Support users should not be able to access competitions in states: In preparation, Project setup */
+    public static final String SEARCH_QUERY_SUPPORT_USER = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct " +
+            "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
+            "AND (c.setupComplete IS NOT NULL AND c.setupComplete != FALSE) " +
+            "AND NOT EXISTS (SELECT m.id FROM Milestone m WHERE m.competition.id = c.id AND m.type='FEEDBACK_RELEASED') " +
+            "ORDER BY m.date";
+
     public static final String NON_IFS_QUERY = "SELECT c FROM Competition c WHERE nonIfs = TRUE";
 
     public static final String NON_IFS_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE nonIfs = TRUE";
+
+    public static final String FEEDBACK_RELEASED_QUERY = "SELECT c FROM Competition c WHERE " +
+            "EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
+            "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
+
+    public static final String FEEDBACK_RELEASED_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE " +
+            "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
+            "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
 
     @Query(LIVE_QUERY)
@@ -79,6 +102,13 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(SEARCH_QUERY)
     Page<Competition> search(@Param("searchQuery") String searchQuery, Pageable pageable);
 
+    @Query(SEARCH_QUERY_LEAD_TECHNOLOGIST)
+    Page<Competition> searchForLeadTechnologist(@Param("searchQuery") String searchQuery, @Param("leadTechnologistUserId") Long leadTechnologistUserId, Pageable pageable);
+
+    @Query(SEARCH_QUERY_SUPPORT_USER)
+    Page<Competition> searchForSupportUser(@Param("searchQuery") String searchQuery, Pageable pageable);
+
+
     List<Competition> findByName(String name);
 
     Competition findById(Long id);
@@ -93,4 +123,10 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     Competition findByTemplateForTypeId(Long id);
 
     List<Competition> findByInnovationSectorCategoryId(Long id);
+
+    @Query(FEEDBACK_RELEASED_QUERY)
+    List<Competition> findFeedbackReleased();
+
+    @Query(FEEDBACK_RELEASED_COUNT_QUERY)
+    Long countFeedbackReleased();
 }

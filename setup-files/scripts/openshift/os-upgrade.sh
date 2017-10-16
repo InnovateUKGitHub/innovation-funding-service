@@ -30,16 +30,9 @@ function upgradeServices {
     oc apply -f os-files-tmp/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f os-files-tmp/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f os-files-tmp/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
-
-
-    # shib & idp
-    if $(isNamedEnvironment $TARGET); then
-        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/56-${TARGET}-idp.yml
-        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/5-${TARGET}-shib.yml
-    else
-        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/56-idp.yml
-        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/5-shib.yml
-    fi
+    oc apply -f os-files-tmp/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f os-files-tmp/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f os-files-tmp/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
 
     watchStatus
 }
@@ -54,6 +47,7 @@ function forceReload {
     oc rollout latest dc/competition-mgt-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/project-setup-mgt-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/project-setup-svc ${SVC_ACCOUNT_CLAUSE}
+    oc rollout latest dc/registration-svc ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/idp ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/shib ${SVC_ACCOUNT_CLAUSE}
 
@@ -67,6 +61,7 @@ function watchStatus {
     rolloutStatus competition-mgt-svc
     rolloutStatus project-setup-mgt-svc
     rolloutStatus project-setup-svc
+    rolloutStatus registration-svc
     rolloutStatus idp
     rolloutStatus shib
 }

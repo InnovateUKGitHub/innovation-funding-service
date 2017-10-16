@@ -4,7 +4,6 @@ LABEL maintainer "infrastructure@orangebus.co.uk"
 
 ENV HTTP_PORT=9180 \
     HTTPS_PORT=9143 \
-    WEBAPPS_PROTO=ajp \
     MPM_STARTSERVERS=2 \
     MPM_MINSPARETHREADS=25 \
     MPM_MAXSPARETHREADS=75 \
@@ -48,7 +47,7 @@ RUN apt-get update --fix-missing && \
   mv /usr/local/files/scripts/* /usr/local/bin/ && \
 
 # configure ifs virtual host \
-  mv "/usr/local/files/apache2/ifs-services.conf.$WEBAPPS_PROTO" /etc/apache2/sites-available/ifs-services.conf && a2ensite ifs-services && \
+  mv "/usr/local/files/apache2/ifs-services.conf.ajp" /etc/apache2/sites-available/ifs-services.conf && a2ensite ifs-services && \
 
 # put static files in place \
   mkdir -p /var/www/html/files && \
