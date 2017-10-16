@@ -75,7 +75,7 @@
             </div>
             <fieldset>
                 <legend id="innovationAreaCategoryIds">
-                    <span class="visuallyhidden">Innovation area's</span>
+                    <span class="visuallyhidden">Innovation areas</span>
                 </legend>
             <th:block th:each="innovationAreaCategoryId,status : ${competitionSetupForm.innovationAreaCategoryIds}">
                 <div class="form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryIds[__${status.index}__]')} ? 'form-group-error'" th:id="innovation-row-__${status.index}__">
