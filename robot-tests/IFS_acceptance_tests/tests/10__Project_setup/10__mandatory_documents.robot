@@ -34,7 +34,7 @@ Resource          PS_Common.robot
 *** Variables ***
 
 ${PROJ_WITH_SOLE_APPLICANT}  ${project_ids["High-speed rail and its effects on soil compaction"]}
-${USER_BECKY}  becky.mason@gmail.com
+${USER_BECKY_ORG_PUBSECTOR}  becky.mason@gmail.com
 
 *** Test Cases ***
 Non-lead partner cannot upload either document
@@ -43,10 +43,10 @@ Non-lead partner cannot upload either document
     Given Log in as a different user   &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager needs to upload the following
+    And The user should see the element  jQuery=li:contains("waiting") p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
-    And the user should see the text in the page   Only the Project Manager can upload and submit additional documents
+    And the user should see the element   jQuery=p:contains("Only the Project Manager can upload and submit additional documents")
 
 Lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-5490
@@ -54,10 +54,10 @@ Lead partner cannot upload either document
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager needs to upload the following
+    And The user should see the element  jQuery=li:contains("waiting") p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
-    And the user should see the text in the page   Only the Project Manager can upload and submit additional documents
+    And the user should see the element   jQuery=p:contains("Only the Project Manager can upload and submit additional documents")
 
 PM cannot submit when both documents are not uploaded
     [Documentation]    INFUND-3012, INFUND-5490
@@ -65,7 +65,7 @@ PM cannot submit when both documents are not uploaded
     Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
-    And the user should see the text in the page   Only the Project Manager can upload and submit additional documents
+    And the user should see the element   jQuery=p:contains("Only the Project Manager can upload and submit additional documents")
     #Then the user should see the 2 Upload buttons
     And the user should see the element    css=label[for="collaborationAgreement"]
     And the user should see the element    css=label[for="exploitationPlan"]
@@ -361,7 +361,7 @@ After rejection, lead partner cannot upload either document
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager needs to upload the following
+    And The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -428,7 +428,7 @@ After rejection, non-lead partner cannot upload either document
     [Setup]    log in as a different user   &{collaborator1_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager needs to upload the following
+    And The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -594,42 +594,44 @@ Status updates correctly for internal user's table
     And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action
     And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.ok
 
+# Project used for sole applicant tests - High-speed rail and its effects on soil compaction -
+# has lead org type of Public sector, charity or non Je-S registered research organisation
 Sole applicant uploads only exploitation plan and submits
     [Documentation]  IFS-1864
     [Tags]  HappyPath
-    [Setup]  log in as a different user  ${USER_BECKY}  ${short_password}
-    When the user navigates to the page  ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
+    [Setup]  log in as a different user  ${USER_BECKY_ORG_PUBSECTOR}  ${short_password}
+    Given the user navigates to the page  ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
     And the user clicks the button/link  link=Other documents
     Then the user should not see the text in the page  Collaboration
     And the user should see the element  jQuery=h2:contains("Exploitation plan")
     And the user should not see the element  jQuery=.button.enabled:contains("Submit document")
     When choose file  name=exploitationPlan  ${upload_folder}/${valid_pdf}  # This line uploads valid pdf file as exploitation plan
-    And the user clicks the button/link  jQuery=.button:contains("Submit document")
+    Then the user clicks the button/link  jQuery=.button:contains("Submit document")
     And the user clicks the button/link  jQuery=.button:contains("Submit")
 
 Sole applicant sees correct status on exploitation plan submission
     [Documentation]  IFS-1864
-    [Tags]  HappyPath
+    [Tags]
     When the user clicks the button/link  link=Project setup status
-    Then the user should see the element   css=ul li.waiting:nth-child(7)
+    Then the user should see the element   jQuery=ul li.waiting h2:contains("Other documents")
 
 CompAdmin sees uploaded file and approves it
     [Documentation]    IFS-1864
     [Tags]    HappyPath
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
-    When the user navigates to the page    ${server}/project-setup-management/project/${PROJ_WITH_SOLE_APPLICANT}/partner/documents
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJ_WITH_SOLE_APPLICANT}/partner/documents
     Then the user should not see the text in the page  Collaboration
     And the user should see the element   jQuery=h2:contains("Exploitation plan")
     When the user clicks the button/link  css=.uploaded-file:nth-of-type(1)
     Then the user should see the file without error
     When the user clicks the button/link  jQuery=button:contains("Accept document")
     And the user clicks the button/link  jQuery=.modal-accept-doc .button:contains("Accept document")
-    Then the user should see the text in the page  The document provided has been approved.
+    Then the user should see the element  jQuery=h2:contains("The document provided has been approved.")
 
-Sole applicant can see docuemnts approval
+Sole applicant can see documents approval
     [Documentation]    IFS-1864
-    [Tags]    HappyPath
-    [Setup]  log in as a different user   ${USER_BECKY}  ${short_password}
+    [Tags]
+    [Setup]  log in as a different user   ${USER_BECKY_ORG_PUBSECTOR}  ${short_password}
     When the user navigates to the page   ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
     Then the user should see the element  css=ul li.complete:nth-child(7)
     When the user clicks the button/link  link=Other documents
