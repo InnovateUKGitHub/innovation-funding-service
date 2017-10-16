@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
 <body th:with="context='comp-management'" class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
