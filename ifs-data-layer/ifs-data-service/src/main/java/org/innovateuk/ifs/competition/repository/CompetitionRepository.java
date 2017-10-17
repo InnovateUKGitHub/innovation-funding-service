@@ -111,7 +111,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "        FROM Post p " +
             "        WHERE p.thread.id = t.id " +
             "        GROUP BY p.thread.id) " +
-            "GROUP BY pr.application.id, o.id, o.name, pr.id, pr.name " +
+            "GROUP BY pr.application.id, o.id, pr.id " +
             "ORDER BY pr.application.id, o.name";
 
     @Query(LIVE_QUERY)

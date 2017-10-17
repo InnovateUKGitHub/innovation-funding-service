@@ -243,4 +243,8 @@ public final class ParameterizedTypeReferences {
     public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
     }
+
+    public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryListType() {
+        return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
+    }
 }

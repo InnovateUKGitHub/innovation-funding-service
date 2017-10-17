@@ -15,13 +15,29 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.resource.fixtures.CompetitionCoFundersResourceFixture;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.repository.ProjectRepository;
+import org.innovateuk.ifs.threads.domain.Note;
+import org.innovateuk.ifs.threads.domain.Post;
+import org.innovateuk.ifs.threads.domain.Query;
+import org.innovateuk.ifs.threads.repository.NoteRepository;
+import org.innovateuk.ifs.threads.repository.QueryRepository;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
+import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -29,15 +45,25 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.FEEDBACK_RELEASED;
+import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
+import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
@@ -71,6 +97,24 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Autowired
     private CompetitionMapper competitionMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private QueryRepository queryRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private ProjectFinanceRepository projectFinanceRepository;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
+
+    @Autowired
+    private NoteRepository noteRepository;
+
     private static final Long COMPETITION_ID = 1L;
 
     private static final String COMPETITION_NAME_UPDATED = "Competition name updated";
@@ -102,6 +146,10 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     private final ZonedDateTime sixDaysAhead = now.plusDays(6);
     private final ZonedDateTime sevenDaysAhead = now.plusDays(7);
 
+    private User projectFinanceUser;
+    private User projectManagerUser;
+    private UserResource projectFinanceUserLogin;
+
     @Override
     @Autowired
     protected void setControllerUnderTest(CompetitionController controller) {
@@ -109,8 +157,14 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Before
-    public void setLoggedInUserOnThread() {
+    public  void setupData() {
+
         loginCompAdmin();
+        projectFinanceUser = newUser().withRoles(newRole().withType(UserRoleType.PROJECT_FINANCE).buildSet(1)).withUid("uid2").withFirstName("z").withLastName("y").withEmailAddress("z@y.com").withCreatedOn(ZonedDateTime.now()).withCreatedBy(userMapper.mapToDomain(getSystemRegistrationUser())).build();
+        projectFinanceUser = userRepository.save(projectFinanceUser);
+        projectManagerUser = newUser().withRoles(newRole().withType(UserRoleType.PROJECT_MANAGER).buildSet(1)).withUid("uid1").withFirstName("a").withLastName("b").withEmailAddress("a@b.com").withCreatedOn(ZonedDateTime.now()).withCreatedBy(userMapper.mapToDomain(getSystemRegistrationUser())).build();
+        projectManagerUser = userRepository.save(projectManagerUser);
+        projectFinanceUserLogin = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).withCreatedOn(ZonedDateTime.now()).withCreatedBy("creator").withModifiedOn(ZonedDateTime.now()).withModifiedBy("modifier").build();
     }
 
     @Test
@@ -393,6 +447,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Test
+    @Transactional
     public void notifyAssessors() throws Exception {
         CompetitionResource closedCompetition = createWithDates(twoDaysAgo, oneDayAgo, twoDaysAhead, threeDaysAhead, fourDaysAhead, fiveDaysAhead, sixDaysAhead, sevenDaysAhead);
         closedCompetition.setName("Closed competition name");
@@ -587,6 +642,294 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
         RestResult<CompetitionResource> competitionsResult = controller.getCompetitionById(competitionId);
         assertEquals(competitionTypeId, competitionsResult.getSuccessObject().getCompetitionType());
+    }
+
+    @Test
+    @Transactional
+    public void countOpenQueriesOneCreatedByProjectFinance() throws Exception {
+        Competition competition1 = newCompetition().build();
+        competition1 = competitionRepository.save(competition1);
+        Application application1 = newApplication().withCompetition(competition1).build();
+        application1 = applicationRepository.save(application1);
+        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).build();
+        project1 = projectRepository.save(project1);
+        Organisation organisation1 = newOrganisation().withId(23L).withName("Org1").build();
+        organisation1 = organisationRepository.save(organisation1);
+        ProjectFinance projectFinance1 = newProjectFinance().withOrganisation(organisation1).withProject(project1).build();
+        projectFinanceRepository.save(projectFinance1);
+
+        Post postCreatedByProjectFinanceOnThreadCreatedByProjectFinance = new Post(1L, projectFinanceUser, "query1", emptyList(), ZonedDateTime.now());
+
+        Query queryCreatedByProjectFinance = new Query(1L,
+                projectFinance1.getId(),
+                "org.innovateuk.ifs.finance.domain.ProjectFinance",
+                singletonList(postCreatedByProjectFinanceOnThreadCreatedByProjectFinance),
+                FinanceChecksSectionType.ELIGIBILITY,
+                "title1",
+                ZonedDateTime.now());
+        queryRepository.save(queryCreatedByProjectFinance);
+
+        setLoggedInUser(projectFinanceUserLogin);
+
+        RestResult<Long> openQueriesCountResult = controller.countOpenQueries(competition1.getId());
+        assertTrue(openQueriesCountResult.isSuccess());
+        assertEquals(0L, openQueriesCountResult.getSuccessObject().longValue());
+    }
+
+    @Test
+    @Transactional
+    public void countOpenQueriesOneCreatedByProjectManager() throws Exception {
+        // Note that this should not happen with the real system as only Project Finance user can create Queries
+
+        Competition competition1 = newCompetition().build();
+        competition1 = competitionRepository.save(competition1);
+        Application application1 = newApplication().withCompetition(competition1).build();
+        application1 = applicationRepository.save(application1);
+        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).build();
+        project1 = projectRepository.save(project1);
+        Organisation organisation1 = newOrganisation().withId(23L).withName("Org1").build();
+        organisation1 = organisationRepository.save(organisation1);
+        ProjectFinance projectFinance1 = newProjectFinance().withOrganisation(organisation1).withProject(project1).build();
+        projectFinanceRepository.save(projectFinance1);
+
+        Post postCreatedByProjectFinanceOnThreadCreatedByProjectFinance = new Post(1L, projectManagerUser, "query1", emptyList(), ZonedDateTime.now());
+
+        Query queryCreatedByProjectFinance = new Query(1L,
+                projectFinance1.getId(),
+                "org.innovateuk.ifs.finance.domain.ProjectFinance",
+                singletonList(postCreatedByProjectFinanceOnThreadCreatedByProjectFinance),
+                FinanceChecksSectionType.ELIGIBILITY,
+                "title1",
+                ZonedDateTime.now());
+        queryRepository.save(queryCreatedByProjectFinance);
+
+        setLoggedInUser(projectFinanceUserLogin);
+
+        RestResult<Long> openQueriesCountResult = controller.countOpenQueries(competition1.getId());
+        assertTrue(openQueriesCountResult.isSuccess());
+        assertEquals(0L, openQueriesCountResult.getSuccessObject().longValue());
+    }
+
+    @Test
+    @Transactional
+    public void countOpenQueriesOneCreatedByProjectFinancePMResponded() throws Exception {
+
+        Competition competition1 = newCompetition().build();
+        competition1 = competitionRepository.save(competition1);
+        Application application1 = newApplication().withCompetition(competition1).build();
+        application1 = applicationRepository.save(application1);
+        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).build();
+        project1 = projectRepository.save(project1);
+        Organisation organisation1 = newOrganisation().withId(23L).withName("Org1").build();
+        organisation1 = organisationRepository.save(organisation1);
+        ProjectFinance projectFinance1 = newProjectFinance().withOrganisation(organisation1).withProject(project1).build();
+        projectFinance1 = projectFinanceRepository.save(projectFinance1);
+
+        Post postCreatedByProjectFinanceOnThreadCreatedByProjectFinance = new Post(1L, projectFinanceUser, "query1", emptyList(), ZonedDateTime.now());
+
+        Post postCreatedByProjectManagerOnThreadCreatedByProjectFinance = new Post(2L, projectManagerUser, "response", emptyList(), ZonedDateTime.now().plusMinutes(1L));
+
+        Query queryCreatedByProjectFinance = new Query(1L,
+                projectFinance1.getId(),
+                "org.innovateuk.ifs.finance.domain.ProjectFinance",
+                asList(postCreatedByProjectFinanceOnThreadCreatedByProjectFinance, postCreatedByProjectManagerOnThreadCreatedByProjectFinance),
+                FinanceChecksSectionType.ELIGIBILITY,
+                "title1",
+                ZonedDateTime.now());
+        queryRepository.save(queryCreatedByProjectFinance);
+
+        // check different thread on same project/org is ignored
+        Post postCreatedByProjectFinanceOnDifferentThread = new Post(3L, projectFinanceUser, "query1", emptyList(), ZonedDateTime.now());
+
+        Post postCreatedByProjectManagerOnDifferent = new Post(4L, projectManagerUser, "response", emptyList(), ZonedDateTime.now().plusMinutes(1L));
+
+        Query queryCreatedByProjectFinanceOnDifferentThread = new Query(2L,
+                projectFinance1.getId(),
+                "org.innovateuk.ifs.finance.domain.ProjectFinance",
+                asList(postCreatedByProjectFinanceOnDifferentThread, postCreatedByProjectManagerOnDifferent),
+                FinanceChecksSectionType.ELIGIBILITY,
+                "title2",
+                ZonedDateTime.now());
+        queryRepository.save(queryCreatedByProjectFinanceOnDifferentThread);
+
+        // check that query from a different competition is ignored
+        Competition competition2 = newCompetition().build();
+        competition2 = competitionRepository.save(competition2);
+        Application application2 = newApplication().withCompetition(competition2).build();
+        application2 = applicationRepository.save(application2);
+        Project project2 = newProject().withId(28L).withName("project23").withApplication(application2).build();
+        project2 = projectRepository.save(project2);
+        ProjectFinance projectFinance2 = newProjectFinance().withOrganisation(organisation1).withProject(project2).build();
+        projectFinance2 = projectFinanceRepository.save(projectFinance2);
+        Post postCreatedByProjectFinanceOnDifferentCompetition = new Post(5L, projectFinanceUser, "query1", emptyList(), ZonedDateTime.now());
+
+        Post postCreatedByProjectManagerOnDifferentCompetition = new Post(6L, projectManagerUser, "response", emptyList(), ZonedDateTime.now().plusMinutes(1L));
+
+        Query queryCreatedByProjectFinanceOnDifferentCompetition = new Query(3L,
+                projectFinance2.getId(),
+                "org.innovateuk.ifs.finance.domain.ProjectFinance",
+                asList(postCreatedByProjectFinanceOnDifferentCompetition, postCreatedByProjectManagerOnDifferentCompetition),
+                FinanceChecksSectionType.ELIGIBILITY,
+                "title3",
+                ZonedDateTime.now());
+        queryRepository.save(queryCreatedByProjectFinanceOnDifferentCompetition);
+
+        //check that Notes are not considered in the query count/get
+        Post postCreatedByProjectManager = new Post(7L, projectManagerUser, "response", emptyList(), ZonedDateTime.now().plusMinutes(1L));
+
+        Note noteCreatedByProjectFinance = new Note(3L,
+                projectFinance1.getId(),
+                "org.innovateuk.ifs.finance.domain.ProjectFinance",
+                asList(postCreatedByProjectManager),
+                "title4",
+                ZonedDateTime.now());
+        noteRepository.save(noteCreatedByProjectFinance);
+
+        //check that queries not keyed on ProjectFinance class are ignored
+
+        Post postCreatedByProjectManagerInvalidClass = new Post(8L, projectManagerUser, "response", emptyList(), ZonedDateTime.now().plusMinutes(1L));
+
+        Query queryCreatedByProjectFinanceInvalidClass = new Query(4L,
+                projectFinance1.getId(),
+                "org.innovateuk.ifs.finance.domain.Wobble",
+                asList(postCreatedByProjectManagerInvalidClass),
+                FinanceChecksSectionType.ELIGIBILITY,
+                "title5",
+                ZonedDateTime.now());
+        queryRepository.save(queryCreatedByProjectFinanceInvalidClass);
+
+        setLoggedInUser(projectFinanceUserLogin);
+
+        RestResult<Long> openQueriesCountResult = controller.countOpenQueries(competition1.getId());
+        assertTrue(openQueriesCountResult.isSuccess());
+        assertEquals(1L, openQueriesCountResult.getSuccessObject().longValue());
+
+        RestResult<List<CompetitionOpenQueryResource>> openQueriesResult = controller.getOpenQueries(competition1.getId());
+        assertTrue(openQueriesResult.isSuccess());
+        assertEquals(1, openQueriesResult.getSuccessObject().size());
+        assertEquals(new CompetitionOpenQueryResource(application1.getId(), organisation1.getId(), organisation1.getName(), project1.getId(), project1.getName()), openQueriesResult.getSuccessObject().get(0));
+    }
+
+    @Test
+    @Transactional
+    public void countOpenQueriesTwoPartnersHaveOpenQueries() throws Exception {
+
+        Competition competition1 = newCompetition().build();
+        competition1 = competitionRepository.save(competition1);
+        Application application1 = newApplication().withCompetition(competition1).build();
+        application1 = applicationRepository.save(application1);
+        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).build();
+        project1 = projectRepository.save(project1);
+        Organisation organisation1 = newOrganisation().withId(23L).withName("Org1").build();
+        organisation1 = organisationRepository.save(organisation1);
+        ProjectFinance projectFinance1 = newProjectFinance().withOrganisation(organisation1).withProject(project1).build();
+        projectFinance1 = projectFinanceRepository.save(projectFinance1);
+
+        Post postCreatedByProjectFinanceOnThreadCreatedByProjectFinance = new Post(1L, projectFinanceUser, "query1", emptyList(), ZonedDateTime.now());
+
+        Post postCreatedByProjectManagerOnThreadCreatedByProjectFinance = new Post(2L, projectManagerUser, "response", emptyList(), ZonedDateTime.now().plusMinutes(1L));
+
+        Query queryCreatedByProjectFinance = new Query(1L,
+                projectFinance1.getId(),
+                "org.innovateuk.ifs.finance.domain.ProjectFinance",
+                asList(postCreatedByProjectFinanceOnThreadCreatedByProjectFinance, postCreatedByProjectManagerOnThreadCreatedByProjectFinance),
+                FinanceChecksSectionType.ELIGIBILITY,
+                "title1",
+                ZonedDateTime.now());
+        queryRepository.save(queryCreatedByProjectFinance);
+
+        Organisation organisation2 = newOrganisation().withId(27L).withName("aOrg2").build();
+        organisation2 = organisationRepository.save(organisation2);
+        ProjectFinance projectFinance2 = newProjectFinance().withOrganisation(organisation2).withProject(project1).build();
+        projectFinance2 = projectFinanceRepository.save(projectFinance2);
+
+        Post postCreatedByProjectFinancePartner2 = new Post(3L, projectFinanceUser, "query2", emptyList(), ZonedDateTime.now());
+
+        Post postCreatedByProjectManagerPartner2 = new Post(4L, projectManagerUser, "response2", emptyList(), ZonedDateTime.now().plusMinutes(1L));
+
+        Query queryCreatedByProjectFinancePartner2 = new Query(2L,
+                projectFinance2.getId(),
+                "org.innovateuk.ifs.finance.domain.ProjectFinance",
+                asList(postCreatedByProjectFinancePartner2, postCreatedByProjectManagerPartner2),
+                FinanceChecksSectionType.ELIGIBILITY,
+                "title2",
+                ZonedDateTime.now());
+        queryRepository.save(queryCreatedByProjectFinancePartner2);
+
+        setLoggedInUser(projectFinanceUserLogin);
+
+        RestResult<Long> openQueriesCountResult = controller.countOpenQueries(competition1.getId());
+        assertTrue(openQueriesCountResult.isSuccess());
+        assertEquals(2L, openQueriesCountResult.getSuccessObject().longValue());
+
+        RestResult<List<CompetitionOpenQueryResource>> openQueriesResult = controller.getOpenQueries(competition1.getId());
+        assertTrue(openQueriesResult.isSuccess());
+        assertEquals(2, openQueriesResult.getSuccessObject().size());
+        // check ordering by application id and organisation name
+        assertEquals(new CompetitionOpenQueryResource(application1.getId(), organisation2.getId(), organisation2.getName(), project1.getId(), project1.getName()), openQueriesResult.getSuccessObject().get(0));
+        assertEquals(new CompetitionOpenQueryResource(application1.getId(), organisation1.getId(), organisation1.getName(), project1.getId(), project1.getName()), openQueriesResult.getSuccessObject().get(1));
+    }
+
+    @Test
+    @Transactional
+    public void countOpenQueriesTwoProjectsHaveOpenQueries() throws Exception {
+
+        Competition competition1 = newCompetition().build();
+        competition1 = competitionRepository.save(competition1);
+        Application application1 = newApplication().withCompetition(competition1).build();
+        application1 = applicationRepository.save(application1);
+        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).build();
+        project1 = projectRepository.save(project1);
+        Organisation organisation1 = newOrganisation().withId(23L).withName("Org1").build();
+        organisation1 = organisationRepository.save(organisation1);
+        ProjectFinance projectFinance1 = newProjectFinance().withOrganisation(organisation1).withProject(project1).build();
+        projectFinance1 = projectFinanceRepository.save(projectFinance1);
+
+        Post postCreatedByProjectFinanceOnThreadCreatedByProjectFinance = new Post(1L, projectFinanceUser, "query1", emptyList(), ZonedDateTime.now());
+
+        Post postCreatedByProjectManagerOnThreadCreatedByProjectFinance = new Post(2L, projectManagerUser, "response", emptyList(), ZonedDateTime.now().plusMinutes(1L));
+
+        Query queryCreatedByProjectFinance = new Query(1L,
+                projectFinance1.getId(),
+                "org.innovateuk.ifs.finance.domain.ProjectFinance",
+                asList(postCreatedByProjectFinanceOnThreadCreatedByProjectFinance, postCreatedByProjectManagerOnThreadCreatedByProjectFinance),
+                FinanceChecksSectionType.ELIGIBILITY,
+                "title1",
+                ZonedDateTime.now());
+        queryRepository.save(queryCreatedByProjectFinance);
+
+        Application application2 = newApplication().withId(application1.getId() + 1).withCompetition(competition1).build();
+        application2 = applicationRepository.save(application2);
+        Project project2 = newProject().withId(29L).withName("aproject2").withApplication(application2).build();
+        project2 = projectRepository.save(project2);
+        ProjectFinance projectFinance2 = newProjectFinance().withOrganisation(organisation1).withProject(project2).build();
+        projectFinance2 = projectFinanceRepository.save(projectFinance2);
+
+        Post postCreatedByProjectFinancePartner2 = new Post(3L, projectFinanceUser, "query2", emptyList(), ZonedDateTime.now());
+
+        Post postCreatedByProjectManagerPartner2 = new Post(4L, projectManagerUser, "response2", emptyList(), ZonedDateTime.now().plusMinutes(1L));
+
+        Query queryCreatedByProjectFinancePartner2 = new Query(2L,
+                projectFinance2.getId(),
+                "org.innovateuk.ifs.finance.domain.ProjectFinance",
+                asList(postCreatedByProjectFinancePartner2, postCreatedByProjectManagerPartner2),
+                FinanceChecksSectionType.ELIGIBILITY,
+                "title2",
+                ZonedDateTime.now());
+        queryRepository.save(queryCreatedByProjectFinancePartner2);
+
+        setLoggedInUser(projectFinanceUserLogin);
+
+        RestResult<Long> openQueriesCountResult = controller.countOpenQueries(competition1.getId());
+        assertTrue(openQueriesCountResult.isSuccess());
+        assertEquals(2L, openQueriesCountResult.getSuccessObject().longValue());
+
+        RestResult<List<CompetitionOpenQueryResource>> openQueriesResult = controller.getOpenQueries(competition1.getId());
+        assertTrue(openQueriesResult.isSuccess());
+        assertEquals(2, openQueriesResult.getSuccessObject().size());
+        // check ordering by application id and organisation name
+        assertEquals(new CompetitionOpenQueryResource(application1.getId(), organisation1.getId(), organisation1.getName(), project1.getId(), project1.getName()), openQueriesResult.getSuccessObject().get(0));
+        assertEquals(new CompetitionOpenQueryResource(application2.getId(), organisation1.getId(), organisation1.getName(), project2.getId(), project2.getName()), openQueriesResult.getSuccessObject().get(1));
     }
 
     private List<Long> createCreatedAssessmentsWithCompetition(Long competitionId, UserResource assessor, int numberOfAssessments, ActivityState created) {

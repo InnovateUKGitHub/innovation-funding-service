@@ -762,6 +762,26 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertTopLevelFlagForSupportUser(competitions, response);
     }
 
+    @Test
+    public void getCompetitionOpenQueries() throws Exception {
+        List<CompetitionOpenQueryResource> openQueries = singletonList(new CompetitionOpenQueryResource(1L, 1L, "org", 1L, "proj"));
+        when(competitionRepositoryMock.getOpenQueryByCompetition(competitionId)).thenReturn(openQueries);
+
+        List<CompetitionOpenQueryResource> response = service.findAllOpenQueries(competitionId).getSuccessObjectOrThrowException();
+
+        assertEquals(1, response.size());
+    }
+
+    @Test
+    public void countCompetitionOpenQueries() throws Exception {
+        Long countOpenQueries = 4l;
+        when(competitionRepositoryMock.countOpenQueries(competitionId)).thenReturn(countOpenQueries);
+
+        Long response = service.countAllOpenQueries(competitionId).getSuccessObjectOrThrowException();
+
+        assertEquals(countOpenQueries, response);
+    }
+
     private void assertTopLevelFlagForNonSupportUser(List<Competition> competitions, List<CompetitionSearchResultItem> searchResults) {
 
         forEachWithIndex(searchResults, (i, searchResult) -> {

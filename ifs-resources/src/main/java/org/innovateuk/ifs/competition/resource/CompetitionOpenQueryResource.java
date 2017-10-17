@@ -23,7 +23,6 @@ public class CompetitionOpenQueryResource {
         this.applicationId = applicationId;
         this.organisationId = organisationId;
         this.organisationName = organisationName;
-
         this.projectId = projectId;
         this.projectName = projectName;
     }
@@ -59,7 +58,6 @@ public class CompetitionOpenQueryResource {
         CompetitionOpenQueryResource that = (CompetitionOpenQueryResource) o;
 
         return new EqualsBuilder()
-                .appendSuper(super.equals(o))
                 .append(applicationId, that.applicationId)
                 .append(organisationId, that.organisationId)
                 .append(organisationName, that.organisationName)
@@ -71,7 +69,6 @@ public class CompetitionOpenQueryResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .appendSuper(super.hashCode())
                 .append(applicationId)
                 .append(organisationId)
                 .append(organisationName)
