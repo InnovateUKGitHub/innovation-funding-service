@@ -32,7 +32,6 @@ import static org.springframework.http.HttpStatus.ACCEPTED;
  */
 @RestController
 @RequestMapping("/silstub/sendmail")
-@Profile({"local", "integration-test"})
 public class SimpleEmailEndpointController {
 
     private static final Log LOG = LogFactory.getLog(SimpleEmailEndpointController.class);

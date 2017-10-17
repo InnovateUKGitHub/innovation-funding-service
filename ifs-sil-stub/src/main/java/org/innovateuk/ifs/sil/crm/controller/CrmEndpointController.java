@@ -28,4 +28,17 @@ public class CrmEndpointController {
         LOG.info("Stubbing out SIL CRM update contact endpoint: " + JsonMappingUtil.toJson(contact));
         return restSuccess(HttpStatus.ACCEPTED);
     }
+
+    // TODO qqRP This currently seems to work from the data service
+    // TODO qqRP adaptor.restGetEntity("http://sil-stub:8080/silstub/test", org.innovateuk.ifs.sil.crm.resource.SilContact.class)
+    // TODO qqRP
+    @GetMapping("/test2")
+    public RestResult<SilContact> toRemoveOnceProofOfConceptProved(){
+        SilContact testContact = new SilContact();
+        testContact.setEmail("test@example.com");
+        SilAddress testAddress = new SilAddress();
+        testAddress.setStreet("example street");
+        testContact.setAddress(testAddress);
+        return restSuccess(testContact);
+    }
 }
