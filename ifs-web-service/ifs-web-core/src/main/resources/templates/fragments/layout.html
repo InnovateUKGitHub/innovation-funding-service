@@ -191,7 +191,9 @@
 <th:block th:fragment="header-sub">
     <div class="sub-header">
         <nav>
-            <a th:if="${linkTitle != null and linkUrl != null}"
+            <span th:if="${javascriptBackLink}"
+                  th:attr="data-javascript-back-link=${linkTitle}"></span>
+            <a th:if="${linkTitle != null and linkUrl != null and javascriptBackLink != true}"
                th:class="${linkClass != null ? linkClass : ''}"
                th:href="${linkUrl}"
                th:text="${linkTitle}" />
