@@ -26,7 +26,7 @@ public interface SectionRepository extends PagingAndSortingRepository<Section, L
 
     Section findByQuestionsId(Long questionId);
 
-    Section findByCompetitionIdAndName(Long competitionId, String sectionName);
+    Section findFirstByCompetitionIdAndName(Long competitionId, String sectionName);
 
     List<Section> findByCompetitionIdAndDisplayInAssessmentApplicationSummaryTrueOrderByPriorityAsc(Long competitionId);
 }

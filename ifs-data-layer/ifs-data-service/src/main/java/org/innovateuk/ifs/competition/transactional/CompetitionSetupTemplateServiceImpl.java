@@ -88,9 +88,10 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     public ServiceResult<Question> createDefaultForApplicationSection(Competition competition) {
         //Perform checks
 
-        Section applicationQuestionsSection = sectionRepository.findByCompetitionIdAndName(competition.getId(), "Application questions");
+        Section applicationQuestionsSection = sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), "Application questions");
         Question question = defaultApplicationQuestionFactory.buildQuestion(competition);
         question.setSection(applicationQuestionsSection);
+        question.setCompetition(competition);
 
         return serviceSuccess(questionTemplatePersistorService.persistByEntity(Arrays.asList(question)).get(0));
     }
