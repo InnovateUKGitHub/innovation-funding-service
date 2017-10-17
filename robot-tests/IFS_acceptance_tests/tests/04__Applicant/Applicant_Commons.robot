@@ -92,7 +92,7 @@ the user fills in the Application details
     the user enters text to a text field  css=#application_details-startdate_day  ${tomorrowday}
     the user enters text to a text field  css=#application_details-startdate_month  ${month}
     the user enters text to a text field  css=#application_details-startdate_year  ${nextyear}
-    the user enters text to a text field  css=[id="application.durationInMonths]  24
+    the user enters text to a text field  css=[id="application.durationInMonths"]  24
     the user clicks the button twice      css=label[for="application.resubmission-no"]
     the user selects Research category    ${res_category}
     the user should not see the element   link=Choose your innovation area
