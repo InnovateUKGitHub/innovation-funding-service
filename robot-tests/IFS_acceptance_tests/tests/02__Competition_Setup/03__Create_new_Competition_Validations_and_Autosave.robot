@@ -57,7 +57,7 @@ Initial details: client-side validations
     Then the user should not see the error any more    Please select a competition type.
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     Then the user should not see the error any more    Please select an innovation sector.
-    When the user selects the option from the drop-down menu    Advanced therapies    id=innovationAreaCategoryId-0
+    When the user selects the option from the drop-down menu    Advanced therapies    css=[id="innovationAreaCategoryIds[0]"]
     Then the user should not see the error any more    Please select an innovation area.
     When the user enters text to a text field    id=openingDateDay    01
     #Then the user should not see the error any more    Please enter an opening day.
@@ -448,7 +448,7 @@ The user enters valid data in the initial details
     Given the user enters text to a text field    id=title    Validations Test
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced therapies    id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu    Advanced therapies    css=[id="innovationAreaCategoryIds[0]"]
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017

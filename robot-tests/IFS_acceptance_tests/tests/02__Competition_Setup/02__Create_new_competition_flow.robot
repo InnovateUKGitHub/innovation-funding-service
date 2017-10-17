@@ -121,7 +121,7 @@ Initial details - Innovation sector of Open should be visible
     Then the user should see the element                                jQuery=button:contains("+ add another innovation area")
     When the user selects the option from the drop-down menu            Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu             Open    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu             Biosciences    id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu             Biosciences    css=[id="innovationAreaCategoryIds[0]"]
     And the user clicks the button/link                                 jQuery=button:contains("+ add another innovation area")
     Then the user selects the option from the drop-down menu            Sector    id=competitionTypeId
     When the user selects the option from the drop-down menu            Open    id=innovationSectorCategoryId
@@ -668,12 +668,12 @@ The user enters valid data in the initial details
     Given the user enters text to a text field                css=#title  Competition title
     When the user selects the option from the drop-down menu  Sector  id=competitionTypeId
     And the user selects the option from the drop-down menu   Infrastructure systems  id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu   Offshore wind  id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu   Offshore wind  css=[id="innovationAreaCategoryIds[0]"]
     And the user selects the option from the drop-down menu   Open  id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu   Biosciences     id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu   Biosciences     css=[id="innovationAreaCategoryIds[0]"]
     And the user selects the option from the drop-down menu   Emerging and enabling  id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu   Satellite applications  id=innovationAreaCategoryId-0
-    And the user selects the option from the drop-down menu   Space technology  id=innovationAreaCategoryId-1
+    And the user selects the option from the drop-down menu   Satellite applications  css=[id="innovationAreaCategoryIds[0]"]
+    And the user selects the option from the drop-down menu   Space technology  css=[id="innovationAreaCategoryIds[1]"]
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear  ${nextyear}
@@ -734,10 +734,10 @@ Custom suite setup
 
 the user enters multiple innovation areas
     the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
-    the user selects the option from the drop-down menu    Space technology    id=innovationAreaCategoryId-1
+    the user selects the option from the drop-down menu    Space technology    css=[id="innovationAreaCategoryIds[1]"]
     the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
-    List Should not Contain Value    id=innovationAreaCategoryId-2    Space technology
-    the user selects the option from the drop-down menu    Creative industries    id=innovationAreaCategoryId-2
+    List Should not Contain Value    css=[id="innovationAreaCategoryIds[2]"]    Space technology
+    the user selects the option from the drop-down menu    Creative industries    css=[id="innovationAreaCategoryIds[2]"]
 
 The user should not see the selected option again
-    List Should not Contain Value    id=innovationAreaCategoryId-1    Biosciences
+    List Should not Contain Value    css=[id="innovationAreaCategoryIds[1]"]    Biosciences

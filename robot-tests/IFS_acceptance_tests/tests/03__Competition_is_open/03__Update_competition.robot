@@ -210,7 +210,7 @@ Initial details editable before notify date (Open)
     And the user should see that the element is disabled    id=openingDateYear
     And the user should see that the element is disabled    id=competitionTypeId
     And the user should see that the element is disabled    id=innovationSectorCategoryId
-    And the user should see that the element is disabled    id=innovationAreaCategoryId-0
+    And the user should see that the element is disabled    css=[id="innovationAreaCategoryIds[0]"]
     When the user selects the option from the drop-down menu    Peter Freeman    id=innovationLeadUserId
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
     And the user clicks the button/link    jQuery=button:contains("Done")
