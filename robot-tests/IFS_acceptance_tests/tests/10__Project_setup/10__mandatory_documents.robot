@@ -606,13 +606,9 @@ Sole applicant uploads only exploitation plan and submits
     And the user should see the element  jQuery=h2:contains("Exploitation plan")
     And the user should not see the element  jQuery=.button.enabled:contains("Submit document")
     When choose file  name=exploitationPlan  ${upload_folder}/${valid_pdf}  # This line uploads valid pdf file as exploitation plan
-    Then the user clicks the button/link  jQuery=.button:contains("Submit document")
+    And the user clicks the button/link  jQuery=.button:contains("Submit document")
     And the user clicks the button/link  jQuery=.button:contains("Submit")
-
-Sole applicant sees correct status on exploitation plan submission
-    [Documentation]  IFS-1864
-    [Tags]
-    When the user clicks the button/link  link=Project setup status
+    And the user clicks the button/link  link=Project setup status
     Then the user should see the element   jQuery=ul li.waiting h2:contains("Other documents")
 
 CompAdmin sees uploaded file and approves it
