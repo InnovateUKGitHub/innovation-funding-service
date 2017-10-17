@@ -10,15 +10,15 @@ robotframework-imaplibrary==0.2.5
 robotframework-selenium2library==1.8.0
 robotframework-xvfb==1.2.2
 
-#In order to query the database
+# In order to query the database
 PyMySQL==0.7.9
 
-#Python - Excel Library
+# Python - Excel Library
 openpyxl==2.4.0
 
-#and for PDF
+# and for PDF
 pdfminer==20140328
 
-#SauceLabs dependencies
+# SauceLabs dependencies
 requests==2.11.1
 simplejson==3.10.0
