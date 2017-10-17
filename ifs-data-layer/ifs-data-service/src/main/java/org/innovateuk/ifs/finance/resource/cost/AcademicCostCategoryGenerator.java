@@ -36,7 +36,7 @@ public enum AcademicCostCategoryGenerator implements CostCategoryGenerator<Acade
 
 
     @Override
-    public boolean isSpendCostCategory() {
+    public boolean isIncludedInGeneratedSpendProfile() {
         return true;
     }
 

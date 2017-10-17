@@ -69,7 +69,7 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
 
     private CostCategoryType getOrCreateSupportingCostCategoryType(List<? extends CostCategoryGenerator> summaryPerCategory) {
         // Get the generators for the CostCategories we may need to generate
-        List<CostCategoryGenerator> costCategoryGenerators = simpleFilter(summaryPerCategory, CostCategoryGenerator::isSpendCostCategory);
+        List<CostCategoryGenerator> costCategoryGenerators = simpleFilter(summaryPerCategory, (costCategoryGenerator) -> costCategoryGenerator.isIncludedInGeneratedSpendProfile());
         // Get all of the CostCategoryTypes so we can find out if there is already a logical grouping of CostCategories that fulfils our needs
         List<CostCategoryType> existingCostCategoryTypes = costCategoryTypeRepository.findAll();
         Optional<CostCategoryType> existingCostCategoryTypeWithMatchingCategories = simpleFindFirst(existingCostCategoryTypes, costCategoryType -> {

@@ -23,16 +23,16 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     ACADEMIC("academic");
 
     private String type;
-    private boolean spendCostCategory;
+    private boolean includedInGeneratedSpendProfile;
     private String name;
 
     FinanceRowType(String type) {
         this(type, false, null);
     }
 
-    FinanceRowType(String type, boolean spendCostCategory, String name) {
+    FinanceRowType(String type, boolean includedInGeneratedSpendProfile, String name) {
         this.type = type;
-        this.spendCostCategory = spendCostCategory;
+        this.includedInGeneratedSpendProfile = includedInGeneratedSpendProfile;
         this.name = name;
     }
 
@@ -55,8 +55,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         return FormInputType.findByName(getType());
     }
 
-    public boolean isSpendCostCategory() {
-        return spendCostCategory;
+    public boolean isIncludedInGeneratedSpendProfile() {
+        return includedInGeneratedSpendProfile;
     }
 
     @Override
