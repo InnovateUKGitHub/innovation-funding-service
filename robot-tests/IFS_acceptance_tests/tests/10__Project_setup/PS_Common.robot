@@ -185,8 +185,8 @@ partner fills in his bank details
     [Arguments]  ${email}  ${project}  ${account_number}  ${sort_code}
     log in as a different user                       ${email}    ${short_password}
     the user navigates to the page                   ${server}/project-setup/project/${project}/bank-details
-    the user enters text to a text field             id=bank-acc-number  ${account_number}
-    the user enters text to a text field             id=bank-sort-code  ${sort_code}
+    the user enters text to a text field             id=accountNumber  ${account_number}
+    the user enters text to a text field             id=sortCode  ${sort_code}
     the user clicks the button twice                 css=label[for="address-use-org"]
     the user sees that the radio button is selected  addressType  REGISTERED  # Added this check to give extra execution time
     the user should see the element                  css=#registeredAddress

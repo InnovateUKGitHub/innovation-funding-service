@@ -4,9 +4,10 @@
 <!-- ===========================Place: <HEAD>=========================== -->
 <th:block th:fragment="head">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-
-    <title th:text="${pageTitle}+' - Innovation Funding Service'"></title>
-
+    <!--/* deal with null hasFormErrors for pages that don't have forms */-->
+    <th:block th:with="hasFormErrors=${hasFormErrors != null ? hasFormErrors : false}">
+        <title th:text="|${hasFormErrors ? 'Error: ' : ''} ${pageTitle} - Innovation Funding Service|"></title>
+    </th:block>
     <script type="text/javascript">
       if (!window.console) console = {log: function() {}, warn: function(){}};
     </script>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${#fields.hasErrors('${organisationForm.*}')}" />
 </head>
 <body th:with="context='applicant'" class="create-application-organisation">
 
@@ -19,26 +19,27 @@
 
     <th:block th:insert="fragments/addresses :: organisation-details" th:with="showOrgType=${model.showOrgType}"/>
 
-    <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST" class="extra-margin">
+    <form th:action="@{/organisation/create/selected-organisation/{companyId}(companyId=${organisationForm.searchOrganisationId})}" th:object="${organisationForm}" method="POST" novalidate="novalidate" class="extra-margin">
         <input type="hidden" th:field="*{searchOrganisationId}" />
 
         <h2 class="heading-medium no-margin">Operating address</h2>
         <p class="form-hint">This is the address your organisation works from</p>
+
         <fieldset>
-            <legend>
-                <span class="visuallyhidden">Operating address</span>
-                <th:block th:if="${#fields.hasErrors('*{useSearchResultAddress}')}">
-                    <span class="error-message" th:each="err : ${#fields.errors('*{useSearchResultAddress}')}" th:text="${err}"></span>
-                </th:block>
-            </legend>
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'form-group-error'">
-                <div class="multiple-choice" data-target="manual-company-input" data-target-inverted="true">
-                    <input id="address-same" th:field="*{useSearchResultAddress}" type="checkbox" value="yes" />
-                    <label for="address-same">
-                        The operating address is the same as the registered organisation address
-                    </label>
-                </div>
-            </div>
+          <legend id="useSearchResultAddress">
+              <span class="visuallyhidden">Operating address</span>
+              <th:block th:if="${#fields.hasErrors('*{useSearchResultAddress}')}">
+                  <span class="error-message" th:each="err : ${#fields.errors('*{useSearchResultAddress}')}" th:text="${err}"></span>
+              </th:block>
+          </legend>
+          <div class="form-group" th:classappend="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'form-group-error'">
+              <div class="multiple-choice" data-target="manual-company-input" data-target-inverted="true">
+                  <input id="address-same" th:field="*{useSearchResultAddress}" type="checkbox" value="yes" />
+                  <label for="address-same">
+                      The operating address is the same as the registered organisation address
+                  </label>
+              </div>
+          </div>
         </fieldset>
 
         <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm},addressType=${'operating address'}" />

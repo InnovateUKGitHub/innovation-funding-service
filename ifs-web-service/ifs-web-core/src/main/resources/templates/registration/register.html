@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Sign In'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Sign In',hasFormErrors=${#fields.hasErrors('${registrationForm.*}')}" />
 </head>
 
 <body class="sign-in">
@@ -12,18 +12,16 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
-    <div class="error-summary" th:if="${#fields.hasErrors('${registrationForm.*}')}">
-        <h1 class="heading-medium error-summary-heading">
-            We were unable to create your account
-        </h1>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.errors('${registrationForm.*}')}" th:text="${err}"></li>
-        </ul>
+
+    <div th:if="${#fields.hasErrors('${registrationForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to create your account.</h2>
+        Please review
+        <th:block th:insert="fragments/elements :: error-summary-list(registrationForm)" />
     </div>
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',subTitle='Create your account',size='heading-xlarge'" />
 
-    <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}">
+    <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}" novalidate="novalidate">
         <div class="panel">
             <p>
                 The profile that you are creating will be linked to the following organisation <br/>
@@ -40,7 +38,7 @@
             </label>
             <input class="form-control"
                    id="firstName"
-                   th:classappend="${#fields.hasErrors('firstName')} ? 'form-control-error'"
+                   th:errorclass="form-control-error"
                    type="text"
                    th:field="*{firstName}"
                    required="required"
@@ -60,7 +58,7 @@
                 </th:block>
             </label>
             <input class="form-control"
-                   th:classapend="${#fields.hasErrors('lastName')} ? 'form-control-error'"
+                   th:errorclass="form-control-error"
                    id="lastName"
                    type="text"
                    th:field="*{lastName}"
@@ -82,7 +80,7 @@
             </label>
             <input class="form-control"
                    id="phoneNumber"
-                   th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-control-error'"
+                   th:errorclass="form-control-error"
                    type="tel"
                    th:field="*{phoneNumber}"
                    minlength="8"
@@ -114,7 +112,7 @@
             <th:block th:unless="${invitee}">
                 <input class="form-control"
                        id="email"
-                       th:classappend="${#fields.hasErrors('email')} ? 'form-control-error'"
+                       th:errorclass="form-control-error"
                        type="email"
                        th:field="*{email}"
                        maxlength="256"

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance Checks'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance Checks',hasFormErrors=${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" />
 </head>
 <body th:with="context='project'" class="project spend-profile">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -10,6 +10,17 @@
 <main tabindex="-1" id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId})}">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}" />
+
+    <div th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem saving your response.</h2>
+        Please review
+        <ul class="error-summary-list">
+            <th:block th:each="err : ${nonFormErrors}">
+                <li th:each="errMsg : ${err.codes}" th:text="#{${errMsg}}"></li>
+            </th:block>
+        </ul>
+    </div>
+
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Finance checks',subTitle=${model.projectName},size='heading-xlarge'" />
 
     <th:block th:if="${model.isApproved()}">
@@ -33,16 +44,6 @@
     <h2 class="heading-medium">Queries</h2>
 
     <p>Any queries we raise will appear here, with the most recent queries first. You can upload files to support your answers if necessary.</p>
-
-    <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}">
-        <h2 class="heading-medium error-summary-heading">There was a problem saving your response.</h2>
-        Please review
-        <ul class="error-summary-list">
-            <th:block th:each="err : ${nonFormErrors}">
-                <li th:each="errMsg : ${err.codes}" th:text="#{${errMsg}}"></li>
-            </th:block>
-        </ul>
-    </div>
 
     <ul>
         <li th:each="query : ${model.getQueries()}">

@@ -57,7 +57,7 @@ Initial details: client-side validations
     Then the user should not see the error any more    Please select a competition type.
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     Then the user should not see the error any more    Please select an innovation sector.
-    When the user selects the option from the drop-down menu    Advanced therapies    id=innovationAreaCategoryId-0
+    When the user selects the option from the drop-down menu    Advanced therapies    css=[id="innovationAreaCategoryIds[0]"]
     Then the user should not see the error any more    Please select an innovation area.
     When the user enters text to a text field    id=openingDateDay    01
     #Then the user should not see the error any more    Please enter an opening day.
@@ -111,9 +111,9 @@ Funding information client-side validations
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
     Then the user should not see the error any more    Please generate a competition code.
-    When the user enters text to a text field    id=funders0.funder    FunderName
+    When the user enters text to a text field    id=funders[0].funder    FunderName
     Then the user should not see the error any more    Please enter a funder name.
-    And the user enters text to a text field    id=0-funderBudget    20000
+    And the user enters text to a text field    id=funders[0].funderBudget    20000
     And the user enters text to a text field    id=pafNumber    2016
     And the user enters text to a text field    id=budgetCode    2004
     And the user enters text to a text field    id=activityCode    4242
@@ -387,9 +387,9 @@ the user should see the correct values in the initial details form
     page should contain    John Doe
 
 the user should see the correct details in the funding information form
-    ${input_value} =    Get Value    id=funders0.funder
+    ${input_value} =    Get Value    id=funders[0].funder
     Should Be Equal    ${input_value}    FunderName
-    ${input_value} =    Get Value    id=0-funderBudget
+    ${input_value} =    Get Value    id=funders[0].funderBudget
     Should Be Equal As Strings    ${input_value}    20000
     ${input_value} =    Get Value    id=pafNumber
     Should Be Equal As Strings    ${input_value}    2016
@@ -448,7 +448,7 @@ The user enters valid data in the initial details
     Given the user enters text to a text field    id=title    Validations Test
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced therapies    id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu    Advanced therapies    css=[id="innovationAreaCategoryIds[0]"]
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
