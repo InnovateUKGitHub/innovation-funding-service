@@ -196,11 +196,11 @@ the applicant edits the Subcontracting costs section
     the user clicks the button/link    link=Your project costs
     the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
-    The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    2000
-    The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
-    The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    Romania
-    The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-role"]    Contractor
-    the user selects the checkbox    css=#agree-state-aid-page
+    The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[name^=subcontracting-subcontractingCost]    2000
+    The user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-name"]    Jackson Ltd
+    The user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-country-"]    Romania
+    The user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-role"]    Contractor
+    the user selects the checkbox      stateAidAgreed
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
 the user should see the correct finances change

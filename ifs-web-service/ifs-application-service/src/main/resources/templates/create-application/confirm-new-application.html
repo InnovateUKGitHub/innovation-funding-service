@@ -18,7 +18,7 @@
     </div>
     <div class="grid-row">
         <div class="column-full">
-            <form method="post" action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
 
                 <fieldset>
                     <legend class="visuallyhidden">Create a new application?</legend>

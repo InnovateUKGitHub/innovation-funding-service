@@ -222,7 +222,7 @@ public class ApplicationAjaxControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testSaveFormElementCostSubcontracting() throws Exception {
         String value = "123";
-        String questionId = "cost-subcontracting-13-subcontractingCost";
+        String questionId = "formInput[cost-subcontracting-13-subcontractingCost]";
 
         MvcResult result = mockMvc.perform(
                 post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
@@ -241,7 +241,7 @@ public class ApplicationAjaxControllerTest extends BaseControllerMockMVCTest<App
     @Test
     public void testSaveFormElementCostSubcontractingWithErrors() throws Exception {
         String value = "BOB";
-        String questionId = "cost-subcontracting-13-subcontractingCost";
+        String questionId = "formInput[cost-subcontracting-13-subcontractingCost]";
 
         MvcResult result = mockMvc.perform(
                 post("/application/" + application.getId().toString() + "/form/123/saveFormElement")

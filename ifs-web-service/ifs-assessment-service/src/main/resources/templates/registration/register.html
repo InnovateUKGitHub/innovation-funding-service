@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create assessor account'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create assessor account',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='assessment'">
@@ -12,11 +12,9 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
 
-            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-                <h2 class="heading-medium error-summary-heading">We were unable to create your account</h2>
-                <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
-                </ul>
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to create your account</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Create assessor account',size='heading-xlarge'" />
@@ -24,14 +22,14 @@
             <form th:action="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" method="post" th:object="${form}" novalidate="novalidate">
                 <h2 class="heading-medium">Your details</h2>
                 <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
-                    <label class="form-label" th:for="firstName">
+                    <label class="form-label" for="firstName">
                         <span class="form-label-bold">First name</span>
                         <th:block th:if="${#fields.hasErrors('firstName')}">
                               <span class="error-message"  th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></span>
                         </th:block>
                     </label>
                     <input class="form-control"
-                           th:errorclass="field-error"
+                           th:errorclass="form-control-error"
                            type="text"
                            th:field="*{firstName}"
                            required="required"
@@ -68,7 +66,7 @@
                 <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search', formHint='Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice.'"/>
 
                 <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')} ? 'form-group-error'">
-                    <label class="form-label" th:for="phoneNumber">
+                    <label class="form-label" for="phoneNumber">
                         <span class="form-label-bold">Phone number</span>
                         <span class="form-hint">We may use this to contact you about the application.</span>
                         <th:block th:if="${#fields.hasErrors('phoneNumber')}">
@@ -76,7 +74,7 @@
                         </th:block>
                     </label>
                     <input class="form-control"
-                           th:errorclass="field-error"
+                           th:errorclass="form-control-error"
                            type="tel"
                            th:field="*{phoneNumber}"
                            required="required"

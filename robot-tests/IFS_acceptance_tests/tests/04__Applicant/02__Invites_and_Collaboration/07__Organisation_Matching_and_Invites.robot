@@ -54,7 +54,7 @@ the user changes the application name
     the user clicks the button/link         link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link         jQuery=a:contains("Begin application")
     the user clicks the button/link         jQuery=a:contains("Application details")
-    the user enters text to a text field    id=application_details-title  ${application_name}
+    the user enters text to a text field    css=[id="application.name"]  ${application_name}
     the user clicks the button/link         jQuery=button:contains("Save and return to application overview")
 
 the user sees the application he was invited for on his dashboard
@@ -90,7 +90,7 @@ the user verifies account and starts his application
     the user clicks the button/link               link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link               link=Begin application
     the user clicks the button/link               link=Application details
-    the user enters text to a text field          application_details-title  ${email}'s Application
+    the user enters text to a text field          css=[id="application.name"]  ${email}'s Application
     the user clicks the button/link               jQuery=button:contains("Save and return to application overview")
 
 the user navigates to the Application Team Page

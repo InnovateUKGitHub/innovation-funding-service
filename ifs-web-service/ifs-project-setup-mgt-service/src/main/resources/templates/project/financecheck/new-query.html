@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Queries'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Queries',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
 <body class="query-form">
@@ -42,7 +42,7 @@
                        type="text"
                        class="form-control width-full"
                        required="required"
-                       th:errorclass="field-group-error"
+                       th:errorclass="form-control-error"
                        th:field="*{queryTitle}"
                        th:attr="maxlength=${model.maxTitleCharacters},
                                 data-required-errormessage=#{validation.field.must.not.be.blank},
