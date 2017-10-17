@@ -70,8 +70,6 @@ subprojects {
         }
 
         task buildDocker(type: DockerBuildImage, dependsOn: prepareDockerInput) {
-            dependsOn ":docker:oracle-jre:buildDocker"
-
             tag = "innovateuk/" + project.name.replaceAll(/ifs-/,"")+":latest"
             inputDir = project.file("$project.buildDir/docker")
         }
