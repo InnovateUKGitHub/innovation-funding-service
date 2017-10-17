@@ -25,18 +25,20 @@ public class OtherDocumentsViewModel implements BasicProjectDetailsViewModel {
     private boolean projectManager;
     private boolean submitAllowed;
     private ZonedDateTime submitDate;
+    private boolean collaborationAgreementRequired;
 
     public OtherDocumentsViewModel(Long projectId,
-                                          Long applicationId, String projectName,
-                                          FileDetailsViewModel collaborationAgreementFileDetails,
-                                          FileDetailsViewModel exploitationPlanFileDetails,
-                                          List<String> partnerOrganisationNames,
-                                          List<String> rejectionReasons,
-                                          boolean projectManager,
-                                          boolean otherDocumentsSubmitted,
-                                          ApprovalType otherDocumentsApproved,
-                                          boolean submitAllowed,
-                                          ZonedDateTime submitDate) {
+                                   Long applicationId, String projectName,
+                                   FileDetailsViewModel collaborationAgreementFileDetails,
+                                   FileDetailsViewModel exploitationPlanFileDetails,
+                                   List<String> partnerOrganisationNames,
+                                   List<String> rejectionReasons,
+                                   boolean projectManager,
+                                   boolean otherDocumentsSubmitted,
+                                   ApprovalType otherDocumentsApproved,
+                                   boolean submitAllowed,
+                                   ZonedDateTime submitDate,
+                                   boolean collaborationAgreementRequired) {
         this.projectId = projectId;
         this.applicationId = applicationId;
         this.projectName = projectName;
@@ -50,6 +52,7 @@ public class OtherDocumentsViewModel implements BasicProjectDetailsViewModel {
         this.projectManager = projectManager;
         this.submitAllowed = submitAllowed;
         this.submitDate = submitDate;
+        this.collaborationAgreementRequired = collaborationAgreementRequired;
     }
 
     public Long getProjectId() {
@@ -131,4 +134,8 @@ public class OtherDocumentsViewModel implements BasicProjectDetailsViewModel {
     public Long getApplicationId() {
         return applicationId;
     }
+
+    public boolean isCollaborationAgreementRequired() { return collaborationAgreementRequired; }
+
+    public void setCollaborationAgreementRequired(boolean collaborationAgreementRequired) { this.collaborationAgreementRequired = collaborationAgreementRequired; }
 }
