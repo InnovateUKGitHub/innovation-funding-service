@@ -18,7 +18,7 @@
             </div>
         </div>
     </div>
-    <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'queries'}, competitionId=${model.competitionId}, openQueryCount=${model.openQueryCount})" />
+    <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'queries'}, competitionId=${model.competitionId}, openQueryCount=${model.openQueryCount}, showAllTabs=${model.showTabs})" />
 
     <div class="grid-container constrain-width">
         <th:block th:if="${model.openQueries.size() > 0}">

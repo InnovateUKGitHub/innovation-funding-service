@@ -17,7 +17,7 @@
                 <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionProjectsStatusResource.competitionName},subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: Innovate UK|,size='heading-xlarge'" />
             </div>
         </div>
-        <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount})" />
+        <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount}, showAllTabs=${model.showTabs})" />
         <div th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
             <hr />
             <div class="warning-alert"><p>There are currently no active projects in this competition.</p></div>

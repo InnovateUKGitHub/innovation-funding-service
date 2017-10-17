@@ -10,6 +10,7 @@ import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionStatusVie
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,18 +58,20 @@ public class CompetitionStatusController {
         model.addAttribute("model",
                 new PopulatedCompetitionStatusViewModel(statusRestService.getCompetitionStatus(competitionId).getSuccessObjectOrThrowException(),
                         loggedInUser,
-                        competitionsRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException()).get());
+                        loggedInUser.hasRole(UserRoleType.PROJECT_FINANCE) ? competitionsRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException() : 0L,
+                        loggedInUser.hasRole(UserRoleType.PROJECT_FINANCE)).get());
         return "project/competition-status-all";
     }
 
     @GetMapping("/queries")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
+    @PreAuthorize("hasAnyAuthority('project_finance')")
     public String viewCompetitionStatusQueries(Model model, UserResource loggedInUser,
                                               @PathVariable Long competitionId) {
         model.addAttribute("model",
                 new CompetitionOpenQueriesViewModel(competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException(),
                         competitionsRestService.getCompetitionOpenQueries(competitionId).getSuccessObjectOrThrowException(),
-                        competitionsRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException()));
+                        competitionsRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException(),
+                        true));
         return "project/competition-status-queries";
     }
 
