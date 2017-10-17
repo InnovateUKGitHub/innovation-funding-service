@@ -25,7 +25,7 @@ public interface AssessmentPanelParticipantRepository extends PagingAndSortingRe
     String BY_COMP_AND_STATUS_ON_PANEL = "SELECT assessmentPanelParticipant " +
             "FROM AssessmentPanelParticipant assessmentPanelParticipant " +
             "WHERE assessmentPanelParticipant.competition.id = :competitionId " +
-            "AND assessmentPanelParticipant.role = 'ASSESSOR' " +
+            "AND assessmentPanelParticipant.role = 'PANEL_ASSESSOR' " +
             "AND assessmentPanelParticipant.status IN :status " +
             "AND assessmentPanelParticipant.user.id IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
 

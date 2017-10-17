@@ -70,7 +70,7 @@ public class AssessmentPanelParticipant extends Participant<Competition, Assessm
         this.user = invite.getUser();
         this.competition = invite.getTarget();
         this.invite = invite;
-        this.role = CompetitionParticipantRole.ASSESSOR;
+        this.role = CompetitionParticipantRole.PANEL_ASSESSOR;
     }
 
     @Override

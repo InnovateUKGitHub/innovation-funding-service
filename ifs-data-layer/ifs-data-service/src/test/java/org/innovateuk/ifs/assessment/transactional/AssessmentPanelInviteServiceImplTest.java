@@ -61,7 +61,7 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResource
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
@@ -766,7 +766,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
             assertNull(assessmentPanelParticipant.getId());
             assertEquals(assessmentPanelInvite.getTarget(), assessmentPanelParticipant.getProcess());
             assertEquals(assessmentPanelInvite, assessmentPanelParticipant.getInvite());
-            assertEquals(ASSESSOR, assessmentPanelParticipant.getRole());
+            assertEquals(PANEL_ASSESSOR, assessmentPanelParticipant.getRole());
             assertEquals(assessmentPanelInvite.getUser(), assessmentPanelParticipant.getUser());
         });
     }

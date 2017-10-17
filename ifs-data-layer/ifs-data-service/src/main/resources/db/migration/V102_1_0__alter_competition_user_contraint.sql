@@ -11,3 +11,6 @@ ALTER TABLE competition_user ADD CONSTRAINT UK_role_user_competition UNIQUE (
 ALTER TABLE competition_user
 ADD CONSTRAINT competition_user_to_competition_fk
 FOREIGN KEY (competition_id) REFERENCES competition(id);
+
+ALTER TABLE competition_user MODIFY competition_role ENUM('ASSESSOR', 'INNOVATION_LEAD', 'PANEL_ASSESSOR') NOT NULL;
+

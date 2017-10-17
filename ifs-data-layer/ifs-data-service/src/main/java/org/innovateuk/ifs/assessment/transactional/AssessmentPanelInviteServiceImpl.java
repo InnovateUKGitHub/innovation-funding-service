@@ -62,7 +62,6 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteService {
 
     private static final String WEB_CONTEXT_DASHBOARD = "/assessment/assessor/dashboard";
-    private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
     private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
     
     @Autowired
