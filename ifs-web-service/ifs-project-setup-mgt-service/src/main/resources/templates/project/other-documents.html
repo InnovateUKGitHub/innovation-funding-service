@@ -22,11 +22,21 @@
         <hr/>
 
         <div class="success-alert" th:if="${model.isApproved()}">
-            <p class="heading-small no-margin-top">The documents provided have been approved.</p>
+            <th:block th:if="${model.collaborationAgreementRequired}">
+                <p class="heading-small no-margin-top">The documents provided have been approved.</p>
+            </th:block>
+            <th:block th:unless="${model.collaborationAgreementRequired}">
+                <p class="heading-small no-margin-top">The document provided has been approved.</p>
+            </th:block>
         </div>
 
         <div class="warning-alert" th:if="${model.isRejected()}">
-            <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+            <th:block th:if="${model.collaborationAgreementRequired}">
+                <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+            </th:block>
+            <th:block th:unless="${model.collaborationAgreementRequired}">
+                <p class="heading-small no-margin-top">This document has been reviewed and rejected. We have returned it to the Project Manager.</p>
+            </th:block>
         </div>
 
         <h2 class="heading-medium" th:text="${model.applicationId} + ': ' + ${model.projectName} "/>
@@ -48,11 +58,13 @@
             </th:block>
         </p>
 
-        <th:block th:if="${(model.collaborationAgreementFileDetails != null) and (model.exploitationPlanFileDetails != null)}">
+        <th:block th:if="${(!(model.collaborationAgreementRequired) or model.collaborationAgreementFileDetails != null) and model.exploitationPlanFileDetails != null}">
 
-            <h2 class="heading-medium">Collaboration agreement</h2>
-            <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
-             class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
+            <th:block th:if="${model.collaborationAgreementRequired}">
+                <h2 class="heading-medium">Collaboration agreement</h2>
+                <a th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
+                class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
+            </th:block>
 
             <h2 class="heading-medium">Exploitation plan</h2>
             <a th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}"
@@ -60,13 +72,24 @@
              th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
 
             <th:block th:if="${model.isShowApproveRejectButtons()}">
-                <h2 class="heading-medium">Review documents</h2>
-                <p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
-                <button data-js-modal="modal-accept-docs" class="button">Accept documents</button>
-                <button data-js-modal="modal-reject-docs" class="button button-warning">Reject documents</button>
-                <th:block th:insert="fragments/modals :: modal-overlay" />
-                <th:block th:insert="fragments/modals :: modal-accept-docs" />
-                <th:block th:insert="fragments/modals :: modal-reject-docs" />
+                <th:block th:if="${model.collaborationAgreementRequired}">
+                    <h2 class="heading-medium">Review documents</h2>
+                    <p>Please review the content of the documents to ensure they meet Innovate UK's requirements.</p>
+                    <button data-js-modal="modal-accept-docs" class="button">Accept documents</button>
+                    <button data-js-modal="modal-reject-docs" class="button button-warning">Reject documents</button>
+                    <th:block th:insert="fragments/modals :: modal-overlay" />
+                    <th:block th:insert="fragments/modals :: modal-accept-docs" />
+                    <th:block th:insert="fragments/modals :: modal-reject-docs" />
+                </th:block>
+                <th:block th:unless="${model.collaborationAgreementRequired}">
+                    <h2 class="heading-medium">Review document</h2>
+                    <p>Please review the content of the document to ensure it meets Innovate UK's requirements.</p>
+                    <button data-js-modal="modal-accept-doc" class="button">Accept document</button>
+                    <button data-js-modal="modal-reject-doc" class="button button-warning">Reject document</button>
+                    <th:block th:insert="fragments/modals :: modal-overlay" />
+                    <th:block th:insert="fragments/modals :: modal-accept-doc" />
+                    <th:block th:insert="fragments/modals :: modal-reject-doc" />
+                </th:block>
             </th:block>
 
         </th:block>
