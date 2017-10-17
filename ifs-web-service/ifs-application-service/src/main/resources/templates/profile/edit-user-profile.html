@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your details',hasFormErrors=${#fields.hasErrors('${userDetailsForm.*}')}" />
 </head>
 <body th:with="context='applicant'" class="user-profile-edit">
 
@@ -13,17 +13,13 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Profile',linkClass='link-back',linkUrl=@{/profile/view}" />
 
-    <div class="error-summary" th:if="${#fields.hasErrors('${userDetailsForm.*}')}">
-        <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.errors('${userDetailsForm.*}')}" th:text="${err}"></li>
-        </ul>
+    <div th:if="${#fields.hasErrors('${userDetailsForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We were unable to save your changes</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(userDetailsForm)" />
     </div>
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Your details',size='heading-xlarge'" />
-    <form th:action="${userDetailsForm.getActionUrl()}" method="post" th:object="${userDetailsForm}">
-        <fieldset>
-            <legend class="visuallyhidden">Your details</legend>
+    <form th:action="${userDetailsForm.getActionUrl()}" method="post" th:object="${userDetailsForm}" novalidate="novalidate">
             <div class="form-group" th:classappend="${#fields.hasErrors('firstName')} ? 'form-group-error'">
                 <label class="form-label" for="firstName">
                     <span class="form-label-bold">First name</span>
@@ -85,17 +81,16 @@
                                 data-required-errormessage=#{validation.standard.phonenumber.required}" />
             </div>
             <div class="form-group">
-                <h3 class="heading-small">Email</h3>
+                <div class="heading-small">Email</div>
                 <p class="form-hint">Your email address cannot be changed in the system <br /><strong th:text="*{email}" /></p>
             </div>
             <p>To change your email address please contact Innovate UK by emailing <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a></p>
             <div class="form-group" th:classappend="${#fields.hasErrors('allowMarketingEmails')} ? 'form-group-error'">
                 <div class="multiple-choice">
-                    <input id="allow-marketing-emails" th:field="*{allowMarketingEmails}" type="checkbox" value="yes"/>
-                    <label for="allow-marketing-emails">Email me competition updates, events, deadlines and announcements.</label>
+                    <input id="allowMarketingEmails" th:field="*{allowMarketingEmails}" type="checkbox" value="yes"/>
+                    <label for="allowMarketingEmails">Email me competition updates, events, deadlines and announcements.</label>
                 </div>
             </div>
-        </fieldset>
         <button class="button button-large extra-margin" name="create-account" type="submit">Save changes</button>
     </form>
     <th:block th:insert="fragments/layout :: main-content-end" />

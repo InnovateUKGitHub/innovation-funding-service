@@ -1,6 +1,11 @@
 
 <!-- =================== Comp setup section - Eligibility (3) ============================== -->
 <th:block th:fragment="section-content">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
+    </div>
+
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Eligibility',size='heading-xlarge'" />
 
     <form th:action="@{(${model.general.editable} ? '' : 'eligibility/edit')}" method="post"
@@ -8,13 +13,11 @@
           th:attr="data-competition=${model.general.competition.id}"
           th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="eligibility">
 
-        <fieldset th:if="${model.general.editable}" id="section-3-edit">
-
-            <legend class="visuallyhidden">Eligibility</legend>
+        <th:block th:if="${model.general.editable}">
             <input type="hidden" th:field="*{multipleStream}" />
             <div class="form-group" th:classappend="${#fields.hasErrors('singleOrCollaborative')} ? 'form-group-error'">
                 <fieldset>
-                    <legend>
+                    <legend id="singleOrCollaborative">
                         <span class="form-label-bold">Please choose the project type.</span>
                         <th:block th:if="${#fields.hasErrors('singleOrCollaborative')}">
                               <span class="error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}"></span>
@@ -38,7 +41,7 @@
 
             <div class="form-group" th:classappend="${#fields.hasErrors('researchCategoryId')} ? 'form-group-error'">
                 <fieldset>
-                    <legend>
+                    <legend id="researchCategoryId">
                         <span class="form-label-bold">Please choose the research categories.</span>
                         <th:block th:if="${#fields.hasErrors('researchCategoryId')}">
                               <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}"></span>
@@ -61,7 +64,7 @@
 
             <div class="form-group" th:classappend="${#fields.hasErrors('leadApplicantTypes')} ? 'form-group-error'">
                 <fieldset>
-                    <legend>
+                    <legend id="leadApplicantTypes">
                        <span class="form-label-bold">Lead applicant</span>
                        <span class="hint">Select the lead applicant type required.</span>
                        <th:block th:if="${#fields.hasErrors('leadApplicantTypes')}">
@@ -84,7 +87,7 @@
 
             <div class="form-group" th:classappend="${#fields.hasErrors('researchParticipationAmountId')} ? 'form-group-error'">
                 <fieldset class="inline">
-                    <legend>
+                    <legend id="researchParticipationAmountId">
                         <span class="form-label-bold">Research participation</span>
                         <span class="hint">This indicates the maximum level of research participation allowed.</span>
                         <th:block th:if="${#fields.hasErrors('researchParticipationAmountId')}">
@@ -103,7 +106,7 @@
 
             <div class="form-group" th:classappend="${#fields.hasErrors('resubmission')} ? 'form-group-error'">
                 <fieldset class="inline">
-                    <legend>
+                    <legend id="resubmission">
                         <span class="form-label-bold">Are resubmissions allowed?</span>
                         <span class="hint">Are applicants able to resubmit an application?</span>
                         <th:block th:if="${#fields.hasErrors('resubmission')}">
@@ -136,9 +139,9 @@
             </div>
 
             <button class="button">Done</button>
-        </fieldset>
+        </th:block>
 
-        <fieldset th:unless="${model.general.editable}" id="section-3-">
+        <th:block th:if="${!model.general.editable}">
 
             <dl class="standard-definition-list">
                 <!-- INFUND-5682 : Competition streams options have been hidden rather than removed, since they will be required when new competition types are added -->
@@ -170,7 +173,7 @@
             </dl>
 
             <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
-        </fieldset>
+        </th:block>
 
     </form>
     <ul class="pagination">

@@ -17,4 +17,4 @@ ADD newrelic.yml /
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
 ADD ifs-data-service-@version@.jar app.jar
 
-ENTRYPOINT exec java $JAVA_OPTS $JMX_OPTS -jar app.jar
+ENTRYPOINT exec java -Dfile.encoding=UTF8 $JAVA_OPTS $JMX_OPTS -jar app.jar

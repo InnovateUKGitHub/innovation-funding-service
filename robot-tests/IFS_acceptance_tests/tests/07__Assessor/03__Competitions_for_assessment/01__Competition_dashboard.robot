@@ -140,7 +140,7 @@ Comp admin can see the application is rejected on manage assessment page
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
-    Select From List By Index                                   id=rejectReason    2
+    Select From List By Index                                   id=rejectReasonValid    2
     The user should not see the text in the page                Please enter a reason
     the user enters multiple strings into a text field          id=rejectComment  a${SPACE}  102
     The user should see an error                                Maximum word count exceeded. Please reduce your word count to 100.
