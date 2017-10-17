@@ -153,7 +153,6 @@ ${project_address_page}                 ${project_in_setup_details_page}/project
 ${internal_competition_status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 ${notified_application_competition_status}   ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
 
-
 #Bank details
 ${account_one}   51406795
 ${sortCode_one}  404745
@@ -299,7 +298,7 @@ project finance approves other documents
     log in as a different user       &{internal_finance_credentials}
     the user navigates to the page   ${SERVER}/project-setup-management/project/${project}/partner/documents
     the user clicks the button/link  jQuery=.button:contains("Accept documents")
-    the user clicks the button/link  jQuery=.modal-accept-docs .button:contains("Accept Documents")
+    the user clicks the button/link  jQuery=.modal-accept-docs .button:contains("Accept documents")
 
 project finance generates the Spend Profile
     [Arguments]  ${lead}  ${partner}  ${academic_partner}  ${project}
