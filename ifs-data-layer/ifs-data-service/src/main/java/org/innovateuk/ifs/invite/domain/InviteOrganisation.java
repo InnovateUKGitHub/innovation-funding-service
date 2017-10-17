@@ -21,7 +21,7 @@ public class InviteOrganisation {
 
     private String organisationName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "organisationId", referencedColumnName = "id")
     private Organisation organisation;
 

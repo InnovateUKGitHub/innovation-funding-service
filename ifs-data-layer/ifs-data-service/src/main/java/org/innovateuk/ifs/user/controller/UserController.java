@@ -9,6 +9,7 @@ import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -29,6 +30,7 @@ import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.externalRoles;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -44,6 +46,8 @@ public class UserController {
     private static final String DEFAULT_PAGE_NUMBER = "0";
 
     private static final String DEFAULT_PAGE_SIZE = "40";
+
+    private static final String DEFAULT_PAGE_SIZE_UNLIMITED = "0";
 
     @Autowired
     private BaseUserService baseUserService;
@@ -113,6 +117,11 @@ public class UserController {
     @GetMapping("/findAll/")
     public RestResult<List<UserResource>> findAll() {
         return baseUserService.findAll().toGetResponse();
+    }
+
+    @GetMapping("/findAllExternal")
+    public RestResult<List<UserOrganisationResource>> findAllExternal() {
+        return userService.findAllByProcessRoles(externalRoles()).toGetResponse();
     }
 
     @GetMapping("/findByEmail/{email}/")

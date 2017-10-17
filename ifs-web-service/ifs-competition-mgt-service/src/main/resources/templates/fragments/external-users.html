@@ -1,0 +1,32 @@
+<th:block th:fragment="all-users(users)" xmlns:th="http://www.w3.org/1999/html">
+    <p>
+        <span class="heading-xlarge no-margin" th:text="${users.size()}">38</span>
+        <span class="heading-small">users with IFS account</span>
+    </p>
+    <th:block th:insert="fragments/external-users :: users-table(users=${users})" />
+</th:block>
+
+<th:block th:fragment="users-table(users)" xmlns:th="http://www.w3.org/1999/html">
+    <div class="table-overflow">
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Organisation name</th>
+                <th scope="col">Organisation ID</th>
+                <th scope="col">Email</th>
+                <th scope="col">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td><a th:text="${user.userResource.name}">Steve Smith</a></td>
+                <td><a th:text="${user.organisationName}">Empire Limited</a></td>
+                <td><a th:text="${user.organisationId}">10</a></td>
+                <td><a th:text="${user.userResource.email}">steve.smith@empire.com</a></td>
+                <td><a th:text="${user.userResource.status.displayName}">Verified</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>

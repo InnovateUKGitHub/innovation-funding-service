@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
+import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -10,15 +11,14 @@ import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.transactional.UserTransactionalService;
+import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -83,6 +83,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Autowired
     private EthnicityMapper ethnicityMapper;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
@@ -220,7 +223,21 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(userResources), pagedResult.getNumber(), pagedResult.getSize()));
     }
 
+    @Override
+    public ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes) {
+        List<User> users = userRepository.findByRolesNameIn(roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()));
+        List<UserOrganisationResource> userResources = simpleMap(users, user -> {
+            List<Organisation> organisations = organisationRepository.findByUsersId(user.getId());
+            return new UserOrganisationResource(userMapper.mapToResource(user), organisations.get(0).getId(), organisations.get(0).getName());
+        });
+        return serviceSuccess(sortByUserName(userResources));
+    }
+
     private List<UserResource> sortByName(List<UserResource> userResources) {
         return userResources.stream().sorted(Comparator.comparing(userResource -> userResource.getName().toUpperCase())).collect(Collectors.toList());
+    }
+
+    private List<UserOrganisationResource> sortByUserName(List<UserOrganisationResource> userOrganisationResources) {
+        return userOrganisationResources.stream().sorted(Comparator.comparing(uor -> uor.getUserResource().getName().toUpperCase())).collect(Collectors.toList());
     }
 }

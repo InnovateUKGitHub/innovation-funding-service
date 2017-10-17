@@ -13,11 +13,11 @@ import javax.persistence.*;
 @DiscriminatorValue("APPLICATION")
 public class ApplicationInvite extends Invite<Application, ApplicationInvite> {
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application application;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "owner_id", referencedColumnName = "id")
     private InviteOrganisation inviteOrganisation;
 

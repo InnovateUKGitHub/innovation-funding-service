@@ -8,9 +8,14 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
 import org.innovateuk.ifs.invite.mapper.RoleInviteMapper;
+import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.invite.repository.InviteProjectRepository;
 import org.innovateuk.ifs.invite.repository.InviteRoleRepository;
+import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -20,30 +25,29 @@ import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.mapper.RoleMapper;
-import org.innovateuk.ifs.user.repository.RoleRepository;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -55,10 +59,13 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 public class InviteUserServiceImpl extends BaseTransactionalService implements InviteUserService {
 
     @Autowired
-    private RoleRepository roleRepository;
+    private InviteRoleRepository inviteRoleRepository;
 
     @Autowired
-    private InviteRoleRepository inviteRoleRepository;
+    private InviteProjectRepository inviteProjectRepository;
+
+    @Autowired
+    private ApplicationInviteRepository applicationInviteRepository;
 
     @Autowired
     private RoleInviteMapper roleInviteMapper;
@@ -99,7 +106,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 .andOnSuccess(() -> validateUserNotAlreadyInvited(invitedUser))
                 .andOnSuccess(() -> getRole(adminRoleType))
                 .andOnSuccess(role -> saveInvite(invitedUser, role))
-                .andOnSuccess(roleInvite -> inviteInternalUser(roleInvite));
+                .andOnSuccess(this::inviteInternalUser);
     }
 
     private ServiceResult<Void> validateInvite(UserResource invitedUser, UserRoleType adminRoleType) {
@@ -145,7 +152,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                 invitedUser.getEmail(),
                 generateInviteHash(),
                 role,
-                InviteStatus.CREATED);
+                CREATED);
 
         RoleInvite invite = inviteRoleRepository.save(roleInvite);
 
@@ -218,11 +225,40 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     @Override
     public ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable) {
-
         Page<RoleInvite> pagedResult = inviteRoleRepository.findByStatus(InviteStatus.SENT, pageable);
         List<RoleInviteResource> roleInviteResources = simpleMap(pagedResult.getContent(), roleInvite -> roleInviteMapper.mapToResource(roleInvite));
-
         return serviceSuccess(new RoleInvitePageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(roleInviteResources), pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    @Override
+    public ServiceResult<List<ExternalInviteResource>> getExternalInvites() {
+        return find(() -> serviceSuccess(applicationInviteRepository.findByStatusIn(EnumSet.of(CREATED, SENT))), () -> serviceSuccess(inviteProjectRepository.findByStatusIn(EnumSet.of(CREATED, SENT))))
+                .andOnSuccess((appInvites, prjInvites) ->
+                        serviceSuccess(Stream.concat(
+                                getApplicationInvitesAsExternalInviteResource(appInvites).stream(),
+                                getProjectInvitesAsExternalInviteResource(prjInvites).stream()).collect(Collectors.toList()))
+                );
+    }
+
+    private List<ExternalInviteResource> getApplicationInvitesAsExternalInviteResource(List<ApplicationInvite> appInvites){
+        return appInvites.stream().map(appInvite -> new ExternalInviteResource(
+                appInvite.getName(),
+                appInvite.getInviteOrganisation().getOrganisationName(),
+                appInvite.getInviteOrganisation().getOrganisation() != null ? appInvite.getInviteOrganisation().getOrganisation().getId().toString() : "new",
+                appInvite.getEmail(),
+                appInvite.getTarget().getId(),
+                appInvite.getStatus())).collect(Collectors.toList());
+    }
+
+    private List<ExternalInviteResource> getProjectInvitesAsExternalInviteResource(List<ProjectInvite> prjInvites){
+        return prjInvites.stream().map(projectInvite ->
+                new ExternalInviteResource(
+                        projectInvite.getName(),
+                        projectInvite.getOrganisation().getName(),
+                        projectInvite.getOrganisation().getId().toString(),
+                        projectInvite.getEmail(),
+                        projectInvite.getTarget().getApplication().getId(),
+                        projectInvite.getStatus())).collect(Collectors.toList());
     }
 
     private List<RoleInviteResource> sortByName(List<RoleInviteResource> roleInviteResources) {
