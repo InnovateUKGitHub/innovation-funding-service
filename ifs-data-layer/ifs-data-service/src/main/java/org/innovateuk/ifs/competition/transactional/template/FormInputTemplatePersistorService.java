@@ -46,6 +46,7 @@ public class FormInputTemplatePersistorService implements BaseChainedTemplatePer
             // Extract the validators into a new Set as the hibernate Set contains persistence information which alters
             // the original FormValidator
             Set<FormValidator> copy = new HashSet<>(formInput.getFormValidators());
+
             entityManager.detach(formInput);
             formInput.setCompetition(question.getCompetition());
             formInput.setQuestion(question);

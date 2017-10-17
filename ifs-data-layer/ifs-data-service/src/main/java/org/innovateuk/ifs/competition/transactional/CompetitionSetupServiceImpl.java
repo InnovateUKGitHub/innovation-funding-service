@@ -3,9 +3,7 @@ package org.innovateuk.ifs.competition.transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.AssessorCountOption;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionTypeMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
@@ -29,7 +27,6 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -213,36 +210,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Override
     @Transactional
     public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
-
-        CompetitionType competitionType = competitionTypeRepository.findOne(competitionTypeId);
-        Competition template = competitionType.getTemplate();
-
-        Competition competition = competitionRepository.findById(competitionId);
-        competition.setCompetitionType(competitionType);
-        competition = setDefaultAssessorPayAndCount(competition);
-        return competitionSetupTemplateService.createCompetitionByCompetitionTemplate(competition, template)
+        return competitionSetupTemplateService.createCompetitionByCompetitionTemplate(competitionId, competitionTypeId)
                 .andOnSuccess(() -> serviceSuccess());
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId) {
-        Competition template = competitionRepository.findById(templateId);
-        Competition competition = competitionRepository.findById(competitionId);
-        return competitionSetupTemplateService.createCompetitionByCompetitionTemplate(competition, template)
-                .andOnSuccess(() -> serviceSuccess());
-    }
-
-    private Competition setDefaultAssessorPayAndCount(Competition competition) {
-        if (competition.getAssessorCount() == null) {
-            Optional<AssessorCountOption> defaultAssessorOption = assessorCountOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
-            defaultAssessorOption.ifPresent(assessorCountOption -> competition.setAssessorCount(assessorCountOption.getOptionValue()));
-        }
-
-        if (competition.getAssessorPay() == null) {
-            competition.setAssessorPay(DEFAULT_ASSESSOR_PAY);
-        }
-        return competition;
     }
 
     private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {

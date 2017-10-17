@@ -52,10 +52,6 @@ public interface CompetitionSetupService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId);
 
-    @SecuredBySpring(value = "CREATE", description = "Only those with either comp admin or project finance roles can copy from a competition template")
-    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId);
-
     @SecuredBySpring(value = "CREATE", description = "Only those with either comp admin or project finance roles can create a non IFS competition")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<CompetitionResource> createNonIfs();

@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
  */
 public interface CompetitionSetupTemplateService {
     @NotSecured(value = "Service creates template copies for other services. The calling services should be secured.")
-    ServiceResult<Competition> createCompetitionByCompetitionTemplate(Competition competition, Competition template);
+    ServiceResult<Competition> createCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId);
 
     @NotSecured(value = "Service creates template copies for other services. The calling services should be secured.")
     ServiceResult<Question> createDefaultForApplicationSection(Competition competition);

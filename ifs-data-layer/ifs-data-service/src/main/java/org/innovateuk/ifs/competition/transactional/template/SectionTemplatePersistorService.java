@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
+import org.hibernate.Hibernate;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -26,22 +27,33 @@ public class SectionTemplatePersistorService implements BaseChainedTemplatePersi
     private EntityManager entityManager;
 
     @Transactional
-    public List<Section> persistByPrecedingEntity(Competition competition) {
-        if (competition.getSections() == null) {
+    public List<Section> persistByPrecedingEntity(Competition template) {
+        if (template.getSections() == null) {
             return null;
         }
 
-        List<Section> sectionsWithoutParentSections = competition.getSections().stream()
+        List<Section> sectionsWithoutParentSections = template.getSections().stream()
                 .filter(s -> s.getParentSection() == null)
                 .collect(Collectors.toList());
 
-        new ArrayList<>(sectionsWithoutParentSections).forEach(section -> createChildSectionsRecursively(competition, section));
+        new ArrayList<>(sectionsWithoutParentSections).forEach(section -> createChildSectionsRecursively(template, section));
 
         return sectionsWithoutParentSections;
     }
 
-    private List<Section> createChildSectionsRecursively(Competition competition, Section parentSection) {
-        return parentSection.getChildSections().stream().map(section -> createChildSectionRecursively(competition, section).apply(section)).collect(Collectors.toList());
+    private List<Section> createChildSectionsRecursively(Competition competition, Section parentSectionTemplate) {
+
+
+        Hibernate.initialize(parentSectionTemplate.getChildSections());
+
+        entityManager.detach(parentSectionTemplate);
+        parentSectionTemplate.setCompetition(competition);
+        parentSectionTemplate.setId(null);
+
+        Section savedParentSection = sectionRepository.save(parentSectionTemplate);
+        parentSectionTemplate.setId(savedParentSection.getId());
+
+        return savedParentSection.getChildSections().stream().map(section -> createChildSectionRecursively(competition, savedParentSection).apply(section)).collect(Collectors.toList());
     }
 
     private Function<Section, Section> createChildSectionRecursively(Competition competition, Section parentSection) {
@@ -49,19 +61,13 @@ public class SectionTemplatePersistorService implements BaseChainedTemplatePersi
             entityManager.detach(section);
             section.setCompetition(competition);
             section.setId(null);
+            section.setParentSection(parentSection);
             sectionRepository.save(section);
-            if (!competition.getSections().contains(section)) {
-                competition.getSections().add(section);
-            }
 
-            section.setQuestions(questionTemplatePersistorServiceService.persistByPrecedingEntity(section));
+            questionTemplatePersistorServiceService.persistByPrecedingEntity(section);
 
             createChildSectionsRecursively(competition, section);
 
-            section.setParentSection(parentSection);
-            if (!parentSection.getChildSections().contains(section) || parentSection.getChildSections() == null || parentSection != null) {
-                parentSection.getChildSections().add(section);
-            }
             return section;
         };
     }

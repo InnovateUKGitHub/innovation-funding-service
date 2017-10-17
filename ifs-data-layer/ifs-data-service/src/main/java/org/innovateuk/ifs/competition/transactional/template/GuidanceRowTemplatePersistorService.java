@@ -38,6 +38,8 @@ public class GuidanceRowTemplatePersistorService implements BaseChainedTemplateP
 
     public void cleanForPrecedingEntity(FormInput formInput) {
         List<GuidanceRow> scoreRows = formInput.getGuidanceRows();
-        guidanceRowRepository.delete(scoreRows);
+        if(scoreRows.size() > 0) {
+            guidanceRowRepository.delete(scoreRows);
+        }
     }
 }

@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 /**
  * Transactional service providing functions for creating full or partial copies of competition templates.
  */
@@ -17,18 +20,26 @@ public class CompetitionTemplatePersistorService implements BaseTemplatePersisto
     @Autowired
     private CompetitionRepository competitionRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     public void cleanByEntityId(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
-        sectionTemplateService.cleanForPrecedingEntity(competition);
+        // Disabled clean for now as it was causing problems and have to see if we even need it.
+        //sectionTemplateService.cleanForPrecedingEntity(competition);
     }
 
     @Override
     @Transactional
     public Competition persistByEntity(Competition template) {
+        entityManager.detach(template);
+
+        Competition competition = competitionRepository.save(template);
+        template.setId(competition.getId());
         sectionTemplateService.persistByPrecedingEntity(template);
 
         template.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
 
-        return competitionRepository.save(template);
+        return competition;
     }
 }
