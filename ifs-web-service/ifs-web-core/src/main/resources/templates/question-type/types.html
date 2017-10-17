@@ -170,8 +170,8 @@
                 <label for="application.name">
                     <span class="form-label form-label-bold">Application title</span>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint='Enter the full title of your proposed project.')" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.name')" />
                 </label>
-                <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.name')" />
                 <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
                 <input class="form-control width-full"
                      type="text"
