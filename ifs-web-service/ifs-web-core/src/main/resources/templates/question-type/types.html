@@ -193,14 +193,14 @@
                 </fieldset>
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.durationInMonths__}')} ? 'form-group-error'">
-                <label for="application.durationInMonths">
+                <label for="application.durationInMonths" class="form-label">
                     <span>Duration in months</span>
+                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')"  />
                 </label>
-                <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')"  />
                 <input class="form-control width-extra-small"
                        id="application.durationInMonths"
                        th:field="*{__application.durationInMonths__}"
-                       th:errorclass="field-error"
+                       th:errorclass="form-control-error"
                        type="text"
                        pattern="^([1-9]|0[1-9]|[1-2][0-9]|3[0-6])$"
                        required="required"
