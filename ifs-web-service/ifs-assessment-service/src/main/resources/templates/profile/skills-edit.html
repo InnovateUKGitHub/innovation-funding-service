@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit your skills'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit your skills',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='assessment'">
@@ -12,11 +12,9 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Your skills',linkClass='link-back',linkUrl=@{/profile/skills}" />
 
-            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-                <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
-                <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
-                </ul>
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit your skills',size='heading-xlarge'" />
@@ -36,12 +34,12 @@
                 </th:block>
             </ul>
 
-            <form th:action="@{/profile/skills/edit}" method="post" th:object="${form}" class="extra-margin">
+            <form th:action="@{/profile/skills/edit}" method="post" th:object="${form}" class="extra-margin" novalidate="novalidate">
                 <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')} ? 'form-group-error'">
                     <label class="form-label" th:for="skillAreas">
                         <span class="heading-medium">Skill areas</span>
                         <th:block th:if="${#fields.hasErrors('skillAreas')}">
-                            <span class="error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}" />
+                            <span class="error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}"></span>
                         </th:block>
                     </label>
                     <p class="form-hint">
@@ -67,7 +65,7 @@
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')} ? 'form-group-error'">
                     <fieldset>
-                        <legend>
+                        <legend id="assessorType">
                             <span class="heading-medium">Assessor type</span>
                             <th:block th:if="${#fields.hasErrors('assessorType')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />

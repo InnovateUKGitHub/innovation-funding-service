@@ -64,7 +64,8 @@ Enter address manually: Postcode Validations
     And the user clicks the button/link    jQuery=button:contains("Find UK address")
     And the user expands enter details manually
     And the user should see the element    css=.form-label .error-message
-    When the user enters text to a text field    id=addressForm.postcodeInput    BS14NT/
+    And the user moves focus to the element       css=[name="manual-address"]
+    And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT/
     And the user clicks the button/link    jQuery=button:contains("Find UK address")
     Then the user should see the element    id=addressForm.selectedPostcodeIndex
     When the user enters text to a text field    id=addressForm.postcodeInput    BS14NT\\
@@ -114,4 +115,3 @@ the backslash doesnt give errors
 the user expands enter details manually
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=summary:contains("Enter details manually")[aria-expanded="false"]
     run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=summary:contains("Enter details manually")[aria-expanded="false"]
-

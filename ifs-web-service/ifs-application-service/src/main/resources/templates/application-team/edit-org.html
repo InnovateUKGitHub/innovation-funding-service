@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Update ' + ${model.organisationName}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Update ${model.organisationName}|,hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body class="app-org-invite" th:with="context='applicant'">
@@ -13,11 +13,9 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{applicationId}/team(applicationId=${model.applicationId})}" />
 
-            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-                <h2 class="heading-medium error-summary-heading">We are unable to send the invites out</h2>
-                <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
-                </ul>
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to send the invites out</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
             <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
@@ -30,7 +28,7 @@
             <h2 class="heading-medium" th:text="${model.leadOrganisation} ? ${model.organisationName} + ', Lead organisation' : ${model.organisationName}">Empire Ltd, Lead organisation</h2>
 
             <form th:action="${actionUrl}"
-                  th:object="${form}" method="POST" class="contributorsForm" th:with="
+                  th:object="${form}" method="POST" class="contributorsForm" novalidate="novalidate" th:with="
                   actionUrl=${model.organisationExists} ?
                   @{/application/{applicationId}/team/update/existing/{organisationId}(applicationId=${model.applicationId},organisationId=${model.organisationId})} :
                     @{/application/{applicationId}/team/update/invited/{organisationId}(applicationId=${model.applicationId},organisationId=${model.inviteOrganisationId})}">
@@ -64,13 +62,12 @@
 
                         <tr th:if="*{stagedInvite}" class="repeatable-row">
                             <td class="form-group" th:classappend="${#fields.hasErrors('stagedInvite.name')} ? 'form-group-error'">
-                                <label th:for="'stagedInvite.name'">
+                                <label for="stagedInvite.name">
                                     <span class="visually-hidden">Applicant name</span>
                                     <th:block th:if="${#fields.hasErrors('stagedInvite.name')}">
                                         <span th:each="err : ${#fields.errors('stagedInvite.name')}"
                                               th:text="${err}"
-                                              class="error-message"
-                                              th:data-errorfield="'stagedInvite.name'">Please enter a name</span>
+                                              class="error-message">Please enter a name</span>
                                     </th:block>
                                 </label>
                                 <input type="text"
@@ -81,13 +78,12 @@
                                        th:attr="data-required-errormessage=#{validation.standard.name.required}" />
                             </td>
                             <td class="form-group" th:classappend="${#fields.hasErrors('stagedInvite.email')} ? 'form-group-error'">
-                                <label th:for="'stagedInvite.email'">
+                                <label for="stagedInvite.email">
                                     <span class="visually-hidden">Applicant email</span>
                                     <th:block th:if="${#fields.hasErrors('stagedInvite.email')}">
                                         <span th:each="err : ${#fields.errors('stagedInvite.email')}"
                                               th:text="${err}"
-                                              class="error-message"
-                                              th:data-errorfield="'stagedInvite.email'">Please enter an email</span>
+                                              class="error-message">Please enter an email</span>
                                     </th:block>
                                 </label>
                                 <input type="email"
@@ -114,8 +110,9 @@
                     </tbody>
                 </table>
 
-                <p th:unless="*{stagedInvite}">
-                    <button class="buttonlink"
+                <div th:unless="*{stagedInvite}">
+                    <button
+                          class="buttonlink"
                            data-repeatable-rowcontainer="#applicant-table tbody"
                            data-applicant-table="update-org"
                            type="submit"
@@ -123,7 +120,7 @@
                            name="addStagedInvite">
                         Add another contributor
                     </button>
-                </p>
+                </div>
 
                 <div th:if="${model.userLeadApplicant and !model.leadOrganisation}">
                     <div class="alignright">

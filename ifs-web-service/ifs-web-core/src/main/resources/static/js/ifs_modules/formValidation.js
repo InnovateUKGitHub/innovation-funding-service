@@ -127,6 +127,11 @@ IFS.core.formValidation = (function () {
         jQuery(this).trigger('change')
       })
       IFS.core.formValidation.betterMinLengthSupport()
+      IFS.core.formValidation.initFocusActions()
+      jQuery('body').on('click', '.error-summary-list a', function (e) {
+        e.preventDefault()
+        IFS.core.formValidation.errorSummaryLinksClick(this)
+      })
     },
     checkPasswordPolicy: function (field, errorStyles) {
       var hasUppercase = IFS.core.formValidation.checkFieldContainsUppercase(field)
@@ -613,7 +618,9 @@ IFS.core.formValidation = (function () {
 
       var formGroup = field.closest('.form-group')
       var formGroupRow = field.closest('.form-group-row')
-      var name = IFS.core.formValidation.getIdentifier(field)
+      var name = IFS.core.formValidation.getName(field)
+      var id = IFS.core.formValidation.getIdentifier(field)
+
       var visuallyhidden = displayValidationMessages === 'visuallyhidden'
 
       if (formGroup.length) {
@@ -637,8 +644,14 @@ IFS.core.formValidation = (function () {
         }
       }
 
-      if (jQuery('.error-summary-list [data-errorfield="' + name + '"]:contains(' + message + '),.error-summary-list li:not([data-errorfield]):contains("' + message + '")').length === 0) {
-        jQuery('.error-summary-list').append('<li data-errorfield="' + name + '">' + message + '</li>')
+      if (id.length) {
+        if (jQuery('.error-summary-list [href="#' + id + '"]:contains(' + message + ')').length === 0) {
+          jQuery('.error-summary-list').append('<li><a href="#' + id + '">' + message + '</a></li>')
+        }
+      } else {
+        if (jQuery('.error-summary-list li:contains(' + message + ')').length === 0) {
+          jQuery('.error-summary-list').append('<li>' + message + '</li>')
+        }
       }
 
       jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', false)
@@ -652,7 +665,8 @@ IFS.core.formValidation = (function () {
       var formGroup = field.closest('.form-group')
       var formGroupRow = field.closest('.form-group-row')
       var errorSummary = jQuery('.error-summary-list')
-      var name = IFS.core.formValidation.getIdentifier(field)
+      var name = IFS.core.formValidation.getName(field)
+      var id = IFS.core.formValidation.getIdentifier(field)
 
       // if it is a .form-group we assume the basic form structure with just one field per group
       // i.e.
@@ -699,13 +713,14 @@ IFS.core.formValidation = (function () {
           formGroupRow.removeClass('form-group-error')
         }
       }
+
       // updating the error summary
       if (errorSummary.length) {
-        // remove clientside in summary
-        errorSummary.find('[data-errorfield="' + name + '"]:contains(' + message + ')').remove()
-        // remove server side in summary
-        errorSummary.find('li:not([data-errorfield]):contains("' + message + '")').first().remove()
-
+        if (id.length) {
+          errorSummary.find('[href="#' + id + '"]:contains(' + message + ')').parent().remove()
+        } else {
+          errorSummary.find('li:contains(' + message + ')').remove()
+        }
         if (jQuery('.error-summary-list li:not(.list-header)').length === 0) {
           jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', 'true')
         }
@@ -745,16 +760,32 @@ IFS.core.formValidation = (function () {
         })
       }
     },
-    getIdentifier: function (el) {
+    getName: function (el) {
       if (el.is('[data-date]')) {
-        el = el.closest('.date-group').find('input[type="hidden"]')
+        el = el.closest('.date-group,fieldset').find('input[type="hidden"]')
       }
-      if (el.prop('name').length) {
-        return el.prop('name')
-      } else if (el.prop('id').length) {
-        return el.prop('id')
+      if (typeof (el.attr('name')) !== 'undefined') {
+        return el.attr('name')
+      } else {
+        return IFS.core.formValidation.getIdentifier(el)
       }
-      return false
+    },
+    getIdentifier: function (el) {
+      if (el.is(':radio') || el.is(':checkbox')) {
+        // Ifn it is a radio/checkbox group (so more than one)
+        // Then we use the legend as id otherwise just the field id
+        var name = el.attr('name')
+        if (jQuery('[name="' + name + '"]').length > 1) {
+          el = el.closest('fieldset').find('legend')
+        }
+      }
+      if (el.is('[data-date]')) {
+        el = el.closest('fieldset').find('legend')
+      }
+      if (typeof (el.attr('id')) !== 'undefined') {
+        return el.attr('id')
+      }
+      return ''
     },
     checkHTML5validationMode: function () {
       var testField = jQuery('input')
@@ -781,6 +812,47 @@ IFS.core.formValidation = (function () {
       } else {
         return false
       }
+    },
+    initFocusActions: function () {
+      // If there is an error summary, set focus to the summary
+      var errorSummary = jQuery('.error-summary')
+      if (errorSummary.length) {
+        errorSummary.focus()
+      } else {
+        // Otherwise, set focus to the field with the error
+        jQuery('.form-group-error input:not([type="hidden"])').first().focus()
+      }
+    },
+    errorSummaryLinksClick: function (el) {
+      var id = IFS.core.formValidation.removeHash(jQuery(el).attr('href'))
+      var target = jQuery('[id="' + id + '"]')
+      var targetVisible = IFS.core.formValidation.isVisible(target)
+      var closedCollapsible = target.closest(IFS.core.collapsible.settings.collapsibleEl).not('.' + IFS.core.collapsible.settings.expandedClass)
+      if (targetVisible) {
+        target.first().focus()
+      } else if (closedCollapsible.length) {
+        // it is within a collapsible element and we open it and then put focus on it
+        var stateless = closedCollapsible.hasClass(IFS.core.collapsible.settings.statelessClass)
+        IFS.core.collapsible.toggleCollapsible(closedCollapsible.find('button[aria-controls]'), stateless)
+        target.first().focus()
+      } else {
+        // if the target is invisible we put focus on an element that has the same label as the target
+        // An example of this usecase is the wysiwyg editor
+        var altTarget = jQuery('[aria-labelledby="' + id + '"]')
+        var altTargetVisible = IFS.core.formValidation.isVisible(altTarget)
+        if (altTargetVisible) {
+          altTarget.first().focus()
+        }
+      }
+    },
+    isVisible: function (el) {
+      return !(el.is('[aria-hidden="true"]') || el.is(':visible') === false || el.length === 0)
+    },
+    removeHash: function (href) {
+      if (href.indexOf('#') === 0) {
+        return href.substring(1, href.length)
+      }
+      return href
     },
     betterMinLengthSupport: function () {
       // if the minlenght is not implemented in the browser we use pattern which is more widely supported
