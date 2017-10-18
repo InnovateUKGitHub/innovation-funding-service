@@ -145,7 +145,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     private final ZonedDateTime fiveDaysAhead = now.plusDays(5);
     private final ZonedDateTime sixDaysAhead = now.plusDays(6);
     private final ZonedDateTime sevenDaysAhead = now.plusDays(7);
-
     private User projectFinanceUser;
     private User projectManagerUser;
     private UserResource projectFinanceUserLogin;
@@ -157,7 +156,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Before
-    public  void setLoggedInUserOnThread() {
+    public void setLoggedInUserOnThread() {
         loginCompAdmin();
     }
 
@@ -743,7 +742,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                 ZonedDateTime.now());
         queryRepository.save(queryCreatedByProjectFinance);
 
-        // check different thread on same project/org is ignored
+        // Check different thread on same project/org is ignored
         Post postCreatedByProjectFinanceOnDifferentThread = new Post(3L, projectFinanceUser, "query1", emptyList(), ZonedDateTime.now());
 
         Post postCreatedByProjectManagerOnDifferent = new Post(4L, projectManagerUser, "response", emptyList(), ZonedDateTime.now().plusMinutes(1L));
@@ -757,7 +756,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                 ZonedDateTime.now());
         queryRepository.save(queryCreatedByProjectFinanceOnDifferentThread);
 
-        // check that query from a different competition is ignored
+        // Check that query from a different competition is ignored
         Competition competition2 = newCompetition().withId(competition1.getId() + 1).withName("comp2").build();
         competition2 = competitionRepository.save(competition2);
         Application application2 = newApplication().withCompetition(competition2).withId(application1.getId() + 1).withName("app2").build();
@@ -779,7 +778,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                 ZonedDateTime.now());
         queryRepository.save(queryCreatedByProjectFinanceOnDifferentCompetition);
 
-        //check that Notes are not considered in the query count/get
+        // Check that Notes are not considered in the query count/get
         Post postCreatedByProjectManager = new Post(7L, projectManagerUser, "response", emptyList(), ZonedDateTime.now().plusMinutes(1L));
 
         Note noteCreatedByProjectFinance = new Note(3L,
@@ -790,7 +789,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                 ZonedDateTime.now());
         noteRepository.save(noteCreatedByProjectFinance);
 
-        //check that queries not keyed on ProjectFinance class are ignored
+        // Check that queries not keyed on ProjectFinance class are ignored
 
         Post postCreatedByProjectManagerInvalidClass = new Post(8L, projectManagerUser, "response", emptyList(), ZonedDateTime.now().plusMinutes(1L));
 
