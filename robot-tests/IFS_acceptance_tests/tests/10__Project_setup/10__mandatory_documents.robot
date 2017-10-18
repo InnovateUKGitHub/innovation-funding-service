@@ -300,13 +300,12 @@ Non-lead partner can still view both documents after submitting
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
 
 CompAdmin can see uploaded files
-    [Documentation]    INFUND-4621
+    [Documentation]    INFUND-4621, IFS-1881
     [Tags]    HappyPath
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
     When the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element    jQuery=h2:contains("Projects in setup")
-    When the user clicks the button/link    css=#table-project-status tr:nth-child(2) td:nth-child(7) a
+    Then the user clicks the button/link    css=#table-project-status tr:nth-child(2) td:nth-child(7) a
     Then the user should see the text in the page    Collaboration agreement
     When the user clicks the button/link    css=.uploaded-file:nth-of-type(1)
     Then the user should see the file without error
@@ -517,11 +516,11 @@ Project Finance is able to Approve and Reject
 
 
 Project Finance user can click the link and go back to the Competition Dashboard page
-    [Documentation]    INFUND-5516, INFUND-7345
+    [Documentation]    INFUND-5516, INFUND-7345, IFS-1881
     [Tags]
     When the user clicks the button/link           link=Projects in setup
     Then the user should not see an error in the page
-    And the user should see the text in the page   Projects in setup
+    And the user should see the text in the page   All projects
     [Teardown]    the user goes back to the previous page
 
 # This is bank details and finance test but has been placed here as the required project is used here
