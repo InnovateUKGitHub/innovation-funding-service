@@ -13,7 +13,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.mockito.Mockito.*;
 
 /**
- * Testing the Spring Security and CustomPermissionEvaluator integration with ResearchCategoryService with regards to the
+ * Testing the Spring Security and AbstractCustomPermissionEvaluator integration with ResearchCategoryService with regards to the
  * security rules that are
  */
 

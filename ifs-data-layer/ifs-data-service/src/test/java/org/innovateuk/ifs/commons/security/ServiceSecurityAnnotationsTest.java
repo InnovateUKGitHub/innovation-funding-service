@@ -2,7 +2,7 @@ package org.innovateuk.ifs.commons.security;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator;
+import org.innovateuk.ifs.commons.security.evaluator.AbstractCustomPermissionEvaluator;
 import org.innovateuk.ifs.commons.security.evaluator.ListOfOwnerAndMethod;
 import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
@@ -33,7 +33,7 @@ import static org.junit.Assert.*;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
- * Tests around the Spring Security annotations on the Services and the Permission Rule framework as used by the CustomPermissionEvaluator
+ * Tests around the Spring Security annotations on the Services and the Permission Rule framework as used by the AbstractCustomPermissionEvaluator
  */
 public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
@@ -120,7 +120,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
     @Test
     public void generateLowLevelPermissionsDocumentation() throws Exception {
 
-        CustomPermissionEvaluator evaluator = (CustomPermissionEvaluator) context.getBean("customPermissionEvaluator");
+        AbstractCustomPermissionEvaluator evaluator = (AbstractCustomPermissionEvaluator) context.getBean("customPermissionEvaluator");
 
         List<String[]> permissionRuleSecuredRows = getPermissionRulesBasedSecurity(evaluator);
         List<String[]> simpleSpringSecuritySecuredRows = getSimpleSpringSecurityBasedSecurity();
@@ -198,7 +198,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
         return unwrapProxies(servicesToTest());
     }
 
-    private List<String[]> getPermissionRulesBasedSecurity(CustomPermissionEvaluator evaluator) {
+    private List<String[]> getPermissionRulesBasedSecurity(AbstractCustomPermissionEvaluator evaluator) {
         List<String[]> permissionRuleRows = new ArrayList<>();
 
         PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = getRulesMap(evaluator);

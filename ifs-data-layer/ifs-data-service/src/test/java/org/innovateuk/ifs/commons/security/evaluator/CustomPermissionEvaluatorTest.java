@@ -42,7 +42,7 @@ public class CustomPermissionEvaluatorTest extends BaseUnitTestMocksTest {
     private SecuredMethodsInStackCountInterceptor securedMethodInterceptorMock;
 
     @InjectMocks
-    private CustomPermissionEvaluator permissionEvaluator = new CustomPermissionEvaluator();
+    private AbstractCustomPermissionEvaluator permissionEvaluator = new AbstractCustomPermissionEvaluator();
 
     private UserResource noRightsUser = newUserResource().build();
     private UserResource readOnlyUser = newUserResource().build();

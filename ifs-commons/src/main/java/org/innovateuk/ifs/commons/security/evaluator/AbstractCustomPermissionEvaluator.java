@@ -32,12 +32,14 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
  * An implementation of PermissionEvaluator that supports the inclusion of business rules into Spring Security checking
  * via the {@link PermissionRules} and {@link PermissionRule} annotations, and the ability to provide ways of looking up
  * a protected class (e.g. ApplicationResource) from another type (e.g. an ID in the form of a Long) via the
- * {@link PermissionEntityLookupStrategies} and {@link PermissionEntityLookupStrategy} annotations
+ * {@link PermissionEntityLookupStrategies} and {@link PermissionEntityLookupStrategy} annotations.
+ * Note that this does not have the {@link Component} annotation as doing so would force dependent projects to provide
+ * the dependencies of this class whether or not it is needed. Instead this class should be subclasses where it is
+ * required and the annotation added to that.
  */
-@Component
-public class CustomPermissionEvaluator implements PermissionEvaluator {
+public class AbstractCustomPermissionEvaluator implements PermissionEvaluator {
 
-    private static final Log LOG = LogFactory.getLog(CustomPermissionEvaluator.class);
+    private static final Log LOG = LogFactory.getLog(AbstractCustomPermissionEvaluator.class);
 
     @Autowired
     private ApplicationContext applicationContext;

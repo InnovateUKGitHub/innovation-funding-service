@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import java.util.function.Supplier;
 
 /**
- * A transaction manager that the {@link CustomPermissionEvaluator} uses to wrap all permission checks in a single transaction
+ * A transaction manager that the {@link AbstractCustomPermissionEvaluator} uses to wrap all permission checks in a single transaction
  * in order to better make use of Hibernate's Session cache
  */
 public interface CustomPermissionEvaluatorTransactionManager {
