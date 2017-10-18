@@ -18,6 +18,8 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-8276 Content: Bank Details: should not say "each"
 ...
 ...               INFUND-8688 Experian response - Error message if wrong bank details are submitted
+...
+...               IFS-1881 Project Setup internal project dashboard navigation
 
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser

@@ -26,6 +26,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               IFS-218 After rejection of mandatory documents, lead partner has a submit button
 ...
 ...               IFS-1864 Sole applicants do not have to provide a collaboration agreement document
+...
+...               IFS-1881 Project Setup internal project dashboard navigation
 Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
