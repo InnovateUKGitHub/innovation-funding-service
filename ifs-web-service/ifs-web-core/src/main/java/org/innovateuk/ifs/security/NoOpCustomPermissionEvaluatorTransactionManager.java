@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.security;
 
-import org.innovateuk.ifs.commons.security.evaluator.AbstractCustomPermissionEvaluator;
 import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTransactionManager;
+import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
 import org.springframework.stereotype.Component;
 
 import java.util.function.Supplier;

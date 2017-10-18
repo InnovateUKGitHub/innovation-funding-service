@@ -5,16 +5,18 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
+
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 /**
- * Handling the tokens used for authentication for each request
+ * Handling the tokens used for authentication for each request.
+ * Note that this does not have the annotation as doing so would force dependent projects to provide
+ * the dependencies of this class whether or not it is needed. Instead this class should be subclasses where it is
+ * required and the annotation added to that.
  */
-@Service
-public class UidAuthenticationService implements UserAuthenticationService {
+public class AbstractUidAuthenticationService implements UserAuthenticationService {
 
     @Autowired
     private CredentialsValidator validator;

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.security.evaluator.AbstractCustomPermissionEva
 import org.innovateuk.ifs.commons.security.evaluator.ListOfOwnerAndMethod;
 import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
+import org.innovateuk.ifs.security.UidAuthenticationService;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;

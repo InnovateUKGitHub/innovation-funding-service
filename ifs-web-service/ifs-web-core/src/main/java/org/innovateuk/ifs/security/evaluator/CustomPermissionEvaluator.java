@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.security;
+package org.innovateuk.ifs.security.evaluator;
 
 import org.innovateuk.ifs.commons.security.evaluator.AbstractCustomPermissionEvaluator;
 import org.springframework.stereotype.Component;
