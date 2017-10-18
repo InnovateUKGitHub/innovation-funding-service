@@ -77,13 +77,13 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     public static final String COUNT_OPEN_QUERIES = "SELECT COUNT(DISTINCT t.classPk) " +
             "FROM Post post " +
-            "JOIN Thread t ON t.id = post.thread.id " +
+            "JOIN post.thread t " +
             "JOIN post.author u " +
             "JOIN u.roles roles " +
-            "INNER JOIN ProjectFinance pf ON pf.id = t.classPk " +
-            "INNER JOIN Project pr ON pr.id = pf.project.id " +
-            "INNER JOIN Application a ON a.id = pr.application.id " +
-            "WHERE t.className='org.innovateuk.ifs.finance.domain.ProjectFinance' " +
+            "JOIN ProjectFinance pf ON pf.id = t.classPk " +
+            "JOIN pf.project pr " +
+            "JOIN pr.application a " +
+            "WHERE t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
             "    AND TYPE(t) = Query " +
             "    AND roles.name != 'project_finance' " +
             "    AND a.competition.id = :competitionId " +
@@ -95,14 +95,14 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     public static final String GET_OPEN_QUERIES = "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name) " +
             "FROM Post post " +
-            "JOIN Thread t ON t.id = post.thread.id " +
+            "JOIN post.thread t " +
             "JOIN post.author u " +
             "JOIN u.roles roles " +
-            "INNER JOIN ProjectFinance pf ON pf.id = t.classPk " +
-            "INNER JOIN Project pr ON pr.id = pf.project.id " +
-            "INNER JOIN Application a ON a.id = pr.application.id " +
-            "INNER JOIN Organisation o ON o.id = pf.organisation.id " +
-            "WHERE t.className='org.innovateuk.ifs.finance.domain.ProjectFinance' " +
+            "JOIN ProjectFinance pf ON pf.id = t.classPk " +
+            "JOIN pf.project pr " +
+            "JOIN pr.application a " +
+            "JOIN pf.organisation o " +
+            "WHERE t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
             "    AND TYPE(t) = Query " +
             "    AND roles.name != 'project_finance' " +
             "    AND a.competition.id = :competitionId " +
