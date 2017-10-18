@@ -118,5 +118,8 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
         public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {
             return null;
         }
+
+        @Override
+        public ServiceResult<List<AssessmentPanelInviteResource>> getAllInvitesByUser(long userId) {return null;}
     }
 }
