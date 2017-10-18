@@ -20,8 +20,6 @@
         Manage assessors
     </h1>
 
-    <p>You can view the status of all the assessors and add new assessors.</p>
-
     <p><a href="#">Add a new assessor</a></p>
 
     <ul class="inline-nav">
@@ -29,10 +27,10 @@
             <a th:href="@{'?tab=active'}">Active (12)</a>
         </li>
         <li th:class="${(param.tab != null and param.tab[0] == 'inactive' ? 'selected' : 'not-selected' )}">
-            <a th:href="@{'?tab=inactive'}">Inactive (0)</a>
+            <a th:href="@{'?tab=inactive'}">Inactive (8)</a>
         </li>
         <li th:class="${(param.tab != null and param.tab[0] == 'pending' ? 'selected' : 'not-selected' )}">
-            <a th:href="@{'?tab=pending'}">Pending (0)</a>
+            <a th:href="@{${(param.pending != null and param.pending[0] ==  '1' ? '?tab=pending&#38;pending=1' : '?tab=pending')}}" th:text="${param.pending != null and param.pending[0] ==  '1' ? 'Pending (1)' : 'Pending (0)' }">Pending (0)</a>
         </li>
     </ul>
 
@@ -49,64 +47,64 @@
                     <tr>
                         <th scope="col">Name</th>
                         <th scope="col">Email address</th>
-                        <th scope="col">Training required</th>
+                        <th scope="col">Contract and DOI</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td><a href="#">Arden Pimenta</a></td>
                         <td><a href="#">arden.pimenta@innovateuk.test</a></td>
-                        <td>Yes</td>
+                        <td><span class="no">No</span></td>
                     </tr>
                     <tr>
                         <td><a href="#">Astle Pimenta</a></td>
                         <td><a href="#">astle.pimenta@innovateuk.test</a></td>
-                        <td>No</td>
+                        <td><span class="yes">Yes</span></td>
                     </tr>
                     <tr>
                         <td><a href="#">Ian Cooper</a></td>
                         <td><a href="#">ian.cooper@innovateuk.test</a></td>
-                        <td>No</td>
+                        <td><span class="yes">Yes</span></td>
                     </tr>
                     <tr>
                         <td><a href="#">John Doe</a></td>
                         <td><a href="#">john.doe@innovateuk.test</a></td>
-                        <td>No</td>
+                        <td><span class="yes">Yes</span></td>
                     </tr>
                     <tr>
                         <td><a href="#">Lee Bowman</a></td>
                         <td><a href="#">lee.bowman@innovateuk.test</a></td>
-                        <td>No</td>
+                        <td><span class="no">No</span></td>
                     </tr>
                     <tr>
                         <td><a href="#">Peter Freeman</a></td>
                         <td><a href="#">peter.freeman@innovateuk.test</a></td>
-                        <td>No</td>
+                        <td><span class="yes">Yes</span></td>
                     </tr>
                     <tr>
                         <td><a href="#">Rianne Almeida</a></td>
                         <td><a href="#">rianne.almeida@innovateuk.test</a></td>
-                        <td>No</td>
+                        <td><span class="yes">Yes</span></td>
                     </tr>
                     <tr>
                         <td><a href="#">Robert Johnson</a></td>
                         <td><a href="#">rober.johnsona@innovateuk.test</a></td>
-                        <td>No</td>
+                        <td><span class="no">No</span></td>
                     </tr>
                     <tr>
                         <td><a href="#">Sarah Greenwood</a></td>
                         <td><a href="#">sarah.greenwood@innovateuk.test</a></td>
-                        <td>No</td>
+                        <td><span class="yes">Yes</span></td>
                     </tr>
                     <tr>
                         <td><a href="#">Toby Reader</a></td>
                         <td><a href="#">tody.reader@innovateuk.test</a></td>
-                        <td>No</td>
+                        <td><span class="yes">Yes</span></td>
                     </tr>
                     <tr>
                         <td><a href="#">Veronica Lederman</a></td>
                         <td><a href="#">veronica.lederman@innovateuk.test</a></td>
-                        <td>No</td>
+                        <td><span class="yes">Yes</span></td>
                     </tr>
                 </tbody>
             </table>
@@ -115,11 +113,96 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'inactive'}">
-        Inactive
+        <h2 class="heading-small no-margin-top">Inactive</h2>
+
+        <span class="heading-xlarge no-margin">8</span>
+        <span class="heading-small">inactive internal users</span>
+
+        <div class="table-overflow">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email address</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#">Ari Nunes</a></td>
+                        <td><a href="#">ari.nunes@innovateuk.test</a></td>
+                        <td>Retired</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">Julie Nunes</a></td>
+                        <td><a href="#">julie.nunes@innovateuk.test</a></td>
+                        <td>Training required</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">Lucy Cavanaugh</a></td>
+                        <td><a href="#">lucy.cavanaugh@innovateuk.test</a></td>
+                        <td>Retired</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">Owain Walden</a></td>
+                        <td><a href="#">owain.walden@innovateuk.test</a></td>
+                        <td>Retired</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">Ralph Nunes</a></td>
+                        <td><a href="#">ralph.nunes@innovateuk.test</a></td>
+                        <td>Training required</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">Richard Nunes</a></td>
+                        <td><a href="#">richard.nunes@innovateuk.test</a></td>
+                        <td>Training required</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">Richard Place</a></td>
+                        <td><a href="#">richard.place@innovateuk.test</a></td>
+                        <td>Retired</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">Rudolph Place</a></td>
+                        <td><a href="#">rudolph.place@innovateuk.test</a></td>
+                        <td>Retired</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'pending'}">
-        Pending
+        <h2 class="heading-small no-margin-top">Pending</h2>
+
+        <span class="heading-xlarge no-margin" th:text="${param.pending != null and param.pending[0] ==  '1' ? '1' : '0' }">0</span>
+        <span class="heading-small">pending assessors</span>
+
+        <div class="table-overflow">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email address</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+
+                <th:block th:if="${param.pending != null and param.pending[0] ==  '1'}">
+                    <tbody>
+                        <tr>
+                            <td><a href="#">Carl Test</a></td>
+                            <td><a href="#">carl.test@email.com</a></td>
+                            <td>Invite snet: 12 Sep 2017</td>
+                        </tr>
+                    </tbody>
+                </th:block>
+
+
+            </table>
+        </div>
     </th:block>
 
 
