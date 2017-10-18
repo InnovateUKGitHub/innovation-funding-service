@@ -108,8 +108,8 @@ Funding Information is editable (Open)
     When the user clicks the button/link        link=Funding information
     And the user should see the element         jquery=h1:contains("Funding information")
     And the user clicks the button/link         jQuery=.button:contains("Edit")
-    And The user enters text to a text field    id=funders0.funder  Funders Edit test
-    And the user should see the element         id=0-funderBudget
+    And The user enters text to a text field    id=funders[0].funder  Funders Edit test
+    And the user should see the element         id=funders[0].funderBudget
     And the user should see the element         id=pafNumber
     And the user should see the element         id=budgetCode
     And the user should see the element         id=activityCode
@@ -210,7 +210,7 @@ Initial details editable before notify date (Open)
     And the user should see that the element is disabled    id=openingDateYear
     And the user should see that the element is disabled    id=competitionTypeId
     And the user should see that the element is disabled    id=innovationSectorCategoryId
-    And the user should see that the element is disabled    id=innovationAreaCategoryId-0
+    And the user should see that the element is disabled    css=[id="innovationAreaCategoryIds[0]"]
     When the user selects the option from the drop-down menu    Peter Freeman    id=innovationLeadUserId
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
     And the user clicks the button/link    jQuery=button:contains("Done")

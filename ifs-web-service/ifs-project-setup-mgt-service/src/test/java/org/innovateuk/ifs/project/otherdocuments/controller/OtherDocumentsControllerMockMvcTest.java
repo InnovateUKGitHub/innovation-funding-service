@@ -23,6 +23,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrg
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -59,7 +60,7 @@ public class OtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTe
     }
 
 
-    private void assertProjectDetailsPrepopulatedOk(OtherDocumentsViewModel model) {
+    private void assertProjectDetailsPrepopulatedOkWithPartners(OtherDocumentsViewModel model, boolean solePartner) {
 
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals(Long.valueOf(456), model.getApplicationId());
@@ -70,8 +71,18 @@ public class OtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTe
         assertEquals("d@d.com", model.getProjectManagerEmail());
         assertEquals(Long.valueOf(1L), model.getCompetitionId());
 
-        List<String> testOrgList= new ArrayList<String>(Arrays.asList("Org1", "Org2", "Org3"));
+        List<String> testOrgList;
+        if (solePartner) {
+            testOrgList = new ArrayList<String>(Arrays.asList("Org1"));
+        } else {
+            testOrgList = new ArrayList<String>(Arrays.asList("Org1", "Org2", "Org3"));
+        }
         assertEquals(asList(testOrgList), asList(model.getPartnerOrganisationNames()));
+    }
+
+    private void assertProjectDetailsPrepopulatedOk(OtherDocumentsViewModel model) {
+
+        assertProjectDetailsPrepopulatedOkWithPartners(model, false);
     }
 
     @Test
@@ -167,6 +178,27 @@ public class OtherDocumentsControllerMockMvcTest extends BaseControllerMockMVCTe
         mockMvc.perform(get("/project/123/partner/documents/exploitation-plan")).
                 andExpect(status().isNotFound()).
                 andExpect(view().name("404"));
+    }
+
+    @Test
+    public void testViewOtherDocumentsPageSolePartner() throws Exception {
+
+        ProjectResource project = newProjectResource().withId(projectId).withApplication(applicationId).withName("My Project").build();
+
+        setupViewOtherDocumentsTestExpectations (project);
+
+        List<OrganisationResource> partnerOrganisations = newOrganisationResource().withName("Org1").build(1);
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(partnerOrganisations);
+
+        MvcResult result = mockMvc.perform(get("/project/123/partner/documents")).
+                andExpect(view().name("project/other-documents")).
+                andReturn();
+
+        OtherDocumentsViewModel model = (OtherDocumentsViewModel) result.getModelAndView().getModel().get("model");
+
+        assertProjectDetailsPrepopulatedOkWithPartners(model, true);
+        assertNull(model.getCollaborationAgreementFileDetails());
+
     }
 
     @Override

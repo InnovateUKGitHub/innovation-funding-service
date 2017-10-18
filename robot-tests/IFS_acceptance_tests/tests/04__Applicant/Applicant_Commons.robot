@@ -60,7 +60,6 @@ Mark application details as incomplete
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
     the user should see the element       jQuery=li:contains("Application details") > .action-required
 
-
 the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=img.complete[alt*="Application details"]
     Run Keyword If  '${status}' == 'FAIL'  the applicant completes the application details  Application details
@@ -68,6 +67,7 @@ the Application details are completed
 the applicant completes the application details
     [Arguments]   ${Application_details}
     the user clicks the button/link       link=${Application_details}
+    the user moves Application details in Edit mode
     the user clicks the button/link       jQuery=button:contains("research category")
     the user clicks the button twice      jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
     the user clicks the button/link       jQuery=button:contains("Save")
@@ -76,19 +76,23 @@ the applicant completes the application details
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
     The user enters text to a text field  id=application_details-startdate_month  11
-    The user enters text to a text field  id=application_details-duration  20
+    The user enters text to a text field  css=[id="application.durationInMonths"]  20
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user should see the element       jQuery=button:contains("Edit")
     the user should not see the element   css=input
 
+the user moves Application details in Edit mode
+     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=.buttonlink[name="mark_as_incomplete"]
+     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=.buttonlink[name="mark_as_incomplete"]
+
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery=h1:contains("Application details")
-    the user enters text to a text field  css=#application_details-title  ${appTitle}
+    the user enters text to a text field  css=[id="application.name"]  ${appTitle}
     the user enters text to a text field  css=#application_details-startdate_day  ${tomorrowday}
     the user enters text to a text field  css=#application_details-startdate_month  ${month}
     the user enters text to a text field  css=#application_details-startdate_year  ${nextyear}
-    the user enters text to a text field  css=#application_details-duration  24
+    the user enters text to a text field  css=[id="application.durationInMonths"]  24
     the user clicks the button twice      css=label[for="application.resubmission-no"]
     the user selects Research category    ${res_category}
     the user should not see the element   link=Choose your innovation area
@@ -121,7 +125,7 @@ the user fills in the project costs
     the user fills in Subcontracting costs
     the user fills in Travel and subsistence
     the user fills in Other costs
-    the user clicks the button/link  css=label[for="agree-state-aid-page"]
+    the user clicks the button/link  css=label[for="stateAidAgreed"]
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
     the user has read only view once section is marked complete
@@ -134,7 +138,7 @@ the user has read only view once section is marked complete
 the user fills in Labour
     the user clicks the button/link            jQuery=button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
-    the user enters text to a text field       css=input[id$="labourDaysYearly"]    230
+    the user enters text to a text field       css=input[name^="labour-labourDaysYearly"]    230
     the user should see the element            jQuery=input.form-control[name^=labour-role]:text[value=""]:first
     the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:first    anotherrole
     the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000
@@ -283,7 +287,7 @@ the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page   ${Application}
     the user clicks the button/link       link=Your funding
-    the user enters text to a text field  css=#cost-financegrantclaim  45
+    the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  45
     click element                         jQuery=label:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")

@@ -325,7 +325,7 @@ Lead partner can change the project address
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project address
     When the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see the text in the page    You need to select a project address before you can continue.
+    Then the user should see the text in the page    You need to select an address before you can continue.
     When the user selects the radio button    addressType    ADD_NEW
     And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")

@@ -78,9 +78,10 @@ Bank details server side validations
     [Documentation]    INFUND-3010
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
-    Then the user should see an error    Please enter an account number.
-    And the user should see an error    Please enter a sort code.
-    And the user should see an error    You need to select a billing address before you can continue.
+    And the user clicks the button/link    jQuery=[role="dialog"] .button:contains("Submit")
+    Then the user should see an error    Please enter a valid account number.
+    And the user should see an error    Please enter a valid sort code.
+    And the user should see an error    You need to select an address before you can continue.
 
 Bank details client side validations
     [Documentation]    INFUND-3010, INFUND-6887, INFUND-6482
@@ -109,7 +110,7 @@ Bank details client side validations
     Then the user should not see the text in the page    Please enter a sort code.
     And the user should not see the text in the page    Please enter a valid sort code.
     When the user selects the radio button    addressType    REGISTERED
-    Then the user should not see the text in the page    You need to select a billing address before you can continue.
+    Then the user should not see the text in the page    You need to select an address before you can continue.
 
 Bank account postcode lookup
     [Documentation]    INFUND-3282
@@ -331,10 +332,10 @@ the project finance user downloads the bank details
 
 the user opens the excel and checks the content
     ${contents}=                    read csv file  ${DOWNLOAD_FOLDER}/bank_details.csv
-    ${vitruvius_details}=           get from list  ${contents}  9
+    ${vitruvius_details}=           get from list  ${contents}  3
     ${vitruvius}=                   get from list  ${vitruvius_details}  0
     should be equal                 ${vitruvius}  ${Vitruvius_Name}
-    ${Armstrong_Butler_details}=    get from list  ${contents}  10
+    ${Armstrong_Butler_details}=    get from list  ${contents}  5
     ${Armstrong_Butler}=            get from list  ${Armstrong_Butler_details}  0
     should be equal                 ${Armstrong_Butler}  ${Armstrong_Butler_Name}
     ${application_number}=          get from list  ${vitruvius_details}  1

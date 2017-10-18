@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
@@ -32,6 +30,7 @@ import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +57,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBL
 import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
+import static org.innovateuk.ifs.commons.service.ServiceResult.handlingErrors;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
@@ -72,8 +72,6 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
  */
 @Service
 public class CompetitionServiceImpl extends BaseTransactionalService implements CompetitionService {
-
-    private static final Log LOG = LogFactory.getLog(CompetitionServiceImpl.class);
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -274,8 +272,18 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
         String searchQueryLike = String.format("%%%s%%", searchQuery);
         PageRequest pageRequest = new PageRequest(page, size);
-        Page<Competition> pageResult = competitionRepository.search(searchQueryLike, pageRequest);
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+            if (user.hasRole(UserRoleType.INNOVATION_LEAD)) {
+                return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForLeadTechnologist(searchQueryLike, user.getId(), pageRequest));
+            } else if (user.hasRole(UserRoleType.SUPPORT)) {
+                return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.searchForSupportUser(searchQueryLike, pageRequest));
+            } else {
+                return handleCompetitionSearchResultPage(pageRequest, size, competitionRepository.search(searchQueryLike, pageRequest));
+            }
+        });
+    }
 
+    private ServiceResult<CompetitionSearchResult> handleCompetitionSearchResultPage(PageRequest pageRequest, int size, Page<Competition> pageResult) {
         CompetitionSearchResult result = new CompetitionSearchResult();
         List<Competition> competitions = pageResult.getContent();
         result.setContent(simpleMap(competitions, this::searchResultFromCompetition));

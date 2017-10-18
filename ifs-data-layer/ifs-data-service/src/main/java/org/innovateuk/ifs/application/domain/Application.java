@@ -154,6 +154,14 @@ public class Application implements ProcessActivity {
         this.processRoles = processRoles;
     }
 
+    public void removeProcessRoles(List<ProcessRole> processRolesToRemove) {
+        processRoles.removeAll(processRolesToRemove);
+    }
+
+    public void addProcessRole(ProcessRole processRole) {
+        processRoles.add(processRole);
+    }
+
     public Competition getCompetition() {
         return competition;
     }

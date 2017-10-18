@@ -7,7 +7,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 public class FinanceCheckDocs {
 
     public static final FieldDescriptor[] financeCheckSummaryResourceFields = {
-            fieldWithPath("projectId").description("Id or project that the status is from"),
+            fieldWithPath("projectId").description("Id of project that the status is from"),
             fieldWithPath("projectName").description("Name of project that the status is from"),
             fieldWithPath("competitionId").description("Id of competition that the project is from"),
             fieldWithPath("competitionName").description("Name of competition that the project is from"),
@@ -23,11 +23,12 @@ public class FinanceCheckDocs {
             fieldWithPath("bankDetailsApproved").description("Flag to signify if all bank details are already approved"),
             fieldWithPath("partnerStatusResources").description("List of statuses for all partners"),
             fieldWithPath("researchParticipationPercentage").description("Research participation percentage for the project"),
-            fieldWithPath("competitionMaximumResearchPercentage").description("Maximum research participation percentage for the competition")
+            fieldWithPath("competitionMaximumResearchPercentage").description("Maximum research participation percentage for the competition"),
+            fieldWithPath("applicationId").description("Id of application that lead to project that the status is from")
     };
 
     public static final FieldDescriptor[] financeCheckOverviewResourceFields = {
-            fieldWithPath("projectId").description("Id or project that the status is from"),
+            fieldWithPath("projectId").description("Id of project that the status is from"),
             fieldWithPath("projectName").description("Name of project that the status is from"),
             fieldWithPath("projectStartDate").description("Expected start date of project"),
             fieldWithPath("durationInMonths").description("Total expected project duration in months"),
@@ -40,7 +41,7 @@ public class FinanceCheckDocs {
     };
 
     public static final FieldDescriptor[] financeCheckEligibilityResourceFields = {
-            fieldWithPath("projectId").description("Id or project that the eligibility is from"),
+            fieldWithPath("projectId").description("Id of project that the eligibility is from"),
             fieldWithPath("organisationId").description("Id of organisation that the eligibility is from"),
             fieldWithPath("durationInMonths").description("Total expected project duration in months"),
             fieldWithPath("totalCost").description("Total cost of project for the organisation"),

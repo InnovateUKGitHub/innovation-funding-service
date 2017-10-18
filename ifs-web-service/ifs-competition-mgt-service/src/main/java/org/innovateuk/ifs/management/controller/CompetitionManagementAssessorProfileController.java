@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
 public class CompetitionManagementAssessorProfileController {
 
     @Autowired
