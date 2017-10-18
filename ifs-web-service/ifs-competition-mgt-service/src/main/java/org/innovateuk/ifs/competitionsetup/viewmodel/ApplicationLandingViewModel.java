@@ -22,4 +22,8 @@ public class ApplicationLandingViewModel extends CompetitionSetupViewModel {
     public List<QuestionResource> getProjectDetails() {
         return projectDetails;
     }
+
+    public boolean multipleAssessedQuestionsLeft() {
+        return questions != null && questions.size() > 1;
+    }
 }

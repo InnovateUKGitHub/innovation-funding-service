@@ -110,7 +110,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         //Perform checks
         Question question = questionRepository.findOne(questionId);
         questionTemplatePersistorService.deleteEntityById(questionId);
-        updateFollowingQuestionsPrioritiesByDelta(-1, question.getPriority().longValue(), question.getCompetition().getId());
+        updateFollowingQuestionsPrioritiesByDelta(-1, question.getPriority(), question.getCompetition().getId());
         updateQuestionNumbers(question.getCompetition().getId(), question.getSection().getId());
 
         return serviceSuccess();
@@ -121,12 +121,12 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         Question assessedQuestionWithHighestPriority = questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(createdQuestion.getCompetition().getId(), createdQuestion.getSection().getId());
         createdQuestion.setPriority(assessedQuestionWithHighestPriority.getPriority() + 1);
 
-        updateFollowingQuestionsPrioritiesByDelta(1, createdQuestion.getPriority().longValue(), createdQuestion.getCompetition().getId());
+        updateFollowingQuestionsPrioritiesByDelta(1, createdQuestion.getPriority(), createdQuestion.getCompetition().getId());
 
         return questionRepository.save(createdQuestion);
     }
 
-    private void updateFollowingQuestionsPrioritiesByDelta(int delta, Long priority, Long competitionId) {
+    private void updateFollowingQuestionsPrioritiesByDelta(int delta, Integer priority, Long competitionId) {
         List<Question> subsequentQuestions = questionRepository.findByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(competitionId, priority);
 
         subsequentQuestions.stream().forEach(question -> question.setPriority(question.getPriority() + 1));

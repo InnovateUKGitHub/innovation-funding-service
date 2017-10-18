@@ -47,12 +47,11 @@
                         <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}">
                             <th:block th:text="${question.questionNumber} + '. '"></th:block>
                             <th:block th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
-
                         </a>
                     </h4>
                 </div>
                 <th:form>
-                    <button type="submit" th:value="${question.id}" name="deleteQuestion">Delete Question</button>
+                    <button th:if="${model.multipleAssessedQuestionsLeft()}" type="submit" th:value="${question.id}" name="deleteQuestion">Delete Question</button>
                 </th:form>
                 <!--/* TODO IFS-743 This markup will be required for showing the status of this task in ifs-743 */-->
                 <!--/*<div class="task-status-complete"><span>Complete</span></div>*/-->
