@@ -31,7 +31,7 @@ Assessment panel links are active if the assessment panel has been set
     When the user clicks the button/link   link=Invite assessors to attend
     Then the user should see the element   jQuery=h1:contains("Invite assessors to panel")
 
-No Assessors in Invite and Overview tab
+There are no Assessors in Invite and Overview tab before sending invite
     [Documentation]  IFS-1561
     [Tags]
     Given the user clicks the button/link  link=Invite
