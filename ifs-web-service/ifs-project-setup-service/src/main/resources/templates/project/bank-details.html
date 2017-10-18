@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Bank Details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Bank Details',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body th:with="context='project'" class="bank-detail">
   <th:block th:insert="fragments/layout :: body-start" />
@@ -12,22 +12,21 @@
 <main tabindex="-1" id="content">
   <th:block th:insert="fragments/layout :: main-content-start" />
   <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}" />
-  <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank account',subTitle=${project.name},size='heading-xlarge'" />
 
-  <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:with="readonly=${bankDetails == null ? false : true}">
-
-  <div class="error-summary" th:if="${#fields.hasErrors('*')}">
-      <h2 class="heading-medium error-summary-heading">
-          We are unable to save your bank account details:
-      </h2>
-      <ul class="error-summary-list">
-          <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-      </ul>
-      <ul class="list-bullet">
+  <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+      <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We are unable to save your bank account details:</h2>
+      <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+      <!-- /* only show underneath messages if there are global errors, which in this case are experian errors.
+              Stub values for the inputs can be found in bank details acceptance tests. */-->
+      <ul class="list-bullet" th:if="${#fields.hasErrors('${form}')}">
           <li>please check your account number</li>
           <li>please check your sort code</li>
       </ul>
   </div>
+
+  <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank account',subTitle=${project.name},size='heading-xlarge'" />
+
+  <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate" th:with="readonly=${bankDetails == null ? false : true}">
 
   <th:block th:unless="${bankDetails == null}" >
       <p th:unless="${bankDetails.approved}">The bank account details below are being reviewed. We will contact you if we need any further information.</p>
@@ -55,30 +54,30 @@
     <th:block th:unless="${readonly}">
 
       <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('accountNumber')} ? 'form-group-error'">
-        <label for="bank-acc-number">
+        <label for="accountNumber">
           <span class="form-label-bold">Account number</span>
           <span class="form-hint">For example: 15481965</span>
           <th:block th:if="${#fields.hasErrors('accountNumber')}">
                 <span class="error-message" th:each="err : ${#fields.errors('accountNumber')}" th:text="${err}"></span>
           </th:block>
         </label>
-        <input type="text" th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},data-pattern-errormessage=#{validation.standard.accountnumber.format}" th:errorclass="form-control-error" required="required" pattern="[0-9]{8,}" data-prevent-input-regex="[^0-9]" maxlength="8" id="bank-acc-number" class="form-control width-medium" th:field="*{accountNumber}"/>
+        <input type="text" th:attr="data-required-errormessage=#{validation.standard.accountnumber.required},data-pattern-errormessage=#{validation.standard.accountnumber.format}" th:errorclass="form-control-error" required="required" pattern="[0-9]{8,}" data-prevent-input-regex="[^0-9]" maxlength="8" id="accountNumber" class="form-control width-medium" th:field="*{accountNumber}"/>
       </div>
 
       <div class="form-group" th:classappend="${#fields.hasErrors('sortCode')} ? 'form-group-error'">
-        <label for="bank-sort-code">
+        <label for="sortCode">
           <span class="form-label-bold">Sort code</span>
           <span class="form-hint">For example: 311212</span>
           <th:block th:if="${#fields.hasErrors('sortCode')}">
                 <span class="error-message" th:each="err : ${#fields.errors('sortCode')}" th:text="${err}"></span>
           </th:block>
         </label>
-        <input type="text" th:attr="data-required-errormessage=#{validation.standard.sortcode.required},data-pattern-errormessage=#{validation.standard.sortcode.format}" th:errorclass="form-control-error" required="required"  pattern="[0-9]{6,}" data-prevent-input-regex="[^0-9]" maxlength="6" id="bank-sort-code" class="form-control width-medium" th:field="*{sortCode}"/>
+        <input type="text" th:attr="data-required-errormessage=#{validation.standard.sortcode.required},data-pattern-errormessage=#{validation.standard.sortcode.format}" th:errorclass="form-control-error" required="required"  pattern="[0-9]{6,}" data-prevent-input-regex="[^0-9]" maxlength="6" id="sortCode" class="form-control width-medium" th:field="*{sortCode}"/>
       </div>
 
       <div class="form-group"  th:classappend="${#fields.hasErrors('*{addressType}')} ? 'form-group-error'">
         <fieldset>
-            <legend>
+            <legend id="addressType">
               <h2 class="heading-medium">Billing address</h2>
               <th:block th:if="${#fields.hasErrors('*{addressType}')}">
                   <span class="error-message" th:each="err : ${#fields.errors('addressType')}" th:text="${err}"></span>

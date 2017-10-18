@@ -13,7 +13,7 @@ Applicant has options to enter funding level and details of any other funding
     [Tags]    HappyPath
     When the user clicks the button/link    link=Your funding
     And the user selects the radio button    other_funding-otherPublicFunding-    Yes
-    Then the user should see the element    id=cost-financegrantclaim
+    Then the user should see the element    css=[name^="finance-grantclaimpercentage"]
     And the user should see the element    css=[name*=other_funding-fundingSource]
     And the user should see the element    css=[name*=other_funding-securedDate]
     And the user should see the element    css=[name*=other_funding-fundingAmount]
@@ -27,10 +27,10 @@ Applicant can see maximum funding size available to them
 Funding level validations
     [Documentation]    INFUND-6794
     [Tags]
-    When the user enters text to a text field    id=cost-financegrantclaim    26
+    When the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]    26
     And the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then the user should see the element    jQuery=span.error-message:contains("This field should be 25% or lower.")
-    When the user enters text to a text field    id=cost-financegrantclaim    25
+    When the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]    25
     Then the user should not see the element    jQuery=span.error-message:contains("This field should be 25% or lower.")
     And the user should not see the element    css=.error-message
 
@@ -82,7 +82,7 @@ Funding level has been reset
 Funding level can be re-entered, and this saves correctly
     [Documentation]  INFUND-6895
     [Tags]  HappyPath
-    Given the user enters text to a text field  id=cost-financegrantclaim    43
+    Given the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]    43
     When the user enters text to a text field   css=[name*=other_funding-fundingSource]  Lottery funding
     Then the user enters text to a text field       css=[name*=other_funding-securedDate]  12-${nextyear}
     And the user enters text to a text field        css=[name*=other_funding-fundingAmount]  20000

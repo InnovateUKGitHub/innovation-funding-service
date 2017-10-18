@@ -158,7 +158,7 @@ Summary:Assessor should be able to re-edit before submit
     [Documentation]    INFUND-3400
     When The user clicks the button/link    jQuery=#collapsible-1 a:contains("Return to this question")
     and The user should see the text in the page    What is the business opportunity that your project addresses?
-    When the user selects the option from the drop-down menu    8    id=assessor-question-score
+    When the user selects the option from the drop-down menu    8    css=.assessor-question-score
     And the user enters text to a text field    css=.editor    This is a new feedback entry.
     And the user clicks the button/link    jQuery=a:contains("Back to your assessment overview")
     And the user clicks the button/link    jQuery=a:contains("Review and complete your assessment")
@@ -297,58 +297,58 @@ the collapsible button should contain
 
 the user adds score and feedback for every question
     The user clicks the button/link    link=Scope
-    The user selects the index from the drop-down menu    1    id=research-category
+    The user selects the index from the drop-down menu    1    css=.research-category
     The user clicks the button/link    jQuery=label:contains("Yes")
     The user enters text to a text field    css=.editor    Testing scope feedback text
     Focus    jQuery=a:contains("Sign out")
     Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user selects the option from the drop-down menu    10    css=.assessor-question-score
     The user enters text to a text field    css=.editor    Testing Business opportunity feedback text
     Focus    jQuery=a:contains("Sign out")
     Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user selects the option from the drop-down menu    10    css=.assessor-question-score
     The user enters text to a text field    css=.editor    Testing Potential market feedback text
     Focus    jQuery=a:contains("Sign out")
     Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user selects the option from the drop-down menu    10    css=.assessor-question-score
     The user enters text to a text field    css=.editor    Testing Project exploitation feedback text
     Focus    jQuery=a:contains("Sign out")
     Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user selects the option from the drop-down menu    10    css=.assessor-question-score
     The user enters text to a text field    css=.editor    Testing Economic benefit feedback text
     Focus    jQuery=a:contains("Sign out")
     Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user selects the option from the drop-down menu    10    css=.assessor-question-score
     The user enters text to a text field    css=.editor    Testing Technical approach feedback text
     Focus    jQuery=a:contains("Sign out")
     Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user selects the option from the drop-down menu    10    css=.assessor-question-score
     The user enters text to a text field    css=.editor    Testing Innovation feedback text
     Focus    jQuery=a:contains("Sign out")
     Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user selects the option from the drop-down menu    10    css=.assessor-question-score
     The user enters text to a text field    css=.editor    Testing Risks feedback text
     Focus    jQuery=a:contains("Sign out")
     Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user selects the option from the drop-down menu    10    css=.assessor-question-score
     The user enters text to a text field    css=.editor    Testing Project team feedback text
     Focus    jQuery=a:contains("Sign out")
     Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user selects the option from the drop-down menu    10    css=.assessor-question-score
     The user enters text to a text field    css=.editor    Testing Funding feedback text
     Focus    jQuery=a:contains("Sign out")
     Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    id=assessor-question-score
+    The user selects the option from the drop-down menu    10    css=.assessor-question-score
     The user enters text to a text field    css=.editor    Testing Adding value feedback text
     Focus    jQuery=a:contains("Sign out")
     Wait Until Page Contains Without Screenshots    Saved!
