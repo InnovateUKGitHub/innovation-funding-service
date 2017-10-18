@@ -60,10 +60,15 @@ public class SectionTemplatePersistorService implements BaseChainedTemplatePersi
         };
     }
 
+    public void cleanForPrecedingEntityRecursively(Section section) {
+        section.getChildSections().stream().forEach(s -> cleanForPrecedingEntityRecursively(s));
+
+        questionTemplatePersistorServiceService.cleanForPrecedingEntity(section);
+        sectionRepository.delete(section);
+    }
+
     public void cleanForPrecedingEntity(Competition competition) {
         List<Section> sections = competition.getSections();
-        sections.stream().forEach(section -> questionTemplatePersistorServiceService.cleanForPrecedingEntity(section));
-
-        sectionRepository.delete(sections);
+        sections.stream().forEach(section -> cleanForPrecedingEntityRecursively(section));
     }
 }

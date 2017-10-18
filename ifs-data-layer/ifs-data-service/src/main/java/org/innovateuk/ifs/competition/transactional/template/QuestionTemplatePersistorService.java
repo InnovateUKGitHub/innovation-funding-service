@@ -49,10 +49,11 @@ public class QuestionTemplatePersistorService implements BaseChainedTemplatePers
     @Transactional
     public void cleanForPrecedingEntity(Section section) {
         List<Question> questions = section.getQuestions();
+        if(questions != null) {
+            questions.stream().forEach(question -> formInputTemplateService.cleanForPrecedingEntity(question));
 
-        questions.stream().forEach(question -> formInputTemplateService.cleanForPrecedingEntity(question));
-
-        questionRepository.delete(questions);
+            questionRepository.delete(questions);
+        }
     }
 
     private Function<Question, Question> createQuestionFunction() {

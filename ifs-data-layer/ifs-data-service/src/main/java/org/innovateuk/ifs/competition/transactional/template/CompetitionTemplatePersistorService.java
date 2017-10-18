@@ -23,10 +23,10 @@ public class CompetitionTemplatePersistorService implements BaseTemplatePersisto
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Transactional
     public void cleanByEntityId(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
-        // Disabled clean for now as it was causing problems and have to see if we even need it.
-        //sectionTemplateService.cleanForPrecedingEntity(competition);
+        sectionTemplateService.cleanForPrecedingEntity(competition);
     }
 
     @Override

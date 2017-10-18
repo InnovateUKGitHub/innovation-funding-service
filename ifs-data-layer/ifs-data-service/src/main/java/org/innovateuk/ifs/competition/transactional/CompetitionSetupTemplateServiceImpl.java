@@ -15,13 +15,11 @@ import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorService;
 import org.innovateuk.ifs.competition.transactional.template.DefaultApplicationQuestionFactory;
+import org.innovateuk.ifs.competition.transactional.template.QuestionPriorityService;
 import org.innovateuk.ifs.competition.transactional.template.QuestionTemplatePersistorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -59,8 +57,8 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     @Autowired
     private QuestionRepository questionRepository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private QuestionPriorityService questionPriorityService;
 
     @Override
     public ServiceResult<Competition> createCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
@@ -71,12 +69,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competition.setCompetitionType(competitionType);
         competition = setDefaultAssessorPayAndCount(competition);
 
-        List<Section> sectionList = new ArrayList<>(template.getSections());
-
-        competition.setSections(sectionList);
-
-        //Perform checks
-
         if (competition == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
@@ -86,12 +78,19 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         }
 
         competitionTemplatePersistor.cleanByEntityId(competition.getId());
+
+        List<Section> sectionList = new ArrayList<>(template.getSections());
+        competition.setSections(sectionList);
+
         return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
     }
 
     @Override
     public ServiceResult<Question> createDefaultForApplicationSection(Competition competition) {
         //Perform checks
+        if (competition == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {
+            return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
+        }
 
         Section applicationQuestionsSection = sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), "Application questions");
         Question question = defaultApplicationQuestionFactory.buildQuestion(competition);
@@ -99,59 +98,24 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         question.setCompetition(competition);
 
         Question createdQuestion = questionTemplatePersistorService.persistByEntity(Arrays.asList(question)).get(0);
-        Question prioritizedQuestion = prioritizeQuestion(createdQuestion);
-        updateQuestionNumbers(createdQuestion.getCompetition().getId(), createdQuestion.getSection().getId());
+        Question prioritizedQuestion = questionPriorityService.prioritiseAssessedQuestionAfterCreation(createdQuestion);
 
         return serviceSuccess(prioritizedQuestion);
     }
 
     @Override
     public ServiceResult<Void> deleteQuestionInApplicationSection(Long questionId) {
-        //Perform checks
         Question question = questionRepository.findOne(questionId);
+
+        if (question.getCompetition() == null || !question.getCompetition().getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {
+            return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
+        }
+
         questionTemplatePersistorService.deleteEntityById(questionId);
-        updateFollowingQuestionsPrioritiesByDelta(-1, question.getPriority(), question.getCompetition().getId());
-        updateQuestionNumbers(question.getCompetition().getId(), question.getSection().getId());
+        questionPriorityService.reprioritiseAssessedQuestionsAfterDeletion(question);
 
         return serviceSuccess();
     }
-
-    @Transactional
-    private Question prioritizeQuestion(Question createdQuestion) {
-        Question assessedQuestionWithHighestPriority = questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(createdQuestion.getCompetition().getId(), createdQuestion.getSection().getId());
-        createdQuestion.setPriority(assessedQuestionWithHighestPriority.getPriority() + 1);
-
-        updateFollowingQuestionsPrioritiesByDelta(1, createdQuestion.getPriority(), createdQuestion.getCompetition().getId());
-
-        return questionRepository.save(createdQuestion);
-    }
-
-    private void updateFollowingQuestionsPrioritiesByDelta(int delta, Integer priority, Long competitionId) {
-        List<Question> subsequentQuestions = questionRepository.findByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(competitionId, priority);
-
-        subsequentQuestions.stream().forEach(question -> question.setPriority(question.getPriority() + 1));
-
-        questionRepository.save(subsequentQuestions);
-    }
-
-    @Transactional
-    private void updateQuestionNumbers(Long competitionId, Long sectionId) {
-        List<Question> assessedQuestions = questionRepository.findByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, sectionId);
-
-        Integer questionNumber = 1;
-
-        for(Question question : assessedQuestions) {
-            question.setQuestionNumber(questionNumber.toString());
-            questionNumber++;
-        }
-
-        questionRepository.save(assessedQuestions);
-    }
-
-    /*@Transactional
-    private Question reprioritizeSubsequentQuestions() {
-        List<Question> followingQuestions =
-    }*/
 
     private Competition setDefaultAssessorPayAndCount(Competition competition) {
         if (competition.getAssessorCount() == null) {
