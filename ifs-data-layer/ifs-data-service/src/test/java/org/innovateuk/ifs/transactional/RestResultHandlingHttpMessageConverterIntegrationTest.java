@@ -31,7 +31,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
- * Tests for the {org.innovateuk.ifs.rest.RestResultHandlingHttpMessageConverter}, to assert that it can take successful
+ * Tests for the {org.innovateuk.ifs.rest.AbstractRestResultHandlingHttpMessageConverter}, to assert that it can take successful
  * RestResults from Controllers and convert them into the "body" of the RestResult, and that it can take failing RestResults
  * and convert them into {@link RestErrorResponse} objects.
  */
