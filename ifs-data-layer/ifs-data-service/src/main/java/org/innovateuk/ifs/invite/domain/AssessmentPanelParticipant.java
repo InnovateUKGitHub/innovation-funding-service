@@ -63,15 +63,15 @@ public class AssessmentPanelParticipant extends CompetitionParticipant<Assessmen
         }
 
         if (getInvite().getStatus() != OPENED) {
-            throw new IllegalStateException("Cannot accept a CompetitionAssessmentParticipant that hasn't been opened");
+            throw new IllegalStateException("Cannot accept a AssessmentPanelInvite that hasn't been opened");
         }
 
         if (getStatus() == REJECTED) {
-            throw new IllegalStateException("Cannot accept a CompetitionAssessmentParticipant that has been rejected");
+            throw new IllegalStateException("Cannot accept a AssessmentPanelParticipant that has been rejected");
         }
 
         if (getStatus() == ACCEPTED) {
-            throw new IllegalStateException("CompetitionAssessmentParticipant has already been accepted");
+            throw new IllegalStateException("AssessmentPanelParticipant has already been accepted");
         }
 
         super.setStatus(ACCEPTED);

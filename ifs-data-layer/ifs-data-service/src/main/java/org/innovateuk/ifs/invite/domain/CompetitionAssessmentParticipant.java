@@ -63,7 +63,7 @@ public class CompetitionAssessmentParticipant extends CompetitionParticipant<Com
         }
 
         if (getInvite().getStatus() != OPENED) {
-            throw new IllegalStateException("Cannot accept a CompetitionAssessmentParticipant that hasn't been opened");
+            throw new IllegalStateException("Cannot accept a CompetitionInvite that hasn't been opened");
         }
 
         if (getStatus() == REJECTED) {
