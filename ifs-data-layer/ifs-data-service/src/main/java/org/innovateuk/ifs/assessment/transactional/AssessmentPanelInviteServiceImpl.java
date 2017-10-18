@@ -249,6 +249,16 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
     }
 
+    @Override
+    public ServiceResult<List<AssessmentPanelInviteResource>> getAllInvitesByUser(long userId) {
+        return serviceSuccess(
+                assessmentPanelInviteRepository
+                .getByUserId(userId)
+                .stream()
+                .map(invite -> new AssessmentPanelInviteResource(invite.getHash(), invite.getTarget().getId(), invite.getTarget().getName(), invite.getStatus()))
+                .collect(toList()));
+    }
+
     private ServiceResult<Competition> getCompetition(long competitionId) {
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId));
     }

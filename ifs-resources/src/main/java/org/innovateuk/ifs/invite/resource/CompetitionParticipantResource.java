@@ -21,6 +21,7 @@ public class CompetitionParticipantResource {
     private Long competitionId;
     private Long userId;
     private CompetitionInviteResource invite;
+    private AssessmentPanelInviteResource assessmentPanelInviteResource;
     private RejectionReasonResource rejectionReason;
     private String rejectionReasonComment;
     private CompetitionParticipantRoleResource role;
@@ -200,8 +201,7 @@ public class CompetitionParticipantResource {
             return 100;
         }
         double deadlineProgress = 100 - (((double) daysLeft / (double) totalDays) * 100);
-        long startDateToEndDatePercentage = (long) deadlineProgress;
-        return startDateToEndDatePercentage;
+        return (long) deadlineProgress;
     }
 
     @Override

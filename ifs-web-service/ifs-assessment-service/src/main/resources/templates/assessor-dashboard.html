@@ -145,6 +145,23 @@
                 </div>
             </div>
 
+            <div class="assessment-panel-invites" th:unless="${#lists.isEmpty(model.assessmentPanelInvites)}">
+                <div class="progress-list"><h2 class="heading-medium">Invitations to attend panel (<span
+                    th:text="${#lists.size(model.assessmentPanelInvites)}"/>)</h2>
+                    <ul>
+                        <li th:each="assessmentPanelInvite : ${model.assessmentPanelInvites}" class="status-2-col">
+                            <div class="task">
+                                <h3 class="heading-small">
+                                    <a th:href="@{/competition/{competitionId}/inviteHash(competitionId=${assessmentPanelInvite.competitionId}, inviteHash=${assessmentPanelInvite.inviteHash})}"
+                                       th:text="${assessmentPanelInvite.competitionName}"/>
+                                </h3>
+                            </div>
+                            <div class="call-to-action"> You have been asked to attend this competition. Please respond</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <h2 class="heading-medium">Your assessor details</h2>
             <ul class="list list-bullet">
                 <li>

@@ -25,5 +25,7 @@ public interface AssessmentPanelInviteRepository extends PagingAndSortingReposit
     Page<AssessmentPanelInvite> getByCompetitionIdAndStatus(long competitionId, InviteStatus status, Pageable pageable);
 
     int countByCompetitionIdAndStatusIn(long competitionId, Set<InviteStatus> statuses);
+
+    List<AssessmentPanelInvite> getByUserId(long userId);
 }
 

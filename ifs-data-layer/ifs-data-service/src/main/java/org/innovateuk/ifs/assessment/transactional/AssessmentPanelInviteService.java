@@ -50,4 +50,9 @@ public interface AssessmentPanelInviteService {
             description = "The Competition Admin user and Project Finance users can create assessment panel invites for existing users")
     ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInvites);
 
+//    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+//    @SecuredBySpring(value = "GET_ALL_INVITES_FOR_A_USER",
+//            description = "The competition admin user and finance users can view all invites for a particular user")
+    ServiceResult<List<AssessmentPanelInviteResource>> getAllInvitesByUser(long userId);
+
 }

@@ -62,4 +62,11 @@ public class AssessmentPanelInviteController {
             @PathVariable long competitionId) {
         return assessmentPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
     }
+
+    @GetMapping("/getAllInvitesByUser/{userId}")
+    public RestResult<List<AssessmentPanelInviteResource>> getAllInvitesByUser(
+            @PathVariable long userId) {
+        return assessmentPanelInviteService.getAllInvitesByUser(userId).toGetResponse();
+    }
+
 }
