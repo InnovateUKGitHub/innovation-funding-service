@@ -49,7 +49,9 @@ public class CompetitionAssessmentParticipant extends CompetitionParticipant<Com
             throw new IllegalArgumentException("invite.status must be SENT or OPENED");
         }
 
-        super.setUser(invite.getUser());
+        if (invite.getUser() != null) {
+            super.setUser(invite.getUser());
+        }
         super.setProcess(invite.getTarget());
         this.invite = invite;
         super.setRole(CompetitionParticipantRole.ASSESSOR);
@@ -79,6 +81,10 @@ public class CompetitionAssessmentParticipant extends CompetitionParticipant<Com
 
     public void setStatus(ParticipantStatus status) {
         super.setStatus(status);
+    }
+
+    public void setRole(CompetitionParticipantRole role) {
+        super.setRole(role);
     }
 
     public CompetitionAssessmentParticipant acceptAndAssignUser(User user) {

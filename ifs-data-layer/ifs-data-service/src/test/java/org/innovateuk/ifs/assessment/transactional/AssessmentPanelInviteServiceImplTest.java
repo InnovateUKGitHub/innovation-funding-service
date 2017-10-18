@@ -40,8 +40,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
-import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelParticipantBuilder.newAssessmentPanelParticipant;
 import static org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL;
@@ -112,7 +112,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
         innovationArea = newInnovationArea().build();
         CompetitionInvite competitionInvite = setUpCompetitionInvite(competition, SENT, innovationArea);
-        CompetitionParticipant competitionParticipant = new CompetitionParticipant(competitionInvite);
+        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(competitionInvite);
 
         AssessmentPanelInvite assessmentPanelInvite = setUpAssessmentPanelInvite(competition, SENT);
         AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentPanelInvite);
@@ -197,13 +197,13 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withProfileId(profile.get(0).getId(), profile.get(1).getId())
                 .build(2);
 
-        List<CompetitionParticipant> participants = newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> participants = newCompetitionAssessmentParticipant()
                 .withUser(assessors.get(0), assessors.get(1))
                 .build(2);
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
-        Page<CompetitionParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
+        Page<CompetitionAssessmentParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
 
         when(competitionParticipantRepositoryMock.findParticipantsNotOnPanel(competitionId, pageable))
                 .thenReturn(expectedPage);
@@ -234,7 +234,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
-        Page<CompetitionParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
+        Page<CompetitionAssessmentParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
         when(competitionParticipantRepositoryMock.findParticipantsNotOnPanel(competitionId, pageable))
                 .thenReturn(assessorPage);
@@ -282,7 +282,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withProfileId(profiles.get(0).getId(), profiles.get(1).getId())
                 .build(2);
 
-        List<CompetitionParticipant> participants = newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> participants = newCompetitionAssessmentParticipant()
                 .withUser(assessorUsers.get(0), assessorUsers.get(1))
                 .build(2);
 

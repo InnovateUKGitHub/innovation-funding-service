@@ -79,7 +79,7 @@ public abstract class CompetitionParticipant<I extends Invite<Competition,I>> ex
         return competition;
     }
 
-    protected void setProcess(Competition process) {
+    public void setProcess(Competition process) {
         this.competition = process;
     }
 
@@ -97,7 +97,7 @@ public abstract class CompetitionParticipant<I extends Invite<Competition,I>> ex
         return user;
     }
 
-    protected void setUser(User user) {
+    public void setUser(User user) {
         if (user == null) {
             throw new NullPointerException("user cannot be null");
         }

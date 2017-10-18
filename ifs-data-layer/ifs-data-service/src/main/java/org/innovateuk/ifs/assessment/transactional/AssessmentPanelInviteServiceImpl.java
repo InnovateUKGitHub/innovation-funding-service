@@ -188,7 +188,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
     @Override
         public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
-            final Page<CompetitionParticipant> pagedResult = competitionParticipantRepository.findParticipantsNotOnPanel(competitionId, pageable);
+            final Page<CompetitionAssessmentParticipant> pagedResult = competitionParticipantRepository.findParticipantsNotOnPanel(competitionId, pageable);
 
             return serviceSuccess(new AvailableAssessorPageResource(
                     pagedResult.getTotalElements(),
@@ -201,7 +201,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
     @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
-        List<CompetitionParticipant> result = competitionParticipantRepository.findParticipantsNotOnPanel(competitionId);
+        List<CompetitionAssessmentParticipant> result = competitionParticipantRepository.findParticipantsNotOnPanel(competitionId);
 
         return serviceSuccess(simpleMap(result, competitionParticipant -> competitionParticipant.getUser().getId()));
     }

@@ -189,6 +189,18 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
     @Test
     public void getAssessorsByCompetitionAndStatus() throws Exception {
         loginSteveSmith();
+
+        User acceptedUser = newUser()
+                .withId()
+                .withEmailAddress("ah@test2.com")
+                .withUid("uid-1")
+                .withFirstName("Anthony")
+                .withLastName("Hale")
+                .withProfileId()
+                .build();
+
+        userRepository.save(acceptedUser);
+
         List<AssessmentPanelInvite> newAssessorInvites = newAssessmentPanelInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
@@ -198,19 +210,8 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
 
         List<AssessmentPanelParticipant> assessmentPanelParticipants = saveNewAssessmentPanelParticipants(newAssessorInvites);
 
-        User user = newUser()
-                .withId()
-                .withEmailAddress("ah@test2.com")
-                .withUid("uid-1")
-                .withFirstName("Anthony")
-                .withLastName("Hale")
-                .withProfileId()
-                .build();
-
-        userRepository.save(user);
-
         assessmentPanelParticipants.get(3).getInvite().open();
-        assessmentPanelParticipants.get(3).acceptAndAssignUser(user);
+        assessmentPanelParticipants.get(3).acceptAndAssignUser(acceptedUser);
 
         repository.save(assessmentPanelParticipants);
         flushAndClearSession();
