@@ -7,9 +7,11 @@ import org.springframework.stereotype.Component;
 /**
  * The default Rest Template Adaptor that talks to the IFS API, passing the appropriate authentication tokens depending
  * upon who is logged in
+ * Note that this does not have the {@link Component} annotation as doing so would force dependent projects to provide
+ * the dependencies of this class whether or not it is needed. Instead this class should be subclasses where it is
+ * required and the annotation added to that.
  */
-@Component
-public class RestTemplateAdaptor extends AbstractInternalRestTemplateAdaptor {
+public class AbstractDefaultRestTemplateAdaptor extends AbstractInternalRestTemplateAdaptor {
 
     @Override
     protected void setAuthenticationToken(HttpHeaders headers) {

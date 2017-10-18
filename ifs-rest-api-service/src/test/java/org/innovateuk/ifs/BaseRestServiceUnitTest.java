@@ -1,10 +1,10 @@
 package org.innovateuk.ifs;
 
 import org.innovateuk.ifs.commons.security.authentication.token.Authentication;
-import org.innovateuk.ifs.commons.service.AnonymousUserRestTemplateAdaptor;
+import org.innovateuk.ifs.commons.service.AbstractAnonymousUserRestTemplateAdaptor;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.HttpHeadersUtils;
-import org.innovateuk.ifs.commons.service.RestTemplateAdaptor;
+import org.innovateuk.ifs.commons.service.AbstractDefaultRestTemplateAdaptor;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -57,11 +57,11 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         service = registerRestServiceUnderTest();
         service.setDataRestServiceUrl(dataServicesUrl);
 
-        RestTemplateAdaptor adaptor = new RestTemplateAdaptor();
+        AbstractDefaultRestTemplateAdaptor adaptor = new AbstractDefaultRestTemplateAdaptor();
         adaptor.setRestTemplate(mockRestTemplate);
         adaptor.setAsyncRestTemplate(mockAsyncRestTemplate);
 
-        AnonymousUserRestTemplateAdaptor anonymousUserRestTemplateAdaptor = new AnonymousUserRestTemplateAdaptor();
+        AbstractAnonymousUserRestTemplateAdaptor anonymousUserRestTemplateAdaptor = new AbstractAnonymousUserRestTemplateAdaptor();
         ReflectionTestUtils.setField(anonymousUserRestTemplateAdaptor, "ifsWebSystemUserUid", ANONYMOUS_AUTH_TOKEN);
         anonymousUserRestTemplateAdaptor.setRestTemplate(mockRestTemplate);
         anonymousUserRestTemplateAdaptor.setAsyncRestTemplate(mockAsyncRestTemplate);

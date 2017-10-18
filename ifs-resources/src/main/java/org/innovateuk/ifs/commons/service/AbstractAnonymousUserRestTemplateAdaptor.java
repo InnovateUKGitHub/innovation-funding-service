@@ -7,9 +7,11 @@ import org.springframework.stereotype.Component;
 
 /**
  * A Rest Template Adaptor that is able to make restricted calls on behalf of anonymous users e.g. during registration
+ * Note that this does not have the {@link Component} annotation as doing so would force dependent projects to provide
+ * the dependencies of this class whether or not it is needed. Instead this class should be subclasses where it is
+ * required and the annotation added to that.
  */
-@Component
-public class AnonymousUserRestTemplateAdaptor extends AbstractInternalRestTemplateAdaptor {
+public class AbstractAnonymousUserRestTemplateAdaptor extends AbstractInternalRestTemplateAdaptor {
 
     @Value("${ifs.web.system.user.uid}")
     private String ifsWebSystemUserUid = null;
