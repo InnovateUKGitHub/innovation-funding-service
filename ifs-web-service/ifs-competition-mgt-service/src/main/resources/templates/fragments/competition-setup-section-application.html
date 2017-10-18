@@ -40,8 +40,8 @@
         </ul>
 
         <h3 class="heading-small">Assessed questions</h3>
-        <ul class="task-list">
-            <li th:each="question : ${model.questions}">
+        <ul class="task-list no-margin-bottom">
+            <li th:each="question, iteration : ${model.questions}">
                 <div class="task">
                     <h4 class="heading-small">
                         <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}">
@@ -51,18 +51,23 @@
                         </a>
                     </h4>
                 </div>
-                <th:form>
-                    <button type="submit" th:value="${question.id}" name="deleteQuestion">Delete Question</button>
-                </th:form>
+                <div th:unless="${iteration.index == 0}" class="task-status">
+                    <th:form>
+                        <button type="submit" th:value="${question.id}" name="deleteQuestion" class="buttonlink no-margin">Remove</button>
+                    </th:form>
+                </div>
+
                 <!--/* TODO IFS-743 This markup will be required for showing the status of this task in ifs-743 */-->
                 <!--/*<div class="task-status-complete"><span>Complete</span></div>*/-->
             </li>
         </ul>
         <th:form>
-            <button type="submit" name="createQuestion">Create Question</button>
+            <p>
+                <button type="submit" name="createQuestion" class="buttonlink">Add Question</button>
+            </p>
         </th:form>
 
-        <h3 class="heading-small no-margin">Finances</h3>
+        <h3 class="heading-small">Finances</h3>
         <ul class="task-list">
             <li>
                 <div class="task">
