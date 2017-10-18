@@ -30,7 +30,7 @@ import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
-import static org.innovateuk.ifs.user.resource.UserRoleType.externalRoles;
+import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -121,7 +121,7 @@ public class UserController {
 
     @GetMapping("/findAllExternal")
     public RestResult<List<UserOrganisationResource>> findAllExternal() {
-        return userService.findAllByProcessRoles(externalRoles()).toGetResponse();
+        return userService.findAllByProcessRoles(externalApplicantRoles()).toGetResponse();
     }
 
     @GetMapping("/findByEmail/{email}/")

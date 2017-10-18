@@ -178,7 +178,7 @@ public class UserManagementController {
                 userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
     }
 
-    @PreAuthorize("hasAnyAuthority('support, ifs_administrator')")
+    @PreAuthorize("hasAuthority('support')")
     @GetMapping(value = "/users/created")
     public String allExternalUsers(Model model) {
         return userRestService.findAllExternal().andOnSuccessReturn(users -> {
@@ -187,7 +187,7 @@ public class UserManagementController {
         }).getSuccessObjectOrThrowException();
     }
 
-    @PreAuthorize("hasAnyAuthority('support, ifs_administrator')")
+    @PreAuthorize("hasAuthority('support')")
     @GetMapping(value = "/invites")
     public String allExternalInviteds(Model model) {
         return inviteUserRestService.getAllExternalInvites().andOnSuccessReturn(invites -> {

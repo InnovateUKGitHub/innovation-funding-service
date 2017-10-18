@@ -69,7 +69,7 @@ public enum UserRoleType {
         return new HashSet<>(Arrays.asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD));
     }
 
-    public static Set<UserRoleType> externalRoles(){
+    public static Set<UserRoleType> externalApplicantRoles(){
         return new HashSet<>(Arrays.asList(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER));
     }
 }

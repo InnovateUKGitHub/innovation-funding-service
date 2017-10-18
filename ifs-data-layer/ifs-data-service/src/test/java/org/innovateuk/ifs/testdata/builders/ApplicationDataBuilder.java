@@ -128,6 +128,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         });
     }
 
+    // TODO: IFS-1971 - should be linking with specific org id, which should be passed in, not just org name
     public ApplicationDataBuilder inviteCollaboratorNotYetRegistered(String email, String hash, String name, String organisationName) {
 
         return asLeadApplicant(data -> doInviteCollaborator(data, organisationName, Optional.empty(), email, name, Optional.of(hash)));
@@ -189,6 +190,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
         List<Organisation> organisations = organisationRepository.findByUsersId(data.getLeadApplicant().getId());
         Organisation leadOrganisation = organisations.get(0);
 
+        // TODO: IFS-1971 - Because a specific org id is not passed in here, it is not setting organisation id for application invites
         List<ApplicationInviteResource> applicationInvite = baseApplicationInviteBuilder.
                 withApplication(data.getApplication().getId()).
                 withName(name).
@@ -199,6 +201,7 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                 withCompetitionId(data.getCompetition().getId()).
                 build(1);
 
+        // TODO: IFS-1971 - no org id set
         inviteService.createApplicationInvites(newInviteOrganisationResource().
                 withOrganisationName(organisationName).
                 withInviteResources(applicationInvite).

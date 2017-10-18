@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.security.TokenLookupStrategies;
 import org.innovateuk.ifs.token.security.TokenPermissionRules;
+import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -177,6 +179,11 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         @Override
         public ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable) {
             return serviceSuccess(new UserPageResource());
+        }
+
+        @Override
+        public ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes) {
+            return null;
         }
 
         @Override

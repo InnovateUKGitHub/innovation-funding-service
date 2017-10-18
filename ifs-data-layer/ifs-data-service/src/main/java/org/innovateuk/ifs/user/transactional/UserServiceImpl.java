@@ -2,7 +2,6 @@ package org.innovateuk.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
-import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -225,19 +224,15 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Override
     public ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes) {
-        List<User> users = userRepository.findByRolesNameIn(roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()));
+        List<User> users = userRepository.findByRolesNameInOrderByEmailAsc(roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()));
         List<UserOrganisationResource> userResources = simpleMap(users, user -> {
             List<Organisation> organisations = organisationRepository.findByUsersId(user.getId());
             return new UserOrganisationResource(userMapper.mapToResource(user), organisations.get(0).getId(), organisations.get(0).getName());
         });
-        return serviceSuccess(sortByUserName(userResources));
+        return serviceSuccess(userResources);
     }
 
     private List<UserResource> sortByName(List<UserResource> userResources) {
         return userResources.stream().sorted(Comparator.comparing(userResource -> userResource.getName().toUpperCase())).collect(Collectors.toList());
-    }
-
-    private List<UserOrganisationResource> sortByUserName(List<UserOrganisationResource> userOrganisationResources) {
-        return userOrganisationResources.stream().sorted(Comparator.comparing(uor -> uor.getUserResource().getName().toUpperCase())).collect(Collectors.toList());
     }
 }

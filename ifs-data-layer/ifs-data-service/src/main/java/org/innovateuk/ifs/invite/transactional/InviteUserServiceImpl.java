@@ -40,13 +40,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -234,9 +232,9 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     public ServiceResult<List<ExternalInviteResource>> getExternalInvites() {
         return find(() -> serviceSuccess(applicationInviteRepository.findByStatusIn(EnumSet.of(CREATED, SENT))), () -> serviceSuccess(inviteProjectRepository.findByStatusIn(EnumSet.of(CREATED, SENT))))
                 .andOnSuccess((appInvites, prjInvites) ->
-                        serviceSuccess(Stream.concat(
+                        serviceSuccess(sortByEmail(Stream.concat(
                                 getApplicationInvitesAsExternalInviteResource(appInvites).stream(),
-                                getProjectInvitesAsExternalInviteResource(prjInvites).stream()).collect(Collectors.toList()))
+                                getProjectInvitesAsExternalInviteResource(prjInvites).stream()).collect(Collectors.toList())))
                 );
     }
 
@@ -263,5 +261,9 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     private List<RoleInviteResource> sortByName(List<RoleInviteResource> roleInviteResources) {
         return roleInviteResources.stream().sorted(Comparator.comparing(roleInviteResource -> roleInviteResource.getName().toUpperCase())).collect(Collectors.toList());
+    }
+
+    private List<ExternalInviteResource> sortByEmail(List<ExternalInviteResource> extInviteResources) {
+        return extInviteResources.stream().sorted(Comparator.comparing(extInviteResource -> extInviteResource.getEmail().toUpperCase())).collect(Collectors.toList());
     }
 }

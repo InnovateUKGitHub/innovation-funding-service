@@ -34,6 +34,6 @@ public interface InviteUserService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable);
 
-    @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
+    @PreAuthorize("hasAuthority('support')")
     ServiceResult<List<ExternalInviteResource>> getExternalInvites();
 }
