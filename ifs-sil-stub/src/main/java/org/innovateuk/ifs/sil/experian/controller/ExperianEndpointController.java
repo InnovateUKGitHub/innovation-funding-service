@@ -22,7 +22,6 @@ import org.apache.commons.logging.LogFactory;
  */
 @RestController
 @RequestMapping("/silstub")
-@Profile("local")
 public class ExperianEndpointController {
     private static final Log LOG = LogFactory.getLog(ExperianEndpointController.class);
 

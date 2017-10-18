@@ -14,6 +14,7 @@ dependencies {
     compile project(":ifs-commons")
     compile "org.springframework:spring-web"
     compile 'javax.mail:mail:1.4.7'
+    testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
 }
 
 task getNewRelicAgent {

@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.sil.email.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.sil.AbstractEndpointControllerMockMvcTest;
 import org.innovateuk.ifs.sil.email.resource.SilEmailAddress;
 import org.innovateuk.ifs.sil.email.resource.SilEmailBody;
 import org.innovateuk.ifs.sil.email.resource.SilEmailMessage;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -21,9 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * Tests around the SIL email stub
  */
-@Ignore
-// TODO qqRP if we need this it should go in the sil stub project
-public class SimpleEmailEndpointControllerMockMvcTest extends BaseControllerMockMVCTest<SimpleEmailEndpointController> {
+public class SimpleEmailEndpointControllerMockMvcTest extends AbstractEndpointControllerMockMvcTest<SimpleEmailEndpointController> {
 
     @Override
     protected SimpleEmailEndpointController supplyControllerUnderTest() {
@@ -34,7 +31,6 @@ public class SimpleEmailEndpointControllerMockMvcTest extends BaseControllerMock
 
     @Test
     public void testSendMail() throws Exception {
-
         SilEmailAddress from = new SilEmailAddress("Sender", "sender@example.com");
         List<SilEmailAddress> to = singletonList(new SilEmailAddress("Recipient", "recipient@example.com"));
         SilEmailBody plainTextBody = new SilEmailBody("text/plain", "Some plain text");
@@ -44,19 +40,19 @@ public class SimpleEmailEndpointControllerMockMvcTest extends BaseControllerMock
         String requestBody = objectMapper.writeValueAsString(silEmail);
 
         mockMvc.
-            perform(
-                post("/silstub/sendmail").
-                    header("Content-Type", "application/json").
-                    header("IFS_AUTH_TOKEN", "123abc").
-                    content(requestBody)
-            ).
-            andExpect(status().isAccepted()).
-            andDo(document("silstub/sendmail",
-                requestHeaders(
-                    headerWithName("Content-Type").description("Needs to be application/json"),
-                    headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
-                )
-            ));
+                perform(
+                        post("/silstub/sendmail").
+                                header("Content-Type", "application/json").
+                                header("IFS_AUTH_TOKEN", "123abc").
+                                content(requestBody)
+                ).
+                andExpect(status().isAccepted()).
+                andDo(document("silstub/sendmail",
+                        requestHeaders(
+                                headerWithName("Content-Type").description("Needs to be application/json"),
+                                headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user")
+                        )
+                ));
     }
 }
 
