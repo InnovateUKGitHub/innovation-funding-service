@@ -157,9 +157,11 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Before
-    public  void setupData() {
-
+    public  void setLoggedInUserOnThread() {
         loginCompAdmin();
+    }
+
+    private void setupUserData() {
         projectFinanceUser = newUser().withRoles(newRole().withType(UserRoleType.PROJECT_FINANCE).buildSet(1)).withUid("uid2").withFirstName("z").withLastName("y").withEmailAddress("z@y.com").withCreatedOn(ZonedDateTime.now()).withCreatedBy(userMapper.mapToDomain(getSystemRegistrationUser())).build();
         projectFinanceUser = userRepository.save(projectFinanceUser);
         projectManagerUser = newUser().withRoles(newRole().withType(UserRoleType.PROJECT_MANAGER).buildSet(1)).withUid("uid1").withFirstName("a").withLastName("b").withEmailAddress("a@b.com").withCreatedOn(ZonedDateTime.now()).withCreatedBy(userMapper.mapToDomain(getSystemRegistrationUser())).build();
@@ -532,6 +534,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Test
+    @Transactional
     public void findMethods() throws Exception {
         List<CompetitionResource> existingComps = checkCompetitionCount(2);
 
@@ -647,6 +650,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Test
     @Transactional
     public void countOpenQueriesOneCreatedByProjectFinance() throws Exception {
+        setupUserData();
         Competition competition1 = newCompetition().build();
         competition1 = competitionRepository.save(competition1);
         Application application1 = newApplication().withCompetition(competition1).build();
@@ -681,6 +685,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     public void countOpenQueriesOneCreatedByProjectManager() throws Exception {
         // Note that this should not happen with the real system as only Project Finance user can create Queries
 
+        setupUserData();
         Competition competition1 = newCompetition().build();
         competition1 = competitionRepository.save(competition1);
         Application application1 = newApplication().withCompetition(competition1).build();
@@ -713,10 +718,10 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Test
     @Transactional
     public void countOpenQueriesOneCreatedByProjectFinancePMResponded() throws Exception {
-
-        Competition competition1 = newCompetition().build();
+        setupUserData();
+        Competition competition1 = newCompetition().withName("comp1").build();
         competition1 = competitionRepository.save(competition1);
-        Application application1 = newApplication().withCompetition(competition1).build();
+        Application application1 = newApplication().withCompetition(competition1).withName("app1").build();
         application1 = applicationRepository.save(application1);
         Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).build();
         project1 = projectRepository.save(project1);
@@ -753,17 +758,17 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         queryRepository.save(queryCreatedByProjectFinanceOnDifferentThread);
 
         // check that query from a different competition is ignored
-        Competition competition2 = newCompetition().build();
+        Competition competition2 = newCompetition().withId(competition1.getId() + 1).withName("comp2").build();
         competition2 = competitionRepository.save(competition2);
-        Application application2 = newApplication().withCompetition(competition2).build();
+        Application application2 = newApplication().withCompetition(competition2).withId(application1.getId() + 1).withName("app2").build();
         application2 = applicationRepository.save(application2);
-        Project project2 = newProject().withId(28L).withName("project23").withApplication(application2).build();
+        Project project2 = newProject().withId(project1.getId() + 1).withName("project2").withApplication(application2).build();
         project2 = projectRepository.save(project2);
         ProjectFinance projectFinance2 = newProjectFinance().withOrganisation(organisation1).withProject(project2).build();
         projectFinance2 = projectFinanceRepository.save(projectFinance2);
-        Post postCreatedByProjectFinanceOnDifferentCompetition = new Post(5L, projectFinanceUser, "query1", emptyList(), ZonedDateTime.now());
+        Post postCreatedByProjectFinanceOnDifferentCompetition = new Post(5L, projectFinanceUser, "query2", emptyList(), ZonedDateTime.now());
 
-        Post postCreatedByProjectManagerOnDifferentCompetition = new Post(6L, projectManagerUser, "response", emptyList(), ZonedDateTime.now().plusMinutes(1L));
+        Post postCreatedByProjectManagerOnDifferentCompetition = new Post(6L, projectManagerUser, "response2", emptyList(), ZonedDateTime.now().plusMinutes(1L));
 
         Query queryCreatedByProjectFinanceOnDifferentCompetition = new Query(3L,
                 projectFinance2.getId(),
@@ -813,7 +818,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Test
     @Transactional
     public void countOpenQueriesTwoPartnersHaveOpenQueries() throws Exception {
-
+        setupUserData();
         Competition competition1 = newCompetition().build();
         competition1 = competitionRepository.save(competition1);
         Application application1 = newApplication().withCompetition(competition1).build();
@@ -873,7 +878,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Test
     @Transactional
     public void countOpenQueriesTwoProjectsHaveOpenQueries() throws Exception {
-
+        setupUserData();
         Competition competition1 = newCompetition().build();
         competition1 = competitionRepository.save(competition1);
         Application application1 = newApplication().withCompetition(competition1).build();
@@ -958,9 +963,10 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                         .build()
         );
 
-        assessmentRepository.save(assessments);
+        List<Assessment> savedAssessments = new ArrayList();
+        assessmentRepository.save(assessments).forEach(a -> savedAssessments.add(a));
 
-        return assessments.stream().map(Assessment::getId).collect(Collectors.toList());
+        return savedAssessments.stream().map(Assessment::getId).collect(Collectors.toList());
     }
 
     private CompetitionResource createWithDates(ZonedDateTime startDate,
