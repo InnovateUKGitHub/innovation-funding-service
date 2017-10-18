@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Delete ' + ${model.organisationName}"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Delete ' + ${model.organisationName},hasFormErrors=${#fields.hasErrors('${form.*}')}"/>
 </head>
 
 <body class="app-org-invite" th:with="context='applicant'">
@@ -19,7 +19,7 @@
     </th:block>
 
     <form th:action="${actionUrl}"
-          th:object="${form}" method="POST" class="contributorsForm" th:with="
+          th:object="${form}" method="POST" class="contributorsForm"  novalidate="novalidate" th:with="
                   actionUrl=${model.inviteOrganisationId} ?
                   @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, inviteOrganisation=${model.inviteOrganisationId})} :
                   @{/application/{applicationId}/team/update(applicationId=${model.applicationId}, organisation=${model.organisationId})}">

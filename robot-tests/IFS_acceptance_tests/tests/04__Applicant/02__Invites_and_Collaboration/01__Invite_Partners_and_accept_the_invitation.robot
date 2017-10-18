@@ -168,8 +168,8 @@ Partner requests new verification email via password reset
     [Tags]  HappyPath  Email
     Given the user navigates to the page           ${LOGIN_URL}
     When the user clicks the forgot psw link
-    And the user enters text to a text field       id=id_email    ${invite_email}
-    And the user clicks the button/link            css=input.button
+    And the user enters text to a text field       id=email    ${invite_email}
+    And the user clicks the button/link            css=button
     Then the user should see the text in the page  If your email address is recognised and valid, you’ll receive a notification
 
 Complete account verification

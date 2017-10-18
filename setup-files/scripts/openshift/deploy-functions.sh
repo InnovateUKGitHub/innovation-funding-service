@@ -144,10 +144,11 @@ function substituteOptionalEnvVariable() {
 
 function substituteMandatoryEnvVariable() {
 
-    variableValue=$(getEnvVariableValue $1)
+    variableName=$1
+    variableValue=$(getEnvVariableValue $variableName)
 
     if [ -z "${variableValue}" ]; then
-        echo "Set ${variableName} environment variable"; exit -1
+        echo "Environment variable: ${variableName} not set"; exit -1
     fi
 
     replacementToken=$2
@@ -207,11 +208,9 @@ function tailorAppInstance() {
 
     else
       sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/db-reset/*.yml
       sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
 
       sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/db-reset/*.yml
       sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
     fi
 

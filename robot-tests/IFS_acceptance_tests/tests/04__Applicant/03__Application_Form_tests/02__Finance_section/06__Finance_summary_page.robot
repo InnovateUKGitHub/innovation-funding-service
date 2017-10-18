@@ -318,7 +318,7 @@ Lead enters a valid research participation value
     wait for autosave
     the user enters text to a text field              css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input  1000
     wait for autosave
-    the user selects the checkbox                     id=agree-state-aid-page
+    the user selects the checkbox                     id=stateAidAgreed
     the user clicks the button/link                   jQuery= button:contains('Mark as complete')
     wait for autosave
 
@@ -338,7 +338,7 @@ the user fills in the funding information with bigger amount
     [Arguments]  ${Application}
     the user navigates to Your-finances page  ${Application}
     the user clicks the button/link           link=Your funding
-    the user enters text to a text field      css=#cost-financegrantclaim  30
+    the user enters text to a text field      css=[name^="finance-grantclaimpercentage"]  30
     click element                             jQuery=label:contains("Yes")
     the user enters text to a text field      css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input  8000000
     the user enters text to a text field      css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input  test2

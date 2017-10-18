@@ -18,7 +18,7 @@
     <th:block th:unless="${model.readOnly}">
         <p>This information is used for search results and the opening section of the competition page.</p>
         <div class="form-group" th:classappend="${#fields.hasErrors('shortDescription')} ? 'form-group-error'">
-            <label for="short-description">
+            <label for="shortDescription">
                 <span class="form-label-bold">Short description</span>
                 <span class="form-hint">Appears at the top of the competition page.</span>
                 <th:block th:if="${#fields.hasErrors('shortDescription')}">
@@ -26,7 +26,7 @@
                 </th:block>
             </label>
             <input class="form-control width-full"
-                   id="short-description"
+                   id="shortDescription"
                    type="text"
                    th:errorclass="form-control-error"
                    th:field="${form.shortDescription}"
@@ -35,7 +35,7 @@
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('projectFundingRange')} ? 'form-group-error'">
-            <label for="funding-range">
+            <label for="projectFundingRange">
                 <span class="form-label-bold">Project funding range</span>
                 <span class="form-hint">Appears against the competition search result.</span>
                 <th:block th:if="${#fields.hasErrors('projectFundingRange')}">
@@ -43,7 +43,7 @@
                 </th:block>
             </label>
             <input class="form-control"
-                   id="funding-range"
+                   id="projectFundingRange"
                    type="text"
                    th:errorclass="form-control-error"
                    th:field="${form.projectFundingRange}"
@@ -52,7 +52,7 @@
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.projectFundingRange.required}" />
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('eligibilitySummary')} ? 'form-group-error'">
-            <label for="eligibility-summary">
+            <label for="eligibilitySummary">
                 <span class="form-label-bold">Eligibility summary</span>
                 <span class="form-hint">Appears against the competition search result.</span>
                 <th:block th:if="${#fields.hasErrors('eligibilitySummary')}">
@@ -62,7 +62,7 @@
             <div class="textarea-wrapped">
                 <textarea data-editor="html"
                        class="form-control"
-                       id="eligibility-summary"
+                       id="eligibilitySummary"
                        ifs:utext="${form.eligibilitySummary}"
                        th:field="${form.eligibilitySummary}"
                        required="required"
@@ -86,8 +86,9 @@
                    maxlength="255"
                    th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.keywords.required}" />
         </div>
-        <div class="form-group" th:classappend="${#fields.hasErrors('publishSetting')} ? 'error'">
-            <legend>
+        <div class="form-group" th:classappend="${#fields.hasErrors('publishSetting')} ? 'form-group-error'">
+          <fieldset>
+            <legend id="publishSetting">
                 <span class="form-label-bold">Publish setting</span>
                 <span class="form-hint">Is this competition:</span>
                 <th:block th:if="${#fields.hasErrors('publishSetting')}">
@@ -118,6 +119,7 @@
                     Invite only
                 </label>
             </div>
+          </fieldset>
         </div>
         <div id="invite-only-guidance" class="panel">
             <p>
@@ -183,7 +185,7 @@
 
             <div class="form-group" th:classappend="${#fields.hasErrors('fundingType')} ? 'form-group-error'">
                 <fieldset>
-                    <legend>
+                    <legend id="fundingType">
                         <span class="form-label-bold">Funding type</span>
                         <th:block th:if="${#fields.hasErrors('fundingType')}">
                             <span class="error-message" th:each="err : ${#fields.errors('fundingType')}" th:text="${err}" />
@@ -202,13 +204,15 @@
                 </fieldset>
             </div>
             <div class="form-group" th:classappend="${#fields.hasErrors('projectSize')} ? 'form-group-error'">
-                <label for="project-size">
+                <label for="projectSize">
                     <span class="form-label-bold">Project size</span>
                     <th:block th:if="${#fields.hasErrors('projectSize')}">
                         <span class="error-message" th:each="err : ${#fields.errors('projectSize')}" th:text="${err}" />
                     </th:block>
                </label>
-                <input class="form-control" id="project-size" type="text"
+                <input class="form-control"
+                       id="projectSize"
+                       type="text"
                        th:field="${form.projectSize}"
                        required="required"
                        th:errorclass="form-control-error"
@@ -265,7 +269,7 @@
                 <div class="form-group" th:classappend="${#fields.hasErrors('dates[__${index}__].day') || #fields.hasErrors('dates[__${index}__].month') || #fields.hasErrors('dates[__${index}__].year')} ? 'form-group-error' : ''">
                     <fieldset>
                         <input type="hidden" th:id="${'dates'+index+'-id'}" th:field="${form.dates[__${index}__].id}">
-                        <legend>
+                        <legend th:id="form.dates[__${index}__]">
                             <span class="form-label form-label-bold">Date</span>
                             <th:block th:if="${#fields.hasErrors('dates[__${index}__].day')}">
                                   <span class="error-message" th:each="err : ${#fields.errors('dates[__${index}__].day')}" th:text="${err}" />
@@ -278,54 +282,55 @@
                             </th:block>
                         </legend>
                         <div class="date-group">
-                            <!--/* this is becuase the javascript expects a field that contains the combined dates,
-                                in other situations the  Back-end preferred this above dealing with 3 seperated fields
-                                I've added an disabled attribute to make sure this is not send to the back-end for this instance */-->
-                            <input type="hidden" th:name="${'dates[' + index + '].combined'}" disabled="" />
                             <div class="day">
-                                <label class="form-label" th:for="${'dates-'+index+'-day'}">Day</label>
+                                <label class="form-label" th:for="dates[__${index}__].day">Day</label>
                                 <input class="form-control width-extra-small"
                                        placeholder="DD"
                                        th:errorclass="form-control-error"
                                        type="number"
-                                       th:id="${'dates-'+index+'-day'}"
+                                       th:id="dates[__${index}__].day"
                                        th:field="${form.dates[__${index}__].day}"
                                        min="1"
                                        max="31"
                                        required="required"
-                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.day.required}">
+                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.date.required}">
                             </div>
                             <div class="month">
-                                <label class="form-label" th:for="${'dates-'+index+'-month'}">Month</label>
+                                <label class="form-label" th:for="dates[__${index}__].month">Month</label>
                                 <input class="form-control width-extra-small"
                                        placeholder="MM"
                                        type="number"
                                        th:errorclass="form-control-error"
-                                       th:id="${'dates-'+index+'-month'}"
+                                       th:id="dates[__${index}__].month"
                                        th:field="${form.dates[__${index}__].month}"
                                        min="1"
                                        max="12"
                                        required="required"
-                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.month.required}" />
+                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.date.required}" />
                             </div>
                             <div class="year">
-                                <label class="form-label" th:for="${'dates-'+index+'-year'}">Year</label>
+                                <label class="form-label" th:for="dates[__${index}__].year">Year</label>
                                 <input class="form-control width-extra-small"
                                        placeholder="YYYY"
                                        type="number"
                                        th:errorclass="form-control-error"
-                                       th:id="${'dates-'+index+'-year'}"
+                                       th:id="dates[__${index}__].year"
                                        th:field="${form.dates[__${index}__].year}"
                                        min="1"
                                        required="required"
-                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.year.required}" />
+                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.date.required}" />
                             </div>
+                            <!--/* this is becuase the javascript expects a field that contains the combined dates,
+                                in other situations the  Back-end preferred this above dealing with 3 seperated fields
+                                I've added an disabled attribute to make sure this is not send to the back-end for this instance */-->
+                            <input type="hidden" th:name="${'dates[' + index + '].combined'}" disabled="" />
+
                         </div>
                     </fieldset>
 
                 </div>
                 <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('dates[__${index}__].content')}? 'form-group-error':''">
-                    <label class="form-label" th:for="${'dates-'+index+'-content'}">
+                    <label class="form-label" th:for="dates[__${index}__].content">
                         <span class="form-label-bold">Content</span>
                         <th:block th:if="${#fields.hasErrors('dates[__${index}__].content')}">
                               <span class="error-message" th:each="err : ${#fields.errors('dates[__${index}__].content')}" th:text="${err}" />
@@ -333,7 +338,7 @@
                     </label>
                     <textarea cols="30" rows="5"
                               data-editor="html"
-                              th:id="${'dates-'+index+'-content'}"
+                              th:id="dates[__${index}__].content"
                               class="width-full"
                               th:errorclass="form-control-error"
                               th:field="${form.dates[__${iteration.index}__].content}"
@@ -394,14 +399,24 @@
         <div class="contentGroup" th:id="${'contentGroup-row-'+index}">
             <input type="hidden" th:field="*{contentGroups[__${index}__].id}" />
             <div class="form-group" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].heading')}? 'form-group-error':''">
-                <label class="form-label-bold" th:for="${'heading-'+index}">Heading</label>
-                <input class="form-control" th:id="${'heading-'+index}" type="text" th:field="*{contentGroups[__${index}__].heading}"
+                <label class="form-label-bold" th:for="contentGroups[__${index}__].heading">Heading</label>
+                <input class="form-control"
+                       type="text"
                        required="required"
+                       th:id="contentGroups[__${index}__].heading"
+                       th:errorclass="form-control-error"
+                       th:field="*{contentGroups[__${index}__].heading}"
                        th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.heading.required}" />
             </div>
             <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].content')}? 'form-group-error':''">
-                <label class="form-label-bold" th:for="${'content-'+index}">Content</label>
-                    <textarea th:errorclass="form-control-error" th:id="${'content-'+index}" cols="30" rows="10" class="width-full form-control" data-editor="html" th:field="*{contentGroups[__${index}__].content}"
+                <label class="form-label-bold" th:for="contentGroups[__${index}__].content">Content</label>
+                    <textarea th:errorclass="form-control-error"
+                              cols="30"
+                              rows="10"
+                              class="width-full form-control"
+                              data-editor="html"
+                              th:id="contentGroups[__${index}__].content"
+                              th:field="*{contentGroups[__${index}__].content}"
                               required="required"
                               th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.content.required}"></textarea>
             </div>
