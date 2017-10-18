@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
 public class DeleteQuestionForm {
-    private Long questionId;
+    private Long deleteQuestion;
 
-    public Long getQuestionId() {
-        return questionId;
+    public Long getDeleteQuestion() {
+        return deleteQuestion;
     }
 
-    public void setQuestionId(Long questionId) {
-        this.questionId = questionId;
+    public void setDeleteQuestion(Long deleteQuestion) {
+        this.deleteQuestion = deleteQuestion;
     }
 }

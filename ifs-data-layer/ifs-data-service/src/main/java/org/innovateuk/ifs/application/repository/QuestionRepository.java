@@ -17,6 +17,8 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
     Question findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Long sectionId, Integer priority);
     Question findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(Long competitionId, Long sectionId, Integer priority);
     Question findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(Long competitionId, Long sectionId);
+    List<Question> findByCompetitionIdAndSectionIdOrderByPriorityAsc(Long competitionId, Long sectionId);
     Question findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(Long competitionId, Long sectionId);
+    List<Question> findByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Long priority);
     Question findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Integer priority);
 }

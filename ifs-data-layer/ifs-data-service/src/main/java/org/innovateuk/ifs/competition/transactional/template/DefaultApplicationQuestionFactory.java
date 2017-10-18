@@ -23,8 +23,8 @@ public class DefaultApplicationQuestionFactory {
     private FormValidatorRepository formValidatorRepository;
 
     public Question buildQuestion(Competition competition) {
-        FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.toString());
-        FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.toString());
+        FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.getName());
+        FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
 
         FormInput maxWordCountInput = buildMaxWordCountInput(competition, notEmptyValidator, wordCountValidator);
         FormInput questionScoreInput = buildQuestionScoreInput(competition, notEmptyValidator);

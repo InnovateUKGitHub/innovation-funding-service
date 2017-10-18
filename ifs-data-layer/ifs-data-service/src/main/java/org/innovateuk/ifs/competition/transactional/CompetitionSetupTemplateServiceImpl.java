@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
+import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -17,6 +18,7 @@ import org.innovateuk.ifs.competition.transactional.template.DefaultApplicationQ
 import org.innovateuk.ifs.competition.transactional.template.QuestionTemplatePersistorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -53,6 +55,9 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     @Autowired
     private CompetitionRepository competitionRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -93,17 +98,60 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         question.setSection(applicationQuestionsSection);
         question.setCompetition(competition);
 
-        return serviceSuccess(questionTemplatePersistorService.persistByEntity(Arrays.asList(question)).get(0));
+        Question createdQuestion = questionTemplatePersistorService.persistByEntity(Arrays.asList(question)).get(0);
+        Question prioritizedQuestion = prioritizeQuestion(createdQuestion);
+        updateQuestionNumbers(createdQuestion.getCompetition().getId(), createdQuestion.getSection().getId());
+
+        return serviceSuccess(prioritizedQuestion);
     }
 
     @Override
     public ServiceResult<Void> deleteQuestionInApplicationSection(Long questionId) {
         //Perform checks
-
+        Question question = questionRepository.findOne(questionId);
         questionTemplatePersistorService.deleteEntityById(questionId);
+        updateFollowingQuestionsPrioritiesByDelta(-1, question.getPriority().longValue(), question.getCompetition().getId());
+        updateQuestionNumbers(question.getCompetition().getId(), question.getSection().getId());
 
         return serviceSuccess();
     }
+
+    @Transactional
+    private Question prioritizeQuestion(Question createdQuestion) {
+        Question assessedQuestionWithHighestPriority = questionRepository.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(createdQuestion.getCompetition().getId(), createdQuestion.getSection().getId());
+        createdQuestion.setPriority(assessedQuestionWithHighestPriority.getPriority() + 1);
+
+        updateFollowingQuestionsPrioritiesByDelta(1, createdQuestion.getPriority().longValue(), createdQuestion.getCompetition().getId());
+
+        return questionRepository.save(createdQuestion);
+    }
+
+    private void updateFollowingQuestionsPrioritiesByDelta(int delta, Long priority, Long competitionId) {
+        List<Question> subsequentQuestions = questionRepository.findByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(competitionId, priority);
+
+        subsequentQuestions.stream().forEach(question -> question.setPriority(question.getPriority() + 1));
+
+        questionRepository.save(subsequentQuestions);
+    }
+
+    @Transactional
+    private void updateQuestionNumbers(Long competitionId, Long sectionId) {
+        List<Question> assessedQuestions = questionRepository.findByCompetitionIdAndSectionIdOrderByPriorityAsc(competitionId, sectionId);
+
+        Integer questionNumber = 1;
+
+        for(Question question : assessedQuestions) {
+            question.setQuestionNumber(questionNumber.toString());
+            questionNumber++;
+        }
+
+        questionRepository.save(assessedQuestions);
+    }
+
+    /*@Transactional
+    private Question reprioritizeSubsequentQuestions() {
+        List<Question> followingQuestions =
+    }*/
 
     private Competition setDefaultAssessorPayAndCount(Competition competition) {
         if (competition.getAssessorCount() == null) {
