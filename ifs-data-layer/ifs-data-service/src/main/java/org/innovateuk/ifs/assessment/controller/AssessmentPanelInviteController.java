@@ -68,5 +68,4 @@ public class AssessmentPanelInviteController {
             @PathVariable long userId) {
         return assessmentPanelInviteService.getAllInvitesByUser(userId).toGetResponse();
     }
-
 }

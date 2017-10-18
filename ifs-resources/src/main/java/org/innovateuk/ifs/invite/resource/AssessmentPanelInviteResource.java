@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 
 /**
- * Created by ecormack on 16/10/17.
+ * DTO for {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite}s.
  */
 public class AssessmentPanelInviteResource {
 

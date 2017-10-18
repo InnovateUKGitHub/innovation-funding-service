@@ -56,5 +56,4 @@ public interface AssessmentPanelInviteService {
             value = "READ_ASSESSMENT_PANEL_INVITES",
             description = "An Assessor can view assessor panel invites provided that the invites belong to them")
     ServiceResult<List<AssessmentPanelInviteResource>> getAllInvitesByUser(long userId);
-
 }

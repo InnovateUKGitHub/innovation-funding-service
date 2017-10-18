@@ -77,6 +77,5 @@ public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implem
 
         return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.assessmentPanelInviteResourceListType());
     }
-
 }
 

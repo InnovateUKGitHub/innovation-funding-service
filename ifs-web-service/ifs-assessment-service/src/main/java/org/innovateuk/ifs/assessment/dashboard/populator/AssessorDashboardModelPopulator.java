@@ -104,6 +104,5 @@ public class AssessorDashboardModelPopulator {
                         invite.getCompetitionId()
                 ))
                 .collect(toList());
-
     }
 }

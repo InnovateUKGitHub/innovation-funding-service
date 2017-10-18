@@ -21,7 +21,9 @@ public class AssessorDashboardAssessmentPanelInviteViewModel {
         this.competitionId = competitionId;
     }
 
-    public long getCompetitionId() { return competitionId; }
+    public long getCompetitionId() {
+        return competitionId;
+    }
 
     public String getInviteHash() {
         return hash;
