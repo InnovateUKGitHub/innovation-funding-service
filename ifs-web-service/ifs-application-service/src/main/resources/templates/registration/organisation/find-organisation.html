@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${#fields.hasErrors('${organisationForm.organisationSearchName}') and organisationForm.organisationSearching}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${(#fields.hasErrors('${organisationForm.*}') or #fields.hasErrors('${organisationForm.addressForm.*}')) and (organisationForm.organisationSearching or organisationForm.addressForm.triedToSave or organisationForm.addressForm.triedToSearch)}" />
 </head>
 <body th:with="context='applicant'" class="create-application-find-business">
 
@@ -72,7 +72,7 @@
             <input type="hidden" th:field="*{manualEntry}" />
             <h2 class="heading-medium">Not on Companies House?</h2>
             <p>Enter your organisation details manually. You may need to supply additional details at a later point.</p>
-            <th:block th:with="isOpen=${#strings.isEmpty('*{organisationSearchName}') or !#strings.isEmpty(organisationForm.organisationName) or !#strings.isEmpty(organisationForm.addressForm.postcodeInput) or organisationForm.addressForm.manualAddress}">
+            <th:block th:with="isOpen=${#strings.isEmpty('*{organisationSearchName}') or !#strings.isEmpty(organisationForm.organisationName) or !#strings.isEmpty(organisationForm.addressForm.postcodeInput) or organisationForm.addressForm.manualAddress or organisationForm.addressForm.triedToSearch}">
                 <details th:attr="open=${isOpen} ? 'open' : null ">
                     <summary th:attr="aria-expanded=${isOpen} ? 'true' : 'false'"><span class="summary">Enter details manually</span></summary>
                     <div class="panel" th:attr="aria-hidden=${isOpen} ? 'false' : null">
