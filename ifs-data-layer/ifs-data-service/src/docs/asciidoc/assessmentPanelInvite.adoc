@@ -65,3 +65,15 @@ include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/response-field
 
 ==== Curl Example
 include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/curl-request.adoc[]
+
+=== Get all panel invites for a particular user
+==== Request
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/curl-request.adoc[]

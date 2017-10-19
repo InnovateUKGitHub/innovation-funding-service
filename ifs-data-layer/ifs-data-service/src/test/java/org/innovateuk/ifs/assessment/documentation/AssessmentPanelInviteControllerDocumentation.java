@@ -2,19 +2,19 @@ package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessmentPanelInviteController;
-import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
 
 import static com.google.common.primitives.Longs.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInvitePageResourceDocs.assessorCreatedInvitePageResourceBuilder;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInvitePageResourceDocs.assessorCreatedInvitePageResourceFields;
@@ -24,6 +24,7 @@ import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs
 import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.availableAssessorResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.assessorInvitesToSendResourceFields;
+import static org.innovateuk.ifs.user.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -186,5 +187,22 @@ public class AssessmentPanelInviteControllerDocumentation extends BaseController
                 ));
 
         verify(assessmentPanelInviteServiceMock, only()).getAllInvitesToSend(competitionId);
+    }
+
+    @Test
+    public void getAllInvitesByUser() throws Exception {
+
+        final long USER_ID = 12L;
+        AssessmentPanelInviteResource assessmentPanelInviteResource = newAssessmentPanelInviteResource().build();
+        when(assessmentPanelInviteServiceMock.getAllInvitesByUser(USER_ID)).thenReturn(serviceSuccess(singletonList(assessmentPanelInviteResource)));
+
+        mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesByUser/{userId}", USER_ID))
+                .andExpect(status().isOk())
+                .andDo(document("assessmentpanelinvite/{method-name}",
+                        pathParameters(
+                                parameterWithName("userId").description("ID of the user to get assessment panel invites for")
+                        ),
+                        responseFields(fieldWithPath("[]").description("List of assessment panel invites belonging to the user"))
+                ));
     }
 }
