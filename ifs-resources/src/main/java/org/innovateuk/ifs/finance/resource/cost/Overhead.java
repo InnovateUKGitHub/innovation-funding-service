@@ -63,8 +63,8 @@ public class Overhead extends AbstractFinanceRowItem {
     }
 
     @Override
-    public FinanceRowType getCostType() {
-        return  FinanceRowType.OVERHEADS;
+    public SpendProfileRowType getCostType() {
+        return  SpendProfileRowType.OVERHEADS;
     }
 
     public OverheadRateType getRateType() {

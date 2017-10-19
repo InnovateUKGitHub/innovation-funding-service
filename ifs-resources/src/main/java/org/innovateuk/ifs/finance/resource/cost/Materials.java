@@ -74,8 +74,8 @@ public class Materials extends AbstractFinanceRowItem {
     }
 
     @Override
-    public FinanceRowType getCostType() {
-        return FinanceRowType.MATERIALS;
+    public SpendProfileRowType getCostType() {
+        return SpendProfileRowType.MATERIALS;
     }
 
     public void setItem(String item) {

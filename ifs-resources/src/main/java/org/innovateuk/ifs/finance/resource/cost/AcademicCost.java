@@ -37,8 +37,8 @@ public class AcademicCost extends AbstractFinanceRowItem {
     }
 
     @Override
-    public FinanceRowType getCostType() {
-        return FinanceRowType.ACADEMIC;
+    public SpendProfileRowType getCostType() {
+        return SpendProfileRowType.ACADEMIC;
     }
 
     public String getItem() {

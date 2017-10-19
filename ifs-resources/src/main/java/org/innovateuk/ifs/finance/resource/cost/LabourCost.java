@@ -156,8 +156,8 @@ public class LabourCost extends AbstractFinanceRowItem {
     }
 
     @Override
-    public FinanceRowType getCostType() {
-        return FinanceRowType.LABOUR;
+    public SpendProfileRowType getCostType() {
+        return SpendProfileRowType.LABOUR;
     }
 
     public void setDescription(String description) {

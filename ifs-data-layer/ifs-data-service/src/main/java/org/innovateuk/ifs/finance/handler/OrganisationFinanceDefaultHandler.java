@@ -12,6 +12,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.finance.resource.cost.SpendProfileRowType;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
@@ -53,8 +54,8 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     private ProjectFinanceRepository projectFinanceRepository;
 
     @Override
-    public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType){
-        if(costTypeSupportedByHandler(costType)) {
+    public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, SpendProfileRowType costType){
+        //if(costTypeSupportedByHandler(costType)) {
             Long competitionId = applicationFinance.getApplication().getCompetition().getId();
             Question question = getQuestionByCostType(competitionId, costType);
             try{
@@ -67,30 +68,30 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
             }catch (IllegalArgumentException e){
                 LOG.error(String.format("No FinanceRowHandler for type: %s", costType.getType()), e);
             }
-        }
+        //}
         return null;
     }
 
     // TODO DW - INFUND-1555 - handle rest result
-    private Question getQuestionByCostType(Long competitionId, FinanceRowType costType) {
+    private Question getQuestionByCostType(Long competitionId, SpendProfileRowType costType) {
         return questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, costType.getFormInputType()).getSuccessObjectOrThrowException();
     }
 
     @Override
-    public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId, Competition competition) {
+    public Map<SpendProfileRowType, FinanceRowCostCategory> getOrganisationFinances(Long applicationFinanceId, Competition competition) {
         List<ApplicationFinanceRow> costs = applicationFinanceRowRepository.findByTargetId(applicationFinanceId);
         return addCostsAndTotalsToCategories(costs);
     }
 
     @Override
-    public Map<FinanceRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId, Competition competition) {
+    public Map<SpendProfileRowType, FinanceRowCostCategory> getProjectOrganisationFinances(Long projectFinanceId, Competition competition) {
         List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
         List<ApplicationFinanceRow> asApplicationCosts = toApplicationFinanceRows(costs);
         return addCostsAndTotalsToCategories(asApplicationCosts);
     }
 
     @Override
-    public Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
+    public Map<SpendProfileRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
         ProjectFinance projectFinance = projectFinanceRepository.findOne(projectFinanceId);
         Long applicationId = projectFinance.getProject().getApplication().getId();
         Long organisationId = projectFinance.getOrganisation().getId();
@@ -101,8 +102,8 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return getProjectCostChangesByType(changesList);
     }
 
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<ApplicationFinanceRow> asApplicationCosts) {
-        Map<FinanceRowType, FinanceRowCostCategory> costCategories = createCostCategories();
+    private Map<SpendProfileRowType, FinanceRowCostCategory> addCostsAndTotalsToCategories(List<ApplicationFinanceRow> asApplicationCosts) {
+        Map<SpendProfileRowType, FinanceRowCostCategory> costCategories = createCostCategories();
         costCategories = addCostsToCategories(costCategories, asApplicationCosts);
         costCategories = calculateTotals(costCategories);
         return costCategories;
@@ -134,17 +135,16 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return resetCosts(costCategories);
     }*/
 
-    private Map<FinanceRowType, FinanceRowCostCategory> createCostCategories() {
-        Map<FinanceRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(FinanceRowType.class);
-        for(FinanceRowType costType : FinanceRowType.values()) {
+    private Map<SpendProfileRowType, FinanceRowCostCategory> createCostCategories() {
+        Map<SpendProfileRowType, FinanceRowCostCategory> costCategories = new EnumMap<>(SpendProfileRowType.class);
+        for(SpendProfileRowType costType : SpendProfileRowType.values()) {
             FinanceRowCostCategory financeRowCostCategory = createCostCategoryByType(costType);
             costCategories.put(costType, financeRowCostCategory);
         }
         return costCategories;
     }
 
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostsToCategories(Map<FinanceRowType,
-                                                                             FinanceRowCostCategory> costCategories,
+    private Map<SpendProfileRowType, FinanceRowCostCategory> addCostsToCategories(Map<SpendProfileRowType, FinanceRowCostCategory> costCategories,
                                                                              List<ApplicationFinanceRow> costs) {
         costs.forEach(c -> addCostToCategory(costCategories, c));
         return costCategories;
@@ -155,9 +155,9 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
      * are added to a specific Category (e.g. labour).
      * @param cost ApplicationFinanceRow to be added
      */
-    private Map<FinanceRowType, FinanceRowCostCategory> addCostToCategory(Map<FinanceRowType, FinanceRowCostCategory> costCategories,
+    private Map<SpendProfileRowType, FinanceRowCostCategory> addCostToCategory(Map<SpendProfileRowType, FinanceRowCostCategory> costCategories,
                                                                           ApplicationFinanceRow cost) {
-        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
+        SpendProfileRowType costType = SpendProfileRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
         FinanceRowHandler financeRowHandler = getCostHandler(costType);
         FinanceRowItem costItem = financeRowHandler.toCostItem(cost);
         FinanceRowCostCategory financeRowCostCategory = costCategories.get(costType);
@@ -165,14 +165,14 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return costCategories;
     }
 
-    private Map<FinanceRowType, FinanceRowCostCategory> calculateTotals(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
+    private Map<SpendProfileRowType, FinanceRowCostCategory> calculateTotals(Map<SpendProfileRowType, FinanceRowCostCategory> costCategories) {
         costCategories.values().forEach(FinanceRowCostCategory::calculateTotal);
         return calculateOverheadTotal(costCategories);
     }
 
-    private Map<FinanceRowType, FinanceRowCostCategory> calculateOverheadTotal(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
-        FinanceRowCostCategory labourFinanceRowCostCategory = costCategories.get(FinanceRowType.LABOUR);
-        OverheadCostCategory overheadCategory = (OverheadCostCategory) costCategories.get(FinanceRowType.OVERHEADS);
+    private Map<SpendProfileRowType, FinanceRowCostCategory> calculateOverheadTotal(Map<SpendProfileRowType, FinanceRowCostCategory> costCategories) {
+        FinanceRowCostCategory labourFinanceRowCostCategory = costCategories.get(SpendProfileRowType.LABOUR);
+        OverheadCostCategory overheadCategory = (OverheadCostCategory) costCategories.get(SpendProfileRowType.OVERHEADS);
         overheadCategory.setLabourCostTotal(labourFinanceRowCostCategory.getTotal());
         overheadCategory.calculateTotal();
         return costCategories;
@@ -214,7 +214,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     private FinanceRowHandler getRowHandler(FinanceRow cost){
         cost.getQuestion().getFormInputs().size();
-        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
+        SpendProfileRowType costType = SpendProfileRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
         return getCostHandler(costType);
     }
 
@@ -228,12 +228,12 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return simpleMap(costItems, this::costItemToCost);
     }
 
-    private boolean costTypeSupportedByHandler(FinanceRowType costType) {
+/*    private boolean costTypeSupportedByHandler(FinanceRowType costType) {
         return !(FinanceRowType.YOUR_FINANCE.equals(costType) || FinanceRowType.ACADEMIC.equals(costType));
-    }
+    }*/
 
     @Override
-    public FinanceRowHandler getCostHandler(FinanceRowType costType) {
+    public FinanceRowHandler getCostHandler(SpendProfileRowType costType) {
         FinanceRowHandler handler = null;
         switch(costType) {
             case LABOUR:
@@ -273,7 +273,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         throw new IllegalArgumentException("Not a valid FinanceType: " + costType);
     }
 
-    private FinanceRowCostCategory createCostCategoryByType(FinanceRowType costType) {
+    private FinanceRowCostCategory createCostCategoryByType(SpendProfileRowType costType) {
         switch(costType) {
             case LABOUR:
                 return new LabourCostCategory();
@@ -288,16 +288,16 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         }
     }
 
-    private Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>>
+    private Map<SpendProfileRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>>
                                         getProjectCostChangesByType(List<ImmutablePair<Optional<ApplicationFinanceRow>,
                                                                     Optional<ApplicationFinanceRow>>> costs) {
 
-        Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changedPairs = new LinkedHashMap<>();
+        Map<SpendProfileRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changedPairs = new LinkedHashMap<>();
 
         for(ImmutablePair<Optional<ApplicationFinanceRow>, Optional<ApplicationFinanceRow>> pair : costs) {
             Optional<ApplicationFinanceRow> applicationCost = pair.getLeft();
             Optional<ApplicationFinanceRow> projectCost = pair.getRight();
-            FinanceRowType costType = getCostType(applicationCost, projectCost);
+            SpendProfileRowType costType = getCostType(applicationCost, projectCost);
 
             ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> updatedPair;
             if(isNew(applicationCost)){
@@ -315,13 +315,13 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return changedPairs;
     }
 
-    private FinanceRowType getCostType(Optional<ApplicationFinanceRow> applicationCost, Optional<ApplicationFinanceRow> projectCost){
+    private SpendProfileRowType getCostType(Optional<ApplicationFinanceRow> applicationCost, Optional<ApplicationFinanceRow> projectCost){
         FinanceRow availableRow = applicationCost.isPresent() ? applicationCost.get() : (projectCost.isPresent() ? projectCost.get() : null);
-        FinanceRowType costType = OTHER_COSTS;
+        SpendProfileRowType costType = SpendProfileRowType.OTHER_COSTS;
         if(availableRow != null) {
             List<FormInput> formInputs = availableRow.getQuestion().getFormInputs();
             if (formInputs.size() > 0) {
-                costType = FinanceRowType.fromType(formInputs.get(0).getType());
+                costType = SpendProfileRowType.fromType(formInputs.get(0).getType());
             }
         }
         return costType;
@@ -331,7 +331,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return !applicationCost.isPresent();
     }
 
-    private List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>> addNewOrUpdate(Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changedPairs, FinanceRowType costType, ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> pair){
+    private List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>> addNewOrUpdate(Map<SpendProfileRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changedPairs, SpendProfileRowType costType, ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> pair){
         List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>> listOfChangedRows = changedPairs.get(costType);
         if(listOfChangedRows == null){
             listOfChangedRows = new ArrayList<>();
@@ -348,7 +348,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return (applicationCost.isPresent() && !projectCost.isPresent());
     }
 
-    private ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> buildPairWithTypeOfChange(Optional<ApplicationFinanceRow> applicationCost, Optional<ApplicationFinanceRow> projectCost, FinanceRowType costType, TypeOfChange typeOfChange){
+    private ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> buildPairWithTypeOfChange(Optional<ApplicationFinanceRow> applicationCost, Optional<ApplicationFinanceRow> projectCost, SpendProfileRowType costType, TypeOfChange typeOfChange){
         FinanceRowItem applicationFinanceRowItem = !applicationCost.isPresent() ? null : getApplicationCostItem(costType, applicationCost.get());
         FinanceRowItem projectFinanceRowItem = !projectCost.isPresent() ? null : getApplicationCostItem(costType, projectCost.get());
         return ChangedFinanceRowPair.of(typeOfChange, applicationFinanceRowItem, projectFinanceRowItem);
@@ -400,7 +400,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         });
     }
 
-    private FinanceRowItem getApplicationCostItem(FinanceRowType financeRowType, ApplicationFinanceRow applicationCost){
+    private FinanceRowItem getApplicationCostItem(SpendProfileRowType financeRowType, ApplicationFinanceRow applicationCost){
         return getCostHandler(financeRowType).toCostItem(applicationCost);
     }
 

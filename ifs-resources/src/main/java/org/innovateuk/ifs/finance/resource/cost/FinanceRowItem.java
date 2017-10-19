@@ -37,7 +37,7 @@ public interface FinanceRowItem {
 
     Long getId();
     BigDecimal getTotal();
-    FinanceRowType getCostType();
+    SpendProfileRowType getCostType();
     String getName();
     boolean isEmpty();
     default boolean excludeInRowCount(){

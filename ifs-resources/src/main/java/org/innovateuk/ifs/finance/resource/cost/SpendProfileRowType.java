@@ -9,8 +9,8 @@ import static java.util.Arrays.asList;
 /**
  * FinanceRow types are used to identify the different categories that costs can have
  */
-public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
-/*    LABOUR("labour", true, "Labour"),
+public enum SpendProfileRowType implements CostCategoryGenerator<SpendProfileRowType> {
+    LABOUR("labour", true, "Labour"),
     OVERHEADS("overheads", true, "Overheads"),
     MATERIALS("materials", true, "Materials"),
     CAPITAL_USAGE("capital_usage", true, "Capital usage"),
@@ -20,46 +20,25 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     YOUR_FINANCE("your_finance"),
     FINANCE("finance", false, "Finance"),
     OTHER_FUNDING("other_funding", false, "Other Funding"),
-    ACADEMIC("academic");*/
-
-    LABOUR("labour", "Labour"),
-    OVERHEADS("overheads", "Overheads"),
-    MATERIALS("materials", "Materials"),
-    CAPITAL_USAGE("capital_usage", "Capital usage"),
-    SUBCONTRACTING_COSTS("subcontracting", "Subcontracting"),
-    TRAVEL("travel", "Travel and subsistence"),
-    OTHER_COSTS("other_costs", "Other costs"),
-    YOUR_FINANCE("your_finance"),
-    FINANCE("finance", "Finance"),
-    OTHER_FUNDING("other_funding", "Other Funding"),
     ACADEMIC("academic");
 
     private String type;
-    //private boolean includedInGeneratedSpendProfile;
+    private boolean includedInGeneratedSpendProfile;
     private String name;
 
-/*    FinanceRowType(String type) {
+    SpendProfileRowType(String type) {
         this(type, false, null);
-    }*/
-
-    FinanceRowType(String type) {
-        this(type, null);
     }
 
-/*    FinanceRowType(String type, boolean includedInGeneratedSpendProfile, String name) {
+    SpendProfileRowType(String type, boolean includedInGeneratedSpendProfile, String name) {
         this.type = type;
         this.includedInGeneratedSpendProfile = includedInGeneratedSpendProfile;
         this.name = name;
-    }*/
-
-    FinanceRowType(String type, String name) {
-        this.type = type;
-        this.name = name;
     }
 
-    public static FinanceRowType fromType(FormInputType formInputType) {
+    public static SpendProfileRowType fromType(FormInputType formInputType) {
         if (formInputType != null) {
-            for (FinanceRowType costType : values()) {
+            for (SpendProfileRowType costType : values()) {
                 if (formInputType == FormInputType.findByName(costType.getType())) {
                     return costType;
                 }
@@ -76,12 +55,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         return FormInputType.findByName(getType());
     }
 
-/*    public boolean isIncludedInGeneratedSpendProfile() {
-        return includedInGeneratedSpendProfile;
-    }*/
-
     public boolean isIncludedInGeneratedSpendProfile() {
-        return false;
+        return includedInGeneratedSpendProfile;
     }
 
     @Override
@@ -94,7 +69,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         return name;
     }
 
-    public static Optional<FinanceRowType> getByTypeName(String typeName) {
-        return asList(FinanceRowType.values()).stream().filter(frt -> frt.getType().equals(typeName)).findFirst();
+    public static Optional<SpendProfileRowType> getByTypeName(String typeName) {
+        return asList(SpendProfileRowType.values()).stream().filter(frt -> frt.getType().equals(typeName)).findFirst();
     }
 }
+

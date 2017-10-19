@@ -58,7 +58,7 @@ public class GrantClaim extends AbstractFinanceRowItem {
     }
 
     @Override
-    public FinanceRowType getCostType() {
-        return FinanceRowType.FINANCE;
+    public SpendProfileRowType getCostType() {
+        return SpendProfileRowType.FINANCE;
     }
 }

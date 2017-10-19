@@ -81,8 +81,8 @@ public class SubContractingCost extends AbstractFinanceRowItem {
     }
 
     @Override
-    public FinanceRowType getCostType() {
-        return FinanceRowType.SUBCONTRACTING_COSTS;
+    public SpendProfileRowType getCostType() {
+        return SpendProfileRowType.SUBCONTRACTING_COSTS;
     }
 
     public void setCost(BigDecimal cost) {

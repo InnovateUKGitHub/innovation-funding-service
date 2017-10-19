@@ -5,6 +5,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.finance.resource.cost.SpendProfileRowType;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -21,7 +22,7 @@ public abstract class BaseFinanceResource {
     protected Long organisation;
     protected Long target;
     protected Long organisationSize;
-    protected Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
+    protected Map<SpendProfileRowType, FinanceRowCostCategory> financeOrganisationDetails = new HashMap<>();
 
     public BaseFinanceResource(BaseFinanceResource originalFinance) {
         if (originalFinance != null) {
@@ -75,11 +76,11 @@ public abstract class BaseFinanceResource {
         this.organisationSize = organisationSize;
     }
 
-    public Map<FinanceRowType, FinanceRowCostCategory> getFinanceOrganisationDetails() {
+    public Map<SpendProfileRowType, FinanceRowCostCategory> getFinanceOrganisationDetails() {
         return financeOrganisationDetails;
     }
 
-    public void setFinanceOrganisationDetails(Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails) {
+    public void setFinanceOrganisationDetails(Map<SpendProfileRowType, FinanceRowCostCategory> financeOrganisationDetails) {
         this.financeOrganisationDetails = financeOrganisationDetails;
     }
 
