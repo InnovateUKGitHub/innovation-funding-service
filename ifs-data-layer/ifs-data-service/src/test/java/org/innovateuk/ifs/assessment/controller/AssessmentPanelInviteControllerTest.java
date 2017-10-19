@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.user.builder.AssessmentPanelInviteResourceBuilder;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -11,6 +13,7 @@ import org.springframework.http.MediaType;
 import java.util.List;
 
 import static com.google.common.primitives.Longs.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
@@ -20,6 +23,7 @@ import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBui
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.user.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -215,5 +219,20 @@ public class AssessmentPanelInviteControllerTest extends BaseControllerMockMVCTe
                 .andExpect(status().isOk());
 
         verify(assessmentPanelInviteServiceMock, only()).getAllInvitesToSend(COMPETITION_ID);
+    }
+
+    @Test
+    public void getAllInvitesByUser() throws Exception {
+        final long USER_ID = 12L;
+        AssessmentPanelInviteResource invite = newAssessmentPanelInviteResource()
+                .withCompetitionId(1L)
+                .withCompetitionName("Juggling craziness")
+                .withInviteHash("")
+                .withStatus(InviteStatus.SENT)
+                .build();
+        when(assessmentPanelInviteServiceMock.getAllInvitesByUser(USER_ID)).thenReturn(serviceSuccess(singletonList(invite)));
+
+        mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesByUser/{user_id}", USER_ID))
+                .andExpect(status().isOk());
     }
 }

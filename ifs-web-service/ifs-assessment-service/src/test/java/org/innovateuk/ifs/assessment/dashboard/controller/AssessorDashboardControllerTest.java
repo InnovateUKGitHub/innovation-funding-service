@@ -3,11 +3,8 @@ package org.innovateuk.ifs.assessment.dashboard.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.dashboard.controller.AssessorDashboardController;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorDashboardModelPopulator;
+import org.innovateuk.ifs.assessment.dashboard.viewmodel.*;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
-import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorDashboardActiveCompetitionViewModel;
-import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorDashboardPendingInviteViewModel;
-import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorDashboardUpcomingCompetitionViewModel;
-import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorDashboardViewModel;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -99,6 +96,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withCompetitionName("Juggling Craziness")
                 .withInviteHash("")
                 .withStatus(InviteStatus.SENT)
+                .withUser(12L)
                 .build();
 
         when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(singletonList(participant)));
@@ -122,10 +120,14 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
+        AssessorDashboardAssessmentPanelInviteViewModel expectedAssessmentPanelInviteViewModel = new AssessorDashboardAssessmentPanelInviteViewModel("", "Juggling Craziness", 2L);
+
         assertTrue(model.getPendingInvites().isEmpty());
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
         assertTrue(model.getUpcomingCompetitions().isEmpty());
+        assertFalse(model.getAssessmentPanelInvites().isEmpty());
+        assertEquals(model.getAssessmentPanelInvites(), singletonList(expectedAssessmentPanelInviteViewModel));
     }
     
     @Test

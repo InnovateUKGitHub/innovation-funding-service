@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreFilter;
 
 import java.util.List;
 
@@ -51,7 +52,7 @@ public interface AssessmentPanelInviteService {
             description = "The Competition Admin user and Project Finance users can create assessment panel invites for existing users")
     ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInvites);
 
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PostFilter("hasPermission(returnObject, 'READ_ASSESSMENT_PANEL_INVITES')")
     @SecuredBySpring(
             value = "READ_ASSESSMENT_PANEL_INVITES",
             description = "An Assessor can view assessor panel invites provided that the invites belong to them")

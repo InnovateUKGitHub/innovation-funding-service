@@ -49,4 +49,8 @@ public class AssessmentPanelInviteResourceBuilder extends BaseBuilder<Assessment
     public AssessmentPanelInviteResourceBuilder withInviteHash(String... hash) {
         return withArraySetFieldByReflection("hash", hash);
     }
+
+    public AssessmentPanelInviteResourceBuilder withUser(Long... userId) {
+        return withArraySetFieldByReflection("userId", userId);
+    }
 }
