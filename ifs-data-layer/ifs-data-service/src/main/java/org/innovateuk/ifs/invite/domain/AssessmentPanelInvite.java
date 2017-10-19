@@ -43,5 +43,4 @@ public class AssessmentPanelInvite extends Invite<Competition, AssessmentPanelIn
     public void setTarget(Competition competition) {
         this.competition = competition;
     }
-
 }

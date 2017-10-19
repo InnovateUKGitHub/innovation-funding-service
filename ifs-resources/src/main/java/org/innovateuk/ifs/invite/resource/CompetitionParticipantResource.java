@@ -21,7 +21,6 @@ public class CompetitionParticipantResource {
     private Long competitionId;
     private Long userId;
     private CompetitionInviteResource invite;
-    private AssessmentPanelInviteResource assessmentPanelInviteResource;
     private RejectionReasonResource rejectionReason;
     private String rejectionReasonComment;
     private CompetitionParticipantRoleResource role;
