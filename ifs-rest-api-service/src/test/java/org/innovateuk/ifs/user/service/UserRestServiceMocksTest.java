@@ -17,9 +17,11 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userOrgnisationListType;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.*;
 import static org.junit.Assert.assertEquals;
@@ -342,5 +344,17 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         RestResult<Void> result = service.reactivateUser(123L);
         assertTrue(result.isSuccess());
         assertEquals(OK, result.getStatusCode());
+    }
+
+    @Test
+    public void findAllExternal() throws Exception {
+        String url = usersUrl + "/findAllExternal";
+        List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
+        setupGetWithRestResultExpectations(url,userOrgnisationListType(), userOrganisationResources);
+
+        RestResult<List<UserOrganisationResource>> result = service.findAllExternal();
+        assertTrue(result.isSuccess());
+        assertEquals(OK, result.getStatusCode());
+        assertEquals(userOrganisationResources, result.getSuccessObject());
     }
 }

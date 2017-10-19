@@ -1,22 +1,29 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.builder.RoleInviteBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.invite.domain.ApplicationInvite;
+import org.innovateuk.ifs.invite.domain.InviteOrganisation;
+import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.RoleInvite;
+import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.user.builder.RoleBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -31,18 +38,22 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
+import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
+import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newProjectInvite;
 import static org.innovateuk.ifs.invite.builder.RoleInviteBuilder.newRoleInvite;
 import static org.innovateuk.ifs.invite.builder.RoleInviteResourceBuilder.newRoleInviteResource;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -398,5 +409,27 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         assertEquals(roleInviteResource2, resultObject.getContent().get(0));
         assertEquals(roleInviteResource1, resultObject.getContent().get(1));
 
+    }
+
+    @Test
+    public void testGetExternalInvites() {
+        Application app = newApplication().build();
+        Project prj = newProject().withApplication(app).build();
+        List<InviteOrganisation> inviteOrganisations = newInviteOrganisation().withOrganisationName("Tesla", "East India Company").build(2);
+        List<ApplicationInvite> applicationInvites = newApplicationInvite().withApplication(app).withEmail("x@email.com", "b@email.com").withInviteOrganisation(inviteOrganisations.get(0), inviteOrganisations.get(1)).build(2);
+        List<Organisation> organisations = newOrganisation().withName("Cardiff Electric").withName("Mutiny").build(2);
+        List<ProjectInvite> projectInvites = newProjectInvite().withProject(prj).withOrganisation(organisations.get(0), organisations.get(1)).withEmail("z@email.com", "u@email.com").build(2);
+
+        when(applicationInviteRepositoryMock.findByStatusIn(EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
+        when(inviteProjectRepositoryMock.findByStatusIn(EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
+
+        ServiceResult<List<ExternalInviteResource>> result = service.getExternalInvites();
+
+        assertTrue(result.isSuccess());
+        assertEquals(4, result.getSuccessObject().size());
+        assertEquals("b@email.com", result.getSuccessObject().get(0).getEmail());
+        assertEquals("u@email.com", result.getSuccessObject().get(1).getEmail());
+        assertEquals("x@email.com", result.getSuccessObject().get(2).getEmail());
+        assertEquals("z@email.com", result.getSuccessObject().get(3).getEmail());
     }
 }

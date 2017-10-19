@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.data.domain.PageRequest;
 
+import java.util.ArrayList;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.verify;
@@ -85,6 +87,16 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
 
         verify(inviteUserServiceMock).findPendingInternalUserInvites(Mockito.any(PageRequest.class));
 
+    }
+
+    @Test
+    public void getExternalInvites() throws Exception {
+
+        when(inviteUserServiceMock.getExternalInvites()).thenReturn(serviceSuccess(new ArrayList<>()));
+
+        mockMvc.perform(get("/inviteUser/external/all")).andExpect(status().isOk());
+
+        verify(inviteUserServiceMock).getExternalInvites();
     }
 }
 

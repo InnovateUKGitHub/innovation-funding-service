@@ -21,7 +21,9 @@ import java.util.List;
 import java.util.Set;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -50,9 +52,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
     @Test
     public void testFindByEmail() {
-        assertAccessDenied(() -> classUnderTest.findByEmail("asdf@example.com"), () -> {
-            assertViewSingleUserExpectations();
-        });
+        assertAccessDenied(() -> classUnderTest.findByEmail("asdf@example.com"), this::assertViewSingleUserExpectations);
     }
 
     @Test
@@ -132,6 +132,13 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         });
     }
 
+    @Test
+    public void testFindAllByProcessRoles(){
+        classUnderTest.findAllByProcessRoles(externalApplicantRoles());
+        verify(userRules, times(2)).internalUsersCanViewUserOrganisation(isA(UserOrganisationResource.class), eq(getLoggedInUser()));
+        verifyNoMoreInteractions(userRules);
+    }
+
     @Override
     protected Class<? extends UserService> getClassUnderTest() {
         return TestUserService.class;
@@ -183,7 +190,7 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
 
         @Override
         public ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes) {
-            return null;
+            return serviceSuccess(newUserOrganisationResource().build(2));
         }
 
         @Override

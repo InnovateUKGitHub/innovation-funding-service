@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.invite.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 
 public class ExternalInviteResource {
@@ -44,5 +46,35 @@ public class ExternalInviteResource {
 
     public InviteStatus getStatus() {
         return status;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ExternalInviteResource that = (ExternalInviteResource) o;
+
+        return new EqualsBuilder()
+                .append(name, that.name)
+                .append(organisationName, that.organisationName)
+                .append(organisationId, that.organisationId)
+                .append(email, that.email)
+                .append(applicationId, that.applicationId)
+                .append(status, that.status)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(name)
+                .append(organisationName)
+                .append(organisationId)
+                .append(email)
+                .append(applicationId)
+                .append(status)
+                .toHashCode();
     }
 }

@@ -189,7 +189,7 @@ public class UserManagementController {
 
     @PreAuthorize("hasAuthority('support')")
     @GetMapping(value = "/invites")
-    public String allExternalInviteds(Model model) {
+    public String allExternalInvites(Model model) {
         return inviteUserRestService.getAllExternalInvites().andOnSuccessReturn(invites -> {
             model.addAttribute("invites", invites);
             return "admin/invited-users";
