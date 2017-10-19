@@ -11,6 +11,17 @@ function isNamedEnvironment() {
     fi
 }
 
+function isProductionEnvironment() {
+
+    TARGET=$1
+
+    if [[ ${TARGET} != "production" ]]; then
+        exit 1
+    else
+        exit 0
+    fi
+}
+
 function getProjectName() {
 
     PROJECT=$1
@@ -195,6 +206,7 @@ function tailorAppInstance() {
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
 
     sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/*.yml
+    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/sil-stub/*.yml
     sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/shib/56-*.yml
 
     if [[ ${TARGET} == "production" ]]
@@ -282,12 +294,14 @@ function tailorAppInstance() {
 function useContainerRegistry() {
 
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/sil-stub/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/fractal/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/db-anonymised-data/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/robot-tests/*.yml
 
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/sil-stub/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/fractal/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/db-anonymised-data/*.yml
@@ -295,11 +309,13 @@ function useContainerRegistry() {
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/robot-tests/*.yml
 
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/sil-stub/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/fractal/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/db-anonymised-data/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/shib/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/robot-tests/*.yml
+
 }
 
 function pushApplicationImages() {
@@ -339,6 +355,15 @@ function pushApplicationImages() {
     docker push ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/registration-service:${VERSION}
+}
+
+function pushSilStubImages(){
+    docker tag innovateuk/sil-stub:latest \
+        ${REGISTRY}/${PROJECT}/sil-stub:${VERSION}
+
+    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
+
+    docker push ${REGISTRY}/${PROJECT}/sil-stub:${VERSION}
 }
 
 function pushDBResetImages() {
