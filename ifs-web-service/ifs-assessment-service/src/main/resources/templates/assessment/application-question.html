@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='assessment', responseRequired=${!#lists.isEmpty(model.assessmentFormInputs)}" class="assessment" th:classappend="${responseRequired} ? assessment-form">
@@ -12,13 +12,9 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
-            <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}">
-                <h2 class="heading-medium error-summary-heading">There is a problem on this page</h2>
-                <ul class="error-summary-list">
-                    <th:block th:each="err : ${#fields.errors('${form.*}')}" th:with="markAsCompleteError=#{application.validation.MarkAsCompleteFailed}">
-                        <li th:classappend="${err.equals(markAsCompleteError)} ? 'list-header' : ''" th:text="${err}"></li>
-                    </th:block>
-                </ul>
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
             <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">

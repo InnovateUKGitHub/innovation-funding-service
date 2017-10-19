@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Target start date'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Target start date',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='project'" class="project-details start-date">
@@ -20,7 +20,7 @@
                 <li>You have received, signed and returned the grant offer letter on behalf of the project.</li>
             </ol>
 
-            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post">
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post" novalidate="novalidate">
                 <div class="form-group" th:classappend="${#fields.hasErrors('projectStartDate')} ? 'form-group-error'">
                     <fieldset>
                         <legend>

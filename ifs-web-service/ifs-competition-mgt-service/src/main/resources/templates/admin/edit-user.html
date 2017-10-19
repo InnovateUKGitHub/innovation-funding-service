@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit internal user\'s details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit internal user\'s details',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body>
 
@@ -14,11 +14,10 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='View or search for an internal user',linkClass='link-back',linkUrl=@{/admin/users/active}" />
 
-    <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-        <h2 class="heading-medium error-summary-heading">We were unable to update internal user's details</h2>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
-        </ul>
+
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to update internal user's details</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
     </div>
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Edit internal user\'s details',size='heading-xlarge'" />

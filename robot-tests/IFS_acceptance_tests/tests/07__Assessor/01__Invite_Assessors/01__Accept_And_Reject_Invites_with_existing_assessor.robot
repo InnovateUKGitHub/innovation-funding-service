@@ -190,7 +190,7 @@ The Admin's invites overview should be updated for accepted invites
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
-    Select From List By Index                     id=rejectReason    2
+    Select From List By Index                     id=rejectReasonValid    2
     The user enters text to a text field          id=rejectComment    Unable to assess this application.
     the user cannot see a validation error in the page
 
