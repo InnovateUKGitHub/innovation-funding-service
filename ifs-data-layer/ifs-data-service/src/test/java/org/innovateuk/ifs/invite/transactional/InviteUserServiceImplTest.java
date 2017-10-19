@@ -415,7 +415,7 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     public void testGetExternalInvites() {
         Application app = newApplication().build();
         Project prj = newProject().withApplication(app).build();
-        List<InviteOrganisation> inviteOrganisations = newInviteOrganisation().withOrganisationName("Tesla", "East India Company").build(2);
+        List<InviteOrganisation> inviteOrganisations = newInviteOrganisation().withOrganisationName("Tesla", "Columbia Data Products").build(2);
         List<ApplicationInvite> applicationInvites = newApplicationInvite().withApplication(app).withEmail("x@email.com", "b@email.com").withInviteOrganisation(inviteOrganisations.get(0), inviteOrganisations.get(1)).build(2);
         List<Organisation> organisations = newOrganisation().withName("Cardiff Electric").withName("Mutiny").build(2);
         List<ProjectInvite> projectInvites = newProjectInvite().withProject(prj).withOrganisation(organisations.get(0), organisations.get(1)).withEmail("z@email.com", "u@email.com").build(2);
