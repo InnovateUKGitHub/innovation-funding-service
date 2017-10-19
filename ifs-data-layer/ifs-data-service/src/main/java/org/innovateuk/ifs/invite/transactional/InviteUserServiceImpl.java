@@ -241,7 +241,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     private List<ExternalInviteResource> getApplicationInvitesAsExternalInviteResource(List<ApplicationInvite> appInvites){
         return appInvites.stream().map(appInvite -> new ExternalInviteResource(
                 appInvite.getName(),
-                appInvite.getInviteOrganisation().getOrganisationName(),
+                appInvite.getInviteOrganisation().getOrganisation() != null ? appInvite.getInviteOrganisation().getOrganisation().getName() : appInvite.getInviteOrganisation().getOrganisationName(), // organisation may not exist yet (new collaborator)
                 appInvite.getInviteOrganisation().getOrganisation() != null ? appInvite.getInviteOrganisation().getOrganisation().getId().toString() : "new",
                 appInvite.getEmail(),
                 appInvite.getTarget().getId(),
