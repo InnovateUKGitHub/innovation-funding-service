@@ -61,8 +61,8 @@ public class OtherFunding extends AbstractFinanceRowItem {
     }
 
     @Override
-    public SpendProfileRowType getCostType() {
-        return SpendProfileRowType.OTHER_FUNDING;
+    public FinanceRowType getCostType() {
+        return FinanceRowType.OTHER_FUNDING;
     }
 
     @Override

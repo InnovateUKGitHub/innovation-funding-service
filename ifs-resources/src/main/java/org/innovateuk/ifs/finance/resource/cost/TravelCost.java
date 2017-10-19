@@ -65,8 +65,8 @@ public class TravelCost extends AbstractFinanceRowItem {
     }
 
     @Override
-    public SpendProfileRowType getCostType() {
-        return SpendProfileRowType.TRAVEL;
+    public FinanceRowType getCostType() {
+        return FinanceRowType.TRAVEL;
     }
 
     @Override

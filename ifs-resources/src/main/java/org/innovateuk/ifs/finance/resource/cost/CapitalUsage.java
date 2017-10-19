@@ -140,7 +140,7 @@ public class CapitalUsage extends AbstractFinanceRowItem {
     }
 
     @Override
-    public SpendProfileRowType getCostType() {
-        return SpendProfileRowType.CAPITAL_USAGE;
+    public FinanceRowType getCostType() {
+        return FinanceRowType.CAPITAL_USAGE;
     }
 }
