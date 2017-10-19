@@ -47,8 +47,6 @@ public class UserController {
 
     private static final String DEFAULT_PAGE_SIZE = "40";
 
-    private static final String DEFAULT_PAGE_SIZE_UNLIMITED = "0";
-
     @Autowired
     private BaseUserService baseUserService;
 

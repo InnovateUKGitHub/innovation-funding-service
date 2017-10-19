@@ -45,7 +45,6 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
 
     @Test
     public void saveUserInvite() throws Exception {
-
         when(inviteUserServiceMock.saveUserInvite(inviteUserResource.getInvitedUser(), inviteUserResource.getAdminRoleType())).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/inviteUser/saveInvite")
@@ -58,7 +57,6 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
 
     @Test
     public void getInvite() throws Exception {
-
         when(inviteUserServiceMock.getInvite("SomeHashString")).thenReturn(serviceSuccess(new RoleInviteResource()));
 
         mockMvc.perform(get("/inviteUser/getInvite/SomeHashString")).andExpect(status().isOk());
@@ -69,7 +67,6 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
 
     @Test
     public void checkExistingUser() throws Exception {
-
         when(inviteUserServiceMock.checkExistingUser("SomeHashString")).thenReturn(serviceSuccess(true));
 
         mockMvc.perform(get("/inviteUser/checkExistingUser/SomeHashString")).andExpect(status().isOk());
@@ -80,7 +77,6 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
 
     @Test
     public void findPendingInternalUserInvites() throws Exception {
-
         when(inviteUserServiceMock.findPendingInternalUserInvites(Mockito.any(PageRequest.class))).thenReturn(serviceSuccess(new RoleInvitePageResource()));
 
         mockMvc.perform(get("/inviteUser/internal/pending")).andExpect(status().isOk());
@@ -91,7 +87,6 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
 
     @Test
     public void getExternalInvites() throws Exception {
-
         when(inviteUserServiceMock.getExternalInvites()).thenReturn(serviceSuccess(new ArrayList<>()));
 
         mockMvc.perform(get("/inviteUser/external/all")).andExpect(status().isOk());
