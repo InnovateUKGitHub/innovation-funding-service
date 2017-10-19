@@ -15,7 +15,7 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 
 /**
- * A {@link Participant} in a {@link Competition}.
+ * A {@link CompetitionAssessmentParticipant} in a {@link Competition}.
  */
 @Entity
 @Table(name = "competition_user")
