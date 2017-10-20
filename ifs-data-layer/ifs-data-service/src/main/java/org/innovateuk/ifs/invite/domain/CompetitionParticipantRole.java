@@ -7,5 +7,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
  */
 public enum CompetitionParticipantRole implements ParticipantRole<Competition> {
     INNOVATION_LEAD,
-    ASSESSOR;
+    ASSESSOR,
+    PANEL_ASSESSOR
 }
