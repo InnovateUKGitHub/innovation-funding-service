@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -56,6 +57,6 @@ public class UnsavedFieldsManager {
 
 		return fields.stream()
 				.filter(f -> !(StringUtils.isEmpty(f.getValue())))
-				.collect(Collectors.groupingBy(f -> f.getFieldName()));
+				.collect(Collectors.groupingBy(f -> f.getFieldName(), LinkedHashMap::new, Collectors.toList()));
 	}
 }
