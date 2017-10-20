@@ -5,8 +5,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-// TODO qqRP The reason we need this is that ifs-commons pulls in the spring security modules.
-// TODO qqPR Should ifs-commons do this?
+// The reason we need this is that ifs-commons pulls in the spring security modules.
+// It may make sense to remove the security modules from ifs-commons and just having the jars required for compilation
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {

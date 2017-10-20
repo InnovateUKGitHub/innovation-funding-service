@@ -3,8 +3,8 @@ package org.innovateuk.ifs;
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.security.PermissionRule;
-import org.innovateuk.ifs.commons.security.evaluator.AbstractCustomPermissionEvaluator;
 import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
+import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -41,7 +41,7 @@ public abstract class EndpointDocumentationTest extends BaseIntegrationTest {
     private WebApplicationContext applicationContext;
 
     @Autowired
-    AbstractCustomPermissionEvaluator evaluator;
+    CustomPermissionEvaluator evaluator;
 
     private void writeCsv(String filename, String[] headers, List<String[]> rows) {
         try {
@@ -59,7 +59,7 @@ public abstract class EndpointDocumentationTest extends BaseIntegrationTest {
      * Get a list of properties (name, description, state, comments) for all permission rules
      * defined in the given PermissionEvaluator
      */
-    private List<String[]> getPermissionRules(AbstractCustomPermissionEvaluator evaluator) {
+    private List<String[]> getPermissionRules(CustomPermissionEvaluator evaluator) {
         List<String[]> permissionRuleRows = new ArrayList<>();
 
         PermissionedObjectClassToPermissionsToPermissionsMethods ruleMap = getRulesMap(evaluator);
