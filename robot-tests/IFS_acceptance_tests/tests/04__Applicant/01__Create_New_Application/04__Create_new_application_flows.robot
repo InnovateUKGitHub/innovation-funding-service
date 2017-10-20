@@ -84,7 +84,7 @@ the user edits the application title
     the user should see the element         link=Application details
     the user clicks the button/link         link=Application details
     The project start date is blank
-    The user enters text to a text field    id=application_details-title    ${test_title}
+    The user enters text to a text field    css=[id="application.name"]    ${test_title}
     the user clicks the button/link         jQuery=button:contains("Save and return")
 
 the progress indicator should show 0

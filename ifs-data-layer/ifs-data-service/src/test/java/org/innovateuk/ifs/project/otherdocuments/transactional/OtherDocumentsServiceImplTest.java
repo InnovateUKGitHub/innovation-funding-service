@@ -9,7 +9,9 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -35,8 +37,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static java.util.Collections.singletonList;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_HAS_SOLE_PARTNER;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -44,6 +47,7 @@ import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
+import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -57,9 +61,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocumentsService> {
 
@@ -69,7 +71,10 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
 
     private Application application;
     private Organisation organisation;
+    private PartnerOrganisation leadPartnerOrganisation;
     private Role leadApplicantRole;
+    private Organisation partnerOrganisation;
+    private PartnerOrganisation partnerPartnerOrganisation;
 
     private User user;
     private ProcessRole leadApplicantProcessRole;
@@ -104,6 +109,12 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
                 withUser(user).
                 build();
 
+        leadPartnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
+
+        partnerOrganisation = newOrganisation().build();
+
+        partnerPartnerOrganisation = newPartnerOrganisation().withOrganisation(partnerOrganisation).build();
+
         application = newApplication().
                 withId(applicationId).
                 withProcessRoles(leadApplicantProcessRole).
@@ -115,7 +126,8 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         project = newProject().
                 withId(projectId).
                 withApplication(application).
-                withProjectUsers(singletonList(leadPartnerProjectUser)).
+                withProjectUsers(Collections.singletonList(leadPartnerProjectUser)).
+                withPartnerOrganisations(asList(leadPartnerOrganisation, partnerPartnerOrganisation)).
                 build();
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
@@ -263,7 +275,7 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
 
         Long projectId = 1L;
 
-        Project projectInDB = newProject().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).build();
+        Project projectInDB = newProject().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).withPartnerOrganisations(asList(leadPartnerOrganisation, partnerPartnerOrganisation)).build();
         FileEntry entry = newFileEntry().build();
         FileEntryResource entryResource = newFileEntryResource().build();
         Supplier<InputStream> input = () -> null;
@@ -280,7 +292,6 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
 
         assertEquals(ApprovalType.UNSET, projectInDB.getOtherDocumentsApproved());
         verify(fileServiceMock).updateFile(entryResource, input);
-
     }
 
     @Test
@@ -289,6 +300,24 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
                 project::getCollaborationAgreement,
                 (fileToCreate, inputStreamSupplier) ->
                         service.createCollaborationAgreementFileEntry(123L, fileToCreate, inputStreamSupplier));
+    }
+
+    @Test
+    public void testCreateCollaborationAgreementFileEntryForSolePartner() {
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).withPartnerOrganisations(asList(leadPartnerOrganisation)).build();
+        FileEntryResource entryResource = newFileEntryResource().build();
+        Supplier<InputStream> input = () -> null;
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+
+        ServiceResult<FileEntryResource> result = service.createCollaborationAgreementFileEntry(projectId, entryResource, input);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_HAS_SOLE_PARTNER));
+
+        verify(fileServiceMock, never()).createFile(entryResource, input);
     }
 
     @Test
@@ -314,6 +343,25 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
     }
 
     @Test
+    public void testUpdateCollaborationAgreementFileEntryForSolePartner() {
+        Long projectId = 1L;
+
+        Project projectInDB = newProject().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).withPartnerOrganisations(asList(leadPartnerOrganisation)).build();
+        FileEntryResource entryResource = newFileEntryResource().build();
+        Supplier<InputStream> input = () -> null;
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectWorkflowHandlerMock.getState(projectInDB)).thenReturn(ProjectState.SETUP);
+
+        ServiceResult<Void> result = service.updateCollaborationAgreementFileEntry(projectId, entryResource, input);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_HAS_SOLE_PARTNER));
+
+        verify(fileServiceMock, never()).updateFile(entryResource, input);
+    }
+
+    @Test
     public void testGetCollaborationAgreementFileEntryDetails() {
         assertGetFileDetails(
                 project::setCollaborationAgreement,
@@ -321,10 +369,40 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
     }
 
     @Test
+    public void testGetCollaborationAgreementFileEntryDetailsSolePartner() {
+        Project project = newProject().
+                withId(projectId).
+                withApplication(application).
+                withPartnerOrganisations(asList(leadPartnerOrganisation)).
+                build();
+
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+
+        ServiceResult<FileEntryResource> result =  service.getCollaborationAgreementFileEntryDetails(123L);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_HAS_SOLE_PARTNER));
+    }
+
+    @Test
     public void testGetCollaborationAgreementFileContents() {
         assertGetFileContents(
                 project::setCollaborationAgreement,
                 () -> service.getCollaborationAgreementFileContents(123L));
+    }
+
+    @Test
+    public void testGetCollaborationAgreementFileContentsSolePartner() {
+        Project project = newProject().
+                withId(projectId).
+                withApplication(application).
+                withPartnerOrganisations(asList(leadPartnerOrganisation)).
+                build();
+
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+
+        ServiceResult<FileAndContents> result =  service.getCollaborationAgreementFileContents(123L);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_HAS_SOLE_PARTNER));
     }
 
     @Test
@@ -413,14 +491,39 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
                 project::setExploitationPlan,
                 () -> service.deleteExploitationPlanFile(123L));
     }
+    @Test
+    public void testDeleteExploitationPlanFileProjectLive() {
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
+
+        ServiceResult<Void> result = service.deleteExploitationPlanFile(123L);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
+    }
 
     @Test
-    public void testFailureDeleteExploitationPlanFileProjectLive() {
+    public void testFailureDeleteCollaborationAgreementFileProjectLive() {
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
 
         ServiceResult<Void> result = service.deleteCollaborationAgreementFile(123L);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
+    }
+
+    @Test
+    public void testFailureDeleteCollaborationAgreementFileSolePartner() {
+        Project project = newProject().
+                withId(projectId).
+                withApplication(application).
+                withPartnerOrganisations(asList(leadPartnerOrganisation)).
+                build();
+
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
+
+        ServiceResult<Void> result = service.deleteCollaborationAgreementFile(123L);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_HAS_SOLE_PARTNER));
     }
 
     @Test
@@ -560,6 +663,140 @@ public class OtherDocumentsServiceImplTest extends BaseServiceUnitTest<OtherDocu
         List<ProjectUser> projectUsers = new ArrayList<>();
         projectUsers.add(projectUserToSet);
         Project project = newProject().build();
+        project.setProjectUsers(projectUsers);
+
+        when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+
+        ServiceResult<Void> result = service.saveDocumentsSubmitDateTime(project.getId(), ZonedDateTime.now());
+
+        assertTrue(result.isFailure());
+        assertNull(project.getCollaborationAgreement());
+        assertNull(project.getExploitationPlan());
+        assertTrue(project.getProjectUsers().get(0).getRole().getName()
+                .equals(UserRoleType.PROJECT_MANAGER.getName()));
+        assertNull(project.getDocumentsSubmittedDate());
+    }
+
+    @Test
+    public void testFilesCanBeSubmittedBySolePartner() {
+        Project project = newProject().
+                          withId(projectId).
+                          withApplication(application).
+                          withProjectUsers(Collections.singletonList(leadPartnerProjectUser)).
+                          withPartnerOrganisations(asList(leadPartnerOrganisation)).
+                          build();
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+
+        assertFilesCanBeSubmittedByProjectManagerAndFileExists(
+                project::setExploitationPlan,
+                () -> service.isOtherDocumentsSubmitAllowed(123L, 1L));
+    }
+
+    private void assertFilesCanBeSubmittedByProjectManagerAndFileExists(Consumer<FileEntry> fileSetter1,
+                                                                        Supplier<ServiceResult<Boolean>> getConditionFn) {
+        ProjectUser projectUserToSet = newProjectUser()
+                .withId(1L)
+                .withUser(newUser().withId(1L).build())
+                .withRole(PROJECT_MANAGER)
+                .build();
+
+        project.addProjectUser(projectUserToSet);
+
+        Supplier<InputStream> inputStreamSupplier1 = () -> null;
+
+        getFileEntryResource(fileSetter1, inputStreamSupplier1);
+        ServiceResult<Boolean> result = getConditionFn.get();
+
+        assertTrue(result.isSuccess());
+        assertTrue(result.getSuccessObject());
+
+    }
+
+    private FileEntryResource getFileEntryResource(Consumer<FileEntry> fileSetter1,
+                                                   Supplier<InputStream> inputStreamSupplier1) {
+        FileEntry fileEntry1ToGet = newFileEntry().build();
+
+        FileEntryResource fileEntryResourcesToGet = newFileEntryResource().withFilesizeBytes(100).build();
+
+        fileSetter1.accept(fileEntry1ToGet);
+
+        when(fileServiceMock.getFileByFileEntryId(fileEntry1ToGet.getId())).thenReturn(serviceSuccess(inputStreamSupplier1));
+
+        when(fileEntryMapperMock.mapToResource(fileEntry1ToGet)).thenReturn(fileEntryResourcesToGet);
+        return fileEntryResourcesToGet;
+    }
+
+    @Test
+    public void testFilesCannotBeSubmittedBySolePartnerWithoutExploitationPlan() {
+        project = newProject().
+                withId(projectId).
+                withApplication(application).
+                withProjectUsers(Collections.singletonList(leadPartnerProjectUser)).
+                withPartnerOrganisations(asList(leadPartnerOrganisation)).
+                build();
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+
+        ServiceResult<Boolean> result = service.isOtherDocumentsSubmitAllowed(123L, 1L);
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void testSaveDocumentsSubmitDateTimeIsSuccessfulWhenSolePartnerAndUploadComplete() {
+        ProjectUser projectUserToSet = newProjectUser()
+                .withId(1L)
+                .withUser(newUser().withId(1L).build())
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .build();
+        List<ProjectUser> projectUsers = new ArrayList<>();
+        projectUsers.add(projectUserToSet);
+
+        Project project = newProject().
+                withId(projectId).
+                withApplication(application).
+                withPartnerOrganisations(asList(leadPartnerOrganisation)).
+                build();
+        project.setProjectUsers(projectUsers);
+
+        when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);
+        when(projectRepositoryMock.findOne(project.getId())).thenReturn(project);
+
+        assertSetDocumentDateTimeIfProjectManagerAndFilesExist(
+                project::setExploitationPlan,
+                () -> service.saveDocumentsSubmitDateTime(project.getId(), ZonedDateTime.now()));
+
+        assertNotNull(project.getExploitationPlan());
+        assertTrue(project.getProjectUsers().get(0).getRole().getName()
+                .equals(UserRoleType.PROJECT_MANAGER.getName()));
+        assertNotNull(project.getDocumentsSubmittedDate());
+    }
+
+    private void assertSetDocumentDateTimeIfProjectManagerAndFilesExist(Consumer<FileEntry> fileSetter1,
+                                                                         Supplier<ServiceResult<Void>> getConditionFn) {
+        Supplier<InputStream> inputStreamSupplier1 = () -> null;
+
+        getFileEntryResource(fileSetter1, inputStreamSupplier1);
+        ServiceResult<Void> result = getConditionFn.get();
+
+        assertTrue(result.isSuccess());
+
+    }
+
+    @Test
+    public void testSaveDocumentsSubmitDateTimeFailsWhenSolePartnerAndUploadIncomplete() {
+        ProjectUser projectUserToSet = newProjectUser()
+                .withId(1L)
+                .withUser(newUser().withId(1L).build())
+                .withRole(ProjectParticipantRole.PROJECT_MANAGER)
+                .build();
+        List<ProjectUser> projectUsers = new ArrayList<>();
+        projectUsers.add(projectUserToSet);
+        Project project = newProject().
+                withId(projectId).
+                withApplication(application).
+                withPartnerOrganisations(asList(leadPartnerOrganisation)).
+                build();
         project.setProjectUsers(projectUsers);
 
         when(projectUserRepositoryMock.findByProjectId(project.getId())).thenReturn(projectUsers);

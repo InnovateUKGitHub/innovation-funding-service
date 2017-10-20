@@ -149,7 +149,7 @@
                         <span class="error-message"  th:each="err : ${#fields.errors('question.guidanceTitle')}" th:text="${err}" ></span>
                     </th:block>
                 </label>
-                <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'field-control-error'"
+                <input th:classappend="${#fields.hasErrors('question.guidanceTitle')} ? 'form-control-error'"
                        class="form-control width-x-large"
                        type="text"
                        id="question.guidanceTitle"
@@ -356,7 +356,7 @@
 
                                         <tr th:id="${'guidance-'+iteration.index}">
                                             <td class="form-group" th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')} ? 'form-group-error'">
-                                                <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-scorefrom'}">
+                                                <label class="form-label" th:for="guidanceRows[__${iteration.index}__].scoreFrom">
                                                     <span class="visuallyhidden">Score from</span>
                                                     <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreFrom')}">
                                                         <span class="error-message"  th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].scoreFrom')}" th:text="${err}" ></span>
@@ -367,13 +367,13 @@
                                                        min="0"
                                                        class="form-control width-small"
                                                        th:errorclass="form-control-error"
-                                                       th:id="${'guidanceRow-'+iteration.index+'-scorefrom'}"
+                                                       th:id="guidanceRows[__${iteration.index}__].scoreFrom"
                                                        th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreFrom}"
                                                        th:attr="data-required-errormessage=#{validation.applicationquestionform.scorefrom.required},
                                                                 data-min-errormessage=#{validation.applicationquestionform.scorefrom.min}" />
                                             </td>
                                             <td class="form-group" th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')} ? 'form-group-error'">
-                                                <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-scoreto'}">
+                                                <label class="form-label" th:for="guidanceRows[__${iteration.index}__].scoreTo">
                                                     <span class="visuallyhidden">Score to</span>
                                                     <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].scoreTo')}">
                                                         <span class="error-message"  th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].scoreTo')}" th:text="${err}" ></span>
@@ -382,13 +382,13 @@
                                                 <input required="required" type="number" min="0"
                                                        class="form-control width-small"
                                                        th:errorclass="form-control-error"
-                                                       th:id="${'guidanceRow-'+iteration.index+'-scoreto'}"
+                                                       th:id="guidanceRows[__${iteration.index}__].scoreTo"
                                                        th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].scoreTo}" value=""
                                                        th:attr="data-required-errormessage=#{validation.applicationquestionform.scoreto.required},
                                                                 data-min-errormessage=#{validation.applicationquestionform.scoreto.min}" />
                                             </td>
                                             <td class="form-group" th:classappend="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')} ? 'form-group-error'">
-                                                <label class="form-label" th:for="${'guidanceRow-'+iteration.index+'-justification'}">
+                                                <label class="form-label" th:for="guidanceRows[__${iteration.index}__].justification">
                                                     <span class="visuallyhidden">Justification</span>
                                                     <th:block th:if="${#fields.hasErrors('guidanceRows[__${iteration.index}__].justification')}">
                                                         <span class="error-message" th:each="err : ${#fields.errors('guidanceRows[__${iteration.index}__].justification')}" th:text="${err}" ></span>
@@ -397,7 +397,7 @@
                                                 <textarea required="required"
                                                        class="form-control width-full"
                                                        th:errorclass="form-control-error"
-                                                       th:id="${'guidanceRow-'+iteration.index+'-justification'}"
+                                                       th:id="guidanceRows[__${iteration.index}__].justification"
                                                        th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].justification}"
                                                        maxlength="5000"
                                                        th:attr="data-required-errormessage=#{validation.applicationquestionform.justification.required},

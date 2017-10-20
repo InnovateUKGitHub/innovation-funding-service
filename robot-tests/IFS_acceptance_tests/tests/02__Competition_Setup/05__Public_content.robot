@@ -71,10 +71,10 @@ Competition information and search: server side validation
 Competition information and search: Valid values
     [Documentation]    INFUND-6915  INFUND-8363  IFS-179
     [Tags]  HappyPath
-    When the user enters text to a text field       id=short-description  Short public description
-    And the user enters text to a text field        id=funding-range  Up to £1million
+    When the user enters text to a text field       id=shortDescription  Short public description
+    And the user enters text to a text field        id=projectFundingRange  Up to £1million
     And the user selects the radio button           publishSetting  invite
-    And the user enters text to a text field        css=[labelledby="eligibility-summary"]  Summary of eligiblity
+    And the user enters text to a text field        css=[aria-labelledby="eligibilitySummary"]  Summary of eligiblity
     When the user enters text to a text field       id=keywords  hellohellohellohellohellohellohellohellohellohellou
     And the user clicks the button/link             jQuery=button:contains("Save and review")
     Then the user should see the element            jQuery=.error-summary-list:contains("Each keyword must be less than 50 characters long.")
@@ -93,7 +93,7 @@ Competition information and search: ReadOnly
     And the user should see the element   jQuery=dt:contains("Keywords") + dd:contains("Search,Testing,Robot")
     And the user should see the element   jQuery=dt:contains("Publish setting") + dd:contains("Invite only")
     When the user clicks the button/link  link=Edit
-    Then the user should see the element  css=#short-description[value="Short public description"]
+    Then the user should see the element  css=#shortDescription[value="Short public description"]
     And the user clicks the button/link   jQuery=.button:contains("Save and review")
     And the user clicks the button/link   jQuery=.button:contains("Return to public content")
 
@@ -116,7 +116,7 @@ Summary: User enters valid values and saves
     And the user clicks the button/link        link=Summary
     When the user enters valid data in the summary details
     And the user clicks the button/link        jQuery=button:contains("+ add new section")
-    When the user enters text to a text field  css=#heading-0  A nice new Heading
+    When the user enters text to a text field  id=contentGroups[0].heading  A nice new Heading
     Then the user enters text to a text field   jQuery=.editor:eq(1)  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco ullamco
     And the user uploads the file              id=contentGroups-0.attachment  ${valid_pdf}
     When the user clicks the button/link       jQuery=button:contains("Save and review")
@@ -159,11 +159,11 @@ Eligibility: User enters valid values and saves
     Given the internal user navigates to public content     ${public_content_competition_name}
     When the user clicks the button/link                    link=Eligibility
     And the user enters valid data in the eligibility details
-    Then the user enters text to a text field               css=.contentGroup:first-of-type input[id^="heading"]   Nationality Eligibility Heading
+    Then the user enters text to a text field               css=.contentGroup:first-of-type input[id^="contentGroups"][id$="heading"]   Nationality Eligibility Heading
     And the user enters text to a text field                css=.contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments take these responses into consideration before making decisions
     And the user uploads the file                           css=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
     Then the user clicks the button/link                    jQuery=button:contains("+ add new section")
-    And The user enters text to a text field                css=.contentGroup:nth-of-type(2) input[id^="heading"]   Minimum Eligibility Threshold
+    And The user enters text to a text field                css=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="heading"]   Minimum Eligibility Threshold
     And The user enters text to a text field                css=.contentGroup:nth-of-type(2) .editor    One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support
     And the user uploads the file                           css=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]   ${valid_pdf}
     When the user clicks the button/link                    jQuery=button:contains("Save and review")
@@ -183,7 +183,7 @@ Eligibility: Contains the correct values when viewed, Edit sections
     And the user enters text to a text field  css=.contentGroup:first-of-type .editor   You can give your views on new or changing government policies by responding to consultations. Government departments rule of 267567£$*90 take these responses into consideration before making decisions, Local authorities can decide to meet needs that do not meet the eligibility criteria, Where they decide to do this, the same steps must be taken as would be if the person did have eligible needs (for example, the preparation of a care and support plan).
     And The user enters text to a text field  css=.contentGroup:nth-of-type(2) .editor   One of the important new changes we are introducing through these reforms is establishing the national eligibility criteria for adult care and support This is to be achieved through regulations to be made under a power in clause 13 of the Care Bill. These will set a minimum threshold.
     Then the user clicks the button/link      jQuery=button:contains("+ add new section")
-    And The user enters text to a text field  css=.contentGroup:nth-of-type(3) input[id^="heading"]    Draft Care and Support - Eligibility Criteria
+    And The user enters text to a text field  css=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="heading"]    Draft Care and Support - Eligibility Criteria
     And the user enters text to a text field  css=.contentGroup:nth-of-type(3) .editor   In these Regulations— Citation, commencement “basic personal care activities” means essential personal care tasks that a person carries out as part of normal daily, An adult’s needs meet the eligibility criteria if those needs are due to a physical or mental impairment or illness and the effect of such needs is that the adult.
     And the user clicks the button/link       jQuery=.contentGroup:first-of-type button:contains("Remove")
     And the user clicks the button/link       jQuery=.contentGroup:nth-of-type(2) button:contains("Remove")
@@ -241,11 +241,11 @@ How to apply: User enters valid values and saves
     Given the internal user navigates to public content     ${public_content_competition_name}
     When the user clicks the button/link                    link=How to apply
     And the user enters valid data in How-to-apply details
-    Then the user enters text to a text field               css=.contentGroup:first-of-type input[id^="heading"]   The application process
+    Then the user enters text to a text field               css=.contentGroup:first-of-type input[id^="contentGroups"][id$="heading"]   The application process
     And the user enters text to a text field                css=.contentGroup:first-of-type .editor   External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.
     And the user uploads the file                           css=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
     Then the user clicks the button/link                    jQuery=button:contains("+ add new section")
-    And The user enters text to a text field                css=.contentGroup:nth-of-type(2) input[id^="heading"]   Application questions
+    And The user enters text to a text field                css=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="heading"]   Application questions
     And The user enters text to a text field                css=.contentGroup:nth-of-type(2) .editor    Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765 or email us at support@innovateTest.worth.com
     And the user uploads the file                           css=.contentGroup:nth-of-type(2) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     When the user clicks the button/link                    jQuery=button:contains("Save and review")
@@ -266,16 +266,16 @@ How to apply: Contains the correct values when viewed, Edit sections
     And the user moves focus to the element   css=#contentGroup-row-1 >div.form-group.textarea-wrapped >div.editor
     And The user enters text to a text field  css=.contentGroup:nth-of-type(2) .editor  Application questions are available for reference and to assist with preparation. If you need more information, contact the competition helpline on 0700 123 98765.
     Then the user clicks the button/link      jQuery=button:contains("+ add new section")
-    And The user enters text to a text field  css=.contentGroup:nth-of-type(3) input[id^="heading"]    Application Rules -- Competition Procedures
+    And The user enters text to a text field  css=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="heading"]    Application Rules -- Competition Procedures
     And the user enters text to a text field  css=.contentGroup:nth-of-type(3) .editor   Sets out the rules for Competition framework provision funded by the CodeTechnology: ADReedoor8793£$%^^&&*^%%!@. This document forms part of the ADReedoor8793£$%^^&&*^%%!@ - Funding Rules 2016 to 2017. This document sets out the additional funding rules for Competition frameworks. You must read it together with other relevant funding rule documents. These include: Follow the Instructions.
     Then the user clicks the button/link      jQuery=button:contains("+ add new section")
-    And The user enters text to a text field  css=.contentGroup:nth-of-type(4) input[id^="heading"]    Competition Officers Contact
+    And The user enters text to a text field  css=.contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="heading"]    Competition Officers Contact
     And the user enters text to a text field  css=.contentGroup:nth-of-type(4) .editor  You can access an up-to-date list of areas where Competition is managed locally and how to contact them on GOV.UK. Follow the guidelines attached.
     And the user uploads the file             css=.contentGroup:nth-of-type(4) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     And the user clicks the button/link       jQuery=.contentGroup:first-of-type button:contains("Remove")
     And the user clicks the button/link       jQuery=.contentGroup:nth-of-type(2) button:contains("Remove")
     Then the user clicks the button/link      jQuery=button:contains("+ add new section")
-    And The user enters text to a text field  css=.contentGroup:nth-of-type(5) input[id^="heading"]    Confidentiality and Conflicts
+    And The user enters text to a text field  css=.contentGroup:nth-of-type(5) input[id^="contentGroups"][id$="heading"]    Confidentiality and Conflicts
     And the user enters text to a text field  css=.contentGroup:nth-of-type(5) .editor     We are confident that awarding an increase to your funding allocation is a good use of public funds, Providers with a Financial Memorandum or Conditions of Funding (Grant) or Conditions of Funding. For more information email us back on support@innovateTest.worth.com and find the attached memorandum.
     Then the user uploads the file            css=.contentGroup:nth-of-type(3) input[id^="contentGroups"][id$="attachment"]    ${valid_pdf}
     And the user uploads the file             css=.contentGroup:first-of-type input[id^="contentGroups"][id$="attachment"]     ${valid_pdf}
@@ -332,7 +332,7 @@ User can view the competition url for invite only competitions
 The user is able to edit and publish again
     [Documentation]  INFUND-6914
     [Tags]
-    Given the user enters text to a text field  css=[labelledby="eligibility-summary"]  Some other summary
+    Given the user enters text to a text field  css=[aria-labelledby="eligibilitySummary"]  Some other summary
     And the user clicks the button/link         jQuery=button:contains("Publish and review")
     Then the user clicks the button/link        jQuery=.button:contains("Return to public content")
     When the user should see all sections completed
@@ -464,28 +464,28 @@ User creates a new competition
 the user enters valid data in the summary details
     The user enters text to a text field    css=.editor  This is a Summary description
     the user selects the radio button       fundingType    Grant
-    the user enters text to a text field    id=project-size   10 millions
+    the user enters text to a text field    id=projectSize   10 millions
 
 the user enters valid data in the eligibility details
-    The user enters text to a text field    css=#heading-0              Minimum Eligibility Threshold
+    The user enters text to a text field    id=contentGroups[0].heading              Minimum Eligibility Threshold
     The user enters text to a text field    jQuery=.editor:eq(0)        We are establishing a system that will place a greater focus on prevention, which will mean that the care and support needs of people will be considered earlier than is currently the case. This will build on the strengths of the person and look to prevent, reduce or delay their need for care and support. The Bill will introduce a new system that will support people to live independently and put personalisation at the heart of the process
 
 the user enters valid data in How-to-apply details
-    The user enters text to a text field    css=#heading-0              Read the Guidance
+    The user enters text to a text field    id=contentGroups[0].heading              Read the Guidance
     The user enters text to a text field    jQuery=.editor:eq(0)        To make an application on our online system, you must have a validated applicant profile. We take up to five working days to validate a profile, so you must take this into account when you’re thinking about when to apply. You will keep your own contact details up to date by editing your applicant profile (please see the guidance sheet on our user accounts and applicant profiles page for more information)
 
 the user can add and remove multiple content groups
-    When the user enters text to a text field  id=heading-0    Heading 1
+    When the user enters text to a text field  id=contentGroups[0].heading    Heading 1
     And the user enters text to a text field   jQuery=.editor:eq(0)     Content 1
     And the user uploads the file              id=contentGroups-0.attachment  ${5mb_pdf}
     Then the user should see the element       jQuery=.uploaded-file:contains("testing_5MB.pdf")
     And the user clicks the button/link        jQuery=button:contains("Remove")
     And the user clicks the button/link        jQuery=button:contains("+ add new section")
-    And the user enters text to a text field   id=heading-1    Heading 2
+    And the user enters text to a text field   id=contentGroups[1].heading    Heading 2
     And the user enters text to a text field   jQuery=.editor:eq(1)     Content 2
     And the user uploads the file              id=contentGroups-1.attachment  ${valid_pdf}
     And the user clicks the button/link        jQuery=button:contains("+ add new section")
-    And the user enters text to a text field   id=heading-2    Heading 3
+    And the user enters text to a text field   id=contentGroups[2].heading    Heading 3
     And the user enters text to a text field   jQuery=.editor:eq(2)     Content 3
     When the user uploads the file             id=contentGroups-2.attachment  ${text_file}
     Then the user should see the element       jQuery=.error-summary-list:contains("Please upload a file in .pdf format only.")
@@ -496,7 +496,7 @@ the user can add and remove multiple content groups
     # TODO this reload is required for now due to INFUND-8358
     And the user should not see an error in the page
     And the user clicks the button/link       jQuery=button:contains("Remove section"):eq(1)
-    Then the user should not see the element  id=heading-2
+    Then the user should not see the element  id=contentGroups[2].heading
     And the user should not see the element   jQuery=.editor:eq(2)
 
 the user can add and remove multiple content groups for summary
@@ -504,16 +504,16 @@ the user can add and remove multiple content groups for summary
     And the user clicks the button/link        jQuery=button:contains("Save and review")
     Then the user should see a summary error   Please enter a heading.
     And the user should see a summary error    Please enter content.
-    When the user enters text to a text field  id=heading-0    Heading 1
+    When the user enters text to a text field  id=contentGroups[0].heading    Heading 1
     And the user enters text to a text field   jQuery=.editor:eq(1)     Content 1
     And the user clicks the button/link        jQuery=button:contains("+ add new section")
-    And the user enters text to a text field   id=heading-1    Heading 2
+    And the user enters text to a text field   id=contentGroups[1].heading    Heading 2
     And the user enters text to a text field   jQuery=.editor:eq(2)     Content 2
     And the user clicks the button/link        jQuery=button:contains("+ add new section")
-    And the user enters text to a text field   id=heading-2    Heading 3
+    And the user enters text to a text field   id=contentGroups[2].heading    Heading 3
     And the user enters text to a text field   jQuery=.editor:eq(3)     Content 3
     And the user clicks the button/link        jQuery=button:contains("Remove section"):eq(2)
-    Then the user should not see the element   id=heading-2
+    Then the user should not see the element   id=contentGroups[2].heading
     And the user should not see the element    jQuery=.editor:eq(3)
 
 the user can add and remove multiple event groups
@@ -521,29 +521,29 @@ the user can add and remove multiple event groups
     And the user clicks the button/link        jQuery=button:contains("Save and review")
     Then the user should see a summary error   Please enter a valid date.
     And the user should see a summary error    Please enter valid content.
-    And the user enters text to a text field   id=dates-0-day      60
-    And the user enters text to a text field   id=dates-0-month    -6
+    And the user enters text to a text field   id=dates[0].day      60
+    And the user enters text to a text field   id=dates[0].month    -6
     And the user clicks the button/link        jQuery=button:contains("Save and review")
     Then the user should see a summary error   must be between 1 and 31
     And the user should see a summary error    must be between 1 and 12
-    When the user enters text to a text field  id=dates-0-day      12
-    And the user enters text to a text field   id=dates-0-month    12
-    And the user enters text to a text field   id=dates-0-year     ${nextyear}
+    When the user enters text to a text field  id=dates[0].day      12
+    And the user enters text to a text field   id=dates[0].month    12
+    And the user enters text to a text field   id=dates[0].year     ${nextyear}
     And the user enters text to a text field   jQuery=.editor:eq(0)     Content 1
     And the user clicks the button/link        jQuery=button:contains("+ add new event")
-    And the user enters text to a text field   id=dates-1-day      20
-    And the user enters text to a text field   id=dates-1-month    12
-    And the user enters text to a text field   id=dates-1-year     ${nextyear}
+    And the user enters text to a text field   id=dates[1].day      20
+    And the user enters text to a text field   id=dates[1].month    12
+    And the user enters text to a text field   id=dates[1].year     ${nextyear}
     And the user enters text to a text field   jQuery=.editor:eq(1)     Content 2
     And the user clicks the button/link        jQuery=button:contains("+ add new event")
-    And the user enters text to a text field   id=dates-2-day      30
-    And the user enters text to a text field   id=dates-2-month    12
-    And the user enters text to a text field   id=dates-2-year     ${nextyear}
+    And the user enters text to a text field   id=dates[2].day      30
+    And the user enters text to a text field   id=dates[2].month    12
+    And the user enters text to a text field   id=dates[2].year     ${nextyear}
     And the user enters text to a text field   jQuery=.editor:eq(2)     Content 3
     And the user clicks the button/link        jQuery=button:contains("Remove event"):eq(2)
-    Then the user should not see the element   id=dates-2-day
-    And the user should not see the element    id=dates-2-month
-    And the user should not see the element    id=dates-2-year
+    Then the user should not see the element   id=dates[2].day
+    And the user should not see the element    id=dates[2].month
+    And the user should not see the element    id=dates[2].year
     And the user should not see the element    jQuery=.editor:eq(2)
     And the user clicks the button/link        jQuery=button:contains("Save and review")
     And the user clicks the button/link        jQuery=.button:contains("Return to public content")

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
@@ -8,18 +9,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.primitives.Longs.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
+import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -215,5 +220,66 @@ public class AssessmentPanelInviteControllerTest extends BaseControllerMockMVCTe
                 .andExpect(status().isOk());
 
         verify(assessmentPanelInviteServiceMock, only()).getAllInvitesToSend(COMPETITION_ID);
+    }
+
+    @Test
+    public void getAllInvitesToResend() throws Exception {
+        AssessorInvitesToSendResource resource = newAssessorInvitesToSendResource().build();
+        List<Long> inviteIds = asList(1L, 2L);
+
+        when(assessmentPanelInviteServiceMock.getAllInvitesToResend(COMPETITION_ID, inviteIds)).thenReturn(serviceSuccess(resource));
+
+        mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesToResend/{competitionId}", COMPETITION_ID).contentType(MediaType.APPLICATION_JSON)
+                .param("inviteIds", simpleJoiner(inviteIds, ",")))
+                .andExpect(status().isOk());
+
+        verify(assessmentPanelInviteServiceMock, only()).getAllInvitesToResend(COMPETITION_ID, inviteIds);
+    }
+
+    @Test
+    public void resendInvites() throws Exception {
+        List<Long> inviteIds = asList(1L, 2L);
+
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
+
+        when(assessmentPanelInviteServiceMock.resendInvites(inviteIds, assessorInviteSendResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/assessmentpanelinvite/resendInvites")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(assessorInviteSendResource))
+                .param("inviteIds", simpleJoiner(inviteIds, ",")))
+                .andExpect(status().isOk());
+
+        verify(assessmentPanelInviteServiceMock).resendInvites(inviteIds, assessorInviteSendResource);
+    }
+
+    @Test
+    public void getInvitationOverview() throws Exception {
+        long competitionId = 1L;
+        int page = 2;
+        int size = 10;
+        List<ParticipantStatus> status = Collections.singletonList(ACCEPTED);
+
+        AssessorInviteOverviewPageResource expectedPageResource = newAssessorInviteOverviewPageResource()
+                .withContent(newAssessorInviteOverviewResource().build(2))
+                .build();
+
+        Pageable pageable = new PageRequest(page, size, new Sort(Sort.Direction.ASC, "invite.email"));
+
+        when(assessmentPanelInviteServiceMock.getInvitationOverview(competitionId, pageable, status))
+                .thenReturn(serviceSuccess(expectedPageResource));
+
+        mockMvc.perform(get("/assessmentpanelinvite/getInvitationOverview/{competitionId}", competitionId)
+                .param("page", "2")
+                .param("size", "10")
+                .param("sort", "invite.email")
+                .param("statuses", "ACCEPTED"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedPageResource)));
+
+        verify(assessmentPanelInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status);
     }
 }
