@@ -54,7 +54,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseI
             assertNotNull(response.getBody());
         } catch (HttpClientErrorException | HttpServerErrorException e) {
             fail("Should have handled the request and response ok, but got exception - " + e);
-        }a
+        }
     }
 
     @Test
