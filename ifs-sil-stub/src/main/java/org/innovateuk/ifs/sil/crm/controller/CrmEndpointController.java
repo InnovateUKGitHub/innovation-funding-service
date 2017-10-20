@@ -19,7 +19,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
  */
 @RestController
 @RequestMapping("/silstub")
-@Profile("!crm")
 public class CrmEndpointController {
     private static final Log LOG = LogFactory.getLog(CrmEndpointController.class);
 
@@ -27,18 +26,5 @@ public class CrmEndpointController {
     public RestResult<Void> updateContact(@RequestBody SilContact contact) {
         LOG.info("Stubbing out SIL CRM update contact endpoint: " + JsonMappingUtil.toJson(contact));
         return restSuccess(HttpStatus.ACCEPTED);
-    }
-
-    // TODO qqRP This currently seems to work from the data service
-    // TODO qqRP adaptor.restGetEntity("http://sil-stub:8080/silstub/test", org.innovateuk.ifs.sil.crm.resource.SilContact.class)
-    // TODO qqRP
-    @GetMapping("/test2")
-    public RestResult<SilContact> toRemoveOnceProofOfConceptProved(){
-        SilContact testContact = new SilContact();
-        testContact.setEmail("test@example.com");
-        SilAddress testAddress = new SilAddress();
-        testAddress.setStreet("example street");
-        testContact.setAddress(testAddress);
-        return restSuccess(testContact);
     }
 }
