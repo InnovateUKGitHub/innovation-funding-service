@@ -5,6 +5,7 @@ import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 
@@ -42,5 +43,9 @@ public class AssessmentPanelInvite extends Invite<Competition, AssessmentPanelIn
     @Override
     public void setTarget(Competition competition) {
         this.competition = competition;
+    }
+
+    public AssessmentPanelInvite sendOrResend(User sentBy, ZonedDateTime sentOn) {
+        return doSend(sentBy, sentOn);
     }
 }

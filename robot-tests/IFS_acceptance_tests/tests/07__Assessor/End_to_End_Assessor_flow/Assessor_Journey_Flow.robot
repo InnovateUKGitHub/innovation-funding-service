@@ -23,7 +23,7 @@ Invite a new Assessor to assess a competition
     When the user clicks the button/link      jQuery=a:contains("Review and send invites")
     And the user enters text to a text field  id=message    This is custom text
     And the user clicks the button/link       jQuery=.button:contains("Send invite")
-    And The user should see the element       jQuery=span:contains("Add a non-registered assessor to your list")
+    And The user should see the element       jQuery=h2:contains("Overview of invited assessors")
 
 Invited User gets an email to assess the competition
     [Documentation]    INFUND-8092
