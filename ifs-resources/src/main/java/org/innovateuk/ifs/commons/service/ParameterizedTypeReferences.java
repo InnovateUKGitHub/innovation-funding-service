@@ -96,7 +96,7 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<UserResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<UserOrganisationResource>> userOrgnisationListType() {
+    public static ParameterizedTypeReference<List<UserOrganisationResource>> userOrganisationListType() {
         return new ParameterizedTypeReference<List<UserOrganisationResource>>() {};
     }
 

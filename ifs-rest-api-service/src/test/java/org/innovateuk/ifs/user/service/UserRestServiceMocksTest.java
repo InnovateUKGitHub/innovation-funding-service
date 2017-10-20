@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userOrgnisationListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userOrganisationListType;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -350,7 +350,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void findAllExternal() throws Exception {
         String url = usersUrl + "/findAllExternal";
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
-        setupGetWithRestResultExpectations(url,userOrgnisationListType(), userOrganisationResources);
+        setupGetWithRestResultExpectations(url, userOrganisationListType(), userOrganisationResources);
 
         RestResult<List<UserOrganisationResource>> result = service.findAllExternal();
         assertTrue(result.isSuccess());

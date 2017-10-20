@@ -21,12 +21,12 @@
             </thead>
             <tbody>
             <tr th:each="invite : ${invites}">
-                <td><a th:text="${invite.name}">Steve Smith</a></td>
-                <td><a th:text="${invite.organisationName}">Empire Limited</a></td>
-                <td><a th:text="${invite.organisationId}">22</a></td>
-                <td><a th:text="${invite.email}">steve.smith@empire.com</a></td>
-                <td><a th:text="${invite.applicationId}">10</a></td>
-                <td><a th:text="${invite.status.displayName}">Sent</a></td>
+                <td th:text="${invite.name}">Steve Smith</td>
+                <td th:text="${invite.organisationName}">Empire Limited</td>
+                <td th:text="${invite.organisationId}">22</td>
+                <td th:text="${invite.email}">steve.smith@empire.com</td>
+                <td th:text="${invite.applicationId}">10</td>
+                <td th:text="${invite.status.displayName}">Sent</td>
             </tr>
             </tbody>
         </table>
