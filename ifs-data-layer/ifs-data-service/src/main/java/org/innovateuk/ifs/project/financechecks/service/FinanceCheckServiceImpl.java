@@ -31,6 +31,7 @@ import org.innovateuk.ifs.project.status.transactional.StatusService;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.util.GraphBuilderContext;
+import org.innovateuk.ifs.util.ParsingFunctions;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -234,9 +235,13 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return competitionSetupTransactionalService.isIncludeGrowthTable(app.getCompetition().getId()).
                 andOnSuccess((isIncludeGrowthTable) -> {
                     if (isIncludeGrowthTable) {
-                        return getOnlyForApplication(app, organisationId, financeType).andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
+                        return getOnlyForApplication(app, organisationId, financeType)
+                                //.andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
+                                .andOnSuccess(result -> ParsingFunctions.validLongResult(result.getValue()));
                     } else {
-                        return getOnlyForApplication(app, organisationId, nonFinanceType).andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
+                        return getOnlyForApplication(app, organisationId, nonFinanceType)
+                                //.andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
+                                .andOnSuccess(result -> ParsingFunctions.validLongResult(result.getValue()));
                     }
                 });
     }
