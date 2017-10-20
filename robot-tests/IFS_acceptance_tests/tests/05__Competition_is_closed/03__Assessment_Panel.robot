@@ -8,7 +8,8 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-1564 Assessment panels - Invite assessors to panel - Key statistics
 ...
 ...               IFS-1561 Assessment panels - Invite assessors to panel - Overview tab and resend invites
-
+...
+...               IFS-1135 Assessment panels - Assessor dashboard 'Invitations to attend panel' box
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -16,6 +17,8 @@ Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 ${assessment_panel}  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
+${panel_assessor}    benjamin.nixon@gmail.com
+
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
     [Documentation]  IFS-786
@@ -46,8 +49,8 @@ CompAdmin can add an assessor to invite list
     Given the user clicks the button/link    jQuery=tr:contains("Benjamin Nixon") label
     And the user clicks the button/link      jQuery=tr:contains("Joel George") label
     When the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
-    Then the user should see the element     jQuery=td:contains("Benjamin Nixon") + td:contains("benjamin.nixon@gmail.com")
     And the user should see the element      jQuery=td:contains("Joel George") + td:contains("joel.george@gmail.com")
+    Then the user should see the element     jQuery=td:contains("Benjamin Nixon") + td:contains("${panel_assessor}")
     And the user clicks the button/link      link=Find
     And the user should not see the element  jQuery=td:contains("Benjamin Nixon")
     And the user should not see the element  jQuery=td:contains("Joel George")
@@ -92,6 +95,12 @@ CompAdmin resend invites to multiple assessors
     When the user clicks the button/link        jQuery=button:contains("Send invite")
     Then the user should see the element        jQuery=td:contains("Benjamin Nixon") ~ td:contains("Invite sent: ${today}")
     And the user should see the element         jQuery=td:contains("Joel George") ~ td:contains("Invite sent: ${today}")
+
+Assessor dashboard shows invite to attend panel
+   [Documentation]  IFS-1135
+   [Tags]
+   Given Log in as a different user      email=${panel_assessor}  password=Passw0rd
+   Then the user should see the element  jQuery=h2:contains("Invitations to attend panel") ~ ul:contains("${CLOSED_COMPETITION_NAME}")
 
 *** Keywords ***
 
