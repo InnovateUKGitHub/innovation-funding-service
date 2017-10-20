@@ -462,7 +462,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(0).getName(),
                 "competitionName", invites.get(0).getTarget().getName(),
-                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "inviteUrl", "https://ifs-local-dev/assessment/invite/panel/" + invites.get(0).getHash(),
                 "customTextPlain", "content",
                 "customTextHtml", "content"
         );
@@ -470,7 +470,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(1).getName(),
                 "competitionName", invites.get(1).getTarget().getName(),
-                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "inviteUrl", "https://ifs-local-dev/assessment/invite/panel/" + invites.get(1).getHash(),
                 "customTextPlain", "content",
                 "customTextHtml", "content"
         );
@@ -644,7 +644,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(0).getName(),
                 "competitionName", invites.get(0).getTarget().getName(),
-                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "inviteUrl", "https://ifs-local-dev/assessment/invite/panel/" + invites.get(0).getHash(),
                 "customTextPlain", "content",
                 "customTextHtml", "content"
         );
@@ -652,7 +652,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(1).getName(),
                 "competitionName", invites.get(1).getTarget().getName(),
-                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "inviteUrl", "https://ifs-local-dev/assessment/invite/panel/" + invites.get(1).getHash(),
                 "customTextPlain", "content",
                 "customTextHtml", "content"
         );

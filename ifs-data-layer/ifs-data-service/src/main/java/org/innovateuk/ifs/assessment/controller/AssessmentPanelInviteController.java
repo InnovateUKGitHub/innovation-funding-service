@@ -12,8 +12,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -96,7 +94,7 @@ public class AssessmentPanelInviteController {
     }
 
     @PostMapping("/openInvite/{inviteHash}")
-    public RestResult<CompetitionInviteResource> openInvite(@PathVariable String inviteHash) {
+    public RestResult<AssessmentPanelInviteResource> openInvite(@PathVariable String inviteHash) {
         return assessmentPanelInviteService.openInvite(inviteHash).toPostWithBodyResponse();
     }
 

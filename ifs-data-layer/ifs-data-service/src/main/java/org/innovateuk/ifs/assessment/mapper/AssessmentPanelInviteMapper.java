@@ -4,31 +4,27 @@ import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.invite.domain.AssessmentPanelInvite;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
+import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 /**
- * Mapper between {@link AssessmentPanelInvite} and {@link CompetitionInviteResource}.
+ * Mapper between {@link AssessmentPanelInvite} and {@link AssessmentPanelInviteResource}.
  */
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = { InnovationAreaMapper.class }
 )
-public abstract class AssessmentPanelInviteMapper extends BaseMapper<AssessmentPanelInvite, CompetitionInviteResource, Long> {
+public abstract class AssessmentPanelInviteMapper extends BaseMapper<AssessmentPanelInvite, AssessmentPanelInviteResource, Long> {
 
     @Mappings({
             @Mapping(source = "target.id", target = "competitionId"),
             @Mapping(source = "target.name", target = "competitionName"),
-            @Mapping(source = "target.assessorAcceptsDate", target = "acceptsDate"),
-            @Mapping(source = "target.assessorDeadlineDate", target = "deadlineDate"),
-            @Mapping(source = "target.assessorPay", target = "assessorPay"),
-            @Mapping(source = "target.assessorBriefingDate", target = "briefingDate"),
-            @Mapping(target="innovationArea", ignore=true),
+            @Mapping(source = "user.id", target = "userId"),
     })
     @Override
-    public abstract CompetitionInviteResource mapToResource(AssessmentPanelInvite domain);
+    public abstract AssessmentPanelInviteResource mapToResource(AssessmentPanelInvite domain);
 
     @Mappings({
             @Mapping(target="id", ignore=true),
@@ -38,9 +34,9 @@ public abstract class AssessmentPanelInviteMapper extends BaseMapper<AssessmentP
             @Mapping(target="target", ignore=true),
     })
     @Override
-    public abstract AssessmentPanelInvite mapToDomain(CompetitionInviteResource resource);
+    public abstract AssessmentPanelInvite mapToDomain(AssessmentPanelInviteResource resource);
 
-    public Long mapCompetitionInviteToId(AssessmentPanelInvite object) {
+    public Long mapAssessmentPanelInviteToId(AssessmentPanelInvite object) {
         if (object == null) {
             return null;
         }
