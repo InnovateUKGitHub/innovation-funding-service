@@ -79,13 +79,12 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "FROM Post post " +
             "JOIN post.thread t " +
             "JOIN post.author u " +
-            "JOIN u.roles r " +
             "JOIN ProjectFinance pf ON pf.id = t.classPk " +
             "JOIN pf.project pr " +
             "JOIN pr.application a " +
             "WHERE t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
             "    AND TYPE(t) = Query " +
-            "    AND 0 = (SELECT COUNT(id) FROM Role WHERE name='project_finance' AND id = r.id) " +
+            "    AND 0 = (SELECT COUNT(id) FROM u.roles r WHERE r.name = 'project_finance') " +
             "    AND a.competition.id = :competitionId " +
             "    AND (post.thread.id, post.createdOn) IN ( " +
             "        SELECT p.thread.id, MAX(p.createdOn) " +
@@ -97,14 +96,13 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "FROM Post post " +
             "JOIN post.thread t " +
             "JOIN post.author u " +
-            "JOIN u.roles r " +
             "JOIN ProjectFinance pf ON pf.id = t.classPk " +
             "JOIN pf.project pr " +
             "JOIN pr.application a " +
             "JOIN pf.organisation o " +
             "WHERE t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
             "    AND TYPE(t) = Query " +
-            "    AND 0 = (SELECT COUNT(id) FROM Role WHERE name='project_finance' AND id = r.id) " +
+            "    AND 0 = (SELECT COUNT(id) FROM u.roles r WHERE r.name = 'project_finance') " +
             "    AND a.competition.id = :competitionId " +
             "    AND (post.thread.id, post.createdOn) IN ( " +
             "        SELECT p.thread.id, MAX(p.createdOn) " +
