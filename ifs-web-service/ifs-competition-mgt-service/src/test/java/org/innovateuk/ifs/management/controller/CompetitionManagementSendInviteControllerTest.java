@@ -4,11 +4,9 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.innovateuk.ifs.management.form.AssessorSelectionForm;
 import org.innovateuk.ifs.management.form.OverviewSelectionForm;
 import org.innovateuk.ifs.management.form.ResendInviteForm;
 import org.innovateuk.ifs.management.form.SendInviteForm;
-import org.innovateuk.ifs.management.viewmodel.SendInviteViewModel;
 import org.innovateuk.ifs.management.viewmodel.SendInvitesViewModel;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.junit.Before;
@@ -30,7 +28,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
 import static org.mockito.Mockito.*;
@@ -140,7 +137,7 @@ public class CompetitionManagementSendInviteControllerTest extends BaseControlle
                 .param("subject", "Subject...")
                 .param("content", "Editable content..."))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/assessors/invite", competitionId)));
+                .andExpect(redirectedUrl(format("/competition/%s/assessors/overview?page=0", competitionId)));
 
         InOrder inOrder = inOrder(competitionInviteRestService);
         inOrder.verify(competitionInviteRestService).sendAllInvites(competitionId, expectedAssessorInviteSendResource);
