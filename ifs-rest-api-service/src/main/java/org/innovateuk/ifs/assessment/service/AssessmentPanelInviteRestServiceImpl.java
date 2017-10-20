@@ -11,6 +11,9 @@ import java.util.List;
 
 import static java.lang.String.format;
 
+import static java.lang.String.format;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
+
 /**
  * REST service for managing {@link InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource}s
  */
@@ -28,8 +31,28 @@ public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implem
     }
 
     @Override
+    public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
+        String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "getAllInvitesToResend", competitionId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("inviteIds", simpleJoiner(inviteIds, ","));
+
+        return getWithRestResult(builder.toUriString(), AssessorInvitesToSendResource.class);
+    }
+
+    @Override
     public RestResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
         return postWithRestResult(format("%s/%s/%s", assessmentPanelInviteRestUrl, "sendAllInvites", competitionId), assessorInviteSendResource, Void.class);
+    }
+
+    @Override
+    public RestResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource) {
+        String baseUrl = format("%s/%s", assessmentPanelInviteRestUrl, "resendInvites");
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("inviteIds", simpleJoiner(inviteIds, ","));
+
+        return postWithRestResult(builder.toUriString(), assessorInviteSendResource, Void.class);
     }
 
     @Override
@@ -65,6 +88,31 @@ public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implem
                 .fromPath(baseUrl);
 
         return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.longsListType());
+    }
+
+    @Override
+    public RestResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
+        String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "getNonAcceptedAssessorInviteIds", competitionId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromPath(baseUrl);
+
+        return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.longsListType());
+    }
+
+    @Override
+    public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
+                                                                                int page,
+                                                                                List<ParticipantStatusResource> participantStatuses) {
+        String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "getInvitationOverview", competitionId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("page", page);
+
+        String convertedStatusesList = simpleJoiner(participantStatuses, ",");
+        builder.queryParam("statuses", convertedStatusesList);
+
+        return getWithRestResult(builder.toUriString(), AssessorInviteOverviewPageResource.class);
     }
 
     @Override

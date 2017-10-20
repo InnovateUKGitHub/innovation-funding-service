@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 
-import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessmentPanelInviteMapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -13,6 +13,10 @@ import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
+import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
+import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
+import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
@@ -37,19 +41,31 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.EnumSet;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import java.util.Map;
+
+import static java.lang.String.format;
+import static java.time.format.DateTimeFormatter.ofPattern;
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -62,18 +78,21 @@ import static org.innovateuk.ifs.util.StringFunctions.stripHtml;
 /*
  * Service for managing {@link AssessmentPanelInvite}s.
  */
-
 @Service
 @Transactional
 public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteService {
 
-    private static final String WEB_CONTEXT_DASHBOARD = "/assessment/assessor/dashboard";
-    
+    private static final String WEB_CONTEXT = "/assessment";
+    private static final DateTimeFormatter detailsFormatter = ofPattern("d MMM yyyy");
+
     @Autowired
     private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
 
     @Autowired
     private CompetitionParticipantRepository competitionParticipantRepository;
+
+    @Autowired
+    private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -85,7 +104,9 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     private InnovationAreaMapper innovationAreaMapper;
 
     @Autowired
-    private CompetitionInviteMapper competitionInviteMapper;
+    private AssessmentPanelInviteMapper assessmentPanelInviteMapper;
+    @Autowired
+    private ParticipantStatusMapper participantStatusMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -132,6 +153,23 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     }
 
     @Override
+    public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
+        return getCompetition(competitionId).andOnSuccess(competition -> {
+
+            List<AssessmentPanelInvite> invites = assessmentPanelInviteRepository.getByIdIn(inviteIds);
+            List<String> recipients = simpleMap(invites, AssessmentPanelInvite::getName);
+            recipients.sort(String::compareTo);
+
+            return serviceSuccess(new AssessorInvitesToSendResource(
+                    recipients,
+                    competition.getId(),
+                    competition.getName(),
+                    getInvitePreviewContent(competition)
+            ));
+        });
+    }
+
+    @Override
     public ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInviteSendResource) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
 
@@ -141,7 +179,9 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
             return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
                     assessmentPanelInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
                     invite -> {
-                        invite.send(loggedInUserSupplier.get(), ZonedDateTime.now());
+                        assessmentPanelParticipantRepository.save(
+                                new AssessmentPanelParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()))
+                        );
 
                         return sendInviteNotification(
                                 assessorInviteSendResource.getSubject(),
@@ -156,21 +196,38 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     }
 
     @Override
-    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
-        final Page<CompetitionParticipant> pagedResult = competitionParticipantRepository.findParticipantsNotOnPanel(competitionId, pageable);
+    public ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource) {
+        String customTextPlain = stripHtml(assessorInviteSendResource.getContent());
+        String customTextHtml = plainTextToHtml(customTextPlain);
 
-        return serviceSuccess(new AvailableAssessorPageResource(
-                pagedResult.getTotalElements(),
-                pagedResult.getTotalPages(),
-                simpleMap(pagedResult.getContent(), this::mapToAvailableAssessorResource),
-                pagedResult.getNumber(),
-                pagedResult.getSize()
+        return ServiceResult.processAnyFailuresOrSucceed(simpleMap(
+                assessmentPanelInviteRepository.getByIdIn(inviteIds),
+                invite -> sendInviteNotification(
+                        assessorInviteSendResource.getSubject(),
+                        customTextPlain,
+                        customTextHtml,
+                        invite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()),
+                        Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL
+                )
         ));
     }
 
     @Override
+        public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
+            final Page<CompetitionAssessmentParticipant> pagedResult = competitionParticipantRepository.findParticipantsNotOnPanel(competitionId, pageable);
+
+            return serviceSuccess(new AvailableAssessorPageResource(
+                    pagedResult.getTotalElements(),
+                    pagedResult.getTotalPages(),
+                    simpleMap(pagedResult.getContent(), this::mapToAvailableAssessorResource),
+                    pagedResult.getNumber(),
+                    pagedResult.getSize()
+            ));
+        }
+
+    @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
-        List<CompetitionParticipant> result = competitionParticipantRepository.findParticipantsNotOnPanel(competitionId);
+        List<CompetitionAssessmentParticipant> result = competitionParticipantRepository.findParticipantsNotOnPanel(competitionId);
 
         return serviceSuccess(simpleMap(result, competitionParticipant -> competitionParticipant.getUser().getId()));
     }
@@ -230,6 +287,68 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                         )))).andOnSuccessReturnVoid();
     }
 
+    @Override
+    public ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
+                                                                                   Pageable pageable,
+                                                                                   List<ParticipantStatus> statuses) {
+        Page<AssessmentPanelParticipant> pagedResult = assessmentPanelParticipantRepository.getPanelAssessorsByCompetitionAndStatusContains(
+                    competitionId,
+                    statuses,
+                    pageable);
+
+        List<AssessorInviteOverviewResource> inviteOverviews = simpleMap(
+                pagedResult.getContent(),
+                participant -> {
+                    AssessorInviteOverviewResource assessorInviteOverview = new AssessorInviteOverviewResource();
+                    assessorInviteOverview.setName(participant.getInvite().getName());
+                    assessorInviteOverview.setStatus(participantStatusMapper.mapToResource(participant.getStatus()));
+                    assessorInviteOverview.setDetails(getDetails(participant));
+                    assessorInviteOverview.setInviteId(participant.getInvite().getId());
+
+                    if (participant.getUser() != null) {
+                        Profile profile = profileRepository.findOne(participant.getUser().getProfileId());
+
+                        assessorInviteOverview.setId(participant.getUser().getId());
+                        assessorInviteOverview.setBusinessType(profile.getBusinessType());
+                        assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
+                        assessorInviteOverview.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
+                    }
+
+                    return assessorInviteOverview;
+                });
+
+        return serviceSuccess(new AssessorInviteOverviewPageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                inviteOverviews,
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
+    }
+
+    private String getDetails(AssessmentPanelParticipant participant) {
+        String details = null;
+
+        if (participant.getStatus() == REJECTED) {
+            details = format("Invite declined as %s", lowerCase(participant.getRejectionReason().getReason()));
+        } else if (participant.getStatus() == PENDING) {
+            if (participant.getInvite().getSentOn() != null) {
+                details = format("Invite sent: %s", participant.getInvite().getSentOn().format(detailsFormatter));
+            }
+        }
+
+        return details;
+    }
+
+    @Override
+    public ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
+        List<AssessmentPanelParticipant> participants = assessmentPanelParticipantRepository.getPanelAssessorsByCompetitionAndStatusContains(
+                competitionId,
+                asList(PENDING, REJECTED));
+
+        return serviceSuccess(simpleMap(participants, participant -> participant.getInvite().getId()));
+    }
+
     private ServiceResult<AssessmentPanelInvite> inviteUserToCompetition(User user, long competitionId) {
         return getCompetition(competitionId)
                 .andOnSuccessReturn(
@@ -241,7 +360,6 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     private ServiceResult<Competition> getCompetition(long competitionId) {
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId));
     }
-
 
     private String getInvitePreviewContent(NotificationTarget notificationTarget, Map<String, Object> arguments) {
 
@@ -271,7 +389,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                         "subject", subject,
                         "name", invite.getName(),
                         "competitionName", invite.getTarget().getName(),
-                        "inviteUrl", webBaseUrl + WEB_CONTEXT_DASHBOARD,
+                        "inviteUrl", format("%s/invite/panel/%s", webBaseUrl + WEB_CONTEXT, invite.getHash()),
                         "customTextPlain", customTextPlain,
                         "customTextHtml", customTextHtml
                 ));
@@ -305,7 +423,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {
         return getByHashIfOpen(inviteHash)
                 .andOnSuccessReturn(this::openInvite)
-                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+                .andOnSuccessReturn(assessmentPanelInviteMapper::mapToResource);
     }
 
     private AssessmentPanelInvite openInvite(AssessmentPanelInvite invite) {
@@ -320,8 +438,8 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                 .andOnSuccessReturnVoid();
     }
 
-    private ServiceResult<CompetitionParticipant> getParticipantByInviteHash(String inviteHash) {
-        return find(competitionParticipantRepository.getByInviteHash(inviteHash), notFoundError(CompetitionParticipant.class, inviteHash));
+    private ServiceResult<AssessmentPanelParticipant> getParticipantByInviteHash(String inviteHash) {
+        return find(assessmentPanelParticipantRepository.getByInviteHash(inviteHash), notFoundError(AssessmentPanelParticipant.class, inviteHash));
     }
 
     @Override
@@ -332,32 +450,29 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                 .andOnSuccessReturnVoid();
     }
 
-
     private ServiceResult<AssessmentPanelInvite> getByHash(String inviteHash) {
         return find(assessmentPanelInviteRepository.getByHash(inviteHash), notFoundError(CompetitionInvite.class, inviteHash));
     }
 
-    private ServiceResult<CompetitionParticipant> accept(CompetitionParticipant participant, User user) {
+    private ServiceResult<AssessmentPanelParticipant> accept(AssessmentPanelParticipant participant, User user) {
         if (participant.getInvite().getStatus() != OPENED) {
-            return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
+            return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == ACCEPTED) {
-            return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
+            return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == REJECTED) {
-            return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
+            return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
-            return
-                    applyInnovationAreaToUserProfile(participant, user)
-                            .andOnSuccessReturn(() -> participant.acceptAndAssignUser(user));
+            return serviceSuccess( participant.acceptAndAssignUser(user));
         }
     }
 
-    private ServiceResult<CompetitionParticipant> reject(CompetitionParticipant participant, RejectionReason rejectionReason, Optional<String> rejectionComment) {
+    private ServiceResult<CompetitionParticipant> reject(AssessmentPanelParticipant participant, RejectionReason rejectionReason, Optional<String> rejectionComment) {
         if (participant.getInvite().getStatus() != OPENED) {
-            return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
+            return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == ACCEPTED) {
-            return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
+            return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == REJECTED) {
-            return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
+            return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
             return serviceSuccess(participant.reject(rejectionReason, rejectionComment));
         }
@@ -367,16 +482,15 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         return find(rejectionReasonRepository.findOne(rejectionReason.getId()), notFoundError(RejectionReason.class, rejectionReason.getId()));
     }
 
-    private String getInviteCompetitionName(CompetitionParticipant participant) {
+    private String getInviteCompetitionName(AssessmentPanelParticipant participant) {
         return participant.getInvite().getTarget().getName();
     }
-
 
     private ServiceResult<AssessmentPanelInvite> getByHashIfOpen(String inviteHash) {
         return getByHash(inviteHash).andOnSuccess(invite -> {
 
             if (!EnumSet.of(READY_TO_OPEN, IN_ASSESSMENT, CLOSED, OPEN).contains(invite.getTarget().getCompetitionStatus())) {
-                return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_EXPIRED, invite.getTarget().getName()));
+                return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_INVITE_EXPIRED, invite.getTarget().getName()));
             }
 
             CompetitionParticipant participant = competitionParticipantRepository.getByInviteHash(inviteHash);
@@ -386,7 +500,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
             }
 
             if (participant.getStatus() == ACCEPTED || participant.getStatus() == REJECTED) {
-                return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_CLOSED, invite.getTarget().getName()));
+                return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_INVITE_CLOSED, invite.getTarget().getName()));
             }
             return serviceSuccess(invite);
         });

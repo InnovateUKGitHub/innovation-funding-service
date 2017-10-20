@@ -47,7 +47,7 @@ public class PanelInviteController {
     @Autowired
     private RejectCompetitionModelPopulator rejectCompetitionModelPopulator;
 
-    @GetMapping("/invite/competition/{inviteHash}")
+    @GetMapping("/invite/panel/{inviteHash}")
     public String openInvite(@PathVariable("inviteHash") String inviteHash,
                              @ModelAttribute(name = "form", binding = false) CompetitionInviteForm form,
                              UserResource loggedInUser,
@@ -58,7 +58,7 @@ public class PanelInviteController {
         return "assessor-panel-invite";
     }
 
-    @PostMapping("/invite/competition/{inviteHash}/decision")
+    @PostMapping("/invite/panel/{inviteHash}/decision")
     public String handleDecision(Model model,
                                  @PathVariable("inviteHash") String inviteHash,
                                  UserResource loggedInUser,
