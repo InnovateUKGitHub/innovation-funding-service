@@ -10,29 +10,35 @@ import static java.util.Arrays.asList;
  * FinanceRow types are used to identify the different categories that costs can have
  */
 public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
-    LABOUR("labour", true, "Labour"),
-    OVERHEADS("overheads", true, "Overheads"),
-    MATERIALS("materials", true, "Materials"),
-    CAPITAL_USAGE("capital_usage", true, "Capital usage"),
-    SUBCONTRACTING_COSTS("subcontracting", true, "Subcontracting"),
-    TRAVEL("travel", true, "Travel and subsistence"),
-    OTHER_COSTS("other_costs", true, "Other costs"),
+
+    LABOUR("labour", "Labour", IncludeInSpendProfile.YES),
+    OVERHEADS("overheads", "Overheads", IncludeInSpendProfile.YES),
+    MATERIALS("materials", "Materials", IncludeInSpendProfile.YES),
+    CAPITAL_USAGE("capital_usage", "Capital usage", IncludeInSpendProfile.YES),
+    SUBCONTRACTING_COSTS("subcontracting", "Subcontracting", IncludeInSpendProfile.YES),
+    TRAVEL("travel", "Travel and subsistence", IncludeInSpendProfile.YES),
+    OTHER_COSTS("other_costs", "Other costs", IncludeInSpendProfile.YES),
     YOUR_FINANCE("your_finance"),
-    FINANCE("finance", false, "Finance"),
-    OTHER_FUNDING("other_funding", false, "Other Funding"),
+    FINANCE("finance", "Finance", IncludeInSpendProfile.NO),
+    OTHER_FUNDING("other_funding", "Other Funding", IncludeInSpendProfile.NO),
     ACADEMIC("academic");
 
+    enum IncludeInSpendProfile {
+        NO,
+        YES
+    }
+
     private String type;
-    private boolean includedInGeneratedSpendProfile;
+    private IncludeInSpendProfile includeInSpendProfile;
     private String name;
 
     FinanceRowType(String type) {
-        this(type, false, null);
+        this(type, null, IncludeInSpendProfile.NO);
     }
 
-    FinanceRowType(String type, boolean includedInGeneratedSpendProfile, String name) {
+    FinanceRowType(String type, String name, IncludeInSpendProfile includeInSpendProfile) {
         this.type = type;
-        this.includedInGeneratedSpendProfile = includedInGeneratedSpendProfile;
+        this.includeInSpendProfile = includeInSpendProfile;
         this.name = name;
     }
 
@@ -55,8 +61,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         return FormInputType.findByName(getType());
     }
 
-    public boolean isIncludedInGeneratedSpendProfile() {
-        return includedInGeneratedSpendProfile;
+    public boolean isIncludedInSpendProfile() {
+        return includeInSpendProfile.equals(IncludeInSpendProfile.YES);
     }
 
     @Override
