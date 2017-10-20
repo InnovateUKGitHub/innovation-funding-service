@@ -28,8 +28,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     }
 
     private String type;
-    private IncludeInSpendProfile includeInSpendProfile;
     private String name;
+    private IncludeInSpendProfile includeInSpendProfile;
 
     FinanceRowType(String type) {
         this(type, null, IncludeInSpendProfile.NO);
@@ -37,8 +37,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
 
     FinanceRowType(String type, String name, IncludeInSpendProfile includeInSpendProfile) {
         this.type = type;
-        this.includeInSpendProfile = includeInSpendProfile;
         this.name = name;
+        this.includeInSpendProfile = includeInSpendProfile;
     }
 
     public static FinanceRowType fromType(FormInputType formInputType) {
