@@ -3,19 +3,18 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
-import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
-import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
-import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
-
+import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -23,34 +22,12 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
-import org.innovateuk.ifs.security.LoggedInUserSupplier;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-
-
-import static java.time.format.DateTimeFormatter.ofPattern;
-import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-
-import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.repository.RoleRepository;
-import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -58,14 +35,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.format.DateTimeFormatter;
+import java.time.ZonedDateTime;
+import java.util.EnumSet;
 import java.util.List;
-import static java.time.format.DateTimeFormatter.ofPattern;
+import java.util.Map;
+import java.util.Optional;
+
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -93,10 +78,14 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     @Autowired
     private CompetitionRepository competitionRepository;
 
+    @Autowired
+    private RejectionReasonRepository rejectionReasonRepository;
 
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
 
+    @Autowired
+    private CompetitionInviteMapper competitionInviteMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -166,18 +155,18 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         });
     }
 
-        @Override
-        public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
-            final Page<CompetitionParticipant> pagedResult = competitionParticipantRepository.findParticipantsNotOnPanel(competitionId, pageable);
+    @Override
+    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
+        final Page<CompetitionParticipant> pagedResult = competitionParticipantRepository.findParticipantsNotOnPanel(competitionId, pageable);
 
-            return serviceSuccess(new AvailableAssessorPageResource(
-                    pagedResult.getTotalElements(),
-                    pagedResult.getTotalPages(),
-                    simpleMap(pagedResult.getContent(), this::mapToAvailableAssessorResource),
-                    pagedResult.getNumber(),
-                    pagedResult.getSize()
-            ));
-        }
+        return serviceSuccess(new AvailableAssessorPageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                simpleMap(pagedResult.getContent(), this::mapToAvailableAssessorResource),
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
+    }
 
     @Override
     public ServiceResult<List<Long>> getAvailableAssessorIds(long competitionId) {
@@ -310,6 +299,97 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         return profileRepository.findOne(competitionInvite.getUser().getProfileId()).getInnovationAreas().stream()
                 .map(innovationAreaMapper::mapToResource)
                 .collect(toList());
+    }
+
+    @Override
+    public ServiceResult<CompetitionInviteResource> openInvite(String inviteHash) {
+        return getByHashIfOpen(inviteHash)
+                .andOnSuccessReturn(this::openInvite)
+                .andOnSuccessReturn(competitionInviteMapper::mapToResource);
+    }
+
+    private AssessmentPanelInvite openInvite(AssessmentPanelInvite invite) {
+        return assessmentPanelInviteRepository.save(invite.open());
+    }
+
+    @Override
+    public ServiceResult<Void> acceptInvite(String inviteHash, UserResource currentUser) {
+        final User user = userRepository.findOne(currentUser.getId());
+        return getParticipantByInviteHash(inviteHash)
+                .andOnSuccess(p -> accept(p, user))
+                .andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<CompetitionParticipant> getParticipantByInviteHash(String inviteHash) {
+        return find(competitionParticipantRepository.getByInviteHash(inviteHash), notFoundError(CompetitionParticipant.class, inviteHash));
+    }
+
+    @Override
+    public ServiceResult<Void> rejectInvite(String inviteHash, RejectionReasonResource rejectionReason, Optional<String> rejectionComment) {
+        return getRejectionReason(rejectionReason)
+                .andOnSuccess(reason -> getParticipantByInviteHash(inviteHash)
+                        .andOnSuccess(invite -> reject(invite, reason, rejectionComment)))
+                .andOnSuccessReturnVoid();
+    }
+
+
+    private ServiceResult<AssessmentPanelInvite> getByHash(String inviteHash) {
+        return find(assessmentPanelInviteRepository.getByHash(inviteHash), notFoundError(CompetitionInvite.class, inviteHash));
+    }
+
+    private ServiceResult<CompetitionParticipant> accept(CompetitionParticipant participant, User user) {
+        if (participant.getInvite().getStatus() != OPENED) {
+            return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
+        } else if (participant.getStatus() == ACCEPTED) {
+            return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
+        } else if (participant.getStatus() == REJECTED) {
+            return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
+        } else {
+            return
+                    applyInnovationAreaToUserProfile(participant, user)
+                            .andOnSuccessReturn(() -> participant.acceptAndAssignUser(user));
+        }
+    }
+
+    private ServiceResult<CompetitionParticipant> reject(CompetitionParticipant participant, RejectionReason rejectionReason, Optional<String> rejectionComment) {
+        if (participant.getInvite().getStatus() != OPENED) {
+            return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
+        } else if (participant.getStatus() == ACCEPTED) {
+            return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_ACCEPTED_INVITE, getInviteCompetitionName(participant)));
+        } else if (participant.getStatus() == REJECTED) {
+            return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
+        } else {
+            return serviceSuccess(participant.reject(rejectionReason, rejectionComment));
+        }
+    }
+
+    private ServiceResult<RejectionReason> getRejectionReason(final RejectionReasonResource rejectionReason) {
+        return find(rejectionReasonRepository.findOne(rejectionReason.getId()), notFoundError(RejectionReason.class, rejectionReason.getId()));
+    }
+
+    private String getInviteCompetitionName(CompetitionParticipant participant) {
+        return participant.getInvite().getTarget().getName();
+    }
+
+
+    private ServiceResult<AssessmentPanelInvite> getByHashIfOpen(String inviteHash) {
+        return getByHash(inviteHash).andOnSuccess(invite -> {
+
+            if (!EnumSet.of(READY_TO_OPEN, IN_ASSESSMENT, CLOSED, OPEN).contains(invite.getTarget().getCompetitionStatus())) {
+                return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_EXPIRED, invite.getTarget().getName()));
+            }
+
+            CompetitionParticipant participant = competitionParticipantRepository.getByInviteHash(inviteHash);
+
+            if (participant == null) {
+                return serviceSuccess(invite);
+            }
+
+            if (participant.getStatus() == ACCEPTED || participant.getStatus() == REJECTED) {
+                return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_CLOSED, invite.getTarget().getName()));
+            }
+            return serviceSuccess(invite);
+        });
     }
 }
 

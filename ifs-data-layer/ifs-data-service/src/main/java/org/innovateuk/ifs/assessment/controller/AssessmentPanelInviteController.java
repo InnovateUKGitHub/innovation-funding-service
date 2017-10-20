@@ -2,16 +2,18 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controller for managing Invites to Assessment Panels.
@@ -61,5 +63,22 @@ public class AssessmentPanelInviteController {
     public RestResult<List<Long>> getAvailableAssessorIds(
             @PathVariable long competitionId) {
         return assessmentPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
+    }
+
+    @PostMapping("/openInvite/{inviteHash}")
+    public RestResult<CompetitionInviteResource> openInvite(@PathVariable String inviteHash) {
+        return assessmentPanelInviteService.openInvite(inviteHash).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/acceptInvite/{inviteHash}")
+    public RestResult<Void> acceptInvite(@PathVariable String inviteHash) {
+        final UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        return assessmentPanelInviteService.acceptInvite(inviteHash, currentUser).toPostResponse();
+    }
+
+    @PostMapping("/rejectInvite/{inviteHash}")
+    public RestResult<Void> rejectInvite(@PathVariable String inviteHash, @Valid @RequestBody CompetitionRejectionResource rejection) {
+        return assessmentPanelInviteService.rejectInvite(inviteHash, rejection.getRejectReason(), Optional.ofNullable(rejection.getRejectComment())).toPostResponse();
+
     }
 }

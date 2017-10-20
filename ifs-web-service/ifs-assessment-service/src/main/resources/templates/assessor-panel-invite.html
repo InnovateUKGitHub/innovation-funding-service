@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invitation to assess',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    </head>
+
+    <body th:with="context='assessment'" class="app-dashboard">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
+
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assess '${model.competitionName}'|,size='heading-xlarge'" />
+            <p>Invitation to panel assessment on <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
+
+            <section class="boxed">
+                <h2 class="heading-medium no-margin" th:text="|${#temporals.format(model.acceptsDate, 'dd MMMM yyyy')} to ${#temporals.format(model.deadlineDate, 'dd MMMM yyyy')}: Assessment period|">
+                    21 March 2017 to 28 March 2017: Assessment period
+                </h2>
+                <p>This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependent on how many applications have been submitted. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatDecimal(model.assessorPay,0, 'COMMA', 0, 'POINT')}">100</th:block> per application.</p>
+
+                <p th:if="${model.briefingDate}" th:text="|The assessor webinar briefing will last one hour,
+                    taking place on ${#temporals.format(model.briefingDate, 'dd MMMM')}.|"></p>
+            </section>
+
+            <section>
+                <h2 class="heading-medium" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
+
+                <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">See competition brief</a></p>
+
+                <h3 class="heading-small">You should reject this invitation if:</h3>
+                <ul class="list list-bullet">
+                    <li>You should reject this invitation if you are unavailable for the panel assessment date.</li>
+                </ul>
+            </section>
+
+            <form th:action="@{/invite/panel/{inviteHash}/decision(inviteHash=${model.panelInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'form-group-error'">
+                    <fieldset>
+                        <legend id="acceptInvitation">
+                            <span class="heading-medium">Select your ability to assess for the panel</span>
+                            <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
+                            </th:block>
+                        </legend>
+
+                        <div class="multiple-choice">
+                            <input id="acceptPanel" value="true" type="radio" required="required"
+                                   th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.panelinvitedecision.required}" />
+                            <label for="acceptPanel">
+                                Yes, I am able to attend the panel assessment.
+                                <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
+                            </label>
+                        </div>
+
+                        <div class="multiple-choice" data-target="reject-panel">
+                            <input id="rejectPanel" value="false" type="radio" required="required"
+                                   th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.panelinvitedecision.required}"/>
+                            <label for="rejectPanel">
+                                No, I am not able to attend the panel assessment.
+                            </label>
+                        </div>
+
+                        <div class="panel js-hidden" id="reject-panel">
+                            <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'form-group-error'">
+                                <label class="form-label" for="rejectReasonValid">
+                                    Please select a reason for rejecting the panel
+                                    <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
+                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
+                                    </th:block>
+                                </label>
+                                <select id="rejectReasonValid" class="form-control" th:attr="data-required-errormessage=#{validation.panelrejectionresource.rejectReason.required}" th:errorclass="form-control-error" required="required" th:field="*{rejectReason}">
+                                    <option value="">Select a reason</option>
+                                    <option th:each="reason : ${rejectionReasons}"
+                                            th:value="${reason.id}"
+                                            th:text="${reason.reason}"
+                                            value="1">Not available</option>
+                                </select>
+                            </div>
+                            <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'form-group-error'">
+                                <label class="form-label" th:for="${#ids.next('rejectComment')}">
+                                    Use this space to provide more information
+                                    <th:block th:if="${#fields.hasErrors('rejectComment')}">
+                                        <span class="error-message"  th:each="err : ${#fields.errors('rejectComment')}" th:text="${err}" />
+                                    </th:block>
+                                </label>
+                                <textarea class="form-control width-full"
+                                          maxlength="5000"
+                                          data-max_words="100"
+                                          data-maxwordslength="100"
+                                          data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
+                                          th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
+                                          th:errorclass="form-control-error"
+                                          rows="4"
+                                          th:field="*{rejectComment}"></textarea>
+                                <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
+                                    <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <button class="button" type="submit">Confirm</button>
+            </form>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>
