@@ -10,7 +10,6 @@ import static java.util.Arrays.asList;
  * FinanceRow types are used to identify the different categories that costs can have
  */
 public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
-
     LABOUR("labour", "Labour", IncludeInSpendProfile.YES),
     OVERHEADS("overheads", "Overheads", IncludeInSpendProfile.YES),
     MATERIALS("materials", "Materials", IncludeInSpendProfile.YES),
