@@ -161,9 +161,9 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     private void setupUserData() {
-        projectFinanceUser = newUser().withRoles(newRole().withType(UserRoleType.PROJECT_FINANCE).buildSet(1)).withUid("uid2").withFirstName("z").withLastName("y").withEmailAddress("z@y.com").withCreatedOn(ZonedDateTime.now()).withCreatedBy(userMapper.mapToDomain(getSystemRegistrationUser())).build();
+        projectFinanceUser = newUser().withRoles(newRole().withName("project_finance").withType(UserRoleType.PROJECT_FINANCE).buildSet(1)).withUid("uid2").withFirstName("z").withLastName("y").withEmailAddress("z@y.com").withCreatedOn(ZonedDateTime.now()).withCreatedBy(userMapper.mapToDomain(getSystemRegistrationUser())).build();
         projectFinanceUser = userRepository.save(projectFinanceUser);
-        projectManagerUser = newUser().withRoles(newRole().withType(UserRoleType.PROJECT_MANAGER).buildSet(1)).withUid("uid1").withFirstName("a").withLastName("b").withEmailAddress("a@b.com").withCreatedOn(ZonedDateTime.now()).withCreatedBy(userMapper.mapToDomain(getSystemRegistrationUser())).build();
+        projectManagerUser = newUser().withRoles(newRole().withName("project_manager").withType(UserRoleType.PROJECT_MANAGER).buildSet(1)).withUid("uid1").withFirstName("a").withLastName("b").withEmailAddress("a@b.com").withCreatedOn(ZonedDateTime.now()).withCreatedBy(userMapper.mapToDomain(getSystemRegistrationUser())).build();
         projectManagerUser = userRepository.save(projectManagerUser);
         projectFinanceUserLogin = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).withCreatedOn(ZonedDateTime.now()).withCreatedBy("creator").withModifiedOn(ZonedDateTime.now()).withModifiedBy("modifier").build();
     }
