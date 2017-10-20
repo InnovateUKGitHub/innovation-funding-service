@@ -2,11 +2,11 @@ package org.innovateuk.ifs.commons.security;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.commons.security.evaluator.AbstractCustomPermissionEvaluator;
 import org.innovateuk.ifs.commons.security.evaluator.ListOfOwnerAndMethod;
 import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
 import org.innovateuk.ifs.security.UidAuthenticationService;
+import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
- * Tests around the Spring Security annotations on the Services and the Permission Rule framework as used by the AbstractCustomPermissionEvaluator
+ * Tests around the Spring Security annotations on the Services and the Permission Rule framework as used by the @link {@link CustomPermissionEvaluator}
  */
 public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
@@ -121,7 +121,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
     @Test
     public void generateLowLevelPermissionsDocumentation() throws Exception {
 
-        AbstractCustomPermissionEvaluator evaluator = (AbstractCustomPermissionEvaluator) context.getBean("customPermissionEvaluator");
+        CustomPermissionEvaluator evaluator = (CustomPermissionEvaluator) context.getBean("customPermissionEvaluator");
 
         List<String[]> permissionRuleSecuredRows = getPermissionRulesBasedSecurity(evaluator);
         List<String[]> simpleSpringSecuritySecuredRows = getSimpleSpringSecurityBasedSecurity();
@@ -199,7 +199,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
         return unwrapProxies(servicesToTest());
     }
 
-    private List<String[]> getPermissionRulesBasedSecurity(AbstractCustomPermissionEvaluator evaluator) {
+    private List<String[]> getPermissionRulesBasedSecurity(CustomPermissionEvaluator evaluator) {
         List<String[]> permissionRuleRows = new ArrayList<>();
 
         PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = getRulesMap(evaluator);

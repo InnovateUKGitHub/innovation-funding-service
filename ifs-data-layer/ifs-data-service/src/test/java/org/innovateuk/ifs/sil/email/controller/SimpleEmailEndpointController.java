@@ -28,7 +28,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 
 /**
- * A simple endpoint to allow stubbing of the SIL outbound email endpoint for integration tests
+ * A simple endpoint to allow stubbing of the SIL outbound email endpoint for integration tests only
  */
 @RestController
 @RequestMapping("/silstub/sendmail")

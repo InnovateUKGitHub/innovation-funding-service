@@ -1,5 +1,5 @@
 FROM davidcaste/alpine-java-unlimited-jce:jdk8
-MAINTAINER David Soff <richard@hiveit.co.uk>
+MAINTAINER Richard Popple <richard@hiveit.co.uk>
 EXPOSE 8080
 EXPOSE 8090
 EXPOSE 8081
