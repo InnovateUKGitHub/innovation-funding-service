@@ -10,19 +10,19 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.user.domain.Agreement;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.AgreementRepository;
-import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -48,14 +48,14 @@ import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
-import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
+import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
@@ -63,8 +63,8 @@ import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.n
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
-import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
@@ -323,7 +323,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void acceptInvite_participantIsDifferentUser() {
-        competitionParticipantRepository.save(newCompetitionParticipant()
+        competitionParticipantRepository.save(newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
                 .withRole(ASSESSOR)
@@ -348,7 +348,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void acceptInvite_noParticipantUserAndInviteHasSameEmail() {
-        competitionParticipantRepository.save(newCompetitionParticipant()
+        competitionParticipantRepository.save(newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
                 .withRole(ASSESSOR)
@@ -374,7 +374,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void acceptInvite_noParticipantUserAndInviteHasDifferentEmail() {
-        competitionParticipantRepository.save(newCompetitionParticipant()
+        competitionParticipantRepository.save(newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
                 .withRole(ASSESSOR)
@@ -401,7 +401,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void acceptInvite() throws Exception {
-        competitionParticipantRepository.save(newCompetitionParticipant()
+        competitionParticipantRepository.save(newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
                 .withRole(ASSESSOR)
@@ -427,7 +427,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     @Test
     public void acceptInvite_newAssessor() throws Exception {
         InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
-        competitionParticipantRepository.save(newCompetitionParticipant()
+        competitionParticipantRepository.save(newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
                 .withRole(ASSESSOR)
@@ -464,7 +464,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void acceptInvite_notOpened() throws Exception {
-        competitionParticipantRepository.save(newCompetitionParticipant()
+        competitionParticipantRepository.save(newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
                 .withRole(ASSESSOR)
@@ -489,7 +489,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void acceptInvite_rejected() throws Exception {
-        competitionParticipantRepository.save(newCompetitionParticipant()
+        competitionParticipantRepository.save(newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
                 .withRole(ASSESSOR)
@@ -520,7 +520,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void rejectInvite() throws Exception {
-        competitionParticipantRepository.save(newCompetitionParticipant()
+        competitionParticipantRepository.save(newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
                 .withRole(ASSESSOR)
@@ -544,7 +544,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void rejectInvite_noReasonComment() throws Exception {
-        competitionParticipantRepository.save(newCompetitionParticipant()
+        competitionParticipantRepository.save(newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
                 .withRole(ASSESSOR)
@@ -568,7 +568,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void rejectInvite_accepted() throws Exception {
-        competitionParticipantRepository.save(newCompetitionParticipant()
+        competitionParticipantRepository.save(newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
                 .withRole(ASSESSOR)
@@ -602,7 +602,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void rejectInvite_notOpened() throws Exception {
-        competitionParticipantRepository.save(newCompetitionParticipant()
+        competitionParticipantRepository.save(newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
                 .withRole(ASSESSOR)
@@ -627,7 +627,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void rejectInvite_unknownReason() throws Exception {
-        competitionParticipantRepository.save(newCompetitionParticipant()
+        competitionParticipantRepository.save(newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withStatus(PENDING)
                 .withRole(ASSESSOR)
@@ -863,7 +863,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withEmail("created@competition.com", "sent@competition.com", "opened@competition.com")
                 .withHash("created", "sent", "opened")
                 .build(3));
-        competitionParticipantRepository.save(newCompetitionParticipant()
+        competitionParticipantRepository.save(newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withCompetition(competition)
                 .withRole(ASSESSOR)
@@ -1184,7 +1184,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         userRepository.save(asList(paulPlum, felixWilson));
 
-        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
                 .withId()
                 .withUser(null, null, null, null, paulPlum, felixWilson)
                 .withInvite(
@@ -1264,7 +1264,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         userRepository.save(asList(paulPlum, felixWilson));
 
-        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
                 .withId()
                 .withUser(null, null, null, null, paulPlum, felixWilson)
                 .withInvite(

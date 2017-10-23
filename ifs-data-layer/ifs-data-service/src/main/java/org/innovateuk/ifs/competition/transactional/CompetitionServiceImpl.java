@@ -15,6 +15,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -42,28 +43,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
-import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
-import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
-import static org.innovateuk.ifs.commons.service.ServiceResult.handlingErrors;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
-import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
@@ -125,7 +115,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
 
-        List<CompetitionParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
+        List<CompetitionAssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
 
         List<UserResource> innovationLeads = simpleMap(competitionParticipants, competitionParticipant -> userMapper.mapToResource(competitionParticipant.getUser()));
 
@@ -142,7 +132,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 find(userRepository.findOne(innovationLeadUserId),
                      notFoundError(User.class, innovationLeadUserId))
                 .andOnSuccess(innovationLead -> {
-                    CompetitionParticipant competitionParticipant = new CompetitionParticipant();
+                    CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant();
                     competitionParticipant.setProcess(competition);
                     competitionParticipant.setUser(innovationLead);
                     competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);

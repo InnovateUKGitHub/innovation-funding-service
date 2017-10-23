@@ -2,14 +2,14 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.util.List;
 
@@ -31,10 +31,22 @@ public class AssessmentPanelInviteController {
         return assessmentPanelInviteService.getAllInvitesToSend(competitionId).toGetResponse();
     }
 
+    @GetMapping("/getAllInvitesToResend/{competitionId}")
+    public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(
+            @PathVariable long competitionId,
+            @RequestParam List<Long> inviteIds) {
+        return assessmentPanelInviteService.getAllInvitesToResend(competitionId, inviteIds).toGetResponse();
+    }
+
     @PostMapping("/sendAllInvites/{competitionId}")
     public RestResult<Void> sendAllInvites(@PathVariable long competitionId,
                                            @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
         return assessmentPanelInviteService.sendAllInvites(competitionId, assessorInviteSendResource).toPostResponse();
+    }
+
+    @PostMapping("/resendInvites")
+    public RestResult<Void> resendInvites(@RequestParam List<Long> inviteIds, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+        return assessmentPanelInviteService.resendInvites(inviteIds, assessorInviteSendResource).toPostWithBodyResponse();
     }
 
     @GetMapping("/getCreatedInvites/{competitionId}")
@@ -61,5 +73,20 @@ public class AssessmentPanelInviteController {
     public RestResult<List<Long>> getAvailableAssessorIds(
             @PathVariable long competitionId) {
         return assessmentPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
+    }
+
+    @GetMapping(value = "/getNonAcceptedAssessorInviteIds/{competitionId}")
+    public RestResult<List<Long>> getNonAcceptedAssessorInviteIds(
+            @PathVariable long competitionId) {
+        return assessmentPanelInviteService.getNonAcceptedAssessorInviteIds(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/getInvitationOverview/{competitionId}")
+    public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(
+            @PathVariable long competitionId,
+            @RequestParam List<ParticipantStatus> statuses,
+            @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "invite.name", direction = Sort.Direction.ASC) Pageable pageable
+    ) {
+        return assessmentPanelInviteService.getInvitationOverview(competitionId, pageable, statuses).toGetResponse();
     }
 }

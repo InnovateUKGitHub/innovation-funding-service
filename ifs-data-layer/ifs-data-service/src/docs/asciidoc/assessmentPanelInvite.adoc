@@ -65,3 +65,25 @@ include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/response-field
 
 ==== Curl Example
 include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/curl-request.adoc[]
+
+=== Get all invites to resend
+==== Request
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-resend/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-resend/path-parameters.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-resend/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-resend/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-resend/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-resend/curl-request.adoc[]
+
+=== Resend invites
+==== Request
+include::{snippets}/assessmentpanelinvite/resend-invites/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/resend-invites/request-parameters.adoc[]
+include::{snippets}/assessmentpanelinvite/resend-invites/request-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/resend-invites/curl-request.adoc[]
