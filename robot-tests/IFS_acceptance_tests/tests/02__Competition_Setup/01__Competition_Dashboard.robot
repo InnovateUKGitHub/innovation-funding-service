@@ -59,7 +59,8 @@ PS projects title and lead
     Given the user navigates to the page  ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user should see the element   link=${PROJECT_SETUP_COMPETITION_NAME}
     When the user clicks the button/link  link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element  jQuery=tr:nth-child(1) th:contains("Elbow grease")
+    Then the user should see the element  jQuery=a:contains("All projects")
+    And the user should see the element   jQuery=tr:nth-child(1) th:contains("Elbow grease")
     And the user should see the element   jQuery=tr:nth-child(1) th:contains("Lead: Big Riffs And Insane Solos Ltd")
     And the user should see the element   jQuery=tr:nth-child(2) th:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
     And the user should see the element   jQuery=tr:nth-child(2) th:contains("Lead: ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
@@ -71,7 +72,7 @@ PS projects status page
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element          jQuery=tr:nth-child(2):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
-    And The user should see the text in the page  All projects
+    And the user should see the element           jQuery=a:contains("All projects")
     [Teardown]    The user navigates to the page  ${COMP_ADMINISTRATOR_DASHBOARD}
 
 Upcoming competitions

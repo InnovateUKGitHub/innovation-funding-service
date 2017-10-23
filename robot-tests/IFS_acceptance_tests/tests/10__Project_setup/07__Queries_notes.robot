@@ -13,6 +13,8 @@ Documentation
 ...               INFUND-7753 Partner receives an email alerting them to a further response to an earlier query
 ...
 ...               INFUND-7756 Project finance can post an update to an existing note
+...
+...               IFS-1882 Project Setup internal project dashboard: Query responses
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    Close browser and delete emails
@@ -369,6 +371,16 @@ IFS Admin can see queries raised column updates to 'view'
     Given log in as a different user    &{ifs_admin_user_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Awaiting response")
+
+IFS Admin can see applicant's response flagged in Query responses tab
+    [Documentation]    IFS-1882
+    [Tags]
+    Given the user navigates to the page  ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status/all
+    When the user clicks the button/link  jQuery=a:contains("Query responses (1)")
+    Then the user should see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_NUMBER}")~td:contains("${EMPIRE_LTD_NAME}")
+    When the user clicks the button/link  jQuery=a:contains("${EMPIRE_LTD_NAME}")
+    Then the user should see the element  jQuery=h1:contains("Empire Ltd")
+    And the user should see the element   jQuery=a:contains("Post a new query")
 
 Project finance user can view the response
     [Documentation]    INFUND-4843

@@ -37,7 +37,8 @@ Project Finance has a dashboard and can see projects in PS
     [Setup]  Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page  ${COMP_MANAGEMENT_PROJECT_SETUP}
     When the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element    jQuery=tr:nth-child(2) th:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
+    Then the user should see the element    jQuery=a:contains("All projects")
+    And the user should see the element     jQuery=tr:nth-child(2) th:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And the user should see the element     jQuery=tr:nth-child(2) th a:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
     And the user should see the element     jQuery=tr:nth-child(2) th:contains("3 partners")
     And the user should see the element     jQuery=tr:nth-child(2) th:contains("Lead: ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}")
@@ -73,7 +74,8 @@ Other internal users cannot see Bank details or Finance checks
     # This is added to HappyPath because CompAdmin should NOT have access to Bank details
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should not see the element      css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3) a
+    Then the user should see the element          jQuery=a:contains("All projects")
+    And the user should not see the element       css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3) a
     And the user should not see the element       css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4) a
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details    ${403_error_message}
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    ${403_error_message}
