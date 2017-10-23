@@ -729,7 +729,6 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         content.forEach(this::assertNotExistingAssessorUser);
     }
 
-
     @Test
     public void getAllInvitesByUser() throws Exception {
 
@@ -759,9 +758,6 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
         assertEquals(expected.get(0), actual.get(0));
         assertEquals(expected.get(1), actual.get(1));
-        //assertTrue(actual.contains(expected.get(0)));
-        //assertTrue(actual.contains(expected.get(1)));
-        //assertEquals(expected.get(1), actual.get(0));
         InOrder inOrder = inOrder(assessmentPanelInviteRepositoryMock);
         inOrder.verify(assessmentPanelInviteRepositoryMock).getByUserId(1L);
         inOrder.verifyNoMoreInteractions();

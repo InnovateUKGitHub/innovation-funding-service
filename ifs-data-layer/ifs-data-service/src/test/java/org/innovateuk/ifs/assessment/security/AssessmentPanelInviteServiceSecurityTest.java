@@ -1,49 +1,28 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteService;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.AssessmentPanelInvite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-
-import java.util.Arrays;
 import java.util.List;
-
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
-import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-
-import java.util.List;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.user.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurityTest<AssessmentPanelInviteService> {
@@ -134,8 +113,6 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
 
     @Test
     public void getAllInvitesByUser() throws Exception {
-
-
         UserResource assessorUserResource = newUserResource()
                 .withRolesGlobal(singletonList(
                         newRoleResource()
@@ -204,7 +181,6 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
             return null;
         }
 
-
         @Override
         public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds) {
             return null;
@@ -213,13 +189,6 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
         @Override
         public ServiceResult<List<AssessmentPanelInviteResource>> getAllInvitesByUser(long userId) {
             return serviceSuccess(asList(newAssessmentPanelInviteResource().withUser(1L).build()));
-            //return serviceSuccess(emptyList());
         }
-//            return serviceSuccess(singletonList(newAssessmentPanelInviteResource()
-//                    .withUser(2L)
-//                    .build()));
-
-        }
-
-
+    }
 }

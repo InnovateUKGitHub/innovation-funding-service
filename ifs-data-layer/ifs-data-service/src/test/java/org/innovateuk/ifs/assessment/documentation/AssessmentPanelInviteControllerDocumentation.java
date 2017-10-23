@@ -194,12 +194,11 @@ public class AssessmentPanelInviteControllerDocumentation extends BaseController
 
     @Test
     public void getAllInvitesByUser() throws Exception {
-
-        final long USER_ID = 12L;
+        final long userId = 12L;
         AssessmentPanelInviteResource assessmentPanelInviteResource = newAssessmentPanelInviteResource().build();
-        when(assessmentPanelInviteServiceMock.getAllInvitesByUser(USER_ID)).thenReturn(serviceSuccess(singletonList(assessmentPanelInviteResource)));
+        when(assessmentPanelInviteServiceMock.getAllInvitesByUser(userId)).thenReturn(serviceSuccess(singletonList(assessmentPanelInviteResource)));
 
-        mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesByUser/{userId}", USER_ID))
+        mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesByUser/{userId}", userId))
                 .andExpect(status().isOk())
                 .andDo(document("assessmentpanelinvite/{method-name}",
                         pathParameters(
