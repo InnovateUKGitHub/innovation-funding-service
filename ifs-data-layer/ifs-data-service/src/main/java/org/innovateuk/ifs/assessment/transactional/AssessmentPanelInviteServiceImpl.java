@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
@@ -437,6 +439,17 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                 .andOnSuccessReturnVoid();
     }
 
+    @Override
+    public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
+        return getByHash(inviteHash).andOnSuccessReturn(invite -> {
+            if (invite.getUser() != null) {
+                return TRUE;
+            }
+
+            return userRepository.findByEmail(invite.getEmail()).isPresent();
+        });
+    }
+
     private ServiceResult<AssessmentPanelInvite> getByHash(String inviteHash) {
         return find(assessmentPanelInviteRepository.getByHash(inviteHash), notFoundError(CompetitionInvite.class, inviteHash));
     }
@@ -476,11 +489,11 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     private ServiceResult<AssessmentPanelInvite> getByHashIfOpen(String inviteHash) {
         return getByHash(inviteHash).andOnSuccess(invite -> {
 
-            if (!EnumSet.of(READY_TO_OPEN, IN_ASSESSMENT, CLOSED, OPEN).contains(invite.getTarget().getCompetitionStatus())) {
+            if (!EnumSet.of(CLOSED, IN_ASSESSMENT, FUNDERS_PANEL).contains(invite.getTarget().getCompetitionStatus())) {
                 return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_INVITE_EXPIRED, invite.getTarget().getName()));
             }
 
-            CompetitionParticipant participant = competitionParticipantRepository.getByInviteHash(inviteHash);
+            AssessmentPanelParticipant participant = assessmentPanelParticipantRepository.getByInviteHash(inviteHash);
 
             if (participant == null) {
                 return serviceSuccess(invite);

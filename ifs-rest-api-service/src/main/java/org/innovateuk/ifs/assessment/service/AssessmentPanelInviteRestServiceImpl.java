@@ -10,8 +10,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 import static java.lang.String.format;
-
-import static java.lang.String.format;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 
 /**
@@ -116,8 +114,8 @@ public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implem
     }
 
     @Override
-    public RestResult<CompetitionInviteResource> openInvite(String inviteHash) {
-        return postWithRestResultAnonymous(format("%s/%s/%s", assessmentPanelInviteRestUrl, "openInvite", inviteHash), CompetitionInviteResource.class);
+    public RestResult<AssessmentPanelInviteResource> openInvite(String inviteHash) {
+        return postWithRestResultAnonymous(format("%s/%s/%s", assessmentPanelInviteRestUrl, "openInvite", inviteHash), AssessmentPanelInviteResource.class);
     }
 
     @Override

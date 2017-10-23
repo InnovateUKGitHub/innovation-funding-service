@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * Form field model for the competition rejection content
+ * Form field model for the panel rejection content
  */
 public class PanelInviteForm extends BaseBindingResultTarget {
 

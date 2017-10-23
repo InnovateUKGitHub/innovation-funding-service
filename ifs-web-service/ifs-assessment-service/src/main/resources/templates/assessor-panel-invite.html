@@ -20,13 +20,9 @@
             <p>Invitation to panel assessment on <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
             <section class="boxed">
-                <h2 class="heading-medium no-margin" th:text="|${#temporals.format(model.acceptsDate, 'dd MMMM yyyy')} to ${#temporals.format(model.deadlineDate, 'dd MMMM yyyy')}: Assessment period|">
-                    21 March 2017 to 28 March 2017: Assessment period
+                <h2 class="heading-medium no-margin" th:text="|${#temporals.format(model.panelDate, 'dd MMMM yyyy')}: Assessment panel|">
+                    21 March 2017: Assessment panel
                 </h2>
-                <p>This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependent on how many applications have been submitted. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatDecimal(model.assessorPay,0, 'COMMA', 0, 'POINT')}">100</th:block> per application.</p>
-
-                <p th:if="${model.briefingDate}" th:text="|The assessor webinar briefing will last one hour,
-                    taking place on ${#temporals.format(model.briefingDate, 'dd MMMM')}.|"></p>
             </section>
 
             <section>
@@ -55,7 +51,6 @@
                                    th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.panelinvitedecision.required}" />
                             <label for="acceptPanel">
                                 Yes, I am able to attend the panel assessment.
-                                <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
                             </label>
                         </div>
 

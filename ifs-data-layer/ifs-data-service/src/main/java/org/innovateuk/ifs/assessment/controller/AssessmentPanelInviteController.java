@@ -19,7 +19,6 @@ import java.util.Optional;
 /**
  * Controller for managing Invites to Assessment Panels.
  */
-
 @RestController
 @RequestMapping("/assessmentpanelinvite")
 public class AssessmentPanelInviteController {
@@ -108,5 +107,10 @@ public class AssessmentPanelInviteController {
     public RestResult<Void> rejectInvite(@PathVariable String inviteHash, @Valid @RequestBody CompetitionRejectionResource rejection) {
         return assessmentPanelInviteService.rejectInvite(inviteHash, rejection.getRejectReason(), Optional.ofNullable(rejection.getRejectComment())).toPostResponse();
 
+    }
+
+    @GetMapping("/checkExistingUser/{inviteHash}")
+    public RestResult<Boolean> checkExistingUser(@PathVariable String inviteHash) {
+        return assessmentPanelInviteService.checkExistingUser(inviteHash).toGetResponse();
     }
 }

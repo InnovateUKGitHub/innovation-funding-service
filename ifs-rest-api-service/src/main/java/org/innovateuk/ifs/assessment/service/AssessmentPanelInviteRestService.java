@@ -32,7 +32,7 @@ public interface AssessmentPanelInviteRestService {
                                                                          int page,
                                                                          List<ParticipantStatusResource> participantStatus);
 
-    RestResult<CompetitionInviteResource> openInvite(String inviteHash);
+    RestResult<AssessmentPanelInviteResource> openInvite(String inviteHash);
 
     RestResult<Void> acceptInvite(String inviteHash);
 

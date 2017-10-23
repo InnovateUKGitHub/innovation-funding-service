@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.invite.populator;
 
 import org.innovateuk.ifs.assessment.invite.viewmodel.PanelInviteViewModel;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
+import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ public class PanelInviteModelPopulator {
     private AssessmentPanelInviteRestService inviteRestService;
 
     public PanelInviteViewModel populateModel(String inviteHash, boolean userLoggedIn) {
-        CompetitionInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccessObjectOrThrowException();
+        AssessmentPanelInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccessObjectOrThrowException();
 
         return new PanelInviteViewModel(inviteHash, invite, userLoggedIn);
     }

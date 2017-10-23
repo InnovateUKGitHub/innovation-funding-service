@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.assessment.invite.controller;
 
-import org.innovateuk.ifs.assessment.invite.form.CompetitionInviteForm;
+import org.innovateuk.ifs.assessment.invite.form.PanelInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.PanelInviteModelPopulator;
 import org.innovateuk.ifs.assessment.invite.populator.RejectCompetitionModelPopulator;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
@@ -49,7 +49,7 @@ public class PanelInviteController {
 
     @GetMapping("/invite/panel/{inviteHash}")
     public String openInvite(@PathVariable("inviteHash") String inviteHash,
-                             @ModelAttribute(name = "form", binding = false) CompetitionInviteForm form,
+                             @ModelAttribute(name = "form", binding = false) PanelInviteForm form,
                              UserResource loggedInUser,
                              Model model) {
         boolean userLoggedIn = loggedInUser != null;
@@ -62,7 +62,7 @@ public class PanelInviteController {
     public String handleDecision(Model model,
                                  @PathVariable("inviteHash") String inviteHash,
                                  UserResource loggedInUser,
-                                 @Valid @ModelAttribute("form") CompetitionInviteForm form,
+                                 @Valid @ModelAttribute("form") PanelInviteForm form,
                                  BindingResult bindingResult,
                                  ValidationHandler validationHandler) {
 
@@ -108,7 +108,7 @@ public class PanelInviteController {
 
     private String doRejectInvite(Model model,
                                   String inviteHash,
-                                  CompetitionInviteForm form,
+                                  PanelInviteForm form,
                                   UserResource loggedInUser,
                                   ValidationHandler validationHandler) {
         Supplier<String> failureView = () -> openInvite(inviteHash, form, loggedInUser, model);

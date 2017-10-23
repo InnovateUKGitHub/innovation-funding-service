@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 
+import java.time.ZonedDateTime;
+
 /**
  * DTO for {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite}s.
  */
@@ -16,13 +18,15 @@ public class AssessmentPanelInviteResource extends InviteResource {
     private String competitionName;
     private long userId;
     private String email;
+    private ZonedDateTime panelDate;
 
     public AssessmentPanelInviteResource(String hash,
                                          long competitionId,
                                          String competitionName,
                                          InviteStatus status,
                                          long userId,
-                                         String email
+                                         String email,
+                                         ZonedDateTime panelDate
     ) {
         this.hash = hash;
         this.competitionId = competitionId;
@@ -30,6 +34,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
         this.status = status;
         this.userId = userId;
         this.email = email;
+        this.panelDate = panelDate;
     }
 
     public AssessmentPanelInviteResource() {
@@ -68,9 +73,13 @@ public class AssessmentPanelInviteResource extends InviteResource {
         this.competitionName = competitionName;
     }
 
-    public long getUserId() { return userId; }
+    public long getUserId() {
+        return userId;
+    }
 
-    public void setUserId(long userId) { this.userId = userId; }
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
 
     public String getEmail() {
         return email;
@@ -78,6 +87,14 @@ public class AssessmentPanelInviteResource extends InviteResource {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public ZonedDateTime getPanelDate() {
+        return panelDate;
+    }
+
+    public void setPanelDate(ZonedDateTime panelDate) {
+        this.panelDate = panelDate;
     }
 
     @JsonIgnore
@@ -100,6 +117,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
                 .append(hash, that.hash)
                 .append(competitionName, that.competitionName)
                 .append(email, that.email)
+                .append(panelDate, that.panelDate)
                 .isEquals();
     }
 
@@ -112,6 +130,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
                 .append(competitionName)
                 .append(userId)
                 .append(email)
+                .append(panelDate)
                 .toHashCode();
     }
 }

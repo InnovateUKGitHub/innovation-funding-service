@@ -259,5 +259,10 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
         public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, RejectionReasonResource rejectionReason, Optional<String> rejectionComment) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
+            return null;
+        }
     }
 }

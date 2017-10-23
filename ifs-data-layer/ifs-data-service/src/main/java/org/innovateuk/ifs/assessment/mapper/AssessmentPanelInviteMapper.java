@@ -22,6 +22,7 @@ public abstract class AssessmentPanelInviteMapper extends BaseMapper<AssessmentP
             @Mapping(source = "target.id", target = "competitionId"),
             @Mapping(source = "target.name", target = "competitionName"),
             @Mapping(source = "user.id", target = "userId"),
+            @Mapping(source = "target.assessmentPanelDate", target = "panelDate"),
     })
     @Override
     public abstract AssessmentPanelInviteResource mapToResource(AssessmentPanelInvite domain);

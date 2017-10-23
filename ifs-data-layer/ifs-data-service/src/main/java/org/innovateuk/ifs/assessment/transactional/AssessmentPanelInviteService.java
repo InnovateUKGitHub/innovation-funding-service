@@ -89,4 +89,10 @@ public interface AssessmentPanelInviteService {
             description = "The System Registration user can read an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, RejectionReasonResource rejectionReason, Optional<String> rejectionComment);
+
+    @PreAuthorize("hasAuthority('system_registrar')")
+    @SecuredBySpring(value = "CHECK_EXISTING_USER_ON_HASH",
+            description = "The System Registration user can check for the presence of a User on an invite or the presence of a User with the invited e-mail address",
+            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
+    ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash);
 }
