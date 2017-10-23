@@ -10,7 +10,6 @@ import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
-import java.util.Optional;
 
 
 /**
@@ -88,7 +87,7 @@ public interface AssessmentPanelInviteService {
     @SecuredBySpring(value = "REJECT_INVITE_ON_HASH",
             description = "The System Registration user can read an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, RejectionReasonResource rejectionReason, Optional<String> rejectionComment);
+    ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "CHECK_EXISTING_USER_ON_HASH",

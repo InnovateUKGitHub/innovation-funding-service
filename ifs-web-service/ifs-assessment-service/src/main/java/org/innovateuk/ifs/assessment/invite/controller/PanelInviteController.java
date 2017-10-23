@@ -6,7 +6,6 @@ import org.innovateuk.ifs.assessment.invite.populator.RejectCompetitionModelPopu
 import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -115,7 +114,7 @@ public class PanelInviteController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
-            RestResult<Void> updateResult = inviteRestService.rejectInvite(inviteHash, new CompetitionRejectionResource(form.getRejectReason(), form.getRejectComment()));
+            RestResult<Void> updateResult = inviteRestService.rejectInvite(inviteHash);
 
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> format("redirect:/invite/panel/%s/reject/thank-you", inviteHash));

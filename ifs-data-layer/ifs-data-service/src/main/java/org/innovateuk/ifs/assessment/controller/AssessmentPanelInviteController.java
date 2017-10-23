@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Controller for managing Invites to Assessment Panels.
@@ -104,9 +103,8 @@ public class AssessmentPanelInviteController {
     }
 
     @PostMapping("/rejectInvite/{inviteHash}")
-    public RestResult<Void> rejectInvite(@PathVariable String inviteHash, @Valid @RequestBody CompetitionRejectionResource rejection) {
-        return assessmentPanelInviteService.rejectInvite(inviteHash, rejection.getRejectReason(), Optional.ofNullable(rejection.getRejectComment())).toPostResponse();
-
+    public RestResult<Void> rejectInvite(@PathVariable String inviteHash) {
+        return assessmentPanelInviteService.rejectInvite(inviteHash).toPostResponse();
     }
 
     @GetMapping("/checkExistingUser/{inviteHash}")

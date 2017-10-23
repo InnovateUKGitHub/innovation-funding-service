@@ -36,7 +36,7 @@ public interface AssessmentPanelInviteRestService {
 
     RestResult<Void> acceptInvite(String inviteHash);
 
-    RestResult<Void> rejectInvite(String inviteHash, CompetitionRejectionResource rejectionReason);
+    RestResult<Void> rejectInvite(String inviteHash);
 
     RestResult<Boolean> checkExistingUser(String inviteHash);
 }

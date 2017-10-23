@@ -40,7 +40,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
@@ -432,10 +431,9 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     }
 
     @Override
-    public ServiceResult<Void> rejectInvite(String inviteHash, RejectionReasonResource rejectionReason, Optional<String> rejectionComment) {
-        return getRejectionReason(rejectionReason)
-                .andOnSuccess(reason -> getParticipantByInviteHash(inviteHash)
-                        .andOnSuccess(invite -> reject(invite, reason, rejectionComment)))
+    public ServiceResult<Void> rejectInvite(String inviteHash) {
+        return getParticipantByInviteHash(inviteHash)
+                .andOnSuccess(invite -> reject(invite))
                 .andOnSuccessReturnVoid();
     }
 
@@ -466,7 +464,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         }
     }
 
-    private ServiceResult<CompetitionParticipant> reject(AssessmentPanelParticipant participant, RejectionReason rejectionReason, Optional<String> rejectionComment) {
+    private ServiceResult<CompetitionParticipant> reject(AssessmentPanelParticipant participant) {
         if (participant.getInvite().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_REJECT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == ACCEPTED) {
@@ -474,7 +472,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_REJECT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
-            return serviceSuccess(participant.reject(rejectionReason, rejectionComment));
+            return serviceSuccess(participant.reject());
         }
     }
 
