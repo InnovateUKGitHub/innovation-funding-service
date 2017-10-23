@@ -7,6 +7,7 @@ import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -34,10 +35,13 @@ public class FormInputTemplatePersistorService implements BaseChainedTemplatePer
         return simpleMap(question.getFormInputs(), createFunction(question));
     }
 
+    @Transactional
     public void cleanForPrecedingEntity(Question question) {
         List<FormInput> formInputs = question.getFormInputs();
 
+
         formInputs.stream().forEach(formInput -> guidanceRowTemplateService.cleanForPrecedingEntity(formInput));
+        formInputs.stream().forEach(formInput -> entityManager.detach(formInput));
         formInputRepository.delete(formInputs);
     }
 
