@@ -91,13 +91,13 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         final UserResource userResource = newUserResource().build();
         when(baseUserServiceMock.findByProcessRole(eq(INNOVATION_LEAD))).thenReturn(serviceSuccess(asList(userResource, userResource)));
 
-        mockMvc.perform(get("/user/findByRole/{userRoleName}", INNOVATION_LEAD.getName()))
+        mockMvc.perform(get("/user/findByRole/{userRole}", INNOVATION_LEAD))
                 .andDo(document("user/{method-name}",
                         pathParameters(
                                 parameterWithName("userRoleName").description("The name of the role to get the users by.")
                         ),
                         responseFields(
-                                fieldWithPath("[]").description("list of users with the selected role")
+                                fieldWithPath("[]").description("list of users with the selected role, ordered by first name, lastn ame")
                         )
                 ));
     }
