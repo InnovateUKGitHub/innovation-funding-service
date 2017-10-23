@@ -25,7 +25,6 @@
             <div class="warning-alert"><p>There are currently no active projects in this competition.</p></div>
         </div>
     </div>
-  <div class="grid-container constrain-width">
     <div class="table-overflow" th:unless="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
       <table id="table-project-status" class="icon-table">
         <thead>
@@ -98,7 +97,6 @@
       </table>
     </div>
     <th:block th:insert="fragments/layout :: main-content-end" />
-  </div>
 </main>
 <th:block th:insert="fragments/layout :: footer" />
 <th:block th:insert="fragments/layout :: body-end" />
