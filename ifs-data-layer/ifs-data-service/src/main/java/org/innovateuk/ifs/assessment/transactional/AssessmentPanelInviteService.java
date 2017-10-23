@@ -4,13 +4,13 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.data.domain.Pageable;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import java.util.List;
-
 
 /**
  * Service for managing {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite}s.
@@ -59,9 +59,8 @@ public interface AssessmentPanelInviteService {
             description = "The Competition Admin user and Project Finance users can create assessment panel invites for existing users")
     ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInvites);
 
-    @PostFilter("hasPermission(returnObject, 'READ_ASSESSMENT_PANEL_INVITES')")
-    @SecuredBySpring(
-            value = "READ_ASSESSMENT_PANEL_INVITES",
+    @PostAuthorize("hasPermission(returnObject, 'READ_ASSESSMENT_PANEL_INVITES')")
+    @SecuredBySpring(value = "READ_ASSESSMENT_PANEL_INVITES",
             description = "An Assessor can view assessor panel invites provided that the invites belong to them")
     ServiceResult<List<AssessmentPanelInviteResource>> getAllInvitesByUser(long userId);
 

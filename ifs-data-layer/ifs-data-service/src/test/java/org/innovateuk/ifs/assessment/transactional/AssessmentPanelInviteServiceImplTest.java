@@ -29,6 +29,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -66,6 +67,7 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.user.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -725,6 +727,35 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         assertEquals("Name 5", content.get(4).getName());
 
         content.forEach(this::assertNotExistingAssessorUser);
+    }
+
+
+    @Test
+    public void getAllInvitesByUser() throws Exception {
+
+        User user = newUser()
+                .withId(1L)
+                .build();
+
+        List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
+                .withEmail("paulplum@gmail.com")
+                .withHash("")
+                .withName("Paul Plum")
+                .withStatus(SENT)
+                .withUser(user)
+                .build(2);
+
+        when(assessmentPanelInviteRepositoryMock.getByUserId(1L)).thenReturn(invites);
+
+        List<AssessmentPanelInviteResource> actual = service.getAllInvitesByUser(1L).getSuccessObject();
+        List<AssessmentPanelInviteResource> expected = new ArrayList<>();
+        expected.add(new AssessmentPanelInviteResource("", 2L, "Competition in Assessor Panel", SENT, 1L));
+        expected.add(new AssessmentPanelInviteResource("", 2L, "Competition in Assessor Panel", SENT, 1L));
+
+        assertEquals(expected, actual);
+        InOrder inOrder = inOrder(assessmentPanelInviteRepositoryMock);
+        inOrder.verify(assessmentPanelInviteRepositoryMock).getByUserId(1L);
+        inOrder.verifyNoMoreInteractions();
     }
 
     private void assertNotExistingAssessorUser(AssessorInviteOverviewResource assessorInviteOverviewResource) {

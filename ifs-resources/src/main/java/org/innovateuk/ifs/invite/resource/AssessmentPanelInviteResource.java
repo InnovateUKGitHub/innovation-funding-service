@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 
 /**
- * DTO for s.
+ * DTO for {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite}s.
  */
 public class AssessmentPanelInviteResource {
 
@@ -34,7 +34,6 @@ public class AssessmentPanelInviteResource {
     }
 
     private AssessmentPanelInviteResource() {
-        // no-arg constructor
     }
 
     public String getHash() {

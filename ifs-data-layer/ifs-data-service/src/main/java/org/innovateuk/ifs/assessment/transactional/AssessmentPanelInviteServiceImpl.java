@@ -337,11 +337,12 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                 assessmentPanelInviteRepository
                 .getByUserId(userId)
                 .stream()
-                .map(invite -> new AssessmentPanelInviteResource(invite.getHash(),
-                        invite.getTarget().getId()
-                        , invite.getTarget().getName()
-                        , invite.getStatus()
-                        , invite.getUser().getId()))
+                .map(invite -> new AssessmentPanelInviteResource(
+                        invite.getHash(),
+                        invite.getTarget().getId(),
+                        invite.getTarget().getName(),
+                        invite.getStatus(),
+                        invite.getUser().getId()))
                 .collect(toList()));
     }
 

@@ -5,12 +5,11 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.List;
-
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
@@ -22,6 +21,8 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListReso
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.user.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -173,6 +174,23 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
         AssessorInviteOverviewPageResource actual = service.getInvitationOverview(competitionId, page, Arrays.asList(ACCEPTED, PENDING))
                 .getSuccessObject();
 
+        assertEquals(expected, actual);
+    }
+
+    public void getAllInvitesByUser() throws Exception {
+        Long USER_ID = 1L;
+        AssessmentPanelInviteResource assessmentPanelInviteResource = newAssessmentPanelInviteResource()
+                .withUser(USER_ID)
+                .withStatus(SENT)
+                .withCompetitionName("Competition Name")
+                .withCompetitionId(1L)
+                .withInviteHash("")
+                .build();
+        List<AssessmentPanelInviteResource> expected = singletonList(assessmentPanelInviteResource);
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAllInvitesByUser", USER_ID), ParameterizedTypeReferences.assessmentPanelInviteResourceListType(), expected, OK);
+
+        List<AssessmentPanelInviteResource> actual = service.getAllInvitesByUser(USER_ID).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
     }
 }
