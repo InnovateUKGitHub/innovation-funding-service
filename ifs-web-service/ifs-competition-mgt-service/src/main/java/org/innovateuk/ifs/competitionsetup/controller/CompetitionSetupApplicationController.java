@@ -81,7 +81,7 @@ public class CompetitionSetupApplicationController {
         ServiceResult<CompetitionSetupQuestionResource> restResult = competitionSetupQuestionService.createDefaultQuestion(competitionId);
 
         Function<CompetitionSetupQuestionResource, String> successViewFunction =
-                (question) -> String.format("redirect:/competition/setup/%d/section/application/question/%d", competitionId, question.getQuestionId());
+                (question) -> String.format("redirect:/competition/setup/%d/section/application/question/%d/edit", competitionId, question.getQuestionId());
         Supplier<String> successView = () -> successViewFunction.apply(restResult.getSuccessObjectOrThrowException());
 
         return successView.get();
