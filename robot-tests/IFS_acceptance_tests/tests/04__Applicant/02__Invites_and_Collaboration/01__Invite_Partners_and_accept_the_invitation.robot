@@ -236,7 +236,7 @@ Lead applicant invites a non registered user in the same organisation
     And the user clicks the button/link            jQuery=button:contains("Invite")
     Then the user should see the element           jQuery=.table-overflow td:contains(${test_mailbox_one}+inviteorg2@gmail.com)+td:contains("Invite pending for 0 days")
 
-Support user can see finance contact in invited users list
+Support user can see contributor in invited users list
     [Documentation]    IFS-1841
     [Tags]
     Given log in as a different user  &{support_user_credentials}
@@ -269,7 +269,7 @@ Lead should not see pending status for accepted invite
     And the user clicks the button/link         link=Update and add contributors from ${EMPIRE_LTD_NAME}
     Then the user should see the element         jQuery=.table-overflow td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
 
-Support user can see finance contact in users with account list
+Support user can see contributor in users with account list
     [Documentation]    IFS-1841
     [Tags]
     Given log in as a different user  &{support_user_credentials}
