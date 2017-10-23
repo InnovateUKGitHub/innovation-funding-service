@@ -178,9 +178,9 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
     }
 
     public void getAllInvitesByUser() throws Exception {
-        Long USER_ID = 1L;
+        long userId = 1L;
         AssessmentPanelInviteResource assessmentPanelInviteResource = newAssessmentPanelInviteResource()
-                .withUser(USER_ID)
+                .withUser(userId)
                 .withStatus(SENT)
                 .withCompetitionName("Competition Name")
                 .withCompetitionId(1L)
@@ -188,9 +188,9 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
                 .build();
         List<AssessmentPanelInviteResource> expected = singletonList(assessmentPanelInviteResource);
 
-        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAllInvitesByUser", USER_ID), ParameterizedTypeReferences.assessmentPanelInviteResourceListType(), expected, OK);
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAllInvitesByUser", userId), ParameterizedTypeReferences.assessmentPanelInviteResourceListType(), expected, OK);
 
-        List<AssessmentPanelInviteResource> actual = service.getAllInvitesByUser(USER_ID).getSuccessObjectOrThrowException();
+        List<AssessmentPanelInviteResource> actual = service.getAllInvitesByUser(userId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
     }
 }
