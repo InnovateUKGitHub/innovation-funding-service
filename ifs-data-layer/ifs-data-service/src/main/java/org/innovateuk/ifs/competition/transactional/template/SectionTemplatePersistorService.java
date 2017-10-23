@@ -31,13 +31,17 @@ public class SectionTemplatePersistorService implements BaseChainedTemplatePersi
             return null;
         }
 
-        List<Section> sectionsWithoutParentSections = template.getSections().stream()
-                .filter(s -> s.getParentSection() == null)
-                .collect(Collectors.toList());
+        List<Section> sectionsWithoutParentSections = getTopLevelSections(template);
 
         new ArrayList<>(sectionsWithoutParentSections).forEach(section -> createChildSectionRecursively(template, null).apply(section));
 
         return sectionsWithoutParentSections;
+    }
+
+    private List<Section> getTopLevelSections(Competition competition) {
+        return competition.getSections().stream()
+                    .filter(s -> s.getParentSection() == null)
+                    .collect(Collectors.toList());
     }
 
     private List<Section> createChildSectionsRecursively(Competition competition, Section parentSectionTemplate) {
@@ -64,11 +68,12 @@ public class SectionTemplatePersistorService implements BaseChainedTemplatePersi
         section.getChildSections().stream().forEach(s -> cleanForPrecedingEntityRecursively(s));
 
         questionTemplatePersistorServiceService.cleanForPrecedingEntity(section);
+
+        entityManager.detach(section);
         sectionRepository.delete(section);
     }
 
     public void cleanForPrecedingEntity(Competition competition) {
-        List<Section> sections = competition.getSections();
-        sections.stream().forEach(section -> cleanForPrecedingEntityRecursively(section));
+        getTopLevelSections(competition).stream().forEach(section -> cleanForPrecedingEntityRecursively(section));
     }
 }

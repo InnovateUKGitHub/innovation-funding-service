@@ -77,7 +77,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceFailure(new Error(COMPETITION_NO_TEMPLATE));
         }
 
-        competitionTemplatePersistor.cleanByEntityId(competition.getId());
+        competitionTemplatePersistor.cleanByEntityId(competitionId);
 
         List<Section> sectionList = new ArrayList<>(template.getSections());
         competition.setSections(sectionList);

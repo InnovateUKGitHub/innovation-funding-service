@@ -208,7 +208,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
-    @Transactional
     public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
         return competitionSetupTemplateService.createCompetitionByCompetitionTemplate(competitionId, competitionTypeId)
                 .andOnSuccess(() -> serviceSuccess());

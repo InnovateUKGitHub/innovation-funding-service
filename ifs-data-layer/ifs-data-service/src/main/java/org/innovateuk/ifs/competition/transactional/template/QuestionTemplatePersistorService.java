@@ -43,6 +43,7 @@ public class QuestionTemplatePersistorService implements BaseChainedTemplatePers
         Question question = questionRepository.findOne(questionId);
         formInputTemplateService.cleanForPrecedingEntity(question);
 
+        entityManager.detach(question);
         questionRepository.delete(questionId);
     }
 
@@ -52,6 +53,7 @@ public class QuestionTemplatePersistorService implements BaseChainedTemplatePers
         if(questions != null) {
             questions.stream().forEach(question -> formInputTemplateService.cleanForPrecedingEntity(question));
 
+            questions.stream().forEach(question -> entityManager.detach(question));
             questionRepository.delete(questions);
         }
     }
