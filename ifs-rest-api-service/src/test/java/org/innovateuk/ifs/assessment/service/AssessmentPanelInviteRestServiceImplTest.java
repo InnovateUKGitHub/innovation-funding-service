@@ -180,17 +180,17 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
 
     @Test
     public void openInvite() {
-        CompetitionInviteResource expected = new CompetitionInviteResource();
+        AssessmentPanelInviteResource expected = new AssessmentPanelInviteResource();
         expected.setCompetitionName("my competition");
-        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "openInvite", "hash"), CompetitionInviteResource.class, null, expected, OK);
-        CompetitionInviteResource actual = service.openInvite("hash").getSuccessObject();
+        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "openInvite", "hash"), AssessmentPanelInviteResource.class, null, expected, OK);
+        AssessmentPanelInviteResource actual = service.openInvite("hash").getSuccessObject();
         assertEquals(expected, actual);
     }
 
     @Test
     public void openInvite_hashNotExists() {
-        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "openInvite", "hashNotExists"), CompetitionInviteResource.class, null, null, NOT_FOUND);
-        RestResult<CompetitionInviteResource> restResult = service.openInvite("hashNotExists");
+        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "openInvite", "hashNotExists"), AssessmentPanelInviteResource.class, null, null, NOT_FOUND);
+        RestResult<AssessmentPanelInviteResource> restResult = service.openInvite("hashNotExists");
         assertTrue(restResult.isFailure());
     }
 
@@ -203,13 +203,9 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
 
     @Test
     public void rejectInvite() {
-        RejectionReasonResource rejectionReasonResource = new RejectionReasonResource();
-        rejectionReasonResource.setId(1L);
-        CompetitionRejectionResource rejectionResource = new CompetitionRejectionResource(rejectionReasonResource, "too busy");
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "rejectInvite", "hash"), OK);
 
-        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "rejectInvite", "hash"), Void.class, rejectionResource, null, OK);
-
-        RestResult<Void> restResult = service.rejectInvite("hash", rejectionResource);
+        RestResult<Void> restResult = service.rejectInvite("hash");
         assertTrue(restResult.isSuccess());
     }
 

@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -256,7 +255,7 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
         }
 
         @Override
-        public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash, RejectionReasonResource rejectionReason, Optional<String> rejectionComment) {
+        public ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash) {
             return null;
         }
 

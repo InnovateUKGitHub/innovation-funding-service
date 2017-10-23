@@ -20,6 +20,7 @@ public class AssessmentPanelInviteResourceBuilderTest {
         long expectedCompId = 2L;
         String expectedEmail = "tom@poly.io";
         String expectedHash = "inviteHash";
+        long expectedUserId = 1L;
         ZonedDateTime expectedPanelDate = ZonedDateTime.now();
 
         AssessmentPanelInviteResource invite = newAssessmentPanelInviteResource()
@@ -28,6 +29,7 @@ public class AssessmentPanelInviteResourceBuilderTest {
                 .withEmail(expectedEmail)
                 .withHash(expectedHash)
                 .withPanelDate(expectedPanelDate)
+                .withUserId(expectedUserId)
                 .build();
 
         assertEquals(expectedCompetitionName, invite.getCompetitionName());
@@ -35,6 +37,7 @@ public class AssessmentPanelInviteResourceBuilderTest {
         assertEquals(expectedEmail, invite.getEmail());
         assertEquals(expectedHash, invite.getHash());
         assertEquals(expectedPanelDate, invite.getPanelDate());
+        assertEquals(expectedUserId, invite.getUserId());
     }
 
     @Test
@@ -44,6 +47,7 @@ public class AssessmentPanelInviteResourceBuilderTest {
         String[] expectedEmails = {"tom@poly.io", "steve.smith@empire.com"};
         String[] expectedHashes = {"hash1", "hash2"};
         ZonedDateTime[] expectedPanelDates = {ZonedDateTime.now(), ZonedDateTime.now().plusHours(1)};
+        long[] expectedUserIds = {3L, 4L};
 
         List<AssessmentPanelInviteResource> invites = newAssessmentPanelInviteResource()
                 .withCompetitionName(expectedCompetitionNames)
@@ -51,6 +55,7 @@ public class AssessmentPanelInviteResourceBuilderTest {
                 .withEmail(expectedEmails)
                 .withHash(expectedHashes)
                 .withPanelDate(expectedPanelDates)
+                .withUserId(3L, 4L)
                 .build(2);
 
         AssessmentPanelInviteResource first = invites.get(0);
@@ -59,6 +64,7 @@ public class AssessmentPanelInviteResourceBuilderTest {
         assertEquals(expectedEmails[0], first.getEmail());
         assertEquals(expectedHashes[0], first.getHash());
         assertEquals(expectedPanelDates[0], first.getPanelDate());
+        assertEquals(expectedUserIds[0], first.getUserId());
 
         AssessmentPanelInviteResource second = invites.get(1);
         assertEquals(expectedCompetitionNames[1], second.getCompetitionName());
@@ -66,5 +72,6 @@ public class AssessmentPanelInviteResourceBuilderTest {
         assertEquals(expectedEmails[1], second.getEmail());
         assertEquals(expectedHashes[1], second.getHash());
         assertEquals(expectedPanelDates[1], second.getPanelDate());
+        assertEquals(expectedUserIds[1], second.getUserId());
     }
 }

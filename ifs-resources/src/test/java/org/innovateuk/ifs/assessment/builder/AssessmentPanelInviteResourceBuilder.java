@@ -36,6 +36,10 @@ public class AssessmentPanelInviteResourceBuilder extends BaseBuilder<Assessment
         return withArraySetFieldByReflection("competitionId", ids);
     }
 
+    public AssessmentPanelInviteResourceBuilder withUserId(Long... ids) {
+        return withArraySetFieldByReflection("userId", ids);
+    }
+
     public AssessmentPanelInviteResourceBuilder withEmail(String... emails) {
         return withArraySetFieldByReflection("email", emails);
     }
