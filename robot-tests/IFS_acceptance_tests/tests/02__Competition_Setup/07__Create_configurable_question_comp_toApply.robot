@@ -10,7 +10,7 @@ Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
 *** Variables ***
 ${compName_programme}  programme configurable comp
-${compName_generic}    sector configurable comp
+${compName_generic}    generic configurable comp
 
 *** Test Cases ***
 User creates a non generic competition
@@ -27,30 +27,36 @@ User creates a non generic competition
 #   TODO-- Ensure edit view is rendered on first click ---dependant on IFS-743
     then the user should not see the element            jQuery=button:contains("Edit this question")
 #    check the default values for the assessed  questions
-#       the user should see the text in the element         question.maxWords  400
+    the user should see the text in the element        id=question.maxWords  400
 #       the user should see the text in the element         input[id="appendix-no"] checked="checked"
 #   TODO-- IFS-2004 this remove link needs to be added
 #    and the user should see the element                 link=Remove
-    the user fills in the question details              First question
+#   TODO -- Return to application questions link is not addded yet
+#   the user should see the element                      link=Return to application questions
+    the user fills in the assessed question details     First question
     the user clicks the button/link                     link=Save and close
     the user should see the element                     jQuery=li:contains("11.First question") .task-status:contains("Remove")
 #    add one more question
     the user clicks the button/link                     link=Add question
-    the user fills in the question details              Second question
-    the user clicks the button/link                     link=Save and close
+#   TODO -- Adding question can be made a separate keyword and can be reused
+    the user fills in the assessed question details     Second question
+    the user clicks the button/link                     css=input[value="Save and close"]
      # checking the question number is correctly reset
     the user clicks the button/link                     jQuery=li:contains("11.First question") .task-status:contains("Remove")
     then the user clicks the button/link                jQuery=li:contains("11.Second question")
 #    check the complete status once the question is marked Done
     then the user should not see the element            css=input   # read only view is rendered
-    the user clicks the button/link                     link=Edit this question
-    when the user clicks the button/link                link = Done
-    then the user should see the element                jQuery=li:contains("11.Second question")  .task complete : contains("complete")
+    the user clicks the button/link                     jQuery=a:contains("Edit this question")
+    when the user clicks the button/link                css=input[value="Save and close"]
+    then the user should see the element                jQuery=li:contains("11.Second question")  .task complete:contains("complete")
     the user should not see the element                 jQuery=li:contains("11.Second question") .task-status:contains("Remove")
-    the user clicks the button/link                     link=Done
+    the user clicks the button/link                     jQuery=button:contains("Done")
+    the user clicks the button/link                     jQuery=a:ccontains("Return to setup overview")
+    the user clicks the button/link                     jQuery=a:contains("Complete")
+    Then the user clicks the button/link                jQuery=a:contains("Done")
 
 User able to open the comp
-    Given  the user navigates to the page                                      ${CA_UpcomingComp}
+    Given the user navigates to the page                                      ${CA_UpcomingComp}
     Then the user should see the element                                       jQuery=h2:contains("Ready to open") ~ ul a:contains("${compName_programme}}")
     Change the open date of the Competition in the database to one day before  ${compName_programme}
     lead applicant able to apply to newly created comp                         {compName_programme}
@@ -63,8 +69,8 @@ User can create a new generic comp
     the user should see the element                                  jQuery=li:contains("1.Edit this question")
     the user should not see the element                              jQuery=li:contains("Edit this question") .taskcompete:contains("Remove")
     the user clicks the button/link                                  Add question
-    the user fills in the question details                           Generic second question
-    the user clicks the button/link                                  link= Done
+    the user fills in the assessed question details                  Generic second question
+    the user clicks the button/link                                  css=input[value="Save and close"]
     the user should see the element                                  jQuery=li:contains("Generic second question) .task-status:contains("Complete")
     the user should not see the element                              jQuery=li:contains("Generic second question) .task-status:contains("Remove")
     the user clicks the button/link                                  link=Done
@@ -118,17 +124,18 @@ lead applicant can fill in the application questions and mark it complete
     the user clicks the button/link       link= new generic question
     the user enters text to a text field  css=.textarea-wrapped .editor  Applicant filling newly added question
 
-the user fills in the question details
+# TODO -- Move this keyword to compAdmin if this is needed for IFS-743 or any other tests
+the user fills in the assessed question details
     [Arguments]  ${question_heading}
-    the user enters text to a text field  question.shortTitle  ${question_heading}
-    the user enters text to a text field  question.title  sample text
-    the user enters text to a text field  question.guidanceTitle   sample text
-    the user enters text to a text field  question.guidance  sample text
-    the user enters text to a text field  question.scoreTotal  sample text
-    the user enters text to a text field  question.assessmentGuidanceTitle  sample text
-    the user enters text to a text field  guidanceRow-0-justification  sample text
-    the user enters text to a text field  guidanceRow-1-justification  sample text
-    the user enters text to a text field  guidanceRow-2-justification  sample text
-    the user enters text to a text field  guidanceRow-3-justification  sample text
-    the user enters text to a text field  guidanceRow-4-justification  sample text
+    the user enters text to a text field  id=question.shortTitle  ${question_heading}
+    the user enters text to a text field  id=question.title  sample text
+    the user enters text to a text field  id=question.guidanceTitle   sample text
+    the user enters text to a text field  id=question.guidance  sample text
+    the user enters text to a text field  id=question.scoreTotal  sample text
+    the user enters text to a text field  id=question.assessmentGuidanceTitle  sample text
+    the user enters text to a text field  id=guidanceRow-0-justification  sample text
+    the user enters text to a text field  id=guidanceRow-1-justification  sample text
+    the user enters text to a text field  id=guidanceRow-2-justification  sample text
+    the user enters text to a text field  id=guidanceRow-3-justification  sample text
+    the user enters text to a text field  id=guidanceRow-4-justification  sample text
 
