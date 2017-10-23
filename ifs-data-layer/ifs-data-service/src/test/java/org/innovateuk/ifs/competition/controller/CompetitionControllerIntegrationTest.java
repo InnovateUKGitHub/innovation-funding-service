@@ -20,7 +20,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -583,7 +582,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Test
-    @Ignore
     public void initApplicationFormByType() throws Exception {
         Long competitionId = 7L;
         Long competitionTypeId = 1L;

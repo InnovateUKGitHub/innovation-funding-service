@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
@@ -20,16 +21,16 @@ import org.mockito.Mock;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static org.innovateuk.ifs.application.builder.GuidanceRowResourceBuilder.newFormInputGuidanceRowResourceBuilder;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests the CompetitionSetupQuestionServiceImpl with mocked repositories/mappers.
@@ -65,6 +66,9 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
     @Mock
     private GuidanceRowRepository guidanceRowRepository;
+
+    @Mock
+    private CompetitionSetupTemplateService competitionSetupTemplateService;
 
     @Test
     public void test_getByQuestionId() {
@@ -148,7 +152,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     }
 
     @Test
-    public void test_save() {
+    public void test_update() {
         long questionId = 1L;
 
         List<GuidanceRowResource> guidanceRows = newFormInputGuidanceRowResourceBuilder().build(1);
@@ -217,5 +221,29 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         assertEquals(writtenFeedbackFormInput.getActive(), true);
 
         verify(guidanceRowMapper).mapToDomain(guidanceRows);
+    }
+
+    @Test
+    public void test_delete() {
+        long questionId = 1L;
+        when(competitionSetupTemplateService.deleteQuestionInApplicationSection(questionId)).thenReturn(serviceSuccess());
+        ServiceResult<Void> result = service.delete(questionId);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void test_createByCompetitionId() {
+        long competitionId = 22L;
+        long questionId = 33L;
+        Competition competition = newCompetition().build();
+        Question newlyCreatedQuestion = newQuestion().withId(questionId).build();
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionSetupTemplateService.createDefaultForApplicationSection(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
+        when(questionRepository.findOne(questionId)).thenReturn(newlyCreatedQuestion);
+
+        ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
+        assertTrue(result.isSuccess());
+
+        //TODO: assert expected resource result (question)
     }
 }
