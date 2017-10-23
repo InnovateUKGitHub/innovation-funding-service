@@ -31,7 +31,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -44,7 +43,6 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -702,31 +700,29 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Test
     public void createQuestion() throws Exception {
-        Long competitionId = 1L;
         CompetitionSetupQuestionResource competitionSetupQuestionResource = newCompetitionSetupQuestionResource().withQuestionId(10L).build();
 
-        when(competitionSetupQuestionService.createDefaultQuestion(competitionId)).thenReturn(serviceSuccess(competitionSetupQuestionResource));
+        when(competitionSetupQuestionService.createDefaultQuestion(COMPETITION_ID)).thenReturn(serviceSuccess(competitionSetupQuestionResource));
 
-        mockMvc.perform(post("/competition/setup/"+ competitionId +"/section/application/landing-page")
+        mockMvc.perform(post(URL_PREFIX + "/landing-page")
                 .param("createQuestion", "true"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/question/10"));
+                .andExpect(view().name("redirect:" + URL_PREFIX + "/question/10/edit"));
 
-        verify(competitionSetupQuestionService).createDefaultQuestion(competitionId);
+        verify(competitionSetupQuestionService).createDefaultQuestion(COMPETITION_ID);
     }
 
     @Test
     public void createQuestion_serviceErrorResultsInInternalServerErrorResponse() throws Exception {
-        Long competitionId = 1L;
         Error error = Error.globalError("Something is wrong.");
 
-        when(competitionSetupQuestionService.createDefaultQuestion(competitionId)).thenReturn(serviceFailure(error));
+        when(competitionSetupQuestionService.createDefaultQuestion(COMPETITION_ID)).thenReturn(serviceFailure(error));
 
-        mockMvc.perform(post("/competition/setup/"+ competitionId +"/section/application/landing-page")
+        mockMvc.perform(post(URL_PREFIX + "/landing-page")
                 .param("createQuestion", "true"))
                 .andExpect(status().is5xxServerError());
 
-        verify(competitionSetupQuestionService).createDefaultQuestion(competitionId);
+        verify(competitionSetupQuestionService).createDefaultQuestion(COMPETITION_ID);
     }
 
     @Test
@@ -739,30 +735,10 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupQuestionService.deleteQuestion(questionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/landing-page")
-                .param("questionId", questionId.toString()))
-                .andExpect(status().isOk())
+                .param("deleteQuestion", questionId.toString()))
+                .andExpect(status().is3xxRedirection())
                 .andExpect(model().hasNoErrors())
-                .andExpect(view().name("/landing-page"));
-
-        verify(competitionSetupQuestionService).deleteQuestion(questionId);
-    }
-
-    @Test
-    public void testDeleteQuestion_serviceErrorsAreBoundToModel() throws Exception {
-        Long questionId = 1L;
-
-        CompetitionResource competition = newCompetitionResource().build();
-
-        Error error = fieldError("questionId", questionId, BAD_REQUEST.toString());
-
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-        when(competitionSetupQuestionService.deleteQuestion(questionId)).thenReturn(serviceFailure(error));
-
-        mockMvc.perform(post(URL_PREFIX + "/landing-page")
-                .param("questionId", questionId.toString()))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeHasFieldErrorCode("deleteQuestion", "questionId", BAD_REQUEST.toString()))
-                .andExpect(view().name("/landing-page"));
+                .andExpect(view().name("redirect:" + URL_PREFIX + "/landing-page"));
 
         verify(competitionSetupQuestionService).deleteQuestion(questionId);
     }
