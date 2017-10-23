@@ -59,7 +59,7 @@ public interface AssessmentPanelInviteService {
             description = "The Competition Admin user and Project Finance users can create assessment panel invites for existing users")
     ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInvites);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ_ASSESSMENT_PANEL_INVITES')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'READ_ASSESSMENT_PANEL_INVITES')")
     @SecuredBySpring(value = "READ_ASSESSMENT_PANEL_INVITES",
             description = "An Assessor can view assessor panel invites provided that the invites belong to them")
     ServiceResult<List<AssessmentPanelInviteResource>> getAllInvitesByUser(long userId);

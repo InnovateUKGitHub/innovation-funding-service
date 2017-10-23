@@ -6,7 +6,9 @@ import org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.domain.AssessmentPanelInvite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -14,6 +16,7 @@ import org.innovateuk.ifs.user.security.UserLookupStrategies;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -25,6 +28,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
@@ -130,27 +134,24 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
 
     @Test
     public void getAllInvitesByUser() throws Exception {
-//
-//        UserResource assessorUserResource = newUserResource()
-//                .withRolesGlobal(singletonList(
-//                        newRoleResource()
-//                        .withType(ASSESSOR)
-//                        .withId(2L)
-//                        .build())
-//                        )
-//                .build();
-//
-//        setLoggedInUser(assessorUserResource);
-//        ServiceResult<List<AssessmentPanelInviteResource>> restResource = classUnderTest.getAllInvitesByUser(1L);
-//        long competitionId = 1L;
-//        assertTrue(classUnderTest
-//                .getAllInvitesByUser(1L)
-//                .getSuccessObject().isEmpty());
-        AssessmentPanelInviteResource assessmentPanelInviteResource = newAssessmentPanelInviteResource().withUser(1L).build();
-        when(assessmentPanelInvitePermissionRules.userCanViewInvites()).thenReturn(ass!);
+
+
+        UserResource assessorUserResource = newUserResource()
+                .withRolesGlobal(singletonList(
+                        newRoleResource()
+                        .withType(ASSESSOR)
+                        .withId(1L)
+                        .build())
+                        )
+                .build();
+        when(userLookupStrategies.findById(1L)).thenReturn(assessorUserResource);
+
         assertAccessDenied(
                 () -> classUnderTest.getAllInvitesByUser(1L),
-                () -> verify(assessmentPanelInvitePermissionRules).userCanViewInvites(isA(List.class), isA(UserResource.class))
+                () -> {
+                    verify(assessmentPanelInvitePermissionRules).userCanViewInvites(isA(UserResource.class), isA(UserResource.class));
+                    verifyNoMoreInteractions(assessmentPanelInvitePermissionRules);
+                }
         );
     }
 

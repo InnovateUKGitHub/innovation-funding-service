@@ -15,10 +15,11 @@ import java.util.List;
 @Component
 @PermissionRules
 public class AssessmentPanelInvitePermissionRules extends BasePermissionRules {
+
     @PermissionRule(value = "READ_ASSESSMENT_PANEL_INVITES", description = "An assessor may only view their own invites to assessment panels")
-    public boolean userCanViewInvites(List<AssessmentPanelInviteResource> invite, UserResource user) {
-        return invite != null &&
-                 user != null &&
-                 user.getId() == invite.get(0).getUserId();
+    public boolean userCanViewInvites(UserResource inviteUser, UserResource loggedInUser) {
+        return inviteUser != null &&
+                loggedInUser != null &&
+                inviteUser.equals(loggedInUser);
     }
 }
