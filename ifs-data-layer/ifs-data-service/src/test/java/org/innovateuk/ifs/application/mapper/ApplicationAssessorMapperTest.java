@@ -6,7 +6,7 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Test;
@@ -19,7 +19,7 @@ import static java.util.Optional.of;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
-import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
+import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
@@ -56,7 +56,7 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
                                 .build())
                 .build();
 
-        CompetitionParticipant competitionParticipant = newCompetitionParticipant()
+        CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant()
                 .withUser(newUser()
                         .withId(1L)
                         .withFirstName("John")

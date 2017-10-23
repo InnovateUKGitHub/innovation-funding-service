@@ -133,7 +133,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return serviceSuccess(new FinanceCheckSummaryResource(overviewResource, competition.getId(), competition.getName(),
                 spendProfile.isPresent(), getPartnerStatuses(sortedPartnersList, project), bankDetailsApproved,
-                spendProfileGeneratedBy, spendProfileGeneratedDate));
+                spendProfileGeneratedBy, spendProfileGeneratedDate, application.getId()));
     }
 
     @Override

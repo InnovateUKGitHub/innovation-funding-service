@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard',hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
@@ -23,11 +23,12 @@
     <form th:if="${model.editable}"
           method="post"
           th:object="${competitionSetupForm}"
-          th:action="@{'/competition/setup/{competitionId}/section/application/question/{questionId}/edit'(competitionId=${model.general.competition.id}, questionId=${competitionSetupForm.question.questionId})}" novalidate="novalidate"
+          th:action="@{'/competition/setup/{competitionId}/section/application/question/{questionId}/edit'(competitionId=${model.general.competition.id}, questionId=${competitionSetupForm.question.questionId})}" 
           th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           data-th-attr="data-competition=${model.general.competition.id}, data-objectId=${competitionSetupForm.question.questionId},
           data-subsection=${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE ? 'project' : 'question'}"
-          data-section="application">
+          data-section="application"
+          novalidate="novalidate">
 
         <th:block th:insert="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.question}, ${model.editable})" />
         <div class="extra-margin">

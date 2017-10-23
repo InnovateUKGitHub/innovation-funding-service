@@ -29,7 +29,7 @@ create new account for submitting
     the user clicks the button/link                   link=Untitled application (start here)
     the user clicks the button/link                   jQuery=a:contains("Begin application")
     the user clicks the button/link                   link=Application details
-    the user enters text to a text field              id=application_details-title    ${application_name}
+    the user enters text to a text field              css=[id="application.name"]    ${application_name}
     the user clicks the button/link                   jQuery=button:contains("Save and return")
     the user marks every section but one as complete  ${application_name}
 
@@ -91,7 +91,7 @@ Create new application with the same user
     check if there is an existing application in progress for this competition
     the user clicks the button/link       jQuery=a:contains("Begin application")
     the user clicks the button/link       link=Application details
-    the user enters text to a text field  id=application_details-title  ${Application_title}
+    the user enters text to a text field  css=[id="application.name"]  ${Application_title}
     the user clicks the button/link       jQuery=button:contains("Save and return")
 
 check if there is an existing application in progress for this competition
@@ -106,7 +106,7 @@ create new submit application
     And the guest user clicks the log-in button
     And the user clicks the button/link                 jQuery=a:contains("Begin application")
     And the user clicks the button/link                 link=Application details
-    And the user enters text to a text field            id=application_details-title    ${application_name}
+    And the user enters text to a text field            css=[id="application.name"]    ${application_name}
     And the user clicks the button/link                 jQuery=button:contains("Save and return")
 
 Invite and accept the invitation
@@ -130,8 +130,8 @@ the user fills in the inviting steps
     the user clicks the button/link       link=view and manage contributors and collaborators
     the user clicks the button/link       link=Add a collaborator organisation
     the user enters text to a text field  css=#organisationName  New Organisation's Name
-    the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
-    the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
+    the user enters text to a text field  css=[id="applicants[0].name"]  Partner's name
+    the user enters text to a text field  css=[id="applicants[0].email"]  ${email}
     the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
 
 # The search results are specific to Research Organisation type
@@ -182,8 +182,8 @@ invite a registered user
     the user clicks the button/link                            link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link                            link=Add a collaborator organisation
     the user enters text to a text field                       css=#organisationName  New Organisation's Name
-    the user enters text to a text field                       css=input[id="applicants0.name"]  Partner's name
-    the user enters text to a text field                       css=input[id="applicants0.email"]  ${EMAIL_INVITED}
+    the user enters text to a text field                       css=[id="applicants[0].name"]  Partner's name
+    the user enters text to a text field                       css=[id="applicants[0].email"]  ${EMAIL_INVITED}
     the user clicks the button/link                            jQuery=button:contains("Add organisation and invite applicants")
     the user clicks the button/link                            jQuery=a:contains("Begin application")
     the user should see the text in the page                   Application overview

@@ -39,7 +39,6 @@ function dbReset() {
 # Entry point
 cleanUp
 cloneConfig
-tailorAppInstance
 
 if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
 

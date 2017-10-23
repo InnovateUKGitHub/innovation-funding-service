@@ -23,6 +23,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -147,7 +148,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
         if (existingLeadTechnologistId != null) {
 
-            CompetitionParticipant competitionParticipant =
+            CompetitionAssessmentParticipant competitionParticipant =
                     competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
                             existingLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD);
 
@@ -167,7 +168,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             if (!doesLeadTechnologistAlreadyExist(competition)) {
                 User leadTechnologist = competition.getLeadTechnologist();
 
-                CompetitionParticipant competitionParticipant = new CompetitionParticipant();
+                CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant();
                 competitionParticipant.setProcess(competition);
                 competitionParticipant.setUser(leadTechnologist);
                 competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);

@@ -1,12 +1,12 @@
 
 <!-- =================== Comp setup section - Additional info (2) ============================== -->
 <th:block th:fragment="section-content">
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
-      <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
-      <ul class="error-summary-list">
-          <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
-      </ul>
+
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
+
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding information',size='heading-xlarge'" />
 
     <form th:attr="data-competition=${model.general.competition.id},data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="additional"
@@ -39,6 +39,7 @@
                         </label>
                         <input required="required" class="form-control width-x-large"
                                th:errorclass="form-control-error"
+                               th:id="funders[__${iteration.index}__].funder"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
                                th:attr="data-required-errormessage=#{validation.additionalinfoform.fundername.required},
                                         data-maxlength-errormessage=#{validation.additionalinfoform.funder.size(null,null,'255')}" />
@@ -55,7 +56,7 @@
                         <input required="required" type="number" min="0"
                                class="form-control width-x-large"
                                th:errorclass="form-control-error"
-                               th:id="${iteration.index}+'-funderBudget'"
+                               th:id="funders[__${iteration.index}__].funderBudget"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}"
                                value=""
                                th:attr="data-required-errormessage=#{validation.additionalinfoform.funderbudget.required},
@@ -100,6 +101,7 @@
                     <input class="form-control width-large"
                            th:errorclass="form-control-error"
                            type="text"
+                           id="pafNumber"
                            th:field="${competitionSetupForm.pafNumber}" />
                 </div>
 
@@ -111,6 +113,7 @@
                         </th:block>
                     </label>
                     <input class="form-control width-large"
+                           id="budgetCode"
                            th:errorclass="form-control-error"
                            type="text"
                            th:field="${competitionSetupForm.budgetCode}" />
@@ -118,7 +121,7 @@
 
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('activityCode')} ? 'form-group-error'">
-                    <label class="form-label" for="competitionSetupForm.activityCode">
+                    <label class="form-label" for="activityCode">
                         <span class="form-label-bold">Activity code</span>
                         <th:block th:if="${#fields.hasErrors('activityCode')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}"></span>
@@ -127,6 +130,7 @@
                     <input class="form-control width-large"
                            th:errorclass="form-control-error"
                            type="text"
+                           id="activityCode"
                            th:field="${competitionSetupForm.activityCode}"
                            maxlength="255"
                            th:attr="data-maxlength-errormessage=#{validation.additionalinfoform.activitycode.size}" />
@@ -144,6 +148,7 @@
                            class="form-control width-large readonly-boxed"
                            th:classappend="${#fields.hasErrors('competitionCode')} ? 'form-control-error'"
                            type="text"
+                           id="competitionCode"
                            name="competitionCode"
                            th:value="${competitionSetupForm.competitionCode}"
                            required="required"
