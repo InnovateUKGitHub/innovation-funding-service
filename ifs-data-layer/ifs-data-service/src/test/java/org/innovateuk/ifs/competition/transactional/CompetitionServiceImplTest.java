@@ -3,13 +3,12 @@ package org.innovateuk.ifs.competition.transactional;
 import com.google.common.collect.Lists;
 import org.assertj.core.util.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -17,6 +16,7 @@ import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -48,8 +48,9 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -67,14 +68,10 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionServiceImpl> {
 
@@ -119,7 +116,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         User user = UserBuilder.newUser().build();
         UserResource userResource = UserResourceBuilder.newUserResource().build();
-        List<CompetitionParticipant> competitionParticipants = CompetitionParticipantBuilder.newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
                 .withUser(user)
                 .build(4);
 
@@ -151,7 +148,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         ServiceResult<Void> result = service.addInnovationLead(competitionId, innovationLeadUserId);
         assertTrue(result.isSuccess());
 
-        CompetitionParticipant savedCompetitionParticipant = new CompetitionParticipant();
+        CompetitionAssessmentParticipant savedCompetitionParticipant = new CompetitionAssessmentParticipant();
         savedCompetitionParticipant.setProcess(competition);
         savedCompetitionParticipant.setUser(innovationLead);
         savedCompetitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
@@ -176,7 +173,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void removeInnovationLead() throws Exception {
         Long innovationLeadUserId = 2L;
 
-        CompetitionParticipant competitionParticipant = CompetitionParticipantBuilder.newCompetitionParticipant().build();
+        CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().build();
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
                 .thenReturn(competitionParticipant);
 

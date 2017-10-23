@@ -26,6 +26,8 @@ Documentation     INFUND-901: As a lead applicant I want to invite application c
 ...               INFUND-8590 Lead applicant can Delete a partner Organisation
 ...
 ...               IFS-951  Display 'Organisation type' against user
+...
+...               IFS-1841 Basic view of all 'external' IFS users
 Suite Setup       log in and create new application if there is not one already  Invite robot test application
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
@@ -233,7 +235,15 @@ Lead applicant invites a non registered user in the same organisation
     And The user enters text to a text field       name=stagedInvite.email    ${test_mailbox_one}+inviteorg2@gmail.com
     And the user clicks the button/link            jQuery=button:contains("Invite")
     Then the user should see the element           jQuery=.table-overflow td:contains(${test_mailbox_one}+inviteorg2@gmail.com)+td:contains("Invite pending for 0 days")
-   [Teardown]    Logout as user
+
+Support user can see contributor in invited users list
+    [Documentation]    IFS-1841
+    [Tags]
+    Given log in as a different user  &{support_user_credentials}
+    When the user navigates to the page  ${server}/management/admin/users/created
+    And the user clicks the button/link  jQuery=a:contains("Invited users")
+    Then the user should see the element  jQuery=td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Sent")
+    [Teardown]    Logout as user
 
 Registered partner should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
@@ -258,6 +268,14 @@ Lead should not see pending status for accepted invite
     And the user clicks the button/link         link=view and manage contributors and collaborators
     And the user clicks the button/link         link=Update and add contributors from ${EMPIRE_LTD_NAME}
     Then the user should see the element         jQuery=.table-overflow td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
+
+Support user can see contributor in users with account list
+    [Documentation]    IFS-1841
+    [Tags]
+    Given log in as a different user  &{support_user_credentials}
+    When the user navigates to the page  ${server}/management/admin/users/created
+    And the user clicks the button/link  jQuery=a:contains("Users with account")
+    Then the user should see the element  jQuery=td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Verified")
 
 *** Keywords ***
 The lead applicant should have the correct status

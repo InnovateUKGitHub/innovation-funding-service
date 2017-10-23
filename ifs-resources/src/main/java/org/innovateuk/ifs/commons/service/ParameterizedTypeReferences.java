@@ -97,6 +97,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<UserResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<UserOrganisationResource>> userOrganisationListType() {
+        return new ParameterizedTypeReference<List<UserOrganisationResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<CompetitionResource>> competitionResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionResource>>() {};
     }
@@ -147,6 +151,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<InviteProjectResource>> inviteProjectResourceListType() {
         return new ParameterizedTypeReference<List<InviteProjectResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<ExternalInviteResource>> externalInviteResourceListType() {
+        return new ParameterizedTypeReference<List<ExternalInviteResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<FinanceRowItem>> costItemListType() {

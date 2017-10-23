@@ -1,0 +1,34 @@
+<th:block th:fragment="all-invites(invites)" xmlns:th="http://www.w3.org/1999/html">
+    <p>
+        <span class="heading-xlarge no-margin" th:text="${invites.size()}">38</span>
+        <span class="heading-small">users invited to collaborate</span>
+    </p>
+    <th:block th:insert="fragments/invited-users :: invites-table(invites=${invites})" />
+</th:block>
+
+<th:block th:fragment="invites-table(invites)" xmlns:th="http://www.w3.org/1999/html">
+    <div class="table-overflow">
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Organisation name</th>
+                <th scope="col">Organisation ID</th>
+                <th scope="col">Email</th>
+                <th scope="col">Application number</th>
+                <th scope="col">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="invite : ${invites}">
+                <td th:text="${invite.name}">Steve Smith</td>
+                <td th:text="${invite.organisationName}">Empire Limited</td>
+                <td th:text="${invite.organisationId}">22</td>
+                <td th:text="${invite.email}">steve.smith@empire.com</td>
+                <td th:text="${invite.applicationId}">10</td>
+                <td th:text="${invite.status.displayName}">Sent</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
