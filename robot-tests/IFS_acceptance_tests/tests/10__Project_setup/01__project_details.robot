@@ -46,6 +46,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-7432 Terms and Conditions of grant offer takes you to the IFS ts and cs, not the grant ones
 ...
 ...               INFUND-9062 Validation missing when inviting self as finance contact or PM
+...
+...               IFS-1841 Basic view of all 'external' IFS users
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup  Applicant
@@ -363,13 +365,21 @@ Non lead partner invites finance contact
     When the user clicks the button/link       jQuery=button:contains("Invite to project")
     Then the user should see the element       jQuery=label[for="financeContact3"]:contains("Pending")
     And the user clicks the button/link    jQuery=.button:contains("Save finance contact")
-    [Teardown]  Logout as user
+
+Support user can see finance contact in invited users list
+    [Documentation]    IFS-1841
+    [Tags]
+    Given log in as a different user  &{support_user_credentials}
+    When the user navigates to the page  ${server}/management/admin/users/created
+    And the user clicks the button/link  jQuery=a:contains("Invited users")
+    Then the user should see the element  jQuery=td:contains("${test_mailbox_one}+ludlowfincont@gmail.com") ~ td:contains("Sent")
+    [Teardown]    Logout as user
 
 Invited Fin Contact for non lead partner
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
     [Tags]  HappyPath
-    Then the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
-    Given log in as a different user     &{collaborator1_credentials}
+    Given the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
+    When log in as a different user     &{collaborator1_credentials}
     Then the user navigates to the page  ${project_in_setup_page}/details
     And the matching status checkbox is updated  project-details-finance  3  yes
     When the user navigates to the page    ${project_in_setup_page}
@@ -377,12 +387,21 @@ Invited Fin Contact for non lead partner
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
 
+Support user can see finance contact in users with account list
+    [Documentation]    IFS-1841
+    [Tags]
+    Given log in as a different user  &{support_user_credentials}
+    When the user navigates to the page  ${server}/management/admin/users/created
+    And the user clicks the button/link  jQuery=a:contains("Users with account")
+    Then the user should see the element  jQuery=td:contains("${test_mailbox_one}+ludlowfincont@gmail.com") ~ td:contains("Verified")
+
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
     # and not in Bank Details. Because for this scenario there are testing data for project 4.
 Non lead partner not eligible for funding
     [Documentation]    INFUND-7090, INFUND-7174
     [Tags]  HappyPath
-    Given the user navigates to the page    ${project_in_setup_page}
+    Given log in as a different user  &{collaborator1_credentials}
+    When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    css=ul li.complete:nth-child(2)
     Then the user should not see the element    css=ul li.require-action:nth-child(4)
     When The user navigates to the page and gets a custom error message     ${project_in_setup_page}/bank-details    ${403_error_message}
