@@ -184,7 +184,7 @@
             </td>
             <td rowspan="2" class="rowspan buttoncolumn" th:if="${viewmode == 'edit'}">
                 <button th:unless="${cost.id == null}"
-                        type="submit"
+                        type="button"
                         name="remove_cost"
                         class="buttonlink js-remove-row"
                         th:value="${cost.id}"
@@ -592,7 +592,7 @@
                 </td>
                 <td class="alignright buttoncolumn remove" th:if="${viewmode == 'edit'}">
                     <button th:unless="${cost.id == null}"
-                            type="submit"
+                            type="button"
                             name="remove_cost"
                             th:value="${cost.id}"
                             th:class="'buttonlink js-remove-row'"
