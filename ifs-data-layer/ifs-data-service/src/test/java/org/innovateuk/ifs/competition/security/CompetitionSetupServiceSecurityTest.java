@@ -141,11 +141,6 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<CompetitionResource> createNonIfs() {
             return null;
         }
