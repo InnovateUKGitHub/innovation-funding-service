@@ -7,6 +7,7 @@ import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
@@ -22,8 +23,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,11 +56,11 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
 
         roleInvitePageResource = new RoleInvitePageResource();
 
-        when(userRestServiceMock.getActiveInternalUsers(1, 5)).thenReturn(RestResult.restSuccess(userPageResource));
+        when(userRestServiceMock.getActiveInternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(userRestServiceMock.getInactiveInternalUsers(1, 5)).thenReturn(RestResult.restSuccess(userPageResource));
+        when(userRestServiceMock.getInactiveInternalUsers(1, 5)).thenReturn(restSuccess(userPageResource));
 
-        when(inviteUserRestServiceMock.getPendingInternalUserInvites(1, 5)).thenReturn(RestResult.restSuccess(roleInvitePageResource));
+        when(inviteUserRestServiceMock.getPendingInternalUserInvites(1, 5)).thenReturn(restSuccess(roleInvitePageResource));
     }
 
     @Test
@@ -98,7 +103,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     public void testViewUser() throws Exception {
         ZonedDateTime now = ZonedDateTime.now();
         UserResource user = newUserResource().withCreatedOn(now).withCreatedBy("abc").withModifiedOn(now).withModifiedBy("abc").build();
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(user));
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(user));
 
         mockMvc.perform(get("/admin/user/{userId}", 1L))
                 .andExpect(status().isOk())
@@ -120,7 +125,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .withRolesGlobal(Collections.singletonList(role))
                 .build();
         when(userRestServiceMock.retrieveUserById(1L))
-                .thenReturn(RestResult.restSuccess(userResource));
+                .thenReturn(restSuccess(userResource));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}/edit", 1L).
                 param("firstName", "First").
@@ -163,7 +168,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .build();
 
         when(userRestServiceMock.retrieveUserById(1L))
-                .thenReturn(RestResult.restSuccess(userResource));
+                .thenReturn(restSuccess(userResource));
 
         EditUserForm expectedForm = new EditUserForm();
         expectedForm.setFirstName("first");
@@ -192,8 +197,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .withRolesGlobal(Collections.singletonList(role))
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
-        when(userRestServiceMock.deactivateUser(1L)).thenReturn(RestResult.restSuccess());
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
+        when(userRestServiceMock.deactivateUser(1L)).thenReturn(restSuccess());
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}/edit", 1L).
                     param("deactivateUser", ""))
                 .andExpect(status().is3xxRedirection())
@@ -216,7 +221,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .withRolesGlobal(Collections.singletonList(role))
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
         when(userRestServiceMock.deactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}/edit", 1L).
                     param("deactivateUser", ""))
@@ -247,8 +252,8 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .withRolesGlobal(Collections.singletonList(role))
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
-        when(userRestServiceMock.reactivateUser(1L)).thenReturn(RestResult.restSuccess());
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
+        when(userRestServiceMock.reactivateUser(1L)).thenReturn(restSuccess());
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}", 1L).
                     param("reactivateUser", ""))
                 .andExpect(status().is3xxRedirection())
@@ -271,7 +276,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .withRolesGlobal(Collections.singletonList(role))
                 .build();
 
-        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(RestResult.restSuccess(userResource));
+        when(userRestServiceMock.retrieveUserById(1L)).thenReturn(restSuccess(userResource));
         when(userRestServiceMock.reactivateUser(1L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}", 1L).
                     param("reactivateUser", ""))
@@ -287,6 +292,26 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
         mockMvc.perform(MockMvcRequestBuilders.post("/admin/user/{userId}", 1L).
                     param("reactivateUser", ""))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void allExternalUsers() throws Exception {
+        List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
+        when(userRestServiceMock.findAllExternal()).thenReturn(restSuccess(userOrganisationResources));
+        mockMvc.perform(get("/admin/users/created"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/external-users"))
+                .andExpect(model().attribute("users", userOrganisationResources));
+    }
+
+    @Test
+    public void allExternalInvites() throws Exception {
+        List<ExternalInviteResource> externalInviteResources = new ArrayList<>();
+        when(inviteUserRestServiceMock.getAllExternalInvites()).thenReturn(restSuccess(externalInviteResources));
+        mockMvc.perform(get("/admin/invites"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("admin/invited-users"))
+                .andExpect(model().attribute("invites", externalInviteResources));
     }
 
     @Override
