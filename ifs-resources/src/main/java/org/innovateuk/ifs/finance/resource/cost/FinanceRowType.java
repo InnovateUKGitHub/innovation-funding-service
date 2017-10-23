@@ -60,6 +60,7 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         return FormInputType.findByName(getType());
     }
 
+    @Override
     public boolean isIncludedInSpendProfile() {
         return includeInSpendProfile.equals(IncludeInSpendProfile.YES);
     }
