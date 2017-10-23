@@ -5,6 +5,7 @@ import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -45,6 +46,10 @@ public class AssessmentPanelInviteResourceBuilder extends BaseBuilder<Assessment
 
     public AssessmentPanelInviteResourceBuilder withStatus(InviteStatus... statuses) {
         return withArraySetFieldByReflection("status", statuses);
+    }
+
+    public AssessmentPanelInviteResourceBuilder withPanelDate(ZonedDateTime... panelDates) {
+        return withArraySetFieldByReflection("panelDate", panelDates);
     }
 
     @Override

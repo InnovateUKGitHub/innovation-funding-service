@@ -2,11 +2,11 @@ package org.innovateuk.ifs.assessment.invite.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.invite.form.CompetitionInviteForm;
-import org.innovateuk.ifs.assessment.invite.populator.CompetitionInviteModelPopulator;
+import org.innovateuk.ifs.assessment.invite.form.PanelInviteForm;
+import org.innovateuk.ifs.assessment.invite.populator.PanelInviteModelPopulator;
 import org.innovateuk.ifs.assessment.invite.populator.RejectCompetitionModelPopulator;
-import org.innovateuk.ifs.assessment.invite.viewmodel.CompetitionInviteViewModel;
-import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
+import org.innovateuk.ifs.assessment.invite.viewmodel.PanelInviteViewModel;
+import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
 import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.junit.Before;
@@ -21,14 +21,13 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.nCopies;
-import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
@@ -45,10 +44,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
-public class PanelInviteControllerTest extends BaseControllerMockMVCTest<CompetitionInviteController> {
+public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelInviteController> {
     @Spy
     @InjectMocks
-    private CompetitionInviteModelPopulator competitionInviteModelPopulator;
+    private PanelInviteModelPopulator panelInviteModelPopulator;
 
     @Spy
     @InjectMocks
@@ -61,8 +60,8 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
     private static final String restUrl = "/invite/competition/";
 
     @Override
-    protected CompetitionInviteController supplyControllerUnderTest() {
-        return new CompetitionInviteController();
+    protected PanelInviteController supplyControllerUnderTest() {
+        return new PanelInviteController();
     }
 
     @Override
@@ -82,28 +81,24 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite-accept/competition/hash/accept"));
 
-        verifyZeroInteractions(competitionInviteRestService);
+        verifyZeroInteractions(assessmentPanelInviteRestService);
     }
 
     @Test
     public void acceptInvite_notLoggedInAndExistingUser() throws Exception {
         setLoggedInUser(null);
-        ZonedDateTime acceptsDate = ZonedDateTime.now();
-        ZonedDateTime deadlineDate = ZonedDateTime.now().plusDays(1);
-        ZonedDateTime briefingDate = ZonedDateTime.now().plusDays(2);
-        BigDecimal assessorPay = BigDecimal.TEN;
+        ZonedDateTime panelDate = ZonedDateTime.now();
         Boolean accept = true;
 
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource()
+        AssessmentPanelInviteResource inviteResource = newAssessmentPanelInviteResource()
                 .withCompetitionName("my competition")
-                .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate)
-                .withBriefingDate(briefingDate).withAssessorPay(assessorPay)
+                .withPanelDate(panelDate)
                 .build();
 
-        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", inviteResource, false);
+        PanelInviteViewModel expectedViewModel = new PanelInviteViewModel("hash", inviteResource, false);
 
-        when(competitionInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
-        when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(assessmentPanelInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(TRUE));
+        when(assessmentPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -112,9 +107,9 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessor-competition-accept-user-exists-but-not-logged-in"));
 
-        InOrder inOrder = inOrder(competitionInviteRestService);
-        inOrder.verify(competitionInviteRestService).checkExistingUser("hash");
-        inOrder.verify(competitionInviteRestService).openInvite("hash");
+        InOrder inOrder = inOrder(assessmentPanelInviteRestService);
+        inOrder.verify(assessmentPanelInviteRestService).checkExistingUser("hash");
+        inOrder.verify(assessmentPanelInviteRestService).openInvite("hash");
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -123,7 +118,7 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
         setLoggedInUser(null);
         Boolean accept = true;
 
-        when(competitionInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(FALSE));
+        when(assessmentPanelInviteRestService.checkExistingUser("hash")).thenReturn(restSuccess(FALSE));
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -131,71 +126,69 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/registration/hash/start"));
 
-        verify(competitionInviteRestService).checkExistingUser("hash");
+        verify(assessmentPanelInviteRestService).checkExistingUser("hash");
     }
 
     @Test
     public void confirmAcceptInvite() throws Exception {
-        when(competitionInviteRestService.acceptInvite("hash")).thenReturn(restSuccess());
+        when(assessmentPanelInviteRestService.acceptInvite("hash")).thenReturn(restSuccess());
 
         mockMvc.perform(get("/invite-accept/competition/{inviteHash}/accept", "hash"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessor/dashboard"));
 
-        verify(competitionInviteRestService).acceptInvite("hash");
+        verify(assessmentPanelInviteRestService).acceptInvite("hash");
     }
 
     @Test
     public void confirmAcceptInvite_hashNotExists() throws Exception {
-        when(competitionInviteRestService.acceptInvite("notExistHash")).thenReturn(restFailure(GENERAL_NOT_FOUND));
+        when(assessmentPanelInviteRestService.acceptInvite("notExistHash")).thenReturn(restFailure(GENERAL_NOT_FOUND));
 
         mockMvc.perform(get("/invite-accept/competition/{inviteHash}/accept", "notExistHash"))
                 .andExpect(status().isNotFound());
 
-        verify(competitionInviteRestService).acceptInvite("notExistHash");
+        verify(assessmentPanelInviteRestService).acceptInvite("notExistHash");
     }
 
     @Test
     public void openInvite() throws Exception {
-        ZonedDateTime acceptsDate = ZonedDateTime.now();
-        ZonedDateTime deadlineDate = ZonedDateTime.now().plusDays(1);
-        ZonedDateTime briefingDate = ZonedDateTime.now().plusDays(2);
-        BigDecimal assessorPay = BigDecimal.TEN;
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition")
-                .withAcceptsDate(acceptsDate).withDeadlineDate(deadlineDate)
-                .withBriefingDate(briefingDate).withAssessorPay(assessorPay).build();
+        ZonedDateTime panelDate = ZonedDateTime.now();
 
-        CompetitionInviteViewModel expectedViewModel = new CompetitionInviteViewModel("hash", inviteResource, true);
+        AssessmentPanelInviteResource inviteResource = newAssessmentPanelInviteResource().withCompetitionName("my competition")
+                .withPanelDate(panelDate)
+                .build();
 
-        when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
+        PanelInviteViewModel expectedViewModel = new PanelInviteViewModel("hash", inviteResource, true);
+
+        when(assessmentPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
         mockMvc.perform(get(restUrl + "{inviteHash}", "hash"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("assessor-competition-invite"))
                 .andExpect(model().attribute("model", expectedViewModel));
 
-        verify(competitionInviteRestService).openInvite("hash");
+        verify(assessmentPanelInviteRestService).openInvite("hash");
     }
 
     @Test
     public void openInvite_hashNotExists() throws Exception {
-        when(competitionInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
+        when(assessmentPanelInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(AssessmentPanelInviteResource.class, "notExistHash")));
         mockMvc.perform(get(restUrl + "{inviteHash}", "notExistHash"))
                 .andExpect(model().attributeDoesNotExist("model"))
                 .andExpect(status().isNotFound());
 
-        verify(competitionInviteRestService).openInvite("notExistHash");
+        verify(assessmentPanelInviteRestService).openInvite("notExistHash");
     }
 
     @Test
     public void noDecisionMade() throws Exception {
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+        AssessmentPanelInviteResource inviteResource = newAssessmentPanelInviteResource().withCompetitionName("my competition").build();
 
-        when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(assessmentPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
         String comment = RandomStringUtils.random(5001);
         Boolean accept = false;
 
-        CompetitionInviteForm expectedForm = new CompetitionInviteForm();
+        PanelInviteForm expectedForm = new PanelInviteForm();
 
         MvcResult result = mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash"))
                 .andExpect(status().isOk())
@@ -206,12 +199,12 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessor-competition-invite")).andReturn();
 
-        CompetitionInviteViewModel model = (CompetitionInviteViewModel) result.getModelAndView().getModel().get("model");
+        PanelInviteViewModel model = (PanelInviteViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals("hash", model.getCompetitionInviteHash());
+        assertEquals("hash", model.getPanelInviteHash());
         assertEquals("my competition", model.getCompetitionName());
 
-        CompetitionInviteForm form = (CompetitionInviteForm) result.getModelAndView().getModel().get("form");
+        PanelInviteForm form = (PanelInviteForm) result.getModelAndView().getModel().get("form");
 
         BindingResult bindingResult = form.getBindingResult();
 
@@ -221,8 +214,8 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
         assertTrue(bindingResult.hasFieldErrors("acceptInvitation"));
         assertEquals("Please indicate your decision.", bindingResult.getFieldError("acceptInvitation").getDefaultMessage());
 
-        verify(competitionInviteRestService).openInvite("hash");
-        verifyNoMoreInteractions(competitionInviteRestService);
+        verify(assessmentPanelInviteRestService).openInvite("hash");
+        verifyNoMoreInteractions(assessmentPanelInviteRestService);
     }
 
     @Test
@@ -234,7 +227,7 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
                 .with(id(1L))
                 .build(), comment);
 
-        when(competitionInviteRestService.rejectInvite("hash", competitionRejectionResource)).thenReturn(restSuccess());
+        when(assessmentPanelInviteRestService.rejectInvite("hash", competitionRejectionResource)).thenReturn(restSuccess());
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -244,20 +237,20 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite/competition/hash/reject/thank-you"));
 
-        verify(competitionInviteRestService).rejectInvite("hash", competitionRejectionResource);
-        verifyNoMoreInteractions(competitionInviteRestService);
+        verify(assessmentPanelInviteRestService).rejectInvite("hash", competitionRejectionResource);
+        verifyNoMoreInteractions(assessmentPanelInviteRestService);
     }
 
     @Test
     public void rejectInvite_noReason() throws Exception {
         Boolean accept = false;
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+        AssessmentPanelInviteResource inviteResource = newAssessmentPanelInviteResource().withCompetitionName("my competition").build();
 
-        when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(assessmentPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
         String comment = String.join(" ", nCopies(100, "comment"));
 
-        CompetitionInviteForm expectedForm = new CompetitionInviteForm();
+        PanelInviteForm expectedForm = new PanelInviteForm();
         expectedForm.setAcceptInvitation(accept);
         expectedForm.setRejectComment(comment);
 
@@ -271,13 +264,13 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessor-competition-invite")).andReturn();
 
-        CompetitionInviteViewModel model = (CompetitionInviteViewModel) result.getModelAndView().getModel().get("model");
+        PanelInviteViewModel model = (PanelInviteViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals("hash", model.getCompetitionInviteHash());
+        assertEquals("hash", model.getPanelInviteHash());
         assertEquals("my competition", model.getCompetitionName());
 
-        verify(competitionInviteRestService).openInvite("hash");
-        verifyNoMoreInteractions(competitionInviteRestService);
+        verify(assessmentPanelInviteRestService).openInvite("hash");
+        verifyNoMoreInteractions(assessmentPanelInviteRestService);
     }
 
     @Test
@@ -287,7 +280,7 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
                 .with(id(1L))
                 .build(), null);
 
-        when(competitionInviteRestService.rejectInvite("hash", competitionRejectionResource)).thenReturn(restSuccess());
+        when(assessmentPanelInviteRestService.rejectInvite("hash", competitionRejectionResource)).thenReturn(restSuccess());
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -296,20 +289,20 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/invite/competition/hash/reject/thank-you"));
 
-        verify(competitionInviteRestService).rejectInvite("hash", competitionRejectionResource);
-        verifyNoMoreInteractions(competitionInviteRestService);
+        verify(assessmentPanelInviteRestService).rejectInvite("hash", competitionRejectionResource);
+        verifyNoMoreInteractions(assessmentPanelInviteRestService);
     }
 
     @Test
     public void rejectInvite_exceedsCharacterSizeLimit() throws Exception {
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+        AssessmentPanelInviteResource inviteResource = newAssessmentPanelInviteResource().withCompetitionName("my competition").build();
 
-        when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(assessmentPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
         String comment = RandomStringUtils.random(5001);
         Boolean accept = false;
 
-        CompetitionInviteForm expectedForm = new CompetitionInviteForm();
+        PanelInviteForm expectedForm = new PanelInviteForm();
         expectedForm.setAcceptInvitation(accept);
         expectedForm.setRejectReason(newRejectionReasonResource().with(id(1L)).build());
         expectedForm.setRejectComment(comment);
@@ -327,12 +320,12 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessor-competition-invite")).andReturn();
 
-        CompetitionInviteViewModel model = (CompetitionInviteViewModel) result.getModelAndView().getModel().get("model");
+        PanelInviteViewModel model = (PanelInviteViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals("hash", model.getCompetitionInviteHash());
+        assertEquals("hash", model.getPanelInviteHash());
         assertEquals("my competition", model.getCompetitionName());
 
-        CompetitionInviteForm form = (CompetitionInviteForm) result.getModelAndView().getModel().get("form");
+        PanelInviteForm form = (PanelInviteForm) result.getModelAndView().getModel().get("form");
 
         BindingResult bindingResult = form.getBindingResult();
 
@@ -343,20 +336,20 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
         assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        verify(competitionInviteRestService).openInvite("hash");
-        verifyNoMoreInteractions(competitionInviteRestService);
+        verify(assessmentPanelInviteRestService).openInvite("hash");
+        verifyNoMoreInteractions(assessmentPanelInviteRestService);
     }
 
     @Test
     public void rejectInvite_exceedsWordLimit() throws Exception {
-        CompetitionInviteResource inviteResource = newCompetitionInviteResource().withCompetitionName("my competition").build();
+        AssessmentPanelInviteResource inviteResource = newAssessmentPanelInviteResource().withCompetitionName("my competition").build();
 
-        when(competitionInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
+        when(assessmentPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
         String comment = String.join(" ", nCopies(101, "comment"));
         Boolean accept = false;
 
-        CompetitionInviteForm expectedForm = new CompetitionInviteForm();
+        PanelInviteForm expectedForm = new PanelInviteForm();
         expectedForm.setAcceptInvitation(accept);
         expectedForm.setRejectReason(newRejectionReasonResource().with(id(1L)).build());
         expectedForm.setRejectComment(comment);
@@ -374,12 +367,12 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessor-competition-invite")).andReturn();
 
-        CompetitionInviteViewModel model = (CompetitionInviteViewModel) result.getModelAndView().getModel().get("model");
+        PanelInviteViewModel model = (PanelInviteViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals("hash", model.getCompetitionInviteHash());
+        assertEquals("hash", model.getPanelInviteHash());
         assertEquals("my competition", model.getCompetitionName());
 
-        CompetitionInviteForm form = (CompetitionInviteForm) result.getModelAndView().getModel().get("form");
+        PanelInviteForm form = (PanelInviteForm) result.getModelAndView().getModel().get("form");
 
         BindingResult bindingResult = form.getBindingResult();
 
@@ -390,8 +383,8 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
         assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(100, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        verify(competitionInviteRestService).openInvite("hash");
-        verifyNoMoreInteractions(competitionInviteRestService);
+        verify(assessmentPanelInviteRestService).openInvite("hash");
+        verifyNoMoreInteractions(assessmentPanelInviteRestService);
     }
 
     @Test
@@ -403,8 +396,8 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
                 .with(id(1L))
                 .build(), comment);
 
-        when(competitionInviteRestService.rejectInvite("notExistHash", competitionRejectionResource)).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
-        when(competitionInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(CompetitionInviteResource.class, "notExistHash")));
+        when(assessmentPanelInviteRestService.rejectInvite("notExistHash", competitionRejectionResource)).thenReturn(restFailure(notFoundError(AssessmentPanelInviteResource.class, "notExistHash")));
+        when(assessmentPanelInviteRestService.openInvite("notExistHash")).thenReturn(restFailure(notFoundError(AssessmentPanelInviteResource.class, "notExistHash")));
 
         mockMvc.perform(post(restUrl + "{inviteHash}/decision", "notExistHash")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -413,9 +406,9 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<Competi
                 .param("rejectComment", comment))
                 .andExpect(status().isNotFound());
 
-        InOrder inOrder = inOrder(competitionInviteRestService);
-        inOrder.verify(competitionInviteRestService).rejectInvite("notExistHash", competitionRejectionResource);
-        inOrder.verify(competitionInviteRestService).openInvite("notExistHash");
+        InOrder inOrder = inOrder(assessmentPanelInviteRestService);
+        inOrder.verify(assessmentPanelInviteRestService).rejectInvite("notExistHash", competitionRejectionResource);
+        inOrder.verify(assessmentPanelInviteRestService).openInvite("notExistHash");
         inOrder.verifyNoMoreInteractions();
     }
 

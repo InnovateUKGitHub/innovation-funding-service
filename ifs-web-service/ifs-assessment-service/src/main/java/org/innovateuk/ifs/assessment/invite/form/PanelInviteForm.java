@@ -16,7 +16,7 @@ import javax.validation.constraints.Size;
  */
 public class PanelInviteForm extends BaseBindingResultTarget {
 
-    @NotNull(message = "{validation.competitioninvitedecision.required}")
+    @NotNull(message = "{validation.panelinvitedecision.required}")
     private Boolean acceptInvitation;
 
     private RejectionReasonResource rejectReason;
@@ -32,7 +32,7 @@ public class PanelInviteForm extends BaseBindingResultTarget {
         this.acceptInvitation = acceptInvitation;
     }
 
-    @AssertTrue(message = "{validation.rejectcompetitionform.rejectReason.required}")
+    @AssertTrue(message = "{validation.rejectpanelform.rejectReason.required}")
     public boolean isRejectReasonValid() {
         return BooleanUtils.isNotFalse(acceptInvitation) || rejectReason != null;
     }
