@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -10,6 +11,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -40,6 +42,9 @@ public interface UserService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable);
+
+    @PostFilter("hasPermission(filterObject, 'READ_USER_ORGANISATION')")
+    ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<UserPageResource> findInactiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable);

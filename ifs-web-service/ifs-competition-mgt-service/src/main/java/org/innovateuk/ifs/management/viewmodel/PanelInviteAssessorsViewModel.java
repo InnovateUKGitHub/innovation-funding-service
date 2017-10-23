@@ -17,6 +17,7 @@ public abstract class PanelInviteAssessorsViewModel<ViewModelRowType extends Pan
     private String innovationArea;
     private List<ViewModelRowType> assessors;
     private PaginationViewModel pagination;
+    private String originQuery;
 
     protected PanelInviteAssessorsViewModel() {
     }
@@ -99,5 +100,13 @@ public abstract class PanelInviteAssessorsViewModel<ViewModelRowType extends Pan
 
     public void setPagination(PaginationViewModel pagination) {
         this.pagination = pagination;
+    }
+
+    public String getOriginQuery() {
+        return originQuery;
+    }
+
+    public void setOriginQuery(String originQuery) {
+        this.originQuery = originQuery;
     }
 }

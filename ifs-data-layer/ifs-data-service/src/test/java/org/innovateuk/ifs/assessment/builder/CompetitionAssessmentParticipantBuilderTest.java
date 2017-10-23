@@ -7,9 +7,9 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
-import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
+import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 
-public class CompetitionParticipantBuilderTest {
+public class CompetitionAssessmentParticipantBuilderTest {
 
     @Test
     public void buildOne() {
@@ -30,7 +30,7 @@ public class CompetitionParticipantBuilderTest {
         String expectedRejectionComment = "Too busy";
         CompetitionInvite expectedInvite = newCompetitionInvite().build();
 
-        CompetitionParticipant participant = newCompetitionParticipant()
+        CompetitionAssessmentParticipant participant = newCompetitionAssessmentParticipant()
                 .withId(expectedId)
                 .withStatus(expectedStatus)
                 .withUser(expectedUser)
@@ -62,7 +62,7 @@ public class CompetitionParticipantBuilderTest {
         RejectionReason[] expectedRejectionReasons = { newRejectionReason().withReason("Unavailable").build(), null };
         String[] expectedRejectionComment = { "Too busy", null };
 
-        List<CompetitionParticipant> participants = newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> participants = newCompetitionAssessmentParticipant()
                 .withId(expectedIds)
                 .withStatus(expectedStatuses)
                 .withUser(expectedUsers)
