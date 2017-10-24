@@ -379,7 +379,7 @@ IFS Admin can see applicant's response flagged in Query responses tab
     When the user clicks the button/link  jQuery=a:contains("Query responses (1)")
     Then the user should see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_NUMBER}")~td:contains("${EMPIRE_LTD_NAME}")
     When the user clicks the button/link  jQuery=a:contains("${EMPIRE_LTD_NAME}")
-    Then the user should see the element  jQuery=h1:contains("Empire Ltd")
+    Then the user should see the element  jQuery=h1:contains("${EMPIRE_LTD_NAME}")
     And the user should see the element   jQuery=a:contains("Post a new query")
 
 Project finance user can view the response
