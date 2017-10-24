@@ -30,7 +30,6 @@ dependencies {
  * in the output directory.
  */
 task prepareDockerInput {
-    dependsOn getNewRelicAgent
     dependsOn build
     def inputDir = project.file("$project.buildDir/docker")
 
