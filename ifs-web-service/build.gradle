@@ -11,7 +11,7 @@ project(':ifs-web-service').bootRepackage {
 jar.enabled = false
 
 // This is necessary because the java plugin is also applied to
-// the ifs-data-layer project, which does _not_ build a jar.
+// the ifs-web-service project, which does _not_ build a jar.
 bootRepackage.enabled = false
 
 // Necessary to not build a jar for the ifs-web-core project.
