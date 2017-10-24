@@ -236,11 +236,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                 andOnSuccess((isIncludeGrowthTable) -> {
                     if (isIncludeGrowthTable) {
                         return getOnlyForApplication(app, organisationId, financeType)
-                                //.andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
                                 .andOnSuccess(result -> ParsingFunctions.validLongResult(result.getValue()));
                     } else {
                         return getOnlyForApplication(app, organisationId, nonFinanceType)
-                                //.andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
                                 .andOnSuccess(result -> ParsingFunctions.validLongResult(result.getValue()));
                     }
                 });
