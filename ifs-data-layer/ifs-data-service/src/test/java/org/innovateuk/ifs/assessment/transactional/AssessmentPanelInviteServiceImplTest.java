@@ -28,20 +28,18 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.time.ZonedDateTime.now;
-import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
-import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelParticipantBuilder.newAssessmentPanelParticipant;
 import static org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL;
@@ -61,7 +59,7 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResource
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
@@ -82,7 +80,6 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<AssessmentPanelInviteServiceImpl> {
     private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
     private static final String INVITE_HASH = "inviteHash";
-    private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
 
     private InnovationArea innovationArea;
     private Role assessorRole;
@@ -112,7 +109,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
         innovationArea = newInnovationArea().build();
         CompetitionInvite competitionInvite = setUpCompetitionInvite(competition, SENT, innovationArea);
-        CompetitionParticipant competitionParticipant = new CompetitionParticipant(competitionInvite);
+        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(competitionInvite);
 
         AssessmentPanelInvite assessmentPanelInvite = setUpAssessmentPanelInvite(competition, SENT);
         AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentPanelInvite);
@@ -197,13 +194,13 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withProfileId(profile.get(0).getId(), profile.get(1).getId())
                 .build(2);
 
-        List<CompetitionParticipant> participants = newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> participants = newCompetitionAssessmentParticipant()
                 .withUser(assessors.get(0), assessors.get(1))
                 .build(2);
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
-        Page<CompetitionParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
+        Page<CompetitionAssessmentParticipant> expectedPage = new PageImpl<>(participants, pageable, 2L);
 
         when(competitionParticipantRepositoryMock.findParticipantsNotOnPanel(competitionId, pageable))
                 .thenReturn(expectedPage);
@@ -234,7 +231,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
-        Page<CompetitionParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
+        Page<CompetitionAssessmentParticipant> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
         when(competitionParticipantRepositoryMock.findParticipantsNotOnPanel(competitionId, pageable))
                 .thenReturn(assessorPage);
@@ -282,7 +279,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withProfileId(profiles.get(0).getId(), profiles.get(1).getId())
                 .build(2);
 
-        List<CompetitionParticipant> participants = newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> participants = newCompetitionAssessmentParticipant()
                 .withUser(assessorUsers.get(0), assessorUsers.get(1))
                 .build(2);
 
@@ -462,7 +459,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(0).getName(),
                 "competitionName", invites.get(0).getTarget().getName(),
-                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "inviteUrl", "https://ifs-local-dev/assessment/invite/panel/" + invites.get(0).getHash(),
                 "customTextPlain", "content",
                 "customTextHtml", "content"
         );
@@ -470,7 +467,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(1).getName(),
                 "competitionName", invites.get(1).getTarget().getName(),
-                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "inviteUrl", "https://ifs-local-dev/assessment/invite/panel/" + invites.get(1).getHash(),
                 "customTextPlain", "content",
                 "customTextHtml", "content"
         );
@@ -644,7 +641,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(0).getName(),
                 "competitionName", invites.get(0).getTarget().getName(),
-                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "inviteUrl", "https://ifs-local-dev/assessment/invite/panel/" + invites.get(0).getHash(),
                 "customTextPlain", "content",
                 "customTextHtml", "content"
         );
@@ -652,7 +649,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(1).getName(),
                 "competitionName", invites.get(1).getTarget().getName(),
-                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "inviteUrl", "https://ifs-local-dev/assessment/invite/panel/" + invites.get(1).getHash(),
                 "customTextPlain", "content",
                 "customTextHtml", "content"
         );
@@ -766,7 +763,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
             assertNull(assessmentPanelParticipant.getId());
             assertEquals(assessmentPanelInvite.getTarget(), assessmentPanelParticipant.getProcess());
             assertEquals(assessmentPanelInvite, assessmentPanelParticipant.getInvite());
-            assertEquals(ASSESSOR, assessmentPanelParticipant.getRole());
+            assertEquals(PANEL_ASSESSOR, assessmentPanelParticipant.getRole());
             assertEquals(assessmentPanelInvite.getUser(), assessmentPanelParticipant.getUser());
         });
     }

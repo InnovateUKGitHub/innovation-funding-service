@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invitation to assess',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
+    </head>
+
+    <body th:with="context='assessment'" class="app-dashboard">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
+
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assess '${model.competitionName}'|,size='heading-xlarge'" />
+            <p>You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
+
+            <section class="boxed">
+                <h2 class="heading-medium no-margin" th:text="|${#temporals.format(model.panelDate, 'dd MMMM yyyy')}: Assessment panel|">
+                    21 March 2017: Assessment panel
+                </h2>
+            </section>
+
+            <section>
+                <h2 class="heading-medium" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
+
+                <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">See competition brief</a></p>
+                <br>
+            </section>
+
+            <form th:action="@{/invite/panel/{inviteHash}/decision(inviteHash=${model.panelInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'form-group-error'">
+                    <fieldset>
+                        <legend id="acceptInvitation">
+                            <span class="heading-medium">Are you able to attend the panel assessment?</span>
+                            <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
+                            </th:block>
+                            <p>You should reject this invitation if you are unavailable for the panel assessment date.</p>
+                        </legend>
+
+                        <div class="multiple-choice">
+                            <input id="acceptPanel" value="true" type="radio" required="required"
+                                   th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.panelinvitedecision.required}" />
+                            <label for="acceptPanel">
+                                Yes, I am able to attend the panel assessment.
+                            </label>
+                        </div>
+
+                        <div class="multiple-choice" data-target="reject-panel">
+                            <input id="rejectPanel" value="false" type="radio" required="required"
+                                   th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.panelinvitedecision.required}"/>
+                            <label for="rejectPanel">
+                                No, I am not able to attend the panel assessment.
+                            </label>
+                        </div>
+                    </fieldset>
+                </div>
+
+                <button class="button" type="submit">Confirm</button>
+            </form>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

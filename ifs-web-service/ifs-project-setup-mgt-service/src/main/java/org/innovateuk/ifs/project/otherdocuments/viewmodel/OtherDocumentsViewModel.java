@@ -26,10 +26,11 @@ public class OtherDocumentsViewModel implements BasicProjectDetailsViewModel {
     private String projectManagerEmail;
 
     private ApprovalType approved;
+    private boolean collaborationAgreementRequired;
 
     public OtherDocumentsViewModel(Long projectId, long applicationId, String projectName, Long competitionId, String leadPartnerOrganisationName, String projectManagerName,
-                                          String projectManagerTelephone, String projectManagerEmail, FileDetailsViewModel collaborationAgreementFileDetails,
-                                          FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, ApprovalType approved
+                                   String projectManagerTelephone, String projectManagerEmail, FileDetailsViewModel collaborationAgreementFileDetails,
+                                   FileDetailsViewModel exploitationPlanFileDetails, List<String> partnerOrganisationNames, ApprovalType approved, boolean collaborationAgreementRequired
                                           ) {
         this.projectId = projectId;
         this.applicationId = applicationId;
@@ -43,6 +44,7 @@ public class OtherDocumentsViewModel implements BasicProjectDetailsViewModel {
         this.exploitationPlanFileDetails = exploitationPlanFileDetails;
         this.partnerOrganisationNames = partnerOrganisationNames;
         this.approved = approved;
+        this.collaborationAgreementRequired = collaborationAgreementRequired;
     }
 
     @Override
@@ -89,4 +91,5 @@ public class OtherDocumentsViewModel implements BasicProjectDetailsViewModel {
 
     public Boolean isShowApproveRejectButtons() { return ApprovalType.UNSET.equals(approved); }
 
+    public boolean isCollaborationAgreementRequired() { return collaborationAgreementRequired; }
 }

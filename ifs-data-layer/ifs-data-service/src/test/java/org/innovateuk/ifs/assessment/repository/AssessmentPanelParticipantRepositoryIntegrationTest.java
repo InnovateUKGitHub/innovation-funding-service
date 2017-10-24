@@ -30,7 +30,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -177,7 +176,7 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
         );
 
         RejectionReason reason = rejectionReasonRepository.findAll().get(0);
-        savedParticipant.reject(reason, Optional.of("too busy"));
+        savedParticipant.reject();
         flushAndClearSession();
 
         long id = savedParticipant.getId();
@@ -189,6 +188,18 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
     @Test
     public void getAssessorsByCompetitionAndStatus() throws Exception {
         loginSteveSmith();
+
+        User acceptedUser = newUser()
+                .withId()
+                .withEmailAddress("ah@test2.com")
+                .withUid("uid-1")
+                .withFirstName("Anthony")
+                .withLastName("Hale")
+                .withProfileId()
+                .build();
+
+        userRepository.save(acceptedUser);
+
         List<AssessmentPanelInvite> newAssessorInvites = newAssessmentPanelInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
@@ -198,19 +209,8 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
 
         List<AssessmentPanelParticipant> assessmentPanelParticipants = saveNewAssessmentPanelParticipants(newAssessorInvites);
 
-        User user = newUser()
-                .withId()
-                .withEmailAddress("ah@test2.com")
-                .withUid("uid-1")
-                .withFirstName("Anthony")
-                .withLastName("Hale")
-                .withProfileId()
-                .build();
-
-        userRepository.save(user);
-
         assessmentPanelParticipants.get(3).getInvite().open();
-        assessmentPanelParticipants.get(3).acceptAndAssignUser(user);
+        assessmentPanelParticipants.get(3).acceptAndAssignUser(acceptedUser);
 
         repository.save(assessmentPanelParticipants);
         flushAndClearSession();

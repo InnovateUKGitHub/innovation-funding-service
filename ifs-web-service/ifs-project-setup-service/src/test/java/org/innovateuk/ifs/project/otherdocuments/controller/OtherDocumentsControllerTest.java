@@ -376,6 +376,9 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
         ProjectResource project = newProjectResource().withId(projectId).build();
 
+        OrganisationResource partnerOrganisation = newOrganisationResource().build();
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+
         MockMultipartFile uploadedFile = new MockMultipartFile("collaborationAgreement", "filename.txt", "text/plain", "My content!".getBytes());
 
         when(otherDocumentsService.addCollaborationAgreementDocument(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
@@ -387,7 +390,7 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
         when(projectService.getById(projectId)).thenReturn(project);
         when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(asList(partnerOrganisation, leadOrganisation));
         when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(false);
 
         MvcResult result = mockMvc.perform(
@@ -493,12 +496,14 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
     public void testOtherDocumentsSubmitAllowedWhenAllFilesUploaded() throws Exception {
         long projectId = 123L;
         ProjectResource project = newProjectResource().withId(projectId).build();
+        OrganisationResource partnerOrganisation = newOrganisationResource().build();
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(projectService.isProjectManager(loggedInUser.getId(), projectId)).thenReturn(true);
         when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(asList(partnerOrganisation, leadOrganisation));
         when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
 
         MvcResult result = mockMvc.perform(
@@ -533,12 +538,14 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
     public void testSubmitShownWhenFromLeadOrgAndProjectManager() throws Exception {
         long projectId = 123L;
         ProjectResource project = newProjectResource().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
+        OrganisationResource partnerOrganisation = newOrganisationResource().build();
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(projectService.isProjectManager(loggedInUser.getId(), projectId)).thenReturn(true);
         when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(asList(partnerOrganisation, leadOrganisation));
         when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
 
         MvcResult result = mockMvc.perform(
@@ -556,12 +563,14 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
     public void testSubmitNotShownWhenFromLeadOrgButNotProjectManager() throws Exception {
         long projectId = 123L;
         ProjectResource project = newProjectResource().withId(projectId).withOtherDocumentsApproved(ApprovalType.REJECTED).withDocumentsSubmittedDate(ZonedDateTime.now()).build();
+        OrganisationResource partnerOrganisation = newOrganisationResource().build();
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(projectService.isProjectManager(loggedInUser.getId(), projectId)).thenReturn(false);
         when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(asList(partnerOrganisation, leadOrganisation));
         when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
 
         MvcResult result = mockMvc.perform(
@@ -597,11 +606,34 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
         long projectId = 123L;
 
         ProjectResource project = newProjectResource().withId(projectId).build();
+        OrganisationResource partnerOrganisation = newOrganisationResource().build();
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
-        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(asList(partnerOrganisation, leadOrganisation));
+        when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
+
+        mockMvc.perform(get("/project/{id}/partner/documents/confirm", projectId)).
+                andExpect(status().isOk()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
+                andExpect(view().name("project/other-documents-confirm")).
+                andReturn();
+    }
+
+    @Test
+    public void testViewConfirmDocumentsPageSinglePartner() throws Exception {
+
+        long projectId = 123L;
+
+        ProjectResource project = newProjectResource().withId(projectId).build();
+        OrganisationResource partnerOrganisation = newOrganisationResource().build();
+
+        when(projectService.getById(projectId)).thenReturn(project);
+        when(otherDocumentsService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
+        when(otherDocumentsService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
+        when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(asList(partnerOrganisation));
         when(otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
 
         mockMvc.perform(get("/project/{id}/partner/documents/confirm", projectId)).

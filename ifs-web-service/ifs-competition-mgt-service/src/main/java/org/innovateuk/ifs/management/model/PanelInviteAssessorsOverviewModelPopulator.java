@@ -48,8 +48,7 @@ public class PanelInviteAssessorsOverviewModelPopulator extends PanelInviteAsses
                 competition.getId(),
                 page,
                 asList(REJECTED, PENDING)
-        )
-                .getSuccessObjectOrThrowException();
+        ).getSuccessObjectOrThrowException();
 
         List<PanelOverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 

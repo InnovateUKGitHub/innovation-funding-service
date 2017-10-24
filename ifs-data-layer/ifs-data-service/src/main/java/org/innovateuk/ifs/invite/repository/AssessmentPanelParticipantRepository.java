@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.invite.repository;
 
 import org.innovateuk.ifs.invite.domain.AssessmentPanelParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,7 @@ public interface AssessmentPanelParticipantRepository extends PagingAndSortingRe
     String BY_COMP_AND_STATUS_ON_PANEL = "SELECT assessmentPanelParticipant " +
             "FROM AssessmentPanelParticipant assessmentPanelParticipant " +
             "WHERE assessmentPanelParticipant.competition.id = :competitionId " +
-            "AND assessmentPanelParticipant.role = 'ASSESSOR' " +
+            "AND assessmentPanelParticipant.role = 'PANEL_ASSESSOR' " +
             "AND assessmentPanelParticipant.status IN :status " +
             "AND assessmentPanelParticipant.user.id IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
 
@@ -40,4 +41,6 @@ public interface AssessmentPanelParticipantRepository extends PagingAndSortingRe
 
     @Override
     List<AssessmentPanelParticipant> findAll();
+
+    AssessmentPanelParticipant getByInviteHash(String hash);
 }
