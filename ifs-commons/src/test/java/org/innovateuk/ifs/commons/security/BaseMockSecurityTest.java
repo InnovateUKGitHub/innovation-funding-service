@@ -83,7 +83,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
 
         // get the custom permission evaluator from the applicationContext and swap its rulesMap for one containing only
         // Mockito mocks
-        AbstractCustomPermissionEvaluator permissionEvaluator = (AbstractCustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
+        RootCustomPermissionEvaluator permissionEvaluator = (RootCustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
         cleanDownCachedPermissionRules(permissionEvaluator);
 
         originalRulesMap = getRulesMap(permissionEvaluator);
@@ -108,13 +108,13 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
     @After
     public void teardown() {
 
-        AbstractCustomPermissionEvaluator permissionEvaluator = (AbstractCustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
+        RootCustomPermissionEvaluator permissionEvaluator = (RootCustomPermissionEvaluator) applicationContext.getBean("customPermissionEvaluator");
         cleanDownCachedPermissionRules(permissionEvaluator);
         setRulesMap(permissionEvaluator, originalRulesMap);
         setLookupStrategyMap(permissionEvaluator, originalLookupStrategyMap);
     }
 
-    private void setLookupStrategyMap(AbstractCustomPermissionEvaluator permissionEvaluator, PermissionedObjectClassToLookupMethods right) {
+    private void setLookupStrategyMap(RootCustomPermissionEvaluator permissionEvaluator, PermissionedObjectClassToLookupMethods right) {
         ReflectionTestUtils.setField(permissionEvaluator, "lookupStrategyMap", right);
     }
 
@@ -155,7 +155,7 @@ public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
     }
 
     /**
-     * Given the rulesMap from the AbstractCustomPermissionEvaluator, this method replaces all of the original @PermissionRules-annotated beans
+     * Given the rulesMap from the RootCustomPermissionEvaluator, this method replaces all of the original @PermissionRules-annotated beans
      * with Mockito mocks, and all of the @PermissionRule-annotated methods on those beans with the equivalent methods from the mocks.
      * <p>
      * This method then returns all of the mocks that it has created (so for each original @PermissionRules class, there will be an

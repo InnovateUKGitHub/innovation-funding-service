@@ -37,9 +37,9 @@ import static org.springframework.core.annotation.AnnotationUtils.findAnnotation
  * the dependencies of this class whether or not it is needed. Instead this class should be subclasses where it is
  * required and the annotation added to that.
  */
-public class AbstractCustomPermissionEvaluator implements PermissionEvaluator {
+public class RootCustomPermissionEvaluator implements PermissionEvaluator {
 
-    private static final Log LOG = LogFactory.getLog(AbstractCustomPermissionEvaluator.class);
+    private static final Log LOG = LogFactory.getLog(RootCustomPermissionEvaluator.class);
 
     @Autowired
     private ApplicationContext applicationContext;

@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.service;
 
-import org.innovateuk.ifs.commons.service.AbstractDefaultRestTemplateAdaptor;
+import org.innovateuk.ifs.commons.service.RootDefaultRestTemplateAdaptor;
 import org.springframework.stereotype.Component;
 
 /**
  * The {@link Component} annotation is added here where it is needed.
- * See {@link AbstractDefaultRestTemplateAdaptor} for more information.
+ * See {@link RootDefaultRestTemplateAdaptor} for more information.
  */
 @Component
-public class DefaultRestTemplateAdaptor extends AbstractDefaultRestTemplateAdaptor {
+public class DefaultRestTemplateAdaptor extends RootDefaultRestTemplateAdaptor {
 }

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  * the dependencies of this class whether or not it is needed. Instead this class should be subclasses where it is
  * required and the annotation added to that.
  */
-public class AbstractAnonymousUserRestTemplateAdaptor extends AbstractInternalRestTemplateAdaptor {
+public class RootAnonymousUserRestTemplateAdaptor extends AbstractInternalRestTemplateAdaptor {
 
     @Value("${ifs.web.system.user.uid}")
     private String ifsWebSystemUserUid = null;

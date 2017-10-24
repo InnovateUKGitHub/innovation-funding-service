@@ -8,5 +8,5 @@ import org.springframework.stereotype.Component;
  * See {@link RootCustomPermissionEvaluator} for more information.
  */
 @Component
-public class CustomPermissionEvaluator extends RootCustomPermissionEvaluator {
+public class RootCustomPermissionEvaluator extends RootCustomPermissionEvaluator {
 }

@@ -24,10 +24,10 @@ import static java.util.Collections.singletonList;
 public abstract class BaseRestService {
 
     @Autowired
-    private AbstractDefaultRestTemplateAdaptor adaptor;
+    private RootDefaultRestTemplateAdaptor adaptor;
 
     @Autowired
-    private AbstractAnonymousUserRestTemplateAdaptor anonymousRestTemplateAdaptor;
+    private RootAnonymousUserRestTemplateAdaptor anonymousRestTemplateAdaptor;
 
     private String dataRestServiceURL;
 
@@ -40,11 +40,11 @@ public abstract class BaseRestService {
         this.dataRestServiceURL = dataRestServiceURL;
     }
 
-    public void setRestTemplateAdaptor(AbstractDefaultRestTemplateAdaptor adaptor) {
+    public void setRestTemplateAdaptor(RootDefaultRestTemplateAdaptor adaptor) {
         this.adaptor = adaptor;
     }
 
-    public void setAnonymousRestTemplateAdaptor(AbstractAnonymousUserRestTemplateAdaptor anonymousRestTemplateAdaptor) {
+    public void setAnonymousRestTemplateAdaptor(RootAnonymousUserRestTemplateAdaptor anonymousRestTemplateAdaptor) {
         this.anonymousRestTemplateAdaptor = anonymousRestTemplateAdaptor;
     }
 

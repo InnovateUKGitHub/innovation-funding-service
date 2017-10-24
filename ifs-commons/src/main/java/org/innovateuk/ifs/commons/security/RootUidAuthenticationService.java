@@ -16,7 +16,7 @@ import java.util.Optional;
  * the dependencies of this class whether or not it is needed. Instead this class should be subclasses where it is
  * required and the annotation added to that.
  */
-public class AbstractUidAuthenticationService implements UserAuthenticationService {
+public class RootUidAuthenticationService implements UserAuthenticationService {
 
     @Autowired
     private CredentialsValidator validator;

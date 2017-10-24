@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.service;
 
-import org.innovateuk.ifs.commons.service.AbstractAnonymousUserRestTemplateAdaptor;
+import org.innovateuk.ifs.commons.service.RootAnonymousUserRestTemplateAdaptor;
 import org.springframework.stereotype.Component;
 
 /**
  * The {@link Component} annotation is added here where it is needed.
- * See {@link AbstractAnonymousUserRestTemplateAdaptor} for more information.
+ * See {@link RootAnonymousUserRestTemplateAdaptor} for more information.
  */
 @Component
-public class AnonymousUserRestTemplateAdaptor extends AbstractAnonymousUserRestTemplateAdaptor {
+public class AnonymousUserRestTemplateAdaptor extends RootAnonymousUserRestTemplateAdaptor {
 }
