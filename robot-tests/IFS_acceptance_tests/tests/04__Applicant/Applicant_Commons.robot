@@ -160,7 +160,7 @@ the user chooses Calculate overheads option
     wait for autosave
     the user enters text to a text field                    css=input[name^="overheads-total"][id^="cost-overheads"]   40
     wait for autosave
-    the total overhead costs should reflect rate entered    css=#total-cost  £ ${totalCosts}
+    the total overhead costs should reflect rate entered    css=#total-cost  £${totalCosts}
 
 the total overhead costs should reflect rate entered
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
@@ -190,7 +190,7 @@ the user fills in Capital usage
     the user enters text to a text field  css=.form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css=.form-finances-capital-usage-utilisation   100
     focus                                 css=.section-total-summary > [data-mirror^="#section-total"]
-    textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £ 4,975
+    textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £4,975
     the user clicks the button/link       jQuery=button:contains("Capital usage")
 
 the user fills in Subcontracting costs

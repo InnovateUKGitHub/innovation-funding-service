@@ -23,25 +23,18 @@
                 <tr>
                     <th scope="col">Total costs</th>
                     <th scope="col" class="numeric">% Grant</th>
-                    <th scope="col" class="numeric">Funding sought</th>
-                    <th scope="col" class="numeric">Other public sector funding</th>
-                    <th scope="col" class="numeric">Contribution to project</th>
+                    <th scope="col" class="numeric">Funding sought (&pound;)</th>
+                    <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
+                    <th scope="col" class="numeric">Contribution to project (&pound;)</th>
                 </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="numeric">&pound;
-                            <th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'COMMA')}"/>
-                        </td>
-                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}"/>
-                        <td class="numeric">&pound;
-                            <th:block th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'COMMA')}"/>
-                        </td>
-                        <td class="numeric">&pound;
-                            <th:block th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'COMMA')}"/>
-                        </td>
-                        <td class="numeric">&pound;
-                            <th:block th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'COMMA')}"/>
+                        <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'COMMA')}"/>200,903</td>
+                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}">30%</td>
+                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'COMMA')}">57,803</td>
+                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'COMMA')}">2,468</td>
+                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'COMMA')}">140,632</td>
                         </td>
                     </tr>
                 </tbody>

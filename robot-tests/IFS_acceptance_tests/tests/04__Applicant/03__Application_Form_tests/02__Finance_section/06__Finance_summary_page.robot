@@ -253,7 +253,7 @@ Innovation lead can see read only view of Your funding
     Then the user should see the text in the page  Please complete your project finances.
     When the user clicks the button/link           jQuery=a:contains("Your funding")
     Then the user should see the element           jQuery=dt:contains("Funding level") + dd:contains("30%")
-    And the user should see the element            jQuery=th:contains("Lottery") ~ td:contains("£ 2,468")
+    And the user should see the element            jQuery=th:contains("Lottery") ~ td:contains("£2,468")
 
 *** Keywords ***
 the finance summary calculations should be correct
@@ -348,13 +348,13 @@ the user fills in the funding information with bigger amount
 User verifies captial usage, subcontracting, travel and other costs for innovation lead
     the user expands the section     Capital usage
     the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") + td:contains("Existing") + td:contains("12") + td:contains("2120")
-    the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") ~ td:contains("1200") + td:contains("60") + td:contains("£ 552")
+    the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") ~ td:contains("1200") + td:contains("60") + td:contains("£552")
     the user collapses the section   Capital usage
     the user expands the section     Subcontracting costs
-    the user should see the element  jQuery=#subcontracting-table td:contains("Developers") + td:contains("UK") + td:contains("To develop stuff") + td:contains("£ 90,000")
+    the user should see the element  jQuery=#subcontracting-table td:contains("Developers") + td:contains("UK") + td:contains("To develop stuff") + td:contains("£90,000")
     the user collapses the section   Subcontracting costs
     the user expands the section     Travel and subsistence
-    the user should see the element  jQuery=#travel-costs-table td:contains("To visit colleagues") + td:contains("15") + td:contains("398") + td:contains("£ 5,970")
+    the user should see the element  jQuery=#travel-costs-table td:contains("To visit colleagues") + td:contains("15") + td:contains("398") + td:contains("£5,970")
     the user collapses the section   Travel and subsistence
     the user expands the section     Other costs
     the user should see the element  jQuery=#other-costs-table td:contains("Some more costs") + td:contains("1,100")
@@ -376,13 +376,13 @@ User verifies labour, overhead costs and materials for innovation lead
 User verifies captial usage, subcontracting, travel and other costs
     the user expands the section     Capital usage
     the user should see the element  jQuery=#capital-usage-table td:contains("some description") + td:contains("New") + td:contains("10") + td:contains("5000")
-    the user should see the element  jQuery=#capital-usage-table td:contains("some description") ~ td:contains("25") + td:contains("100") + td:contains("£ 4975")
+    the user should see the element  jQuery=#capital-usage-table td:contains("some description") ~ td:contains("25") + td:contains("100") + td:contains("£4975")
     the user collapses the section   Capital usage
     the user expands the section     Subcontracting costs
-    the user should see the element  jQuery=#subcontracting-table td:contains("SomeName") + td:contains("Netherlands") + td:contains("Quality Assurance") + td:contains("£ 1,000")
+    the user should see the element  jQuery=#subcontracting-table td:contains("SomeName") + td:contains("Netherlands") + td:contains("Quality Assurance") + td:contains("£1,000")
     the user collapses the section   Subcontracting costs
     the user expands the section     Travel and subsistence
-    the user should see the element  jQuery=#travel-costs-table td:contains("test") + td:contains("10") + td:contains("100") + td:contains("£ 1,000")
+    the user should see the element  jQuery=#travel-costs-table td:contains("test") + td:contains("10") + td:contains("100") + td:contains("£1,000")
     the user collapses the section   Travel and subsistence
     the user expands the section     Other costs
     the user should see the element  jQuery=#other-costs-table td:contains("some other costs") + td:contains("50")

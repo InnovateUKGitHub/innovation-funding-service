@@ -181,9 +181,9 @@ the academic partner fills the finances
     wait for autosave
 
 the calculations should be correct and the totals rounded to the second decimal
-    Textfield Value Should Be  id=subtotal-directly-allocated    £ 3,000
-    Textfield Value Should Be  id=subtotal-exceptions    £ 2,000
-    Textfield Value Should Be  id=total    £ 9,000
+    Textfield Value Should Be  id=subtotal-directly-allocated    £3,000
+    Textfield Value Should Be  id=subtotal-exceptions    £2,000
+    Textfield Value Should Be  id=total    £9,000
 
 the academic partner uploads a file
     [Arguments]    ${file_name}

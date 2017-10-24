@@ -38,22 +38,22 @@
                 <th scope="col">Project duration</th>
                 <th scope="col">Total costs</th>
                 <th scope="col" class="numeric">% Grant</th>
-                <th scope="col" class="numeric">Funding sought</th>
+                <th scope="col" class="numeric">Funding sought (&pound;)</th>
                 <th:block th:unless="${summaryModel.usingJesFinances}">
-                    <th scope="col" class="numeric">Other public sector funding</th>
-                    <th scope="col" class="numeric">Contribution to project</th>
+                    <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
+                    <th scope="col" class="numeric">Contribution to project (&pound;)</th>
                 </th:block>
             </tr>
             </thead>
             <tbody>
             <tr>
-                <td th:text="${summaryModel.eligibilityOverview.durationInMonths+' months'}" />
-                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.totalCost,1,'COMMA')}" /></td>
-                <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.percentageGrant,1,'NONE')+'%'}" />
-                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.fundingSought,1,'COMMA')}" /></td>
+                <td th:text="${summaryModel.eligibilityOverview.durationInMonths+' months'}">15 months</td>
+                <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.totalCost,1,'DEFAULT')}">200,123</th:block></td>
+                <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.percentageGrant,1,'NONE')+'%'}">20%</td>
+                <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.fundingSought,1,'DEFAULT')}">60,271</td>
                 <th:block th:unless="${summaryModel.usingJesFinances}">
-                    <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.otherPublicSectorFunding,1,'COMMA')}" /></td>
-                    <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.contributionToProject,1,'COMMA')}" /></td>
+                    <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
+                    <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.contributionToProject,1,'DEFAULT')}">138,164</td>
                 </th:block>
             </tr>
             </tbody>
@@ -92,7 +92,7 @@
                 <span class="finance-total" th:if="${subSection.name == 'Overhead costs'}">(<span data-calculation-format="percentage" data-calculation-on-pageload="" data-calculation-operations="/,*" data-calculation-fields="[data-current-overhead-total], [class~=labour-total] ,100"></span> of Labour)</span>
             </h3>
             <div class="collapsible-content"
-                 th:with="viewmode=${summaryModel.isApproved() or summaryModel.isExternalView()} ? 'approved' : (${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly')">
+                 th:with="viewmode=${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly'">
                 <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
                       enctype="multipart/form-data">
                     <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
@@ -103,15 +103,14 @@
                                                            organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
                                                            organisationFinanceSize=(${model.finance.organisationFinanceSize})">
                                 <!--/*
-                                    viewmode=approved; generates the inputs as text,
-                                    viewmode=readonly, generates readonly inputs,
+                                    viewmode=readonly, generates the inputs as text,
                                     viewmode=edit, generates the editable inputs + repeating row elements)
                                 */-->
                                 <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode=${viewmode})" th:with="formInputIndex=(${status.index})" />
                             </th:block>
                         </th:block>
                     </th:block>
-                    <div class="alignright-button" th:unless="${summaryModel.isExternalView()}">
+                    <div class="alignright-button" th:unless="${summaryModel.isExternalView() || summaryModel.isApproved()}">
                         <a th:href="@{?section={sectionId}(sectionId=${subSection.id})}" th:if="${viewmode=='readonly'}" class="button button-secondary">Edit</a>
                         <button th:if="${viewmode=='edit'}" name="save-eligibility" class="button">Save</button>
                     </div>
@@ -129,7 +128,7 @@
                        class="heading-medium width-full alignright"
                        data-calculation-fields="[id*=section-total]"
                        data-calculation-operations="+"
-                       th:value="'£ ' + ${#numbers.formatDecimal(model.finance.organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}"/>
+                       th:value="'£ ' + ${#numbers.formatInteger(model.finance.organisationFinanceTotal, 0, 'DEFAULT')}"/>
             </div>
         </div>
     </th:block>
