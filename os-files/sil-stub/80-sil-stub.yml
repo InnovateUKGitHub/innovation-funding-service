@@ -75,9 +75,6 @@ items:
     - name: 8080-tcp
       port: 8080
       targetPort: 8080
-    - name: 8009-tcp
-      port: 8009
-      targetPort: 8009
     selector:
       deploymentconfig: sil-stub
   status:
