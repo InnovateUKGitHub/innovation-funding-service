@@ -299,7 +299,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                         .stream()
                         .map(Category::getName)
                         .collect(Collectors.toCollection(TreeSet::new)),
-                c.getApplications().size(),
+                applicationRepository.countByCompetitionId(c.getId()),
                 c.startDateDisplay(),
                 c.getCompetitionStatus(),
                 ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null),

@@ -30,5 +30,8 @@ public interface AssessmentPanelInviteRepository extends PagingAndSortingReposit
     List<AssessmentPanelInvite> getByUserId(long userId);
 
     List<AssessmentPanelInvite> getByIdIn(List<Long> inviteIds);
+
+    AssessmentPanelInvite getByHash(String hash);
+
 }
 

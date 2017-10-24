@@ -7,6 +7,7 @@ import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
+import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUnitTest<AssessmentPanelInviteRestServiceImpl> {
@@ -177,6 +179,7 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
         assertEquals(expected, actual);
     }
 
+    @Test
     public void getAllInvitesByUser() throws Exception {
         long userId = 1L;
         AssessmentPanelInviteResource assessmentPanelInviteResource = newAssessmentPanelInviteResource()
@@ -192,5 +195,42 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
 
         List<AssessmentPanelInviteResource> actual = service.getAllInvitesByUser(userId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void openInvite() {
+        AssessmentPanelInviteResource expected = newAssessmentPanelInviteResource().build();
+        expected.setCompetitionName("my competition");
+        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "openInvite", "hash"), AssessmentPanelInviteResource.class, null, expected, OK);
+        AssessmentPanelInviteResource actual = service.openInvite("hash").getSuccessObject();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void openInvite_hashNotExists() {
+        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "openInvite", "hashNotExists"), AssessmentPanelInviteResource.class, null, null, NOT_FOUND);
+        RestResult<AssessmentPanelInviteResource> restResult = service.openInvite("hashNotExists");
+        assertTrue(restResult.isFailure());
+    }
+
+    @Test
+    public void acceptInvite() {
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "acceptInvite", "hash"), OK);
+        RestResult<Void> restResult = service.acceptInvite("hash");
+        assertTrue(restResult.isSuccess());
+    }
+
+    @Test
+    public void rejectInvite() {
+        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "rejectInvite", "hash"), Void.class, null, null, OK);
+
+        RestResult<Void> restResult = service.rejectInvite("hash");
+        assertTrue(restResult.isSuccess());
+    }
+
+    @Test
+    public void checkExistingUser() {
+        setupGetWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "checkExistingUser", "hash"), Boolean.class, TRUE);
+        assertTrue(service.checkExistingUser("hash").getSuccessObject());
     }
 }

@@ -25,10 +25,8 @@ import org.mockito.InOrder;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
-
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +34,6 @@ import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.time.ZonedDateTime.now;
-import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -67,7 +64,6 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
-import static org.innovateuk.ifs.user.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
@@ -84,7 +80,6 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<AssessmentPanelInviteServiceImpl> {
     private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
     private static final String INVITE_HASH = "inviteHash";
-    private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
 
     private InnovationArea innovationArea;
     private Role assessorRole;
@@ -464,7 +459,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(0).getName(),
                 "competitionName", invites.get(0).getTarget().getName(),
-                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "inviteUrl", "https://ifs-local-dev/assessment/invite/panel/" + invites.get(0).getHash(),
                 "customTextPlain", "content",
                 "customTextHtml", "content"
         );
@@ -472,7 +467,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(1).getName(),
                 "competitionName", invites.get(1).getTarget().getName(),
-                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "inviteUrl", "https://ifs-local-dev/assessment/invite/panel/" + invites.get(1).getHash(),
                 "customTextPlain", "content",
                 "customTextHtml", "content"
         );
@@ -646,7 +641,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(0).getName(),
                 "competitionName", invites.get(0).getTarget().getName(),
-                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "inviteUrl", "https://ifs-local-dev/assessment/invite/panel/" + invites.get(0).getHash(),
                 "customTextPlain", "content",
                 "customTextHtml", "content"
         );
@@ -654,7 +649,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 "subject", assessorInviteSendResource.getSubject(),
                 "name", invites.get(1).getName(),
                 "competitionName", invites.get(1).getTarget().getName(),
-                "inviteUrl", "https://ifs-local-dev/assessment/assessor/dashboard",
+                "inviteUrl", "https://ifs-local-dev/assessment/invite/panel/" + invites.get(1).getHash(),
                 "customTextPlain", "content",
                 "customTextHtml", "content"
         );
@@ -753,8 +748,8 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
         List<AssessmentPanelInviteResource> actual = service.getAllInvitesByUser(1L).getSuccessObject();
         List<AssessmentPanelInviteResource> expected = new ArrayList<>();
-        expected.add(new AssessmentPanelInviteResource("", 2L, "Competition in Assessor Panel", SENT, 1L));
-        expected.add(new AssessmentPanelInviteResource("", 2L, "Competition in Assessor Panel", SENT, 1L));
+        expected.add(new AssessmentPanelInviteResource("", 2L, "Competition in Assessor Panel", SENT, 1L, "", now()));
+        expected.add(new AssessmentPanelInviteResource("", 2L, "Competition in Assessor Panel", SENT, 1L, "", now()));
 
         assertEquals(expected.get(0), actual.get(0));
         assertEquals(expected.get(1), actual.get(1));
