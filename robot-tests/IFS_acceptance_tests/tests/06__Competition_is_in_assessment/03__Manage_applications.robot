@@ -131,7 +131,6 @@ Filter by application number on the assessor page
     Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("22")
     And the user should not see the element    jQuery=.pagination-label:contains(Next)
 
-
 Filtering of the applications
     [Documentation]    INFUND-8061
     [Setup]  the user navigates to the page    ${SERVER}/management/assessment/competition/${IN_ASSESSMENT_COMPETITION}
@@ -204,7 +203,6 @@ Notify an assigned user
     And the user clicks the button/link    link=Competition
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled     jQuery=button:contains("Notify assessors")
-    #TODO Check email once 7249 is done
 
 Assessor should see the assigned application
     [Documentation]    INFUND-7050
@@ -227,7 +225,6 @@ Remove and notify an assessor (Notified)
     And the user clicks the button/link           jQuery=button:contains("Remove assessor")
     And the user should see the text in the page  Previously assigned (1)
     And the previously assigned list is correct
-    #TODO Check email once 7249 is done
 
 Assessor should not see the removed application
     [Documentation]    INFUND-7232
@@ -266,40 +263,36 @@ the application list is correct before changes
     the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("19")
     the user should see the element    jQuery=tr:nth-child(1) td:nth-child(2):contains("Park living")
     the user should see the element    jQuery=tr:nth-child(1) td:nth-child(3):contains("The Best Juggling Company")
-    #the user should see the element    jQuery=tr:nth-child(1) td:nth-child(4):contains(${initial_application_assesors})
-    #the user should see the element    jQuery=tr:nth-child(1) td:nth-child(5):contains(${initial_application_assigned})
-    #the user should see the element    jQuery=tr:nth-child(1) td:nth-child(5):contains(${initial+application_submitted})
-    #TODO checks disabled due toINFUND-7745
+    the user should see the element    jQuery=tr:nth-child(1) td:nth-child(4):contains("2")
+    the user should see the element    jQuery=tr:nth-child(1) td:nth-child(5):contains("1")
+    the user should see the element    jQuery=tr:nth-child(1) td:nth-child(6):contains("0")
 
 the available assessors information is correct
     the user should see the element    jQuery=.assessors-available td:nth-child(1):contains('Paul Plum')
     the user should see the element    jQuery=.assessors-available td:nth-child(2):contains('Town Planning, Construction')
-    #the user should see the element    jQuery=.assessors-available td:nth-child(3):contains('8')
-    #the user should see the element    jQuery=.assessors-available td:nth-child(4):contains('4')
-    #the user should see the element    jQuery=.assessors-available td:nth-child(5):contains('0')
-    #TODO checks disabled due toINFUND-7745
+    the user should see the element    jQuery=.assessors-available td:nth-child(3):contains('11')
+    the user should see the element    jQuery=.assessors-available td:nth-child(4):contains('7')
+    the user should see the element    jQuery=.assessors-available td:nth-child(5):contains('0')
 
 the assigned list is correct before notification
     the user should see the element    jQuery=.assessors-assigned td:nth-child(1):contains("Paul Plum")
     the user should see the element    jQuery=.assessors-assigned td:nth-child(2):contains("Academic")
     the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("Urban living")
     the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("infrastructure")
-    #the user should see the element    jQuery=tr:eq(1) td:nth-child(4):contains("9")
-    #the user should see the element    jQuery=tr:eq(1) td:nth-child(5):contains("5")
-    #the user should see the element    jQuery=tr:eq(1) td:nth-child(6):contains("-")
-    #the user should see the element    jQuery=tr:eq(1) td:nth-child(7):contains("-")
-    #the user should see the element    jQuery=tr:eq(1) td:nth-child(8):contains("-")
-    #the user should see the element    jQuery=tr:eq(1) td:nth-child(9):contains("-")
-    #TODO checks disabled due toINFUND-7745
+    the user should see the element    jQuery=tr:eq(1) td:nth-child(4):contains("12")
+    the user should see the element    jQuery=tr:eq(1) td:nth-child(5):contains("8")
+    the user should see the element    jQuery=tr:eq(1) td:nth-child(6):contains("-")
+    the user should see the element    jQuery=tr:eq(1) td:nth-child(7):contains("-")
+    the user should see the element    jQuery=tr:eq(1) td:nth-child(8):contains("-")
+    the user should see the element    jQuery=tr:eq(1) td:nth-child(9):contains("-")
 
 the previously assigned list is correct
     the user should see the element    jQuery=.assessors-previous td:nth-child(1):contains('Paul Plum')
     the user should see the element    jQuery=.assessors-previous td:nth-child(2):contains('Academic')
     the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('Urban living')
     the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('infrastructure')
-    #the user should see the element    jQuery=.assessors-previous td:nth-child(4):contains('8')
-    #the user should see the element    jQuery=.assessors-previous td:nth-child(5):contains('4')
-    #TODO checks disabled due toINFUND-7745
+    the user should see the element    jQuery=.assessors-previous td:nth-child(4):contains('11')
+    the user should see the element    jQuery=.assessors-previous td:nth-child(5):contains('7')
 
 the user see the correct key statistics
     the user should see the element    jQuery=small:contains("Total assignments")
