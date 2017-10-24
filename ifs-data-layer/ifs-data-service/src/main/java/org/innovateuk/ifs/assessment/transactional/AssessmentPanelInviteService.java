@@ -2,11 +2,10 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
@@ -14,19 +13,27 @@ import java.util.List;
 /**
  * Service for managing {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite}s.
  */
-
 public interface AssessmentPanelInviteService {
 
-
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GET_ALL_CREATED_INVITES",
             description = "Competition Admins and Project Finance users can get all invites that have been created for an assessment panel on a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "GET_ALL_INVITES_TO_RESEND",
+            description = "Competition Admins and Project Finance users can get all invites to be resent for an assessment panel on a competition")
+    ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "SEND_ALL_INVITES",
             description = "The Competition Admins and Project Finance users can send all assessment panel invites")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInvitesToSendResource);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "RESEND_INVITES",
+            description = "The Competition Admins and Project Finance users can resend assessment panel invites")
+    ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_ASSESSORS_BY_COMPETITION",
@@ -50,4 +57,15 @@ public interface AssessmentPanelInviteService {
             description = "The Competition Admin user and Project Finance users can create assessment panel invites for existing users")
     ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInvites);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
+            description = "Competition Admins and Project Finance users can retrieve assessment panel invitation overview by competition")
+    ServiceResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
+                                                                            Pageable pageable,
+                                                                            List<ParticipantStatus> statuses);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
+            description = "Competition Admins and Project Finance users can retrieve invited assessor invite ids by competition")
+    ServiceResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId);
 }

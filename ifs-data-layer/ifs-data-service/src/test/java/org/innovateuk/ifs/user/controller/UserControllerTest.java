@@ -31,10 +31,12 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_PASSWORD_RESET;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.URL_VERIFY_EMAIL;
+import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -336,5 +338,12 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         when(registrationServiceMock.activateUser(123L)).thenReturn(serviceSuccess());
         mockMvc.perform(get("/user/id/123/reactivate")).andExpect(status().isOk());
         verify(registrationServiceMock).activateUser(123L);
+    }
+
+    @Test
+    public void findAllExternal() throws Exception {
+        when(userServiceMock.findAllByProcessRoles(externalApplicantRoles())).thenReturn(serviceSuccess(newUserOrganisationResource().build(2)));
+        mockMvc.perform(get("/user/findAllExternal")).andExpect(status().isOk());
+        verify(userServiceMock).findAllByProcessRoles(externalApplicantRoles());
     }
 }

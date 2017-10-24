@@ -151,6 +151,7 @@ Invite multiple assessors
     And The user should see the text in the page       Please visit our online Innovation Funding Service to respond to this request
     And The user enters text to a text field           css=#subject  Invitation to assess 'Sustainable living models for the future' @
     And the user clicks the button/link                jQuery=.button:contains("Send invite")
+    And the user clicks the button/link                link=Invite
     Then The user should not see the text in the page  ${assessor_to_add}
     And The user clicks the button/link                link=Find
     And the user should not see the text in the page   ${assessor_to_add}
@@ -248,7 +249,7 @@ The key statistics are calculated
 the calculations of the Assessors on invite list should be correct
     #Calculation of the Assessors on invite list
     ${ASSESSORS_ON_LIST}=    Get matching xpath count    //*[@id="content"]/form/div[2]/table/tbody/tr
-    ${ASSESSORS_COUNT}=    Get text    jQuery=.highlight-panel:contains("assessors on invite list") .heading-large
+    ${ASSESSORS_COUNT}=    Get text    jQuery=.highlight-panel:contains("Assessors on invite list") .heading-large
     Should Be Equal As Integers    ${ASSESSORS_ON_LIST}    ${ASSESSORS_COUNT}
 
 the user invites multiple assessors
