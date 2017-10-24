@@ -22,7 +22,7 @@ def setting_wait_until_flag(func):
     try:
       result = func(*args)
     except:
-      capture_page_screenshot_on_failure(local_auto_increment)
+      __capture_page_screenshot_on_failure(local_auto_increment)
       raise
     finally:
       currently_waiting_for_keyword_to_succeed[local_auto_increment] = False
@@ -86,8 +86,10 @@ def run_keyword_and_ignore_error_without_screenshots(keyword, *args):
 def run_keyword_and_return_status_without_screenshots(keyword, *args):
   return BuiltIn().run_keyword_and_return_status(keyword, *args)
 
-
-def capture_page_screenshot_on_failure(flag = 0):
+# Using the keyword Capture Page Screenshot On Failure as an autonomous keyword
+# will raise the error "Keyword 'Capture Page Screenshot On Failure' could not be run on failure: KeyError: 0"
+# that is because the flag is not set when this function gets called without setting_wait_until_flag and defaults to 0
+def __capture_page_screenshot_on_failure(flag = 0):
   if not currently_waiting_for_keyword_to_succeed[flag]:
     capture_large_screenshot()
 
