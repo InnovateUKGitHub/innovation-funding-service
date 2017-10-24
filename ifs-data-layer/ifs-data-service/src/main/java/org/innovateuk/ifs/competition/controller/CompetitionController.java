@@ -202,4 +202,14 @@ public class CompetitionController {
         return competitionService.findFeedbackReleasedCompetitions().toGetResponse();
     }
 
+    @GetMapping("/{id}/queries/open")
+    public RestResult<List<CompetitionOpenQueryResource>> getOpenQueries(@PathVariable("id") Long competitionId) {
+        return competitionService.findAllOpenQueries(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/{id}/queries/open/count")
+    public RestResult<Long> countOpenQueries(@PathVariable("id") Long competitionId) {
+        return competitionService.countAllOpenQueries(competitionId).toGetResponse();
+    }
+
 }
