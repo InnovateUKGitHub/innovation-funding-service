@@ -283,7 +283,7 @@ IFS Admin can see Bank Details
     [Setup]  log in as a different user            &{ifs_admin_user_credentials}
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=${PS_BD_Competition_Name}
-    Then the user should see the element          jQuery=a:contains("All projects")
+    Then the user should see the element          link=All projects
     And the user should see the element           css=#table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(3)
     When the user clicks the button/link          css=#table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(3) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details

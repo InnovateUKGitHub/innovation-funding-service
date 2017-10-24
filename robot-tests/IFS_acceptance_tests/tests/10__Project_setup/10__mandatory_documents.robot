@@ -307,7 +307,7 @@ CompAdmin can see uploaded files
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
     When the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element    jQuery=a:contains("All projects")
+    Then the user should see the element   link=All projects
     When the user clicks the button/link    css=#table-project-status tr:nth-child(2) td:nth-child(7) a
     Then the user should see the text in the page    Collaboration agreement
     When the user clicks the button/link    css=.uploaded-file:nth-of-type(1)
@@ -523,7 +523,7 @@ Project Finance user can click the link and go back to the Competition Dashboard
     [Tags]
     When the user clicks the button/link           link=Projects in setup
     Then the user should not see an error in the page
-    And the user should see the element           jQuery=a:contains("All projects")
+    And the user should see the element            link=All projects
     [Teardown]    the user goes back to the previous page
 
 # This is bank details and finance test but has been placed here as the required project is used here
