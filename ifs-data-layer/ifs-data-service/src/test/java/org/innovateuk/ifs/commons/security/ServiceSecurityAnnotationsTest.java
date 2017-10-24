@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
- * Tests around the Spring Security annotations on the Services and the Permission Rule framework as used by the @link {@link CustomPermissionEvaluator}
+ * Tests around the Spring Security annotations on the Services and the Permission Rule framework as used by the {@link CustomPermissionEvaluator}
  */
 public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
