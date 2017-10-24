@@ -36,7 +36,7 @@ function upgradeServices {
 
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
-        oc apply -f os-files-tmp/sil-stub/ ${SVC_ACCOUNT_CLAUSE}
+        oc apply -f os-files-tmp/sil-stub/80-sil-stub.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
     watchStatus
