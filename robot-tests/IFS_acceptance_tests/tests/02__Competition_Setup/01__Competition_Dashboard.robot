@@ -57,7 +57,6 @@ Project setup competition calculations
 PS projects title and lead
     [Documentation]    INFUND-2610, IFS-1881
     Given the user navigates to the page  ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user should see the element   link=${PROJECT_SETUP_COMPETITION_NAME}
     When the user clicks the button/link  link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element  jQuery=a:contains("All projects")
     And the user should see the element   jQuery=tr:nth-child(1) th:contains("Elbow grease")
