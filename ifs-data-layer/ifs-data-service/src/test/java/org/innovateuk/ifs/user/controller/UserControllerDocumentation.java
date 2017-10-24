@@ -97,7 +97,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                                 parameterWithName("userRoleName").description("The name of the role to get the users by.")
                         ),
                         responseFields(
-                                fieldWithPath("[]").description("list of users with the selected role, ordered by first name, lastn ame")
+                                fieldWithPath("[]").description("list of users with the selected role, ordered by first name, last name")
                         )
                 ));
     }
