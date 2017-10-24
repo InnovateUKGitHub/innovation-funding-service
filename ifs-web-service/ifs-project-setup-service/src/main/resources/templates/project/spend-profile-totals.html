@@ -55,7 +55,7 @@
                         <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}" th:id="${'month'+stats.index}" />
                     </th:block>
                     <th scope="col" class="fix-right">Total</th>
-                    <th scope="col" class="fix-right" >Eligible project cost</th>
+                    <th scope="col" class="fix-right">Eligible project cost</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -64,24 +64,24 @@
                         <span th:text="${organisationName}" />
                         <span th:if="${organisationName.equals(model.table.leadOrganisation.name)}"> (Lead)</span>
                     </th>
-                    <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'COMMA')}"/>
-                    <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.table.organisationToActualTotal.get(row.key),1,'COMMA')}" />
-                    <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerOrganisationMap.get(row.key),1,'COMMA')}" />
+                    <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'DEFAULT')}"/>
+                    <td class="fix-right" th:text="${'&pound;'+#numbers.formatInteger(model.table.organisationToActualTotal.get(row.key),1,'DEFAULT')}" />
+                    <td class="fix-right" th:text="${'&pound;'+#numbers.formatInteger(model.table.eligibleCostPerOrganisationMap.get(row.key),1,'DEFAULT')}" />
                 </tr>
                 </tbody>
                 <tfoot>
                 <tr class="form-group-row">
                     <th scope="row" class="fix-left">Total</th>
                     <th:block th:each="monthTotal,status : ${model.table.totalForEachMonth}">
-                        <td th:text="${'&pound; '+#numbers.formatInteger(monthTotal,1,'COMMA')}" />
+                        <td th:text="${'&pound;'+#numbers.formatInteger(monthTotal,1,'DEFAULT')}" />
                     </th:block>
                     <td class="fix-right">
-                        <input th:value="${'&pound; '+#numbers.formatInteger(model.table.totalOfAllActualTotals,1,'COMMA')}"
+                        <input th:value="${'&pound;'+#numbers.formatInteger(model.table.totalOfAllActualTotals,1,'DEFAULT')}"
                                readonly="readonly"
                                id="spend-profile-total-total" />
                     </td>
                     <td class="fix-right">
-                        <input readonly="readonly" th:value="${'&pound; '+#numbers.formatInteger(model.table.totalOfAllEligibleTotals,1,'COMMA')}" />
+                        <input readonly="readonly" th:value="${'&pound;'+#numbers.formatInteger(model.table.totalOfAllEligibleTotals,1,'DEFAULT')}" />
                     </td>
                 </tr>
                 </tfoot>
@@ -114,7 +114,7 @@
                                                           .jan-'+(item.year+1)+',
                                                           .feb-'+(item.year+1)+',
                                                           .mar-'+(item.year+1)}">
-                    &pound;<th:block th:text="${#numbers.formatInteger(item.amount,1,'DEFAULT')}" />                                                          
+                    &pound;<th:block th:text="${#numbers.formatInteger(item.amount,1,'DEFAULT')}" />
                 </td>
             </tr>
             </tbody>
