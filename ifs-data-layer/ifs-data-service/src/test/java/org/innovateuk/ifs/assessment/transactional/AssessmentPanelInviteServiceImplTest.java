@@ -34,6 +34,7 @@ import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.time.ZonedDateTime.now;
+import static java.time.ZonedDateTime.of;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -510,8 +511,8 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         List<String> emails = asList("john@email.com", "peter@email.com");
         List<String> names = asList("John Barnes", "Peter Jones");
 
-        ZonedDateTime acceptsDate = ZonedDateTime.of(2016, 12, 20, 12, 0,0,0, ZoneId.systemDefault());
-        ZonedDateTime deadlineDate = ZonedDateTime.of(2017, 1, 17, 12, 0,0,0, ZoneId.systemDefault());
+        ZonedDateTime acceptsDate = of(2016, 12, 20, 12, 0,0,0, ZoneId.systemDefault());
+        ZonedDateTime deadlineDate = of(2017, 1, 17, 12, 0,0,0, ZoneId.systemDefault());
 
         Competition competition = newCompetition()
                 .withName("Competition in Assessor Panel")
@@ -565,8 +566,8 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         List<String> names = asList("John Barnes", "Peter Jones");
         List<Long> inviteIds = asList(1L, 2L);
 
-        ZonedDateTime acceptsDate = ZonedDateTime.of(2016, 12, 20, 12, 0,0,0, ZoneId.systemDefault());
-        ZonedDateTime deadlineDate = ZonedDateTime.of(2017, 1, 17, 12, 0,0,0, ZoneId.systemDefault());
+        ZonedDateTime acceptsDate = of(2016, 12, 20, 12, 0,0,0, ZoneId.systemDefault());
+        ZonedDateTime deadlineDate = of(2017, 1, 17, 12, 0,0,0, ZoneId.systemDefault());
 
         Competition competition = newCompetition()
                 .withName("my competition")
@@ -742,14 +743,15 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withStatus(SENT)
                 .withUser(user)
                 .withCompetition(competition)
+                .withSentOn(of(2000, 1, 2, 3, 4, 0, 0, ZoneId.systemDefault()))
                 .build(2);
 
         when(assessmentPanelInviteRepositoryMock.getByUserId(1L)).thenReturn(invites);
 
         List<AssessmentPanelInviteResource> actual = service.getAllInvitesByUser(1L).getSuccessObject();
         List<AssessmentPanelInviteResource> expected = new ArrayList<>();
-        expected.add(new AssessmentPanelInviteResource("", 2L, "Competition in Assessor Panel", SENT, 1L, "", now()));
-        expected.add(new AssessmentPanelInviteResource("", 2L, "Competition in Assessor Panel", SENT, 1L, "", now()));
+        expected.add(new AssessmentPanelInviteResource("", 2L, "Competition in Assessor Panel", SENT, 1L, "paulplum@gmail.com", of(2000, 1, 2, 3, 4, 0, 0, ZoneId.systemDefault())));
+        expected.add(new AssessmentPanelInviteResource("", 2L, "Competition in Assessor Panel", SENT, 1L, "paulplum@gmail.com", of(2000, 1, 2, 3, 4, 0, 0, ZoneId.systemDefault())));
 
         assertEquals(expected.get(0), actual.get(0));
         assertEquals(expected.get(1), actual.get(1));

@@ -152,7 +152,7 @@
                         <li th:each="assessmentPanelInvite : ${model.assessmentPanelInvites}" class="status-2-col">
                             <div class="task">
                                 <h3 class="heading-small">
-                                    <a th:href="@{/invite/panel/inviteHash(competitionId={assessmentPanelInvite.competitionId}, inviteHash=${assessmentPanelInvite.inviteHash})}"
+                                    <a th:href="@{/invite/panel/{inviteHash}(inviteHash=${assessmentPanelInvite.inviteHash})}"
                                        th:text="${assessmentPanelInvite.competitionName}"/>
                                 </h3>
                                 <p>You have been asked to assess this competition. Please respond.</p>

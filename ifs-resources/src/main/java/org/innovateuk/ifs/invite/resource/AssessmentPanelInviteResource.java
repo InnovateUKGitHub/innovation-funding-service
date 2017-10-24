@@ -37,7 +37,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
         this.panelDate = panelDate;
     }
 
-    private AssessmentPanelInviteResource() {
+    public AssessmentPanelInviteResource() {
     }
 
 

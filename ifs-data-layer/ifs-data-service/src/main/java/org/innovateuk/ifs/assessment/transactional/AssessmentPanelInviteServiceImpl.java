@@ -355,7 +355,9 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                         invite.getTarget().getId(),
                         invite.getTarget().getName(),
                         invite.getStatus(),
-                        invite.getUser().getId()))
+                        invite.getUser().getId(),
+                        invite.getEmail(),
+                        invite.getSentOn()))
                 .collect(toList()));
     }
 
