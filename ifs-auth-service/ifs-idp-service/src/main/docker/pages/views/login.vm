@@ -98,7 +98,7 @@
                 <span class="heading-secondary">Innovation Funding Service</span>
                 Sign in
             </h1>
-            <form action="$flowExecutionUrl" method="post">
+            <form action="$flowExecutionUrl" method="post" id="sign-in-form">
 
             #set ($serviceName = $rpUIContext.serviceName)
 
@@ -169,7 +169,7 @@
 
             #if ($passwordEnabled)
               <div class="form-group extra-margin">
-                <button class="button" type="submit" name="_eventId_proceed">Sign in</button>
+                <button class="button" type="submit" name="_eventId_proceed" id="sign-in-cta">Sign in</button>
               </div>
             #end
 
