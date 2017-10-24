@@ -94,7 +94,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         mockMvc.perform(get("/user/findByRole/{userRole}", INNOVATION_LEAD))
                 .andDo(document("user/{method-name}",
                         pathParameters(
-                                parameterWithName("userRoleName").description("The name of the role to get the users by.")
+                                parameterWithName("userRole").description("The role to get the users by.")
                         ),
                         responseFields(
                                 fieldWithPath("[]").description("list of users with the selected role, ordered by first name, last name")
