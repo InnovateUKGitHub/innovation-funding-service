@@ -98,16 +98,16 @@ CompAdmin resend invites to multiple assessors
     Then the user should see the element        jQuery=td:contains("Benjamin Nixon") ~ td:contains("Invite sent: ${today}")
     And the user should see the element         jQuery=td:contains("Joel George") ~ td:contains("Invite sent: ${today}")
 
-Assesor is able to accept the invitation
-    [Documentation]  IFS-37
+Assesor is able to accept the invitation from dashboard
+    [Documentation]  IFS-37  IFS-1135
     [Tags]
-    [Setup]  Log in as a different user     benjamin.nixon@gmail.com  ${short_password}
-    Given the user reads his email and clicks the link  benjamin.nixon@gmail.com  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
+    [Setup]  Log in as a different user     ${panel_assessor}  ${short_password}
+    Given the user clicks the button/link  jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button  acceptInvitation  true
     And The user clicks the button/link     jQuery=button:contains("Confirm")
-    Then the user should see the element    jQuery=h1:contains("Assessor dashboard")  #to be updated once ifs-1135 goes in
+    Then the user should not see the element    jQuery=h2:contains("Invitations to attend panel")
 
-Assesor is able to reject the invitation
+Assesor is able to reject the invitation from email
     [Documentation]  IFS-37
     [Tags]
     [Setup]  Logout as user
@@ -116,7 +116,7 @@ Assesor is able to reject the invitation
     And The user clicks the button/link     jQuery=button:contains("Confirm")
     And the user clicks the button/link     link=Sign in
     And Logging in and Error Checking   joel.george@gmail.com  ${short_password}
-    Then the user should see the element    jQuery=h1:contains("Assessor dashboard")  #to be updated once ifs-1135 goes in
+    Then the user should not see the element    jQuery=h2:contains("Invitations to attend panel")
 
 Comp Admin can see the rejected invitation
     [Documentation]  IFS-37
@@ -124,12 +124,6 @@ Comp Admin can see the rejected invitation
     [Setup]  Log in as a different user     &{Comp_admin1_credentials}
     Given the user navigates to the page    ${SERVER}/management/assessment/panel/competition/13/assessors/overview
     Then the user should see the element    jQuery=td:contains("Joel George") ~ td:contains("Invite declined")
-
-Assessor dashboard shows invite to attend panel
-   [Documentation]  IFS-1135
-   [Tags]
-   Given Log in as a different user      email=${panel_assessor}  password=Passw0rd
-   Then the user should see the element  jQuery=h2:contains("Invitations to attend panel") ~ ul:contains("${CLOSED_COMPETITION_NAME}")
 
 *** Keywords ***
 
