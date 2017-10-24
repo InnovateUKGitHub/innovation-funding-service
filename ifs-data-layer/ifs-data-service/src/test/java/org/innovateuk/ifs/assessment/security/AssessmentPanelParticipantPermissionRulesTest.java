@@ -98,16 +98,4 @@ public class AssessmentPanelParticipantPermissionRulesTest extends BasePermissio
 
         assertFalse(rules.userCanViewTheirOwnAssessmentPanelParticipation(assessmentPanelParticipantResource, userResource));
     }
-
-    @Test
-    public void userCanViewTheirOwnAssessmentPanelParticipation_notAssessor() {
-        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource()
-                .withUser(7L)
-                .build();
-        UserResource userResource = newUserResource()
-                .withId(7L)
-                .build();
-
-        assertFalse(rules.userCanViewTheirOwnAssessmentPanelParticipation(assessmentPanelParticipantResource, userResource));
-    }
 }
