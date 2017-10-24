@@ -347,7 +347,7 @@ the user fills in the funding information with bigger amount
 
 User verifies captial usage, subcontracting, travel and other costs for innovation lead
     the user expands the section     Capital usage
-    the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") + td:contains("Existing") + td:contains("12") + td:contains("2120")
+    the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") + td:contains("Existing") + td:contains("12") + td:contains("2,120")
     the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") ~ td:contains("1200") + td:contains("60") + td:contains("£552")
     the user collapses the section   Capital usage
     the user expands the section     Subcontracting costs

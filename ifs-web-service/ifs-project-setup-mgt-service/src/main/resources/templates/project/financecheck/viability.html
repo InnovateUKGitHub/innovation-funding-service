@@ -33,8 +33,8 @@
           <th scope="col">Total costs</th>
           <th scope="col" class="numeric">% Grant</th>
           <th scope="col" class="numeric">Total project cost</th>
-          <th scope="col" class="numeric">Grant applied for</th>
-          <th scope="col" class="numeric">Other public sector funding</th>
+          <th scope="col" class="numeric">Grant applied for (&pound;)</th>
+          <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
         </tr>
       </thead>
       <tbody>
@@ -42,8 +42,8 @@
           <td>&pound;<th:block th:text="${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}" /></td>
           <td th:text="${model.percentageGrant+'%'}" class="numeric"></td>
           <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.contributionToProject,1,'DEFAULT')}" /></td>
-          <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'DEFAULT')}" /></td>
-          <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
+          <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'DEFAULT')}" /></td>
+          <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
         </tr>
       </tbody>
     </table>

@@ -30,11 +30,11 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'COMMA')}"/>200,903</td>
+                        <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'DEFAULT')}"/>200,903</td>
                         <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}">30%</td>
-                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'COMMA')}">57,803</td>
-                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'COMMA')}">2,468</td>
-                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'COMMA')}">140,632</td>
+                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'DEFAULT')}">57,803</td>
+                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
+                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'DEFAULT')}">140,632</td>
                         </td>
                     </tr>
                 </tbody>
@@ -58,7 +58,7 @@
                 <tr>
                     <th:block th:each="rowType : ${sectionDiffs.keySet()}">
                         <td th:unless="${#strings.isEmpty(rowType.name)}" class="numeric">&pound;
-                            <th:block th:text="${#numbers.formatInteger(sectionDiffs.get(rowType),1,'COMMA')}"/>
+                            <th:block th:text="${#numbers.formatInteger(sectionDiffs.get(rowType),1,'DEFAULT')}"/>
                         </td>
                     </th:block>
                 </tr>
@@ -84,7 +84,7 @@
                 <tfoot>
                 <tr>
                     <th>Overall</th>
-                    <th colspan="5" class="numeric" th:text="${#numbers.formatInteger(model.getDifferenceInTotalCostsAfterChanges(),1,'COMMA')}"></th>
+                    <th colspan="5" class="numeric" th:text="${#numbers.formatInteger(model.getDifferenceInTotalCostsAfterChanges(),1,'DEFAULT')}"></th>
                 </tr>
                 </tfoot>
                 <tbody>

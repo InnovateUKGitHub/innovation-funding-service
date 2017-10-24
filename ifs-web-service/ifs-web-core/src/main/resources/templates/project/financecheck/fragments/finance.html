@@ -128,7 +128,7 @@
                                th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
                                readonly="readonly"
                                type="text"
-                               th:value="'£' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
+                               th:value="'£' + ${#numbers.formatInteger(costCategory.getTotal(), 0, 'DEFAULT')}" />
 
                     </div>
                 </div>
@@ -245,8 +245,8 @@
                 <th scope="col">Start date</th>
                 <th scope="col">Duration</th>
                 <th scope="col" class="numeric">Total project cost</th>
-                <th scope="col" class="numeric">Grant applied for</th>
-                <th scope="col" class="numeric">Other public sector funding</th>
+                <th scope="col" class="numeric">Grant applied for (&pound;)</th>
+                <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
                 <th scope="col" class="numeric">Total % grant</th>
             </tr>
             </thead>
@@ -254,9 +254,9 @@
             <tr>
                 <td th:text="${#temporals.format(overview.projectStartDate, 'd MMM yyyy')}" />
                 <td th:text="${overview.durationInMonths+' months'}" />
-                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(overview.totalProjectCost,1,'COMMA')}" /></td>
-                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(overview.grantAppliedFor,1,'COMMA')}" /></td>
-                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(overview.otherPublicSectorFunding,1,'COMMA')}" /></td>
+                <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(overview.totalProjectCost,1,'DEFAULT')}" /></td>
+                <td class="numeric"><th:block th:text="${#numbers.formatInteger(overview.grantAppliedFor,1,'DEFAULT')}" /></td>
+                <td class="numeric"><th:block th:text="${#numbers.formatInteger(overview.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
                 <td th:text="${#numbers.formatInteger(overview.totalPercentageGrant,1,'NONE')+'%'}" class="numeric" />
             </tr>
             </tbody>
@@ -275,24 +275,24 @@
                             % Grant
                         </th>
                         <th scope="col" class="numeric width-small-medium">
-                            Funding sought
+                            Funding sought (&pound;)
                         </th>
                         <th scope="col" class="numeric width-medium">
-                            Other public sector funding
+                            Other public sector funding (&pound;)
                         </th>
                         <th scope="col" class="numeric width-small-medium">
-                            Contribution to project
+                            Contribution to project (&pound;)
                         </th>
                     </tr>
                 </thead>
                 <tfoot>
                     <tr>
                         <th>Total</th>
-                        <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summaries.getTotalCost(),1,'COMMA')}" /></strong></td>
+                        <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summaries.getTotalCost(),1,'DEFAULT')}" /></strong></td>
                         <td class="numeric"></td>
-                        <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summaries.getTotalFundingSought(),1,'COMMA')}" /></strong></td>
-                        <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summaries.getTotalOtherPublicSectorFunding(),1,'COMMA')}" /></strong></td>
-                        <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summaries.getTotalContributionToProject(),1,'COMMA')}" /></strong></td>
+                        <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summaries.getTotalFundingSought(),1,'DEFAULT')}" /></strong></td>
+                        <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summaries.getTotalOtherPublicSectorFunding(),1,'DEFAULT')}" /></strong></td>
+                        <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summaries.getTotalContributionToProject(),1,'DEFAULT')}" /></strong></td>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -302,11 +302,11 @@
                                 <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
                                 <small th:if="${partner.isLeadOrganisation()}">Lead</small>
                             </th>
-                            <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summary.totalCost,1,'COMMA')}" /></strong></td>
-                            <td th:text="${#numbers.formatInteger(summary.percentageGrant,1,'NONE')+'%'}" class="numeric" />
-                            <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(summary.fundingSought,1,'COMMA')}" /></td>
-                            <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(summary.otherPublicSectorFunding,1,'COMMA')}" /></td>
-                            <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(summary.contributionToProject,1,'COMMA')}" /></td>
+                            <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summary.totalCost,1,'DEFAULT')}" /></strong></td>
+                            <td th:text="${#numbers.formatInteger(summary.percentageGrant,1,'NONE')+'%'}" class="numeric"></td>
+                            <td class="numeric"><th:block th:text="${#numbers.formatInteger(summary.fundingSought,1,'DEFAULT')}" /></td>
+                            <td class="numeric"><th:block th:text="${#numbers.formatInteger(summary.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
+                            <td class="numeric"><th:block th:text="${#numbers.formatInteger(summary.contributionToProject,1,'DEFAULT')}" /></td>
                         </tr>
                     </th:block>
                 </tbody>
@@ -323,25 +323,19 @@
                         <tr>
                             <th scope="col">Partner</th>
                             <th scope="col" class="numeric width-small">Total</th>
-                            <th scope="col" class="numeric width-small">
-                                Labour
-                            </th>
-                            <th scope="col" class="numeric width-small">
-                                Overheads
-                            </th>
-                            <th scope="col" class="numeric width-small">
-                                Materials
-                            </th>
-                            <th scope="col" class="numeric width-small">Capital usage</th>
-                            <th scope="col" class="numeric width-small">Subcontract cost</th>
-                            <th scope="col" class="numeric width-small">Travel and subs</th>
-                            <th scope="col" class="numeric width-small">Other costs</th>
+                            <th scope="col" class="numeric width-small">Labour (&pound;)</th>
+                            <th scope="col" class="numeric width-small">Overheads (&pound;)</th>
+                            <th scope="col" class="numeric width-small">Materials (&pound;)</th>
+                            <th scope="col" class="numeric width-small">Capital usage (&pound;)</th>
+                            <th scope="col" class="numeric width-small">Subcontract cost (&pound;)</th>
+                            <th scope="col" class="numeric width-small">Travel and subs (&pound;)</th>
+                            <th scope="col" class="numeric width-small">Other costs (&pound;)</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
                             <th>Total</th>
-                            <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(breakdowns.total,1,'COMMA')}" /></strong></td>
+                            <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(breakdowns.total,1,'DEFAULT')}" /></strong></td>
                             <td class="numeric">&nbsp;</td>
                             <td class="numeric">&nbsp;</td>
                             <td class="numeric">&nbsp;</td>
@@ -359,11 +353,11 @@
                                 <strong th:text="${partner.getOrganisationName()}">Organisation Name<br /></strong>
                                 <small th:if="${partner.isLeadOrganisation()}">Lead</small>
                             </th>
-                            <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(finance.getTotal(),1,'COMMA')}" /></strong></td>
+                            <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(finance.getTotal(),1,'DEFAULT')}" /></strong></td>
                             <th:block th:each="rowType : ${finance.financeOrganisationDetails.keySet()}" th:with="row=${finance.financeOrganisationDetails.get(rowType)}">
-                            <td th:if="${rowType.isSpendCostCategory()}" class="numeric">
-                                &pound; <th:block th:text="${#numbers.formatInteger(row.total,1,'COMMA')}" />
-                            </td>
+                                <td th:if="${rowType.isSpendCostCategory()}" class="numeric">
+                                    <th:block th:text="${#numbers.formatInteger(row.total,1,'DEFAULT')}" />
+                                </td>
                             </th:block>
                         </tr>
                     </th:block>

@@ -185,18 +185,18 @@
                     <tr>
                         <th scope="col" class="numeric width-small">Total project costs</th>
                         <th scope="col" class="numeric width-small">% Grant</th>
-                        <th scope="col" class="numeric width-small">Funding sought</th>
-                        <th scope="col" class="numeric width-small">Other public sector funding</th>
-                        <th scope="col" class="numeric width-small">Contribution to project</th>
+                        <th scope="col" class="numeric width-small">Funding sought (&pound;)</th>
+                        <th scope="col" class="numeric width-small">Other public sector funding (&pound;)</th>
+                        <th scope="col" class="numeric width-small">Contribution to project (&pound;)</th>
                     </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatDecimal(model.organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" /></strong></td>
+                    <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(model.organisationFinance.total, 0, 'DEFAULT')}" /></strong></td>
                     <td class="numeric"><th:block th:text="${model.organisationFinance.grantClaimPercentage}+'%'" /></td>
-                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(model.organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}" /></td>
-                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(model.organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}" /></td>
-                    <td class="numeric">&pound;<th:block th:text="${#numbers.formatDecimal(model.organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}" /></td>
+                    <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalFundingSought, 0, 'DEFAULT')}" /></td>
+                    <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalOtherFunding, 0, 'DEFAULT')}" /></td>
+                    <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.organisationFinance.totalContribution, 0, 'DEFAULT')}" /></td>
                 </tr>
                 </tbody>
             </table>
