@@ -55,7 +55,11 @@
                         <a th:href="${backURL}" class="button-secondary" th:text="${'Return to ' + #strings.toLowerCase(backTitle)}">Return to application overview</a>
                     </th:block>
                     <th:block th:unless="${model.allReadOnly}">
-                        <button th:unless="${model.isSection()}" id="application-question-save" type="submit" class="button app-submit-btn" name="submit-section">Save and return to application overview</button>
+                        <button th:unless="${model.isSection()}"
+                                id="application-question-save"
+                                type="submit"
+                                class="button app-submit-btn"
+                                name="submit-section">Save and return to application overview</button>
                     </th:block>
                 </th:block>
 

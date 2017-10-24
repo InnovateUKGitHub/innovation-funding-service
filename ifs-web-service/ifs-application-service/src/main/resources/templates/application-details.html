@@ -86,8 +86,13 @@
         </th:block>
     </form>
 
-    <a th:id="${model.user.ableToSubmitApplication ? 'application-overview-submit-cta' : 'application-overview-review-cta'}" class="button" th:href="@{/application/{id}/summary(id=${model.currentApplication.id})}" th:text="${model.user.ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
-    <a id="application-overview-print" class="button button-clear" th:href="@{/application/{id}/print(id=${model.currentApplication.id})}" rel="nofollow" target="_blank"><span class="icon icon-print"></span> Print your application</a>
+    <a th:id="${model.user.ableToSubmitApplication ? 'application-overview-submit-cta' : 'application-overview-review-cta'}"
+       class="button" th:href="@{/application/{id}/summary(id=${model.currentApplication.id})}"
+       th:text="${model.user.ableToSubmitApplication ? 'Review and submit' : 'Review'}" />
+    <a id="application-overview-print"
+       class="button button-clear"
+       th:href="@{/application/{id}/print(id=${model.currentApplication.id})}" rel="nofollow" target="_blank">
+        <span class="icon icon-print"></span> Print your application</a>
 
 
     <th:block th:insert="fragments/layout :: main-content-end" />

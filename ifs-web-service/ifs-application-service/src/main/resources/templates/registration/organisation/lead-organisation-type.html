@@ -31,7 +31,9 @@
         <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
     </div>
 
-    <form id="lead-organisation-type-form" th:object="${organisationForm}" th:action="@{/organisation/create/lead-organisation-type}" method="POST" novalidate="novalidate">
+    <form id="lead-organisation-type-form"
+          th:object="${organisationForm}"
+          th:action="@{/organisation/create/lead-organisation-type}" method="POST" novalidate="novalidate">
         <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationTypeId}')} ? 'form-group-error'">
             <fieldset>
                 <legend class="extra-margin-bottom" id="organisationTypeId">
