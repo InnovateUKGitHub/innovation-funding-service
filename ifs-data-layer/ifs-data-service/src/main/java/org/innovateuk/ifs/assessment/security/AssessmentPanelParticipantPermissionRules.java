@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.invite.resource.AssessmentPanelParticipantResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,21 +18,16 @@ public class AssessmentPanelParticipantPermissionRules extends BasePermissionRul
     public boolean userCanAcceptAssessmentPanelInvite(AssessmentPanelParticipantResource assessmentPanelParticipant, UserResource user) {
         return user != null &&
                 assessmentPanelParticipant != null &&
-                isAssessor(user) &&
                 isSameUser(assessmentPanelParticipant, user);
     }
 
     @PermissionRule(value = "READ", description = "only the same user can read their panel participation")
     public boolean userCanViewTheirOwnAssessmentPanelParticipation(AssessmentPanelParticipantResource assessmentPanelParticipant, UserResource user) {
-        return isAssessor(user) && isSameParticipant(assessmentPanelParticipant, user);
+        return isSameParticipant(assessmentPanelParticipant, user);
     }
 
     private static boolean isSameParticipant(AssessmentPanelParticipantResource assessmentPanelParticipant, UserResource user) {
         return user.getId().equals(assessmentPanelParticipant.getUserId());
-    }
-
-    private static boolean isAssessor(UserResource user) {
-        return user.hasRole(UserRoleType.ASSESSOR);
     }
 
     private static boolean isSameUser(AssessmentPanelParticipantResource assessmentPanelParticipant, UserResource user) {
