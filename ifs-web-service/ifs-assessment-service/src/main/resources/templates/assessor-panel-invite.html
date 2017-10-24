@@ -17,7 +17,7 @@
             </div>
 
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assess '${model.competitionName}'|,size='heading-xlarge'" />
-            <p>Invitation to panel assessment on <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
+            <p>You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
             <section class="boxed">
                 <h2 class="heading-medium no-margin" th:text="|${#temporals.format(model.panelDate, 'dd MMMM yyyy')}: Assessment panel|">
@@ -29,21 +29,18 @@
                 <h2 class="heading-medium" th:text="|Competition details: ${model.competitionName}|">Competition details: Technology inspired</h2>
 
                 <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">See competition brief</a></p>
-
-                <h3 class="heading-small">You should reject this invitation if:</h3>
-                <ul class="list list-bullet">
-                    <li>You should reject this invitation if you are unavailable for the panel assessment date.</li>
-                </ul>
+                <br>
             </section>
 
             <form th:action="@{/invite/panel/{inviteHash}/decision(inviteHash=${model.panelInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
                 <div class="form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'form-group-error'">
                     <fieldset>
                         <legend id="acceptInvitation">
-                            <span class="heading-medium">Select your ability to assess for the panel</span>
+                            <span class="heading-medium">Are you able to attend the panel assessment?</span>
                             <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
                                 <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
                             </th:block>
+                            <p>You should reject this invitation if you are unavailable for the panel assessment date.</p>
                         </legend>
 
                         <div class="multiple-choice">
