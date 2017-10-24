@@ -16,7 +16,7 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 Competition dashboard Open competition
     [Documentation]    INFUND-7562
     [Tags]
-    When The user clicks the button/link    link=${OPEN_COMPETITION_NAME}
+    When The user clicks the button/link    link=${openCompetitionRTO_name}
     Then the user should see the element    jQuery=span:contains("16: Predicting market trends programme")
     And the user should see the element    jQuery=h1:contains("Open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")
@@ -28,6 +28,8 @@ Competition dashboard Open competition
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
     And the user should see the element    jQuery=a:contains("Manage assessments")[aria-disabled="true"]
+    And the user should see the element    jQuery=a:contains("Manage assessment panel")[aria-disabled="true"]
+    And the user should see the element    jQuery=a:contains("Input and review funding decision")[aria-disabled="true"]
 
 Milestones for the Open Competitions
     [Documentation]    INFUND-7561
@@ -44,17 +46,20 @@ Competition dashboard ready to Open competition
     [Tags]
     Given the user navigates to the page    ${CA_UpcomingComp}
     When The user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
-    Then the user should see the element    jQuery=span:contains("7: Photonics for health")
+    Then the user should see the element    jQuery=span:contains("${READY_TO_OPEN_COMPETITION_NAME}")
     And the user should see the element    jQuery=h1:contains("Ready to open")
     And the user should see the element    jQuery=h1:contains("Ready to open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
     And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("Digital manufacturing")
     And the user should see the element    link=View and update competition setup
+    And The user should not see the text in the element  css=#content p  Once you complete, this competition will be ready to open.
     And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
     And the user should see the element    jQuery=a:contains("Manage assessments")[aria-disabled="true"]
+    And the user should see the element    jQuery=a:contains("Manage assessment panel")[aria-disabled="true"]
+    And the user should see the element    jQuery=a:contains("Input and review funding decision")[aria-disabled="true"]
     And the user should see the element    jQuery=a:contains("Applications: All, submitted, ineligible")[aria-disabled="true"]
 
 Milestones for the ready to Open Competitions

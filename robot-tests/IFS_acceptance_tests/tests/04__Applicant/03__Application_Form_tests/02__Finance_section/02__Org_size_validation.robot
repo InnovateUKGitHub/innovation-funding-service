@@ -38,7 +38,7 @@ Funding section is now available
 Small org can't have more than 70% funding level
     [Documentation]    INFUND-1110
     [Tags]
-    When the user enters text to a text field    id=cost-financegrantclaim    46
+    When the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]    46
     Then the user should see the element  jQuery=span.error-message:contains("This field should be 45% or lower.")
 
 
@@ -78,7 +78,7 @@ Funding section has been reset
 Medium org can't have more than 60% level
     [Documentation]    INFUND-1110
     [Tags]
-    When the user enters text to a text field    css=#cost-financegrantclaim    36
+    When the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]    36
     Then the user should see the element  jQuery=span.error-message:contains("This field should be 35% or lower.")
 
 
@@ -86,7 +86,7 @@ Funding section can be completed with under 60%
     [Documentation]    INFUND-1110
     [Tags]    HappyPath
     When the user completes the funding section with funding level    35
-    Then the user should not see the element    jQuery=.error-message
+    Then the user should not see the element    css=.error-message
 
 
 User still sees warning that the funding section will be reset
@@ -120,7 +120,7 @@ Funding section has been reset again
 Large org can't have more than 50% level
     [Documentation]    INFUND-1110
     [Tags]
-    When the user enters text to a text field    css=#cost-financegrantclaim    27
+    When the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]    27
     Then the user should see the element  jQuery=span.error-message:contains("This field should be 25% or lower.")
 
 
@@ -141,13 +141,13 @@ The user marks their organisation as
     the user enters text to a text field    jQuery=label:contains("Turnover") + input    150
     the user enters text to a text field    jQuery=label:contains("employees") + input    0
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    the user should not see the element  jQuery=.error-message
+    the user should not see the element  css=.error-message
     the user should see the text in the page    Please complete your project finances.
 
 
 the user completes the funding section with funding level
     [Arguments]    ${funding_level}
-    the user enters text to a text field    id=cost-financegrantclaim    ${funding_level}
+    the user enters text to a text field    css=[name^="finance-grantclaimpercentage"]    ${funding_level}
     the user selects the radio button    other_funding-otherPublicFunding-    Yes
     the user enters text to a text field    css=[name*=other_funding-fundingSource]    Lottery funding
     the user enters text to a text field    css=[name*=other_funding-securedDate]    12-2008
@@ -157,7 +157,7 @@ the user completes the funding section with funding level
 
 the funding section has been reset including funding level
     [Arguments]    ${funding_level}
-    Then the user should not see the text in the element    css=#cost-financegrantclaim    ${funding_level}
+    Then the user should not see the text in the element    css=[name^="finance-grantclaimpercentage"]    ${funding_level}
     And checkbox should not be selected  termsAgreed
     And the user should not see the text in the element    css=[name*=other_funding-fundingSource]    Lottery funding
     And the user should not see the text in the element    css=[name*=other_funding-securedDate]    12-2008

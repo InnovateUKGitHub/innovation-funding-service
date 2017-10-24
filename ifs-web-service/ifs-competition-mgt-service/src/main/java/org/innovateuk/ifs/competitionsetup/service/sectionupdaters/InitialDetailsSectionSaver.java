@@ -81,8 +81,8 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 return serviceFailure(errors);
             }
 
-            return competitionService.update(competition).andOnSuccess(() -> {
-                if (initialDetailsForm.isMarkAsCompleteAction() && Boolean.FALSE.equals(competition.getSetupComplete())) {
+            return competitionService.updateCompetitionInitialDetails(competition).andOnSuccess(() -> {
+                if (initialDetailsForm.isMarkAsCompleteAction() && applicationFormHasNotBeenInitialised(competition)) {
                     return competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
                 } else {
                     return serviceSuccess();
@@ -91,7 +91,11 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         } else {
             return serviceFailure(new Error("Initial details section is not editable after notifications", BAD_REQUEST));
         }
-   }
+    }
+
+    private boolean applicationFormHasNotBeenInitialised(CompetitionResource competition) {
+        return !competition.isInitialDetailsComplete();
+    }
 
     private List<Error> doSetupComplete(final CompetitionResource competition, final InitialDetailsForm initialDetailsForm) {
         List<Error> errors = new ArrayList<>();

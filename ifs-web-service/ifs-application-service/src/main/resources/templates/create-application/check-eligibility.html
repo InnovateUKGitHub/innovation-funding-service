@@ -10,7 +10,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Please sign in or create an account',size='heading-xlarge'" />
 
 
@@ -23,7 +23,7 @@
             <a th:href="${redirectAfterLogin}" class="button" value="create-account" type="submit">Sign in</a>
         </section>
 
-        <section class="column-half" th:with="createUrl= '/organisation/create/find-business'">
+        <section class="column-half" th:with="createUrl= '/organisation/create/initialize'">
             <h2 class="heading-large no-margin">New to this service?</h2>
             <p>If you haven't used the new Innovation Funding Service before you will need to create an account.</p>
 

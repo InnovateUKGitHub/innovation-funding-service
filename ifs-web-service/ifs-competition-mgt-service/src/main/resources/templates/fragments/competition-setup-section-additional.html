@@ -1,19 +1,19 @@
 
 <!-- =================== Comp setup section - Additional info (2) ============================== -->
 <th:block th:fragment="section-content">
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
-      <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
-      <ul class="error-summary-list">
-          <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
-      </ul>
+
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
+
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Funding information',size='heading-xlarge'" />
 
-    <form th:attr="data-competition=${competition.id},data-autosave=${setupComplete != true}?compSetup" data-section="additional"
-          th:action="@{(${editable} ? '' : 'additional/edit')}"
+    <form th:attr="data-competition=${model.general.competition.id},data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="additional"
+          th:action="@{(${model.general.editable} ? '' : 'additional/edit')}"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
 
-        <fieldset th:if="${editable}">
+        <fieldset th:if="${model.general.editable}">
             <legend class="visuallyhidden">Funding information</legend>
             <div class="grid-row">
                 <div class="column-half">
@@ -39,6 +39,7 @@
                         </label>
                         <input required="required" class="form-control width-x-large"
                                th:errorclass="form-control-error"
+                               th:id="funders[__${iteration.index}__].funder"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funder}"
                                th:attr="data-required-errormessage=#{validation.additionalinfoform.fundername.required},
                                         data-maxlength-errormessage=#{validation.additionalinfoform.funder.size(null,null,'255')}" />
@@ -55,7 +56,7 @@
                         <input required="required" type="number" min="0"
                                class="form-control width-x-large"
                                th:errorclass="form-control-error"
-                               th:id="${iteration.index}+'-funderBudget'"
+                               th:id="funders[__${iteration.index}__].funderBudget"
                                th:field="${competitionSetupForm.funders[__${iteration.index}__].funderBudget}"
                                value=""
                                th:attr="data-required-errormessage=#{validation.additionalinfoform.funderbudget.required},
@@ -100,6 +101,7 @@
                     <input class="form-control width-large"
                            th:errorclass="form-control-error"
                            type="text"
+                           id="pafNumber"
                            th:field="${competitionSetupForm.pafNumber}" />
                 </div>
 
@@ -111,6 +113,7 @@
                         </th:block>
                     </label>
                     <input class="form-control width-large"
+                           id="budgetCode"
                            th:errorclass="form-control-error"
                            type="text"
                            th:field="${competitionSetupForm.budgetCode}" />
@@ -118,7 +121,7 @@
 
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('activityCode')} ? 'form-group-error'">
-                    <label class="form-label" for="competitionSetupForm.activityCode">
+                    <label class="form-label" for="activityCode">
                         <span class="form-label-bold">Activity code</span>
                         <th:block th:if="${#fields.hasErrors('activityCode')}">
                             <span class="error-message"  th:each="err : ${#fields.errors('activityCode')}" th:text="${err}"></span>
@@ -127,6 +130,7 @@
                     <input class="form-control width-large"
                            th:errorclass="form-control-error"
                            type="text"
+                           id="activityCode"
                            th:field="${competitionSetupForm.activityCode}"
                            maxlength="255"
                            th:attr="data-maxlength-errormessage=#{validation.additionalinfoform.activitycode.size}" />
@@ -144,19 +148,20 @@
                            class="form-control width-large readonly-boxed"
                            th:classappend="${#fields.hasErrors('competitionCode')} ? 'form-control-error'"
                            type="text"
+                           id="competitionCode"
                            name="competitionCode"
                            th:value="${competitionSetupForm.competitionCode}"
                            required="required"
                            th:attr="data-required-errormessage=#{validation.additionalinfoform.competitioncode.required}"
                            data-autosave-disabled="data-autosave-disabled"/>
-                    <button class="button button-secondary" th:disabled="${isSetupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${competition.id}">Generate code</button>
+                    <button class="button button-secondary" th:disabled="${model.general.state.setupAndLive}" th:if="${#strings.isEmpty(competitionSetupForm.competitionCode)}" type="submit" name="generate-code" id="generate-code" th:value="${model.general.competition.id}">Generate code</button>
                 </div>
             </fieldset>
 
             <button class="button">Done</button>
         </fieldset>
 
-        <fieldset th:if="${!editable}" id="section-2-">
+        <fieldset th:if="${!model.general.editable}" id="section-2-">
             <table>
                 <thead>
                 <tr>
@@ -195,19 +200,19 @@
                 <dd th:text="${competitionSetupForm.competitionCode}">Competition Code</dd>
             </dl>
 
-            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
         </fieldset>
 
     </form>
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='initial')}">
+            <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='initial')}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Initial details</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='eligibility')}">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='eligibility')}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Eligibility</span>
             </a>

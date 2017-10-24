@@ -10,7 +10,7 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='/competition/search',currentApplication=${currentApplication},javascriptBackLink=true" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Confirm your organisation',subTitle='Create your account',size='heading-xlarge'" />
 
     <div class="message-alert">
@@ -20,7 +20,9 @@
     <h2 class="heading-medium no-margin-bottom">Confirm your organisation details are correct</h2>
     <th:block th:insert="fragments/addresses :: organisation-details" th:with="confirmDetails=true, showOrgType=true" />
 
-    <a th:href="@{/organisation/create/save-organisation}" name="save-organisation" class="button extra-margin">Save and continue</a>
+    <form method="post" th:action="@{/organisation/create/save-organisation}">
+        <button name="save-organisation" class="button extra-margin">Save and continue</button>
+    </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

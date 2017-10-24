@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessment summary'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessment summary',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='assessment'" class="assessment assessment-form">
@@ -12,11 +12,9 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${model.assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
-            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-                <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
-                <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
-                </ul>
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There is a problem on this page</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
             <th:block th:with="applicationName=${#strings.isEmpty(model.applicationName)} ? #{ifs.application.no_title} : ${model.applicationName}">
@@ -32,13 +30,13 @@
 
             <th:block th:insert="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" />
 
-            <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate">
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
                 <div class="question" th:id="form-input-fundingConfirmation">
                     <div class="form-group" th:classappend="${#fields.hasErrors('fundingConfirmation')} ? 'form-group-error'">
                         <fieldset class="inline">
-                            <legend>
+                            <legend id="fundingConfirmation">
                                 <span class="form-label-bold">Do you believe that this application is suitable for funding?</span>
                                 <th:block th:if="${#fields.hasErrors('fundingConfirmation')}">
                                     <span class="error-message"  th:each="err : ${#fields.errors('fundingConfirmation')}" th:text="${err}"></span>
@@ -91,7 +89,7 @@
                                     th:errorclass="form-control-error"
                                     rows="4"
                                     th:field="*{feedback}"></textarea>
-                                <div class="textarea-footer" th:with="feedback=*{feedback}">
+                                <div class="textarea-footer" th:with="feedback=*{feedback}" aria-live="polite" aria-atomic="true" role="status">
                                     <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, feedback)})" />
                                 </div>
                             </div>
@@ -119,7 +117,7 @@
                                     rows="4"
                                     th:field="*{comment}"></textarea>
 
-                                <div class="textarea-footer" th:with="comment=*{comment}">
+                                <div class="textarea-footer" th:with="comment=*{comment}" aria-live="polite" aria-atomic="true" role="status">
                                     <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, comment)})" />
                                 </div>
                             </div>

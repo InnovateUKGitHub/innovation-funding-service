@@ -37,7 +37,6 @@ The user should see a field and summary error
     the user should see a summary error    ${ERROR_TEXT}
 
 the user should not see an error in the page
-    Page Should Not Contain    Error
     Page Should Not Contain    ${500_error_message}
     Page Should Not Contain    ${404_error_message}
     Page Should Not Contain    ${403_error_message}

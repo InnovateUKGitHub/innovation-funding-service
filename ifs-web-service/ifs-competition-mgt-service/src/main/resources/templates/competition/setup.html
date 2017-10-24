@@ -1,31 +1,38 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
+<head th:with="pageTitle='Competition Management Dashboard'">
+  <th:block th:if="${competitionSetupForm != null}">
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle},hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
+  </th:block>
+  <th:block th:if="${competitionSetupForm == null}">
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle}" />
+  </th:block>
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/competition-setup :: comp-setup-complete-modal" />
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${currentSection.toString() == 'HOME'}" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${competition.id})}" th:if="${currentSection.toString() != 'HOME'}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
 
 
-    <th:block th:if="${currentSection.toString() == 'HOME'}">
+    <th:block th:if="${model.general.currentSectionIsHome()}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Competition setup',size='heading-xlarge'" />
     </th:block>
 
-    <th:block th:insert="fragments/competition-setup :: comp-setup-navigation(${allSections}, ${currentSection}, ${competition}, ${readyToOpen})" th:if="${currentSection.toString() == 'HOME'}" />
+    <th:block th:insert="fragments/competition-setup :: comp-setup-navigation(${model.general.allSections}, ${model.general.currentSection}, ${model.general.competition}, ${readyToOpen})" th:if="${model.general.currentSectionIsHome()}" />
 
-    <th:block th:if="${currentSectionFragment != null}">
-        <th:block th:replace="fragments/competition-setup-sections :: ${currentSectionFragment}" />
+    <th:block th:if="${model.general.currentSectionFragment != null}">
+        <th:block th:replace="fragments/competition-setup-sections :: ${model.general.currentSectionFragment}" />
     </th:block>
 
-    <th:block th:insert="fragments/competition-setup :: setup-home" th:if="${currentSection.toString() != 'HOME'}" />
+    <th:block th:insert="fragments/competition-setup :: setup-home" th:if="${!model.general.currentSectionIsHome()}" />
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

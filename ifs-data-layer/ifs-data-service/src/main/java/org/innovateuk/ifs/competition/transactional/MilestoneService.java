@@ -21,14 +21,10 @@ public interface MilestoneService {
     @SecuredBySpring(value = "VALIDATE_PUBLIC_DATES", securedType = MilestoneResource.class, description = "Only comp admin or project finance can validate the public dates.")
     ServiceResult<Boolean> allPublicDatesComplete(final Long id);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance', 'innovation_lead')")
-    @SecuredBySpring(value="READ", securedType=MilestoneResource.class,
-            description = "Only Comp Admins and project finance users can see all the milestones for the given competition")
+    @PreAuthorize("hasPermission(#id, 'VIEW_MILESTONE')")
     ServiceResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(final Long id);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    @SecuredBySpring(value="READ", securedType=MilestoneResource.class,
-            description = "Only Comp Admins and project finance users can request the milestones for the competition by its type")
+    @PreAuthorize("hasPermission(#id, 'VIEW_MILESTONE_BY_TYPE')")
     ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(final MilestoneType type, final Long id);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")

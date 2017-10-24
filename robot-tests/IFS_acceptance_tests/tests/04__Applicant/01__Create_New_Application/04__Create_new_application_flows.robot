@@ -24,9 +24,9 @@ Non registered users non companies house route
     And the user clicks the button/link            link=Home and industrial efficiency programme
     And the user clicks the button/link            jQuery=a:contains("Start new application")
     And the user clicks the button/link            jQuery=.button:contains("Create account")
-    When the user clicks the Not on company house link
     And the user selects the radio button          organisationTypeId    radio-1
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
+    When the user clicks the Not on company house link
     And the user clicks the button/link            jQuery=.button:contains("Save and continue")
     Then The user should see the text in the page  Your details
 
@@ -52,9 +52,9 @@ Verify the name of the new application
     And the user edits the application title
     Then the user should see the text in the page                 ${test_title}
     And the progress indicator should show 0
-    And the user clicks the button/link                           link=view team members and add collaborators
+    And the user clicks the button/link                           link=view and manage contributors and collaborators
     And the user should see the text in the page                  Application team
-    And the user should see the text in the page                  View and manage your participants
+    And the user should see the text in the page                  View and manage your contributors or collaborators in the application.
     And the user can see this new application on their dashboard  ${test_title}
 
 Marketing emails information should have updated on the profile
@@ -84,7 +84,7 @@ the user edits the application title
     the user should see the element         link=Application details
     the user clicks the button/link         link=Application details
     The project start date is blank
-    The user enters text to a text field    id=application_details-title    ${test_title}
+    The user enters text to a text field    css=[id="application.name"]    ${test_title}
     the user clicks the button/link         jQuery=button:contains("Save and return")
 
 the progress indicator should show 0
@@ -103,7 +103,7 @@ The user can see this new application on their dashboard
 Applicant goes to the registration form
     the user navigates to the page   ${frontDoor}
     the user clicks the button/link  link=Home and industrial efficiency programme
-    And the user follows the flow to register their organisation
+    And the user follows the flow to register their organisation   ${BUSINESS_TYPE_ID}
 
 the user directed to correct dashboard
     [Arguments]    ${Application_name}

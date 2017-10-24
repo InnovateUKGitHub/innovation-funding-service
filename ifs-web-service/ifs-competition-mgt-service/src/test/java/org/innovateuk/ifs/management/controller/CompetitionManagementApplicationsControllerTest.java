@@ -1,19 +1,21 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.management.model.AllApplicationsPageModelPopulator;
-import org.innovateuk.ifs.management.model.ApplicationsMenuModelPopulator;
-import org.innovateuk.ifs.management.model.IneligibleApplicationsModelPopulator;
-import org.innovateuk.ifs.management.model.SubmittedApplicationsModelPopulator;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.management.model.*;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -28,6 +30,7 @@ import static java.util.Optional.empty;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
@@ -40,6 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CompetitionManagementApplicationsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementApplicationsController> {
 
     private long COMPETITION_ID = 1L;
+    private String COMPETITION_NAME = "comp1";
     private CompetitionSummaryResource defaultExpectedCompetitionSummary;
 
     @InjectMocks
@@ -57,6 +61,13 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     @InjectMocks
     @Spy
     private IneligibleApplicationsModelPopulator ineligibleApplicationsModelPopulator;
+
+    @Mock
+    private UnsuccessfulApplicationsModelPopulator unsuccessfulApplicationsModelPopulator;
+
+    @InjectMocks
+    @Spy
+    private NavigateApplicationsModelPopulator navigateApplicationsModelPopulator;
 
     @Override
     protected CompetitionManagementApplicationsController supplyControllerUnderTest() {
@@ -522,6 +533,31 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     }
 
     @Test
+    public void unsuccessfulApplications() throws Exception {
+
+        Long competitionId = 1L;
+        int pageIndex = 0;
+        int pageSize = 20;
+        String sortField = "id";
+
+        String competitionName = "Competition One";
+        List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
+        ApplicationPageResource applicationPageResource = new ApplicationPageResource();
+        UnsuccessfulApplicationsViewModel viewModel = new UnsuccessfulApplicationsViewModel(competitionId,
+                competitionName, unsuccessfulApplications, unsuccessfulApplications.size(), new PaginationViewModel(applicationPageResource, ""));
+
+        when(unsuccessfulApplicationsModelPopulator.populateModel(eq(competitionId), eq(pageIndex), eq(pageSize), eq(sortField), any()))
+                .thenReturn(viewModel);
+
+        mockMvc.perform(get("/competition/{competitionId}/applications/unsuccessful?page={pageIndex}&size={pageSize}&sort={sortField}",
+                competitionId, pageIndex, pageSize, sortField))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/unsuccessful-applications"))
+                .andExpect(model().attribute("model", viewModel))
+                .andReturn();
+    }
+
+    @Test
     public void allApplicationsSupportView() throws Exception {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.SUPPORT).build())).build());
 
@@ -631,5 +667,23 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals("Dashboard", model.getBackTitle());
         assertEquals("/dashboard/live", model.getBackURL());
         assertEquals(expectedApplicationRows, model.getApplications());
+    }
+
+    @Test
+    public void navigationOptions() throws Exception {
+        CompetitionResource competitionResource = newCompetitionResource().withId(COMPETITION_ID).withName(COMPETITION_NAME).build();
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/manage", COMPETITION_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/navigate-applications"))
+                .andReturn();
+
+        NavigateApplicationsViewModel model = (NavigateApplicationsViewModel) result.getModelAndView().getModel().get("model");
+
+        verify(competitionService, only()).getById(COMPETITION_ID);
+
+        assertEquals(COMPETITION_ID, model.getCompetitionId().longValue());
+        assertEquals(COMPETITION_NAME, model.getCompetitionName());
     }
 }

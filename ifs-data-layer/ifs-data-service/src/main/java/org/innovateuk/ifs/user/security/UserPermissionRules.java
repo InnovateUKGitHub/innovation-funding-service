@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
  * Permission rules that determines who can perform CRUD operations based around Users.
@@ -72,6 +72,11 @@ public class UserPermissionRules {
 
     @PermissionRule(value = "READ", description = "Internal users can view everyone")
     public boolean internalUsersCanViewEveryone(UserResource userToView, UserResource user) {
+        return isInternal(user);
+    }
+
+    @PermissionRule(value = "READ_USER_ORGANISATION", description = "Internal support users can view all users and associated organisations")
+    public boolean internalUsersCanViewUserOrganisation(UserOrganisationResource userToView, UserResource user) {
         return isInternal(user);
     }
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept application'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept application',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='assessment'" class="reject-invitation-confirm">
@@ -12,12 +12,11 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})})" />
 
-            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-                <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
-                <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
-                </ul>
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
+
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Accept application',size='heading-xlarge'" />
 
             <h2 class="visually-hidden">Application details</h2>
@@ -39,7 +38,7 @@
                 </div>
 
                 <h3 class="heading-small no-margin">Project summary:</h3>
-                <p th:text="${model.projectSummary}" data-md-to-html="">This is the applicant response for project summary.</p>
+                <p th:text="${model.projectSummary}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response for project summary.</p>
             </div>
 
             <p class="heading-small">Review the project summary above to make sure:</p>
@@ -50,9 +49,9 @@
             </ul>
 
             <form th:action="@{/{assessmentId}/assignment/respond(assessmentId=${model.assessmentId})}" method="post" novalidate="novalidate" th:object="${form}">
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('assessmentAccept')} ? 'form-group-error'">
                     <fieldset>
-                        <legend>
+                        <legend id="assessmentAccept">
                             <span class="heading-medium">Select your ability to assess this application</span>
                             <th:block th:if="${#fields.hasErrors('assessmentAccept')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('assessmentAccept')}" th:text="${err}" />
@@ -75,13 +74,13 @@
 
                         <div class="panel js-hidden" id="reject-application">
                             <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'form-group-error'">
-                                <label class="form-label" th:for="${#ids.next('rejectReasonValid')}">
+                                <label class="form-label" for="rejectReasonValid">
                                     Please select a reason for rejecting the competition
                                     <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
                                         <span class="error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
                                     </th:block>
                                 </label>
-                                <select class="form-control" th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}" th:errorclass="form-control-error" required="required" th:field="*{rejectReason}">
+                                <select class="form-control"  id="rejectReasonValid" th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}" th:errorclass="form-control-error" required="required" th:field="*{rejectReason}">
                                     <option value="">Select a reason</option>
                                     <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
                                             th:value="${reason}"
@@ -106,7 +105,7 @@
                                           th:errorclass="form-control-error"
                                           rows="4"
                                           th:field="*{rejectComment}"></textarea>
-                                <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
+                                <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
                                     <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
                                 </div>
                             </div>

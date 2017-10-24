@@ -1,26 +1,29 @@
 
 <!-- =================== Comp setup section - Eligibility (3) ============================== -->
 <th:block th:fragment="section-content">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
+    </div>
+
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Eligibility',size='heading-xlarge'" />
 
-    <form th:action="@{(${editable} ? '' : 'eligibility/edit')}" method="post"
+    <form th:action="@{(${model.general.editable} ? '' : 'eligibility/edit')}" method="post"
           th:object="${competitionSetupForm}" novalidate="novalidate"
-          th:attr="data-competition=${competition.id}"
-          data-autosave="compSetup" data-section="eligibility">
+          th:attr="data-competition=${model.general.competition.id}"
+          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup" data-section="eligibility">
 
-        <fieldset th:if="${editable}" id="section-3-edit">
-
-            <legend class="visuallyhidden">Eligibility</legend>
+        <th:block th:if="${model.general.editable}">
             <input type="hidden" th:field="*{multipleStream}" />
             <div class="form-group" th:classappend="${#fields.hasErrors('singleOrCollaborative')} ? 'form-group-error'">
-                <fieldset class="inline">
-                    <legend>
+                <fieldset>
+                    <legend id="singleOrCollaborative">
                         <span class="form-label-bold">Please choose the project type.</span>
                         <th:block th:if="${#fields.hasErrors('singleOrCollaborative')}">
                               <span class="error-message"  th:each="err : ${#fields.errors('singleOrCollaborative')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
-                    <div class="multiple-choice" th:each="collaborationLevel : ${collaborationLevels}">
+                    <div class="multiple-choice" th:each="collaborationLevel : ${model.collaborationLevels}">
                         <input th:id="${'single-or-collaborative-' + collaborationLevel.code}"
                                name="singleOrCollaborative"
                                th:value="${collaborationLevel.code}"
@@ -37,15 +40,15 @@
 
 
             <div class="form-group" th:classappend="${#fields.hasErrors('researchCategoryId')} ? 'form-group-error'">
-                <fieldset class="inline">
-                    <legend>
+                <fieldset>
+                    <legend id="researchCategoryId">
                         <span class="form-label-bold">Please choose the research categories.</span>
                         <th:block th:if="${#fields.hasErrors('researchCategoryId')}">
                               <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryId')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
 
-                    <div class="multiple-choice" th:each="researchCategory : ${researchCategories}" >
+                    <div class="multiple-choice" th:each="researchCategory : ${model.researchCategories}" >
                         <input th:value="${researchCategory.id}"
                                 type="checkbox"
                                 name="researchCategoryId"
@@ -60,8 +63,8 @@
 
 
             <div class="form-group" th:classappend="${#fields.hasErrors('leadApplicantTypes')} ? 'form-group-error'">
-                <fieldset class="inline">
-                    <legend>
+                <fieldset>
+                    <legend id="leadApplicantTypes">
                        <span class="form-label-bold">Lead applicant</span>
                        <span class="hint">Select the lead applicant type required.</span>
                        <th:block th:if="${#fields.hasErrors('leadApplicantTypes')}">
@@ -69,7 +72,7 @@
                        </th:block>
                     </legend>
 
-                     <div class="multiple-choice" th:each="leadApplicantType : ${leadApplicantTypes}">
+                     <div class="multiple-choice" th:each="leadApplicantType : ${model.leadApplicantTypes}">
                         <input th:id="${'lead-applicant-type-' + leadApplicantType.id}"
                                name="leadApplicantTypes"
                                th:value="${leadApplicantType.id}"
@@ -84,7 +87,7 @@
 
             <div class="form-group" th:classappend="${#fields.hasErrors('researchParticipationAmountId')} ? 'form-group-error'">
                 <fieldset class="inline">
-                    <legend>
+                    <legend id="researchParticipationAmountId">
                         <span class="form-label-bold">Research participation</span>
                         <span class="hint">This indicates the maximum level of research participation allowed.</span>
                         <th:block th:if="${#fields.hasErrors('researchParticipationAmountId')}">
@@ -96,14 +99,14 @@
                             id="researchParticipation"
                             required="required"
                             th:attr="data-required-errormessage=#{validation.eligibilityform.researchparticipationamountId.required}">
-                        <option th:each="researchParticipationAmount : ${researchParticipationAmounts}" th:text="${researchParticipationAmount.name}" th:value="${researchParticipationAmount.id}" th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">Research participation</option>
+                        <option th:each="researchParticipationAmount : ${model.researchParticipationAmounts}" th:text="${researchParticipationAmount.name}" th:value="${researchParticipationAmount.id}" th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">Research participation</option>
                     </select>
                 </fieldset>
             </div>
 
             <div class="form-group" th:classappend="${#fields.hasErrors('resubmission')} ? 'form-group-error'">
                 <fieldset class="inline">
-                    <legend>
+                    <legend id="resubmission">
                         <span class="form-label-bold">Are resubmissions allowed?</span>
                         <span class="hint">Are applicants able to resubmit an application?</span>
                         <th:block th:if="${#fields.hasErrors('resubmission')}">
@@ -136,9 +139,9 @@
             </div>
 
             <button class="button">Done</button>
-        </fieldset>
+        </th:block>
 
-        <fieldset th:if="${!editable}" id="section-3-">
+        <th:block th:if="${!model.general.editable}">
 
             <dl class="standard-definition-list">
                 <!-- INFUND-5682 : Competition streams options have been hidden rather than removed, since they will be required when new competition types are added -->
@@ -153,35 +156,35 @@
                 </div>
 
                 <dt>Project type</dt>
-                <dd th:each="(collaborationLevel : ${collaborationLevels})" th:if="${collaborationLevel.code == competitionSetupForm.singleOrCollaborative}" th:text="${collaborationLevel.name}">Collaboration level</dd>
+                <dd th:each="(collaborationLevel : ${model.collaborationLevels})" th:if="${collaborationLevel.code == competitionSetupForm.singleOrCollaborative}" th:text="${collaborationLevel.name}">Collaboration level</dd>
 
                 <dt>Research categories</dt>
-                <dd th:text="${researchCategoriesFormatted}"></dd>
+                <dd th:text="${model.researchCategoriesFormatted}"></dd>
 
                 <dt>Lead applicant</dt>
-                <dd th:text="${leadApplicantTypesText}"></dd>
+                <dd th:text="${model.leadApplicantTypesText}"></dd>
 
                 <dt>Research participation</dt>
-                <dd th:each="(researchParticipationAmount : ${researchParticipationAmounts})" th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}" th:text="${researchParticipationAmount.name}">Research category</dd>
+                <dd th:each="(researchParticipationAmount : ${model.researchParticipationAmounts})" th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}" th:text="${researchParticipationAmount.name}">Research category</dd>
 
                 <dt>Are resubmissions allowed?</dt>
                 <dd th:text="${#strings.capitalize(competitionSetupForm.resubmission)}"></dd>
 
             </dl>
 
-            <button th:unless="${preventEdit}" type="submit" class="button">Edit</button>
-        </fieldset>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button">Edit</button>
+        </th:block>
 
     </form>
     <ul class="pagination">
         <li class="prev">
-            <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='additional')}">
+            <a rel="prev" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='additional')}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Funding Information</span>
             </a>
         </li>
         <li class="next">
-            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='milestones')}">
+            <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='milestones')}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Milestones</span>
             </a>

@@ -56,12 +56,30 @@ items:
             value: "9443"
           - name: HTTP_PORT
             value: "9080"
+          - name: MPM_STARTSERVERS
+            value: "<<SHIBBOLETH_SP_MPM_STARTSERVERS>>"
+          - name: MPM_MINSPARETHREADS
+            value: "<<SHIBBOLETH_SP_MPM_MINSPARETHREADS>>"
+          - name: MPM_MAXSPARETHREADS
+            value: "<<SHIBBOLETH_SP_MPM_MAXSPARETHREADS>>"
+          - name: MPM_THREADLIMIT
+            value: "<<SHIBBOLETH_SP_MPM_THREADLIMIT>>"
+          - name: MPM_THREADSPERCHILD
+            value: "<<SHIBBOLETH_SP_MPM_THREADSPERCHILD>>"
+          - name: MPM_MAXREQUESTWORKERS
+            value: "<<SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS>>"
+          - name: MPM_MAXCONNECTIONSPERCHILD
+            value: "<<SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD>>"
+          - name: MEMCACHE_ENDPOINT
+            value: "<<SHIBBOLETH-MEMCACHE-ENDPOINT>>"
           ports:
           - containerPort: 9443
           - containerPort: 9080
           resources:
             limits:
-              memory: 1536Mi
+              memory: "<<SHIBBOLETH_SP_MEMORY_LIMIT>>"
+            requests:
+              memory: "<<SHIBBOLETH_SP_MEMORY_REQUEST>>"
           test: false
     triggers:
     - type: ConfigChange
@@ -83,6 +101,8 @@ items:
   kind: Route
   metadata:
     name: shib
+    annotations:
+      haproxy.router.openshift.io/balance: roundrobin
   spec:
     host: <<SHIB-ADDRESS>>
     port:

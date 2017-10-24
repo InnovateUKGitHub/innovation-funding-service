@@ -31,11 +31,11 @@
 
             <th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
 
-            <p class="subtitle extra-margin" th:if="${currentApplication.isOpen()}">
+            <p class="subtitle extra-margin" th:if="${currentApplication.isOpen() and currentCompetition.isOpen()}">
                 Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
             </p>
 
-            <form action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js section-overview">
+            <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js section-overview" novalidate="novalidate">
                 <th:block th:insert="fragments/application :: application-summary (competitionIsOpen = ${currentCompetition.isOpen()}, isApplicant = true)" />
             </form>
 

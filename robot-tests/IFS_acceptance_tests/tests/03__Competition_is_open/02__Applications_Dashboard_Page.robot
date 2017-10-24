@@ -25,7 +25,7 @@ ${quarantine_warning}    This file has been found to be unsafe
 Application Dashboard
     [Documentation]    INFUND-7369
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
+    Given the user clicks the button/link    link=${openCompetitionRTO_name}
     When the user clicks the button/link    jQuery=a:contains("Applications: All, submitted, ineligible")
     Then The user should see the element    jQuery=a:contains("Submitted applications")
     And The user should see the element    link=All applications
@@ -80,11 +80,11 @@ Application has team link and team details
     [Documentation]  IFS-43
     [Tags]  HappyPath
     Given the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
-    Then the user should see the element  link=view application team details
+    Then the user should see the element  link=view contributors and collaborators
     And the user should see the text in the page  ${OPEN_COMPETITION_APPLICATION_NAME}
-    When the user clicks the button/link  link=view application team details
+    When the user clicks the button/link  link=view contributors and collaborators
     Then the user should see the text in the page  Application team
-    And the user should see the text in the page  View team members for both the lead and collaborating organisations.
+    And the user should see the text in the page  View contributors for both the lead and collaborating organisations.
     And the user should see the element    jQuery=h2:nth-of-type(1):contains("${EMPIRE_LTD_NAME} (Lead)")+h3:contains("Organisation type")+p:contains("Business")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress0 span:nth-of-type(1):contains("1")
     And the user should see the element    jQuery=div#applicationTeamOrganisationRegisteredAddress0 span:nth-of-type(2):contains("Empire Road")
@@ -116,7 +116,7 @@ Comp admin can open the view mode of the application
     When the user can see the option to upload a file on the page        ${technical_approach_url}
     Then the user uploads the file to the 'technical approach' question  ${valid_pdf}
     When log in as a different user                         &{Comp_admin1_credentials}
-    And the user navigates to the page                      ${COMP_MANAGEMENT_APPLICATIONS_LIST}
+    And the user navigates to the page                      ${applicationsForRTOComp}
     #Then the user should see the element  id=sort-by
     #And the user selects the option from the drop-down menu  id  id=sort-by
     And the user clicks the button/link                     link=All applications
@@ -196,11 +196,11 @@ the applicant edits the Subcontracting costs section
     the user clicks the button/link    link=Your project costs
     the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
-    The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    2000
-    The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
-    The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    Romania
-    The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-role"]    Contractor
-    the user selects the checkbox    css=#agree-state-aid-page
+    The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[name^=subcontracting-subcontractingCost]    2000
+    The user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-name"]    Jackson Ltd
+    The user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-country-"]    Romania
+    The user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-role"]    Contractor
+    the user selects the checkbox      stateAidAgreed
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
 the user should see the correct finances change
@@ -228,7 +228,7 @@ check calculations on both pages
     ${element_page_two}=    Get Webelements    ${list_locator}
     ${length_list_page_two}=    Get Length    ${element_page_two}
     log    ${length_list_page_two}
-    the user navigates to the page    ${comp_management_applications_list}
+    the user navigates to the page    ${applicationsForRTOComp}
     ${element}=    Get Webelements    ${list_locator}
     ${length_list}=    Get Length    ${element}
     log    ${length_list}
@@ -258,7 +258,7 @@ check both pages of applications
     ${row_count_second_page}=    get matching xpath count    //*[td]
     convert to integer    ${row_count_second_page}
     log    ${row_count_second_page}
-    the user navigates to the page    ${comp_management_applications_list}
+    the user navigates to the page    ${applicationsForRTOComp}
     ${row_count_first_page}=    get matching xpath count    //*[td]
     convert to integer    ${row_count_first_page}
     log    ${row_count_first_page}

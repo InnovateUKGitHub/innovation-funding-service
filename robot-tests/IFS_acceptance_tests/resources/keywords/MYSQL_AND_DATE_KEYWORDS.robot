@@ -79,6 +79,11 @@ get today
     # This format is like: 4 February 2017
     [Return]    ${today}
 
+get today short month
+    ${today} =    Get Current Date  UTC   result_format=%-d %b %Y    exclude_millis=true
+    # This format is like: 4 Feb 2017
+    [Return]    ${today}
+
 get tomorrow
     ${today} =    Get Time
     ${tomorrow} =     Add time To Date    ${today}    1 day
@@ -93,6 +98,11 @@ get thirteen days
     ${today} =    Get Time
     ${thirteen} =     Add time To Date    ${today}    13 day
     [Return]    ${thirteen}
+
+get fifteen days
+    ${today} =    Get Time
+    ${fifteen} =     Add time To Date    ${today}    15 day
+    [Return]    ${fifteen}
 
 get tomorrow day
     ${today}=    get time
@@ -120,15 +130,33 @@ get next year
     [Return]    ${year}
 
 get comp id from comp title
-    [Arguments]    ${title}
-    Connect to Database    @{database}
-    ${result} =    query    SELECT `id` FROM `${database_name}`.`competition` WHERE `name`='${title}';
-    Log    ${result}
+    [Arguments]  ${name}
+    ${id} =   get table id by name  competition  ${name}
+    [Return]  ${id}
+
+get application id by name
+    [Arguments]  ${name}
+    ${id} =   get table id by name  application  ${name}
+    [Return]  ${id}
+
+get project id by name
+    [Arguments]  ${name}
+    ${id} =   get table id by name  project  ${name}
+    [Return]  ${id}
+
+get organisation id by name
+    [Arguments]  ${name}
+    ${id} =   get table id by name  organisation  ${name}
+    [Return]  ${id}
+
+get table id by name
+    [Arguments]  ${table}  ${name}
+    Connect to Database  @{database}
+    ${result} =  query  SELECT `id` FROM `${database_name}`.`${table}` WHERE `name`='${name}';
     # the result of this query looks like ((13,),) so you need get the value array[0][0]
-    ${result} =    get from list    ${result}    0
-    ${competitionId} =    get from list    ${result}    0
-    Log    ${competitionId}
-    [Return]    ${competitionId}
+    ${result} =  get from list  ${result}  0
+    ${id} =      get from list  ${result}  0
+    [Return]  ${id}
 
 # The below keyword gets date from first selector and checks if it is greater than the date from second selector
 # For example 12 February 2018 > 26 January 2017 . Greater in this case means latest.

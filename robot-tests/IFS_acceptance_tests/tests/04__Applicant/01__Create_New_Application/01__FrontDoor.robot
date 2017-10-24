@@ -24,10 +24,7 @@ Guest user navigates to Front Door
     When the user clicks the button/link     link=Contact us
     Then the user should see the element     jQuery=h1:contains("Contact us")
     And the user should not see an error in the page
-    When the user clicks the button/link    jQuery=a:contains("feedback")
-    And the user selects feedback window
-    Then the user should see the element    css=.title-text
-    [Teardown]    close survey window
+    And the user should see the element      jQuery=a:contains("feedback")
 
 Guest user can see Competitions and their information
     [Documentation]    INFUND-6923
@@ -43,14 +40,14 @@ Guest user can see Competitions and their information
 Guest user can see the opening and closing status of competitions
     [Documentation]  IFS-268
     [Tags]    MySQL
-    [Setup]    Connect to Database    @{database}
+    [Setup]  Connect to Database  @{database}
     Then Change the open date of the Competition in the database to tomorrow   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Opening soon    Opens
     And Change the open date of the Competition in the database to one day before   ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
-    And Change the close date of the Competition in the database to a fortnight   ${READY_TO_OPEN_COMPETITION_NAME}
+    And Change the close date of the Competition in the database to fifteen days  ${READY_TO_OPEN_COMPETITION_NAME}
     Given the user navigates to the page  ${frontDoor}
     Then the user can see the correct date status of the competition    ${READY_TO_OPEN_COMPETITION_NAME}    Open now    Opened
     And Change the close date of the Competition in the database to thirteen days   ${READY_TO_OPEN_COMPETITION_NAME}
@@ -77,8 +74,8 @@ Guest user can see the public information of an unopened competition
     [Documentation]    INFUND-8714
     [Tags]
     [Setup]    the user navigates to the page    ${frontDoor}
-    Given the user clicks the button/link    link=Photonics for health
-    Then the user should see the element    jQuery=h1:contains("Photonics for health")
+    Given the user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
+    Then the user should see the element    jQuery=h1:contains("${READY_TO_OPEN_COMPETITION_NAME}")
     And the user should see the element    jQuery=strong:contains("Competition opens") + span:contains("Saturday 24 February 2018")
     And the user should see the element    jQuery=li:contains("Competition closes")
     And the user should see the element    jQuery=li:contains("Friday 16 March 2018")
@@ -173,9 +170,6 @@ the user navigates to the front door
 Close survey window
     Close Window
     Select Window
-
-the user selects feedback window
-    Select Window    title=Innovation Funding Service - Feedback Survey
 
 the user can see the correct date status of the competition
     [Arguments]    ${competition_name}    ${date_status}    ${open_text}

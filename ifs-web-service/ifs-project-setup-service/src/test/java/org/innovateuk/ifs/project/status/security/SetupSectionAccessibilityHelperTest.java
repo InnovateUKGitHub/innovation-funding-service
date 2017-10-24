@@ -30,18 +30,18 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
     }
 
     @Test
-    public void testLeadCanAccessProjectManagerPageWhenCompaniesHouseDetailsCompleteAndProjectDetailsComplete() {
-        whenCompaniesHouseDetailsCompleteAndProjectDetailsComplete((helper, organisation) -> helper.leadCanAccessProjectManagerPage(organisation));
+    public void testLeadCanAccessProjectManagerPageWhenCompaniesHouseDetailsCompleteAndNotLead() {
+        whenCompaniesHouseDetailsCompleteAndNotLead((helper, organisation) -> helper.leadCanAccessProjectManagerPage(organisation));
     }
 
     @Test
-    public void testLeadCanAccessProjectManagerPageWhenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndNotLead() {
-        whenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndNotLead((helper, organisation) -> helper.leadCanAccessProjectManagerPage(organisation));
+    public void testLeadCanAccessProjectManagerPageWhenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated() {
+        whenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated((helper, organisation) -> helper.leadCanAccessProjectManagerPage(organisation));
     }
 
     @Test
-    public void testLeadCanAccessProjectManagerPageWhenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndLead() {
-        whenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndLead((helper, organisation) -> helper.leadCanAccessProjectManagerPage(organisation));
+    public void testLeadCanAccessProjectManagerPageWhenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated() {
+        whenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated((helper, organisation) -> helper.leadCanAccessProjectManagerPage(organisation));
     }
 
     @Test
@@ -50,18 +50,18 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
     }
 
     @Test
-    public void testLeadCanAccessProjectStartDatePageWhenCompaniesHouseDetailsCompleteAndProjectDetailsComplete() {
-        whenCompaniesHouseDetailsCompleteAndProjectDetailsComplete((helper, organisation) -> helper.leadCanAccessProjectStartDatePage(organisation));
+    public void testLeadCanAccessProjectStartDatePageWhenCompaniesHouseDetailsCompleteAndNotLead() {
+        whenCompaniesHouseDetailsCompleteAndNotLead((helper, organisation) -> helper.leadCanAccessProjectStartDatePage(organisation));
     }
 
     @Test
-    public void testLeadCanAccessProjectStartDatePageWhenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndNotLead() {
-        whenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndNotLead((helper, organisation) -> helper.leadCanAccessProjectStartDatePage(organisation));
+    public void testLeadCanAccessProjectStartDatePageWhenCompaniesHouseDetailsCompleteAndLeadAndSpendProfileGenerated() {
+        whenCompaniesHouseDetailsCompleteAndLeadAndSpendProfileGenerated((helper, organisation) -> helper.leadCanAccessProjectStartDatePage(organisation));
     }
 
     @Test
-    public void testLeadCanAccessProjectStartDatePageWhenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndLead() {
-        whenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndLead((helper, organisation) -> helper.leadCanAccessProjectStartDatePage(organisation));
+    public void testLeadCanAccessProjectStartDatePageWhenCompaniesHouseDetailsCompleteAndLeadAndSpendProfileNotGenerated() {
+        whenCompaniesHouseDetailsCompleteAndLeadAndSpendProfileNotGenerated((helper, organisation) -> helper.leadCanAccessProjectStartDatePage(organisation));
     }
 
     @Test
@@ -70,18 +70,33 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
     }
 
     @Test
-    public void testLeadCanAccessProjectAddressPageWhenCompaniesHouseDetailsCompleteAndProjectDetailsComplete() {
-        whenCompaniesHouseDetailsCompleteAndProjectDetailsComplete((helper, organisation) -> helper.leadCanAccessProjectAddressPage(organisation));
+    public void testLeadCanAccessProjectAddressPageWhenCompaniesHouseDetailsCompleteAndNotLead() {
+        whenCompaniesHouseDetailsCompleteAndNotLead((helper, organisation) -> helper.leadCanAccessProjectAddressPage(organisation));
     }
 
     @Test
-    public void testLeadCanAccessProjectAddressPageWhenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndNotLead() {
-        whenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndNotLead((helper, organisation) -> helper.leadCanAccessProjectAddressPage(organisation));
+    public void testLeadCanAccessProjectAddressPageWhenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated() {
+        whenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated((helper, organisation) -> helper.leadCanAccessProjectAddressPage(organisation));
     }
 
     @Test
-    public void testLeadCanAccessProjectAddressPageWhenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndLead() {
-        whenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndLead((helper, organisation) -> helper.leadCanAccessProjectAddressPage(organisation));
+    public void testLeadCanAccessProjectAddressPageWhenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated() {
+        whenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated((helper, organisation) -> helper.leadCanAccessProjectAddressPage(organisation));
+    }
+
+    @Test
+    public void testCanAccessFinanceContactPageWhenCompaniesHouseDetailsNotComplete() {
+        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.canAccessFinanceContactPage(organisation));
+    }
+
+    @Test
+    public void testCanAccessFinanceContactPageWhenCompaniesHouseDetailsCompleteAndGOLGenerated() {
+        whenCompaniesHouseDetailsCompleteAndGolGenerated((helper, organisation) -> helper.canAccessFinanceContactPage(organisation));
+    }
+
+    @Test
+    public void testCanAccessFinanceContactPageWhenCompaniesHouseDetailsCompleteAndGOLNotGenerated() {
+        whenCompaniesHouseDetailsCompleteAndGolNotGenerated((helper, organisation) -> helper.canAccessFinanceContactPage(organisation));
     }
 
     private void whenCompaniesHouseDetailsNotComplete(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
@@ -94,22 +109,10 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     }
 
-    private void whenCompaniesHouseDetailsCompleteAndProjectDetailsComplete(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+    private void whenCompaniesHouseDetailsCompleteAndNotLead(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
-
-        SectionAccess access = methodToCall.apply(helper, organisation);
-        Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
-
-    }
-
-    private void whenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndNotLead(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
-
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
         when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(false);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
@@ -117,12 +120,72 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     }
 
-    private void whenCompaniesHouseDetailsCompleteAndProjectDetailsNotCompleteAndLead(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+    private void whenCompaniesHouseDetailsCompleteAndLeadAndSpendProfileGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
         when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
         when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(true);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+
+    }
+
+    private void whenCompaniesHouseDetailsCompleteAndLeadAndSpendProfileNotGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(false);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.ACCESSIBLE == access);
+
+    }
+
+    private void whenCompaniesHouseDetailsCompleteAndGolGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+
+        when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(true);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+
+    }
+
+    private void whenCompaniesHouseDetailsCompleteAndGolNotGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+
+        when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(false);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.ACCESSIBLE == access);
+
+    }
+
+    private void whenCompaniesHouseDetailsCompleteAndLeadAndGolGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(true);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+
+    }
+
+    private void whenCompaniesHouseDetailsCompleteAndLeadAndGolNotGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isLeadPartnerOrganisation(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isGrantOfferLetterAvailable()).thenReturn(false);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
         Assert.assertTrue(SectionAccess.ACCESSIBLE == access);

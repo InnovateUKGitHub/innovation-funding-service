@@ -55,7 +55,7 @@ Non-IFS public content
     [Documentation]    INFUND-7965
     [Tags]
     Given the user should see the element  jQuery=h1:contains("Public content")
-    When the user fills in the Public content and publishes
+    When the user fills in the Public content and publishes  Non-IFS
     Then the user should see the element       jQuery=small:contains("Last published")
     And the user should not see the element    jQuery=button:contains("Publish content")
     Then the user clicks the button/link  link=Return to non-IFS competition details
@@ -91,8 +91,8 @@ the user fills out the competition title and url
     And the user enters text to a text field   id=url    http://www.google.co.uk
 
 the user fills out the non-IFS details
-    And the user selects the option from the drop-down menu  Materials and manufacturing  id=innovationSector
-    And the user selects the option from the drop-down menu  Assembly / disassembly / joining  id=innovationArea
+    And the user selects the option from the drop-down menu  Materials and manufacturing  id=innovationSectorCategoryId
+    And the user selects the option from the drop-down menu  Assembly / disassembly / joining  id=innovationAreaCategoryId
     When the user enters text to a text field   id=openDate-day    1
     And the user enters text to a text field   id=openDate-month    1
     And the user enters text to a text field   id=openDate-year    2020

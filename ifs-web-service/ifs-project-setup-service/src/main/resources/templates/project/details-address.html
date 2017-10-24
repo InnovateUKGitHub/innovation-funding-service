@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project address'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project address',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='project'" class="project-details project-address">
@@ -15,9 +15,9 @@
 
             <p>We will assign a Monitoring Officer who will visit your project at this address.</p>
 
-            <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" >
+            <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" novalidate="novalidate">
                 <div class="form-group" th:classappend="${#fields.hasErrors('*{addressType}')}? 'form-group-error'">
-                    <fieldset>
+                    <fieldset id="addressType">
                         <legend>
                             <span class="heading-medium">Project address</span>
                             <th:block th:if="${#fields.hasErrors('*{addressType}')}">
@@ -28,7 +28,7 @@
 
                         <th:block th:if="${model.registeredAddress}">
                             <div class="multiple-choice" data-target="registeredAddress">
-                                <input id="address-use-org" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.projectdetailsaddressviewmodelform.organisationaddresstype.required}" value="REGISTERED" th:field="*{addressType}" />
+                                <input id="address-use-org" type="radio" name="project-address-group" required="required" th:attr="data-required-errormessage=#{validation.bankdetailsresource.organisationaddress.required}" value="REGISTERED" th:field="*{addressType}" />
                                 <label for="address-use-org">
                                     Use organisation address (<strong th:text="${model.registeredAddress.postcode}">BS1 4NT</strong>)
                                 </label>
@@ -89,6 +89,8 @@
                         </div>
                     </fieldset>
                 </div>
+
+                <p>You can change your project address up until your grant offer letter is generated.</p>
 
                 <button class="button extra-margin">Save project address</button>
             </form>

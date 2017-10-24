@@ -77,7 +77,7 @@ addUserToShibboleth() {
 
 wipeLdapUsers
 
-for u in $(mysql $db -P $port -u $user --password=$pass -h $host -N -s -e "select email from user where status = 'ACTIVE' and system_user = 0;")
+for u in $(mysql $db -P $port -u $user --password=$pass -h $host -N -s -e "select email from user where system_user = 0;")
 do
   addUserToShibboleth "$u"
 done | ldapadd -H ldapi:/// -D "cn=admin,$domain" -w "$ldappass"

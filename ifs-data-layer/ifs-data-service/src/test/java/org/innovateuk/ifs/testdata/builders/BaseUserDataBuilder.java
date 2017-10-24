@@ -25,8 +25,6 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
 
     public abstract S registerUser(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber);
 
-    public abstract S createUserDirectly(String firstName, String lastName, String emailAddress, String organisationName, String phoneNumber, boolean emailVerified);
-
     public S withNewOrganisation(OrganisationDataBuilder organisationBuilder) {
         return with(data -> organisationBuilder.build().getOrganisation());
     }
@@ -52,6 +50,15 @@ public abstract class BaseUserDataBuilder<T extends BaseUserData, S> extends Bas
                     tokenService.handleExtraAttributes(token);
                     tokenService.removeToken(token);
                 })).orElseThrow(() -> new RuntimeException("No Invite Token exists for user " + user.getId()));
+            });
+        });
+    }
+
+    public S deactivateUser() {
+        return with(data -> {
+            doAs(ifsAdmin(), () -> {
+                UserResource user = data.getUser();
+                registrationService.deactivateUser(user.getId());
             });
         });
     }

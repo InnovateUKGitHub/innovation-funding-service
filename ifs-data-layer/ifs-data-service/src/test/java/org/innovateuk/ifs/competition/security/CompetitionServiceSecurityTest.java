@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -15,6 +14,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -37,12 +37,15 @@ import static org.mockito.MockitoAnnotations.initMocks;
  */
 public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<CompetitionService> {
 
+    private CompetitionLookupStrategy competitionLookupStrategy;
+
     private CompetitionPermissionRules rules;
 
     @Before
     public void lookupPermissionRules() {
 
         rules = getMockPermissionRulesBean(CompetitionPermissionRules.class);
+        competitionLookupStrategy = getMockPermissionEntityLookupStrategiesBean(CompetitionLookupStrategy.class);
 
         initMocks(this);
     }
@@ -61,6 +64,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
 
         verify(rules, times(2)).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
         verify(rules, times(2)).internalUserCanViewAllCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -71,6 +75,51 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         assertAccessDenied(() -> classUnderTest.getCompetitionById(1L), () -> {
             verify(rules).externalUsersCannotViewCompetitionsInSetup(isA(CompetitionResource.class), isNull(UserResource.class));
             verify(rules).internalUserCanViewAllCompetitions(isA(CompetitionResource.class), isNull(UserResource.class));
+            verify(rules).innovationLeadCanViewCompetitionAssignedToThem(isA(CompetitionResource.class), isNull(UserResource.class));
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
+    public void findInnovationLeads() {
+
+        Long competitionId = 1L;
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
+
+        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
+
+        assertAccessDenied(
+                () -> classUnderTest.findInnovationLeads(1L),
+                () -> {
+                    verify(rules).internalAdminCanManageInnovationLeadsForCompetition(any(CompetitionResource.class), any(UserResource.class));
+                    verifyNoMoreInteractions(rules);
+                });
+    }
+
+    @Test
+    public void addInnovationLead() {
+        Long competitionId = 1L;
+        Long innovationLeadUserId = 2L;
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
+
+        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
+
+        assertAccessDenied(() -> classUnderTest.addInnovationLead(competitionId, innovationLeadUserId), () -> {
+            verify(rules).internalAdminCanManageInnovationLeadsForCompetition(any(CompetitionResource.class), any(UserResource.class));
+            verifyNoMoreInteractions(rules);
+        });
+    }
+
+    @Test
+    public void removeInnovationLead() {
+        Long competitionId = 1L;
+        Long innovationLeadUserId = 2L;
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
+
+        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
+
+        assertAccessDenied(() -> classUnderTest.removeInnovationLead(competitionId, innovationLeadUserId), () -> {
+            verify(rules).internalAdminCanManageInnovationLeadsForCompetition(any(CompetitionResource.class), any(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }
@@ -88,6 +137,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         assertEquals(0, results.getSuccessObject().size());
 
         verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThemInSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -99,6 +149,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         assertEquals(0, results.getSuccessObject().size());
 
         verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThemInSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
     }
 
@@ -110,16 +161,29 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         assertEquals(0, results.getSuccessObject().size());
 
         verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThemInSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
         verifyNoMoreInteractions(rules);
+    }
+
+    @Test
+    public void findUnsuccessfulApplications() {
+        Long competitionId = 1L;
+        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().build();
+
+        when(competitionLookupStrategy.getCompetititionResource(competitionId)).thenReturn(competitionResource);
+
+        assertAccessDenied(() -> classUnderTest.findUnsuccessfulApplications(competitionId, 0, 0, ""), () -> {
+            verify(rules).internalUsersAndIFSAdminCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
+            verify(rules).innovationLeadForCompetitionCanViewUnsuccessfulApplications(any(CompetitionResource.class), any(UserResource.class));
+            verifyNoMoreInteractions(rules);
+        });
     }
 
     @Test
     public void countCompetitions() {
         setLoggedInUser(null);
 
-        assertAccessDenied(() -> classUnderTest.countCompetitions(), () -> {
-            verifyNoMoreInteractions(rules);
-        });
+        assertAccessDenied(() -> classUnderTest.countCompetitions(), () -> verifyNoMoreInteractions(rules));
     }
 
     @Test
@@ -151,6 +215,28 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.manageInformState(1L), PROJECT_FINANCE, COMP_ADMIN);
     }
 
+    @Test
+    public void findPreviousCompetitions() {
+        setLoggedInUser(null);
+
+        ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findFeedbackReleasedCompetitions();
+        assertEquals(0, results.getSuccessObject().size());
+
+        verify(rules, times(2)).internalUserCanViewAllCompetitionSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verify(rules, times(2)).innovationLeadCanViewCompetitionAssignedToThemInSearchResults(isA(CompetitionSearchResultItem.class), isNull(UserResource.class));
+        verifyNoMoreInteractions(rules);
+    }
+
+    @Test
+    public void countOpenQueries() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countAllOpenQueries(1L), PROJECT_FINANCE);
+    }
+
+    @Test
+    public void findAllOpenQueries() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findAllOpenQueries(1L), PROJECT_FINANCE);
+    }
+
     private void runAsRole(UserRoleType roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
@@ -173,6 +259,26 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         @Override
         public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
             return serviceSuccess(newCompetitionResource().build());
+        }
+
+        @Override
+        public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
+            return serviceSuccess(newCompetitionResource().build(2));
+        }
+
+        @Override
+        public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> addInnovationLead(Long competitionId, Long innovationLeadUserId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> removeInnovationLead(Long competitionId, Long innovationLeadUserId) {
+            return null;
         }
 
         @Override
@@ -206,6 +312,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
+        public ServiceResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageIndex, int pageSize, String sortField) {
+            return serviceSuccess(new ApplicationPageResource());
+        }
+
+        @Override
         public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
             return serviceSuccess(new CompetitionSearchResult());
         }
@@ -233,6 +344,21 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         @Override
         public ServiceResult<Void> manageInformState(long competitionId) {
             return null;
+        }
+
+        @Override
+        public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
+            return serviceSuccess(newCompetitionSearchResultItem().build(2));
+        }
+
+        @Override
+        public ServiceResult<List<CompetitionOpenQueryResource>> findAllOpenQueries(Long competitionId) {
+            return serviceSuccess(emptyList());
+        }
+
+        @Override
+        public ServiceResult<Long>countAllOpenQueries(Long competitionId) {
+            return serviceSuccess(0L);
         }
     }
 }

@@ -8,7 +8,7 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
@@ -25,10 +25,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
+import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -89,7 +90,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
                 .build(2);
         userRepository.save(users);
 
-        List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
                 .with(id(null))
                 .withUser(users.toArray(new User[users.size()]))
                 .withCompetition(competition)
@@ -119,7 +120,7 @@ public class AssessorCountSummaryControllerIntegrationTest extends BaseControlle
 
         assessmentRepository.save(assessment);
 
-        AssessorCountSummaryPageResource counts = controller.getAssessorCountSummariesByCompetitionId(competitionId,0,3).getSuccessObject();
+        AssessorCountSummaryPageResource counts = controller.getAssessorCountSummariesByCompetitionId(competitionId, Optional.empty(), Optional.empty(), 0,3).getSuccessObject();
 
         assertEquals(2, counts.getTotalElements());
         assertEquals(0, counts.getNumber());

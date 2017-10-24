@@ -17,7 +17,7 @@ public enum UserRoleType {
     ASSESSOR("assessor","Assessor"),
     LEADAPPLICANT("leadapplicant", "Lead Applicant"),
     COMP_ADMIN("comp_admin", "Competition Administrator"),
-    COMP_EXEC("competition_executive", "Competition Executive"),
+    COMP_EXEC("competition_executive", "Portfolio Manager"),
     INNOVATION_LEAD("innovation_lead", "Innovation Lead"),
     SYSTEM_MAINTAINER("system_maintainer", "System Maintainer"),
     SYSTEM_REGISTRATION_USER("system_registrar", "System Registration User"),
@@ -26,8 +26,7 @@ public enum UserRoleType {
     PARTNER("partner", "Partner"),
     PROJECT_MANAGER("project_manager", "Project Manager"),
     IFS_ADMINISTRATOR("ifs_administrator", "IFS Administrator"),
-    SUPPORT("support", "IFS Support User")
-    ;
+    SUPPORT("support", "IFS Support User");
     private String name;
     private String displayName;
 
@@ -68,5 +67,9 @@ public enum UserRoleType {
 
     public static Set<UserRoleType> internalRoles(){
         return new HashSet<>(Arrays.asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD));
+    }
+
+    public static Set<UserRoleType> externalApplicantRoles(){
+        return new HashSet<>(Arrays.asList(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER));
     }
 }

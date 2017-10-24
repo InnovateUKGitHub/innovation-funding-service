@@ -10,6 +10,8 @@ Documentation     INFUND-3830: As a Competitions team member I want to view all 
 ...               INFUND-3004 As a Competition Executive I want the competition to automatically open based on the date that has been provided in the competition open field in the setup phase.
 ...
 ...               INFUND-2610 As an internal user I want to be able to view and access all projects that have been successful within a competition so that I can track the project setup process
+...
+...               IFS-1881 Project Setup internal project dashboard navigation
 Suite Setup       the user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -53,11 +55,10 @@ Project setup competition calculations
     And the total calculation in dashboard should be correct   Project setup    //section/ul/li
 
 PS projects title and lead
-    [Documentation]    INFUND-2610
+    [Documentation]    INFUND-2610, IFS-1881
     Given the user navigates to the page  ${COMP_MANAGEMENT_PROJECT_SETUP}
-    And the user should see the element   link=${PROJECT_SETUP_COMPETITION_NAME}
     When the user clicks the button/link  link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element  jQuery=h2:contains("Projects in setup")
+    Then the user should see the element  link=All projects
     And the user should see the element   jQuery=tr:nth-child(1) th:contains("Elbow grease")
     And the user should see the element   jQuery=tr:nth-child(1) th:contains("Lead: Big Riffs And Insane Solos Ltd")
     And the user should see the element   jQuery=tr:nth-child(2) th:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
@@ -66,11 +67,11 @@ PS projects title and lead
     And the user should see the element   jQuery=tr:nth-child(3) th:contains("Lead: Guitar Gods Ltd")
 
 PS projects status page
-    [Documentation]    INFUND-2610
+    [Documentation]    INFUND-2610, IFS-1881
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element          jQuery=tr:nth-child(2):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
-    And The user should see the text in the page  Projects in setup
+    And the user should see the element           link=All projects
     [Teardown]    The user navigates to the page  ${COMP_ADMINISTRATOR_DASHBOARD}
 
 Upcoming competitions
@@ -95,7 +96,7 @@ Competition Opens automatically on date
     Then the user should not see the element                                        jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
     When the user navigates to the page                                             ${CA_Live}
     Then the user should see the element                                            jQuery=h2:contains('Open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
-    [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type = 'OPEN_DATE';
+    [Teardown]  execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type = 'OPEN_DATE';
 
 Search existing applications
     [Documentation]    INFUND-3829

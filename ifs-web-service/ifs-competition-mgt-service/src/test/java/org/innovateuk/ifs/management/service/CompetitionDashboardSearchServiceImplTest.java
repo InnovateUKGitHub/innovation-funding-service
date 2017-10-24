@@ -49,15 +49,14 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
 
     @Test
     public void test_getProjectSetupCompetitions() throws Exception {
-        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", singleton("innovation area 1"), 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special", 0, null, null);
-        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", singleton("innovation area 2"), 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special", 0, null, null);
+        CompetitionSearchResultItem resource1 = new CompetitionSearchResultItem(1L, "i1", singleton("innovation area 1"), 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special", 0, null, null, null);
+        CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", singleton("innovation area 2"), 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special", 0, null, null, null);
         when(competitionsRestService.findProjectSetupCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
 
-        Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getProjectSetupCompetitions();
+        List<CompetitionSearchResultItem> result = service.getProjectSetupCompetitions();
 
-        assertTrue(result.get(CompetitionStatus.PROJECT_SETUP).contains(resource1));
-        assertTrue(result.get(CompetitionStatus.PROJECT_SETUP).contains(resource2));
-        assertEquals(result.get(CompetitionStatus.ASSESSOR_FEEDBACK), null);
+        assertTrue(result.contains(resource1));
+        assertTrue(result.contains(resource2));
     }
 
     @Test

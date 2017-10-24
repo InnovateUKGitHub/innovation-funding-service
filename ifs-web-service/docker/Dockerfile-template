@@ -1,6 +1,4 @@
-FROM davidcaste/alpine-java-unlimited-jce:jdk8
-MAINTAINER David Soff <dsoff@worth.systems>
-RUN apk --update add curl
+FROM innovateuk/oracle-jre
 EXPOSE 8009
 EXPOSE 8000
 EXPOSE 8080
@@ -14,4 +12,4 @@ ADD coscale-monitoring.sh /root/coscale-monitoring.sh
 ADD @app_name@-@version@.jar app.jar
 
 
-ENTRYPOINT exec java $JAVA_OPTS $JMX_OPTS -jar app.jar
+ENTRYPOINT exec java -Dfile.encoding=UTF8 $JAVA_OPTS $JMX_OPTS -jar app.jar

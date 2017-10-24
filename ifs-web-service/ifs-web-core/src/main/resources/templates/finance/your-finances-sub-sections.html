@@ -5,7 +5,10 @@
     <th:block th:fragment="finance(model)">
         <div class="your-finances">
             <h2 class="heading-medium no-margin-bottom">Finances</h2>
-            <p>Please complete your project finances.</p>
+            <div class="message-alert">
+                <p>Only members from your organisation will be able to see a breakdown of your finances.</p>
+            </div>
+            <p class="extra-margin">Please complete your project finances.</p>
 
             <details th:unless="${model.canNotRequestFunding || model.allReadOnly}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
                 <summary><span class="summary">Not requesting funding</span></summary>
@@ -217,6 +220,7 @@
     </th:block>
 
     <th:block th:fragment="overview_finances(model)">
+        <h2 class="heading-medium">Funding rules for this competition</h2>
         <th:block th:each="formInputViewModel : ${model.formInputViewModels}" th:with="formInput=${formInputViewModel.formInput}">
             <th:block th:if="${formInput.type.displayableFinancialSummaryType}"  th:with="model=${model.openSectionViewModel}" >
                 <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
@@ -228,7 +232,6 @@
                     <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}"/>
                 </th:block>
             </th:block>
-            <h2 class="heading-medium">Funding rules for this competition</h2>
             <th:block th:if="${formInputViewModel.formInput.type.displayableQuestionType}">
                 <div class="wysiwyg-styles">
                     <th:block th:insert="question-type/types :: ${formInputViewModel.formInput.type.nameLower} (${formInputViewModel})"></th:block>

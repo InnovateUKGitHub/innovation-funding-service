@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.applicant.service.ApplicantRestService;
+import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
@@ -69,9 +70,8 @@ import static org.innovateuk.ifs.organisation.builder.OrganisationAddressResourc
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
@@ -115,7 +115,8 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @Test
-    public void displayApplicationOverview() throws Exception {
+    public void displayApplicationOverviewAsCompAdmin() throws Exception {
+        this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.setupApplicationResponses();
@@ -128,7 +129,8 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
-                .andExpect(model().attribute("readOnly", false));
+                .andExpect(model().attribute("readOnly", false))
+                .andExpect(model().attribute("canReinstate", true));
     }
 
     @Test
@@ -196,7 +198,64 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 .build());
 
         ApplicationOverviewIneligibilityViewModel expectedIneligibility = new ApplicationOverviewIneligibilityViewModel(
-                "Removed by", now, "Reason for removal...");
+                false, "Removed by", now, "Reason for removal...");
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("applicationReadyForSubmit", false))
+                .andExpect(model().attribute("isCompManagementDownload", true))
+                .andExpect(model().attribute("responses", new HashMap<>()))
+                .andExpect(model().attribute("ineligibility", expectedIneligibility))
+                .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/all"));
+    }
+
+    @Test
+    public void readOnlyIneligibleViewModelAttrDependsOnCompetitionState() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.setupEmptyResponses();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+        this.setupResearchCategories();
+        setupApplicantResource();
+
+        ZonedDateTime now = ZonedDateTime.now();
+
+        applications.get(0).setApplicationState(ApplicationState.INELIGIBLE);
+        applications.get(0).setIneligibleOutcome(newIneligibleOutcomeResource()
+                .withReason("Reason for removal...")
+                .withRemovedBy("Removed by")
+                .withRemovedOn(now)
+                .build());
+
+        // Competition is beyond assessment (in panel)
+
+        competitionResource.setCompetitionStatus(CompetitionStatus.FUNDERS_PANEL);
+
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+
+        ApplicationOverviewIneligibilityViewModel expectedIneligibility = new ApplicationOverviewIneligibilityViewModel(
+                true, "Removed by", now, "Reason for removal...");
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("applicationReadyForSubmit", false))
+                .andExpect(model().attribute("isCompManagementDownload", true))
+                .andExpect(model().attribute("responses", new HashMap<>()))
+                .andExpect(model().attribute("ineligibility", expectedIneligibility))
+                .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/all"));
+
+        // Competition still in assessment state
+
+        competitionResource.setCompetitionStatus(CompetitionStatus.IN_ASSESSMENT);
+
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+
+        expectedIneligibility = new ApplicationOverviewIneligibilityViewModel(
+                false, "Removed by", now, "Reason for removal...");
 
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
                 .andExpect(status().isOk())
@@ -416,11 +475,12 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupOrganisationTypes();
         setupApplicantResource();
 
-        IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().build();
+        IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().withReason("coz").build();
         when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId())
-                .param("markAsIneligible", ""))
+                .param("markAsIneligible", "")
+                .param("ineligibleReason", "coz"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/applications/ineligible"));
 
@@ -436,7 +496,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         this.setupOrganisationTypes();
         setupApplicantResource();
 
-        IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().build();
+        IneligibleOutcomeResource ineligibleOutcomeResource = newIneligibleOutcomeResource().withReason("coz").build();
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(applications.get(0).getId()).withOrganisation(organisations.get(0).getId()).build();
         List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
 
@@ -448,11 +508,46 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         when(applicationService.markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource))).thenReturn(serviceFailure(new Error(APPLICATION_MUST_BE_SUBMITTED)));
 
         mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "")
-                .param("markAsIneligible", ""))
+                .param("markAsIneligible", "")
+                .param("ineligibleReason", "coz"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("competition-mgt-application-overview"));
 
         verify(applicationService).markAsIneligible(eq(applications.get(0).getId()), eq(ineligibleOutcomeResource));
+    }
+
+    @Test
+    public void markAsIneligible_noReason() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+        setupApplicantResource();
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(applications.get(0).getId()).withOrganisation(organisations.get(0).getId()).build();
+        List<ResearchCategoryResource> researchCategories = newResearchCategoryResource().build(3);
+
+        when(formInputResponseRestService.getResponsesByApplicationId(applications.get(0).getId())).thenReturn(restSuccess(new ArrayList<>()));
+        when(financeHandler.getFinanceModelManager(OrganisationTypeEnum.BUSINESS.getId())).thenReturn(defaultFinanceModelManager);
+        when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
+        when(categoryRestServiceMock.getResearchCategories()).thenReturn(restSuccess(researchCategories));
+
+        MvcResult result = mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "")
+                .param("markAsIneligible", ""))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andReturn();
+
+        ApplicationForm form = (ApplicationForm) result.getModelAndView().getModel().get("form");
+        BindingResult bindingResult = form.getBindingResult();
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getFieldErrorCount());
+        assertTrue(bindingResult.hasFieldErrors("ineligibleReason"));
+        assertEquals("validation.field.must.not.be.blank", bindingResult.getFieldError("ineligibleReason").getCode());
+
     }
 
     @Test
@@ -686,6 +781,45 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 .andExpect(view().name("404"));
 
         verify(formInputResponseRestService).getFile(formInputId, applications.get(0).getId(), processRoleId);
+    }
+
+    @Test
+    public void displayApplicationOverviewAsSupport() throws Exception {
+        this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.SUPPORT).build())).build());
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+        this.setupResearchCategories();
+        setupApplicantResource();
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("readOnly", true))
+                .andExpect(model().attribute("canReinstate", false));
+    }
+
+    @Test
+    public void displayApplicationOverviewAsInnovationLead() throws Exception {
+        this.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build())).build());
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.setupApplicationResponses();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+        this.setupResearchCategories();
+        this.setupFinances();
+        setupApplicantResource();
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}", competitionResource.getId(), applications.get(0).getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("readOnly", false))
+                .andExpect(model().attribute("canReinstate", false));
     }
 
     private void assertApplicationOverviewWithBackUrl(final String origin, final String expectedBackUrl) throws Exception {

@@ -23,12 +23,12 @@ Invite a new Assessor to assess a competition
     When the user clicks the button/link      jQuery=a:contains("Review and send invites")
     And the user enters text to a text field  id=message    This is custom text
     And the user clicks the button/link       jQuery=.button:contains("Send invite")
-    And The user should see the element       jQuery=span:contains("Add a non-registered assessor to your list")
+    And The user should see the element       jQuery=h2:contains("Overview of invited assessors")
 
 Invited User gets an email to assess the competition
     [Documentation]    INFUND-8092
     [Tags]
-    User reads the email and clicks the link to accept the assessment  ${Assessor_e2e["email"]}  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'  This is custom text
+    Then the user reads his email and clicks the link  ${Assessor_e2e["email"]}  Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'  This is custom text  1
     [Teardown]  Delete the emails from both test mailboxes
 
 Resend the invite to the assessor again
@@ -38,7 +38,8 @@ Resend the invite to the assessor again
     Given the user clicks the button/link     link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link       jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link       link=Overview
-    When the user clicks the button/link      jQuery=td:contains("E2E") ~ td:contains("Resend invite") a
+    And the user clicks the button/link       jQuery=tr:contains("E2E") label
+    When the user clicks the button/link      jQuery=button:contains("Resend invites")
     And the user clicks the button/link       jQuery=.button:contains("Send invite")
     [Teardown]  The user closes the browser
 
@@ -46,7 +47,7 @@ Resent email can be read by the invited user
      [Documentation]    IFS-39
      [Tags]
      [Setup]    The guest user opens the browser
-     User reads the email and clicks the link to accept the assessment    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'    Assessment period:
+     Then the user reads his email and clicks the link    ${test_mailbox_one}+AJE2E@gmail.com    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'    Assessment period:  1
 
 Invited user accepts the invitation and follows the registration flow
     [Documentation]    INFUND-8092
@@ -76,12 +77,12 @@ New assessor has no assements
 
 CompAdmin should see Assessor's profile and Innovation Area
     [Documentation]    INFUND-8092
-    [Setup]    Log in as a different user         &{Comp_admin1_credentials}
-    Given the user clicks the button/link         link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link           jQuery=a:contains("Invite assessors to assess the competition")
-    And the user clicks the button/link           link=Overview
-    When the user clicks the button/link          link=E2E
-    And the user should see the text in the page  Emerging technology
+    [Setup]    Log in as a different user  &{Comp_admin1_credentials}
+    Given the user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
+    And the user clicks the button/link    link=Accepted
+    When the user clicks the button/link   link=E2E
+    And the user should see the element    jQuery=.heading-small:contains("Innovation areas") + ul:contains("Emerging technology")
 
 CompAdmin Invites assessor to assess an application
     [Setup]    The user clicks the button/link  link=Dashboard

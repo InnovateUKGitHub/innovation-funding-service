@@ -1,12 +1,14 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+
 def targetBuild = hasProperty('profile') ? profile : 'docker';
-apply from: targetBuild+"-build.gradle";
+apply from: targetBuild + "-build.gradle";
 
 
 project(':ifs-web-service').bootRepackage {
-    onlyIf{ Task task -> false}
+    onlyIf { Task task -> false }
 }
 
-jar.enabled=false
+jar.enabled = false
 
 subprojects {
 
@@ -33,43 +35,51 @@ subprojects {
             }
         }
 
-        task prepareDockerFile(type: Copy) {
+        /**
+         * This task creates a `docker` directory in the $BUILD/docker` directory of the project,
+         * where it will write all the necessary files to build a docker container.
+         * In other words, after this task is executed, one could manually run `docker build .`
+         * in the output directory.
+         */
+        task prepareDockerInput {
             dependsOn getNewRelicAgent
+            dependsOn build
+            def inputDir = project.file("$project.buildDir/docker")
 
-            ext.appName = 'default-service-name'
-            outputs.upToDateWhen { false }
-            from '../docker/'
-            into 'src/main/docker/'
-            include 'Dockerfile-template'
-            rename 'Dockerfile-template', 'Dockerfile'
-            filter {
-                it.replaceAll('@version@', project.properties['version']).replaceAll('@app_name@', appName)
-            }
-        }
-
-        task buildDocker(type: Docker, dependsOn: build) {
-            push = false
-            applicationName = 'default-service-name'
-            tagVersion = 'latest'
-            dockerfile = file('src/main/docker/Dockerfile')
             doFirst {
                 copy {
+                    from '../docker/'
+                    into inputDir
+                    include 'Dockerfile-template'
+                    rename 'Dockerfile-template', 'Dockerfile'
+                    filter {
+                        it.replaceAll('@version@', project.properties['version']).replaceAll('@app_name@', jar.baseName)
+                    }
+                }
+                copy {
                     from jar
-                    into stageDir
+                    into inputDir
                 }
                 copy {
                     from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
-                    into stageDir
+                    into inputDir
                 }
                 copy {
                     from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
                     from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
-                    into stageDir
+                    into inputDir
                 }
             }
         }
 
-        buildDocker.dependsOn prepareDockerFile
+        task buildDocker(type: DockerBuildImage) {
+            dependsOn ":docker:oracle-jre:buildDocker"
+            dependsOn prepareDockerInput
+
+            tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+            inputDir = project.file("$project.buildDir/docker")
+        }
+
 
         // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
         // Can reinstate excludeDevtools in the bootRepackage task in next release
@@ -79,7 +89,7 @@ subprojects {
 
         bootRepackage {
             mainClass = 'org.innovateuk.ifs.Application'
-        //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+            //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
         }
     }
 }
@@ -123,3 +133,34 @@ task endpointDocumentation(type: Task) {
 }
 
 build.finalizedBy endpointDocumentation
+
+
+    task prepareFractalDockerInput {
+
+        def inputDir = project.file("$project.buildDir/fractal")
+
+        doFirst {
+            copy {
+                from file("ifs-web-core/src/main/resources/templates/fractal-components")
+                into file("${inputDir}/fractal-components")
+            }
+            copy {
+                from file("ifs-web-core/src/main/resources/static")
+                into file("${inputDir}/static")
+            }
+            copy {
+                from file("fractal.js")
+                into inputDir
+            }
+            copy {
+                from file("fractal")
+                into inputDir
+            }
+        }
+    }
+
+    task buildFractal(type: DockerBuildImage) {
+        dependsOn prepareFractalDockerInput
+        tag = "innovateuk/fractal:latest"
+        inputDir = project.file("$project.buildDir/fractal")
+    }

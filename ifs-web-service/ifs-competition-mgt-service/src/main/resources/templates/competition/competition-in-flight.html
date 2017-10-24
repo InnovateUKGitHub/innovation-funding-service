@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionStatus.displayName},subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
     <div class="grid-row">
-        <form action="#" th:action="@{/competition}" method="post">
+        <form th:action="@{/competition}" method="post">
             <div class="column-two-thirds">
                 <div class="boxed">
                     <h2 class="heading-medium no-margin-top">Competition information</h2>
@@ -34,14 +34,15 @@
                         <dt>Innovation Lead</dt>
                         <dd th:text="${model.lead}">Mark Daily</dd>
 
-                        <dt>Competition Executive</dt>
+                        <dt>Portfolio Manager</dt>
                         <dd th:text="${model.executive}">Paul Ray</dd>
                     </dl>
 
                     <p th:unless="${model.readOnly}"
                        th:if="${(model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN or
                        model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN or
-                       model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED)}">
+                       model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).CLOSED or
+                       model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT)}">
                        <a th:href="@{/competition/setup/{competitionId}(competitionId=${model.competitionId})}">View and update competition setup</a>
                     </p>
                 </div>
@@ -103,6 +104,20 @@
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}"
                            th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">
                             Manage assessments
+                        </a>
+                    </li>
+                    <li th:unless="${model.readOnly}">
+                        <a class="disabled" aria-disabled="true"
+                           th:if="${!model.assessmentPanelEnabled or
+                            model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">
+                            Manage assessment panel
+                        </a>
+                        <a th:unless="${!model.assessmentPanelEnabled or
+                            model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}"
+                           th:href="@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}">
+                            Manage assessment panel
                         </a>
                     </li>
                     <li th:unless="${model.readOnly}">

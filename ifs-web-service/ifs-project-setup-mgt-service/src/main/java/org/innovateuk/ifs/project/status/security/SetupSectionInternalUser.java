@@ -11,6 +11,7 @@ import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 
 /**
  * This is a helper class for determining whether or not a given Project Setup section is available to access
@@ -84,7 +85,7 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessGrantOfferLetterSendSection(UserResource userResource) {
-        if((userResource.hasRole(COMP_ADMIN) || userResource.hasRole(PROJECT_FINANCE)) && projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
+        if(isInternalAdmin(userResource) && projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
             return ACCESSIBLE;
         }
 
@@ -106,7 +107,7 @@ public class SetupSectionInternalUser {
     }
 
     public ProjectActivityStates grantOfferLetterActivityStatus(UserResource userResource) {
-        if(userResource.hasRole(COMP_ADMIN) || userResource.hasRole(PROJECT_FINANCE)) {
+        if(isInternalAdmin(userResource)) {
             return projectSetupProgressChecker.getRoleSpecificActivityState().get(COMP_ADMIN);
         } else {
             return projectSetupProgressChecker.getGrantOfferLetterState();

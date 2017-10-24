@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.user.domain.User;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -90,6 +91,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> competition.setMilestones(milestones));
     }
 
+    public CompetitionBuilder withLeadTechnologist(User leadTechnologist){
+        return with(competition -> competition.setLeadTechnologist(leadTechnologist));
+    }
+
     public CompetitionBuilder withName(String... names) {
         return withArray((competition, name) -> setField("name", competition, name), names);
     }
@@ -149,16 +154,22 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     				.withFundersPanelDate(now.minusDays(1L));
     	} else if(ASSESSOR_FEEDBACK.equals(status)) {
             return withSetupComplete(true)
-                    .withStartDate(now.minusDays(4L))
-                    .withEndDate(now.minusDays(3L))
-                    .withFundersPanelDate(now.minusDays(2L))
-                    .withFundersPanelEndDate(now.minusDays(1L));
-        } else if(PROJECT_SETUP.equals(status)) {
-            return withSetupComplete(true)
-                    .withStartDate(now.minusDays(5L))
-                    .withEndDate(now.minusDays(4L))
+                    .withStartDate(now.minusDays(7L))
+                    .withEndDate(now.minusDays(6L))
+                    .withAssessorAcceptsDate(now.minusDays(5L))
+                    .withAssessorsNotifiedDate(now.minusDays(4L))
                     .withFundersPanelDate(now.minusDays(3L))
                     .withFundersPanelEndDate(now.minusDays(2L))
+                    .withAssessmentClosedDate(now.minusDays(1L));
+        } else if(PROJECT_SETUP.equals(status)) {
+            return withSetupComplete(true)
+                    .withStartDate(now.minusDays(8L))
+                    .withEndDate(now.minusDays(7L))
+                    .withAssessorAcceptsDate(now.minusDays(6L))
+                    .withAssessorsNotifiedDate(now.minusDays(5L))
+                    .withFundersPanelDate(now.minusDays(4L))
+                    .withFundersPanelEndDate(now.minusDays(3L))
+                    .withAssessmentClosedDate(now.minusDays(2L))
                     .withAssessorFeedbackDate(now.minusDays(1L));
         } else if(COMPETITION_SETUP.equals(status)) {
             return withSetupComplete(false);
@@ -199,4 +210,7 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withAcademicGrantPercentage(Integer... percentages) { return withArray((percentage, competition) -> competition.setAcademicGrantPercentage(percentage), percentages); }
 
+    public CompetitionBuilder withLeadTechnologist(User... leadTechnologists) {
+        return withArray((competition, leadTechnologist) -> setField("leadTechnologist", competition, leadTechnologist), leadTechnologists);
+    }
 }

@@ -39,7 +39,7 @@ User can navigate back to Become an Assessor page
     [Tags]
     When the user clicks the button/link           jQuery=.button:contains("Create account")
     Then the user should see the element           jQuery=.heading-small:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
-    And the user clicks the button/link            Link=Back
+    And the user clicks the button/link            jQuery=.link-back:contains("Back")
     And the user should see the element            jQuery=h1:contains("Become an assessor for Innovate UK")
 
 Create assessor account: server-side validations
@@ -102,9 +102,9 @@ Innovation area on assessor profile for invited user
     [Documentation]    INFUND-7960
     [Tags]
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
-    Given the user clicks the button/link  link=${OPEN_COMPETITION_NAME}
+    Given the user clicks the button/link  link=${openCompetitionRTO_name}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
-    And the user clicks the button/link    jQuery=a:contains("81 to")
+    And the user clicks the button/link    jQuery=a:contains("101 to")
     When the user clicks the button/link   link=Thomas Fister
     Then the user should see the element   jQuery=h3:contains("Innovation areas") ~ ul li:contains("Emerging and enabling") li:contains("Satellite applications")
     [Teardown]    Logout as user
@@ -125,7 +125,7 @@ Non-registered assessor: Reject invitation
 
 *** Keywords ***
 the assessor fills in all fields
-    Select From List By Index    id=rejectReason  3
+    Select From List By Index    id=rejectReasonValid  3
     The user should not see the text in the page  This field cannot be left blank
     The user enters text to a text field          id=rejectComment    Unable to assess this application.
 

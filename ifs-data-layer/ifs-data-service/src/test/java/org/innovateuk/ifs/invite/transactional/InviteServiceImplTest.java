@@ -35,6 +35,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -75,11 +76,11 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
     private final Log log = LogFactory.getLog(getClass());
 
     @Mock
-    NotificationService notificationService;
+    private NotificationService notificationService;
     @Mock
-    ApplicationInviteMapper applicationInviteMapper;
+    private ApplicationInviteMapper applicationInviteMapper;
     @Mock
-    InviteOrganisationMapper inviteOrganisationMapper;
+    private InviteOrganisationMapper inviteOrganisationMapper;
 
 
     @InjectMocks
@@ -98,6 +99,18 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         localValidatorFactory.afterPropertiesSet();
 
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
+    }
+
+    @Test
+    public void findOneByHash() {
+        String hash = "123abc";
+        ApplicationInvite applicationInvite = newApplicationInvite().build();
+
+        when(applicationInviteRepositoryMock.getByHash(hash)).thenReturn(applicationInvite);
+
+        ServiceResult<ApplicationInvite> result = inviteService.findOneByHash(hash);
+
+        assertEquals(applicationInvite, result.getSuccessObjectOrThrowException());
     }
 
 
@@ -723,15 +736,17 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), inviteProcessRoles.get(0).getOrganisationId()))
                 .thenReturn(organisationProcessRoles);
         when(applicationFinanceRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId())).thenReturn(applicationFinance);
+        when(applicationServiceMock.getProgressPercentageBigDecimalByApplicationId(application.getId())).thenReturn(serviceSuccess(BigDecimal.valueOf(35L)));
 
         ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInvite.getId());
 
-        InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock, applicationFinanceRepositoryMock);
+        InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock, applicationFinanceRepositoryMock, applicationServiceMock);
         inOrder.verify(processRoleRepositoryMock).findByApplicationIdAndOrganisationId(application.getId(), inviteProcessRoles.get(0).getOrganisationId());
         inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
         inOrder.verify(inviteOrganisationRepositoryMock).delete(applicationInvite.getInviteOrganisation());
         inOrder.verify(applicationFinanceRepositoryMock).findByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
         inOrder.verify(applicationFinanceRepositoryMock).delete(applicationFinance);
+        inOrder.verify(applicationServiceMock).getProgressPercentageBigDecimalByApplicationId(application.getId());
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(applicationInviteResult.isSuccess());

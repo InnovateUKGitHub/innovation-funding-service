@@ -1,30 +1,46 @@
-<!-- =================== Comp setup section - Initial Details (1) ============================== -->
+<!-- =================== Comp setup section - Overview (1) ============================== -->
 
 <th:block th:fragment="comp-setup-navigation(sections, currentSection, competition, readyToOpen)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:unless="${(param.section != null)}">
+        <div th:if="${setupComplete}" class="extra-margin-bottom">
+            <div class="message-alert">
+                <p>Setup of this competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
+            </div>
+        </div>
         <ul class="task-list">
-            <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}">
+            <li th:each="(section, iteration : ${sections})" th:if="${model.sectionIsNotHome(section)}">
                 <div class="task">
                     <h2 class="heading-small">
-                        <a th:if="(${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'})"
+                        <a th:if="${model.initialCompleteOrSectionIsInitial(section)}"
                            th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
                            th:text="${section.name}">Section Name</a>
-                        <th:block th:unless="${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}"
+                        <th:block th:unless="${model.initialCompleteOrSectionIsInitial(section)}"
                                   th:text="${section.name}">Section Name</th:block>
                     </h2>
                 </div>
-                <div th:if="${isPublicContentPublished and section.toString() == 'CONTENT'}"
-                      th:with="publishDay=${#temporals.format(publishDate, 'd MMMM yyyy')},
-                         publishTime=${#strings.toLowerCase(#temporals.format(publishDate, ' h:mma'))}"
+                <div th:if="${model.publicContentPublishedAndSectionIsContent(section)}"
+                      th:with="publishDay=${#temporals.format(model.publishDate, 'd MMMM yyyy')},
+                         publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, ' h:mma'))}"
                       th:text="${'Last published ' + publishDay + ' ' + publishTime}"
                       class="notification">Last published</div>
-                <div th:if="${section.isComplete(competition) and !competition.isSetupAndLive()}" class="task-status-complete"><span>Complete</span></div>
+                <div th:if="${model.sectionCompleteAndCompetitionNotLive(section)}" class="task-status-complete"><span>Complete</span></div>
+            </li>
+            <li>
+                <div class="task">
+                    <h2 class="heading-small">
+                        <th:block th:if="${model.general.initialComplete}">
+                            <a th:href="@{/competition/setup/{competitionId}/manage-innovation-leads/find(competitionId=${competition.id})}">Stakeholders</a>
+                        </th:block>
+                        <th:block th:unless="${model.general.initialComplete}">Stakeholders</th:block>
+                    </h2>
+                </div>
             </li>
         </ul>
-        <div th:if="${readyToOpen}" class="extra-margin">
-            <p>Once you save, this competition will be ready to open but will not be published.</p>
-            <a th:href="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${competition.id})}"
-               class="button no-margin-right" id="compCTA">Save</a>
+        <div th:if="${!isReadyToOpen}" class="extra-margin">
+            <p>Once you complete, this competition will be ready to open.</p>
+            <a data-js-modal="complete-modal"
+               th:disabled="${!setupReady}"
+               class="button no-margin-right"  id="compCTA">Complete</a>
         </div>
     </th:block>
 </th:block>
@@ -32,7 +48,7 @@
 <!-- ===================Comp admin Page back button============================== -->
 <div th:fragment="setup-home">
     <div class="extra-margin">
-        <a class="button button-secondary" th:href="@{/competition/setup/{competitionId}/(competitionId=${competition.id})}">Return to setup overview</a>
+        <a class="button button-secondary" th:href="@{/competition/setup/{competitionId}/(competitionId=${model.general.competition.id})}">Return to setup overview</a>
     </div>
 </div>
 
@@ -80,6 +96,21 @@
         <hr />
         <div>
             <button name="send-emails" class="button">Send email to all applicants</button>
+            <button type="button" class="js-close buttonlink">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- ======== Comp admin - complete modal ======= -->
+<div th:fragment="comp-setup-complete-modal">
+    <div class="complete-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="heading-medium no-margin">Complete competition setup</h2>
+        <p>Setup of competition has now been completed and will automatically open on the date set. If you need to change anything after publication, contact the IFS Content Team.</p>
+        <hr />
+        <div>
+            <a th:href="@{/competition/setup/{competitionId}/ready-to-open(competitionId=${model.general.competition.id})}"
+               class="button">Done</a>
             <button type="button" class="js-close buttonlink">Cancel</button>
         </div>
     </div>

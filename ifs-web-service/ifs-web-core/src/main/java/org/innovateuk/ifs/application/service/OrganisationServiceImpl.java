@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.organisation.service.CompanyHouseRestService;
@@ -63,23 +61,18 @@ public class OrganisationServiceImpl implements OrganisationService {
     }
 
     @Override
-    public OrganisationResource save(OrganisationResource organisation) {
-        return organisationRestService.update(organisation).getSuccessObjectOrThrowException();
+    public OrganisationResource createOrMatch(OrganisationResource organisation) {
+        return organisationRestService.createOrMatch(organisation).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash) {
+        return organisationRestService.createAndLinkByInvite(organisation, inviteHash).getSuccessObjectOrThrowException();
     }
 
     @Override
     public OrganisationResource updateNameAndRegistration(OrganisationResource organisation){
         return organisationRestService.updateNameAndRegistration(organisation).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public OrganisationResource saveForAnonymousUserFlow(OrganisationResource organisation) {
-        return organisationRestService.updateByIdForAnonymousUserFlow(organisation).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public OrganisationResource addAddress(OrganisationResource organisation, AddressResource address, OrganisationAddressType addressType) {
-        return organisationRestService.addAddress(organisation, address, addressType).getSuccessObjectOrThrowException();
     }
 
     @Override

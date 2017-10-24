@@ -106,7 +106,6 @@ class CsvUtils {
         LocalDate startDate;
         String projectManager;
         boolean projectAddressAdded;
-        boolean projectDetailsSubmitted;
         List<Pair<String, String>> financeContactsForOrganisations;
         String moFirstName;
         String moLastName;
@@ -121,7 +120,6 @@ class CsvUtils {
             startDate = nullableDate(line.get(i++));
             projectManager = line.get(i++);
             projectAddressAdded = nullableBoolean(line.get(i++));
-            projectDetailsSubmitted = nullableBoolean(line.get(i++));
 
             String financeContactsLine = line.get(i++);
 
@@ -437,6 +435,8 @@ class CsvUtils {
         String activityCode;
         Integer assessorCount;
         BigDecimal assessorPay;
+        Boolean hasAssessmentPanel;
+        Boolean hasInterviewStage;
         boolean published;
         String shortDescription;
         String fundingRange;
@@ -488,6 +488,8 @@ class CsvUtils {
             code = nullable(line.get(i++));
             assessorCount = nullableInteger(line.get(i++));
             assessorPay = nullableBigDecimal(line.get(i++));
+            hasAssessmentPanel = nullableBoolean(line.get(i++));
+            hasInterviewStage = nullableBoolean(line.get(i++));
             published = nullableBoolean(line.get(i++));
             shortDescription = nullable(line.get(i++));
             fundingRange = nullable(line.get(i++));

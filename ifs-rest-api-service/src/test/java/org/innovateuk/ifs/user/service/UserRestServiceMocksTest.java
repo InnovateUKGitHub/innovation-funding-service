@@ -15,9 +15,13 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userOrganisationListType;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.*;
 import static org.junit.Assert.assertEquals;
@@ -49,6 +53,18 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         assertEquals(2, users.size());
         assertEquals(user1, users.get(0));
         assertEquals(user2, users.get(1));
+    }
+
+    @Test
+    public void test_findProcessRoleByUserId() {
+        List<ProcessRoleResource> processRoleList = newProcessRoleResource().build(10);
+        Long userId = 249L;
+
+        setupGetWithRestResultExpectations(processRoleRestURL + "/findByUserId/" + userId, processRoleResourceListType(), processRoleList);
+
+        List<ProcessRoleResource> response = service.findProcessRoleByUserId(userId).getSuccessObject();
+        assertEquals(10, response.size());
+        assertEquals(processRoleList, response);
     }
 
     @Test
@@ -328,5 +344,17 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         RestResult<Void> result = service.reactivateUser(123L);
         assertTrue(result.isSuccess());
         assertEquals(OK, result.getStatusCode());
+    }
+
+    @Test
+    public void findAllExternal() throws Exception {
+        String url = usersUrl + "/findAllExternal";
+        List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
+        setupGetWithRestResultExpectations(url, userOrganisationListType(), userOrganisationResources);
+
+        RestResult<List<UserOrganisationResource>> result = service.findAllExternal();
+        assertTrue(result.isSuccess());
+        assertEquals(OK, result.getStatusCode());
+        assertEquals(userOrganisationResources, result.getSuccessObject());
     }
 }

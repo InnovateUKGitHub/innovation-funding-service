@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller.dashboard;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -16,10 +17,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
 
@@ -43,19 +42,29 @@ public class CompetitionManagementDashboardController {
     @GetMapping("/dashboard/live")
     public String live(Model model, UserResource user){
         boolean supportView = user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
-        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(competitionDashboardSearchService.getLiveCompetitions(),
-                competitionDashboardSearchService.getCompetitionCounts(), supportView));
-
+        Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions = competitionDashboardSearchService.getLiveCompetitions();
+        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(liveCompetitions, getCompetitionCountResource(liveCompetitions), supportView));
         return TEMPLATE_PATH + "live";
+    }
+
+    // IFS-191 filtered view can now have different count according to assigned competitions
+    private CompetitionCountResource getCompetitionCountResource(Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions){
+        CompetitionCountResource competitionCountResource = competitionDashboardSearchService.getCompetitionCounts();
+        Long competitionCount = 0L;
+        if(liveCompetitions != null){
+            competitionCount = liveCompetitions.keySet().stream().mapToLong(status -> liveCompetitions.get(status).size()).sum();
+        }
+        competitionCountResource.setLiveCount(competitionCount);
+        return competitionCountResource;
     }
 
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model) {
-        final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
+        final List<CompetitionSearchResultItem> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
 
-        model.addAttribute(MODEL_ATTR, new ProjectSetupDashboardViewModel(projectSetupCompetitions,
-                competitionDashboardSearchService.getCompetitionCounts(),
-                formatInnovationAreaNames(projectSetupCompetitions)));
+        model.addAttribute(MODEL_ATTR,
+                new ProjectSetupDashboardViewModel(projectSetupCompetitions,
+                        competitionDashboardSearchService.getCompetitionCounts()));
 
         return TEMPLATE_PATH + "projectSetup";
     }
@@ -71,16 +80,13 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "upcoming";
     }
 
-    @GetMapping("/dashboard/complete")
-    public String complete(Model model) {
-
-        //TODO INFUND-3833
-        model.addAttribute(MODEL_ATTR, new CompleteDashboardViewModel(Collections.emptyMap(),
+    @GetMapping("/dashboard/previous")
+    public String previous(Model model) {
+        model.addAttribute(MODEL_ATTR, new PreviousDashboardViewModel(competitionDashboardSearchService.getPreviousCompetitions().stream().sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate())).collect(Collectors.toList()),
                 competitionDashboardSearchService.getCompetitionCounts()));
 
-        return TEMPLATE_PATH + "complete";
+        return TEMPLATE_PATH + "previous";
     }
-
 
     @GetMapping("/dashboard/non-ifs")
     public String nonIfs(Model model) {

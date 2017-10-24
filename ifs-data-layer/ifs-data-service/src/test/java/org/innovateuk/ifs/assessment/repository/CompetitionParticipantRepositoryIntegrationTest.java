@@ -9,12 +9,20 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
-import org.innovateuk.ifs.user.domain.*;
-import org.innovateuk.ifs.user.repository.*;
+import org.innovateuk.ifs.user.domain.Agreement;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.AgreementRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.RoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.AffiliationType;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -38,17 +46,17 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInviteWithoutId;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInviteWithoutId;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
-import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
@@ -63,6 +71,9 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private CompetitionRepository competitionRepository;
@@ -95,6 +106,9 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     private AgreementRepository agreementRepository;
 
     @Autowired
+    private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
+
+    @Autowired
     @Override
     protected void setRepository(CompetitionParticipantRepository repository) {
         this.repository = repository;
@@ -110,7 +124,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void findAll() {
-        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+        List<CompetitionAssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
                 newCompetitionInviteWithoutId()
                         .withName("name1", "name2")
                         .withEmail("test1@test.com", "test2@test.com")
@@ -122,7 +136,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         );
         flushAndClearSession();
 
-        List<CompetitionParticipant> retrievedParticipant = repository.findAll();
+        List<CompetitionAssessmentParticipant> retrievedParticipant = repository.findAll();
 
         assertEquals(2, retrievedParticipant.size());
         assertEqualParticipants(savedParticipants, retrievedParticipant);
@@ -132,7 +146,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     public void getByInviteHash() {
         String hash = generateInviteHash();
 
-        CompetitionParticipant savedParticipant = saveNewCompetitionParticipant(
+        CompetitionAssessmentParticipant savedParticipant = saveNewCompetitionParticipant(
                 newCompetitionInviteWithoutId()
                         .withName("name1")
                         .withEmail("test1@test.com")
@@ -144,13 +158,13 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         );
         flushAndClearSession();
 
-        CompetitionParticipant retrievedParticipant = repository.getByInviteHash(hash);
+        CompetitionAssessmentParticipant retrievedParticipant = repository.getByInviteHash(hash);
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
     @Test
     public void save() {
-        CompetitionParticipant savedParticipant = saveNewCompetitionParticipant(
+        CompetitionAssessmentParticipant savedParticipant = saveNewCompetitionParticipant(
                 newCompetitionInviteWithoutId()
                         .withName("name1")
                         .withEmail("test1@test.com")
@@ -164,13 +178,13 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         long id = savedParticipant.getId();
 
-        CompetitionParticipant retrievedParticipant = repository.findOne(id);
+        CompetitionAssessmentParticipant retrievedParticipant = repository.findOne(id);
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
     @Test
     public void save_accepted() {
-        CompetitionParticipant savedParticipant = saveNewCompetitionParticipant(
+        CompetitionAssessmentParticipant savedParticipant = saveNewCompetitionParticipant(
                 newCompetitionInviteWithoutId()
                         .withName("name1")
                         .withEmail(user.getEmail())
@@ -186,13 +200,13 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         long id = savedParticipant.getId();
 
-        CompetitionParticipant retrievedParticipant = repository.findOne(id);
+        CompetitionAssessmentParticipant retrievedParticipant = repository.findOne(id);
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
     @Test
     public void save_rejected() {
-        CompetitionParticipant savedParticipant = saveNewCompetitionParticipant(
+        CompetitionAssessmentParticipant savedParticipant = saveNewCompetitionParticipant(
                 newCompetitionInviteWithoutId()
                         .withName("name1")
                         .withEmail("test1@test.com")
@@ -209,13 +223,13 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         long id = savedParticipant.getId();
 
-        CompetitionParticipant retrievedParticipant = repository.findOne(id);
+        CompetitionAssessmentParticipant retrievedParticipant = repository.findOne(id);
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
     @Test
     public void getByUserRoleStatus() {
-        CompetitionParticipant savedParticipant = saveNewCompetitionParticipant(
+        CompetitionAssessmentParticipant savedParticipant = saveNewCompetitionParticipant(
                 newCompetitionInviteWithoutId()
                         .withName("name1")
                         .withEmail(user.getEmail())
@@ -228,7 +242,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         );
         flushAndClearSession();
 
-        List<CompetitionParticipant> retrievedParticipants = repository.getByUserIdAndRole(user.getId(), ASSESSOR);
+        List<CompetitionAssessmentParticipant> retrievedParticipants = repository.getByUserIdAndRole(user.getId(), ASSESSOR);
         assertEqualParticipants(savedParticipant, getOnlyElement(retrievedParticipants));
     }
 
@@ -236,7 +250,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     public void getByCompetitionAndRole() {
         List<Competition> competitions = newCompetition().withId(1L, 7L).build(2);
 
-        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+        List<CompetitionAssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
                 newCompetitionInviteWithoutId()
                         .withName("name1", "name2")
                         .withEmail("test1@test.com", "test2@test.com")
@@ -248,7 +262,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         flushAndClearSession();
 
-        List<CompetitionParticipant> retrievedParticipants = repository.getByCompetitionIdAndRole(competitions.get(0).getId(), ASSESSOR);
+        List<CompetitionAssessmentParticipant> retrievedParticipants = repository.getByCompetitionIdAndRole(competitions.get(0).getId(), ASSESSOR);
 
         assertNotNull(retrievedParticipants);
         assertEquals(1, retrievedParticipants.size());
@@ -259,7 +273,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     public void getByCompetitionIdAndRoleAndStatus() {
         List<Competition> competitions = newCompetition().withId(1L, 7L).build(2);
 
-        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+        List<CompetitionAssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
                 newCompetitionInviteWithoutId()
                         .withName("name1", "name2", "name3")
                         .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
@@ -270,13 +284,13 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                         .build(3));
 
         // Now accept one of the invites
-        CompetitionParticipant competitionParticipantToAccept = savedParticipants.get(1);
+        CompetitionAssessmentParticipant competitionParticipantToAccept = savedParticipants.get(1);
         competitionParticipantToAccept.getInvite().open();
         competitionParticipantToAccept.acceptAndAssignUser(user);
 
         flushAndClearSession();
 
-        List<CompetitionParticipant> retrievedParticipants = repository.getByCompetitionIdAndRoleAndStatus(1L, ASSESSOR, ParticipantStatus.ACCEPTED);
+        List<CompetitionAssessmentParticipant> retrievedParticipants = repository.getByCompetitionIdAndRoleAndStatus(1L, ASSESSOR, ParticipantStatus.ACCEPTED);
 
         assertNotNull(retrievedParticipants);
         assertEqualParticipants(singletonList(competitionParticipantToAccept), retrievedParticipants);
@@ -292,7 +306,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.ACCEPTED);
         List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com", "steve.smith@empire.com");
-        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+        List<CompetitionAssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
                 newCompetitionInviteWithoutId()
                         .withName("name1", "name2", "name3")
                         .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
@@ -304,7 +318,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                         .build(3));
 
         // Now accept all of the invites
-        savedParticipants.stream().forEach(
+        savedParticipants.forEach(
                 participant -> {
                     participant.getInvite().open();
                     participant.acceptAndAssignUser(participant.getInvite().getUser());
@@ -327,7 +341,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         flushAndClearSession();
 
-        List<CompetitionParticipant> retrievedParticipants = repository.findParticipantsWithAssessments(1L, ASSESSOR, ParticipantStatus.ACCEPTED, 1L);
+        List<CompetitionAssessmentParticipant> retrievedParticipants = repository.findParticipantsWithAssessments(1L, ASSESSOR, ParticipantStatus.ACCEPTED, 1L);
 
         assertNotNull(retrievedParticipants);
         assertEquals(2, retrievedParticipants.size());
@@ -343,7 +357,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.ACCEPTED);
         List<User> users = findUsersByEmail("paul.plum@gmail.com", "felix.wilson@gmail.com", "steve.smith@empire.com");
-        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+        List<CompetitionAssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
                 newCompetitionInviteWithoutId()
                         .withName("name1", "name2", "name3")
                         .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
@@ -355,7 +369,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                         .build(3));
 
         // Now accept all of the invites
-        savedParticipants.stream().forEach(
+        savedParticipants.forEach(
                 participant -> {
                     participant.getInvite().open();
                     participant.acceptAndAssignUser(participant.getInvite().getUser());
@@ -377,7 +391,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pagination = new PageRequest(0, 1);
 
-        Page<CompetitionParticipant> retrievedParticipants = repository.findParticipantsWithoutAssessments(1L, ASSESSOR, ParticipantStatus.ACCEPTED, 1L, null, pagination);
+        Page<CompetitionAssessmentParticipant> retrievedParticipants = repository.findParticipantsWithoutAssessments(1L, ASSESSOR, ParticipantStatus.ACCEPTED, 1L, null, pagination);
 
         assertNotNull(retrievedParticipants);
         assertEquals(2, retrievedParticipants.getTotalElements());
@@ -391,7 +405,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     public void countByCompetitionIdAndRoleAndStatus() {
         List<Competition> competitions = newCompetition().withId(1L, 7L).build(2);
 
-        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+        List<CompetitionAssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
                 newCompetitionInviteWithoutId()
                         .withName("name1", "name2", "name3")
                         .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
@@ -401,9 +415,9 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                         .withStatus(SENT)
                         .build(3));
 
-        // Now accept two of the invites
-        for (int i = 0; i < 2; i++) {
-            CompetitionParticipant competitionParticipantToAccept = savedParticipants.get(i);
+        // Now accept one of the invites
+        for (int i = 0; i < 1; i++) {
+            CompetitionAssessmentParticipant competitionParticipantToAccept = savedParticipants.get(i);
             competitionParticipantToAccept.getInvite().open();
             competitionParticipantToAccept.acceptAndAssignUser(user);
         }
@@ -412,7 +426,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         long count = repository.countByCompetitionIdAndRoleAndStatus(1L, ASSESSOR, ParticipantStatus.ACCEPTED);
 
-        assertEquals(2L, count);
+        assertEquals(1L, count);
     }
 
     @Test
@@ -422,7 +436,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                 .build(2);
         competitionRepository.save(competitions);
 
-        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+        List<CompetitionAssessmentParticipant> savedParticipants = saveNewCompetitionParticipants(
                 newCompetitionInviteWithoutId()
                         .withName("name1", "name1", "name2")
                         .withEmail("test1@test.com", "test1@test.com", "test2@test.com")
@@ -434,13 +448,13 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         flushAndClearSession();
 
-        List<CompetitionParticipant> retrievedParticipants = repository.getByInviteEmail("test1@test.com");
+        List<CompetitionAssessmentParticipant> retrievedParticipants = repository.getByInviteEmail("test1@test.com");
         assertEqualParticipants(asList(savedParticipants.get(0), savedParticipants.get(1)), retrievedParticipants);
     }
 
     @Test
     public void getByInviteId() {
-        CompetitionParticipant savedParticipant = saveNewCompetitionParticipant(
+        CompetitionAssessmentParticipant savedParticipant = saveNewCompetitionParticipant(
                 newCompetitionInviteWithoutId()
                         .withName("name1")
                         .withEmail("test1@test.com")
@@ -452,7 +466,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         flushAndClearSession();
 
-        CompetitionParticipant retrievedParticipant = repository.getByInviteId(savedParticipant.getInvite().getId());
+        CompetitionAssessmentParticipant retrievedParticipant = repository.getByInviteId(savedParticipant.getInvite().getId());
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
@@ -476,20 +490,20 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEquals(2, participantCount);
     }
 
-    private CompetitionParticipant saveNewCompetitionParticipant(CompetitionInvite invite) {
-        return repository.save(new CompetitionParticipant(invite));
+    private CompetitionAssessmentParticipant saveNewCompetitionParticipant(CompetitionInvite invite) {
+        return repository.save(new CompetitionAssessmentParticipant(invite));
     }
 
-    private List<CompetitionParticipant> saveNewCompetitionParticipants(List<CompetitionInvite> invites) {
+    private List<CompetitionAssessmentParticipant> saveNewCompetitionParticipants(List<CompetitionInvite> invites) {
         return invites.stream().map(competitionInvite ->
-                repository.save(new CompetitionParticipant(competitionInvite))).collect(toList());
+                repository.save(new CompetitionAssessmentParticipant(competitionInvite))).collect(toList());
     }
 
-    private void assertEqualParticipants(List<CompetitionParticipant> expected, List<CompetitionParticipant> actual) {
+    private void assertEqualParticipants(List<CompetitionAssessmentParticipant> expected, List<CompetitionAssessmentParticipant> actual) {
         zip(expected, actual, this::assertEqualParticipants);
     }
 
-    private void assertEqualParticipants(CompetitionParticipant expected, CompetitionParticipant actual) {
+    private void assertEqualParticipants(CompetitionAssessmentParticipant expected, CompetitionAssessmentParticipant actual) {
         assertNotNull(expected);
         assertNotNull(actual);
 
@@ -519,6 +533,17 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void getAssessorsByCompetitionAndStatus() throws Exception {
         loginSteveSmith();
+
+        User acceptedUser = newUser()
+                .withId()
+                .withUid("uid-1")
+                .withFirstName("Anthony")
+                .withLastName("Hale")
+                .withProfileId()
+                .build();
+
+        userRepository.save(acceptedUser);
+
         List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
@@ -527,20 +552,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                 .withStatus(SENT)
                 .build(4);
 
-        List<CompetitionParticipant> competitionParticipants = saveNewCompetitionParticipants(newAssessorInvites);
-
-        User user = newUser()
-                .withId()
-                .withUid("uid-1")
-                .withFirstName("Anthony")
-                .withLastName("Hale")
-                .withProfileId()
-                .build();
-
-        userRepository.save(user);
+        List<CompetitionAssessmentParticipant> competitionParticipants = saveNewCompetitionParticipants(newAssessorInvites);
 
         competitionParticipants.get(3).getInvite().open();
-        competitionParticipants.get(3).acceptAndAssignUser(user);
+        competitionParticipants.get(3).acceptAndAssignUser(acceptedUser);
 
         repository.save(competitionParticipants);
         flushAndClearSession();
@@ -549,9 +564,9 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatus(
+        Page<CompetitionAssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndStatusContains(
                 competition.getId(),
-                ACCEPTED,
+                singletonList(ACCEPTED),
                 pageable
         );
 
@@ -560,7 +575,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEquals(20, pagedResult.getSize());
         assertEquals(0, pagedResult.getNumber());
 
-        List<CompetitionParticipant> content = pagedResult.getContent();
+        List<CompetitionAssessmentParticipant> content = pagedResult.getContent();
 
         assertEquals(1, content.size());
         assertEquals("Anthony Hale", content.get(0).getInvite().getName());
@@ -636,7 +651,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                 .withStatus(SENT)
                 .build(4);
 
-        List<CompetitionParticipant> competitionParticipants = saveNewCompetitionParticipants(newAssessorInvites);
+        List<CompetitionAssessmentParticipant> competitionParticipants = saveNewCompetitionParticipants(newAssessorInvites);
 
         competitionParticipants.get(1).getInvite().open();
         competitionParticipants.get(1).acceptAndAssignUser(users.get(1));
@@ -648,10 +663,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        Page<CompetitionAssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 innovationArea.getId(),
-                ACCEPTED,
+                singletonList(ACCEPTED),
                 TRUE,
                 pageable
         );
@@ -661,7 +676,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEquals(20, pagedResult.getSize());
         assertEquals(0, pagedResult.getNumber());
 
-        List<CompetitionParticipant> content = pagedResult.getContent();
+        List<CompetitionAssessmentParticipant> content = pagedResult.getContent();
 
         assertEquals(1, content.size());
         assertEquals("Charles Dance", content.get(0).getInvite().getName());
@@ -686,10 +701,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        Page<CompetitionAssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 innovationArea.getId(),
-                null,
+                asList(ACCEPTED, PENDING),
                 null,
                 pageable
         );
@@ -699,7 +714,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEquals(20, pagedResult.getSize());
         assertEquals(0, pagedResult.getNumber());
 
-        List<CompetitionParticipant> content = pagedResult.getContent();
+        List<CompetitionAssessmentParticipant> content = pagedResult.getContent();
 
         assertEquals(1, content.size());
         assertEquals("Claire Jenkins", content.get(0).getInvite().getName());
@@ -708,6 +723,17 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     @Test
     public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_participantStatus() throws Exception {
         loginSteveSmith();
+
+        User acceptedUser = newUser()
+                .withId()
+                .withUid("uid-1")
+                .withFirstName("Anthony")
+                .withLastName("Hale")
+                .withProfileId()
+                .build();
+
+        userRepository.save(acceptedUser);
+
         List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
@@ -716,20 +742,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                 .withStatus(SENT)
                 .build(4);
 
-        List<CompetitionParticipant> competitionParticipants = saveNewCompetitionParticipants(newAssessorInvites);
-
-        User user = newUser()
-                .withId()
-                .withUid("uid-1")
-                .withFirstName("Anthony")
-                .withLastName("Hale")
-                .withProfileId()
-                .build();
-
-        userRepository.save(user);
+        List<CompetitionAssessmentParticipant> competitionParticipants = saveNewCompetitionParticipants(newAssessorInvites);
 
         competitionParticipants.get(3).getInvite().open();
-        competitionParticipants.get(3).acceptAndAssignUser(user);
+        competitionParticipants.get(3).acceptAndAssignUser(acceptedUser);
 
         repository.save(competitionParticipants);
         flushAndClearSession();
@@ -738,10 +754,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        Page<CompetitionAssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 null,
-                ACCEPTED,
+                singletonList(ACCEPTED),
                 null,
                 pageable
         );
@@ -751,7 +767,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEquals(20, pagedResult.getSize());
         assertEquals(0, pagedResult.getNumber());
 
-        List<CompetitionParticipant> content = pagedResult.getContent();
+        List<CompetitionAssessmentParticipant> content = pagedResult.getContent();
 
         assertEquals(1, content.size());
         assertEquals("Anthony Hale", content.get(0).getInvite().getName());
@@ -815,10 +831,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        Page<CompetitionAssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 null,
-                null,
+                singletonList(PENDING),
                 TRUE,
                 pageable
         );
@@ -828,7 +844,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEquals(20, pagedResult.getSize());
         assertEquals(0, pagedResult.getNumber());
 
-        List<CompetitionParticipant> content = pagedResult.getContent();
+        List<CompetitionAssessmentParticipant> content = pagedResult.getContent();
 
         assertEquals(1, content.size());
         assertEquals("Jane Pritchard", content.get(0).getInvite().getName());
@@ -892,10 +908,10 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        Page<CompetitionAssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 null,
-                null,
+                singletonList(PENDING),
                 FALSE,
                 pageable
         );
@@ -905,7 +921,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEquals(20, pagedResult.getSize());
         assertEquals(0, pagedResult.getNumber());
 
-        List<CompetitionParticipant> content = pagedResult.getContent();
+        List<CompetitionAssessmentParticipant> content = pagedResult.getContent();
 
         assertEquals(3, content.size());
         assertEquals("Anthony Hale", content.get(0).getInvite().getName());
@@ -920,20 +936,24 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
                 .withInnovationArea(innovationArea)
-                .withStatus(SENT)
+                .withStatus(SENT, SENT, OPENED, OPENED)
                 .build(4);
 
-        saveNewCompetitionParticipants(newAssessorInvites);
+        List<CompetitionAssessmentParticipant> participants = saveNewCompetitionParticipants(newAssessorInvites);
+        RejectionReason reason = rejectionReasonRepository.findAll().get(0);
+        participants.get(2).reject(reason, Optional.of("too busy"));
+        participants.get(3).reject(reason, Optional.of("not well"));
+
         flushAndClearSession();
 
         assertEquals(4, repository.count());
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<CompetitionParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant(
+        Page<CompetitionAssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 null,
-                null,
+                 asList(PENDING, REJECTED),
                 null,
                 pageable
         );
@@ -943,12 +963,55 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEquals(20, pagedResult.getSize());
         assertEquals(0, pagedResult.getNumber());
 
-        List<CompetitionParticipant> content = pagedResult.getContent();
+        List<CompetitionAssessmentParticipant> content = pagedResult.getContent();
 
         assertEquals(4, content.size());
         assertEquals("Anthony Hale", content.get(0).getInvite().getName());
+        assertEquals(REJECTED, content.get(0).getStatus());
         assertEquals("Charles Dance", content.get(1).getInvite().getName());
+        assertEquals(PENDING, content.get(1).getStatus());
         assertEquals("Claire Jenkins", content.get(2).getInvite().getName());
+        assertEquals(REJECTED, content.get(2).getStatus());
         assertEquals("Jane Pritchard", content.get(3).getInvite().getName());
+        assertEquals(PENDING, content.get(3).getStatus());
+    }
+
+    @Test
+    public void findAssessorAvailableForAssessmentPanel() {
+        CompetitionAssessmentParticipant availableParticipant = saveNewCompetitionParticipant(
+                newCompetitionInviteWithoutId()
+                        .withName("name1")
+                        .withEmail(user.getEmail())
+                        .withHash(Invite.generateInviteHash())
+                        .withCompetition(competition)
+                        .withInnovationArea(innovationArea)
+                        .withStatus(OPENED)
+                        .withUser(user)
+                        .build()
+        );
+        availableParticipant.acceptAndAssignUser(user);
+
+        User assessor = userMapper.mapToDomain(getFelixWilson());
+        CompetitionAssessmentParticipant unavailableParticipant = saveNewCompetitionParticipant(
+                newCompetitionInviteWithoutId()
+                        .withName(assessor.getName())
+                        .withEmail(assessor.getEmail())
+                        .withHash(Invite.generateInviteHash())
+                        .withCompetition(competition)
+                        .withInnovationArea(innovationArea)
+                        .withStatus(OPENED)
+                        .withUser(assessor)
+                        .build()
+        );
+        unavailableParticipant.acceptAndAssignUser(assessor);
+
+        AssessmentPanelInvite invite = new AssessmentPanelInvite(userMapper.mapToDomain(getFelixWilson()), "hash", competition);
+        assessmentPanelInviteRepository.save(invite);
+
+        flushAndClearSession();
+
+        List<CompetitionAssessmentParticipant> retrievedParticipants = repository.findParticipantsNotOnPanel(competition.getId());
+        assertEquals(1, retrievedParticipants.size());
+        assertEqualParticipants(availableParticipant, retrievedParticipants.get(0));
     }
 }

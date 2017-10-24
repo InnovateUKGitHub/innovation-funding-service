@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.*;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.publiccontent.service.ContentGroupRestService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,21 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    public List<UserResource> findInnovationLeads(Long competitionId){
+        return competitionsRestService.findInnovationLeads(competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public void addInnovationLead(Long competitionId, Long innovationLeadUserId){
+        competitionsRestService.addInnovationLead(competitionId, innovationLeadUserId);
+    }
+
+    @Override
+    public void removeInnovationLead(Long competitionId, Long innovationLeadUserId){
+        competitionsRestService.removeInnovationLead(competitionId, innovationLeadUserId);
+    }
+
+    @Override
     public CompetitionResource getPublishedById(Long competitionId){
         return competitionsRestService.getPublishedCompetitionById(competitionId).getSuccessObjectOrThrowException();
     }
@@ -69,6 +86,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    public ApplicationPageResource findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField) {
+        return competitionsRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public List<OrganisationTypeResource> getOrganisationTypes(long id) {
         return competitionsRestService.getCompetitionOrganisationType(id).getSuccessObjectOrThrowException();
     }
@@ -82,6 +104,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public ServiceResult<Void> update(CompetitionResource competition) {
         return competitionsRestService.update(competition).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> updateCompetitionInitialDetails(CompetitionResource competition) {
+        return competitionsRestService.updateCompetitionInitialDetails(competition).toServiceResult();
     }
 
     @Override
@@ -153,4 +180,5 @@ public class CompetitionServiceImpl implements CompetitionService {
     public CompetitionResource createNonIfs() {
         return competitionsRestService.createNonIfs().getSuccessObjectOrThrowException();
     }
+
 }

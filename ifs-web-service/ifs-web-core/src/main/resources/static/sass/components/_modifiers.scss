@@ -146,3 +146,14 @@ table {
 hr {
   clear: both;
 }
+
+button {
+  &.link-back {
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    padding-right: 0;
+    cursor: pointer;
+  }
+}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Queries'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Queries',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
 <body class="query-form">
@@ -42,7 +42,7 @@
                        type="text"
                        class="form-control width-full"
                        required="required"
-                       th:errorclass="field-group-error"
+                       th:errorclass="form-control-error"
                        th:field="*{queryTitle}"
                        th:attr="maxlength=${model.maxTitleCharacters},
                                 data-required-errormessage=#{validation.field.must.not.be.blank},
@@ -97,7 +97,7 @@
                       data-maxwordslength-errormessage=#{validation.field.max.word.count(null,${model.maxQueryWords})},
                       data-maxlength-errormessage=#{validation.field.too.many.characters(null,${model.maxQueryCharacters})},
                       data-required-errormessage=#{validation.field.must.not.be.blank}"></textarea>
-                    <div class="textarea-footer" th:with="query=*{query}">
+                    <div class="textarea-footer" th:with="query=*{query}" aria-live="polite" aria-atomic="true" role="status">
                         <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})" />
                     </div>
                 </div>

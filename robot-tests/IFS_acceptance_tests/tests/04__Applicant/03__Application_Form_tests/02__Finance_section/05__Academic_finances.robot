@@ -163,7 +163,7 @@ Academic finance overview
 *** Keywords ***
 Custom Suite Setup
     the guest user opens the browser
-    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${OPEN_COMPETITION_NAME}  You will be joining as part of the organisation
+    Login new application invite academic  ${test_mailbox_one}+academictest@gmail.com  Invitation to collaborate in ${openCompetitionBusinessRTO_name}  You will be joining as part of the organisation
 
 the academic partner fills the finances
     [Documentation]    INFUND-2399
@@ -204,7 +204,7 @@ Lead applicant marks the finances as complete
     the user clicks the button/link                  link=Academic robot test application
     the applicant completes the application details  Application details
     the user navigates to the academic application finances
-    the user marks the finances as complete          Academic robot test application
+    the user marks the finances as complete          Academic robot test application  labour costs  n/a
 
 
 Lead applicant marks the finances as incomplete

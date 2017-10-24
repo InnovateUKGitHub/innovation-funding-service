@@ -21,25 +21,25 @@
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="heading-large" th:text="${model.assessorsInvited}">60</span><br/>
-                <small>invited</small>
+                <small>Invited</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="heading-large" th:text="${model.assessorsAccepted}">23</span><br/>
-                <small>accepted</small>
+                <small>Accepted</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="heading-large" th:text="${model.assessorsDeclined}">3</span><br/>
-                <small>declined</small>
+                <small>Declined</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="heading-large" th:text="${model.assessorsStaged}">6</span><br/>
-                <small>assessors on invite list</small>
+                <small>Assessors on invite list</small>
             </div>
         </div>
     </div>
@@ -52,7 +52,7 @@
         <dd th:text="${model.innovationArea}">Agriculture and food</dd>
     </dl>
 
-    <p class="extra-margin extra-margin-bottom">Choose a tab to find, invite and see an overview of assessors.</p>
+    <div><br></div>
 
     <ul class="inline-nav">
         <li class="selected">
@@ -63,6 +63,9 @@
         </li>
         <li class="not-selected">
             <a th:href="@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Overview</a>
+        </li>
+        <li class="not-selected">
+            <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
         </li>
     </ul>
 
@@ -117,6 +120,7 @@
           th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}"
           th:object="${assessorSelectionForm}"
           data-multipage-select=""
+          novalidate="novalidate" 
           th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
         <div class="grid-row sorting">
@@ -167,7 +171,7 @@
                         </div>
                     </td>
                     <td>
-                        <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
+                        <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}"
                            th:text="${assessor.name}">John Barnes
                         </a>
                     </td>

@@ -93,13 +93,17 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     public ServiceResult<ProjectStatusResource> getProjectStatusByProjectId(Long projectId) {
         Project project = projectRepository.findOne(projectId);
         if (null != project) {
-            return ServiceResult.serviceSuccess(getProjectStatusResourceByProject(project));
+            return getProjectStatusByProject(project);
         }
         return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND, HttpStatus.NOT_FOUND));
     }
 
-    private ProjectStatusResource getProjectStatusResourceByProject(Project project) {
+    @Override
+    public ServiceResult<ProjectStatusResource> getProjectStatusByProject(Project project) {
+        return serviceSuccess(getProjectStatusResourceByProject(project));
+    }
 
+    private ProjectStatusResource getProjectStatusResourceByProject(Project project) {
         ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project);
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
 
@@ -190,7 +194,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectActivityStates getSpendProfileStatus(Project project, ProjectActivityStates financeCheckStatus) {
 
-        ApprovalType approvalType = spendProfileService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
+        ApprovalType approvalType = spendProfileService.getSpendProfileStatus(project.getId()).getSuccessObject();
         switch (approvalType) {
             case APPROVED:
                 return COMPLETE;
@@ -243,7 +247,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     private ProjectActivityStates getGrantOfferLetterStatus(Project project) {
 
-        ApprovalType spendProfileApprovalType = spendProfileService.getSpendProfileStatusByProjectId(project.getId()).getSuccessObject();
+        ApprovalType spendProfileApprovalType = spendProfileService.getSpendProfileStatus(project.getId()).getSuccessObject();
 
         if (project.getOfferSubmittedDate() == null && ApprovalType.APPROVED.equals(spendProfileApprovalType)) {
             return PENDING;

@@ -81,7 +81,6 @@ the address fields should be filled with dummy data
     Textfield Should Contain    id=addressForm.selectedPostcode.county    Cheshire
     Textfield Should Contain    id=addressForm.selectedPostcode.postcode    CH64 3RU
 
-
 the user submits their information
     Execute Javascript    jQuery('form').attr('novalidate','novalidate');
     the user selects the checkbox    termsAndConditions
@@ -101,25 +100,22 @@ the user cannot login with either password
     Page Should Contain    ${unsuccessful_login_message}
     Page Should Contain    Your email/password combination doesn't seem to work.
 
-
 the lead applicant invites a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     run keyword if    ${smoke_test}!=1    invite a registered user    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     run keyword if    ${smoke_test}==1    invite a new academic    ${EMAIL_LEAD}    ${EMAIL_INVITED}
 
-
 invite a new academic
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
     the user logs-in in new browser    ${EMAIL_LEAD}  ${correct_password}
     the user clicks the button/link    link=${application_name}
-    the user clicks the button/link    link=view team members and add collaborators
+    the user clicks the button/link    link=view and manage contributors and collaborators
     the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     the user clicks the button/link    jQuery=.button:contains("Add additional partner organisation")
     the user enters text to a text field    name=organisations[1].organisationName    university of liverpool
     the user enters text to a text field    name=organisations[1].invites[0].personName    Academic User
     the user enters text to a text field    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
     the user clicks the button/link    jQuery=.button:contains("Save changes")
-
 
 the user should see that the element is disabled
     [Arguments]    ${element}
@@ -142,11 +138,11 @@ The user fills the empty question fields
 The user fills the empty assessment fields
     The user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
     the user moves focus and waits for autosave
-    The user enters text to a text field    id=guidanceRow-0-scorefrom    30
+    The user enters text to a text field    id=guidanceRows[0].scoreFrom    30
     the user moves focus and waits for autosave
-    The user enters text to a text field    id=guidanceRow-0-scoreto    35
+    The user enters text to a text field    id=guidanceRows[0].scoreTo    35
     the user moves focus and waits for autosave
-    The user enters text to a text field    id=guidanceRow-0-justification    This is a justification
+    The user enters text to a text field    id=guidanceRows[0].justification    This is a justification
     the user moves focus and waits for autosave
 
 The user checks the question fields
@@ -192,3 +188,9 @@ the user collapses the section
     [Arguments]  ${section}
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("${section}")[aria-expanded="true"]
     run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("${section}")[aria-expanded="true"]
+
+the internal sends the descision notification email to all applicants
+    [Arguments]  ${email}
+    the user enters text to a text field  css=.editor  ${email}
+    the user clicks the button/link       css=.button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       css=button[name="send-emails"]

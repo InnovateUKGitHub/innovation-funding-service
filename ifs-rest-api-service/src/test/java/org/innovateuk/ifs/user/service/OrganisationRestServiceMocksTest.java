@@ -12,8 +12,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.organisationResourceListType;
 
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpMethod.GET;
@@ -26,8 +28,7 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
 
     @Override
     protected OrganisationRestServiceImpl registerRestServiceUnderTest() {
-        OrganisationRestServiceImpl userRestService = new OrganisationRestServiceImpl();
-        return userRestService;
+        return new OrganisationRestServiceImpl();
     }
 
     @Test
@@ -70,9 +71,29 @@ public class OrganisationRestServiceMocksTest extends BaseRestServiceUnitTest<Or
         String organisationNameEncoded = UriUtils.encode(organisation.getName(), "UTF-8");
 
         setupPostWithRestResultExpectations(organisationsUrl + "/updateNameAndRegistration/" + organisationId + "?name=" + organisationNameEncoded + "&registration=" + organisation.getCompanyHouseNumber(), OrganisationResource.class, null, organisation, OK);
-
         OrganisationResource receivedResource = service.updateNameAndRegistration(organisation).getSuccessObject();
 
         Assert.assertEquals(organisation, receivedResource);
+    }
+
+    @Test
+    public void createOrMatch() {
+        OrganisationResource expected = newOrganisationResource().build();
+
+        setupPostWithRestResultAnonymousExpectations(format("%s/createOrMatch", organisationsUrl), OrganisationResource.class, expected, expected, OK);
+
+        OrganisationResource response = service.createOrMatch(expected).getSuccessObjectOrThrowException();
+        assertEquals(expected, response);
+    }
+
+    @Test
+    public void createAndLinkByInvite() {
+        String inviteHash = "abc123";
+        OrganisationResource expected = newOrganisationResource().build();
+
+        setupPostWithRestResultAnonymousExpectations(format("%s/createAndLinkByInvite?inviteHash=%s", organisationsUrl, inviteHash), OrganisationResource.class, expected, expected, OK);
+
+        OrganisationResource response = service.createAndLinkByInvite(expected, inviteHash).getSuccessObjectOrThrowException();
+        assertEquals(expected, response);
     }
 }

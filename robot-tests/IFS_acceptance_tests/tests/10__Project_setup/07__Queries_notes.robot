@@ -13,6 +13,8 @@ Documentation
 ...               INFUND-7753 Partner receives an email alerting them to a further response to an earlier query
 ...
 ...               INFUND-7756 Project finance can post an update to an existing note
+...
+...               IFS-1882 Project Setup internal project dashboard: Query responses
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    Close browser and delete emails
@@ -48,7 +50,7 @@ Queries section is linked to from the main finance check summary page
     [Documentation]    INFUND-4840
     [Tags]
     [Setup]  the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6)
+    When the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(6)
     Then the user should see the text in the page    Raise finance queries to the organisation in this section
 
 Queries section contains finance contact name, email and telephone
@@ -140,7 +142,8 @@ Post new query server side validations
 Post new query client side validations
     [Documentation]    INFUND-4840
     [Tags]
-    When the user enters text to a text field    id=queryTitle    an eligibility query's title
+    When the user moves focus to the element    link=Sign out
+    And the user enters text to a text field    id=queryTitle    an eligibility query's title
     Then the user should not see the element    jQuery=label[for="queryTitle"] .error-message:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some query text
     Then the user should not see the element    jQuery=label[for="query] .error-message:contains(This field cannot be left blank.)
@@ -177,7 +180,7 @@ New query can be posted
     When the user clicks the button/link    jQuery=.button:contains("Post Query")
     Then the user should not see the element  jQuery=.button:contains("Post Query")
     And the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
-    And the user should see the element  jQuery=#post-new-response
+    And the user should see the element  css=#post-new-response
 
 Query sections are no longer editable
     [Documentation]    INFUND-4840
@@ -198,7 +201,7 @@ Finance contact receives an email when new query is posted
 Project finance user can add another query
     [Documentation]    INFUND-4840
     [Tags]
-    Given the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6)
+    Given the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(6)
     When the user clicks the button/link    jQuery=.button:contains("Post a new query")
     And the user enters text to a text field    id=queryTitle    a viability query's title
     And the user selects the option from the drop-down menu    VIABILITY    id=section
@@ -369,12 +372,22 @@ IFS Admin can see queries raised column updates to 'view'
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Awaiting response")
 
+IFS Admin can see applicant's response flagged in Query responses tab
+    [Documentation]    IFS-1882
+    [Tags]
+    Given the user navigates to the page  ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status/all
+    When the user clicks the button/link  link=Query responses (1)
+    Then the user should see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_NUMBER}")~td:contains("${EMPIRE_LTD_NAME}")
+    When the user clicks the button/link  link=${EMPIRE_LTD_NAME}
+    Then the user should see the element  jQuery=h1:contains("${EMPIRE_LTD_NAME}")
+    And the user should see the element   link=Post a new query
+
 Project finance user can view the response
     [Documentation]    INFUND-4843
     [Tags]
     [Setup]    log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6)
+    When the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(6)
     Then the user should see the text in the page    this is some response text
 
 Project finance user can view the finance contact's uploaded files
@@ -412,7 +425,7 @@ Link to notes from viability section
     [Tags]
     Given log in as a different user    &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2)
+    And the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(2)
     And the user clicks the button/link    jQuery=.button:contains("Notes")
     Then the user should see the text in the page    Use this section to make notes related to the finance checks
     And the user should see the element    jQuery=.button:contains("Create a new note")
@@ -429,7 +442,7 @@ Link to notes from main finance checks summary page
     [Documentation]    INFUND-4845
     [Tags]
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(7)
+    And the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(7)
     Then the user should see the text in the page    Use this section to make notes related to the finance checks
     And the user should see the element    jQuery=.button:contains("Create a new note")
 
@@ -502,7 +515,8 @@ Create new note server side validations
 Create new note client side validations
     [Documentation]    INFUND-4845
     [Tags]
-    When the user enters text to a text field    id=noteTitle    an eligibility query's title
+    When the user moves focus to the element    link=Sign out
+    And the user enters text to a text field    id=noteTitle    an eligibility query's title
     Then the user should not see the element    jQuery=label[for="noteTitle"] .error-message:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some note text
     Then the user should not see the element    jQuery=label[for="note"] .error-message:contains(This field cannot be left blank.)

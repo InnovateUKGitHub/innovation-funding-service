@@ -30,7 +30,7 @@ Application details: Previous submission
     And the user should see the text in the page    Previous application number
     And the user should see the text in the page    Previous application title
     When the user clicks the button/link    jQuery=label:contains(No)
-    Then The user should not see the element    id=application_details-previousapplicationnumber
+    Then The user should not see the element    css=[id="application.previousApplicationNumber"]
 
 Application details: Research category
     [Documentation]    INFUND-6823
@@ -106,6 +106,7 @@ Marking a question as complete
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
     Then the text box should turn to green
+    And the word count should be correct for the Project summary
     And the user should see the element    jQuery=button:contains("Edit")
     And the question should be marked as complete on the application overview page
 
@@ -172,7 +173,7 @@ the text box should be editable
 
 the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application overview
-    the user should see the element    jQuery=li:nth-child(2)
+    the user should see the element    css=li:nth-child(2)
     the user should not see the element    jQuery=li:nth-child(2) span:contains("Complete")
 
 the finance summary page should show a warning
@@ -184,10 +185,13 @@ Log in and create a new application for the Aerospace competition
     Given the user logs-in in new browser  &{lead_applicant_credentials}
     When the user navigates to the page    ${SERVER}/competition/${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/overview/
     the user clicks the button/link             jQuery=a:contains("Start new application")
+
     #The following two lines are failing if we don't have any other application for the same competition
-    Run Keyword And Ignore Error    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
-    Run Keyword And Ignore Error    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
+            Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
+            ...    AND    And the user clicks the button/link    jQuery=.button:contains("Continue")
+
     And the user clicks the button/link    jQuery=a:contains("Begin application")
     And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title    Aerospace test application
+    And the user enters text to a text field    css=[id="application.name"]    Aerospace test application
     And the user clicks the button/link    jQuery=button:contains("Save and return")

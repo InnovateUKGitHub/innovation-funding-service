@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
@@ -8,6 +9,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,12 @@ import java.util.List;
 public interface CompetitionService {
     CompetitionResource getById(Long id);
 
+    List<UserResource> findInnovationLeads(Long competitionId);
+
+    void addInnovationLead(Long competitionId, Long innovationLeadUserId);
+
+    void removeInnovationLead(Long competitionId, Long innovationLeadUserId);
+
     CompetitionResource getPublishedById(Long id);
 
     CompetitionResource create();
@@ -29,11 +37,15 @@ public interface CompetitionService {
 
     List<CompetitionResource> getAllCompetitionsNotInSetup();
 
+    ApplicationPageResource findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField);
+
     List<CompetitionTypeResource> getAllCompetitionTypes();
 
     List<OrganisationTypeResource> getOrganisationTypes(long id);
 
     ServiceResult<Void> update(CompetitionResource competition);
+
+    ServiceResult<Void> updateCompetitionInitialDetails(CompetitionResource competition);
 
     ServiceResult<Void> setSetupSectionMarkedAsComplete(Long competitionId, CompetitionSetupSection section);
 

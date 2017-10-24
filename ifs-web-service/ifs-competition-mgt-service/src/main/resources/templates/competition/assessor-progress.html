@@ -162,20 +162,68 @@
         </div>
 
         <p th:if="${#lists.isEmpty(model.rejected)}">No applications have been rejected by this assessor.</p>
+
+        <h2 class="heading-medium" th:text="| Previously assigned (${#lists.size(model.previouslyAssigned)}) |"/>
+
+        <div class="table-overflow" th:if="${!#lists.isEmpty(model.previouslyAssigned)}">
+            <table>
+                <thead>
+                <tr>
+                    <th scope="col" class="width-small">Application number</th>
+                    <th scope="col">Title</th>
+                    <th scope="col" class="width-large">Lead organisation</th>
+                    <th scope="col" class="width-small numeric">Assessors</th>
+                    <th scope="col" class="width-medium"><span class="visuallyhidden">Action</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="app : ${model.previouslyAssigned}">
+                    <td>
+                        <a href="#"
+                           th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}"
+                           th:text="${app.applicationId}">1</a>
+                    </td>
+                    <td th:text="${app.applicationName}">Application name</td>
+                    <td th:text="${app.leadOrganisation}">Lead organisation</td>
+                    <td th:text="${app.totalAssessors}" class="numeric">3</td>
+                    <td class="alignright"><form method="post"
+                              th:action="@{/assessment/competition/{competitionId}/assessors/{assessorId}/application/{applicationId}/assign(competitionId=${model.competitionId}, assessorId=${model.assessorId}, applicationId=${app.applicationId})}" >
+                        <button type="submit" class="button-secondary no-margin">Reassign</button>
+                    </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">No applications have been previously assigned to this assessor.</p>
     </div>
 
     <h2 class="heading-medium">Applications</h2>
 
-    <p>These are rest of the applications for this competition. You can assign more to this assessor.</p>
+    <p>These are the rest of the applications for this competition. You can assign more to this assessor.</p>
 
     <form method="GET">
-        <div class="grid-row sorting">
-            <div class="column-half">
-                <div class="data">
-                    <span class="bold-xlarge" th:text="${model.applicationsView.totalApplications}">2</span>
-                    <span class="bold-small">Applications</span>
+        <div class="search-filters extra-margin">
+            <fieldset>
+                <legend class="heading-medium no-margin">Filter applications</legend>
+                <div class="grid-row extra-margin">
+                    <div class="column-two-thirds">
+                        <label class="form-label" for="filterSearch">Search by application number.</label>
+                        <input type="text"
+                               class="form-control extra-margin-bottom"
+                               id="filterSearch"
+                               name="filterSearch"
+                               th:value="${model.filter}"/>
+                        <a href="?" th:href="'?filterSearch='">Clear all filters</a>
+                    </div>
+                    <div class="column-third">
+                        <button class="button">Filter</button>
+                    </div>
                 </div>
-            </div>
+            </fieldset>
+        </div>
+    </form>
             <!--/*
                 <div class="column-half alignright">
                 <div class="form-group">
@@ -191,8 +239,15 @@
                 <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
                  </div>
             */-->
+    <div class="grid-row sorting">
+        <div class="column-half">
+            <div class="data">
+                <span class="bold-xlarge" th:text="${model.applicationsView.totalApplications}">2</span>
+                <span class="bold-small">Applications</span>
+            </div>
         </div>
-    </form>
+    </div>
+
 
     <div class="table-overflow">
         <table class="applications-available">

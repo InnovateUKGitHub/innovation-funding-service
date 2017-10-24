@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Manager'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Manager',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='project'" class="project-detail project-manager">
@@ -74,6 +74,8 @@
                         </table>
                     </div>
                 </fieldset>
+
+                <p>You can change your Project Manager up until your grant offer letter is generated.</p>
 
                 <button class="button extra-margin" type="submit" id="save" name="save_pm">Save</button>
             </form>

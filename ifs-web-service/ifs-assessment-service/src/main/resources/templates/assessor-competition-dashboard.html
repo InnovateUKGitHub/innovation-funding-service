@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.competitionTitle}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.competitionTitle},hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
     <body th:with="context='assessment'" class="assessor-comp-dashboard">
@@ -13,18 +13,23 @@
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard})" />
 
-            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-                <h2 class="heading-medium error-summary-heading">There was a problem submitting some of your assessments</h2>
-
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem submitting some of your assessments</h2>
                 <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
+                    <li th:each="err : ${#fields.detailedErrors('${form.*}')}">
+                        <th:block th:if="${err.global}" th:text="${err.message}">Non-field specific message</th:block>
+                        <!--/* Add a one to the field name of assesmentId's as th:field will increament the id of the list and we just want to select the first one.
+                               It was harder to make the template change underneath as it was inside of a loop with if/else */-->
+                        <a th:if="${err.fieldName}" th:href="|#${err.fieldName == 'assessmentIds' ? 'assessmentIds1' : err.fieldName}|" th:text="${err.message}">The error message</a>
+                    </li>
                 </ul>
             </div>
+
 
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionTitle},size='heading-xlarge'" />
 
             <div class="grid-row">
-                <div class="column-two-thirds competition details">
+                <div class="column-one-half competition details">
                     <dl class="font-xsmall">
                         <dt>Competition:</dt>
                         <dd th:text="${model.competitionTitle}"></dd>
@@ -37,7 +42,7 @@
                     </dl>
                 </div>
 
-                <div class="column-one-third">
+                <div class="column-one-half">
                     <p><a th:href="@{~/competition/{cid}/overview(cid=${model.competitionId})}" target="_blank" rel="external noopener noreferrer">View competition brief (opens in a new window)</a></p>
                 </div>
             </div>

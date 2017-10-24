@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-544: As an applicant I want the ‘Application summary’ page to show me complete and incomplete sections, so that I can easy judge how much of the application is left to do
-Suite Setup       log in and create new application if there is not one already
+ Suite Setup       log in and create new application if there is not one already  Robot test application
 Suite Teardown    the user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot

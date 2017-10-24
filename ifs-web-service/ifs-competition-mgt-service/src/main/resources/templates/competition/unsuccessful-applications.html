@@ -1,0 +1,53 @@
+ <!DOCTYPE html>
+<html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Unsuccessful applications - ${model.competitionName}|" />
+</head>
+
+<body>
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Previous applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications/manage(competitionId=${model.competitionId})}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Unsuccessful applications',subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
+
+
+    <div class="grid-row sorting">
+        <div class="column-full">
+            <span class="heading-xlarge no-margin" th:text="${model.unsuccessfulApplicationsSize}">6</span>
+            <span class="heading-small">applications</span>
+        </div>
+    </div>
+    <div class="table-overflow">
+        <table id="application-list">
+            <thead>
+            <tr>
+                <th scope="col">Application number</th>
+                <th scope="col">Project title</th>
+                <th scope="col">Lead organisation</th>
+                <th scope="col">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="row, iterStat : ${model.unsuccessfulApplications}">
+                <td>
+                    <a th:href="@{'/competition/' + ${row.competition} + '/application/' + ${row.id} + ${originQuery}}" th:text="${row.id}">124</a>
+                </td>
+                <td th:text="${row.name}">Automated Project Title generator</td>
+                <td th:text="${row.leadOrganisationName}">B.Systems</td>
+                <td th:text="${#messages.msg('ifs.application.unsuccessful.' + row.applicationState.getStateName())}">Not funded</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.unsuccessfulApplicationsPagination})" />
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

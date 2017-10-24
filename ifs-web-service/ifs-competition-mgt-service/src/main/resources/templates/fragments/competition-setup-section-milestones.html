@@ -1,26 +1,22 @@
 
 <!-- =================Section: Milestones (4) =========================== -->
 <th:block th:fragment="section-content">
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
-        <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
-        </ul>
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
+
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Milestones',size='heading-xlarge'" />
 
     <div class="panel">
         Define the competition milestones. Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
     </div>
 
-    <form th:action="@{(${editable} ? '' : 'milestones/edit')}"
-          th:attrappend="data-autosave=${setupComplete != true}?compSetup"
-          th:attr="data-competition=${competition.id}" data-section="milestones"
+    <form th:action="@{(${model.general.editable} ? '' : 'milestones/edit')}"
+          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
+          th:attr="data-competition=${model.general.competition.id}" data-section="milestones"
           method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
-        <fieldset th:if="${editable}" id="section-4-edit">
-
-
-            <legend class="visuallyhidden">Milestones</legend>
+        <div th:if="${model.general.editable}" id="section-4-edit">
 
             <table class="milestones-table">
                 <thead>
@@ -44,14 +40,15 @@
                       <th scope="row" th:id="${'milestone-' + milestoneEntry.key}">
                         <span th:text="${milestoneEntry.value.milestoneType.milestoneDescription}" />
                       </th>
-                      <input type="hidden"
-                             required="required"
-                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
-                             th:value="${milestoneEntry.key}" />
-                      <input type="hidden"
-                             th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
-                             th:value="${milestoneEntry.value.editable}" />
                       <td class="time">
+                        <input type="hidden"
+                               required="required"
+                               th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].milestoneType'"
+                               th:value="${milestoneEntry.key}" />
+                        <input type="hidden"
+                               th:name="'milestoneEntries[' + ${milestoneEntry.key} + '].editable'"
+                               th:value="${milestoneEntry.value.editable}" />
+
                           <select th:if="${milestoneEntry.value.timeOption}"
                                   th:id="'milestoneEntries[' + ${milestoneEntry.key} + '].time'"
                                   class="form-control width-large"
@@ -114,9 +111,9 @@
             </table>
             <button class="button extra-margin">Done</button>
 
-        </fieldset>
+        </div>
 
-        <th:block th:unless="${editable}">
+        <th:block th:unless="${model.general.editable}">
             <table>
                 <thead>
                     <tr>
@@ -139,21 +136,21 @@
                     </tr>
                 </tbody>
             </table>
-            <button th:unless="${preventEdit}" type="submit" class="button extra-margin">Edit</button>
+            <button th:unless="${model.general.state.preventEdit}" type="submit" class="button extra-margin">Edit</button>
         </th:block>
     </form>
 
     <ul class="pagination">
         <li class="prev">
             <a rel="prev" title="Navigate to next part"
-               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='eligibility')}">
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='eligibility')}">
                 <span class="pagination-label">Previous</span>
                 <span class="pagination-part-title">Eligibility</span>
             </a>
         </li>
         <li class="next">
             <a rel="next" title="Navigate to next part"
-               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='application')}">
+               th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='application')}">
                 <span class="pagination-label">Next</span>
                 <span class="pagination-part-title">Application</span>
             </a>

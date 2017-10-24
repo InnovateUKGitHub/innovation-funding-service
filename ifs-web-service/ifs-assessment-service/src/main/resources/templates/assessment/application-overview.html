@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessor overview'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessor overview',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='assessment'" class="assessment assessment-overview">
@@ -95,7 +95,7 @@
                                       th:errorclass="form-control-error"
                                       rows="4"
                                       th:field="*{rejectComment}"></textarea>
-                            <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
+                            <div class="textarea-footer" th:with="rejectComment=*{rejectComment}" aria-live="polite" aria-atomic="true" role="status">
                                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
                             </div>
                         </div>

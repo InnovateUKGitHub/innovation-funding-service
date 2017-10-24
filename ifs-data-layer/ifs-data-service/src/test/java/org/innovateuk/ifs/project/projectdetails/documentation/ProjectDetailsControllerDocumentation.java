@@ -4,34 +4,24 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.projectdetails.controller.ProjectDetailsController;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_BE_IN_THE_FUTURE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_DATE_MUST_START_ON_FIRST_DAY_OF_MONTH;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_PARTNER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_FINANCE_CONTACT_MUST_BE_A_USER_ON_THE_PROJECT_FOR_THE_ORGANISATION;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_PROJECT_MANAGER_MUST_BE_LEAD_PARTNER;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder.newInviteProjectResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
@@ -39,17 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVCTest<ProjectDetailsController> {
 
-    private RestDocumentationResultHandler document;
-
     @Override
     protected ProjectDetailsController supplyControllerUnderTest() {
         return new ProjectDetailsController();
-    }
-
-    @Before
-    public void setup(){
-        this.document = document("project/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -60,7 +42,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(post("/project/{id}/startdate", 123L).
                 param("projectStartDate", "2017-02-01"))
                 .andExpect(status().isOk())
-                .andDo(this.document);
+                .andDo(document("project/{method-name}"));
 
         verify(projectDetailsServiceMock).updateProjectStartDate(123L, LocalDate.of(2017, 2, 1));
     }
@@ -73,7 +55,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(post("/project/{id}/startdate", 123L).
                 param("projectStartDate", "2015-01-01"))
                 .andExpect(status().isBadRequest())
-                .andDo(this.document);
+                .andDo(document("project/{method-name}"));
     }
 
     @Test
@@ -84,7 +66,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
         mockMvc.perform(post("/project/{id}/startdate", 123L).
                 param("projectStartDate", "2015-01-05"))
                 .andExpect(status().isBadRequest())
-                .andDo(this.document);
+                .andDo(document("project/{method-name}"));
     }
 
     @Test
@@ -96,7 +78,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the project"),
                                 parameterWithName("projectManagerId").description("User id of the Project Manager being assigned")
@@ -113,7 +95,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(post("/project/{id}/project-manager/{projectManagerId}", project1Id, projectManagerId))
                 .andExpect(status().isBadRequest())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the project"),
                                 parameterWithName("projectManagerId").description("User id of the Project Manager being assigned")
@@ -128,7 +110,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the Project that is having a Finance Contact applied to"),
                                 parameterWithName("organisationId").description("Id of the Organisation that is having its Finance Contact set")
@@ -147,7 +129,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
                 .andExpect(status().isBadRequest())
-                .andDo(this.document);
+                .andDo(document("project/{method-name}"));
     }
 
     @Test
@@ -158,55 +140,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(post("/project/{projectId}/organisation/{organisationId}/finance-contact?financeContact=789", 123L, 456L))
                 .andExpect(status().isBadRequest())
-                .andDo(this.document);
-    }
-
-    @Test
-    public void setApplicationDetailsSubmittedDateButDetailsNotFilledIn() throws Exception {
-        when(projectDetailsServiceMock.submitProjectDetails(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceFailure(PROJECT_SETUP_PROJECT_DETAILS_CANNOT_BE_SUBMITTED_IF_INCOMPLETE));
-        mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
-                .andExpect(status().isBadRequest())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
-                        )));
-    }
-
-    @Test
-    public void setApplicationDetailsSubmittedDate() throws Exception {
-        when(projectDetailsServiceMock.submitProjectDetails(isA(Long.class), isA(ZonedDateTime.class))).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/project/{projectId}/setApplicationDetailsSubmitted", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
-                        )));
-    }
-
-    @Test
-    public void isSubmitAllowedReturnsFalseWhenDetailsNotProvided() throws Exception {
-        when(projectDetailsServiceMock.isSubmitAllowed(123L)).thenReturn(serviceSuccess(false));
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/isSubmitAllowed", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
-                        )))
-                .andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().equals("false"));
-    }
-
-    @Test
-    public void isSubmitAllowed() throws Exception {
-        when(projectDetailsServiceMock.isSubmitAllowed(123L)).thenReturn(serviceSuccess(true));
-        MvcResult mvcResult = mockMvc.perform(get("/project/{projectId}/isSubmitAllowed", 123L))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
-                        )))
-                .andReturn();
-        assertTrue(mvcResult.getResponse().getContentAsString().equals("true"));
+                .andDo(document("project/{method-name}"));
     }
 
     @Test
@@ -218,7 +152,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                 .contentType(APPLICATION_JSON)
                 .content(toJson(invite)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
                         )
@@ -234,7 +168,7 @@ public class ProjectDetailsControllerDocumentation extends BaseControllerMockMVC
                 .contentType(APPLICATION_JSON)
                 .content(toJson(invite)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("projectId").description("Id of project that bank details status summary is requested for")
                         )

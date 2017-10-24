@@ -72,7 +72,7 @@ Guidance in the your project costs
     When the user clicks the button/link    jQuery=button:contains("Labour")
     And the user clicks the button/link     css=#collapsible-0 summary
     Then the user should see the element    css=#details-content-0 p
-    And the user should see the element     jQuery=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
+    And the user should see the element     css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
 
 Working days per year should be 232
     [Documentation]    INFUND-2961
@@ -120,7 +120,7 @@ Academic partner can upload file for field J-es PDF
     # Note the Jes form is already uploaded
     Then the user should see the element     css=a.uploaded-file
     When The user clicks the button/link       jQuery=button:contains("Remove")
-    then the user should see the element       jQuery=label[class="button-secondary extra-margin"]
+    then the user should see the element       css=label[class="button-secondary extra-margin"]
     and the user uploads the file  css=.upload-section input  ${valid_pdf}
     and the user should see the text in the page    ${valid_pdf}
 
@@ -128,7 +128,7 @@ Compadmin can open the jes-file in applications
     [Documentation]     IFS-102
     [Tags]
     [Setup]  log in as a different user   &{Comp_admin1_credentials}
-    Given the user navigates to the page  ${OPEN_COMPETITION_MAN}
+    Given the user navigates to the page  ${openCompetitionManagementRTO}
     and the user clicks the button/link  link=Applications: All, submitted, ineligible
     and the user clicks the button/link  link=All applications
     and the user clicks the button/link  link=${OPEN_COMPETITION_APPLICATION_5_NUMBER}
@@ -136,7 +136,7 @@ Compadmin can open the jes-file in applications
     And the user should see the text in the page    ${valid_pdf}
     and the user clicks the button/link  link=${valid_pdf} (opens in a new window)
     and the user should not see an error in the page
-    and the user navigates to the page  ${OPEN_COMPETITION_MAN}
+    and the user navigates to the page  ${openCompetitionManagementRTO}
 
 File upload mandatory for Academic partner to mark section as complete
     [Documentation]    INFUND-8469
@@ -146,7 +146,7 @@ File upload mandatory for Academic partner to mark section as complete
     Given the user navigates to Your-finances page  ${applicationName}
     and the user clicks the button/link      link=Your project costs
     and the user clicks the button/link       jQuery=button:contains("Remove")
-    When the user selects the checkbox      jQuery=label[for="agree-terms-page"]
+    When the user selects the checkbox      css=label[for="agree-terms-page"]
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
     then the user should see a field error     You must upload a Je-S file
 
@@ -156,19 +156,19 @@ Applicant chooses Calculate overheads option
     [Setup]  log in as a different user                     &{lead_applicant_credentials}
     # This test also checks read only view of the overheads once section is marked as complete
     When the user navigates to Your-finances page           ${applicationName}
-    Then the user fills in the project costs                ${applicationName}
-    And wait until element is not visible without screenshots   css=.task-list li:nth-of-type(1) .task-status-incomplete
+    Then the user fills in the project costs                Calculate  185,997
+    And wait until element is not visible without screenshots  css=.task-list li:nth-of-type(1) .task-status-incomplete
     When the user clicks the button/link                    link=Your project costs
     Then the user should see the text in the page           ${excel_file}
     And the user clicks the button/link                     jQuery=button:contains("Edit your project costs")
     And the user clicks the button/link                     css=button[name="overheadfiledelete"]
-    When the user selects the checkbox                      agree-state-aid-page
+    When the user selects the checkbox                      stateAidAgreed
     And the user clicks the button/link                     jQuery=button:contains("Mark as complete")
     Then the user should see a summary error                You cannot mark as complete.
 
 *** Keywords ***
 Custom Suite Setup
-    log in and create new application if there is not one already
+    log in and create new application if there is not one already  Robot test application
     Applicant navigates to the finances of the Robot application
 
 the user adds three material rows
@@ -209,9 +209,8 @@ the user navigates to another page
 
 the user should see the funding guidance
     [Documentation]    INFUND-7093
-    the user should see the element           jQuery=#details-content-0 p
+    the user should see the element           css=#details-content-0 p
 
 the user should not see the funding guidance
     [Documentation]    INFUND-7093
-    the user should not see the element           jQuery=#details-content-0 p
-
+    the user should not see the element           css=#details-content-0 p

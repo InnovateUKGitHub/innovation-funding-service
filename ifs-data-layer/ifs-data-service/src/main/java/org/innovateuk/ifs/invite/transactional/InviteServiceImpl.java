@@ -7,6 +7,7 @@ import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
@@ -45,6 +46,7 @@ import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Consumer;
@@ -116,6 +118,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
 
+    @Autowired
+    private ApplicationService applicationService;
+
     LocalValidatorFactoryBean validator;
 
     public InviteServiceImpl() {
@@ -177,6 +182,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             notificationArguments.put("applicationName", invite.getTarget().getName());
         }
         notificationArguments.put("sentByName", loggedInUser.getName());
+        notificationArguments.put("applicationId", invite.getTarget().getId());
         notificationArguments.put("competitionName", invite.getTarget().getCompetition().getName());
         notificationArguments.put("competitionUrl", getCompetitionDetailsUrl(baseUrl, invite));
         notificationArguments.put("inviteUrl", getInviteUrl(baseUrl, invite));
@@ -195,7 +201,6 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         } else {
             notificationArguments.put("leadApplicantTitle", "");
         }
-        notificationArguments.put("leadApplicantEmail", invite.getTarget().getLeadApplicant().getEmail());
 
         Notification notification = new Notification(from, singletonList(to), Notifications.INVITE_COLLABORATOR, notificationArguments);
         return notificationService.sendNotification(notification, EMAIL);
@@ -204,6 +209,11 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Override
     public ServiceResult<ApplicationInvite> findOne(Long id) {
         return find(applicationInviteRepository.findOne(id), notFoundError(ApplicationInvite.class, id));
+    }
+
+    @Override
+    public ServiceResult<ApplicationInvite> findOneByHash(String hash) {
+        return find(applicationInviteRepository.getByHash(hash), notFoundError(ApplicationInvite.class, hash));
     }
 
     @Override
@@ -270,6 +280,8 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         Organisation organisation = invite.getInviteOrganisation().getOrganisation();
         ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisation.getId());
         processRoleRepository.save(processRole);
+        application.addProcessRole(processRole);
+        updateApplicationProgress(application);
     }
 
     private ApplicationInviteResource mapInviteToInviteResource(ApplicationInvite invite) {
@@ -306,22 +318,24 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return find(applicationInviteMapper.mapIdToDomain(applicationInviteId), notFoundError(ApplicationInvite.class))
                 .andOnSuccessReturnVoid(applicationInvite -> {
                     ProcessRole leadApplicantProcessRole = applicationInvite.getTarget().getLeadApplicantProcessRole();
-                    Long applicationId = applicationInvite.getTarget().getId();
+                    Application application = applicationInvite.getTarget();
 
                     List<ProcessRole> collaboratorProcessRoles = processRoleRepository.findByUserAndApplicationId(
                             applicationInvite.getUser(),
-                            applicationInvite.getTarget().getId()
+                            application.getId()
                     );
 
-                    reassignCollaboratorResponsesAndQuestionStatuses(applicationId, leadApplicantProcessRole, collaboratorProcessRoles);
+                    reassignCollaboratorResponsesAndQuestionStatuses(application.getId(), leadApplicantProcessRole, collaboratorProcessRoles);
 
                     processRoleRepository.delete(collaboratorProcessRoles);
+                    application.removeProcessRoles(collaboratorProcessRoles);
 
                     InviteOrganisation inviteOrganisation = applicationInvite.getInviteOrganisation();
 
                     if (inviteOrganisation.getInvites().size() < 2) {
                         inviteOrganisationRepository.delete(inviteOrganisation);
-                        deleteOrganisationsApplicationData(inviteOrganisation.getOrganisation(), applicationInvite.getTarget());
+                        deleteOrganisationsApplicationData(inviteOrganisation.getOrganisation(), application);
+
                     } else {
                         inviteOrganisation.getInvites().remove(applicationInvite);
                         inviteOrganisationRepository.save(inviteOrganisation);
@@ -336,6 +350,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                 applicationFinanceRepository.delete(finance);
             }
         }
+        updateApplicationProgress(application);
     }
 
     protected Supplier<ServiceResult<ApplicationInvite>> invite(final String hash) {
@@ -370,17 +385,15 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private InviteOrganisation buildNewInviteOrganisation(InviteOrganisationResource inviteOrganisationResource) {
-        InviteOrganisation newInviteOrganisation = new InviteOrganisation(
+        return new InviteOrganisation(
                 inviteOrganisationResource.getOrganisationName(),
                 null,
                 null);
-        return newInviteOrganisation;
     }
 
     private InviteOrganisation buildNewInviteOrganisationForOrganisation(InviteOrganisationResource inviteOrganisationResource, Organisation organisation) {
-        InviteOrganisation newInviteOrganisation = new InviteOrganisation(inviteOrganisationResource.getOrganisationName(),
+        return new InviteOrganisation(inviteOrganisationResource.getOrganisationName(),
                 organisation,null);
-        return newInviteOrganisation;
     }
 
     private List<ApplicationInvite> saveInviteOrganisationWithInvites(InviteOrganisation inviteOrganisation, List<ApplicationInviteResource> applicationInviteResources) {
@@ -553,5 +566,12 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
                         .andOnSuccess(inviteOrganisation -> serviceSuccess(inviteOrganisation))
                         .andOnFailure(() -> serviceSuccess(buildNewInviteOrganisationForOrganisation(inviteOrganisationResource, organisation)))
                 );
+    }
+
+    private void updateApplicationProgress(Application application) {
+        BigDecimal completion = applicationService
+                .getProgressPercentageBigDecimalByApplicationId(application.getId())
+                .getSuccessObject();
+        application.setCompletion(completion);
     }
 }

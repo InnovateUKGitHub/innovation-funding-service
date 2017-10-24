@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${#fields.hasErrors('${organisationForm.*}')}" />
 </head>
 <body th:with="context='applicant'" class="create-application-find-business">
 
@@ -10,14 +10,14 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:unless="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkClass='link-back',linkUrl='/organisation/create/type/new-account-organisation-type',currentApplication=${currentApplication}" />
-    <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back ',linkClass='link-back',linkUrl='javascript:history.back()'" />
+    <th:block th:unless="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkClass='link-back',linkUrl='/organisation/create/new-account-organisation-type',currentApplication=${currentApplication}" />
+    <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type ',linkClass='link-back',linkUrl='/organisation/create/lead-organisation-type'" />
 
-    <th:block th:with="orgTitle=${isLeadApplicant} ? 'Your organisation' : ${organisationForm.organisationType.name}">
+    <th:block th:with="orgTitle=${organisationType.name}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${orgTitle},subTitle='Create your account',size='heading-xlarge'" />
     </th:block>
 
-    <th:block th:if="${organisationForm.notResearch}">
+    <th:block th:unless="${organisationForm.research}">
         <div class="message-alert">
             <p>Your organisation must be UK based to receive funding from Innovate UK.</p>
         </div>
@@ -59,7 +59,7 @@
                        th:text="${organisation.name}">
                     </a>
                 </h3>
-                <th:block th:if="${organisationForm.notResearch}">
+                <th:block th:unless="${organisationForm.research}">
                     <p class="meta crumbtrail" th:text="${organisation.extraAttributes.description}"></p>
                     <p th:text="${organisation.location}"></p>
                 </th:block>
@@ -68,7 +68,7 @@
                 <p>No results found.<br/>Please check your search criteria and try again.</p>
             </li>
         </ul>
-        <th:block th:if="${organisationForm.notResearch}">
+        <th:block th:unless="${organisationForm.research}">
             <input type="hidden" th:field="*{manualEntry}" />
             <h2 class="heading-medium">Not on Companies House?</h2>
             <p>Enter your organisation details manually. You may need to supply additional details at a later point.</p>

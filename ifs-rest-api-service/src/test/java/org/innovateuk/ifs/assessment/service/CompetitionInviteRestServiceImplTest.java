@@ -6,6 +6,8 @@ import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +29,7 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListReso
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
-import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -53,6 +55,21 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
         setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAllInvitesToSend", competitionId), AssessorInvitesToSendResource.class, expected);
         AssessorInvitesToSendResource actual = service.getAllInvitesToSend(competitionId).getSuccessObject();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAllInvitesToResend() throws Exception {
+        long competitionId = 1L;
+        List<Long> inviteIds = asList(1L, 2L);
+
+        AssessorInvitesToSendResource expected = newAssessorInvitesToSendResource()
+                .withRecipients(asList("James", "John"))
+                .build();
+
+        setupGetWithRestResultExpectations(format("%s/%s/%s%s", restUrl, "getAllInvitesToResend", competitionId, "?inviteIds=1,2"), AssessorInvitesToSendResource.class, expected);
+        AssessorInvitesToSendResource actual = service.getAllInvitesToResend(competitionId, inviteIds).getSuccessObject();
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -192,14 +209,14 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void getInvitationOverview() throws Exception {
         long competitionId = 1L;
-        int page = 5;
+        int page = 1;
         Optional<Long> innovationArea = of(10L);
-        Optional<ParticipantStatusResource> participantStatus = of(ACCEPTED);
+        List<ParticipantStatusResource> participantStatus = Collections.singletonList(ACCEPTED);
         Optional<Boolean> compliant = of(TRUE);
 
         AssessorInviteOverviewPageResource expected = newAssessorInviteOverviewPageResource().build();
 
-        String expectedUrl = format("%s/%s/%s?page=5&innovationArea=10&status=ACCEPTED&compliant=true", restUrl, "getInvitationOverview", competitionId);
+        String expectedUrl = format("%s/%s/%s?page=1&innovationArea=10&statuses=ACCEPTED&compliant=true", restUrl, "getInvitationOverview", competitionId);
 
         setupGetWithRestResultExpectations(expectedUrl, AssessorInviteOverviewPageResource.class, expected);
 
@@ -212,15 +229,31 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void getInvitationOverview_noExtraParams() throws Exception {
         long competitionId = 1L;
-        int page = 5;
+        int page = 1;
 
         AssessorInviteOverviewPageResource expected = newAssessorInviteOverviewPageResource().build();
 
-        String expectedUrl = format("%s/%s/%s?page=5", restUrl, "getInvitationOverview", competitionId);
+        String expectedUrl = format("%s/%s/%s?page=1&statuses=ACCEPTED,PENDING", restUrl, "getInvitationOverview", competitionId);
 
         setupGetWithRestResultExpectations(expectedUrl, AssessorInviteOverviewPageResource.class, expected);
 
-        AssessorInviteOverviewPageResource actual = service.getInvitationOverview(competitionId, page, empty(), empty(), empty())
+        AssessorInviteOverviewPageResource actual = service.getInvitationOverview(competitionId, page, empty(), Arrays.asList(ACCEPTED, PENDING), empty())
+                .getSuccessObject();
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAssessorsNotAcceptedInviteIds() throws Exception {
+        long competitionId = 1L;
+        List<Long> expected = asList(1L, 2L);
+        List<ParticipantStatusResource> statuses = Arrays.asList(PENDING, REJECTED);
+
+        String expectedUrl = format("%s/%s/%s?statuses=%s", restUrl, "getAssessorsNotAcceptedInviteIds", competitionId, "PENDING,REJECTED");
+
+        setupGetWithRestResultExpectations(expectedUrl, ParameterizedTypeReferences.longsListType(), expected);
+
+        List<Long> actual = service.getAssessorsNotAcceptedInviteIds(competitionId, empty(), statuses, empty())
                 .getSuccessObject();
 
         assertEquals(expected, actual);
@@ -331,5 +364,18 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "resendInvite", inviteId), assessorInviteSendResource, OK);
 
         assertTrue(service.resendInvite(inviteId, assessorInviteSendResource).isSuccess());
+    }
+
+    @Test
+    public void resendInvites() {
+        List<Long> inviteIds = asList(1L, 2L);
+        AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
+                .withSubject("subject")
+                .withContent("content")
+                .build();
+
+        setupPostWithRestResultExpectations(format("%s/%s%s", restUrl, "resendInvites", "?inviteIds=1,2"), assessorInviteSendResource, OK);
+
+        assertTrue(service.resendInvites(inviteIds, assessorInviteSendResource).isSuccess());
     }
 }

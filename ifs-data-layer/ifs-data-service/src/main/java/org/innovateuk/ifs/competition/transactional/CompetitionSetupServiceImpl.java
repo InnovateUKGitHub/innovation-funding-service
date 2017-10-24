@@ -23,8 +23,14 @@ import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +66,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private CompetitionTypeMapper competitionTypeMapper;
     @Autowired
     private CompetitionTypeRepository competitionTypeRepository;
+    @Autowired
+    private CompetitionParticipantRepository competitionParticipantRepository;
     @Autowired
     private CompetitionFunderService competitionFunderService;
     @Autowired
@@ -121,6 +129,62 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     private void saveFunders(CompetitionResource competitionResource) {
         competitionFunderService.reinsertFunders(competitionResource);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingLeadTechnologistId) {
+
+        return deleteExistingLeadTechnologist(competitionId, existingLeadTechnologistId)
+                .andOnSuccess(() -> update(competitionId, competitionResource))
+                .andOnSuccess(updatedCompetitionResource -> saveLeadTechnologist(updatedCompetitionResource));
+    }
+
+    private ServiceResult<Void> deleteExistingLeadTechnologist(Long competitionId, Long existingLeadTechnologistId) {
+
+        if (existingLeadTechnologistId != null) {
+
+            CompetitionAssessmentParticipant competitionParticipant =
+                    competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
+                            existingLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD);
+
+            if (competitionParticipant != null) {
+                competitionParticipantRepository.delete(competitionParticipant);
+            }
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> saveLeadTechnologist(CompetitionResource competitionResource) {
+
+        if (competitionResource.getLeadTechnologist() != null) {
+            Competition competition = competitionMapper.mapToDomain(competitionResource);
+
+            if (!doesLeadTechnologistAlreadyExist(competition)) {
+                User leadTechnologist = competition.getLeadTechnologist();
+
+                CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant();
+                competitionParticipant.setProcess(competition);
+                competitionParticipant.setUser(leadTechnologist);
+                competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+                competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
+
+                competitionParticipantRepository.save(competitionParticipant);
+            }
+        }
+
+        return serviceSuccess();
+
+    }
+
+    private boolean doesLeadTechnologistAlreadyExist(Competition competition) {
+
+        CompetitionParticipant existingCompetitionParticipant =
+                competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competition.getId(),
+                        competition.getLeadTechnologist().getId(), CompetitionParticipantRole.INNOVATION_LEAD);
+
+        return existingCompetitionParticipant != null;
     }
 
     @Override
