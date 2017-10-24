@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.security.evaluator;
 
+import org.innovateuk.ifs.commons.security.evaluator.RootCustomPermissionEvaluator;
 import org.springframework.stereotype.Component;
 
 /**
@@ -7,5 +8,5 @@ import org.springframework.stereotype.Component;
  * See {@link CustomPermissionEvaluator} for more information.
  */
 @Component
-public class CustomPermissionEvaluator extends CustomPermissionEvaluator {
+public class CustomPermissionEvaluator extends RootCustomPermissionEvaluator {
 }
