@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
@@ -35,6 +36,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -658,6 +660,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 assertTrue(rules.ifsAdminCanDeactivateUsers(userToReactivate, user));
             } else {
                 assertFalse(rules.ifsAdminCanDeactivateUsers(userToReactivate, user));
+            }
+        });
+    }
+
+    @Test
+    public void testInternalUsersCanAccessAllUserOrganisations(){
+
+        UserOrganisationResource userOrganisationResource = UserOrganisationResourceBuilder.newUserOrganisationResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (isInternal(user)) {
+                assertTrue(rules.internalUsersCanViewUserOrganisation(userOrganisationResource, user));
+            } else {
+                assertFalse(rules.internalUsersCanViewUserOrganisation(userOrganisationResource, user));
             }
         });
     }

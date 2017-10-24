@@ -24,8 +24,10 @@ import static org.innovateuk.ifs.documentation.UserDocs.userPageResourceFields;
 import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -218,6 +220,18 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                 .andDo(document("user/{method-name}",
                         pathParameters(
                                 parameterWithName("userId").description("Identifier of the user being reactivated")
+                        )
+                ));
+    }
+
+    @Test
+    public void findAllExternal() throws Exception {
+        when(userServiceMock.findAllByProcessRoles(externalApplicantRoles())).thenReturn(serviceSuccess(newUserOrganisationResource().build(2)));
+
+        mockMvc.perform(get("/user/findAllExternal"))
+                .andDo(document("user/{method-name}",
+                        responseFields(
+                                fieldWithPath("[]").description("list of external users with associated organisations")
                         )
                 ));
     }
