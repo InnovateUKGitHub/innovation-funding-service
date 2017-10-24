@@ -165,8 +165,6 @@ public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelIn
 
         when(assessmentPanelInviteRestService.openInvite("hash")).thenReturn(restSuccess(inviteResource));
 
-        Boolean accept = false;
-
         PanelInviteForm expectedForm = new PanelInviteForm();
 
         MvcResult result = mockMvc.perform(post(restUrl + "{inviteHash}/decision", "hash"))

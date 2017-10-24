@@ -125,7 +125,7 @@ public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implem
 
     @Override
     public RestResult<Void> rejectInvite(String inviteHash) {
-        return postWithRestResult(format("%s/%s/%s", assessmentPanelInviteRestUrl, "rejectInvite", inviteHash), Void.class);
+        return postWithRestResultAnonymous(format("%s/%s/%s", assessmentPanelInviteRestUrl, "rejectInvite", inviteHash), Void.class);
     }
 
     @Override

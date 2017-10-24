@@ -203,7 +203,7 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
 
     @Test
     public void rejectInvite() {
-        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "rejectInvite", "hash"), OK);
+        setupPostWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "rejectInvite", "hash"), Void.class, null, null, OK);
 
         RestResult<Void> restResult = service.rejectInvite("hash");
         assertTrue(restResult.isSuccess());

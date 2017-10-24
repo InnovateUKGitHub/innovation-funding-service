@@ -46,7 +46,6 @@ import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.lowerCase;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -318,7 +317,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         String details = null;
 
         if (participant.getStatus() == REJECTED) {
-            details = format("Invite declined as %s", lowerCase(participant.getRejectionReason().getReason()));
+            details = "Invite declined";
         } else if (participant.getStatus() == PENDING) {
             if (participant.getInvite().getSentOn() != null) {
                 details = format("Invite sent: %s", participant.getInvite().getSentOn().format(detailsFormatter));
@@ -433,7 +432,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     @Override
     public ServiceResult<Void> rejectInvite(String inviteHash) {
         return getParticipantByInviteHash(inviteHash)
-                .andOnSuccess(invite -> reject(invite))
+                .andOnSuccess(this::reject)
                 .andOnSuccessReturnVoid();
     }
 

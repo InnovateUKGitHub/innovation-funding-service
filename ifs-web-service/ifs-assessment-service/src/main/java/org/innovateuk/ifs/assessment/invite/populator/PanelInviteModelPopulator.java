@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Build the model for the Competition Invitation view.
+ * Build the model for the Assessment Panel Invitation view.
  */
 @Component
 public class PanelInviteModelPopulator {
