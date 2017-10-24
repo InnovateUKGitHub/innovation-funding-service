@@ -128,7 +128,7 @@
                                th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
                                readonly="readonly"
                                type="text"
-                               th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
+                               th:value="'£' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
 
                     </div>
                 </div>

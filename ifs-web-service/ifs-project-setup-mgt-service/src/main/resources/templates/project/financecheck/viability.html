@@ -39,11 +39,11 @@
       </thead>
       <tbody>
         <tr>
-          <td>&pound;<th:block th:text="${#numbers.formatInteger(model.totalCosts,1,'COMMA')}" /></td>
-          <td th:text="${model.percentageGrant+'%'}" class="numeric" />
-          <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.contributionToProject,1,'COMMA')}" /></td>
-          <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'COMMA')}" /></td>
-          <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.otherPublicSectorFunding,1,'COMMA')}" /></td>
+          <td>&pound;<th:block th:text="${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}" /></td>
+          <td th:text="${model.percentageGrant+'%'}" class="numeric"></td>
+          <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.contributionToProject,1,'DEFAULT')}" /></td>
+          <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'DEFAULT')}" /></td>
+          <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
         </tr>
       </tbody>
     </table>

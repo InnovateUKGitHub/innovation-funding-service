@@ -128,7 +128,7 @@
                        class="heading-medium width-full alignright"
                        data-calculation-fields="[id*=section-total]"
                        data-calculation-operations="+"
-                       th:value="'£ ' + ${#numbers.formatInteger(model.finance.organisationFinanceTotal, 0, 'DEFAULT')}"/>
+                       th:value="'£' + ${#numbers.formatInteger(model.finance.organisationFinanceTotal, 0, 'DEFAULT')}"/>
             </div>
         </div>
     </th:block>

@@ -107,7 +107,7 @@
             <!--/* view  */-->
             <dl class="readonly-data">
                 <dt th:text="${formInput.description}">Turnover (&pound;)</dt>
-                <dd th:text="'£'+ *{formInput[__${formInput.id}__] != null ? #numbers.formatInteger(formInput[__${formInput.id}__],0,'DEFAULT') : '0'}">&pound; 100,000,000</dd>
+                <dd>&pound;<th:block th:text="*{formInput[__${formInput.id}__] != null ? #numbers.formatInteger(formInput[__${formInput.id}__],0,'DEFAULT') : '0'}">100,000,000</th:block></dd>
             </dl>
         </th:block>
     </th:block>
@@ -454,7 +454,7 @@
             <th:block th:switch="${overheadRate.name()}">
                 <th:block th:case="'NONE'">
                     No overhead costs
-                    <div data-calculation-rawvalue="0"  th:id="${'section-total-'+subSection.id}" aria-hidden="true">£ 0</div>
+                    <div data-calculation-rawvalue="0"  th:id="${'section-total-'+subSection.id}" aria-hidden="true">£0</div>
                 </th:block>
                 <th:block th:case="'DEFAULT_PERCENTAGE'">
                     <table>
@@ -670,7 +670,7 @@
                 </div>
                 <div class="form-group alignright inline">
                     <label th:for="${'cost-overheads-'+overheadCosts?.id+'-calculate'}">
-                        <span>Enter the total cost of overheads as calculated in the spreadsheet £</span>
+                        <span>Enter the total cost of overheads as calculated in the spreadsheet &pound;</span>
                     </label>
                     <input type="text"
                            th:name="${'overheads-total-' + question.id + '-'+overheadCosts?.id}"

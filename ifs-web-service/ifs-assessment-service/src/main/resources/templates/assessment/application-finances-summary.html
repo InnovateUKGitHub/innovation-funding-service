@@ -52,20 +52,36 @@
                                     </div>
                                 </th>
                                 <th:block th:with="organisationFinance=${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
-                                    <td class="numeric bold" th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />
+                                    <td class="numeric bold">
+                                        &pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.total, 0, 'DEFAULT')}" />
+                                    </td>
                                     <td class="numeric" th:text="${organisationFinance.grantClaimPercentage}+'%'"/>
-                                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}"/>
-                                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/>
-                                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}"/>
+                                    <td class="numeric">
+                                        &pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.totalFundingSought, 0, 'DEFAULT')}" />
+                                    </td>
+                                    <td class="numeric">
+                                        &pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.totalOtherFunding, 0, 'DEFAULT')}" />
+                                    </td>
+                                    <td class="numeric">
+                                        &pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.totalContribution, 0, 'DEFAULT')}" />
+                                    </td>
                                 </th:block>
                             </tr>
                             <tr>
                                 <th scope="row">Total</th>
-                                <td class="numeric bold" th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}" />
-                                <td />
-                                <td class="numeric" th:text="'£'+${#numbers.formatDecimal(totalFundingSought, 0, 'COMMA', 0, 'POINT')}" />
-                                <td class="numeric" th:text="'£'+${#numbers.formatDecimal(totalOtherFunding, 0, 'COMMA', 0, 'POINT')}" />
-                                <td class="numeric" th:text="'£'+${#numbers.formatDecimal(totalContribution, 0, 'COMMA', 0, 'POINT')}" />
+                                <td class="numeric bold">
+                                    &pound;<th:block th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}" />
+                                </td>
+                                <td></td>
+                                <td class="numeric">
+                                    &poudn;<th:block th:text="${#numbers.formatInteger(totalFundingSought, 0, 'DEFAULT')}" />
+                                </td>
+                                <td class="numeric">
+                                    &poudn;<th:block th:text="${#numbers.formatInteger(totalOtherFunding, 0, 'DEFAULT')}" />
+                                </td>
+                                <td class="numeric">
+                                    &poudn;<th:block th:text="${#numbers.formatInteger(totalContribution, 0, 'DEFAULT')}" />
+                                </td>
                             </tr>
                         </tbody>
                     </table>

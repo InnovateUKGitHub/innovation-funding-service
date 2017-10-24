@@ -102,8 +102,7 @@
             <tbody>
             <tr th:each="item : ${model.summary.years}">
                 <td th:text="${item.year + ' - ' + (item.year + 1)}"></td>
-                <td th:text="${'£ '+#numbers.formatInteger(item.amount,1,'COMMA')}"
-                    th:attr="data-calculation-fields=${'.apr-'+item.year+',
+                <td th:attr="data-calculation-fields=${'.apr-'+item.year+',
                                                           .may-'+item.year+',
                                                           .jun-'+item.year+',
                                                           .jul-'+item.year+',
@@ -114,7 +113,9 @@
                                                           .dec-'+item.year+',
                                                           .jan-'+(item.year+1)+',
                                                           .feb-'+(item.year+1)+',
-                                                          .mar-'+(item.year+1)}"></td>
+                                                          .mar-'+(item.year+1)}">
+                    &pound;<th:block th:text="${#numbers.formatInteger(item.amount,1,'DEFAULT')}" />                                                          
+                </td>
             </tr>
             </tbody>
         </table>
