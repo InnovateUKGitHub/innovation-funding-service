@@ -4,6 +4,7 @@ package org.innovateuk.ifs.competitionsetup.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
@@ -66,6 +67,9 @@ public class CompetitionSetupApplicationController {
 
     @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;
+
+    @Autowired
+    private QuestionSetupRestService questionSetupRestService;
 
     @Autowired
     private CompetitionSetupPopulator competitionSetupPopulator;
@@ -144,7 +148,9 @@ public class CompetitionSetupApplicationController {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
-        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource, () -> getFinancePage(model, competitionResource, true, null));
+        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource,
+                () -> getFinancePage(model, competitionResource, true, null),
+                Optional.of(FINANCES), Optional.empty());
     }
 
     @PostMapping("/question/finance/edit")
@@ -193,7 +199,10 @@ public class CompetitionSetupApplicationController {
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
-        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource, () -> getQuestionPage(model, competitionResource, questionId, true, null));
+        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource,
+                () -> getQuestionPage(model, competitionResource, questionId, true, null),
+                Optional.empty(),
+                Optional.ofNullable(questionId));
     }
 
     @PostMapping(value = "/question/{questionId}/edit", params = "question.type=ASSESSED_QUESTION")
@@ -271,7 +280,10 @@ public class CompetitionSetupApplicationController {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
-        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource, () ->  getDetailsPage(model, competitionResource, true, null));
+        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource,
+                () ->  getDetailsPage(model, competitionResource, true, null),
+                Optional.of(APPLICATION_DETAILS),
+                Optional.empty());
 
     }
 
@@ -364,11 +376,15 @@ public class CompetitionSetupApplicationController {
         return competitionSetupForm;
     }
 
-    private String ifUserCanAccessEditPageMarkSectionAsIncomplete(CompetitionResource competition, Supplier<String> successAction) {
+    private String ifUserCanAccessEditPageMarkSectionAsIncomplete(CompetitionResource competition, Supplier<String> successAction,
+                                                                  Optional<CompetitionSetupSubsection> subsectionOpt,
+                                                                  Optional<Long> questionIdOpt) {
         if(CompetitionSetupSection.APPLICATION_FORM.preventEdit(competition)) {
             LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competition.getId(), CompetitionSetupSection.APPLICATION_FORM));
             return "redirect:/dashboard";
         } else {
+            questionIdOpt.ifPresent(questionId -> questionSetupRestService.markQuestionSetupInComplete(competition.getId(), questionId));
+            subsectionOpt.ifPresent(competitionSetupSubsection -> competitionSetupRestService.markSubSectionInComplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM, competitionSetupSubsection));
             competitionSetupRestService.markSectionInComplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
             return successAction.get();
         }

@@ -2,13 +2,17 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSetupSectionStatusMap;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSetupSubsectionStatusMap;
 
 /**
  * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link CompetitionResource}.
@@ -46,6 +50,16 @@ public class CompetitionSetupRestServiceImpl extends BaseRestService implements 
     }
 
     @Override
+    public RestResult<Void> markSubSectionComplete(long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
+        return getWithRestResult(String.format("%s/subsectionStatus/complete/%s/%s/%s", competitionSetupRestURL, competitionId, parentSection, subsection), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> markSubSectionInComplete(long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
+        return getWithRestResult(String.format("%s/subsectionStatus/incomplete/%s/%s/%s", competitionSetupRestURL, competitionId, parentSection, subsection), Void.class);
+    }
+
+    @Override
     public RestResult<String> generateCompetitionCode(long competitionId, ZonedDateTime openingDate) {
         return postWithRestResult(String.format("%s/generateCompetitionCode/%s", competitionSetupRestURL, competitionId), openingDate, String.class);
     }
@@ -71,7 +85,12 @@ public class CompetitionSetupRestServiceImpl extends BaseRestService implements 
     }
 
     @Override
-    public RestResult<Map<CompetitionSetupSection, Boolean>> getSectionStatuses(long competitionId) {
+    public RestResult<Map<CompetitionSetupSection, Optional<Boolean>>> getSectionStatuses(long competitionId) {
         return getWithRestResult(String.format("%s/sectionStatus/%s", competitionSetupRestURL, competitionId), competitionSetupSectionStatusMap());
+    }
+
+    @Override
+    public RestResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(long competitionId) {
+        return getWithRestResult(String.format("%s/subsectionStatus/%s", competitionSetupRestURL, competitionId), competitionSetupSubsectionStatusMap());
     }
 }

@@ -3,9 +3,11 @@ package org.innovateuk.ifs.competition.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -22,6 +24,10 @@ public interface CompetitionSetupRestService {
 
     RestResult<Void> markSectionInComplete(long competitionId, CompetitionSetupSection section);
 
+    RestResult<Void> markSubSectionComplete(long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection);
+
+    RestResult<Void> markSubSectionInComplete(long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection);
+
     RestResult<String> generateCompetitionCode(long competitionId, ZonedDateTime openingDate);
 
     RestResult<Void> initApplicationForm(long competitionId, long competitionTypeId);
@@ -32,5 +38,7 @@ public interface CompetitionSetupRestService {
 
     RestResult<CompetitionResource> createNonIfs();
 
-    RestResult<Map<CompetitionSetupSection, Boolean>> getSectionStatuses(long competitionId);
+    RestResult<Map<CompetitionSetupSection, Optional<Boolean>>> getSectionStatuses(long competitionId);
+
+    RestResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(long competitionId);
 }

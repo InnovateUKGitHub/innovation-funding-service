@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * populates the model for the competition setup menu page section.
@@ -33,7 +34,7 @@ public class MenuModelPopulator implements CompetitionSetupSectionModelPopulator
 	@Override
 	public CompetitionSetupViewModel populateModel(GeneralSetupViewModel generalViewModel, CompetitionResource competitionResource) {
 		PublicContentResource publicContent = publicContentService.getCompetitionById(competitionResource.getId());
-		Map<CompetitionSetupSection, Boolean> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId()).getSuccessObjectOrThrowException();
+		Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId()).getSuccessObjectOrThrowException();
 		return new MenuViewModel(generalViewModel, publicContent.getPublishDate(), isPublicContentPublished(publicContent), statuses);
 	}
 

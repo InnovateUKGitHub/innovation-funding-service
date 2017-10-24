@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * General populator for non section specific
@@ -23,11 +24,11 @@ public class CompetitionSetupPopulator {
     private CompetitionSetupRestService competitionSetupRestService;
 
     public GeneralSetupViewModel populateGeneralModelAttributes(CompetitionResource competitionResource, CompetitionSetupSection section) {
-        Map<CompetitionSetupSection, Boolean> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId())
+        Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId())
                 .getSuccessObjectOrThrowException();
 
         boolean editable = (!statuses.containsKey(section)
-                || !statuses.get(section))
+                || !statuses.get(section).isPresent())
                 && !section.preventEdit(competitionResource);
 
         GeneralSetupViewModel viewModel = new GeneralSetupViewModel(editable, competitionResource, section, CompetitionSetupSection.values(),

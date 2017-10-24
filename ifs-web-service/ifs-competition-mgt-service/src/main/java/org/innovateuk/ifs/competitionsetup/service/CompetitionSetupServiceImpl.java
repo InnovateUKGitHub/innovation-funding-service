@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competitionsetup.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.application.AbstractApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
@@ -42,6 +44,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
+
+    @Autowired
+    private QuestionSetupRestService questionSetupRestService;
 
 	@Autowired
     private CompetitionSetupPopulator competitionSetupPopulator;
@@ -216,7 +221,28 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
             throw new IllegalArgumentException();
         }
 
-        return saver.saveSection(competitionResource, competitionSetupForm);
+        ServiceResult<Void> result = saver.saveSection(competitionResource, competitionSetupForm);
+        result.andOnSuccess(() -> {
+            markQuestionAsComplete(subsection, competitionSetupForm, competitionResource.getId());
+            markSubSectionAsComplete(subsection, competitionResource.getId());
+        });
+
+        return result;
+    }
+
+    private void markSubSectionAsComplete(CompetitionSetupSubsection subsection, Long competitionId) {
+        if(CompetitionSetupSubsection.APPLICATION_DETAILS.equals(subsection) ||
+                CompetitionSetupSubsection.FINANCES.equals(subsection)) {
+            competitionSetupRestService.markSubSectionComplete(competitionId, CompetitionSetupSection.APPLICATION_FORM, subsection);
+        }
+    }
+
+    private void markQuestionAsComplete(CompetitionSetupSubsection subsection, CompetitionSetupForm competitionSetupForm, Long competitionId) {
+        if(CompetitionSetupSubsection.QUESTIONS.equals(subsection) ||
+                CompetitionSetupSubsection.PROJECT_DETAILS.equals(subsection)) {
+            AbstractApplicationQuestionForm form = (AbstractApplicationQuestionForm) competitionSetupForm;
+            questionSetupRestService.markQuestionSetupComplete(competitionId, form.getQuestion().getQuestionId());
+        }
     }
 
     private void checkCompetitionInitialDetailsComplete(CompetitionResource competitionResource, CompetitionSetupSection section) {
@@ -236,8 +262,8 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
     @Override
     public boolean isInitialDetailsCompleteOrTouched(Long competitionId) {
-        Map<CompetitionSetupSection, Boolean> statuses = competitionSetupRestService.getSectionStatuses(competitionId).getSuccessObjectOrThrowException();
-        return statuses.containsKey(CompetitionSetupSection.INITIAL_DETAILS);
+        Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionId).getSuccessObjectOrThrowException();
+        return statuses.get(CompetitionSetupSection.INITIAL_DETAILS).isPresent();
     }
 
 	@Override
@@ -246,10 +272,10 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 			return false;
 		}
 
-        Map<CompetitionSetupSection, Boolean> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId()).getSuccessObjectOrThrowException();
+        Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId()).getSuccessObjectOrThrowException();
 		
 		Optional<CompetitionSetupSection> notDoneSection = getRequiredSectionsForReadyToOpen().stream()
-                .filter(section -> (!statuses.containsKey(section) || !statuses.get(section)))
+                .filter(section -> (!statuses.get(section).isPresent() || !statuses.get(section).get()))
                 .findFirst();
 
 		return !notDoneSection.isPresent();

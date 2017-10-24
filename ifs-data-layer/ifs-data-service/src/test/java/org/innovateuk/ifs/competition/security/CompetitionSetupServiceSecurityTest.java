@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import org.junit.Test;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -152,17 +154,17 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<Map<CompetitionSetupSection, Boolean>> getSectionStatuses(Long competitionId) {
+        public ServiceResult<Map<CompetitionSetupSection, Optional<Boolean>>> getSectionStatuses(Long competitionId) {
             return null;
         }
 
         @Override
-		public ServiceResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
+		public ServiceResult<SetupStatusResource> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
 			return null;
 		}
 
 		@Override
-		public ServiceResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
+		public ServiceResult<SetupStatusResource> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
 			return null;
 		}
 

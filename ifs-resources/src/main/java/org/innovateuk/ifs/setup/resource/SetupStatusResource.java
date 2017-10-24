@@ -24,6 +24,14 @@ public class SetupStatusResource {
         this.targetId = targetId;
     }
 
+    public SetupStatusResource(String className, Long classPk, Long parentId, String targetClassName, Long targetId) {
+        this.className = className;
+        this.classPk = classPk;
+        this.parentId = parentId;
+        this.targetClassName = targetClassName;
+        this.targetId = targetId;
+    }
+
     public Long getId() {
         return id;
     }
