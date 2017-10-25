@@ -12,15 +12,18 @@ public class ApplicationLandingViewModel extends CompetitionSetupViewModel {
     private List<QuestionResource> projectDetails;
     private Map<CompetitionSetupSubsection, Boolean> subsectionStatuses;
     private Map<Long, Boolean> questionStatuses;
+    private Boolean allComplete;
 
     public ApplicationLandingViewModel(GeneralSetupViewModel generalSetupViewModel, List<QuestionResource> questions, List<QuestionResource> projectDetails,
                                        Map<CompetitionSetupSubsection, Boolean> subsectionStatuses,
-                                       Map<Long, Boolean> questionStatuses) {
+                                       Map<Long, Boolean> questionStatuses,
+                                       Boolean allComplete) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.questions = questions;
         this.projectDetails = projectDetails;
         this.subsectionStatuses = subsectionStatuses;
         this.questionStatuses = questionStatuses;
+        this.allComplete = allComplete;
     }
 
     public List<QuestionResource> getQuestions() {
@@ -37,5 +40,9 @@ public class ApplicationLandingViewModel extends CompetitionSetupViewModel {
 
     public Map<Long, Boolean> getQuestionStatuses() {
         return questionStatuses;
+    }
+
+    public Boolean getAllComplete() {
+        return allComplete;
     }
 }

@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -62,11 +63,17 @@ public class ApplicationLandingModelPopulator implements CompetitionSetupSection
         Map<CompetitionSetupSubsection, Boolean> subSectionsStatuses = convertWithDefaultsIfNotPresent(competitionSetupRestService.getSubsectionStatuses(competitionResource.getId()).getSuccessObjectOrThrowException());
         Map<Long, Boolean> questionStatuses = questionSetupRestService.getQuestionStatuses(competitionResource.getId(), sectionToPopulateModel()).getSuccessObjectOrThrowException();
 
+        List<QuestionResource> questions = getSortedQuestions(questionResources, parentSections);
+        List<QuestionResource> projectDetails = getSortedProjectDetails(questionResources, parentSections);
+
+        Boolean allStatusesComplete = checkStatusesComplete(subSectionsStatuses, questionStatuses, questions, projectDetails);
+
         return new ApplicationLandingViewModel(generalViewModel,
-                getSortedQuestions(questionResources, parentSections),
-                getSortedProjectDetails(questionResources, parentSections),
+                questions,
+                projectDetails,
                 subSectionsStatuses,
-                questionStatuses);
+                questionStatuses,
+                allStatusesComplete);
     }
 
     private Map<CompetitionSetupSubsection,Boolean> convertWithDefaultsIfNotPresent(Map<CompetitionSetupSubsection, Optional<Boolean>> subSectionsStatuses) {
@@ -86,5 +93,24 @@ public class ApplicationLandingModelPopulator implements CompetitionSetupSection
                 .filter(questionResource -> !questionResource.getShortName().equals(CompetitionSetupQuestionType.APPLICATION_DETAILS.getShortName()))
                 .collect(Collectors.toList())
                 : new ArrayList<>();
+    }
+
+    private Boolean checkStatusesComplete(Map<CompetitionSetupSubsection, Boolean> subSectionsStatuses, Map<Long, Boolean> questionStatuses,
+                                          List<QuestionResource> questions, List<QuestionResource> projectDetails) {
+        return !subSectionsInComplete(subSectionsStatuses) &&
+                !questionsInComplete(questionStatuses, questions) &&
+                !questionsInComplete(questionStatuses, projectDetails);
+    }
+
+    private boolean questionsInComplete(Map<Long, Boolean> questionStatuses, List<QuestionResource> questions) {
+        return questions.stream()
+                .map(questionResource -> questionStatuses.getOrDefault(questionResource.getId(), Boolean.FALSE))
+                .anyMatch(aBoolean -> aBoolean.equals(Boolean.FALSE));
+    }
+
+    private boolean subSectionsInComplete(Map<CompetitionSetupSubsection, Boolean> subSectionsStatuses) {
+        return subSectionsStatuses.entrySet().stream()
+                .filter(entry -> asList(CompetitionSetupSubsection.FINANCES, CompetitionSetupSubsection.APPLICATION_DETAILS).contains(entry.getKey()))
+                .anyMatch(entry -> entry.getValue().equals(Boolean.FALSE));
     }
 }

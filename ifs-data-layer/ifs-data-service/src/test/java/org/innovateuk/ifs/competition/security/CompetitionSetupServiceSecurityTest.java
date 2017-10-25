@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
@@ -89,9 +90,12 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         classUnderTest.create();
         classUnderTest.updateCompetitionInitialDetails(competitionId, new CompetitionResource(), 7L);
         classUnderTest.createNonIfs();
-        Long sectionId = 3L;
         classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
         classUnderTest.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
+        classUnderTest.getSectionStatuses(competitionId);
+        classUnderTest.getSubsectionStatuses(competitionId);
+        classUnderTest.markSubsectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS, CompetitionSetupSubsection.APPLICATION_DETAILS);
+        classUnderTest.markSubsectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS, CompetitionSetupSubsection.APPLICATION_DETAILS);
     }
     @Test
     public void testProjectFinanceAllAccessAllowed() {
@@ -159,6 +163,11 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
+        public ServiceResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(Long competitionId) {
+            return null;
+        }
+
+        @Override
 		public ServiceResult<SetupStatusResource> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
 			return null;
 		}
@@ -167,6 +176,16 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 		public ServiceResult<SetupStatusResource> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
 			return null;
 		}
+
+        @Override
+        public ServiceResult<SetupStatusResource> markSubsectionComplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<SetupStatusResource> markSubsectionInComplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
+            return null;
+        }
 
         @Override
         public ServiceResult<Void> returnToSetup(Long competitionId) {

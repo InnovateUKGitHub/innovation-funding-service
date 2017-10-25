@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -52,9 +53,9 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     @Test
     public void testGetSectionStatuses() throws Exception {
         final Long competitionId = 5L;
-        final Map<CompetitionSetupSection, Boolean> sectionStatuses = asMap(CompetitionSetupSection.INITIAL_DETAILS, TRUE,
-                CompetitionSetupSection.CONTENT, TRUE,
-                CompetitionSetupSection.APPLICATION_FORM, FALSE);
+        final Map<CompetitionSetupSection, Optional<Boolean>> sectionStatuses = asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.of(TRUE),
+                CompetitionSetupSection.CONTENT, Optional.of(TRUE),
+                CompetitionSetupSection.APPLICATION_FORM, Optional.of(FALSE));
 
         when(competitionSetupServiceMock.getSectionStatuses(competitionId)).thenReturn(serviceSuccess(sectionStatuses));
 

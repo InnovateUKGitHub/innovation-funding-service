@@ -19,16 +19,6 @@ public class SetupStatusResourceDocs {
             fieldWithPath("parentId").description("Foreign key to the parent setup status")
     };
 
-    public static final FieldDescriptor[] setupStatusListFields = {
-            fieldWithPath("[].id").description("Id of the Setup status resource"),
-            fieldWithPath("[].completed").description("Indicator it is complete"),
-            fieldWithPath("[].className").description("Name of the class linked to completed field"),
-            fieldWithPath("[].classPk").description("Primary key of the class linked to completed field"),
-            fieldWithPath("[].targetClassName").description("Name of the context class (for instance the Competition)"),
-            fieldWithPath("[].targetId").description("Primary key of the context class (for instance the Competition)"),
-            fieldWithPath("[].parentId").description("Foreign key to the parent setup status")
-    };
-
     public static final SetupStatusResourceBuilder setupStatusResourceBuilder = newSetupStatusResource()
             .withId(1L)
             .withCompleted(Boolean.FALSE)
