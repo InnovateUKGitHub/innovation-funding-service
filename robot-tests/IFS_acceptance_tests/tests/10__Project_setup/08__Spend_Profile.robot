@@ -64,6 +64,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               IFS-1576 Allow changes to Target start date until generation of Spend Profile
 ...
 ...               IFS-1579 Allow change of Finance Contact until generation of GOL
+...
+...               IFS-1871 External csv Spend Profile – unexpected data being output
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -143,18 +145,16 @@ Lead partner can see correct project start date and duration
     And the user should see the text in the page     ${project_duration} months
 
 Calculations in the spend profile table
-    [Documentation]    INFUND-3764, INFUND-6148
+    [Documentation]    INFUND-3764, INFUND-6148, IFS-1871
     [Tags]    HappyPath
     Given the user should see the element  css=.spend-profile-table
-    Then the user should see the element   jQuery=th:contains("Labour") ~ td.fix-right:contains("£3,081")
-    And the user should see the element    jQuery=th:contains("Overheads") ~ td.fix-right:contains("£0")
-    And the user should see the element    jQuery=th:contains("Materials") ~ td.fix-right:contains("£100,200")
-    And the user should see the element    jQuery=th:contains("Capital usage") ~ td.fix-right:contains("£552")
-    And the user should see the element    jQuery=th:contains("Subcontracting") ~ td.fix-right:contains("£90,000")
-    And the user should see the element    jQuery=th:contains("Travel and subsistence") ~ td.fix-right:contains("£5,970")
-    And the user should see the element    jQuery=th:contains("Other costs") ~ td.fix-right:contains("£1,100")
-    And the user should see the element    jQuery=th:contains("Finance") ~ td.fix-right:contains("£30")
-    And the user should see the element    jQuery=th:contains("Other Funding") ~ td.fix-right:contains("£2,468")
+    Then the user should see the element   jQuery=th:contains("Labour") ~ td.fix-right:contains("£ 3,081")
+    And the user should see the element    jQuery=th:contains("Overheads") ~ td.fix-right:contains("£ 0")
+    And the user should see the element    jQuery=th:contains("Materials") ~ td.fix-right:contains("£ 100,200")
+    And the user should see the element    jQuery=th:contains("Capital usage") ~ td.fix-right:contains("£ 552")
+    And the user should see the element    jQuery=th:contains("Subcontracting") ~ td.fix-right:contains("£ 90,000")
+    And the user should see the element    jQuery=th:contains("Travel and subsistence") ~ td.fix-right:contains("£ 5,970")
+    And the user should see the element    jQuery=th:contains("Other costs") ~ td.fix-right:contains("£ 1,100")
     #${duration} is No of Months + 1, due to header
     And the sum of tds equals the total    .spend-profile-table  1  38  3081    # Labour
     And the sum of tds equals the total    .spend-profile-table  3  38  100200  # Materials
@@ -167,7 +167,7 @@ Lead Partner can see Spend profile summary
     [Tags]
     Given the user navigates to the page  ${external_spendprofile_summary}/review
     When the user should see the element  jQuery=.grid-container th:contains("Financial year") + th:contains("Project spend")
-    Then the user should see the element  jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£56,605")
+    Then the user should see the element  jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£ 55,875")
 
 Lead partner can edit his spend profile with invalid values and see the error messages
     [Documentation]  INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148 INFUND-6146
@@ -180,7 +180,7 @@ Lead partner can edit his spend profile with invalid values and see the error me
     And the user should see the element        jQuery=.form-group-error th:contains("Labour")
     And the user should see the element        jQuery=th:contains("Labour") ~ .fix-right.cell-error input[data-calculation-rawvalue="3495"]
     # Project costs for financial year are instantly reflecting the financial values INFUND-3971, INFUND-6148
-    And the user should see the element        jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£57,019")
+    And the user should see the element        jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£ 56,289")
     When the user clicks the button/link       jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element       jQuery=.error-summary:contains("Your total costs are higher than the eligible project costs.")
     When the user clicks the button/link       jQuery=.button:contains("Edit spend profile")
@@ -197,9 +197,6 @@ Lead partner can edit his spend profile with invalid values and see the error me
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  0
     And the user moves focus to the element    css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
     And the user should not see the element    css=.error-summary-list
-    When the user enters text to a text field  jQuery=th:contains("Other Funding") ~ td:nth-child(4) input  ${empty}
-    Then the user should see the element       jQuery=.error-summary:contains("This field cannot be left blank.")
-    And the user enters text to a text field   jQuery=th:contains("Other Funding") ~ td:nth-child(4) input  68
 
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
