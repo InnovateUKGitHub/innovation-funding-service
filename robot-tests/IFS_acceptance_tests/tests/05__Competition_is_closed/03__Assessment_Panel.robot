@@ -10,6 +10,9 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-1561 Assessment panels - Invite assessors to panel - Overview tab and resend invites
 ...
 ...               IFS-37 Assessment panels - Accept/Reject Panel Invite
+...
+...               IFS-1563 Assessment panels - Invite assessors to panel - Accepted tab
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -114,12 +117,16 @@ Assesor is able to reject the invitation
     And Logging in and Error Checking   joel.george@gmail.com  ${short_password}
     Then the user should see the element    jQuery=h1:contains("Assessor dashboard")  #to be updated once ifs-1135 goes in
 
-Comp Admin can see the rejected invitation
-    [Documentation]  IFS-37
+Comp Admin can see the rejected and accepted invitation
+    [Documentation]  IFS-37 IFS-1563
     [Tags]
     [Setup]  Log in as a different user     &{Comp_admin1_credentials}
     Given the user navigates to the page    ${SERVER}/management/assessment/panel/competition/13/assessors/overview
     Then the user should see the element    jQuery=td:contains("Joel George") ~ td:contains("Invite declined")
+    And the user clicks the button/link     link=Accepted
+    And the user should see the element     jQuery=td:contains("Benjamin Nixon") ~ td:contains("Materials, process and manufacturing design technologies")
+    And the user clicks the button/link     link=Overview
+    And the user should not see the element  jQuery=td:contains("Benjamin Nixon")
 
 *** Keywords ***
 
