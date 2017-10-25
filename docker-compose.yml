@@ -124,6 +124,15 @@ services:
         aliases:
           - ifs-data-service
 
+  sil-stub:
+      image: innovateuk/sil-stub
+      healthcheck:
+        test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
+        interval: 15s
+        timeout: 8s
+      networks:
+        - ifs
+
 networks:
   ifs:
     driver: bridge

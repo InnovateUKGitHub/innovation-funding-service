@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: sil-stub
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: sil-stub
+    strategy:
+      type: Rolling
+      rollingParams:
+        timeoutSeconds: 600
+        maxSurge: 2
+        maxUnavailable: 0
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: sil-stub
+      spec:
+        containers:
+        - image: innovateuk/sil-stub:1.0-SNAPSHOT
+          name: sil-stub
+          livenessProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 31
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+          imagePullPolicy: Always
+          env:
+          - name: JAVA_OPTS
+            value: -Xms1000m -Xmx1000m
+          ports:
+          - containerPort: 8080
+          resources:
+            limits:
+              cpu: 1000m
+            requests:
+              cpu: 100m
+              memory: 1G
+    test: false
+    triggers:
+    - type: ConfigChange
+    status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: sil-stub
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+    selector:
+      deploymentconfig: sil-stub
+  status:
+    loadBalancer: {}

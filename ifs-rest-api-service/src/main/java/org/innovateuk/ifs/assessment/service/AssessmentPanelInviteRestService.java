@@ -31,4 +31,12 @@ public interface AssessmentPanelInviteRestService {
     RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                          int page,
                                                                          List<ParticipantStatusResource> participantStatus);
+
+    RestResult<AssessmentPanelInviteResource> openInvite(String inviteHash);
+
+    RestResult<Void> acceptInvite(String inviteHash);
+
+    RestResult<Void> rejectInvite(String inviteHash);
+
+    RestResult<Boolean> checkExistingUser(String inviteHash);
 }
