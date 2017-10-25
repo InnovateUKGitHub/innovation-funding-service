@@ -24,7 +24,7 @@ def getBaseUrl(downloadUrl):
 def getBaseAuthUrlAndPortUrl(baseUrl):
   curlCommand = "curl -L --insecure -w marker%{url_effective}marker " + baseUrl
   loginHtml = shell(curlCommand)
-  loginPostUrl = re.findall('<form action="(.*)" method="post">', loginHtml, re.MULTILINE)[0]
+  loginPostUrl = re.findall('<form action="(.*)" method="post" id="sign-in-form">', loginHtml, re.MULTILINE)[0]
   redirectUrl = re.findall("marker(.*)marker", loginHtml, re.MULTILINE)[0]
   o = urlparse(redirectUrl)
   baseAuthUrl = o.scheme + "://" + o.netloc

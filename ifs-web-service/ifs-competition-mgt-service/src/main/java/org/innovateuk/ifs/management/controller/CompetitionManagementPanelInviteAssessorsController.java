@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
-import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
@@ -42,9 +41,6 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 public class CompetitionManagementPanelInviteAssessorsController extends CompetitionManagementCookieController<AssessorPanelSelectionForm> {
 
     private static final String SELECTION_FORM = "assessorPanelSelectionForm";
-
-    @Autowired
-    private CompetitionInviteRestService competitionInviteRestService;
 
     @Autowired
     private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
