@@ -351,7 +351,7 @@ Milestones: Green check should show
 Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
     [Tags]    HappyPath
-    [Setup]    go to    ${COMP_MANAGEMENT_COMP_SETUP}
+    [Setup]  The user navigates to the page  ${COMP_MANAGEMENT_COMP_SETUP}
     When The user clicks the button/link    link=Application
     Then The user should see the text in the page  Sector competition questions
     And the user should see the element    link=1. Need or challenge
