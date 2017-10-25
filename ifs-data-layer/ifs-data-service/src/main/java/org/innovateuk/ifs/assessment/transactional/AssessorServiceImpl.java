@@ -11,7 +11,7 @@ import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -198,7 +198,7 @@ public class AssessorServiceImpl extends BaseTransactionalService implements Ass
     }
 
     private void assignCompetitionParticipantsToUser(User user) {
-        List<CompetitionParticipant> competitionParticipants = competitionParticipantRepository.getByInviteEmail(user.getEmail());
+        List<CompetitionAssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByInviteEmail(user.getEmail());
         competitionParticipants.forEach(competitionParticipant -> competitionParticipant.setUser(user));
         competitionParticipantRepository.save(competitionParticipants);
     }

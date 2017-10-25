@@ -2,6 +2,7 @@ package org.innovateuk.ifs.invite.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
@@ -9,7 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.List;
+
 import static java.lang.String.format;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.externalInviteResourceListType;
 
 /**
  * A typical RestService to use as a client API on the web-service side for the data-service functionality.
@@ -41,5 +45,11 @@ public class InviteUserRestServiceImpl extends BaseRestService implements Invite
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         String uriWithParams = buildPaginationUri(inviteRestUrl + "/internal/pending", pageNumber, pageSize, null, params);
         return getWithRestResult(uriWithParams, RoleInvitePageResource.class);
+    }
+
+    @Override
+    public RestResult<List<ExternalInviteResource>> getAllExternalInvites() {
+        String uri = inviteRestUrl + "/external/all";
+        return getWithRestResult(uri, externalInviteResourceListType());
     }
 }
