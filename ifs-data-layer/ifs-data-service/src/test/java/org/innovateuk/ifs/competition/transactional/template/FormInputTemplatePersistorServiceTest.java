@@ -6,9 +6,9 @@ import org.junit.Test;
 /**
  * TODO: Add description
  */
-public class GuidanceRowTemplatePersistorServiceTest  extends BaseServiceUnitTest<GuidanceRowTemplatePersistorService> {
-    public GuidanceRowTemplatePersistorService supplyServiceUnderTest() {
-        return new GuidanceRowTemplatePersistorService();
+public class FormInputTemplatePersistorServiceTest extends BaseServiceUnitTest<FormInputTemplatePersistorService> {
+    public FormInputTemplatePersistorService supplyServiceUnderTest() {
+        return new FormInputTemplatePersistorServiceImpl();
     }
 
     @Test
@@ -17,6 +17,10 @@ public class GuidanceRowTemplatePersistorServiceTest  extends BaseServiceUnitTes
 
     @Test
     public void cleanForPrecedingEntity() throws Exception {
+    }
+
+    @Test
+    public void createFunction() throws Exception {
     }
 
 }

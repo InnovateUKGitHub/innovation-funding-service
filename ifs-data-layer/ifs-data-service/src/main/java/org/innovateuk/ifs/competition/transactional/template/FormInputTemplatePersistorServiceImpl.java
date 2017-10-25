@@ -20,12 +20,12 @@ import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATIO
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
-public class FormInputTemplatePersistorService implements BaseChainedTemplatePersistorService<List<FormInput>, Question> {
+public class FormInputTemplatePersistorServiceImpl implements FormInputTemplatePersistorService {
     @Autowired
     private FormInputRepository formInputRepository;
 
     @Autowired
-    private GuidanceRowTemplatePersistorService guidanceRowTemplateService;
+    private GuidanceRowTemplatePersistorServiceImpl guidanceRowTemplateService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -38,7 +38,6 @@ public class FormInputTemplatePersistorService implements BaseChainedTemplatePer
     @Override
     public void cleanForPrecedingEntity(Question question) {
         List<FormInput> formInputs = question.getFormInputs();
-
 
         formInputs.stream().forEach(formInput -> guidanceRowTemplateService.cleanForPrecedingEntity(formInput));
         formInputs.stream().forEach(formInput -> entityManager.detach(formInput));

@@ -13,10 +13,10 @@ import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorService;
+import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorServiceImpl;
 import org.innovateuk.ifs.competition.transactional.template.DefaultApplicationQuestionFactory;
-import org.innovateuk.ifs.competition.transactional.template.QuestionPriorityService;
-import org.innovateuk.ifs.competition.transactional.template.QuestionTemplatePersistorService;
+import org.innovateuk.ifs.competition.transactional.template.QuestionPriorityServiceImpl;
+import org.innovateuk.ifs.competition.transactional.template.QuestionTemplatePersistorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,10 +40,10 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private DefaultApplicationQuestionFactory defaultApplicationQuestionFactory;
 
     @Autowired
-    private CompetitionTemplatePersistorService competitionTemplatePersistor;
+    private CompetitionTemplatePersistorServiceImpl competitionTemplatePersistor;
 
     @Autowired
-    private QuestionTemplatePersistorService questionTemplatePersistorService;
+    private QuestionTemplatePersistorServiceImpl questionTemplatePersistorServiceImpl;
 
     @Autowired
     private AssessorCountOptionRepository assessorCountOptionRepository;
@@ -58,7 +58,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private QuestionRepository questionRepository;
 
     @Autowired
-    private QuestionPriorityService questionPriorityService;
+    private QuestionPriorityServiceImpl questionPriorityService;
 
     @Override
     public ServiceResult<Competition> createCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
@@ -97,7 +97,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         question.setSection(applicationQuestionsSection);
         question.setCompetition(competition);
 
-        Question createdQuestion = questionTemplatePersistorService.persistByEntity(Arrays.asList(question)).get(0);
+        Question createdQuestion = questionTemplatePersistorServiceImpl.persistByEntity(Arrays.asList(question)).get(0);
         Question prioritizedQuestion = questionPriorityService.prioritiseAssessedQuestionAfterCreation(createdQuestion);
 
         return serviceSuccess(prioritizedQuestion);
@@ -111,7 +111,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        questionTemplatePersistorService.deleteEntityById(questionId);
+        questionTemplatePersistorServiceImpl.deleteEntityById(questionId);
         questionPriorityService.reprioritiseAssessedQuestionsAfterDeletion(question);
 
         return serviceSuccess();

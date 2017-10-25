@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.transactional.template;
 
 import org.innovateuk.ifs.application.domain.GuidanceRow;
 import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
@@ -22,6 +23,7 @@ public class DefaultApplicationQuestionFactory {
     @Autowired
     private FormValidatorRepository formValidatorRepository;
 
+    @NotSecured("Has to be secured by calling services.")
     public Question buildQuestion(Competition competition) {
         FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.getName());
         FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
