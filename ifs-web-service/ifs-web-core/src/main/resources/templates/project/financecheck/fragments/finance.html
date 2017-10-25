@@ -1517,7 +1517,7 @@
                             </th>
                             <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(finance.getTotal(),1,'COMMA')}" /></strong></td>
                             <th:block th:each="rowType : ${finance.financeOrganisationDetails.keySet()}" th:with="row=${finance.financeOrganisationDetails.get(rowType)}">
-                            <td th:if="${rowType.isSpendCostCategory()}" class="numeric">
+                            <td th:if="${rowType.isIncludedInSpendProfile()}" class="numeric">
                                 &pound; <th:block th:text="${#numbers.formatInteger(row.total,1,'COMMA')}" />
                             </td>
                             </th:block>
