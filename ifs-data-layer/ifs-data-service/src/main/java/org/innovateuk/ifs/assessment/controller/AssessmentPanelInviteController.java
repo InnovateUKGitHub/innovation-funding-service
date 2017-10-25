@@ -4,10 +4,12 @@ import org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,7 +18,6 @@ import java.util.List;
 /**
  * Controller for managing Invites to Assessment Panels.
  */
-
 @RestController
 @RequestMapping("/assessmentpanelinvite")
 public class AssessmentPanelInviteController {
@@ -88,5 +89,26 @@ public class AssessmentPanelInviteController {
             @PageableDefault(size = DEFAULT_PAGE_SIZE, sort = "invite.name", direction = Sort.Direction.ASC) Pageable pageable
     ) {
         return assessmentPanelInviteService.getInvitationOverview(competitionId, pageable, statuses).toGetResponse();
+    }
+
+    @PostMapping("/openInvite/{inviteHash}")
+    public RestResult<AssessmentPanelInviteResource> openInvite(@PathVariable String inviteHash) {
+        return assessmentPanelInviteService.openInvite(inviteHash).toPostWithBodyResponse();
+    }
+
+    @PostMapping("/acceptInvite/{inviteHash}")
+    public RestResult<Void> acceptInvite(@PathVariable String inviteHash) {
+        final UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
+        return assessmentPanelInviteService.acceptInvite(inviteHash, currentUser).toPostResponse();
+    }
+
+    @PostMapping("/rejectInvite/{inviteHash}")
+    public RestResult<Void> rejectInvite(@PathVariable String inviteHash) {
+        return assessmentPanelInviteService.rejectInvite(inviteHash).toPostResponse();
+    }
+
+    @GetMapping("/checkExistingUser/{inviteHash}")
+    public RestResult<Boolean> checkExistingUser(@PathVariable String inviteHash) {
+        return assessmentPanelInviteService.checkExistingUser(inviteHash).toGetResponse();
     }
 }

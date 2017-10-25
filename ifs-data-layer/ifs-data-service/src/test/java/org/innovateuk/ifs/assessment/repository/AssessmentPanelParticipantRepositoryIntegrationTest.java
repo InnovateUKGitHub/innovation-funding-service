@@ -30,7 +30,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -177,7 +176,7 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
         );
 
         RejectionReason reason = rejectionReasonRepository.findAll().get(0);
-        savedParticipant.reject(reason, Optional.of("too busy"));
+        savedParticipant.reject();
         flushAndClearSession();
 
         long id = savedParticipant.getId();
