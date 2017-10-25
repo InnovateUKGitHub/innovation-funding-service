@@ -290,9 +290,9 @@
                         <th>Total</th>
                         <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summaries.getTotalCost(),1,'DEFAULT')}" /></strong></td>
                         <td class="numeric"></td>
-                        <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summaries.getTotalFundingSought(),1,'DEFAULT')}" /></strong></td>
-                        <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summaries.getTotalOtherPublicSectorFunding(),1,'DEFAULT')}" /></strong></td>
-                        <td class="numeric"><strong>&pound;<th:block th:text="${#numbers.formatInteger(summaries.getTotalContributionToProject(),1,'DEFAULT')}" /></strong></td>
+                        <td class="numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalFundingSought(),1,'DEFAULT')}">19,000</strong></td>
+                        <td class="numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalOtherPublicSectorFunding(),1,'DEFAULT')}">19,000</strong></td>
+                        <td class="numeric"><strong th:text="${#numbers.formatInteger(summaries.getTotalContributionToProject(),1,'DEFAULT')}">19,000</strong></td>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -346,7 +346,6 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                    <!--<th:block th:each="finance : ${breakdowns.finances}" th:with="partner=${breakdowns.getPartnerFromBreakdown(finance.organisation)}">-->
                     <th:block th:each="partner : ${breakdowns.getOrganisationResources()}" th:with="finance=${breakdowns.getPartnerFinances(partner.organisation)}">
                         <tr>
                             <th scope="col">
