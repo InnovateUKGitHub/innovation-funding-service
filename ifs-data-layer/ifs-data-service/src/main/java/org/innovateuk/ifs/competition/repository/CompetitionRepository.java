@@ -75,6 +75,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
+    // TODO update when IFS-2072 is addressed (track Spend Profile states via workflow)
     public static final String COUNT_OPEN_QUERIES = "SELECT COUNT(DISTINCT t.classPk) " +
             "FROM Post post " +
             "JOIN post.thread t " +
@@ -93,6 +94,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "        GROUP BY p.thread.id) " +
             "    AND (SELECT COUNT(id) FROM pr.spendProfiles sp) != (SELECT COUNT(id) FROM pr.partnerOrganisations po)";
 
+    // TODO update when IFS-2072 is addressed (track Spend Profile states via workflow)
     public static final String GET_OPEN_QUERIES = "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name) " +
             "FROM Post post " +
             "JOIN post.thread t " +
