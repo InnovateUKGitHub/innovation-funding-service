@@ -21,16 +21,18 @@ Resource          ../../resources/defaultResources.robot
 ${assessment_panel}  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
 ${panel_assessor}    benjamin.nixon@gmail.com
 
+${panel_user_joel}  joel.george@gmail.com
+
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
     [Documentation]  IFS-786
-    [Tags]
+    [Tags]  HappyPath
     Given The user clicks the button/link  link=${CLOSED_COMPETITION_NAME}
     Then the user should see the element   jQuery=.disabled:contains("Manage assessment panel")
 
 Assessment panel links are active if the assessment panel has been set
     [Documentation]  IFS-786
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  enable assessment panel for the competition
     Given the user clicks the button/link  link=Manage assessment panel
     When the user clicks the button/link   link=Invite assessors to attend
@@ -46,12 +48,12 @@ There are no Assessors in Invite and Overview tab before sending invite
 
 CompAdmin can add an assessor to invite list
     [Documentation]  IFS-31
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user clicks the button/link  link=Find
     Given the user clicks the button/link    jQuery=tr:contains("Benjamin Nixon") label
     And the user clicks the button/link      jQuery=tr:contains("Joel George") label
     When the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
-    And the user should see the element      jQuery=td:contains("Joel George") + td:contains("joel.george@gmail.com")
+    And the user should see the element      jQuery=td:contains("Joel George") + td:contains("${panel_user_joel}")
     Then the user should see the element     jQuery=td:contains("Benjamin Nixon") + td:contains("${panel_assessor}")
     And the user clicks the button/link      link=Find
     And the user should not see the element  jQuery=td:contains("Benjamin Nixon")
@@ -68,7 +70,8 @@ Cancel sending invite returns to the invite tab
 
 Assessor recieves the invite to panel
     [Documentation]  IFS-1560  IFS-1564
-    [Tags]
+    [Tags]  HappyPath
+    [Setup]  the user clicks the button/link  link=Invite
     Given the user clicks the button/link     link=Review and send invites
     When the user clicks the button/link      jQuery=button:contains("Send invite")
     And the user reads his email              benjamin.nixon@gmail.com  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
@@ -88,7 +91,7 @@ Bulk add assessor to invite list
 
 CompAdmin resend invites to multiple assessors
     [Documentation]  IFS-1561
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  the user clicks the button/link    link=Overview
     Given the user clicks the button/link         jQuery=tr:contains("Benjamin Nixon") label
     And the user clicks the button/link         jQuery=tr:contains("Joel George") label
@@ -100,7 +103,7 @@ CompAdmin resend invites to multiple assessors
 
 Assesor is able to accept the invitation from dashboard
     [Documentation]  IFS-37  IFS-1135
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  Log in as a different user     ${panel_assessor}  ${short_password}
     Given the user clicks the button/link  jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button  acceptInvitation  true
@@ -122,7 +125,7 @@ Comp Admin can see the rejected invitation
     [Documentation]  IFS-37
     [Tags]
     [Setup]  Log in as a different user     &{Comp_admin1_credentials}
-    Given the user navigates to the page    ${SERVER}/management/assessment/panel/competition/13/assessors/overview
+    Given the user navigates to the page    ${SERVER}/management/assessment/panel/competition/${CLOSED_COMPETITION}/assessors/overview
     Then the user should see the element    jQuery=td:contains("Joel George") ~ td:contains("Invite declined")
 
 *** Keywords ***
