@@ -27,7 +27,7 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...
 ...               INFUND-6403 Filter and Pagination on 'Find' tab of Invite dashboard
 ...
-...               INFUND-6453 Filter and pagination on 'Overview' tab of Invite assessors dashboard
+...               INFUND-6453 Filter and pagination on 'Pending and rejected' tab of Invite assessors dashboard
 ...
 ...               IFS-33 As a comp exec I can select and add multiple assessors to the invite list
 ...
@@ -50,7 +50,7 @@ Check the initial key statistics
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Pending and rejected
 
-Filtering in the Invite Overview page
+Filtering in the Invite Pending and rejected page
     [Documentation]    INFUND-6453
     [Tags]
     Given the user selects the option from the drop-down menu  Assembly / disassembly / joining  id=filterInnovationArea

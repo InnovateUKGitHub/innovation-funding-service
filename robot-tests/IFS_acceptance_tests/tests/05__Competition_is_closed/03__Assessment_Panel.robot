@@ -7,7 +7,7 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...
 ...               IFS-1564 Assessment panels - Invite assessors to panel - Key statistics
 ...
-...               IFS-1561 Assessment panels - Invite assessors to panel - Overview tab and resend invites
+...               IFS-1561 Assessment panels - Invite assessors to panel - Pending and rejected tab and resend invites
 ...
 ...               IFS-37 Assessment panels - Accept/Reject Panel Invite
 Suite Setup       Custom Suite Setup
@@ -34,7 +34,7 @@ Assessment panel links are active if the assessment panel has been set
     When the user clicks the button/link   link=Invite assessors to attend
     Then the user should see the element   jQuery=h1:contains("Invite assessors to panel")
 
-There are no Assessors in Invite and Overview tab before sending invite
+There are no Assessors in Invite and Pending and rejected tab before sending invite
     [Documentation]  IFS-1561
     [Tags]
     Given the user clicks the button/link  link=Invite
@@ -88,7 +88,7 @@ Bulk add assessor to invite list
 CompAdmin resend invites to multiple assessors
     [Documentation]  IFS-1561
     [Tags]  HappyPath
-    [Setup]  the user clicks the button/link    link=Overview
+    [Setup]  the user clicks the button/link    link=Pending and rejected
     Given the user clicks the button/link         jQuery=tr:contains("Benjamin Nixon") label
     And the user clicks the button/link         jQuery=tr:contains("Joel George") label
     And the user clicks the button/link         jQuery=button:contains("Resend invites")
