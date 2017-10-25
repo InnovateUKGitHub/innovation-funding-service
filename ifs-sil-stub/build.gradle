@@ -1,0 +1,73 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+def targetBuild = hasProperty('profile') ? profile : 'docker';
+apply from: targetBuild+"-build.gradle";
+
+configurations {
+    providedRuntime
+}
+
+jar {
+    baseName = 'ifs-sil-stub'
+}
+
+processResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
+dependencies {
+    compile project(":ifs-commons")
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile 'javax.mail:mail:1.4.7'
+    testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
+}
+
+/**
+ * This task creates a `docker` directory in the $BUILD/docker` directory of the project,
+ * where it will write all the necessary files to build a docker container.
+ * In other words, after this task is executed, one could manually run `docker build .`
+ * in the output directory.
+ */
+task prepareDockerInput {
+    dependsOn build
+    def inputDir = project.file("$project.buildDir/docker")
+
+    doFirst {
+        copy {
+            from 'docker/'
+            into inputDir
+            include 'Dockerfile-template'
+            rename 'Dockerfile-template', 'Dockerfile'
+            filter {
+                it.replaceAll('@version@', project.properties['version']).replaceAll('@app_name@', jar.baseName)
+            }
+        }
+        copy {
+            from jar
+            into inputDir
+        }
+    }
+}
+
+task buildDocker(type: DockerBuildImage) {
+    dependsOn prepareDockerInput
+    tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+    inputDir = project.file("$project.buildDir/docker")
+}
+
+
+// Workaround for https://github.com/spring-projects/spring-boot/issues/8308
+// Can reinstate excludeDevtools in the bootRepackage task in next release
+springBoot {
+    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+}
+
+bootRepackage {
+    mainClass = 'org.innovateuk.ifs.Application'
+    //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.0'
+}

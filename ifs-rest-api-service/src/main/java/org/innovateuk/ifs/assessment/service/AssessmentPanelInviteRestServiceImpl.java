@@ -112,5 +112,25 @@ public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implem
 
         return getWithRestResult(builder.toUriString(), AssessorInviteOverviewPageResource.class);
     }
+
+    @Override
+    public RestResult<AssessmentPanelInviteResource> openInvite(String inviteHash) {
+        return postWithRestResultAnonymous(format("%s/%s/%s", assessmentPanelInviteRestUrl, "openInvite", inviteHash), AssessmentPanelInviteResource.class);
+    }
+
+    @Override
+    public RestResult<Void> acceptInvite(String inviteHash) {
+        return postWithRestResult(format("%s/%s/%s", assessmentPanelInviteRestUrl, "acceptInvite", inviteHash), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> rejectInvite(String inviteHash) {
+        return postWithRestResultAnonymous(format("%s/%s/%s", assessmentPanelInviteRestUrl, "rejectInvite", inviteHash), Void.class);
+    }
+
+    @Override
+    public RestResult<Boolean> checkExistingUser(String inviteHash) {
+        return getWithRestResultAnonymous(format("%s/%s/%s", assessmentPanelInviteRestUrl, "checkExistingUser", inviteHash), Boolean.class);
+    }
 }
 

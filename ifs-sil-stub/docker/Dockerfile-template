@@ -1,0 +1,12 @@
+FROM davidcaste/alpine-java-unlimited-jce:jdk8
+MAINTAINER Richard Popple <richard@hiveit.co.uk>
+EXPOSE 8080
+ENV JAVA_OPTS -Xmx300m
+RUN apk --update add curl
+
+WORKDIR /
+VOLUME /tmp
+
+ADD ifs-sil-stub-@version@.jar app.jar
+
+ENTRYPOINT exec java $JAVA_OPTS -jar app.jar

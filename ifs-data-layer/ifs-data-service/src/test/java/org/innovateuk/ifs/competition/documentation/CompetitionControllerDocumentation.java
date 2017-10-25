@@ -3,10 +3,7 @@ package org.innovateuk.ifs.competition.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
-import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.documentation.CompetitionCountResourceDocs;
@@ -18,6 +15,7 @@ import org.mockito.Mock;
 import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -405,6 +403,39 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         "competition/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list of competitions, which have had feedback released, that the authenticated user has access to")
+                        )
+                ));
+    }
+
+    @Test
+    public void getOpenQueryCount() throws Exception {
+        when(competitionService.countAllOpenQueries(321L)).thenReturn(serviceSuccess(1L));
+
+        mockMvc.perform(get("/competition/{id}/queries/open/count", 321L))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the competition whose open queries are being counted")
+                        )
+                ));
+    }
+
+    @Test
+    public void getOpenQueries() throws Exception {
+        when(competitionService.findAllOpenQueries(321L)).thenReturn(serviceSuccess(Arrays.asList(
+                new CompetitionOpenQueryResource(1L, 2L, "a", 3L, "b"),
+                new CompetitionOpenQueryResource(1L, 2L, "a", 3L, "b"))));
+
+        mockMvc.perform(get("/competition/{id}/queries/open", 321L))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the competition whose open queries are being retrieved")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").description("list of open queries")
                         )
                 ));
     }
