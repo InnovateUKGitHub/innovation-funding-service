@@ -147,7 +147,7 @@ the Applicant fills the Materials fields
 the applicant edits the Subcontracting costs section
     the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
-    the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    100
+    the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) [name^="subcontracting-subcontractingCost"]   100
     the user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    test1
     the user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    test2
     the user moves focus to the element    jQuery=button:contains(Add another subcontractor)
@@ -156,8 +156,8 @@ the applicant edits the Subcontracting costs section
     the user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-name"]    test1
     the user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-country-"]    test2
     the user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-role"]    test3
-    the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    100
-    the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]    test
+    the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) [name^="subcontracting-subcontractingCost"]   100
+    the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) [name^="subcontracting-name"]    test
     the user moves focus to the element    jQuery=button:contains("Subcontracting costs")
 
 the applicant fills the 'capital usage' field

@@ -48,8 +48,8 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.hamcrest.Matchers.containsString;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
-import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.assessment.transactional.CompetitionInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -95,7 +95,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     private static final String INVITE_HASH = "inviteHash";
     private static final DateTimeFormatter inviteFormatter = ofPattern("d MMMM yyyy");
 
-    private CompetitionParticipant competitionParticipant;
+    private CompetitionAssessmentParticipant competitionParticipant;
     private UserResource userResource;
     private User user;
     private Profile profile;
@@ -129,7 +129,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         innovationArea = newInnovationArea().build();
         CompetitionInvite competitionInvite = setUpCompetitionInvite(competition, SENT, innovationArea);
 
-        competitionParticipant = new CompetitionParticipant(competitionInvite);
+        competitionParticipant = new CompetitionAssessmentParticipant(competitionInvite);
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
         userResource = newUserResource().withId(userId).build();
@@ -1026,7 +1026,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         CompetitionInvite invite = setUpCompetitionInvite(newCompetition().withName("my competition").build(), email, name, SENT, null, newUser()
                 .build());
 
-        competitionParticipant = newCompetitionParticipant().withInvite(invite).build();
+        competitionParticipant = newCompetitionAssessmentParticipant().withInvite(invite).build();
 
         AssessorInviteSendResource assessorInviteSendResource = setUpAssessorInviteSendResource();
 
@@ -1880,7 +1880,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     @Test
     public void acceptInvite_newAssessor() {
         InnovationArea innovationArea = newInnovationArea().build();
-        CompetitionParticipant competitionParticipant = newCompetitionParticipant()
+        CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant()
                 .withInvite(newCompetitionInvite()
                         .withStatus(OPENED)
                         .withInnovationArea(innovationArea)
@@ -1906,7 +1906,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     @Test
     public void acceptInvite_newAssessorExistingInnovationArea() {
         InnovationArea innovationArea = newInnovationArea().build();
-        CompetitionParticipant competitionParticipant = newCompetitionParticipant()
+        CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant()
                 .withInvite(newCompetitionInvite()
                         .withStatus(OPENED)
                         .withInnovationArea(innovationArea)
@@ -1938,7 +1938,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     @Test
     public void acceptInvite_newAssessorDifferentInnovationArea() {
         InnovationArea innovationArea = newInnovationArea().build();
-        CompetitionParticipant competitionParticipant = newCompetitionParticipant()
+        CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant()
                 .withInvite(newCompetitionInvite()
                         .withStatus(OPENED)
                         .withInnovationArea(innovationArea)
@@ -2007,7 +2007,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         );
     }
 
-    private CompetitionParticipant createCompetitionParticipantExpectations(CompetitionInvite competitionInvite) {
+    private CompetitionAssessmentParticipant createCompetitionParticipantExpectations(CompetitionInvite competitionInvite) {
         return createLambdaMatcher(competitionParticipant -> {
             assertNull(competitionParticipant.getId());
             assertEquals(competitionInvite.getTarget(), competitionParticipant.getProcess());
@@ -2025,7 +2025,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         ParticipantStatus status = ParticipantStatus.PENDING;
         Boolean compliant = true;
 
-        List<CompetitionParticipant> expectedParticipants = newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> expectedParticipants = newCompetitionAssessmentParticipant()
                 .withInvite(
                         newCompetitionInvite()
                                 .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
@@ -2037,7 +2037,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withStatus(PENDING)
                 .build(5);
 
-        Page<CompetitionParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
+        Page<CompetitionAssessmentParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
         when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competitionId,
@@ -2113,7 +2113,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withAffiliations(newAffiliation().build(2))
                 .build();
 
-        List<CompetitionParticipant> expectedParticipants = newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> expectedParticipants = newCompetitionAssessmentParticipant()
                 .withInvite(
                         newCompetitionInvite()
                                 .withName("Existing user", "New user")
@@ -2130,7 +2130,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withName("Innovation 1", "Innovation 2")
                 .build(2);
 
-        Page<CompetitionParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 6);
+        Page<CompetitionAssessmentParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 6);
 
         when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competitionId,
@@ -2197,7 +2197,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     public void getInvitationOverview_noFilters() throws Exception {
         long competitionId = 1L;
         Pageable pageable = new PageRequest(0, 5);
-        List<CompetitionParticipant> expectedParticipants = newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> expectedParticipants = newCompetitionAssessmentParticipant()
                 .withInvite(
                         newCompetitionInvite()
                                 .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
@@ -2209,7 +2209,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withStatus(PENDING)
                 .build(5);
 
-        Page<CompetitionParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
+        Page<CompetitionAssessmentParticipant> pageResult = new PageImpl<>(expectedParticipants, pageable, 10);
 
         when(competitionParticipantRepositoryMock.getAssessorsByCompetitionAndStatusContains(competitionId, singletonList(PENDING), pageable))
                 .thenReturn(pageResult);
@@ -2256,7 +2256,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withInnovationArea(newInnovationArea().build())
                 .build(5);
 
-        List<CompetitionParticipant> expectedParticipants = newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> expectedParticipants = newCompetitionAssessmentParticipant()
                 .withInvite(invites.get(0), invites.get(1), invites.get(2), invites.get(3),invites.get(4))
                 .withStatus(PENDING, PENDING, PENDING, PENDING, REJECTED)
                 .build(5);

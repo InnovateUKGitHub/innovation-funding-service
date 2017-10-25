@@ -39,7 +39,7 @@ User can navigate back to Become an Assessor page
     [Tags]
     When the user clicks the button/link           jQuery=.button:contains("Create account")
     Then the user should see the element           jQuery=.heading-small:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
-    And the user clicks the button/link            Link=Back
+    And the user clicks the button/link            jQuery=.link-back:contains("Back")
     And the user should see the element            jQuery=h1:contains("Become an assessor for Innovate UK")
 
 Create assessor account: server-side validations
@@ -125,7 +125,7 @@ Non-registered assessor: Reject invitation
 
 *** Keywords ***
 the assessor fills in all fields
-    Select From List By Index    id=rejectReason  3
+    Select From List By Index    id=rejectReasonValid  3
     The user should not see the text in the page  This field cannot be left blank
     The user enters text to a text field          id=rejectComment    Unable to assess this application.
 

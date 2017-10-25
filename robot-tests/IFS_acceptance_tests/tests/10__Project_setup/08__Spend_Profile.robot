@@ -62,6 +62,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-7685 Broken link on spend profile page
 ...
 ...               IFS-1576 Allow changes to Target start date until generation of Spend Profile
+...
+...               IFS-1579 Allow change of Finance Contact until generation of GOL
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -183,7 +185,7 @@ Lead partner can edit his spend profile with invalid values and see the error me
     Then the user should see the element       jQuery=.error-summary:contains("Your total costs are higher than the eligible project costs.")
     When the user clicks the button/link       jQuery=.button:contains("Edit spend profile")
     Then the user enters text to a text field  jQuery=th:contains("Labour") + td input  10
-#    And the user should not see the element   jQuery=.form-group-error th:contains("Labour")  # TODO IFS-1120
+    And the user should not see the element   jQuery=.form-group-error th:contains("Labour")
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  -55
     And the user moves focus to the element    jQuery=th:contains("Overheads") ~ td:nth-child(5)
     Then the user should see the element       jQuery=.error-summary-list li:contains("This field should be 0 or higher")
@@ -347,9 +349,9 @@ Academic partner spend profile server side validations
     When the user enters text to a text field        css=.spend-profile-table tbody .form-group-row:nth-child(5) td:nth-of-type(1) input    -1    # Directly incurredStaff
     And the user enters text to a text field         css=.spend-profile-table tbody .form-group-row:nth-child(6) td:nth-of-type(3) input    3306  # Travel and subsistence
     And the user moves focus to the element          css=.spend-profile-table tbody .form-group-row:nth-child(7) td:nth-of-type(6) input
-    And the user clicks the button/link              jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the text in the page    Your total costs are higher than your eligible costs.
-    And the user should see the text in the page     This field should be 0 or higher.
+    When the user clicks the button/link              jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should see the text in the page     This field should be 0 or higher.
 
 Academic partner spend profile client side validations
     [Documentation]    INFUND-5846
@@ -544,11 +546,11 @@ Project Finance is able to see Spend Profile approval page
     Then the user should see the element    css=#accept-profile
     And the user should see the element    jQuery=#content .button.button.button-warning:contains("Reject")
 
-Check if project manager and project address fields are still editable
-   [Documentation]    IFS-1577, IFS-1578
+Check if project details are editable
+   [Documentation]    IFS-1577, IFS-1578, IFS-1579
    [Tags]
    Given Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
-   Then check if project manager and project address fields are editable  ${PS_SP_APPLICATION_PROJECT}
+   Then check if project manager, project address and finance contact fields are editable  ${PS_SP_APPLICATION_PROJECT}
 
 Comp Admin is able to see Spend Profile approval page
     [Documentation]    INFUND-2638, INFUND-5617, INFUND-6226, INFUND-5549
@@ -821,11 +823,12 @@ the user returns edit rights for the organisation
     the user clicks the button/link  jQuery=.button:contains("Allow partner to edit")
     the user should see the text in the page    In progress
 
-check if project manager and project address fields are editable
+check if project manager, project address and finance contact fields are editable
     [Arguments]  ${project}
     the user navigates to the page  ${server}/project-setup/project/${project}/details
     check if project address can be changed
     check if project manager can be changed
+    check if finance contact can be changed
 
 check if project address can be changed
     the user clicks the button/link  jQuery=a:contains("Project address")
@@ -843,4 +846,15 @@ check if project manager can be changed
     the user clicks the button/link  jQuery=a:contains("Project Manager")
     the user sees that the radio button is selected  projectManager  projectManager2
     the user selects the radio button  projectManager  projectManager1
+    the user clicks the button/link  jQuery=button:contains("Save")
+
+# Finance contact is changed below and switched back to original value so that
+# the tests which follow this are not impacted by permissions error
+check if finance contact can be changed
+    the user clicks the button/link  jQuery=a:contains("Katz")
+    the user selects the radio button  financeContact  financeContact2
+    the user clicks the button/link  jQuery=button:contains("Save")
+    the user clicks the button/link  jQuery=a:contains("Katz")
+    the user sees that the radio button is selected  financeContact  financeContact2
+    the user selects the radio button  financeContact  financeContact1
     the user clicks the button/link  jQuery=button:contains("Save")

@@ -3,10 +3,7 @@ package org.innovateuk.ifs.user.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.*;
 
 import java.util.List;
 import java.util.concurrent.Future;
@@ -20,6 +17,8 @@ public interface UserRestService {
     RestResult<UserResource> retrieveUserById(Long id);
 
     RestResult<List<UserResource>> findAll();
+
+    RestResult<List<UserOrganisationResource>> findAllExternal();
 
     RestResult<List<UserResource>> findByUserRoleType(UserRoleType userRoleType);
 

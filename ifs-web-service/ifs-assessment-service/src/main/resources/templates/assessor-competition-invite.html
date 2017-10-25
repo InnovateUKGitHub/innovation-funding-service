@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invitation to assess'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invitation to assess',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='assessment'" class="app-dashboard">
@@ -10,15 +10,13 @@
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assess '${model.competitionName}'|,size='heading-xlarge'" />
 
-            <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-                <h2 class="heading-medium error-summary-heading">We were unable to save your changes</h2>
-                <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
-                </ul>
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=|Invitation to assess '${model.competitionName}'|,size='heading-xlarge'" />
             <p>You are invited to assess the competition <strong th:text="|'${model.competitionName}'|">'Technology inspired'</strong>.</p>
 
             <section class="boxed">
@@ -46,10 +44,10 @@
             </section>
 
             <form th:action="@{/invite/competition/{inviteHash}/decision(inviteHash=${model.competitionInviteHash})}" method="post" novalidate="novalidate" th:object="${form}">
-                <div class="form-group">
+                <div class="form-group" th:classappend="${#fields.hasErrors('acceptInvitation')} ? 'form-group-error'">
                     <fieldset>
-                        <legend class="heading-medium">
-                            Select your ability to assess the competition
+                        <legend id="acceptInvitation">
+                            <span class="heading-medium">Select your ability to assess the competition</span>
                             <th:block th:if="${#fields.hasErrors('acceptInvitation')}">
                                 <span class="error-message" th:each="err : ${#fields.errors('acceptInvitation')}" th:text="${err}" />
                             </th:block>
@@ -57,7 +55,7 @@
 
                         <div class="multiple-choice">
                             <input id="acceptCompetition" value="true" type="radio" required="required"
-                                   th:field="*{acceptInvitation}"/>
+                                   th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.competitioninvitedecision.required}" />
                             <label for="acceptCompetition">
                                 Yes, I am able to assess applications to this competition
                                 <th:block th:unless="${model.userLoggedIn}">, and create an account</th:block>
@@ -66,7 +64,7 @@
 
                         <div class="multiple-choice" data-target="reject-competition">
                             <input id="rejectCompetition" value="false" type="radio" required="required"
-                                   th:field="*{acceptInvitation}"/>
+                                   th:field="*{acceptInvitation}" th:attr="data-required-errormessage=#{validation.competitioninvitedecision.required}"/>
                             <label for="rejectCompetition">
                                 No, I am not able to assess applications to this competition
                             </label>
@@ -74,13 +72,13 @@
 
                         <div class="panel js-hidden" id="reject-competition">
                             <div class="form-group" th:classappend="${#fields.hasErrors('rejectReasonValid')} ? 'form-group-error'">
-                                <label class="form-label" th:for="${#ids.next('rejectReasonValid')}">
+                                <label class="form-label" for="rejectReasonValid">
                                     Please select a reason for rejecting the competition
                                     <th:block th:if="${#fields.hasErrors('rejectReasonValid')}">
                                         <span class="error-message"  th:each="err : ${#fields.errors('rejectReasonValid')}" th:text="${err}" />
                                     </th:block>
                                 </label>
-                                <select class="form-control" th:attr="data-required-errormessage=#{validation.competitionrejectionresource.rejectReason.required}" th:errorclass="form-control-error" required="required" th:field="*{rejectReason}">
+                                <select id="rejectReasonValid" class="form-control" th:attr="data-required-errormessage=#{validation.competitionrejectionresource.rejectReason.required}" th:errorclass="form-control-error" required="required" th:field="*{rejectReason}">
                                     <option value="">Select a reason</option>
                                     <option th:each="reason : ${rejectionReasons}"
                                             th:value="${reason.id}"

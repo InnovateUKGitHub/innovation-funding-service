@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard',hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
@@ -15,18 +15,21 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.editable} ?  ${competitionSetupForm.question.shortTitle} : #{ifs.application.question.no_heading},subTitle=${competitionName},size='heading-xlarge'" />
 
-    <p class="extra-margin">
-        You can edit this question for the applicant as well as the guidance for assessors.
-    </p>
+    <p class="extra-margin" th:unless="${model.general.state.preventEdit}">
+        You can edit this question for the applicant as well as the guidance for assessors. </p>
+
+    <p class="extra-margin" th:if="${model.general.state.preventEdit}">
+        You are no longer able to make changes to this page.</p>
 
     <form th:if="${model.editable}"
           method="post"
           th:object="${competitionSetupForm}"
-          th:action="@{'/competition/setup/{competitionId}/section/application/question/{questionId}/edit'(competitionId=${model.general.competition.id}, questionId=${competitionSetupForm.question.questionId})}" novalidate="novalidate"
+          th:action="@{'/competition/setup/{competitionId}/section/application/question/{questionId}/edit'(competitionId=${model.general.competition.id}, questionId=${competitionSetupForm.question.questionId})}"
           th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           data-th-attr="data-competition=${model.general.competition.id}, data-objectId=${competitionSetupForm.question.questionId},
           data-subsection=${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE ? 'project' : 'question'}"
-          data-section="application">
+          data-section="application"
+          novalidate="novalidate">
 
         <th:block th:insert="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.question}, ${model.editable})" />
         <div class="extra-margin">

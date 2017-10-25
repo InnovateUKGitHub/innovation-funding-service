@@ -82,6 +82,11 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     }
 
     @Test
+    public void financeContactPageAccess() {
+        assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessFinanceContactPage(organisation), () -> rules.partnerCanAccessFinanceContactPage(123L, user));
+    }
+
+    @Test
     public void monitoringOfficerSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessMonitoringOfficerSection, () -> rules.partnerCanAccessMonitoringOfficerSection(123L, user));
     }

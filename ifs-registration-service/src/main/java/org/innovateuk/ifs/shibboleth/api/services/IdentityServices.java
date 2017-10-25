@@ -237,7 +237,7 @@ public class IdentityServices implements CreateIdentityService, FindIdentityServ
     }
 
     /**
-     * the the Attributes for this user's pwdAccountLockedTime, or null if this entry has no such property.
+     * the Attributes for this user's pwdAccountLockedTime, or null if this entry has no such property.
      * @param uuid
      * @return
      */

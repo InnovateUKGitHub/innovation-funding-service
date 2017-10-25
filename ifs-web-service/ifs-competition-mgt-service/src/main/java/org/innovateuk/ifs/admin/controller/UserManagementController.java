@@ -37,7 +37,6 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasAnyAuthority('ifs_administrator')")
 public class UserManagementController {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
@@ -55,6 +54,7 @@ public class UserManagementController {
     @Autowired
     private InternalUserService internalUserService;
 
+    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/users/active")
     public String viewActive(Model model,
                              HttpServletRequest request,
@@ -63,6 +63,7 @@ public class UserManagementController {
         return view(model, "active", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
+    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/users/inactive")
     public String viewInactive(Model model,
                                HttpServletRequest request,
@@ -71,6 +72,7 @@ public class UserManagementController {
         return view(model, "inactive", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
+    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/users/pending")
     public String viewPending(Model model,
                                HttpServletRequest request,
@@ -159,10 +161,7 @@ public class UserManagementController {
     }
 
     private EditUserResource constructEditUserResource(EditUserForm form, Long userId) {
-
-        EditUserResource editUserResource = new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
-
-        return editUserResource;
+        return new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
     }
 
     @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
@@ -177,5 +176,23 @@ public class UserManagementController {
     public String reactivateUser(@PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
                 userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
+    }
+
+    @PreAuthorize("hasAuthority('support')")
+    @GetMapping(value = "/users/created")
+    public String allExternalUsers(Model model) {
+        return userRestService.findAllExternal().andOnSuccessReturn(users -> {
+            model.addAttribute("users", users);
+           return "admin/external-users";
+        }).getSuccessObjectOrThrowException();
+    }
+
+    @PreAuthorize("hasAuthority('support')")
+    @GetMapping(value = "/invites")
+    public String allExternalInvites(Model model) {
+        return inviteUserRestService.getAllExternalInvites().andOnSuccessReturn(invites -> {
+            model.addAttribute("invites", invites);
+            return "admin/invited-users";
+        }).getSuccessObjectOrThrowException();
     }
 }

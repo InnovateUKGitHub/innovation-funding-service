@@ -11,6 +11,17 @@ function isNamedEnvironment() {
     fi
 }
 
+function isProductionEnvironment() {
+
+    TARGET=$1
+
+    if [[ ${TARGET} != "production" ]]; then
+        exit 1
+    else
+        exit 0
+    fi
+}
+
 function getProjectName() {
 
     PROJECT=$1
@@ -131,41 +142,88 @@ function injectLDAPVariables() {
     sed -i.bak "s#<<LDAP-SCHEME>>#$LDAP_SCHEME#g" os-files-tmp/db-reset/*.yml
 }
 
+function getEnvVariableValue() {
+    variableName=$1
+    eval echo "\$$variableName"
+}
+
+function substituteOptionalEnvVariable() {
+    variableValue=$(getEnvVariableValue $1)
+    replacementToken=$2
+    find os-files-tmp -name '*.yml' | xargs sed -i.bak "s#${replacementToken}#${variableValue}#g"
+}
+
+function substituteMandatoryEnvVariable() {
+
+    variableName=$1
+    variableValue=$(getEnvVariableValue $variableName)
+
+    if [ -z "${variableValue}" ]; then
+        echo "Environment variable: ${variableName} not set"; exit -1
+    fi
+
+    replacementToken=$2
+
+    find os-files-tmp -name '*.yml' | xargs sed -i.bak "s#${replacementToken}#${variableValue}#g"
+}
+
 function tailorAppInstance() {
+
+    # We will set up the default environment variables here for local and remote projects as we do not expect these to
+    # be available other than in Bamboo-triggered jobs
+    if ! $(isNamedEnvironment $TARGET); then
+
+        # for the IDP and Registration Service
+        export LDAP_URL="ldaps://ldap:389"
+        export LDAP_PASSWORD="default"
+
+        # for the SP
+        export SHIBBOLETH_SP_MPM_STARTSERVERS="2"
+        export SHIBBOLETH_SP_MPM_MINSPARETHREADS="25"
+        export SHIBBOLETH_SP_MPM_MAXSPARETHREADS="75"
+        export SHIBBOLETH_SP_MPM_THREADLIMIT="64"
+        export SHIBBOLETH_SP_MPM_THREADSPERCHILD="25"
+        export SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS="150"
+        export SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD="0"
+        export SHIBBOLETH_SP_MEMORY_REQUEST="300Mi"
+        export SHIBBOLETH_SP_MEMORY_LIMIT="600Mi"
+
+        # for the IDP
+        export SHIBBOLETH_IDP_MEMORY_REQUEST="500M"
+        export SHIBBOLETH_IDP_MEMORY_LIMIT="2048M"
+        export GA_TRACKING_ID=
+        export LDAP_USESSL="true"
+        export LDAP_BASEDN="dc=nodomain"
+        export LDAP_BINDDN="cn=admin,dc=nodomain"
+        export LDAP_AUTHENTICATOR="anonSearchAuthenticator"
+
+        # for the SP and IDP
+        export SHIBBOLETH_MEMCACHE_ENDPOINT=
+    fi
+
     if [ -z "$SSLCERTFILE" ]; then echo "Set SSLCERTFILE, SSLCACERTFILE, and SSLKEYFILE environment variables"; exit -1; fi
     sed -i.bak -e $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
-    sed -i.bak -e $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/named-envs/*.yml
     sed -i.bak -e $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
-    sed -i.bak -e $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/named-envs/*.yml
     sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
-    sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/named-envs/*.yml
 
     sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/*.yml
+    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/sil-stub/*.yml
     sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/shib/56-*.yml
-    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/shib/named-envs/56-*.yml
 
     if [[ ${TARGET} == "production" ]]
     then
       sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
       sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
-      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
 
       sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" os-files-tmp/*.yml
       sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
-      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
 
     else
       sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/db-reset/*.yml
       sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
-      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
-
-
 
       sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/db-reset/*.yml
       sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
-      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/named-envs/*.yml
     fi
 
 
@@ -177,32 +235,34 @@ function tailorAppInstance() {
 
         sed -i.bak "s/claimName: file-upload-claim/claimName: ${TARGET}-file-upload-claim/g" os-files-tmp/*.yml
 
-        if [[ ${TARGET} == "demo" ]]
-        then
-            if [ -z "${bamboo_demo_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
-            sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_demo_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
-        fi
-        if [[ ${TARGET} == "sysint" ]]
-        then
-            if [ -z "${bamboo_sysint_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
-            sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_sysint_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
-        fi
-        if [[ ${TARGET} == "perf" ]]
-        then
-            if [ -z "${bamboo_perf_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
-            sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_perf_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
-        fi
-        if [[ ${TARGET} == "uat" ]]
-        then
-            if [ -z "${bamboo_uat_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
-            sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_uat_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
-        fi
-        if [[ ${TARGET} == "production" ]]
-        then
-            if [ -z "${bamboo_production_ldap_password}" ]; then echo "Set bamboo_${TARGET}_ldap_password environment variable"; exit -1; fi
-            sed -i.bak "s/<<LDAP-PASSWORD>>/${bamboo_production_ldap_password}/g" os-files-tmp/shib/named-envs/*.yml
-        fi
     fi
+
+    # for the IDP and Registration Service
+    substituteMandatoryEnvVariable LDAP_URL "<<LDAP-URL>>"
+    substituteMandatoryEnvVariable LDAP_PASSWORD "<<LDAP-PASSWORD>>"
+
+    # for the SP
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_STARTSERVERS "<<SHIBBOLETH_SP_MPM_STARTSERVERS>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MINSPARETHREADS "<<SHIBBOLETH_SP_MPM_MINSPARETHREADS>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MAXSPARETHREADS "<<SHIBBOLETH_SP_MPM_MAXSPARETHREADS>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_THREADLIMIT "<<SHIBBOLETH_SP_MPM_THREADLIMIT>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_THREADSPERCHILD "<<SHIBBOLETH_SP_MPM_THREADSPERCHILD>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS "<<SHIBBOLETH_SP_MPM_MAXREQUESTWORKERS>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD "<<SHIBBOLETH_SP_MPM_MAXCONNECTIONSPERCHILD>>"
+    substituteOptionalEnvVariable SHIBBOLETH_SP_MEMORY_REQUEST "<<SHIBBOLETH_SP_MEMORY_REQUEST>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_SP_MEMORY_LIMIT "<<SHIBBOLETH_SP_MEMORY_LIMIT>>"
+
+    # for the IDP
+    substituteOptionalEnvVariable SHIBBOLETH_IDP_MEMORY_REQUEST "<<SHIBBOLETH_IDP_MEMORY_REQUEST>>"
+    substituteMandatoryEnvVariable SHIBBOLETH_IDP_MEMORY_LIMIT "<<SHIBBOLETH_IDP_MEMORY_LIMIT>>"
+    substituteOptionalEnvVariable GA_TRACKING_ID "<<GA-TRACKING-ID>>"
+    substituteMandatoryEnvVariable LDAP_USESSL "<<LDAP_USESSL>>"
+    substituteMandatoryEnvVariable LDAP_BASEDN "<<LDAP_BASEDN>>"
+    substituteMandatoryEnvVariable LDAP_BINDDN "<<LDAP_BINDDN>>"
+    substituteMandatoryEnvVariable LDAP_AUTHENTICATOR "<<LDAP_AUTHENTICATOR>>"
+
+    # for the SP and IDP
+    substituteOptionalEnvVariable SHIBBOLETH_MEMCACHE_ENDPOINT "<<SHIBBOLETH-MEMCACHE-ENDPOINT>>"
 
     ## TODO DW - when we remove the tech debt of having multiple files for the shib yml files per named environment,
     ## we can do away with this more complex configuration block and that of the one above that this one mirrors
@@ -212,42 +272,16 @@ function tailorAppInstance() {
         sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=int,dc=g2g3digital,dc=net#g" os-files-tmp/45-registration-svc.yml
         sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=int,dc=g2g3digital,dc=net#g" os-files-tmp/45-registration-svc.yml
 
-        if [[ ${TARGET} == "demo" ]]
-        then
-            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_demo_ldap_password}/g" os-files-tmp/45-registration-svc.yml
-        fi
-        if [[ ${TARGET} == "sysint" ]]
-        then
-            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_sysint_ldap_password}/g" os-files-tmp/45-registration-svc.yml
-        fi
-        if [[ ${TARGET} == "perf" ]]
-        then
-            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_perf_ldap_password}/g" os-files-tmp/45-registration-svc.yml
-        fi
-        if [[ ${TARGET} == "uat" ]]
-        then
-            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.${TARGET}.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_uat_ldap_password}/g" os-files-tmp/45-registration-svc.yml
-        fi
-        if [[ ${TARGET} == "production" ]]
-        then
-            sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldap://oldap.org.iuk.local:389#g" os-files-tmp/45-registration-svc.yml
-            sed -i.bak "s/<<SHIBBOLETH_LDAP_PASSWORD>>/${bamboo_production_ldap_password}/g" os-files-tmp/45-registration-svc.yml
-        fi
     else
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_URL>>#ldaps://ldap:389#g" os-files-tmp/45-registration-svc.yml
         sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" os-files-tmp/45-registration-svc.yml
         sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=nodomain#g" os-files-tmp/45-registration-svc.yml
         sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=nodomain#g" os-files-tmp/45-registration-svc.yml
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_PASSWORD>>#default#g" os-files-tmp/45-registration-svc.yml
     fi
 
     if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
     then
         sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
+        sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/5-front-door-service.yml
     fi
 
     if [[ ${TARGET} == "local" ]]
@@ -259,26 +293,28 @@ function tailorAppInstance() {
 function useContainerRegistry() {
 
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/sil-stub/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/fractal/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/db-anonymised-data/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/robot-tests/*.yml
 
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/sil-stub/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/fractal/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/db-anonymised-data/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/shib/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/shib/named-envs/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/robot-tests/*.yml
 
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/sil-stub/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/db-reset/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/fractal/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/db-anonymised-data/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/shib/*.yml
-    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/shib/named-envs/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/robot-tests/*.yml
+
 }
 
 function pushApplicationImages() {
@@ -318,6 +354,15 @@ function pushApplicationImages() {
     docker push ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/registration-service:${VERSION}
+}
+
+function pushSilStubImages(){
+    docker tag innovateuk/sil-stub:latest \
+        ${REGISTRY}/${PROJECT}/sil-stub:${VERSION}
+
+    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
+
+    docker push ${REGISTRY}/${PROJECT}/sil-stub:${VERSION}
 }
 
 function pushDBResetImages() {

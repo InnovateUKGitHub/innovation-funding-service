@@ -1,0 +1,1 @@
+buildDocker.dependsOn ":docker:oracle-jre:buildDocker"
