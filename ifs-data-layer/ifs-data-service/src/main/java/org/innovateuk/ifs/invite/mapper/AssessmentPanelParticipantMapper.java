@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.invite.domain.AssessmentPanelParticipant;
-import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
+import org.innovateuk.ifs.invite.resource.AssessmentPanelParticipantResource;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,7 +22,7 @@ import org.mapstruct.Mappings;
                 ParticipantStatusMapper.class,
         }
 )
-public abstract class AssessmentPanelParticipantMapper extends BaseMapper<AssessmentPanelParticipant, CompetitionParticipantResource, Long> {
+public abstract class AssessmentPanelParticipantMapper extends BaseMapper<AssessmentPanelParticipant, AssessmentPanelParticipantResource, Long> {
 
     @Mappings({
             @Mapping(source = "process.id", target = "competitionId"),
@@ -36,16 +36,16 @@ public abstract class AssessmentPanelParticipantMapper extends BaseMapper<Assess
             @Mapping(source = "process.competitionStatus", target = "competitionStatus"),
     })
     @Override
-    public abstract CompetitionParticipantResource mapToResource(AssessmentPanelParticipant domain);
+    public abstract AssessmentPanelParticipantResource mapToResource(AssessmentPanelParticipant domain);
 
     @Mappings({
             @Mapping(source = "userId", target = "user"),
             @Mapping(source = "competitionId", target = "process")
     })
     @Override
-    public abstract AssessmentPanelParticipant mapToDomain(CompetitionParticipantResource resource);
+    public abstract AssessmentPanelParticipant mapToDomain(AssessmentPanelParticipantResource resource);
 
-    public Long mapCompetitionParticipantToId(AssessmentPanelParticipant object) {
+    public Long mapAssessmentPanelParticipantToId(AssessmentPanelParticipant object) {
         if (object == null) {
             return null;
         }
