@@ -90,7 +90,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "        SELECT p.thread.id, MAX(p.createdOn) " +
             "        FROM Post p " +
             "        WHERE p.thread.id = t.id " +
-            "        GROUP BY p.thread.id)";
+            "        GROUP BY p.thread.id) " +
+            "    AND (SELECT COUNT(id) FROM pr.spendProfiles sp) != (SELECT COUNT(id) FROM pr.partnerOrganisations po)";
 
     public static final String GET_OPEN_QUERIES = "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name) " +
             "FROM Post post " +
@@ -108,7 +109,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "        SELECT p.thread.id, MAX(p.createdOn) " +
             "        FROM Post p " +
             "        WHERE p.thread.id = t.id " +
-            "        GROUP BY p.thread.id) " +
+            "        GROUP BY p.thread.id) "  +
+            "    AND (SELECT COUNT(id) FROM pr.spendProfiles sp) != (SELECT COUNT(id) FROM pr.partnerOrganisations po) " +
             "GROUP BY pr.application.id, o.id, pr.id " +
             "ORDER BY pr.application.id, o.name";
 
