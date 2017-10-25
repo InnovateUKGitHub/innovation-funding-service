@@ -48,8 +48,9 @@
                 <thead>
                 <tr>
                     <th:block th:each="rowType : ${sectionDiffs.keySet()}">
-                        <th th:unless="${#strings.isEmpty(rowType.name)}" scope="col" class="numeric"
-                            th:text="${rowType.name}"></th>
+                        <th th:unless="${#strings.isEmpty(rowType.name)}" scope="col" class="numeric">
+                            <th:block th:text="${rowType.name}" /> (&pound;)
+                        </th>
                     </th:block>
                 </tr>
                 </thead>
