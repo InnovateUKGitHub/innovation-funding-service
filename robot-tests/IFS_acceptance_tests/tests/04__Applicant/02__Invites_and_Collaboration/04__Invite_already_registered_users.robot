@@ -83,7 +83,7 @@ Existing user creates a new application and invites a user from the same organis
     the user clicks the button/link       jQuery=button:contains("Invite")
     the user reloads the page
     the user should see the element       jQuery=.table-overflow td:contains(${test_mailbox_one}+invite2@gmail.com) + td:contains("Invite pending for 0 days")
-    the user clicks the button/link       link=Return to application
+    the user clicks the button/link       link=Return to application team page
     the user clicks the button/link       jQuery=a:contains("Begin application")
     the user clicks the button/link       link=Application details
     the user enters text to a text field  css=[id="application.name"]    Invite a user with the same org

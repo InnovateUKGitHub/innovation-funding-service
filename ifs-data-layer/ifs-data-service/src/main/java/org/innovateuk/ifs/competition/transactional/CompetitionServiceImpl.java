@@ -39,6 +39,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -359,5 +360,17 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
             competition.setFundersPanelEndDate(ZonedDateTime.now());
         }
         return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<List<CompetitionOpenQueryResource>> findAllOpenQueries(Long competitionId) {
+        return serviceSuccess(competitionRepository.getOpenQueryByCompetition(competitionId));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Long> countAllOpenQueries(Long competitionId) {
+        return serviceSuccess(competitionRepository.countOpenQueries(competitionId));
     }
 }
