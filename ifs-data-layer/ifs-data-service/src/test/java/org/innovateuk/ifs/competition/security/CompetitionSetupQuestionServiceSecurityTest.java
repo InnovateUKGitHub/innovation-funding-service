@@ -71,7 +71,6 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
         });
     }
 
-
     @Test
     public void testSaveAllowedIfGlobalCompAdminRole() {
         RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
@@ -101,6 +100,78 @@ public class CompetitionSetupQuestionServiceSecurityTest extends BaseServiceSecu
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
                 classUnderTest.update(newCompetitionSetupQuestionResource().build());
+                fail("Should not have been able to update question without the global Comp Admin role");
+            } catch (AccessDeniedException e) {
+                // expected behaviour
+            }
+        });
+    }
+
+    @Test
+    public void testDeleteAllowedIfGlobalCompAdminRole() {
+        RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+        classUnderTest.delete(1L);
+    }
+
+    @Test
+    public void testDeleteAllowedIfNoGlobalRolesAtAll() {
+        try {
+            classUnderTest.delete(1L);
+            fail("Should not have been able to update question without the global Comp Admin role");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
+        }
+    }
+
+    @Test
+    public void testDeleteDeniedIfNotCorrectGlobalRoles() {
+
+        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
+                .collect(toList());
+
+        nonCompAdminRoles.forEach(role -> {
+
+            setLoggedInUser(
+                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            try {
+                classUnderTest.delete(1L);
+                fail("Should not have been able to update question without the global Comp Admin role");
+            } catch (AccessDeniedException e) {
+                // expected behaviour
+            }
+        });
+    }
+
+    @Test
+    public void testCreateByCompetitionAllowedIfGlobalCompAdminRole() {
+        RoleResource compAdminRole = newRoleResource().withType(COMP_ADMIN).build();
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(compAdminRole)).build());
+        classUnderTest.createByCompetitionId(2L);
+    }
+
+    @Test
+    public void testCreateByCompetitionAllowedIfNoGlobalRolesAtAll() {
+        try {
+            classUnderTest.createByCompetitionId(2L);
+            fail("Should not have been able to update question without the global Comp Admin role");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
+        }
+    }
+
+    @Test
+    public void testCreateByCompetitionDeniedIfNotCorrectGlobalRoles() {
+
+        List<UserRoleType> nonCompAdminRoles = asList(UserRoleType.values()).stream().filter(type -> type != COMP_ADMIN && type != PROJECT_FINANCE)
+                .collect(toList());
+
+        nonCompAdminRoles.forEach(role -> {
+
+            setLoggedInUser(
+                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            try {
+                classUnderTest.createByCompetitionId(3L);
                 fail("Should not have been able to update question without the global Comp Admin role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
