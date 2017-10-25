@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  * This class represents the base class for transactional services.  Method calls within this service will have
  * transaction boundaries provided to allow for safe atomic operations and persistence cascading.
  */
-@Transactional(readOnly = true)
+@Transactional
 public abstract class RootTransactionalService {
     @Autowired
     protected ProcessRoleRepository processRoleRepository;

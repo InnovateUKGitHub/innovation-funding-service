@@ -69,7 +69,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competition.setCompetitionType(competitionType);
         competition = setDefaultAssessorPayAndCount(competition);
 
-        if (competition == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {
+        if (competition == null || competitionIsNotInSetupState(competition)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
@@ -88,7 +88,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     @Override
     public ServiceResult<Question> createDefaultForApplicationSection(Competition competition) {
         //Perform checks
-        if (competition == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {
+        if (competition == null || competitionIsNotInSetupOrReadyToOpenState(competition)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
@@ -127,5 +127,14 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             competition.setAssessorPay(DEFAULT_ASSESSOR_PAY);
         }
         return competition;
+    }
+
+    private boolean competitionIsNotInSetupState(Competition competition) {
+        return !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP);
+    }
+
+    private boolean competitionIsNotInSetupOrReadyToOpenState(Competition competition) {
+        return !(competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)
+                || competition.getCompetitionStatus().equals(CompetitionStatus.READY_TO_OPEN));
     }
 }

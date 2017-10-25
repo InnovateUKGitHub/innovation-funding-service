@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -25,7 +24,7 @@ public class SectionTemplatePersistorService implements BaseChainedTemplatePersi
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Transactional
+    @Override
     public List<Section> persistByPrecedingEntity(Competition template) {
         if (template.getSections() == null) {
             return null;
@@ -36,6 +35,11 @@ public class SectionTemplatePersistorService implements BaseChainedTemplatePersi
         new ArrayList<>(sectionsWithoutParentSections).forEach(section -> createChildSectionRecursively(template, null).apply(section));
 
         return sectionsWithoutParentSections;
+    }
+
+    @Override
+    public void cleanForPrecedingEntity(Competition competition) {
+        getTopLevelSections(competition).stream().forEach(section -> cleanForPrecedingEntityRecursively(section));
     }
 
     private List<Section> getTopLevelSections(Competition competition) {
@@ -64,16 +68,12 @@ public class SectionTemplatePersistorService implements BaseChainedTemplatePersi
         };
     }
 
-    public void cleanForPrecedingEntityRecursively(Section section) {
+    private void cleanForPrecedingEntityRecursively(Section section) {
         section.getChildSections().stream().forEach(s -> cleanForPrecedingEntityRecursively(s));
 
         questionTemplatePersistorServiceService.cleanForPrecedingEntity(section);
 
         entityManager.detach(section);
         sectionRepository.delete(section);
-    }
-
-    public void cleanForPrecedingEntity(Competition competition) {
-        getTopLevelSections(competition).stream().forEach(section -> cleanForPrecedingEntityRecursively(section));
     }
 }

@@ -7,7 +7,6 @@ import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -31,11 +30,12 @@ public class FormInputTemplatePersistorService implements BaseChainedTemplatePer
     @PersistenceContext
     private EntityManager entityManager;
 
+    @Override
     public List<FormInput> persistByPrecedingEntity(Question question) {
         return simpleMap(question.getFormInputs(), createFunction(question));
     }
 
-    @Transactional
+    @Override
     public void cleanForPrecedingEntity(Question question) {
         List<FormInput> formInputs = question.getFormInputs();
 
@@ -45,7 +45,7 @@ public class FormInputTemplatePersistorService implements BaseChainedTemplatePer
         formInputRepository.delete(formInputs);
     }
 
-    public Function<FormInput, FormInput> createFunction(Question question) {
+    private Function<FormInput, FormInput> createFunction(Question question) {
         return (FormInput formInput) -> {
             // Extract the validators into a new Set as the hibernate Set contains persistence information which alters
             // the original FormValidator
