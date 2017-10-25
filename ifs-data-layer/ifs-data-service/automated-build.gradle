@@ -14,23 +14,8 @@ project.ext['flyway.password']="ifs"
 project.ext['flyway.placeholderPrefix']='_${'
 project.ext['flyway.placeholderSuffix']='}'
 
-ext.silRestBaseURL="http://localhost:8080/silstub"
-ext.silRestCrmBaseURL="http://localhost:8080/silstub"
-
-//
-// The production application will use the SIL to send emails out.  For non-production environments, the IFS application
-// can talk to a SIL stub within the IFS application itself.  The below configuration allows you to configure whether or
-// not the stub will attempt to send emails out via an SMTP server, or simply log the emails being sent (it does this
-// regardless)
-//
-ext.ifsSendMailLocally=""
-ext.ifsSmtpHost=""
-ext.ifsSmtpPort=""
-ext.ifsSmtpUser=""
-ext.ifsSmtpAuth=""
-ext.ifsSmtpPassword=""
-ext.ifsSmtpTlsEnabled=""
-ext.ifsMailTimeoutMillis=""
+ext.silRestBaseURL="http://sil-stub:8080/silstub"
+ext.silRestCrmBaseURL="http://sil-stub:8080/silstub"
 
 ext.idpRestBaseURL=""
 
