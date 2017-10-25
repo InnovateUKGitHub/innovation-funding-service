@@ -1,4 +1,6 @@
-FROM innovateuk/oracle-jre
+FROM innovateuk/app-base-image
+#needs root for now
+USER root
 EXPOSE 8080
 EXPOSE 8090
 EXPOSE 8081
@@ -13,6 +15,6 @@ VOLUME /tmp
 ADD newrelic.jar /
 ADD newrelic.yml /
 ADD coscale-monitoring.sh /root/coscale-monitoring.sh
-ADD ifs-data-service-@version@.jar app.jar
+ADD ifs-data-service-@version@-autostart.jar app.jar
 
 ENTRYPOINT exec java -Dfile.encoding=UTF8 $JAVA_OPTS $JMX_OPTS -jar app.jar
