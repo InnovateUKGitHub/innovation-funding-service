@@ -39,4 +39,8 @@ public interface AssessmentPanelInviteRestService {
     RestResult<Void> rejectInvite(String inviteHash);
 
     RestResult<Boolean> checkExistingUser(String inviteHash);
+
+    RestResult<Void> deleteInvite(String email, long competitionId);
+
+    RestResult<Void> deleteAllInvites(long competitionId);
 }

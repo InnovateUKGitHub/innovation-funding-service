@@ -2,7 +2,6 @@ package org.innovateuk.ifs.invite.repository;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.AssessmentPanelInvite;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -31,5 +30,6 @@ public interface AssessmentPanelInviteRepository extends PagingAndSortingReposit
 
     AssessmentPanelInvite getByHash(String hash);
 
+    void deleteByCompetitionIdAndStatus(long competitionId, InviteStatus status);
 }
 

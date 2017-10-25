@@ -263,5 +263,15 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
         public ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Void> deleteInvite(String email, long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> deleteAllInvites(long competitionId) {
+            return null;
+        }
     }
 }

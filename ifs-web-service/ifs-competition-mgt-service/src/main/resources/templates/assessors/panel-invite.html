@@ -70,7 +70,7 @@
                 </div>
             </div>
 
-            <form method="POST" th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
+            <form method="POST" th:action="@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
 
                 <div class="grid-row sorting">
                     <div class="column-half">
@@ -91,10 +91,10 @@
                             <th scope="col">Innovation area</th>
                             <th scope="col">Contract and DOI</th>
                             <td scope="col">
-                                <!--<button name="removeAll" class="buttonlink alignright"-->
-                                        <!--th:if="${!#lists.isEmpty(model.assessors)}">-->
-                                    <!--Remove all-->
-                                <!--</button>-->
+                                <button name="removeAll" class="buttonlink alignright"
+                                        th:if="${!#lists.isEmpty(model.assessors)}">
+                                    Remove all
+                                </button>
                             </td>
                         </tr>
                         </thead>
@@ -114,9 +114,9 @@
                                 <span class="no" th:unless="${assessor.compliant}">No</span>
                             </td>
                             <td class="alignright">
-                                <!--<button class="buttonlink alignright" name="remove" th:value="${assessor.email}">-->
-                                    <!--<span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove-->
-                                <!--</button>-->
+                                <button class="buttonlink alignright" name="remove" th:value="${assessor.email}">
+                                    <span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove
+                                </button>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.assessors)}">

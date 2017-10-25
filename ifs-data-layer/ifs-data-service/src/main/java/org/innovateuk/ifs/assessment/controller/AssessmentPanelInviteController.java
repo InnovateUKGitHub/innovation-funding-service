@@ -111,4 +111,14 @@ public class AssessmentPanelInviteController {
     public RestResult<Boolean> checkExistingUser(@PathVariable String inviteHash) {
         return assessmentPanelInviteService.checkExistingUser(inviteHash).toGetResponse();
     }
+
+    @DeleteMapping("/deleteInvite")
+    public RestResult<Void> deleteInvite(@RequestParam String email, @RequestParam long competitionId) {
+        return assessmentPanelInviteService.deleteInvite(email, competitionId).toDeleteResponse();
+    }
+
+    @DeleteMapping("/deleteAllInvites")
+    public RestResult<Void> deleteAllInvites(@RequestParam long competitionId) {
+        return assessmentPanelInviteService.deleteAllInvites(competitionId).toDeleteResponse();
+    }
 }

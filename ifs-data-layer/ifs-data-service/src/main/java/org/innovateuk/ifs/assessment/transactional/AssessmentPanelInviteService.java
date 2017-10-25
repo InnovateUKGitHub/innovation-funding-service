@@ -94,4 +94,14 @@ public interface AssessmentPanelInviteService {
             description = "The System Registration user can check for the presence of a User on an invite or the presence of a User with the invited e-mail address",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "DELETE_INVITE",
+            description = "The Competition Admins and Project Finance users can delete an assessment panel invite")
+    ServiceResult<Void> deleteInvite(String email, long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "DELETE_ALL_INVITES",
+            description = "The Competition Admins and Project Finance users can delete all the assessment panel invites")
+    ServiceResult<Void> deleteAllInvites(long competitionId);
 }
