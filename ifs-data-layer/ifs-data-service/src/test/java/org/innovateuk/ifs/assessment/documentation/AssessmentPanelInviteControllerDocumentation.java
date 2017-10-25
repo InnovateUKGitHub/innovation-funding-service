@@ -265,7 +265,7 @@ public class AssessmentPanelInviteControllerDocumentation extends BaseController
                 .param("sort", "invite.name,asc")
                 .param("statuses", "PENDING"))
                 .andExpect(status().isOk())
-                .andDo(document("competitioninvite/{method-name}",
+                .andDo(document("assessmentpanelinvite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
@@ -351,4 +351,24 @@ public class AssessmentPanelInviteControllerDocumentation extends BaseController
                         )
                 ));
     }
+
+    @Test
+    public void getNonAcceptedAssessorInviteIds() throws Exception {
+        long competitionId = 1L;
+
+        when(assessmentPanelInviteServiceMock.getNonAcceptedAssessorInviteIds(competitionId))
+                .thenReturn(serviceSuccess(asList(1L, 2L)));
+
+        mockMvc.perform(get("/assessmentpanelinvite/getNonAcceptedAssessorInviteIds/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document("assessmentpanelinvite/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition")
+                        ),
+                        responseFields(fieldWithPath("[]").description("List of non accepted assessor invite ids "))
+                ));
+
+        verify(assessmentPanelInviteServiceMock, only()).getNonAcceptedAssessorInviteIds(competitionId);
+    }
+
 }
