@@ -60,7 +60,7 @@ var UTIL = (function () {
       if (!window.matchMedia) {
         return UTIL.fire('commonStateManaged', 'desktop')
       } else {
-        ssm.addState({
+        ssm.addState({ // eslint-disable-line
           id: 'mobile',
           query: '(max-width: 639px)',
           onEnter: function () {
@@ -71,7 +71,7 @@ var UTIL = (function () {
           }
         })
 
-        ssm.addState({
+        ssm.addState({ // eslint-disable-line
           id: 'desktop',
           query: '(min-width: 640px)',
           onEnter: function () {

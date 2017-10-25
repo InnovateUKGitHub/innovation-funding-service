@@ -1,3 +1,5 @@
+include 'docker:oracle-jre'
+include 'docker:app-base-image'
 include 'ifs-commons'
 include 'ifs-resources'
 include 'ifs-data-layer'

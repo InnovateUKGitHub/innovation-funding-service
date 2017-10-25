@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_HAS_SOLE_PARTNER;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED;
@@ -73,15 +74,23 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
 
     private ServiceResult<List<FileEntryResource>> retrieveUploadedDocuments(Long projectId) {
 
-        ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(projectId);
         ServiceResult<FileEntryResource> exploitationPlanFile = getExploitationPlanFileEntryDetails(projectId);
-
-        return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
+        return getProject(projectId).
+                andOnSuccess(project -> {
+                    return validateProjectNeedsCollaborationAgreement(project).
+                            andOnSuccess(() -> {
+                                ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(projectId);
+                                return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
+                            }).
+                    andOnFailure(() -> aggregate(asList(exploitationPlanFile)));
+                });
     }
 
     @Override
     public ServiceResult<FileEntryResource> getCollaborationAgreementFileEntryDetails(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
+        return getProject(projectId).
+                andOnSuccess(this::validateProjectNeedsCollaborationAgreement).
+                andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getCollaborationAgreement();
 
@@ -115,14 +124,21 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     @Override
     public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
 
-        ServiceResult<Project> project = getProject(projectId);
-        Optional<ProjectUser> projectManager = getExistingProjectManager(project.getSuccessObject());
+        return getProject(projectId).andOnSuccess(project -> {
+            Optional<ProjectUser> projectManager = getExistingProjectManager(project);
+            if (project.getPartnerOrganisations().size() > 1) {
 
-        return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
-                failure -> serviceSuccess(false),
-                success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getSuccessObject().getDocumentsSubmittedDate() == null ?
-                        serviceSuccess(true) :
-                        serviceSuccess(false));
+                return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
+                        failure -> serviceSuccess(false),
+                        success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getDocumentsSubmittedDate() == null ?
+                                serviceSuccess(true) :
+                                serviceSuccess(false));
+            } else {
+                return getExploitationPlan(project).handleSuccessOrFailure(
+                        failure -> serviceSuccess(false),
+                        success -> serviceSuccess(true));
+            }
+        }).andOnFailure(() -> serviceSuccess(false));
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {
@@ -135,6 +151,7 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     @Transactional
     public ServiceResult<FileEntryResource> createCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
+                andOnSuccess(this::validateProjectNeedsCollaborationAgreement).
                 andOnSuccess(project -> fileService.createFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturn(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
     }
@@ -152,7 +169,9 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
 
     @Override
     public ServiceResult<FileAndContents> getCollaborationAgreementFileContents(Long projectId) {
-        return getProject(projectId).andOnSuccess(project -> {
+        return getProject(projectId).
+                andOnSuccess(this::validateProjectNeedsCollaborationAgreement).
+                andOnSuccess(project -> {
 
             FileEntry fileEntry = project.getCollaborationAgreement();
 
@@ -170,15 +189,23 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     public ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
                 andOnSuccess(this::validateProjectIsInSetup).
+                andOnSuccess(this::validateProjectNeedsCollaborationAgreement).
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturnVoid(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
     }
 
     private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
-        if(!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
+        if (!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
             return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
         }
 
+        return serviceSuccess(project);
+    }
+
+    private ServiceResult<Project> validateProjectNeedsCollaborationAgreement(final Project project) {
+        if (project.getPartnerOrganisations().size() <= 1) {
+            return serviceFailure(PROJECT_HAS_SOLE_PARTNER);
+        }
         return serviceSuccess(project);
     }
 
@@ -187,6 +214,7 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     public ServiceResult<Void> deleteCollaborationAgreementFile(Long projectId) {
         return getProject(projectId).
                 andOnSuccess(this::validateProjectIsInSetup).
+                andOnSuccess(this::validateProjectNeedsCollaborationAgreement).
                 andOnSuccess(project ->
                 getCollaborationAgreement(project).andOnSuccess(fileEntry ->
                         fileService.deleteFileIgnoreNotFound(fileEntry.getId()).andOnSuccessReturnVoid(() ->
@@ -276,7 +304,7 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     @Override
     @Transactional
     public ServiceResult<Void> acceptOrRejectOtherDocuments(Long projectId, Boolean approval) {
-        //TODO INFUND-7493
+        //TODO IFS-471 use workflow for approving other documents
         if (approval == null) {
             return serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED);
         }
