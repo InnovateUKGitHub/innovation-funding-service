@@ -62,7 +62,6 @@ dependencies {
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.hibernate:hibernate-core:5.2.7.Final"
-    compile "org.hibernate:hibernate-validator:5.2.4.Final"
     compile "org.springframework.security:spring-security-crypto"
     compile "org.springframework.boot:spring-boot-starter-security"
     compile "mysql:mysql-connector-java"
@@ -87,7 +86,7 @@ dependencies {
     compile "com.google.guava:guava:22.0"
     compile "commons-io:commons-io:2.5"
     compile 'org.jsoup:jsoup:1.10.3'
-    compile "net.sf.opencsv:opencsv:2.4"
+    compile "net.sf.opencsv:opencsv:2.3"
     compile "org.xhtmlrenderer:flying-saucer-core:9.1.6"
     compile "org.xhtmlrenderer:flying-saucer-pdf:9.1.6"
 

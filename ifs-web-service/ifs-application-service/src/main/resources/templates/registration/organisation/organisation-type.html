@@ -20,7 +20,7 @@
 
     <h2 class="heading-medium">Choose your organisation type</h2>
 
-    <form th:object="${form}" th:action="@{/organisation/create/new-account-organisation-type/}" method="POST">
+    <form id="organisation-type-form" th:object="${form}" th:action="@{/organisation/create/new-account-organisation-type/}" method="POST">
         <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationType}')} ? 'form-group-error'">
             <fieldset>
                 <legend id="organisationType">
@@ -41,7 +41,7 @@
         <p>
             If your organisation type is not listed contact the <a th:href="@{/info/contact}">customer support service</a>.
         </p>
-        <button class="button button-large extra-margin" name="select-company-type" type="submit">Continue</button>
+        <button id="organisation-type-cta" class="button button-large extra-margin" name="select-company-type" type="submit">Continue</button>
     </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
