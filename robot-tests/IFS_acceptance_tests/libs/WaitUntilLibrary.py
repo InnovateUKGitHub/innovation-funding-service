@@ -2,31 +2,16 @@ from logging import warn
 from robot.libraries.BuiltIn import BuiltIn
 s2l = BuiltIn().get_library_instance('Selenium2Library')
 
-# Use of an auto incremental integer to track the waiting per request in a dictionary
-# When currently_waiting_for_keyword_to_succeed[int] is True, wait for this request.
-currently_waiting_for_keyword_to_succeed = {}
-auto_increment_id = 0
-
-
-# a decorator that sets and unsets a special flag when performing "Wait until" keywords and enforces that the
-# screenshots are only taken when failure results from a genuine test failure
+# a decorator that prevents intermediate screenshots from being captured.
 def setting_wait_until_flag(func):
 
   def decorator(*args):
-    global auto_increment_id
-    global currently_waiting_for_keyword_to_succeed
-    auto_increment_id += 1
-    local_auto_increment = auto_increment_id
 
-    currently_waiting_for_keyword_to_succeed[local_auto_increment] = True
     try:
       result = func(*args)
     except:
-      __capture_page_screenshot_on_failure(local_auto_increment)
+      # do nothing, especially do not create a screenshot
       raise
-    finally:
-      currently_waiting_for_keyword_to_succeed[local_auto_increment] = False
-      del currently_waiting_for_keyword_to_succeed[local_auto_increment]
     return result
 
   return decorator
@@ -85,13 +70,6 @@ def run_keyword_and_ignore_error_without_screenshots(keyword, *args):
 @setting_wait_until_flag
 def run_keyword_and_return_status_without_screenshots(keyword, *args):
   return BuiltIn().run_keyword_and_return_status(keyword, *args)
-
-# Using the keyword Capture Page Screenshot On Failure as an autonomous keyword
-# will raise the error "Keyword 'Capture Page Screenshot On Failure' could not be run on failure: KeyError: 0"
-# that is because the flag is not set when this function gets called without setting_wait_until_flag and defaults to 0
-def __capture_page_screenshot_on_failure(flag = 0):
-  if not currently_waiting_for_keyword_to_succeed[flag]:
-    capture_large_screenshot()
 
 
 def capture_large_screenshot():
