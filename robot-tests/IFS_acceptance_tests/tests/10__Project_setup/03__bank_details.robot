@@ -18,6 +18,8 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-8276 Content: Bank Details: should not say "each"
 ...
 ...               INFUND-8688 Experian response - Error message if wrong bank details are submitted
+...
+...               IFS-1881 Project Setup internal project dashboard navigation
 
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
@@ -276,12 +278,12 @@ Project Finance can see the progress of partners bank details
 
 
 IFS Admin can see Bank Details
-    [Documentation]    INFUND-4903, INFUND-4903, IFS-603
+    [Documentation]    INFUND-4903, INFUND-4903, IFS-603, IFS-1881
     [Tags]  HappyPath
     [Setup]  log in as a different user            &{ifs_admin_user_credentials}
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=${PS_BD_Competition_Name}
-    Then the user should see the element          jQuery=h2:contains("Projects in setup")
+    Then the user should see the element          link=All projects
     And the user should see the element           css=#table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(3)
     When the user clicks the button/link          css=#table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(3) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details

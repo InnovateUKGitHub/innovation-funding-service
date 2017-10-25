@@ -1,8 +1,8 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 
-project(':ifs-data-layer').bootRepackage {
-    onlyIf{ Task task -> false}
-}
+// This is necessary because the java plugin is also applied to
+// the ifs-data-layer project, which does _not_ build a jar.
+bootRepackage.enabled = false
 
 subprojects {
 
@@ -39,7 +39,7 @@ subprojects {
          */
         task prepareDockerInput {
             dependsOn getNewRelicAgent
-            dependsOn build
+            dependsOn bootRepackage
 
             def inputDir = project.file("$project.buildDir/docker")
 
@@ -54,7 +54,7 @@ subprojects {
                     }
                 }
                 copy {
-                    from jar
+                    from bootRepackage.outputs
                     into inputDir
                 }
                 copy {
@@ -70,7 +70,7 @@ subprojects {
         }
 
         task buildDocker(type: DockerBuildImage, dependsOn: prepareDockerInput) {
-            dependsOn ":docker:oracle-jre:buildDocker"
+            dependsOn ":docker:app-base-image:buildDocker"
 
             tag = "innovateuk/" + project.name.replaceAll(/ifs-/,"")+":latest"
             inputDir = project.file("$project.buildDir/docker")
@@ -85,7 +85,12 @@ subprojects {
 
         bootRepackage {
             mainClass = 'org.innovateuk.ifs.Application'
-            //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+            classifier = "autostart"
+        //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+
+            // By explicitly adding the inputs and outputs to this task, we can utilize the `incremental build' feature.
+            inputs.files(jar.outputs)
+            outputs.file file(jar.archiveName.toString().replace(".jar", "-autostart.jar"))
         }
     }
 

@@ -7,7 +7,6 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
-import java.util.Optional;
 
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
@@ -88,14 +87,7 @@ public class AssessmentPanelParticipant extends CompetitionParticipant<Assessmen
         return accept();
     }
 
-    public AssessmentPanelParticipant reject(RejectionReason rejectionReason, Optional<String> rejectionComment) {
-        if (rejectionReason == null) {
-            throw new NullPointerException("rejectionReason cannot be null");
-        }
-        if (rejectionComment == null) {
-            throw new NullPointerException("rejectionComment cannot be null");
-        }
-
+    public AssessmentPanelParticipant reject() {
         if (getInvite().getStatus() != OPENED) {
             throw new IllegalStateException("Cannot accept a CompetitionInvite that hasn't been opened");
         }
@@ -106,10 +98,7 @@ public class AssessmentPanelParticipant extends CompetitionParticipant<Assessmen
             throw new IllegalStateException("CompetitionInvite has already been rejected");
         }
 
-        super.setRejectionReason(rejectionReason);
-        super.setRejectionReasonComment(rejectionComment.orElse(null));
         super.setStatus(REJECTED);
-
         return this;
     }
 
