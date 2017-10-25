@@ -22,8 +22,8 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     TRAVEL("travel", "Travel and subsistence", singletonList(INCLUDE_IN_SPEND_PROFILE)),
     OTHER_COSTS("other_costs", "Other costs", singletonList(INCLUDE_IN_SPEND_PROFILE)),
     YOUR_FINANCE("your_finance"),
-    FINANCE("finance", "Finance", emptyList()),
-    OTHER_FUNDING("other_funding", "Other Funding", emptyList()),
+    FINANCE("finance", "Finance"),
+    OTHER_FUNDING("other_funding", "Other Funding"),
     ACADEMIC("academic");
 
     enum FinanceRowOptions {
@@ -35,7 +35,11 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     private List<FinanceRowOptions> financeRowOptionsList;
 
     FinanceRowType(String type) {
-        this(type, null, emptyList());
+        this(type, null);
+    }
+
+    FinanceRowType(String type, String name) {
+        this(type, name, emptyList());
     }
 
     FinanceRowType(String type, String name, List<FinanceRowOptions> financeRowOptionsList) {
