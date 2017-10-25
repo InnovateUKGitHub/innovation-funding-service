@@ -119,7 +119,7 @@
                              th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}">
                             <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
                                 th:if="${financeTotal != null}"
-                                th:text="'£'+${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}" />
+                                th:text="${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}" />
                         </th:block>
                     </tr>
                     </tbody>
