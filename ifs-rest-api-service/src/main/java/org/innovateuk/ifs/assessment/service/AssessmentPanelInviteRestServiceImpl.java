@@ -88,13 +88,13 @@ public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implem
     }
 
     @Override
-    public RestResult<List<AssessmentPanelInviteResource>> getAllInvitesByUser(long userId) {
+    public RestResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId) {
         String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "getAllInvitesByUser", userId);
 
         UriComponentsBuilder builder = UriComponentsBuilder
                 .fromPath(baseUrl);
 
-        return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.assessmentPanelInviteResourceListType());
+        return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.assessmentPanelParticipantResourceListType());
     }
 
     @Override

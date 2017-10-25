@@ -62,7 +62,7 @@ public interface AssessmentPanelInviteService {
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'READ_ASSESSMENT_PANEL_INVITES')")
     @SecuredBySpring(value = "READ_ASSESSMENT_PANEL_INVITES",
             description = "An Assessor can view assessor panel invites provided that the invites belong to them")
-    ServiceResult<List<AssessmentPanelInviteResource>> getAllInvitesByUser(long userId);
+    ServiceResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_PANEL_INVITE_OVERVIEW_BY_COMPETITION",

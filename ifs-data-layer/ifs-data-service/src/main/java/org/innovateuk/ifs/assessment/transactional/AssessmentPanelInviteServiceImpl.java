@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.mapper.AssessmentPanelParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
@@ -94,6 +95,9 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     private AssessmentPanelInviteMapper assessmentPanelInviteMapper;
     @Autowired
     private ParticipantStatusMapper participantStatusMapper;
+
+    @Autowired
+    private AssessmentPanelParticipantMapper assessmentPanelParticipantMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -345,19 +349,12 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     }
 
     @Override
-    public ServiceResult<List<AssessmentPanelInviteResource>> getAllInvitesByUser(long userId) {
+    public ServiceResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId) {
         return serviceSuccess(
-                assessmentPanelInviteRepository
-                .getByUserId(userId)
+                assessmentPanelParticipantRepository
+                .findByUserIdAndRole(userId, CompetitionParticipantRole.PANEL_ASSESSOR)
                 .stream()
-                .map(invite -> new AssessmentPanelInviteResource(
-                        invite.getHash(),
-                        invite.getTarget().getId(),
-                        invite.getTarget().getName(),
-                        invite.getStatus(),
-                        invite.getUser().getId(),
-                        invite.getEmail(),
-                        invite.getSentOn()))
+                .map(assessmentPanelParticipantMapper::mapToResource)
                 .collect(toList()));
     }
 

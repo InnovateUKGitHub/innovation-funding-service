@@ -77,7 +77,7 @@ public class AssessmentPanelInviteController {
     }
 
     @GetMapping("/getAllInvitesByUser/{userId}")
-    public RestResult<List<AssessmentPanelInviteResource>> getAllInvitesByUser(
+    public RestResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(
             @PathVariable long userId) {
         return assessmentPanelInviteService.getAllInvitesByUser(userId).toGetResponse();
     }
