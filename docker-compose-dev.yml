@@ -79,7 +79,7 @@ services:
       - ifs
 
   mysql:
-    image: mysql:5.5.49
+    image: mysql:5.7.20
     ports:
       - "3306:3306"
     command: [--character-set-server=utf8, --collation-server=utf8_bin]
