@@ -208,7 +208,7 @@ Project finance user can view finance overview for the consortium
     When the user clicks the button/link    link=Project finance overview
     Then the user should see the element    jQuery=h1:contains("Finance overview")
     # the below figures are listed as:    RowNumber    StartDate    Duration    TotalProjectCost    GrantAppliedFor    OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1    1 Oct 2020    3 months    £402,797    £116,596    £4,936    29%
+    And the categories are verified for Overview section    1    1 Oct 2020    3 months    £402,797    116,596    4,936    29%
 
 Project finance user can view finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -217,16 +217,16 @@ Project finance user can view finances summary for the consortium
     #Check finances summary for lead partner
     Then the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    And the Categories Are Verified For Finances Summary Section    1    £200,903    30%    £60,271    £2,468    £138,164
+    And the Categories Are Verified For Finances Summary Section    1    200,903    30%    60,271    2,468    138,164
     #Check finances summary for academic user
     When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(2) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    Then the Categories Are Verified For Finances Summary Section    2    £990    100%    £990    £0    £0
+    Then the Categories Are Verified For Finances Summary Section    2    990    100%    990    0    0
     #Check finances summary for non lead partner
     When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tbody tr:nth-of-type(3) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-    Then the Categories Are Verified For Finances Summary Section    3    £200,903    30%    £60,271    £2,468    £138,164
+    Then the Categories Are Verified For Finances Summary Section    3    200,903    30%    60,271    2,468    138,164
     #Check total
     When the user should see the text in the element               jQuery=h3:contains("Finances summary") + * tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1    £402,797    £121,532    £4,936    £276,329
+    And The Total Calculation For Finances Summary Are Verified    1    402,797    121,532    4,936    276,329
 
 Project finance can see finance breakdown for different categories
     [Documentation]    INFUND-4846
@@ -236,13 +236,13 @@ Project finance can see finance breakdown for different categories
     #Check finances summary for lead partner
     Then the user should see the text in the element          css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     # the below figures are in this order Total 	Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other costs
-    And all the categories are verified    1    £200,903    £3,081    £0    £100,200    £552    £90,000    £5,970    £1,100
+    And all the categories are verified    1    200,903    3,081    0    100,200    552    90,000    5,970    1,100
     #Check finances summary for academic user
     When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    Then all the categories are verified  2   £990      £286 	 £154 	£66     £0    £0        £44     £440
+    Then all the categories are verified  2   990      286 	 154 	66     0    0        44     440
     #Check finances summary for non lead partner
     When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-    Then all the categories are verified  3   £200,903 	£3,081   £0   £100,200  £552  £90,000   £5,970  £1,100
+    Then all the categories are verified  3   200,903 	3,081   0   100,200  552  90,000   5,970  1,100
     #Check total
     And the user should see the text in the element    css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong    £402,797
 
@@ -254,9 +254,9 @@ IFS Admin user can review Lead partner's finance changes page before the revisio
     When the user clicks the button/link        css=a.eligibility-0
     And the user clicks the button/link         link=Review all changes to project finances
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    Then the categories are verified for Project finances section    1    £200,903    30%    £60,271    £2,468    £138,164
+    Then the categories are verified for Project finances section    1    £200,903    30%    60,271    2,468    138,164
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
-    And the categories are verified for Section changes    1   £0     £0      £0    £0      £0       £0        £0
+    And the categories are verified for Section changes    1   0     0      0    0      0       0        0
     And the user should see the text in the element   css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
     And the user should see the text in the element    css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
     And the user clicks the button/link     jQuery=.button-secondary:contains("Return to eligibility")
@@ -268,9 +268,9 @@ IFS Admin user can review partner's finances before the revisions made
     When the user clicks the button/link        css=a.eligibility-2
     Then the user clicks the button/link        link=Review all changes to project finances
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    And the categories are verified for Project finances section   1   £200,903   30%     £60,271    £2,468     £138,164
+    And the categories are verified for Project finances section   1   £200,903   30%     60,271    2,468     138,164
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
-    And the categories are verified for Section changes    1   £0     £0      £0    £0      £0       £0        £0
+    And the categories are verified for Section changes    1   0     0      0    0      0       0        0
     And the user should see the text in the element   css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(1)   Overall
     And the user should see the text in the element    css=.project-changes tfoot tr:nth-of-type(1) th:nth-of-type(2)   0
 
@@ -282,7 +282,7 @@ Lead Partner can review the external version of Finance Checks eligibility table
     Then the user clicks the button/link    link=Finance checks
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
-    And the user verifies the financial sub-totals for external version under the Detailed-finances    £3,081    £0    £100,200    £552    £90,000    £5,970    £1,100
+    And the user verifies the financial sub-totals for external version under the Detailed-finances    3,081    0    100,200    552    90,000    5,970    1,100
     Then the user should see the element    css=input[id="total-cost"][value="£200,903"]
     And the user clicks the button/link    link=Finance checks
 
@@ -294,7 +294,7 @@ Partner can review only the external version of Finance Checks eligibility table
     Then the user clicks the button/link    link=Finance checks
     When the user clicks the button/link    link=View finances
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
-    And the user verifies the financial sub-totals for external version under the Detailed-finances     £3,081    £0     £100,200    £552    £90,000    £5,970     £1,100
+    And the user verifies the financial sub-totals for external version under the Detailed-finances     3,081    0     100,200    552    90,000    5,970     1,100
     Then the user should see the element    css=input[id="total-cost"][value="£200,903"]
     And the user clicks the button/link     link=Finance checks
 
@@ -327,9 +327,9 @@ Project finance user can see the lead partner's information
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
     When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(1)    £200,903
     When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(2)    30%
-    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(3)    £140,632
-    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    £57,803
-    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(5)    £2,468
+    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(3)    140,632
+    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    57,803
+    When the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(5)    2,468
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button
     [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
@@ -468,9 +468,9 @@ Project finance user can see the lead partner's information about eligibility
     When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months
     When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £200,903
     When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(3)    30%
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £60,271
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £2,468
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £138,164
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(4)    60,271
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(5)    2,468
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(6)    138,164
 
 Finance checks eligibility validations
     [Documentation]    INFUND-4833
@@ -1100,8 +1100,8 @@ Custom suite setup
 the table row has expected values
     the user sees the text in the element    css=.table-overview tbody td:nth-child(2)    3 months
     the user sees the text in the element    css=.table-overview tbody td:nth-child(3)    £402,797
-    the user sees the text in the element    css=.table-overview tbody td:nth-child(4)    £116,596
-    the user sees the text in the element    css=.table-overview tbody td:nth-child(5)    £4,936
+    the user sees the text in the element    css=.table-overview tbody td:nth-child(4)    116,596
+    the user sees the text in the element    css=.table-overview tbody td:nth-child(5)    4,936
     the user sees the text in the element    css=.table-overview tbody td:nth-child(6)    29%
 
 the user fills in project costs

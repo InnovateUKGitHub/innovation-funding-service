@@ -30,12 +30,11 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'DEFAULT')}"/>200,903</td>
+                        <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'DEFAULT')}"/></td>
                         <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}">30%</td>
                         <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'DEFAULT')}">57,803</td>
                         <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
                         <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'DEFAULT')}">140,632</td>
-                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -57,7 +56,7 @@
                 <tbody>
                 <tr>
                     <th:block th:each="rowType : ${sectionDiffs.keySet()}">
-                        <td th:unless="${#strings.isEmpty(rowType.name)}" class="numeric">&pound;
+                        <td th:unless="${#strings.isEmpty(rowType.name)}" class="numeric">
                             <th:block th:text="${#numbers.formatInteger(sectionDiffs.get(rowType),1,'DEFAULT')}"/>
                         </td>
                     </th:block>
