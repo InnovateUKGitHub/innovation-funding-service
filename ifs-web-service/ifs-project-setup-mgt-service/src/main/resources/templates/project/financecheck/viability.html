@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Viability'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Viability',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body>
 <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -11,22 +11,19 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" />
+
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to update viability.</h2>
+        Please review
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+    </div>
+
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${competitionTitle},size='heading-xlarge',smallText=${model.organisationName == model.leadPartnerOrganisation} ? '(Lead Partner)'" />
     <hr/>
 
     <th:block th:if="${model.isShowApprovalMessage()}">
         <div class="success-alert">
             <p>The partner's finance viability has been approved by <span th:text="${model.getApproverName()}"></span>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"></span></p>
-        </div>
-    </th:block>
-
-    <th:block th:object="${form}">
-        <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
-            <h2 class="heading-medium error-summary-heading">Unable to update viability.</h2>
-            Please review
-            <ul class="error-summary-list">
-                <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
-            </ul>
         </div>
     </th:block>
 

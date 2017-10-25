@@ -15,7 +15,7 @@
 
             <h2 class="heading-medium no-margin">You are about to submit your assessments.</h2>
             <p>You will not be able to edit after you submit. Are you sure you want to continue?</p>
-            <form method="post" th:action="@{/assessor/dashboard/competition/{id}(id=${competitionId})}" th:object="${form}">
+            <form method="post" th:action="@{/assessor/dashboard/competition/{id}(id=${competitionId})}" novalidate="novalidate" th:object="${form}">
 
                 <div>
                     <input type="hidden" th:field="*{assessmentIds}" />

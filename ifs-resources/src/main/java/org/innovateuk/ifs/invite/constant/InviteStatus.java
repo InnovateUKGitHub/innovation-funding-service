@@ -5,7 +5,17 @@ package org.innovateuk.ifs.invite.constant;
  * The value of these entries are used when saving to and interpreting from the database.
  */
 public enum InviteStatus {
-    SENT,
-    CREATED,
-    OPENED;
+    SENT("Sent"),
+    CREATED("Not sent"),
+    OPENED("Opened");
+
+    private String displayName;
+
+    InviteStatus(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }

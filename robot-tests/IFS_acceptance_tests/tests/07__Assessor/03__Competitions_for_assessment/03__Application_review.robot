@@ -121,7 +121,7 @@ Scope: Status in the overview is updated
     [Tags]    HappyPath
     Given the user clicks the button/link                    link=Back to your assessment overview
     And the user clicks the button/link                      link=Scope
-    When the user selects the index from the drop-down menu  1    id=research-category
+    When the user selects the index from the drop-down menu  1    css=.research-category
     And the user clicks the button/link                      jQuery=label:contains("Yes")
     And The user enters text to a text field                 css=.editor    Testing feedback field when "Yes" is selected.
     And the user clicks the button/link                      jquery=button:contains("Save and return to assessment overview")
@@ -172,6 +172,7 @@ Economic Benefit: word count
     Given I open one of the application questions          link=4. Economic benefit
     And I should see word count underneath feedback form   Words remaining: 100
     When I enter feedback of words                         102
+    And the user clicks the button/link                    jQuery=button:contains("Save and return to assessment overview")
     Then the user should see a summary error               Maximum word count exceeded. Please reduce your word count to 100.
     When I enter feedback of words                         10
     Then I should see word count underneath feedback form  Words remaining: 90
@@ -180,7 +181,7 @@ Economic Benefit: word count
 Economic Benefit: Autosave
     [Documentation]    INFUND-3780
     [Tags]
-    When the user selects the option from the drop-down menu  9    id=assessor-question-score
+    When the user selects the option from the drop-down menu  9    css=.assessor-question-score
     And the user enters text to a text field                  css=.editor    This is to test the feedback entry.
     And the user clicks the button/link                       jQuery=a:contains(Back to your assessment overview)
     And the user clicks the button/link                       link=4. Economic benefit

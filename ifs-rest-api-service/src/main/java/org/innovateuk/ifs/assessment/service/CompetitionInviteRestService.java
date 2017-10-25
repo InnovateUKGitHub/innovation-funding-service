@@ -61,5 +61,4 @@ public interface CompetitionInviteRestService {
     RestResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
 
     RestResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource);
-
 }
