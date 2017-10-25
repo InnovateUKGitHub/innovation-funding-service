@@ -54,7 +54,6 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
     @Autowired
     private PanelInviteAssessorsAcceptedModelPopulator panelInviteAssessorsAcceptedModelPopulator;
 
-
     protected String getCookieName() {
         return SELECTION_FORM;
     }

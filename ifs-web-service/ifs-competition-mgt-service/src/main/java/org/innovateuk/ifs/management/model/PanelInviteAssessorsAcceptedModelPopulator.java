@@ -34,8 +34,8 @@ public class PanelInviteAssessorsAcceptedModelPopulator extends PanelInviteAsses
     private CompetitionsRestService competitionsRestService;
 
     public PanelInviteAssessorsAcceptedViewModel populateModel(long competitionId,
-                                                          int page,
-                                                          String originQuery) {
+                                                               int page,
+                                                               String originQuery) {
         CompetitionResource competition = competitionsRestService
                 .getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
@@ -45,8 +45,7 @@ public class PanelInviteAssessorsAcceptedModelPopulator extends PanelInviteAsses
         AssessorInviteOverviewPageResource pageResource = assessmentPanelInviteRestService.getInvitationOverview(
                 competition.getId(),
                 page,
-                singletonList(ACCEPTED)
-        )
+                singletonList(ACCEPTED))
                 .getSuccessObjectOrThrowException();
 
         List<PanelOverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
