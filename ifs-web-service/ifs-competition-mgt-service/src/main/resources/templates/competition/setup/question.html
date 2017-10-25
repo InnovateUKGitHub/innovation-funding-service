@@ -16,14 +16,16 @@
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.editable} ? |Edit '${competitionSetupForm.question.shortTitle}'| : ${competitionSetupForm.question.shortTitle},subTitle=${model.general.competition.name},size='heading-xlarge'" />
 
-    <p class="extra-margin">
-        You can edit this question for the applicant as well as the guidance for assessors.
-    </p>
+    <p class="extra-margin" th:unless="${model.general.state.preventEdit}">
+        You can edit this question for the applicant as well as the guidance for assessors. </p>
+
+    <p class="extra-margin" th:if="${model.general.state.preventEdit}">
+        You are no longer able to make changes to this page.</p>
 
     <form th:if="${model.editable}"
           method="post"
           th:object="${competitionSetupForm}"
-          th:action="@{'/competition/setup/{competitionId}/section/application/question/{questionId}/edit'(competitionId=${model.general.competition.id}, questionId=${competitionSetupForm.question.questionId})}" 
+          th:action="@{'/competition/setup/{competitionId}/section/application/question/{questionId}/edit'(competitionId=${model.general.competition.id}, questionId=${competitionSetupForm.question.questionId})}"
           th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           data-th-attr="data-competition=${model.general.competition.id}, data-objectId=${competitionSetupForm.question.questionId},
           data-subsection=${competitionSetupForm.question.type == T(org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType).SCOPE ? 'project' : 'question'}"

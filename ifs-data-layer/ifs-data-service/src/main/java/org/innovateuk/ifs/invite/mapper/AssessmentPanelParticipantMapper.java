@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.invite.mapper;
 
-import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessmentPanelInviteMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.AssessmentPanelParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.mapstruct.Mapper;
@@ -13,17 +13,16 @@ import org.mapstruct.Mappings;
 
 @Mapper(
     config = GlobalMapperConfig.class,
-    uses = {
-        CompetitionMapper.class,
-        UserMapper.class,
-        CompetitionInviteMapper.class,
-        RejectionReasonMapper.class,
-        CompetitionParticipantRoleMapper.class,
-        ParticipantStatusMapper.class,
-        CompetitionInviteMapper.class
-    }
+        uses = {
+                CompetitionMapper.class,
+                UserMapper.class,
+                AssessmentPanelInviteMapper.class,
+                RejectionReasonMapper.class,
+                CompetitionParticipantRoleMapper.class,
+                ParticipantStatusMapper.class,
+        }
 )
-public abstract class CompetitionParticipantMapper extends BaseMapper<CompetitionParticipant, CompetitionParticipantResource, Long> {
+public abstract class AssessmentPanelParticipantMapper extends BaseMapper<AssessmentPanelParticipant, CompetitionParticipantResource, Long> {
 
     @Mappings({
             @Mapping(source = "process.id", target = "competitionId"),
@@ -37,16 +36,16 @@ public abstract class CompetitionParticipantMapper extends BaseMapper<Competitio
             @Mapping(source = "process.competitionStatus", target = "competitionStatus"),
     })
     @Override
-    public abstract CompetitionParticipantResource mapToResource(CompetitionParticipant domain);
+    public abstract CompetitionParticipantResource mapToResource(AssessmentPanelParticipant domain);
 
     @Mappings({
             @Mapping(source = "userId", target = "user"),
             @Mapping(source = "competitionId", target = "process")
     })
     @Override
-    public abstract CompetitionParticipant mapToDomain(CompetitionParticipantResource resource);
+    public abstract AssessmentPanelParticipant mapToDomain(CompetitionParticipantResource resource);
 
-    public Long mapCompetitionParticipantToId(CompetitionParticipant object) {
+    public Long mapCompetitionParticipantToId(AssessmentPanelParticipant object) {
         if (object == null) {
             return null;
         }

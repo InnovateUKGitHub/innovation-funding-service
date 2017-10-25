@@ -318,4 +318,26 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }
+
+    @Test
+    public void findOpenQueryCount() {
+        setupGetWithRestResultExpectations(competitionsRestURL + "/" + 123L+ "/queries/open/count", Long.class, 13L);
+
+        Long responses = service.getCompetitionOpenQueriesCount(123L).getSuccessObject();
+        assertNotNull(responses);
+        assertEquals(13L, responses.longValue());
+    }
+
+    @Test
+    public void findOpenQueries() {
+
+        List<CompetitionOpenQueryResource> returnedResponse =
+                singletonList(new CompetitionOpenQueryResource(1L, 2L, "org", 3L, "proj"));
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/" + 123L+ "/queries/open", competitionOpenQueryListType(), returnedResponse);
+
+        List<CompetitionOpenQueryResource> responses = service.getCompetitionOpenQueries(123L).getSuccessObject();
+        assertNotNull(responses);
+        assertEquals(returnedResponse, responses);
+    }
 }

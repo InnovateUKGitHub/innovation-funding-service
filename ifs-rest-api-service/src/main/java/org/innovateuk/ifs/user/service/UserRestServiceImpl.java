@@ -94,6 +94,11 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
+    public RestResult<List<UserOrganisationResource>> findAllExternal() {
+        return getWithRestResult(userRestURL + "/findAllExternal", userOrganisationListType());
+    }
+
+    @Override
     public RestResult<List<UserResource>> findByUserRoleType(UserRoleType userRoleType) {
         String roleName = userRoleType.getName();
         return getWithRestResult(userRestURL + "/findByRole/"+roleName, userListType());
