@@ -37,7 +37,7 @@ Resend the invite to the assessor again
     [Setup]  The user logs-in in new browser  &{Comp_admin1_credentials}
     Given the user clicks the button/link     link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link       jQuery=a:contains("Invite assessors to assess the competition")
-    And the user clicks the button/link       link=Overview
+    And the user clicks the button/link       link=Pending and rejected
     And the user clicks the button/link       jQuery=tr:contains("E2E") label
     When the user clicks the button/link      jQuery=button:contains("Resend invites")
     And the user clicks the button/link       jQuery=.button:contains("Send invite")

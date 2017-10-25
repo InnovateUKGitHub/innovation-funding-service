@@ -36,7 +36,7 @@ There are no Assessors in Invite and Overview tab before sending invite
     [Tags]
     Given the user clicks the button/link  link=Invite
     And the user should see the element    jQuery=tr:contains("There are no assessors to be invited to this competition.")
-    Then the user clicks the button/link   link=Overview
+    Then the user clicks the button/link   link=Pending and rejected
     And the user should see the element    jQuery=tr:contains("There are no assessors invited to this assessment panel.")
 
 CompAdmin can add an assessor to invite list
@@ -84,7 +84,7 @@ Bulk add assessor to invite list
 CompAdmin resend invites to multiple assessors
     [Documentation]  IFS-1561
     [Tags]
-    [Setup]  the user clicks the button/link    link=Overview
+    [Setup]  the user clicks the button/link    link=Pending and rejected
     Given the user clicks the button/link         jQuery=tr:contains("Benjamin Nixon") label
     And the user clicks the button/link         jQuery=tr:contains("Joel George") label
     And the user clicks the button/link         jQuery=button:contains("Resend invites")
