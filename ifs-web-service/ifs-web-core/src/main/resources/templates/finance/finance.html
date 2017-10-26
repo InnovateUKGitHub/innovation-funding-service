@@ -454,7 +454,7 @@
             <th:block th:switch="${overheadRate.name()}">
                 <th:block th:case="'NONE'">
                     No overhead costs
-                    <div data-calculation-rawvalue="0"  th:id="${'section-total-'+subSection.id}" aria-hidden="true">£0</div>
+                    <div data-current-overhead-total="" data-calculation-rawvalue="0"  th:id="${'section-total-'+subSection.id}" aria-hidden="true">£0</div>
                 </th:block>
                 <th:block th:case="'DEFAULT_PERCENTAGE'">
                     <table>
@@ -489,7 +489,7 @@
                         <tfoot>
                         <tr>
                             <th scope="col">Total administration support cost</th>
-                            <td class="alignright" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}" th:id="${'section-total-'+subSection.id}">
+                            <td class="alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}" th:id="${'section-total-'+subSection.id}">
                                 &pound;<th:block th:text="${costCategory?.total != null ? #numbers.formatInteger(costCategory?.total,0, 'DEFAULT') : '0'}">100,500</th:block>
                             </td>
                         </tr>
@@ -513,7 +513,7 @@
                         <tfoot>
                         <tr>
                             <th scope="row">Total cost of overheads as calculated in the spreadsheet</th>
-                            <td class="alignright" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}"  th:id="${'section-total-'+subSection.id}">
+                            <td class="alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}"  th:id="${'section-total-'+subSection.id}">
                                 &pound;<th:block th:text="${#numbers.formatInteger(costCategory?.total,0, 'DEFAULT')}">0</th:block>
                             </td>
                         </tr>

@@ -632,7 +632,7 @@ Project finance user can see updated finance overview after lead changes to elig
     [Tags]
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(3)    £373,928
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    £107,935
+    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    107,935
     And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(6)    29%
 
 Project finance user can see the Eligibility check page for the partner
@@ -659,9 +659,9 @@ Project finance user can see the partner's information about eligibility
     When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(1)    3 months
     When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £200,903
     When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(3)    30%
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £60,271
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £2,468
-    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £138,164
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(4)    60,271
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(5)    2,468
+    When the user should see the text in the element    css=.table-overview tbody tr:nth-child(1) td:nth-child(6)    138,164
 
 Project finance user can amend all sections of eligibility for partner
     [Documentation]    INFUND-4834
@@ -776,7 +776,7 @@ Project finance user can see updated finance overview after partner changes to e
     Given log in as a different user    &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
     Then the user should see the text in the element   css=.table-overview tr:nth-child(1) td:nth-child(3)    £345,059
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    £99,275
+    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)    99,275
     And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(6)    29%
 
 Project finance can see updated finance breakdown for different categories
@@ -786,13 +786,13 @@ Project finance can see updated finance breakdown for different categories
     #check breakdown for lead partner
     Then the user should see the text in the element   css=.form-group tbody tr:nth-of-type(1) th strong  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     # the below figures are in this order    Total 	      Labour 	Overheads 	Materials 	Capital usage 	Subcontracting cost  Travel and subsistence  Other costs
-    And all the categories are verified  1   £172,034 	 £59,430  £1,954 	£80,000   £5,050   £10,600  £10,000   £5,000
+    And all the categories are verified  1   £172,034 	 59,430  1,954 	80,000   5,050   10,600  10,000   5,000
     #check breakdown for academic user
     When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    Then all the categories are verified  2   £990 	     £286 	   £154    £66       £0 	      £0 	    £44      £440
+    Then all the categories are verified  2   £990 	     £286 	   154    66       0 	      0 	    44      440
     #check breakdown for non lead partner
     When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-    Then all the categories are verified  3   £172,034   £59,430  £1,954  £80,000    £5,050   £10,600  £10,000   £5,000
+    Then all the categories are verified  3   £172,034   59,430  1,954  80,000    5,050   10,600  10,000   5,000
     #Check total
     And the user should see the text in the element  css=.form-group tfoot tr:nth-of-type(1) td:nth-of-type(1) strong   	£345,059
     [Teardown]    the user navigates to the page       ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
@@ -826,16 +826,16 @@ Project finance user can view updated finances summary for the consortium
     #check summary for lead partner
     Then the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(1) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    And the Categories Are Verified For Finances Summary Section   1   £172,034   30%     £51,610    £2,468     £117,956
+    And the Categories Are Verified For Finances Summary Section   1   £172,034   30%     51,610    2,468     117,956
     #check breakdown for academic user
     When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(2) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    Then the Categories Are Verified For Finances Summary Section   2   £990   100%  £990     £0     £0
+    Then the Categories Are Verified For Finances Summary Section   2   £990   100%  990     0     0
     #check breakdown for non lead partner
     When the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tbody tr:nth-of-type(3) th:nth-of-type(1) strong      ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-    Then the Categories Are Verified For Finances Summary Section   3   £172,034  30%     £51,610    £2,468     £117,956
+    Then the Categories Are Verified For Finances Summary Section   3   £172,034  30%     51,610    2,468     117,956
     #check total
     And the user should see the text in the element    jQuery=h3:contains("Finances summary") + * table tfoot tr:nth-of-type(1) th:nth-of-type(1)     Total
-    And The Total Calculation For Finances Summary Are Verified    1   £345,059   £104,211    £4,936     £235,912
+    And The Total Calculation For Finances Summary Are Verified    1   £345,059   104,211    4,936     235,912
 
 Project finance user can view Lead Partner's changes to finances
     [Documentation]    INFUND-4837
@@ -844,9 +844,9 @@ Project finance user can view Lead Partner's changes to finances
     When the user clicks the button/link        css=a.eligibility-0
     And the user clicks the button/link        link=View changes to finances
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
-    Then the categories are verified for Project finances section   1   £172,034   30%     £51,610    £2,468     £117,956
+    Then the categories are verified for Project finances section   1   £172,034   30%     51,610    2,468     117,956
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
-    And the categories are verified for Section changes    1   £56,349     £1,954      £-20,200    £4,498      £-79,400       £4,030        £3,900
+    And the categories are verified for Section changes    1   56,349     1,954      -20,200    4,498      -79,400       4,030        3,900
 
 #1.materials section
 Project finance user can view Lead partner's changes for Materials
