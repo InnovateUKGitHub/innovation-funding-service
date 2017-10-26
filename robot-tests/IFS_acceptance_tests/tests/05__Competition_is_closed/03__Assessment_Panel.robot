@@ -123,13 +123,13 @@ Assesor is able to reject the invitation
 Comp Admin can see the rejected and accepted invitation
     [Documentation]  IFS-37 IFS-1563
     [Tags]
-    [Setup]  Log in as a different user     &{Comp_admin1_credentials}
-    Given the user navigates to the page    ${SERVER}/management/assessment/panel/competition/${CLOSED_COMPETITION}/assessors/overview
-    And the user should see the element    jQuery=td:contains("Joel George") ~ td:contains("Invite declined")
-    And the user clicks the button/link     link=Accepted
-    And the user should see the element     jQuery=td:contains("Benjamin Nixon") ~ td:contains("Materials, process and manufacturing design technologies")
-    When the user clicks the button/link     link=Pending and rejected
-    Then the user should not see the element  jQuery=td:contains("Benjamin Nixon")
+    [Setup]  Log in as a different user        &{Comp_admin1_credentials}
+    Given the user navigates to the page       ${SERVER}/management/assessment/panel/competition/${CLOSED_COMPETITION}/assessors/overview
+    And the user should see the element        jQuery=td:contains("Joel George") ~ td:contains("Invite declined")
+    When the user clicks the button/link        link=Accepted
+    Then the user should see the element        jQuery=td:contains("Benjamin Nixon") ~ td:contains("Materials, process and manufacturing design technologies")
+    When the user clicks the button/link       link=Overview
+    Then the user should not see the element   jQuery=td:contains("Benjamin Nixon")
 
 *** Keywords ***
 
