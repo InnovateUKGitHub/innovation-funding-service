@@ -73,7 +73,6 @@ function shutdownMysqlDumpPodAfterUse() {
 # Entry point
 cleanUp
 cloneConfig
-tailorAppInstance
 
 if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export DB_NAME=ifs
