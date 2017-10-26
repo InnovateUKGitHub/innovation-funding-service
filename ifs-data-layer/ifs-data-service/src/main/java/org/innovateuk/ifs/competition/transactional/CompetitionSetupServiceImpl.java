@@ -249,13 +249,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         return setupStatusService.saveSetupStatus(setupStatus);
     }
 
-    private SetupStatusResource findOrCreateSetupStatusResource(Long competitionId, String sectionClassName, Long sectionId, Optional<CompetitionSetupSection> parentSection) {
-        Optional<SetupStatusResource> setupStatusOpt = setupStatusService.findSetupStatusAndTarget(sectionClassName, sectionId,Competition.class.getName(), competitionId)
-                .getOptionalSuccessObject();
-
-        return setupStatusOpt.orElse(createNewSetupStatus(competitionId, sectionClassName, sectionId, parentSection));
-    }
-
     @Override
     @Transactional
     public ServiceResult<SetupStatusResource> markSubsectionComplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
@@ -274,6 +267,13 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         return setupStatusService.saveSetupStatus(setupStatus);
     }
 
+    private SetupStatusResource findOrCreateSetupStatusResource(Long competitionId, String sectionClassName, Long sectionId, Optional<CompetitionSetupSection> parentSection) {
+        Optional<SetupStatusResource> setupStatusOpt = setupStatusService.findSetupStatusAndTarget(sectionClassName, sectionId,Competition.class.getName(), competitionId)
+                .getOptionalSuccessObject();
+
+        return setupStatusOpt.orElseGet(() -> createNewSetupStatus(competitionId, sectionClassName, sectionId, parentSection));
+    }
+
     private SetupStatusResource createNewSetupStatus(Long competitionId, String sectionClassName, Long sectionId, Optional<CompetitionSetupSection> parentSectionOpt) {
         SetupStatusResource newSetupStatusResource = new SetupStatusResource(sectionClassName, sectionId, Competition.class.getName(), competitionId);
 
@@ -284,7 +284,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
             newSetupStatusResource.setParentId(
                     parentSetupStatusOpt
-                        .orElse(markSectionIncomplete(competitionId, parentSection).getSuccessObjectOrThrowException())
+                        .orElseGet(() -> markSectionIncomplete(competitionId, parentSection).getSuccessObjectOrThrowException())
                         .getId()
             );
         });

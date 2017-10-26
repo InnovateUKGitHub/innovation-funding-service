@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
@@ -18,11 +19,13 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.User;
@@ -33,6 +36,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
@@ -44,6 +48,8 @@ import static org.innovateuk.ifs.application.builder.GuidanceRowBuilder.newFormI
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.application.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.AssessorCountOptionBuilder.newAssessorCountOption;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
@@ -434,5 +440,163 @@ public class CompetitionSetupServiceImplTest {
 		assertTrue(result.isSuccess());
 		assertNull(competition.getAssessorCount());
 		assertEquals(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY, competition.getAssessorPay());
+	}
+
+    @Test
+    public void testMarkSectionCompleteFindOne() {
+        final Long competitionId = 32L;
+        final CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
+        final SetupStatusResource foundStatusResource = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withClassPk(competitionId)
+                .withParentId(12L)
+                .withCompleted(Boolean.FALSE).build();
+        final SetupStatusResource savingStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withClassPk(competitionId)
+                .withParentId(12L)
+                .withCompleted(Boolean.TRUE).build();
+        final SetupStatusResource savedStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withParentId(12L)
+                .withTargetClassName(Competition.class.getName())
+                .withClassPk(competitionId)
+                .withCompleted(Boolean.TRUE).build();
+
+        when(setupStatusService.findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceSuccess(foundStatusResource));
+        when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
+
+        service.markSectionComplete(competitionId, section);
+
+        verify(setupStatusService, times(1)).findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId);
+        verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
+    }
+
+	@Test
+	public void testMarkSectionIncompleteCreateOne() {
+        final Long competitionId = 32L;
+        final CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
+        final SetupStatusResource savingStatus = newSetupStatusResource()
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE).build();
+        savingStatus.setId(null);
+        final SetupStatusResource savedStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE).build();
+
+        when(setupStatusService.findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
+        when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
+
+        service.markSectionIncomplete(competitionId, section);
+
+        verify(setupStatusService, times(1)).findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId);
+        verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
+	}
+
+	@Test
+	public void testMarkSubsectionCompleteFindOne() {
+        final CompetitionSetupSubsection section = CompetitionSetupSubsection.APPLICATION_DETAILS;
+        final Long competitionId = 32L;
+        final CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
+        final SetupStatusResource foundStatusResource = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withClassPk(competitionId)
+                .withParentId(12L)
+                .withCompleted(Boolean.FALSE).build();
+        final SetupStatusResource savingStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withClassPk(competitionId)
+                .withParentId(12L)
+                .withCompleted(Boolean.TRUE).build();
+        final SetupStatusResource savedStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withParentId(12L)
+                .withTargetClassName(Competition.class.getName())
+                .withClassPk(competitionId)
+                .withCompleted(Boolean.TRUE).build();
+        final SetupStatusResource parentSectionStatus = newSetupStatusResource()
+                .withId(12L)
+                .withClassName(parentSection.getClass().getName())
+                .withClassPk(parentSection.getId())
+                .withParentId()
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE).build();
+
+        when(setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceSuccess(parentSectionStatus));
+        when(setupStatusService.findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceSuccess(foundStatusResource));
+        when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
+
+        service.markSubsectionComplete(competitionId, parentSection, section);
+
+        verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
+	}
+
+	@Test
+	public void testMarkSubsectionIncompleteCreateOne() {
+        final CompetitionSetupSubsection section = CompetitionSetupSubsection.APPLICATION_DETAILS;
+        final Long competitionId = 32L;
+        final CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
+        final SetupStatusResource savingStatus = newSetupStatusResource()
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withParentId(12L)
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE).build();
+        savingStatus.setId(null);
+        final SetupStatusResource savedStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withParentId(12L)
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE).build();
+        final SetupStatusResource parentSectionStatus = newSetupStatusResource()
+                .withId(12L)
+                .withClassName(parentSection.getClass().getName())
+                .withClassPk(parentSection.getId())
+                .withParentId()
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE).build();
+
+        when(setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceSuccess(parentSectionStatus));
+        when(setupStatusService.findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
+        when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
+
+        service.markSubsectionIncomplete(competitionId, parentSection, section);
+
+        verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
 	}
 }
