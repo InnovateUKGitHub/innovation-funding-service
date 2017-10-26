@@ -113,7 +113,7 @@ Assesor is able to reject the invitation from email
     [Documentation]  IFS-37
     [Tags]
     [Setup]  Logout as user
-    Given the user reads his email and clicks the link  ${panel_user_joel}  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
+    Given the user reads his email and clicks the link  ${panel_user_joel}  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
     When the user selects the radio button              acceptInvitation  false
     And The user clicks the button/link                 jQuery=button:contains("Confirm")
     And the user clicks the button/link                 link=Sign in
