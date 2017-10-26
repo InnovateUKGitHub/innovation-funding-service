@@ -15,8 +15,10 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
@@ -45,7 +47,10 @@ public class ApplicationTeamManagementModelPopulator {
         OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
         boolean requestForLeadOrganisation = isRequestForLeadOrganisation(organisationId, leadOrganisationResource);
 
-        return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
+        ApplicationTeamManagementViewModel result = populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
+
+        result.setApplicants(result.getApplicants().stream().sorted(Comparator.comparing(a -> a.getPendingSince())).collect(Collectors.toList()));
+        return result;
     }
 
     public ApplicationTeamManagementViewModel populateModelByInviteOrganisationId(Long applicationId, Long inviteOrganisationId, long loggedInUserId) {

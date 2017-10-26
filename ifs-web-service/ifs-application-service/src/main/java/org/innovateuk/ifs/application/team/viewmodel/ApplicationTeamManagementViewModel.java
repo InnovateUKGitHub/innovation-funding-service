@@ -72,6 +72,10 @@ public class ApplicationTeamManagementViewModel {
         return applicants;
     }
 
+    public void setApplicants(List<ApplicationTeamManagementApplicantRowViewModel> applicants) {
+        this.applicants = applicants;
+    }
+
     public boolean isOrganisationExists() {
         return organisationExists;
     }
