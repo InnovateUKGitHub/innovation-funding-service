@@ -303,9 +303,8 @@ public class FinanceChecksNotesController {
                 List<ThreadPostViewModel> posts = new LinkedList<>();
                 for (PostResource p : note.posts) {
                     UserResource user = userService.findById(p.author.getId());
-                    String organisationName = "Innovate UK";
                     ThreadPostViewModel post = new ThreadPostViewModel(p.id, p.author, p.body, p.attachments, p.createdOn);
-                    post.setUsername(user.getName() + " - " + organisationName + (user.hasRole(UserRoleType.PROJECT_FINANCE) ? " (Finance team)" : ""));
+                    post.setUsername(user.getName() + " - Innovate UK" + (user.hasRole(UserRoleType.PROJECT_FINANCE) ? " (Finance team)" : ""));
                     posts.add(post);
                 }
                 ThreadViewModel detail = new ThreadViewModel();
