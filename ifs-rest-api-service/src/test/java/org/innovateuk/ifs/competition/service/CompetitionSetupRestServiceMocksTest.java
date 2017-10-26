@@ -12,8 +12,8 @@ import org.springframework.http.HttpStatus;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.Optional;
 
-import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSetupSectionStatusMap;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.ELIGIBILITY;
@@ -113,10 +113,10 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
     public void getSectionStatuses() {
         final Long competitionId = 342L;
 
-        Map<CompetitionSetupSection, Boolean> expectedResult = asMap(INITIAL_DETAILS, TRUE, ELIGIBILITY, FALSE);
+        Map<CompetitionSetupSection, Optional<Boolean>> expectedResult = asMap(INITIAL_DETAILS, Optional.of(TRUE), ELIGIBILITY, Optional.empty());
         setupGetWithRestResultExpectations(competitionSetupRestURL + "/sectionStatus/" + competitionId, competitionSetupSectionStatusMap(), expectedResult, HttpStatus.OK);
 
-        RestResult<Map<CompetitionSetupSection, Boolean>> result = service.getSectionStatuses(competitionId);
+        RestResult<Map<CompetitionSetupSection, Optional<Boolean>>> result = service.getSectionStatuses(competitionId);
 
         assertTrue(result.isSuccess());
         assertEquals(expectedResult, result.getSuccessObject());

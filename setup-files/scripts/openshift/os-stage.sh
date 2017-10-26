@@ -5,10 +5,8 @@ set -e
 PROJECT=$1
 TARGET=$2
 VERSION=$3
-
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
-
 PROJECT=$(getProjectName $PROJECT $TARGET)
 SVC_ACCOUNT_TOKEN=$(getSvcAccountToken)
 HOST=$(getHost $TARGET)
@@ -21,3 +19,8 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 # Entry point
 createProjectIfNecessaryForNonNamedEnvs
 pushApplicationImages
+
+# The SIL stub is required in all environments, in one form or another, except for production
+if ! $(isProductionEnvironment ${TARGET}); then
+    pushSilStubImages
+fi

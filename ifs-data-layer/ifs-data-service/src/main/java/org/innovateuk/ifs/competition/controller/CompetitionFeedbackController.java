@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.controller;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,4 +46,13 @@ public class CompetitionFeedbackController {
         return competitionService.findFeedbackReleasedCompetitions().toGetResponse();
     }
 
+    @GetMapping("/{id}/queries/open")
+    public RestResult<List<CompetitionOpenQueryResource>> getOpenQueries(@PathVariable("id") Long competitionId) {
+        return competitionService.findAllOpenQueries(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/{id}/queries/open/count")
+    public RestResult<Long> countOpenQueries(@PathVariable("id") Long competitionId) {
+        return competitionService.countAllOpenQueries(competitionId).toGetResponse();
+    }
 }

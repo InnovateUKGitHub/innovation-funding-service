@@ -19,6 +19,7 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -100,6 +101,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<UserResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<UserOrganisationResource>> userOrganisationListType() {
+        return new ParameterizedTypeReference<List<UserOrganisationResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<CompetitionResource>> competitionResourceListType() {
         return new ParameterizedTypeReference<List<CompetitionResource>>() {};
     }
@@ -150,6 +155,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<InviteProjectResource>> inviteProjectResourceListType() {
         return new ParameterizedTypeReference<List<InviteProjectResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<ExternalInviteResource>> externalInviteResourceListType() {
+        return new ParameterizedTypeReference<List<ExternalInviteResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<FinanceRowItem>> costItemListType() {
@@ -241,6 +250,14 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ApplicationSummaryResource>> competitionSummaryResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationSummaryResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryResourceListType() {
+        return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryListType() {
+        return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
     }
 
     public static ParameterizedTypeReference<Map<CompetitionSetupSection, Optional<Boolean>>> competitionSetupSectionStatusMap() {

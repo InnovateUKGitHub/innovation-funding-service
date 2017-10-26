@@ -2,11 +2,13 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionOpenQueryResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSearchResultItemListType;
 
 /**
@@ -31,4 +33,15 @@ public class CompetitionFeedbackRestServiceImpl extends BaseRestService implemen
     public RestResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
         return getWithRestResult(competitionsRestURL +  "/feedback-released", competitionSearchResultItemListType());
     }
+
+    @Override
+    public RestResult<List<CompetitionOpenQueryResource>> getCompetitionOpenQueries(long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/queries/open", competitionOpenQueryResourceListType());
+    }
+
+    @Override
+    public RestResult<Long> getCompetitionOpenQueriesCount(long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/queries/open/count", Long.class);
+    }
+
 }
