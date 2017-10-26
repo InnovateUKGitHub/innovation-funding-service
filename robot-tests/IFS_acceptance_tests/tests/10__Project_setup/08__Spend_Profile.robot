@@ -522,7 +522,7 @@ Partners can see the Spend Profile section completed
     Then the user should see the element    css=li.complete:nth-of-type(6)
 
 Project Finance is able to see Spend Profile approval page
-    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942 IFS-1871
     [Tags]    HappyPath
     [Setup]    Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
@@ -534,9 +534,9 @@ Project Finance is able to see Spend Profile approval page
     And the user should see the text in the page  Innovation Lead
     And the user should see the text in the page    Peter Freeman
     When the user should see the text in the page    Project spend profile
-    Then the user clicks the button/link   link=${Katz_Name}-spend-profile.csv
-    And the user clicks the button/link   link=${Meembee_Name}-spend-profile.csv
-    And the user clicks the button/link   link=${Zooveo_Name}-spend-profile.csv
+    Then the project finance user downloads the spend profile file and checks the content of it  ${Katz_Name}-spend-profile.csv
+    And the user should see the element  link=${Meembee_Name}-spend-profile.csv
+    And the user should see the element  link=${Zooveo_Name}-spend-profile.csv
     When the user should see the text in the page    Approved by Innovate UK
     Then the element should be disabled    css=#accept-profile
     When the user selects the checkbox    approvedByLeadTechnologist
@@ -763,7 +763,6 @@ the user uploads the file
     [Arguments]    ${upload_filename}
     Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
 
-
 the sum of tds equals the total
     [Arguments]    ${table}    ${row}    ${duration}    ${total}
     # This Keyword performs a for loop that iterates per column (in a specific row)
@@ -855,3 +854,39 @@ check if finance contact can be changed
     the user sees that the radio button is selected  financeContact  financeContact2
     the user selects the radio button  financeContact  financeContact1
     the user clicks the button/link  jQuery=button:contains("Save")
+
+the project finance user downloads the spend profile file and checks the content of it
+    [Arguments]  ${file}
+    the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile-export/csv  ${DOWNLOAD_FOLDER}/${file}
+    the user opens the csv file and checks the content  ${file}
+    remove the file from the operating system  ${file}
+
+the user opens the csv file and checks the content
+    [Arguments]  ${file}
+    ${contents} =          read csv file  ${DOWNLOAD_FOLDER}/${file}
+    ${labourRow} =         get from list  ${contents}  1
+    ${labour} =            get from list  ${labourRow}  0
+    should be equal        ${labour}  Labour
+    ${labourFirstMonth} =  get from list  ${labourRow}  1
+    should be equal        ${labourFirstMonth}  14.00
+    ${overheadsRow} =      get from list  ${contents}  2
+    ${overheads} =         get from list  ${overheadsRow}  0
+    should be equal        ${overheads}  Overheads
+    ${materialsRow} =      get from list  ${contents}  3
+    ${materials} =         get from list  ${materialsRow}  0
+    should be equal        ${materials}  Materials
+    ${capitalUsageRow} =   get from list  ${contents}  4
+    ${capitalUsage} =      get from list  ${capitalUsageRow}  0
+    should be equal        ${capitalUsage}  Capital usage
+    ${subcontractingRow} =  get from list  ${contents}  5
+    ${subcontracting} =    get from list  ${subcontractingRow}  0
+    should be equal        ${subcontracting}  Subcontracting
+    ${travelRow} =         get from list  ${contents}  6
+    ${travel} =            get from list  ${travelRow}  0
+    should be equal        ${travel}  Travel and subsistence
+    ${otherCostsRow} =     get from list  ${contents}  7
+    ${otherCosts} =        get from list  ${otherCostsRow}  0
+    should be equal        ${otherCosts}  Other costs
+    ${totalRow} =          get from list  ${contents}  8
+    ${totalFirstMonth} =   get from list  ${totalRow}  1
+    should be equal        ${totalFirstMonth}  5581.00
