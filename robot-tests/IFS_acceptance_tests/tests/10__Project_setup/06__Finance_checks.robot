@@ -1096,7 +1096,7 @@ Non Lead-Partner can view only the external version of finance checks eligibilit
 Project finance user adds, modifies and removes labour rows
     [Documentation]    IFS-1904
     [Tags]
-    [Setup]  the user logs-in in new browser       &{internal_finance_credentials}
+    [Setup]  Log in as a different user            &{internal_finance_credentials}
     Given the user navigates to the page           ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/finance-check/organisation/${PS_GOL_APPLICATION_LEAD_ORGANISATION_ID}/eligibility
     When the user expands the section              Labour
     And the user clicks the button/link            jQuery=h3:contains("Labour") + #collapsible-0 a:contains("Edit")
