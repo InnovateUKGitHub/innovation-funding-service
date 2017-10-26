@@ -13,6 +13,9 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 
+/**
+ * Implements {@link SetupStatusService}
+ */
 @Service
 public class SetupStatusServiceImpl implements SetupStatusService {
 

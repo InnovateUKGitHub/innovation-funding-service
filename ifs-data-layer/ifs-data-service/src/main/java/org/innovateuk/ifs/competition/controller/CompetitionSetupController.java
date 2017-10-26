@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * CompetitionController exposes Competition data and operations through a REST API.
+ * Controller for handling competition that are in setup
  */
 @RestController
 @RequestMapping("/competition/setup")

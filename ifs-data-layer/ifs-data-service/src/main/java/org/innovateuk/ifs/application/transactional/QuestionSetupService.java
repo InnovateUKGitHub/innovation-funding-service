@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.Map;
 
 /**
- * Transactional and secure service for Question processing work
+ * Transactional service for Question setup statuses
  */
 public interface QuestionSetupService {
 

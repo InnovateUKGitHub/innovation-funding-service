@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+/**
+ * Controller for handling statuses on the questions
+ */
 @RestController
 @RequestMapping("/question/setup")
 public class QuestionSetupStatusController {

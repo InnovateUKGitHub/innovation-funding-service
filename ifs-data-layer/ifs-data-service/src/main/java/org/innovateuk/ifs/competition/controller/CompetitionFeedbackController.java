@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * CompetitionController exposes Competition data and operations through a REST API.
+ * Controller for handling feedback part of the competition
  */
 @RestController
 @RequestMapping("/competition/feedback")

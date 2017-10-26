@@ -7,6 +7,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
+/**
+ * Service for handling setup status objects
+ */
 public interface SetupStatusService {
 
     @SecuredBySpring(value = "READ", description = "Only comp admins or projectfinances users can read the status related to setup")

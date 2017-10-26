@@ -19,7 +19,7 @@ import java.util.Optional;
 import static java.util.stream.Collectors.toMap;
 
 /**
- * Transactional and secured service focused around the processing of Applications
+ * Implements {@link QuestionSetupService}
  */
 @Service
 public class QuestionSetupServiceImpl extends BaseTransactionalService implements QuestionSetupService {
