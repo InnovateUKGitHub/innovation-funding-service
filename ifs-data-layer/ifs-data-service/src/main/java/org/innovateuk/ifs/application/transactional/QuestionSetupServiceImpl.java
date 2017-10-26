@@ -52,7 +52,7 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
     public ServiceResult<Map<Long, Boolean>> getQuestionStatuses(Long competitionId, CompetitionSetupSection parentSection) {
         SetupStatusResource parentSectionStatus = setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId)
                 .getSuccessObjectOrThrowException();
-        List<SetupStatusResource> setupStatuses = getSetupStatusByTargetAndOptParentId(competitionId, parentSectionStatus);
+        List<SetupStatusResource> setupStatuses = getSetupStatusByTargetAndParentId(competitionId, parentSectionStatus);
 
         return ServiceResult.serviceSuccess(setupStatuses
                 .stream()
@@ -60,7 +60,7 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
                 .collect(toMap(SetupStatusResource::getClassPk, SetupStatusResource::getCompleted)));
     }
 
-    private List<SetupStatusResource> getSetupStatusByTargetAndOptParentId(Long competitionId, SetupStatusResource parentSectionStatus) {
+    private List<SetupStatusResource> getSetupStatusByTargetAndParentId(Long competitionId, SetupStatusResource parentSectionStatus) {
         return setupStatusService
                     .findByTargetClassNameAndTargetIdAndParentId(Competition.class.getName(), competitionId, parentSectionStatus.getId())
                     .getSuccessObjectOrThrowException();
@@ -70,7 +70,7 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
         Optional<SetupStatusResource> setupStatusOpt = setupStatusService.findSetupStatusAndTarget(Question.class.getName(), questionId, Competition.class.getName(), competitionId)
                 .getOptionalSuccessObject();
 
-        return setupStatusOpt.orElse(createNewSetupStatus(competitionId, questionId, parentSection));
+        return setupStatusOpt.orElseGet(() -> createNewSetupStatus(competitionId, questionId, parentSection));
     }
 
     private SetupStatusResource createNewSetupStatus(Long competitionId, Long questionId, CompetitionSetupSection parentSection) {
@@ -82,7 +82,7 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
                 setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId).getOptionalSuccessObject();
 
         return parentStatusOpt
-                .orElse(competitionSetupService.markSectionIncomplete(competitionId, parentSection)
+                .orElseGet(() -> competitionSetupService.markSectionIncomplete(competitionId, parentSection)
                         .getSuccessObjectOrThrowException())
                 .getId();
     }

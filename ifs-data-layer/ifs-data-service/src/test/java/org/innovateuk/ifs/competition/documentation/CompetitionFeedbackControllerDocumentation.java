@@ -82,7 +82,7 @@ public class CompetitionFeedbackControllerDocumentation extends BaseControllerMo
     public void getOpenQueryCount() throws Exception {
         when(competitionService.countAllOpenQueries(321L)).thenReturn(serviceSuccess(1L));
 
-        mockMvc.perform(get("/competition/{id}/queries/open/count", 321L))
+        mockMvc.perform(get("/competition/feedback/{id}/queries/open/count", 321L))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -98,7 +98,7 @@ public class CompetitionFeedbackControllerDocumentation extends BaseControllerMo
                 new CompetitionOpenQueryResource(1L, 2L, "a", 3L, "b"),
                 new CompetitionOpenQueryResource(1L, 2L, "a", 3L, "b"))));
 
-        mockMvc.perform(get("/competition/{id}/queries/open", 321L))
+        mockMvc.perform(get("/competition/feedback/{id}/queries/open", 321L))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
