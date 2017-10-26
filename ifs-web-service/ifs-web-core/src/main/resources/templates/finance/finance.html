@@ -469,7 +469,7 @@
                         <tfoot>
                         <tr>
                             <th scope="row">Total overhead costs</th>
-                            <td class="alignright"  th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}"  th:id="${'section-total-'+subSection.id}">
+                            <td class="alignright" data-current-overhead-total="" th:attr="data-calculation-rawvalue=${costCategory.total != null ? costCategory.total : '0'}"  th:id="${'section-total-'+subSection.id}">
                                 &pound;<th:block th:text="${#numbers.formatInteger(costCategory?.total,0, 'DEFAULT')}">1,000</th:block>
                             </td>
                         </tr>
