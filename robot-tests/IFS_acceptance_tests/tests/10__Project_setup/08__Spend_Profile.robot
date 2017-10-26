@@ -64,8 +64,6 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               IFS-1576 Allow changes to Target start date until generation of Spend Profile
 ...
 ...               IFS-1579 Allow change of Finance Contact until generation of GOL
-...
-...               IFS-1871 External csv Spend Profile – unexpected data being output
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -145,7 +143,7 @@ Lead partner can see correct project start date and duration
     And the user should see the text in the page     ${project_duration} months
 
 Calculations in the spend profile table
-    [Documentation]    INFUND-3764, INFUND-6148, IFS-1871
+    [Documentation]    INFUND-3764, INFUND-6148
     [Tags]    HappyPath
     Given the user should see the element  css=.spend-profile-table
     Then the user should see the element   jQuery=th:contains("Labour") ~ td.fix-right:contains("£ 3,081")
