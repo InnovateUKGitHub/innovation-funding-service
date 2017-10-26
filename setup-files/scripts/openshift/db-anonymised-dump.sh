@@ -71,7 +71,9 @@ function shutdownMysqlDumpPodAfterUse() {
 }
 
 # Entry point
+echo "cleanUp"
 cleanUp
+echo "cloneConfig"
 cloneConfig
 
 if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
@@ -82,13 +84,20 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export DB_PORT=3306
 fi
 
+echo "injectDBVariables"
 injectDBVariables
+echo "useContainerRegistry"
 useContainerRegistry
 
+echo "pushAnonymisedDatabaseDumpImages"
 pushAnonymisedDatabaseDumpImages
+echo "startupMysqlDumpPod"
 startupMysqlDumpPod
+echo "waitForMysqlDumpPodToStart"
 waitForMysqlDumpPodToStart
+echo "takeMysqlDump"
 takeMysqlDump
+echo "shutdownMysqlDumpPodAfterUse"
 shutdownMysqlDumpPodAfterUse
 
 echo "Job complete!  Dump now available at /tmp/anonymised-dump.sql.gpg"
