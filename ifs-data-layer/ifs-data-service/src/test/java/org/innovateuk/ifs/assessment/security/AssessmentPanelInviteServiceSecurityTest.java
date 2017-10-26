@@ -190,6 +190,16 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
         );
     }
 
+    @Test
+    public void deleteInvite() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN, PROJECT_FINANCE);
+    }
+
+    @Test
+    public void deleteAllInvites() throws Exception {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteAllInvites(1L), COMP_ADMIN, PROJECT_FINANCE);
+    }
+
     public static class TestAssessmentPanelInviteService implements AssessmentPanelInviteService {
 
         @Override

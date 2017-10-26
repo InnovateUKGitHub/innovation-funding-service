@@ -214,4 +214,26 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
         setupGetWithRestResultAnonymousExpectations(format("%s/%s/%s", restUrl, "checkExistingUser", "hash"), Boolean.class, TRUE);
         assertTrue(service.checkExistingUser("hash").getSuccessObject());
     }
+
+    @Test
+    public void deleteInvite() {
+        String email = "firstname.lastname@example.com";
+        long competitionId = 1L;
+
+        setupDeleteWithRestResultExpectations(format("%s/%s?competitionId=%s&email=%s", restUrl, "deleteInvite", competitionId, email));
+
+        RestResult<Void> resultResult = service.deleteInvite(email, competitionId);
+        assertTrue(resultResult.isSuccess());
+    }
+
+    @Test
+    public void deleteAllInvites() throws Exception {
+        long competitionId = 1L;
+
+        setupDeleteWithRestResultExpectations(format("%s/%s?competitionId=%s", restUrl, "deleteAllInvites", competitionId));
+
+        RestResult<Void> resultResult = service.deleteAllInvites(competitionId);
+        assertTrue(resultResult.isSuccess());
+    }
+
 }

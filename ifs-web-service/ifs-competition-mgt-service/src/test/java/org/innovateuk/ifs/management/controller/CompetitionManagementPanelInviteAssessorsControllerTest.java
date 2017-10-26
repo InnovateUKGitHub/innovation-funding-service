@@ -40,7 +40,6 @@ import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -53,7 +52,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
-import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
@@ -66,8 +64,7 @@ import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
 import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -371,6 +368,50 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(assessmentPanelInviteRestService).getCreatedInvites(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void removeInviteFromInviteView() throws Exception {
+        String email = "firstname.lastname@example.com";
+
+        when(assessmentPanelInviteRestService.deleteInvite(email, competition.getId())).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("remove", email)
+                .param("page", "5"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/invite?page=5", competition.getId())))
+                .andReturn();
+
+        verify(assessmentPanelInviteRestService, only()).deleteInvite(email, competition.getId());
+    }
+
+    @Test
+    public void removeInviteFromInviteView_defaultParams() throws Exception {
+        String email = "firstname.lastname@example.com";
+
+        when(assessmentPanelInviteRestService.deleteInvite(email, competition.getId())).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("remove", email))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/invite?page=0", competition.getId())))
+                .andReturn();
+
+        verify(assessmentPanelInviteRestService, only()).deleteInvite(email, competition.getId());
+    }
+
+    @Test
+    public void removeAllInvitesFromInviteView() throws Exception {
+        when(assessmentPanelInviteRestService.deleteAllInvites(competition.getId())).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("removeAll", ""))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/invite?page=0", competition.getId())))
+                .andReturn();
+
+        verify(assessmentPanelInviteRestService).deleteAllInvites(competition.getId());
     }
 
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {

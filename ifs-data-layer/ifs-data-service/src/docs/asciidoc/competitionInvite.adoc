@@ -203,6 +203,17 @@ include::{snippets}/competitioninvite/delete-invite/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/competitioninvite/delete-invite/curl-request.adoc[]
 
+=== Delete all users from the assessor invite list for a competition
+==== Request
+include::{snippets}/competitioninvite/delete-all-invites/http-request.adoc[]
+include::{snippets}/competitioninvite/delete-all-invites/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/delete-all-invites/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/delete-all-invites/curl-request.adoc[]
+
 === Send all invites
 ==== Request
 include::{snippets}/competitioninvite/send-all-invites/http-request.adoc[]
