@@ -278,8 +278,8 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
         }
 
         @Override
-        public ServiceResult<List<AssessmentPanelInviteResource>> getAllInvitesByUser(long userId) {
-            return serviceSuccess(asList(newAssessmentPanelInviteResource().withUser(1L).build()));
+        public ServiceResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId) {
+            return serviceSuccess(asList(newAssessmentPanelParticipantResource().withUser(1L).build()));
         }
 
         @Override

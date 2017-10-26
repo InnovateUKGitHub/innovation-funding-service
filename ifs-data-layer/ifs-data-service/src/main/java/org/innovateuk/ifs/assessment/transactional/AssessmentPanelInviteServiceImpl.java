@@ -53,6 +53,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
@@ -352,7 +353,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     public ServiceResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId) {
         return serviceSuccess(
                 assessmentPanelParticipantRepository
-                .findByUserIdAndRole(userId, CompetitionParticipantRole.PANEL_ASSESSOR)
+                .findByUserIdAndRole(userId, PANEL_ASSESSOR)
                 .stream()
                 .map(assessmentPanelParticipantMapper::mapToResource)
                 .collect(toList()));
