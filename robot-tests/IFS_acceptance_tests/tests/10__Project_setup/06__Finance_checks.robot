@@ -649,7 +649,7 @@ Project finance user can see the partner's zero funding request
     When the user navigates to the page                 ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}/eligibility
     Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(2)    £200,903   # Total costs
     And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
-    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)     £0         # Funding sought
+    And the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(4)     0         # Funding sought
     [Teardown]    the user navigates to the page        ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}/eligibility
 
 Project finance user can see the partner's information about eligibility
@@ -789,7 +789,7 @@ Project finance can see updated finance breakdown for different categories
     And all the categories are verified  1   £172,034 	 59,430  1,954 	80,000   5,050   10,600  10,000   5,000
     #check breakdown for academic user
     When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(2) th strong  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
-    Then all the categories are verified  2   £990 	     £286 	   154    66       0 	      0 	    44      440
+    Then all the categories are verified  2   £990 	     286 	   154    66       0 	      0 	    44      440
     #check breakdown for non lead partner
     When the user should see the text in the element   css=.form-group tbody tr:nth-of-type(3) th strong  ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
     Then all the categories are verified  3   £172,034   59,430  1,954  80,000    5,050   10,600  10,000   5,000
@@ -817,7 +817,7 @@ Project finance user can view Updated finance overview for the consortium
     When the user clicks the button/link    link=Project finance overview
     Then the user should see the element    jQuery=h1:contains("Finance overview")
     # the below figures are listed as:       RowNumber  StartDate      Duration    TotalProjectCost    GrantAppliedFor     OtherPublicSectorFunding    Total%Grant
-    And the categories are verified for Overview section    1   1 Oct 2020  3 months    £345,059   £99,275    £4,936     29%
+    And the categories are verified for Overview section    1   1 Oct 2020  3 months    £345,059   99,275    4,936     29%
 
 Project finance user can view updated finances summary for the consortium
     [Documentation]    INFUND-4846
@@ -923,8 +923,8 @@ Project finance user can view Partner's changes to finances
     Given the user clicks the button/link       link=Finance checks
     When the user clicks the button/link        css=a.eligibility-2
     And the user clicks the button/link        link=View changes to finances
-    When the categories are verified for Project finances section       1   £172,034    30%     £51,610    £2,468     £117,956
-    Then the categories are verified for Section changes                1   £56,349     £1,954     £-20,200   £4,498     £-79,400     £4,030    £3,900
+    When the categories are verified for Project finances section       1   £172,034    30%     51,610    2,468     117,956
+    Then the categories are verified for Section changes                1   £56,349     1,954     -20,200   4,498     -79,400     4,030    3,900
 
 #1.materials section
 Project finance user can view partner's changes for Materials
