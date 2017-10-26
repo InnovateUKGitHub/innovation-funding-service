@@ -385,7 +385,7 @@ function pushFractalImages() {
 
 
 function pushAnonymisedDatabaseDumpImages() {
-    docker tag innovateuk/db-anonymised-data:${VERSION} \
+    docker tag innovateuk/db-anonymised-data:latest \
         ${REGISTRY}/${PROJECT}/db-anonymised-data:${VERSION}
 
     docker login -p ${REGISTRY_TOKEN} -e unused -u unused ${REGISTRY}
