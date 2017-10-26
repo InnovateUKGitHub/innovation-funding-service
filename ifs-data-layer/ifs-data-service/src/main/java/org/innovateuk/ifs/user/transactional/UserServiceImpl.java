@@ -10,7 +10,6 @@ import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.transactional.UserTransactionalService;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
@@ -224,12 +223,15 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Override
     public ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes) {
-        List<User> users = userRepository.findByRolesNameInOrderByEmailAsc(roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()));
+        /*List<User> users = userRepository.findByRolesNameInOrderByEmailAsc(roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()));
         List<UserOrganisationResource> userResources = simpleMap(users, user -> {
             List<Organisation> organisations = organisationRepository.findByUsersId(user.getId());
-            return new UserOrganisationResource(userMapper.mapToResource(user), organisations.get(0).getId(), organisations.get(0).getName());
+            return new UserOrganisationResource(user.getName(), organisations.get(0).getName(), organisations.get(0).getId(), user.getEmail(), user.getStatus().getDisplayName());
         });
-        return serviceSuccess(userResources);
+        return serviceSuccess(userResources);*/
+
+        return serviceSuccess(userRepository.findAllExternalUserOrganisations());
+
     }
 
     private List<UserResource> sortByName(List<UserResource> userResources) {
