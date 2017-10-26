@@ -535,7 +535,7 @@ Project finance can see zero funding for partner in bank details
     And the user navigates to the page                 ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-checks/eligibility
     Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(2)    £200,903    # Total costs
     And the user should see the text in the element     css=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
-    And the user should see the text in the element     css=.table-overview tr:nth-child(1) td:nth-child(4)     £0         # Funding sought
+    And the user should see the text in the element     css=.table-overview tr:nth-child(1) td:nth-child(4)     0         # Funding sought
     When log in as a different user                     &{internal_finance_credentials}
     And the user navigates to the page                 ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
     Then the user should see the element                jQuery=.read-only span:contains("No action required")

@@ -924,7 +924,7 @@ Project finance user can view Partner's changes to finances
     When the user clicks the button/link        css=a.eligibility-2
     And the user clicks the button/link        link=View changes to finances
     When the categories are verified for Project finances section       1   £172,034    30%     51,610    2,468     117,956
-    Then the categories are verified for Section changes                1   £56,349     1,954     -20,200   4,498     -79,400     4,030    3,900
+    Then the categories are verified for Section changes                1   56,349     1,954     -20,200   4,498     -79,400     4,030    3,900
 
 #1.materials section
 Project finance user can view partner's changes for Materials
