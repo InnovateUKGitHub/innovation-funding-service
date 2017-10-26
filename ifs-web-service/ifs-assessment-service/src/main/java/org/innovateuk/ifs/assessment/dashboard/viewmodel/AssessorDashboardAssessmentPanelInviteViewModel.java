@@ -2,9 +2,9 @@ package org.innovateuk.ifs.assessment.dashboard.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-
-import java.time.LocalDate;
-
+/**
+ * Holder of model attributes for assessment panel invites on the assessor dashboard.
+ */
 public class AssessorDashboardAssessmentPanelInviteViewModel {
 
     private final String hash;
