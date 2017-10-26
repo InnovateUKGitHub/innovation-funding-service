@@ -80,13 +80,13 @@ public class QuestionSetupServiceTest extends BaseUnitTestMocksTest {
         final Long competitionId = 32L;
         final CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         final SetupStatusResource savingStatus = newSetupStatusResource()
-                .withId(null)
                 .withClassName(Question.class.getName())
                 .withClassPk(questionId)
                 .withParentId(12L)
                 .withTargetClassName(Competition.class.getName())
                 .withTargetId(competitionId)
                 .withCompleted(Boolean.FALSE).build();
+        savingStatus.setId(null);
         final SetupStatusResource savedStatus = newSetupStatusResource()
                 .withId(13L)
                 .withClassName(Question.class.getName())
@@ -130,7 +130,7 @@ public class QuestionSetupServiceTest extends BaseUnitTestMocksTest {
                 .withClassName(Question.class.getName(), Application.class.getName())
                 .withClassPk(questionId, 14L)
                 .withTargetClassName(Competition.class.getName(), Competition.class.getName())
-                .withClassPk(competitionId, competitionId)
+                .withTargetId(competitionId, competitionId)
                 .withParentId(12L, 12L)
                 .withCompleted(Boolean.FALSE, Boolean.TRUE).build(2);
         final SetupStatusResource parentSectionStatus = newSetupStatusResource()
@@ -139,7 +139,7 @@ public class QuestionSetupServiceTest extends BaseUnitTestMocksTest {
                 .withClassPk(parentSection.getId())
                 .withParentId()
                 .withTargetClassName(Competition.class.getName())
-                .withClassPk(competitionId)
+                .withTargetId(competitionId)
                 .withCompleted(Boolean.FALSE).build();
 
         when(setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId))
@@ -150,10 +150,10 @@ public class QuestionSetupServiceTest extends BaseUnitTestMocksTest {
 
         Map<Long, Boolean> result = service.getQuestionStatuses(competitionId, parentSection).getSuccessObjectOrThrowException();
 
-        verify(setupStatusService, times(1)).findByTargetClassNameAndTargetIdAndParentId(Competition.class.getName(), competitionId, parentSection.getId());
-        verify(setupStatusService, times(1)).findSetupStatusAndTarget(parentSection.getClass().getName(), parentSectionStatus.getId(), Competition.class.getName(), competitionId);
+        verify(setupStatusService, times(1)).findByTargetClassNameAndTargetIdAndParentId(Competition.class.getName(), competitionId, parentSectionStatus.getId());
+        verify(setupStatusService, times(1)).findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId);
 
         assertEquals(1, result.size());
-        assertEquals(Boolean.FALSE, result.get(questionId));
+        assertEquals(false, result.get(questionId));
     }
 }
