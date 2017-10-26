@@ -38,7 +38,7 @@ public interface CompetitionSetupService {
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can mark sections incomplete")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    ServiceResult<SetupStatusResource> markSectionInComplete(Long competitionId, CompetitionSetupSection section);
+    ServiceResult<SetupStatusResource> markSectionIncomplete(Long competitionId, CompetitionSetupSection section);
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can mark subsections complete")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
@@ -46,7 +46,7 @@ public interface CompetitionSetupService {
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can mark subsections incomplete")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    ServiceResult<SetupStatusResource> markSubsectionInComplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection);
+    ServiceResult<SetupStatusResource> markSubsectionIncomplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection);
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can return projects to setup")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")

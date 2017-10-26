@@ -242,7 +242,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Override
     @Transactional
-    public ServiceResult<SetupStatusResource> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
+    public ServiceResult<SetupStatusResource> markSectionIncomplete(Long competitionId, CompetitionSetupSection section) {
         SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, section.getClass().getName(), section.getId(), Optional.empty());
         setupStatus.setCompleted(Boolean.FALSE);
 
@@ -267,7 +267,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Override
     @Transactional
-    public ServiceResult<SetupStatusResource> markSubsectionInComplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
+    public ServiceResult<SetupStatusResource> markSubsectionIncomplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
         SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, subsection.getClass().getName(), subsection.getId(), Optional.of(parentSection));
         setupStatus.setCompleted(Boolean.FALSE);
 
@@ -284,7 +284,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
             newSetupStatusResource.setParentId(
                     parentSetupStatusOpt
-                        .orElse(markSectionInComplete(competitionId, parentSection).getSuccessObjectOrThrowException())
+                        .orElse(markSectionIncomplete(competitionId, parentSection).getSuccessObjectOrThrowException())
                         .getId()
             );
         });

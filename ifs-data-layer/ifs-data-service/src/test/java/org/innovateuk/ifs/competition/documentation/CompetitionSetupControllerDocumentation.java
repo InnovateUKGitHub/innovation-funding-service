@@ -58,10 +58,10 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
     }
 
     @Test
-    public void markAsInComplete() throws Exception {
+    public void markAsIncomplete() throws Exception {
         Long competitionId = 2L;
         CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
-        when(competitionSetupService.markSectionInComplete(competitionId, section)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
+        when(competitionSetupService.markSectionIncomplete(competitionId, section)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
         mockMvc.perform(get("/competition/setup/sectionStatus/incomplete/{competitionId}/{section}", competitionId, section))
                 .andExpect(status().isOk())
@@ -76,7 +76,7 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
     }
 
     @Test
-    public void markSubSectionAsComplete() throws Exception {
+    public void markSubsectionAsComplete() throws Exception {
         Long competitionId = 2L;
         CompetitionSetupSubsection subsection = CompetitionSetupSubsection.APPLICATION_DETAILS;
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
@@ -96,11 +96,11 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
     }
 
     @Test
-    public void markSubSectionAsInComplete() throws Exception {
+    public void markSubsectionAsIncomplete() throws Exception {
         Long competitionId = 2L;
         CompetitionSetupSubsection subsection = CompetitionSetupSubsection.APPLICATION_DETAILS;
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
-        when(competitionSetupService.markSubsectionInComplete(competitionId, parentSection, subsection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
+        when(competitionSetupService.markSubsectionIncomplete(competitionId, parentSection, subsection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
         mockMvc.perform(get("/competition/setup/subsectionStatus/incomplete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection))
                 .andExpect(status().isOk())

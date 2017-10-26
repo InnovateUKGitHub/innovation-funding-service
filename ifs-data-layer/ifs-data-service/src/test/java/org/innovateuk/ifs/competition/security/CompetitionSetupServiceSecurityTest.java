@@ -72,7 +72,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
             assertAccessDenied(() -> classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
                 verifyNoMoreInteractions(rules);
             });
-            assertAccessDenied(() -> classUnderTest.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
+            assertAccessDenied(() -> classUnderTest.markSectionIncomplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
                 verifyNoMoreInteractions(rules);
             });
             assertAccessDenied(() -> classUnderTest.findAllTypes(), () -> {
@@ -91,11 +91,11 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         classUnderTest.updateCompetitionInitialDetails(competitionId, new CompetitionResource(), 7L);
         classUnderTest.createNonIfs();
         classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
-        classUnderTest.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
+        classUnderTest.markSectionIncomplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
         classUnderTest.getSectionStatuses(competitionId);
         classUnderTest.getSubsectionStatuses(competitionId);
         classUnderTest.markSubsectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS, CompetitionSetupSubsection.APPLICATION_DETAILS);
-        classUnderTest.markSubsectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS, CompetitionSetupSubsection.APPLICATION_DETAILS);
+        classUnderTest.markSubsectionIncomplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS, CompetitionSetupSubsection.APPLICATION_DETAILS);
     }
     @Test
     public void testProjectFinanceAllAccessAllowed() {
@@ -108,7 +108,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         classUnderTest.createNonIfs();
         Long sectionId = 3L;
         classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
-        classUnderTest.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
+        classUnderTest.markSectionIncomplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
     }
 
     /**
@@ -173,7 +173,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 		}
 
 		@Override
-		public ServiceResult<SetupStatusResource> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
+		public ServiceResult<SetupStatusResource> markSectionIncomplete(Long competitionId, CompetitionSetupSection section) {
 			return null;
 		}
 
@@ -183,7 +183,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<SetupStatusResource> markSubsectionInComplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
+        public ServiceResult<SetupStatusResource> markSubsectionIncomplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
             return null;
         }
 

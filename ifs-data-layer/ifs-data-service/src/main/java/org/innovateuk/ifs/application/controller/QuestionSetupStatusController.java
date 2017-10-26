@@ -15,16 +15,18 @@ public class QuestionSetupStatusController {
     @Autowired
     private QuestionSetupService questionSetupService;
 
-    @PutMapping("/markAsComplete/{questionId}/{competitionId}")
-    public RestResult<Void> markQuestionSetupAsComplete(@PathVariable("questionId") final Long questionId,
-                                                        @PathVariable("competitionId") final Long competitionId){
-        return questionSetupService.markInSetupAsComplete(questionId, competitionId).toPutResponse();
+    @PutMapping("/markAsComplete/{competitionId}/{parentSection}/{questionId}")
+    public RestResult<Void> markQuestionSetupAsComplete(@PathVariable("competitionId") final Long competitionId,
+                                                        @PathVariable("parentSection") final CompetitionSetupSection parentSection,
+                                                        @PathVariable("questionId") final Long questionId){
+        return questionSetupService.markQuestionInSetupAsComplete(questionId, competitionId, parentSection).toPutResponse();
     }
 
-    @PutMapping("/markAsInComplete/{questionId}/{competitionId}")
-    public RestResult<Void> markQuestionSetupAsInComplete(@PathVariable("questionId") final Long questionId,
-                                                          @PathVariable("competitionId") final Long competitionId){
-        return questionSetupService.markInSetupAsInComplete(questionId, competitionId).toPutResponse();
+    @PutMapping("/markAsIncomplete/{competitionId}/{parentSection}/{questionId}")
+    public RestResult<Void> markQuestionSetupAsInComplete(@PathVariable("competitionId") final Long competitionId,
+                                                          @PathVariable("parentSection") final CompetitionSetupSection parentSection,
+                                                          @PathVariable("questionId") final Long questionId){
+        return questionSetupService.markQuestionInSetupAsIncomplete(questionId, competitionId, parentSection).toPutResponse();
     }
 
     @GetMapping("/getStatuses/{competitionId}/{parentSection}")

@@ -15,11 +15,11 @@ public interface QuestionSetupService {
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can mark sections incomplete")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    ServiceResult<SetupStatusResource> markInSetupAsComplete(Long questionId, Long competitionId);
+    ServiceResult<SetupStatusResource> markQuestionInSetupAsComplete(Long questionId, Long competitionId, CompetitionSetupSection parentSection);
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can mark sections incomplete")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    ServiceResult<SetupStatusResource> markInSetupAsInComplete(Long questionId, Long competitionId);
+    ServiceResult<SetupStatusResource> markQuestionInSetupAsIncomplete(Long questionId, Long competitionId, CompetitionSetupSection parentSection);
 
     @SecuredBySpring(value = "READ", description = "Only those with either comp admin or project finance roles can read the statuses")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
