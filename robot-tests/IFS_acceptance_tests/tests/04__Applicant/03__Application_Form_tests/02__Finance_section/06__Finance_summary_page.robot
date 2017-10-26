@@ -66,7 +66,7 @@ Your Finance includes Finance summary table for lead applicant
     [Tags]
     [Setup]  log in as a different user            &{lead_applicant_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    Then the finance summary table in Your Finances has correct values for lead  £72,611  30%  £0  £8,000,000  £0
+    Then the finance summary table in Your Finances has correct values for lead  £72,611  30%  0  8,000,000  0
     And the user clicks the button/link            link=Return to application overview
 
 Your Finance includes Finance summary table for collaborator
@@ -258,9 +258,9 @@ Innovation lead can see read only view of Your funding
 *** Keywords ***
 the finance summary calculations should be correct
     the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£349,046")
-    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£58,793")
-    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£502,468")
-    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£140,632")
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("58,793")
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("502,468")
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("140,632")
 
 the finance Funding breakdown calculations should be correct
     the user should see the element  jQuery=.project-cost-breakdown th:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") + td:contains("£147,153")
@@ -287,16 +287,16 @@ the finance summary table in Your Finances has correct values for collaborator
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  £990
+    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  990
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(4)  £0
+    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(4)  0
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  £0
+    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  0
 
 the contribution to project and funding sought should be 0 and not a negative number
     the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  £0
-    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  £0
+    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  0
+    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  0
 
 Green check should be visible
     Page Should Contain Image  css=.finance-summary tr:nth-of-type(1) img[src*="/images/field/tick-icon"]
