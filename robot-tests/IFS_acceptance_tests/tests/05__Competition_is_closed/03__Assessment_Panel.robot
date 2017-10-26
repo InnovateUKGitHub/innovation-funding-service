@@ -40,7 +40,7 @@ There are no Assessors in Invite and Pending and rejected tab before sending inv
     [Documentation]  IFS-1561
     [Tags]
     Given the user clicks the button/link  link=Invite
-    And the user should see the element    jQuery=tr:contains("There are no assessors to be invited to this competition.")
+    And the user should see the element    jQuery=tr:contains("There are no assessors to be invited to this panel.")
     Then the user clicks the button/link   link=Pending and rejected
     And the user should see the element    jQuery=tr:contains("There are no assessors invited to this assessment panel.")
 
