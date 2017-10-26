@@ -15,7 +15,7 @@ import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.util.InternalUserOrganisationUtil;
+//import org.innovateuk.ifs.project.util.InternalUserOrganisationUtil;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -41,6 +41,7 @@ import java.net.URLEncoder;
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -62,8 +63,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<FinanceChecksNotesController> {
 
-    @Mock
-    public InternalUserOrganisationUtil internalUserOrganisationUtil;
+/*    @Mock
+    public InternalUserOrganisationUtil internalUserOrganisationUtil;*/
 
     private Long projectId = 3L;
     private Long financeTeamUserId = 18L;
@@ -112,7 +113,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(Arrays.asList(projectUser));
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(asList(projectUser));
 
         UserResource user1 = new UserResource();
         user1.setId(18L);
@@ -133,11 +134,11 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         notes = Arrays.asList(thread2, thread, thread3);
 
         //TODO - Getting the organisation name this way is just a workaround till IFS-651 is fixed.
-        when(internalUserOrganisationUtil.getOrganisationName(financeTeamUser, firstPost)).thenReturn(innovateOrganisationResource.getName());
+/*        when(internalUserOrganisationUtil.getOrganisationName(financeTeamUser, firstPost)).thenReturn(innovateOrganisationResource.getName());
         when(internalUserOrganisationUtil.getOrganisationName(financeTeamUser, firstPost2)).thenReturn(innovateOrganisationResource.getName());
         when(internalUserOrganisationUtil.getOrganisationName(financeTeamUser, firstPost1)).thenReturn(innovateOrganisationResource.getName());
         when(internalUserOrganisationUtil.getOrganisationName(projectManagerUser, firstResponse)).thenReturn(leadOrganisationResource.getName());
-        when(internalUserOrganisationUtil.getOrganisationName(projectManagerUser, firstResponse1)).thenReturn(leadOrganisationResource.getName());
+        when(internalUserOrganisationUtil.getOrganisationName(projectManagerUser, firstResponse1)).thenReturn(leadOrganisationResource.getName());*/
     }
 
     @Test
@@ -166,14 +167,14 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals(2, noteViewModel.getNotes().get(0).getViewModelPosts().size());
         assertEquals("Question", noteViewModel.getNotes().get(0).getViewModelPosts().get(0).body);
         assertEquals(financeTeamUserId, noteViewModel.getNotes().get(0).getViewModelPosts().get(0).author.getId());
-        assertEquals("A Z - Innovate (Finance team)", noteViewModel.getNotes().get(0).getViewModelPosts().get(0).getUsername());
+        assertEquals("A Z - Innovate UK (Finance team)", noteViewModel.getNotes().get(0).getViewModelPosts().get(0).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(noteViewModel.getNotes().get(0).getViewModelPosts().get(0).createdOn));
         assertEquals(1, noteViewModel.getNotes().get(0).getViewModelPosts().get(0).attachments.size());
         assertEquals(23L, noteViewModel.getNotes().get(0).getViewModelPosts().get(0).attachments.get(0).id.longValue());
         assertEquals("file1.txt", noteViewModel.getNotes().get(0).getViewModelPosts().get(0).attachments.get(0).name);
         assertEquals("Response", noteViewModel.getNotes().get(0).getViewModelPosts().get(1).body);
         assertEquals(applicantFinanceContactUserId, noteViewModel.getNotes().get(0).getViewModelPosts().get(1).author.getId());
-        assertEquals("B Z - Org1", noteViewModel.getNotes().get(0).getViewModelPosts().get(1).getUsername());
+        assertEquals("B Z - Innovate UK", noteViewModel.getNotes().get(0).getViewModelPosts().get(1).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(20L).isAfter(noteViewModel.getNotes().get(0).getViewModelPosts().get(1).createdOn));
         assertEquals(0, noteViewModel.getNotes().get(0).getViewModelPosts().get(1).attachments.size());
         assertEquals("Query2 title", noteViewModel.getNotes().get(1).getTitle());
@@ -183,7 +184,7 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals(1, noteViewModel.getNotes().get(1).getViewModelPosts().size());
         assertEquals("Question2", noteViewModel.getNotes().get(1).getViewModelPosts().get(0).body);
         assertEquals(financeTeamUserId, noteViewModel.getNotes().get(1).getViewModelPosts().get(0).author.getId());
-        assertEquals("A Z - Innovate (Finance team)", noteViewModel.getNotes().get(1).getViewModelPosts().get(0).getUsername());
+        assertEquals("A Z - Innovate UK (Finance team)", noteViewModel.getNotes().get(1).getViewModelPosts().get(0).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(15L).isAfter(noteViewModel.getNotes().get(1).getViewModelPosts().get(0).createdOn));
         assertEquals(0, noteViewModel.getNotes().get(1).getViewModelPosts().get(0).attachments.size());
 
@@ -194,12 +195,12 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
         assertEquals(2, noteViewModel.getNotes().get(2).getViewModelPosts().size());
         assertEquals("Question3", noteViewModel.getNotes().get(2).getViewModelPosts().get(0).body);
         assertEquals(financeTeamUserId, noteViewModel.getNotes().get(2).getViewModelPosts().get(0).author.getId());
-        assertEquals("A Z - Innovate (Finance team)", noteViewModel.getNotes().get(2).getViewModelPosts().get(0).getUsername());
+        assertEquals("A Z - Innovate UK (Finance team)", noteViewModel.getNotes().get(2).getViewModelPosts().get(0).getUsername());
         assertTrue(ZonedDateTime.now().isAfter(noteViewModel.getNotes().get(2).getViewModelPosts().get(0).createdOn));
         assertEquals(0, noteViewModel.getNotes().get(2).getViewModelPosts().get(0).attachments.size());
         assertEquals("Response3", noteViewModel.getNotes().get(2).getViewModelPosts().get(1).body);
         assertEquals(applicantFinanceContactUserId, noteViewModel.getNotes().get(2).getViewModelPosts().get(1).author.getId());
-        assertEquals("B Z - Org1", noteViewModel.getNotes().get(2).getViewModelPosts().get(1).getUsername());
+        assertEquals("B Z - Innovate UK", noteViewModel.getNotes().get(2).getViewModelPosts().get(1).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(noteViewModel.getNotes().get(2).getViewModelPosts().get(1).createdOn));
         assertEquals(0, noteViewModel.getNotes().get(2).getViewModelPosts().get(1).attachments.size());
     }
