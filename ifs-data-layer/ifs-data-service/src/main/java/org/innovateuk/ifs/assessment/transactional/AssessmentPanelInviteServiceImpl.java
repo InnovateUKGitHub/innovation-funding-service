@@ -524,5 +524,3 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         return serviceSuccess();
     }
 }
-
-
