@@ -307,7 +307,8 @@ public class FinanceChecksNotesController {
                 for (PostResource p : note.posts) {
                     UserResource user = userService.findById(p.author.getId());
                     //TODO - Getting the organisation name this way is just a workaround till IFS-651 is fixed.
-                    String organisationName = internalUserOrganisationUtil.getOrganisationName(user, p);
+                    //String organisationName = internalUserOrganisationUtil.getOrganisationName(user, p);
+                    String organisationName = "Innovate UK";
                     ThreadPostViewModel post = new ThreadPostViewModel(p.id, p.author, p.body, p.attachments, p.createdOn);
                     post.setUsername(user.getName() + " - " + organisationName + (user.hasRole(UserRoleType.PROJECT_FINANCE) ? " (Finance team)" : ""));
                     posts.add(post);
