@@ -64,6 +64,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               IFS-1576 Allow changes to Target start date until generation of Spend Profile
 ...
 ...               IFS-1579 Allow change of Finance Contact until generation of GOL
+...
+...               IFS-2062 Row to be taken off from Query responses tab once SP is generated
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
