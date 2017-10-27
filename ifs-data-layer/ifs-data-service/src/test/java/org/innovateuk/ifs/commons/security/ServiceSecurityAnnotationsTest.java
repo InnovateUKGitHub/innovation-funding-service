@@ -2,10 +2,11 @@ package org.innovateuk.ifs.commons.security;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluator;
 import org.innovateuk.ifs.commons.security.evaluator.ListOfOwnerAndMethod;
 import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
+import org.innovateuk.ifs.security.UidAuthenticationService;
+import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -33,7 +34,7 @@ import static org.junit.Assert.*;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
- * Tests around the Spring Security annotations on the Services and the Permission Rule framework as used by the CustomPermissionEvaluator
+ * Tests around the Spring Security annotations on the Services and the Permission Rule framework as used by the {@link CustomPermissionEvaluator}
  */
 public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 

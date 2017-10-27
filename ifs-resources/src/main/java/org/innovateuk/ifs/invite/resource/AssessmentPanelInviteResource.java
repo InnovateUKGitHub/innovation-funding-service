@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-
 import java.time.ZonedDateTime;
 
 /**
@@ -19,6 +18,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
     private long userId;
     private String email;
     private ZonedDateTime panelDate;
+
 
     public AssessmentPanelInviteResource(String hash,
                                          long competitionId,
@@ -39,6 +39,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
 
     public AssessmentPanelInviteResource() {
     }
+
 
     public String getHash() {
         return hash;
@@ -97,6 +98,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
         this.panelDate = panelDate;
     }
 
+
     @JsonIgnore
     public boolean isPending() {
         return status == InviteStatus.SENT;
@@ -111,10 +113,10 @@ public class AssessmentPanelInviteResource extends InviteResource {
         AssessmentPanelInviteResource that = (AssessmentPanelInviteResource) o;
 
         return new EqualsBuilder()
-                .append(competitionId, that.competitionId)
-                .append(userId, that.userId)
                 .append(status, that.status)
                 .append(hash, that.hash)
+                .append(competitionId, that.competitionId)
+                .append(userId, that.userId)
                 .append(competitionName, that.competitionName)
                 .append(email, that.email)
                 .append(panelDate, that.panelDate)
@@ -127,8 +129,8 @@ public class AssessmentPanelInviteResource extends InviteResource {
                 .append(status)
                 .append(hash)
                 .append(competitionId)
-                .append(competitionName)
                 .append(userId)
+                .append(competitionName)
                 .append(email)
                 .append(panelDate)
                 .toHashCode();

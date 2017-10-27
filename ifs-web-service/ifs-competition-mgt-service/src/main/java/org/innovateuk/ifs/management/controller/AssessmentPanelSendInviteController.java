@@ -158,11 +158,11 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
     }
 
     private void populateResendInviteFormWithExistingValues(ResendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
-        form.setSubject(format("Invitation to assess '%s'", assessorInviteToSendResource.getCompetitionName()));
+        form.setSubject(format("Invitation to assessment panel for '%s'", assessorInviteToSendResource.getCompetitionName()));
     }
 
     private void populateGroupInviteFormWithExistingValues(SendInviteForm form, AssessorInvitesToSendResource assessorInviteToSendResource) {
-        form.setSubject(format("Invitation to assess '%s'", assessorInviteToSendResource.getCompetitionName()));
+        form.setSubject(format("Invitation to assessment panel for '%s'", assessorInviteToSendResource.getCompetitionName()));
     }
 
     private String redirectToPanelOverviewTab(long competitionId) {
