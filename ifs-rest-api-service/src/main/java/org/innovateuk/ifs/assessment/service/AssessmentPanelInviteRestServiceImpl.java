@@ -135,13 +135,23 @@ public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implem
 
     @Override
     public RestResult<Void> deleteInvite(String email, long competitionId) {
-        return deleteWithRestResult(format("%s/%s?competitionId=%s&email=%s", assessmentPanelInviteRestUrl, "deleteInvite", competitionId, email), Void.class);
+        String baseUrl = format("%s/%s", assessmentPanelInviteRestUrl, "deleteInvite");
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("competitionId", competitionId)
+                .queryParam("email", email);
+
+        return deleteWithRestResult(builder.toUriString(), Void.class);
     }
 
     @Override
     public RestResult<Void> deleteAllInvites(long competitionId) {
-        return deleteWithRestResult(format("%s/%s?competitionId=%s", assessmentPanelInviteRestUrl, "deleteAllInvites", competitionId), Void.class);
-    }
+        String baseUrl = format("%s/%s", assessmentPanelInviteRestUrl, "deleteAllInvites");
 
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("competitionId", competitionId);
+
+        return deleteWithRestResult(builder.toUriString(), Void.class);
+    }
 }
 
