@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.GuidanceRow;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
+import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
@@ -25,6 +26,8 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
 import static org.innovateuk.ifs.application.builder.GuidanceRowResourceBuilder.newFormInputGuidanceRowResourceBuilder;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionSetupQuestionResourceBuilder.newCompetitionSetupQuestionResource;
@@ -233,8 +236,8 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
 
     @Test
     public void test_createByCompetitionId() {
-        long competitionId = 22L;
-        long questionId = 33L;
+        Long competitionId = 22L;
+        Long questionId = 33L;
         Competition competition = newCompetition().build();
         Question newlyCreatedQuestion = newQuestion().withId(questionId).build();
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
@@ -244,6 +247,29 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
         assertTrue(result.isSuccess());
 
-        //TODO: assert expected resource result (question)
+        CompetitionSetupQuestionResource resource = result.getSuccessObjectOrThrowException();
+        assertEquals(questionId, resource.getQuestionId());
+    }
+
+    @Test
+    public void test_createByCompetitionIdWithNonExistentCompId() {
+        Long competitionId = 22L;
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(null);
+
+        ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonErrors.notFoundError(Competition.class, competitionId)));
+    }
+
+    @Test
+    public void test_createByCompetitionIdWhenDefaultCreationFails() {
+        Long competitionId = 22L;
+        Competition competition = newCompetition().build();
+        when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
+        when(competitionSetupTemplateService.createDefaultForApplicationSection(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
+
+        ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(COMPETITION_NOT_EDITABLE));
     }
 }
