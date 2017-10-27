@@ -150,7 +150,7 @@ Support User can see read only summary for lead
     [Tags]  Support
     [Setup]  The user clicks the button/link       css=.finance-summary tbody tr:nth-of-type(1) th a
     When the user should see the text in the page  Please complete your project finances.
-    Then the finance summary table in Your Finances has correct values for lead  £72,611  30%  £0  £8,000,000  £0
+    Then the finance summary table in Your Finances has correct values for lead  £72,611  30%  0  8,000,000  0
 
 Support User can see read only summary for collaborator
     [Documentation]  IFS-401
@@ -212,7 +212,7 @@ Innovation lead can see read only summary for lead
     [Tags]  InnovationLead
     [Setup]  The user clicks the button/link  css=.finance-summary tbody tr:nth-of-type(1) th a
     When the user should see the text in the page       Please complete your project finances.
-    Then the finance summary table in Your Finances has correct values for lead  £200,903  30%  £57,803  £2,468  £140,632
+    Then the finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
 
 Innovation lead can see read only summary for collaborator
     [Documentation]  IFS-802
@@ -348,7 +348,7 @@ the user fills in the funding information with bigger amount
 User verifies captial usage, subcontracting, travel and other costs for innovation lead
     the user expands the section     Capital usage
     the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") + td:contains("Existing") + td:contains("12") + td:contains("2,120")
-    the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") ~ td:contains("1200") + td:contains("60") + td:contains("£552")
+    the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") ~ td:contains("1,200") + td:contains("60") + td:contains("£552")
     the user collapses the section   Capital usage
     the user expands the section     Subcontracting costs
     the user should see the element  jQuery=#subcontracting-table td:contains("Developers") + td:contains("UK") + td:contains("To develop stuff") + td:contains("£90,000")
@@ -375,8 +375,8 @@ User verifies labour, overhead costs and materials for innovation lead
 
 User verifies captial usage, subcontracting, travel and other costs
     the user expands the section     Capital usage
-    the user should see the element  jQuery=#capital-usage-table td:contains("some description") + td:contains("New") + td:contains("10") + td:contains("5000")
-    the user should see the element  jQuery=#capital-usage-table td:contains("some description") ~ td:contains("25") + td:contains("100") + td:contains("£4975")
+    the user should see the element  jQuery=#capital-usage-table td:contains("some description") + td:contains("New") + td:contains("10") + td:contains("5,000")
+    the user should see the element  jQuery=#capital-usage-table td:contains("some description") ~ td:contains("25") + td:contains("100") + td:contains("£4,975")
     the user collapses the section   Capital usage
     the user expands the section     Subcontracting costs
     the user should see the element  jQuery=#subcontracting-table td:contains("SomeName") + td:contains("Netherlands") + td:contains("Quality Assurance") + td:contains("£1,000")
@@ -391,7 +391,7 @@ User verifies captial usage, subcontracting, travel and other costs
 User verifies labour, overhead costs and materials
     the user expands the section     Labour
     the user should see the element  jQuery=dt:contains("Working days per year") ~ dd:contains("230")
-    the user should see the element  jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("120000") ~ td:contains("100")
+    the user should see the element  jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("120,000") ~ td:contains("100")
     the user collapses the section   Labour
     the user expands the section     Overhead costs
     the user should see the element  jQuery=th:contains("20% of labour costs")
