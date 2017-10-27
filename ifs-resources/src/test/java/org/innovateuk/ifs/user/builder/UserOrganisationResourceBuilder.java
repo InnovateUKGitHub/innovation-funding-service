@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class UserOrganisationResourceBuilder extends BaseBuilder<UserOrganisationResource, UserOrganisationResourceBuilder> {
     private UserOrganisationResourceBuilder(List<BiConsumer<Integer, UserOrganisationResource>> newActions) {
@@ -25,5 +26,13 @@ public class UserOrganisationResourceBuilder extends BaseBuilder<UserOrganisatio
 
     public static UserOrganisationResourceBuilder newUserOrganisationResource() {
         return new UserOrganisationResourceBuilder(emptyList());
+    }
+
+    public UserOrganisationResourceBuilder withName(String... names) {
+        return withArray((name, userOrganisation) -> setField("name", name, userOrganisation), names);
+    }
+
+    public UserOrganisationResourceBuilder withEmail(String... emails) {
+        return withArray((email, userOrganisation) -> setField("email", email, userOrganisation), emails);
     }
 }

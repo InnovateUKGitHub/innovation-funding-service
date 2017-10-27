@@ -72,8 +72,4 @@ public enum UserRoleType {
     public static Set<UserRoleType> externalApplicantRoles(){
         return new HashSet<>(Arrays.asList(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER));
     }
-
-    public static Set<String> externalApplicantRoleNames(){
-        return new HashSet<>(Arrays.asList(APPLICANT.getName(), COLLABORATOR.getName(), FINANCE_CONTACT.getName(), PARTNER.getName(), PROJECT_MANAGER.getName()));
-    }
 }

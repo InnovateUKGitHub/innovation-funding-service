@@ -34,10 +34,9 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
-import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoleNames;
-import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -229,7 +228,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Override
     public ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes) {
-        return serviceSuccess(simpleMap(userOrganisationRepository.findByUserRolesNameInOrderByIdUserEmailAsc(externalApplicantRoleNames()), userOrganisationMapper::mapToResource));
+        return serviceSuccess(simpleMap(userOrganisationRepository.findByUserRolesNameInOrderByIdUserEmailAsc(simpleMapSet(roleTypes, UserRoleType::getName)), userOrganisationMapper::mapToResource));
     }
 
     private List<UserResource> sortByName(List<UserResource> userResources) {

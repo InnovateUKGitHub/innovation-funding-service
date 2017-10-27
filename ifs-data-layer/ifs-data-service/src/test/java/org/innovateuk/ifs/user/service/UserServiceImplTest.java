@@ -9,15 +9,15 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.user.transactional.UserServiceImpl;
+import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
+import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -32,7 +32,10 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
+import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -45,6 +48,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Captor
     ArgumentCaptor<Notification> notificationArgumentCaptor;
+
+    @Mock
+    UserOrganisationMapper userOrganisationMapperMock;
 
     @Test
     public void testChangePassword() {
@@ -507,20 +513,22 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertEquals(userResource1, resultObject.getContent().get(1));
     }
 
-    /*@Test
+    @Test
     public void testFindAllByProcessRoles(){
-        List<User> users = newUser().build(2);
-        when(userRepositoryMock.findByRolesNameInOrderByEmailAsc(externalApplicantRoles().stream().map(UserRoleType::getName).collect(Collectors.toSet()))).thenReturn(users);
+        List<UserOrganisation> userOrganisations = newUserOrganisation().withUser(newUser().withEmailAddress("a@test.com").build(), newUser().withEmailAddress("b@test.com").build()).build(2);
+        when(userOrganisationRepositoryMock.findByUserRolesNameInOrderByIdUserEmailAsc(anySet())).thenReturn(userOrganisations);
+        when(userOrganisationMapperMock.mapToResource(userOrganisations.get(0))).thenReturn(newUserOrganisationResource().withEmail(userOrganisations.get(0).getUser().getEmail()).build());
+        when(userOrganisationMapperMock.mapToResource(userOrganisations.get(1))).thenReturn(newUserOrganisationResource().withEmail(userOrganisations.get(1).getUser().getEmail()).build());
 
         ServiceResult<List<UserOrganisationResource>> result = service.findAllByProcessRoles(externalApplicantRoles());
 
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccessObject().size());
-<<<<<<< HEAD
+        assertEquals("a@test.com", result.getSuccessObject().get(0).getEmail());
+        assertEquals("b@test.com", result.getSuccessObject().get(1).getEmail());
 
-        verify(organisationRepositoryMock).findByUsersId(users.get(0).getId());
-        verify(organisationRepositoryMock).findByUsersId(users.get(1).getId());
-    }*/
+        verify(userOrganisationRepositoryMock).findByUserRolesNameInOrderByIdUserEmailAsc(anySet());
+    }
 
     @Override
     protected UserService supplyServiceUnderTest() {
