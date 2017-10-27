@@ -153,8 +153,6 @@ Calculations in the spend profile table
     And the user should see the element    jQuery=th:contains("Subcontracting") ~ td.fix-right:contains("£ 90,000")
     And the user should see the element    jQuery=th:contains("Travel and subsistence") ~ td.fix-right:contains("£ 5,970")
     And the user should see the element    jQuery=th:contains("Other costs") ~ td.fix-right:contains("£ 1,100")
-    And the user should see the element    jQuery=th:contains("Finance") ~ td.fix-right:contains("£ 30")
-    And the user should see the element    jQuery=th:contains("Other Funding") ~ td.fix-right:contains("£ 2,468")
     #${duration} is No of Months + 1, due to header
     And the sum of tds equals the total    .spend-profile-table  1  38  3081    # Labour
     And the sum of tds equals the total    .spend-profile-table  3  38  100200  # Materials
@@ -167,7 +165,7 @@ Lead Partner can see Spend profile summary
     [Tags]
     Given the user navigates to the page  ${external_spendprofile_summary}/review
     When the user should see the element  jQuery=.grid-container th:contains("Financial year") + th:contains("Project spend")
-    Then the user should see the element  jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£ 56,605")
+    Then the user should see the element  jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£ 55,875")
 
 Lead partner can edit his spend profile with invalid values and see the error messages
     [Documentation]  INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409, INFUND-6148 INFUND-6146
@@ -180,7 +178,7 @@ Lead partner can edit his spend profile with invalid values and see the error me
     And the user should see the element        jQuery=.form-group-error th:contains("Labour")
     And the user should see the element        jQuery=th:contains("Labour") ~ .fix-right.cell-error input[data-calculation-rawvalue="3495"]
     # Project costs for financial year are instantly reflecting the financial values INFUND-3971, INFUND-6148
-    And the user should see the element        jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£ 57,019")
+    And the user should see the element        jQuery=.grid-container table tr:nth-child(1) td:nth-child(2):contains("£ 56,289")
     When the user clicks the button/link       jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should see the element       jQuery=.error-summary:contains("Your total costs are higher than the eligible project costs.")
     When the user clicks the button/link       jQuery=.button:contains("Edit spend profile")
@@ -197,9 +195,6 @@ Lead partner can edit his spend profile with invalid values and see the error me
     When the user enters text to a text field  jQuery=th:contains("Overheads") ~ td:nth-child(4) input  0
     And the user moves focus to the element    css=.spend-profile-table tbody .form-group-row:nth-child(3) td:nth-of-type(2) input
     And the user should not see the element    css=.error-summary-list
-    When the user enters text to a text field  jQuery=th:contains("Other Funding") ~ td:nth-child(4) input  ${empty}
-    Then the user should see the element       jQuery=.error-summary:contains("This field cannot be left blank.")
-    And the user enters text to a text field   jQuery=th:contains("Other Funding") ~ td:nth-child(4) input  68
 
 Lead partner can edit his spend profile with valid values
     [Documentation]    INFUND-3765
@@ -525,7 +520,7 @@ Partners can see the Spend Profile section completed
     Then the user should see the element    css=li.complete:nth-of-type(6)
 
 Project Finance is able to see Spend Profile approval page
-    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942
+    [Documentation]    INFUND-2638, INFUND-5617, INFUND-3973, INFUND-5942 IFS-1871
     [Tags]    HappyPath
     [Setup]    Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
@@ -537,9 +532,9 @@ Project Finance is able to see Spend Profile approval page
     And the user should see the text in the page  Innovation Lead
     And the user should see the text in the page    Peter Freeman
     When the user should see the text in the page    Project spend profile
-    Then the user clicks the button/link   link=${Katz_Name}-spend-profile.csv
-    And the user clicks the button/link   link=${Meembee_Name}-spend-profile.csv
-    And the user clicks the button/link   link=${Zooveo_Name}-spend-profile.csv
+    Then the project finance user downloads the spend profile file and checks the content of it  ${Katz_Name}-spend-profile.csv
+    And the user should see the element  link=${Meembee_Name}-spend-profile.csv
+    And the user should see the element  link=${Zooveo_Name}-spend-profile.csv
     When the user should see the text in the page    Approved by Innovate UK
     Then the element should be disabled    css=#accept-profile
     When the user selects the checkbox    approvedByLeadTechnologist
@@ -766,7 +761,6 @@ the user uploads the file
     [Arguments]    ${upload_filename}
     Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
 
-
 the sum of tds equals the total
     [Arguments]    ${table}    ${row}    ${duration}    ${total}
     # This Keyword performs a for loop that iterates per column (in a specific row)
@@ -858,3 +852,39 @@ check if finance contact can be changed
     the user sees that the radio button is selected  financeContact  financeContact2
     the user selects the radio button  financeContact  financeContact1
     the user clicks the button/link  jQuery=button:contains("Save")
+
+the project finance user downloads the spend profile file and checks the content of it
+    [Arguments]  ${file}
+    the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile-export/csv  ${DOWNLOAD_FOLDER}/${file}
+    the user opens the csv file and checks the content  ${file}
+    remove the file from the operating system  ${file}
+
+the user opens the csv file and checks the content
+    [Arguments]  ${file}
+    ${contents} =          read csv file  ${DOWNLOAD_FOLDER}/${file}
+    ${labourRow} =         get from list  ${contents}  1
+    ${labour} =            get from list  ${labourRow}  0
+    should be equal        ${labour}  Labour
+    ${labourFirstMonth} =  get from list  ${labourRow}  1
+    should be equal        ${labourFirstMonth}  14.00
+    ${overheadsRow} =      get from list  ${contents}  2
+    ${overheads} =         get from list  ${overheadsRow}  0
+    should be equal        ${overheads}  Overheads
+    ${materialsRow} =      get from list  ${contents}  3
+    ${materials} =         get from list  ${materialsRow}  0
+    should be equal        ${materials}  Materials
+    ${capitalUsageRow} =   get from list  ${contents}  4
+    ${capitalUsage} =      get from list  ${capitalUsageRow}  0
+    should be equal        ${capitalUsage}  Capital usage
+    ${subcontractingRow} =  get from list  ${contents}  5
+    ${subcontracting} =    get from list  ${subcontractingRow}  0
+    should be equal        ${subcontracting}  Subcontracting
+    ${travelRow} =         get from list  ${contents}  6
+    ${travel} =            get from list  ${travelRow}  0
+    should be equal        ${travel}  Travel and subsistence
+    ${otherCostsRow} =     get from list  ${contents}  7
+    ${otherCosts} =        get from list  ${otherCostsRow}  0
+    should be equal        ${otherCosts}  Other costs
+    ${totalRow} =          get from list  ${contents}  8
+    ${totalFirstMonth} =   get from list  ${totalRow}  1
+    should be equal        ${totalFirstMonth}  5581.00
