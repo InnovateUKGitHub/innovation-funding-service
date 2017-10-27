@@ -19,8 +19,8 @@ Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 ${assessment_panel}  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
-${panel_assessor}    benjamin.nixon@gmail.com
-${panel_user_joel}  joel.george@gmail.com
+${panel_assessor_ben}    benjamin.nixon@gmail.com
+${panel_assessor_joel}  joel.george@gmail.com
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
@@ -52,10 +52,10 @@ CompAdmin can add an assessor to invite list
     Given the user clicks the button/link     jQuery=tr:contains("Benjamin Nixon") label
     And the user clicks the button/link       jQuery=tr:contains("Joel George") label
     When the user clicks the button/link      jQuery=button:contains("Add selected to invite list")
-    And the user should see the element       jQuery=td:contains("Joel George") + td:contains("${panel_user_joel}")
-    Then the user should see the element      jQuery=td:contains("Benjamin Nixon") + td:contains("${panel_assessor}")
-    And the user clicks the button/link       link=Find
-    And the user should not see the element   jQuery=td:contains("Benjamin Nixon")
+    And the user should see the element       jQuery=td:contains("Joel George") + td:contains("${panel_assessor_joel}")
+    Then the user should see the element      jQuery=td:contains("Benjamin Nixon") + td:contains("${panel_assessor_ben}")
+    When the user clicks the button/link      link=Find
+    Then the user should not see the element  jQuery=td:contains("Benjamin Nixon")
     And the user should not see the element   jQuery=td:contains("Joel George")
 
 Cancel sending invite returns to the invite tab
@@ -73,10 +73,10 @@ Assessor recieves the invite to panel
     [Setup]  the user clicks the button/link  link=Invite
     Given the user clicks the button/link     link=Review and send invites
     When the user clicks the button/link      jQuery=button:contains("Send invite")
-    And the user reads his email              ${panel_assessor}  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
-    And the user reads his email              ${panel_user_joel}  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
-    And the user should see the element       jQuery=.column-quarter:contains("2") small:contains("Invited")
+    Then the user should see the element       jQuery=.column-quarter:contains("2") small:contains("Invited")
     And the user should see the element       jQuery=.column-quarter:contains("2") small:contains("Assessors on invite list")
+    And the user reads his email              ${panel_assessor_ben}  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
+    And the user reads his email              ${panel_assessor_joel}  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
 
 Bulk add assessor to invite list
     [Documentation]  IFS-31
@@ -103,7 +103,7 @@ CompAdmin resend invites to multiple assessors
 Assesor is able to accept the invitation from dashboard
     [Documentation]  IFS-37  IFS-1135
     [Tags]  HappyPath
-    [Setup]  Log in as a different user       ${panel_assessor}  ${short_password}
+    [Setup]  Log in as a different user       ${panel_assessor_ben}  ${short_password}
     Given the user clicks the button/link     jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button    acceptInvitation  true
     And The user clicks the button/link       jQuery=button:contains("Confirm")
@@ -113,11 +113,11 @@ Assesor is able to reject the invitation from email
     [Documentation]  IFS-37
     [Tags]
     [Setup]  Logout as user
-    Given the user reads his email and clicks the link  ${panel_user_joel}  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
+    Given the user reads his email and clicks the link  ${panel_assessor_joel}  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
     When the user selects the radio button              acceptInvitation  false
     And The user clicks the button/link                 jQuery=button:contains("Confirm")
     And the user clicks the button/link                 link=Sign in
-    And Logging in and Error Checking                   ${panel_user_joel}  ${short_password}
+    And Logging in and Error Checking                   ${panel_assessor_joel}  ${short_password}
     Then the user should not see the element            jQuery=h2:contains("Invitations to attend panel")
 
 Comp Admin can see the rejected invitation
