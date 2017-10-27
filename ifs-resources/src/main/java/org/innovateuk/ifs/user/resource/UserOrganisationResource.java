@@ -8,8 +8,7 @@ public class UserOrganisationResource {
     private UserStatus status;
 
 
-    public UserOrganisationResource() {
-    }
+    public UserOrganisationResource() {}
 
     public UserOrganisationResource(String name, String organisationName, Long organisationId, String email, UserStatus status) {
         this.name = name;
@@ -37,5 +36,25 @@ public class UserOrganisationResource {
 
     public UserStatus getStatus() {
         return status;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setOrganisationName(String organisationName) {
+        this.organisationName = organisationName;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
     }
 }

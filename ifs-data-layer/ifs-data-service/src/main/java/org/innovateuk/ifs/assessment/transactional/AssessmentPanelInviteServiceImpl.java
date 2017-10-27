@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.mapper.AssessmentPanelParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
@@ -52,6 +53,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
@@ -94,6 +96,9 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     private AssessmentPanelInviteMapper assessmentPanelInviteMapper;
     @Autowired
     private ParticipantStatusMapper participantStatusMapper;
+
+    @Autowired
+    private AssessmentPanelParticipantMapper assessmentPanelParticipantMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -342,6 +347,16 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                         competition -> assessmentPanelInviteRepository.save(new AssessmentPanelInvite(user, generateInviteHash(), competition))
                 );
 
+    }
+
+    @Override
+    public ServiceResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId) {
+        return serviceSuccess(
+                assessmentPanelParticipantRepository
+                .findByUserIdAndRole(userId, PANEL_ASSESSOR)
+                .stream()
+                .map(assessmentPanelParticipantMapper::mapToResource)
+                .collect(toList()));
     }
 
     private ServiceResult<Competition> getCompetition(long competitionId) {

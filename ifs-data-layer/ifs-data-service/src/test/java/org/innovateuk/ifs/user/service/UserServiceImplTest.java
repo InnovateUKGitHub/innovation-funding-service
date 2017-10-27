@@ -511,12 +511,12 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testFindAllByProcessRoles(){
         List<User> users = newUser().build(2);
         when(userRepositoryMock.findByRolesNameInOrderByEmailAsc(externalApplicantRoles().stream().map(UserRoleType::getName).collect(Collectors.toSet()))).thenReturn(users);
-        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(newOrganisation().build(1));
 
         ServiceResult<List<UserOrganisationResource>> result = service.findAllByProcessRoles(externalApplicantRoles());
 
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccessObject().size());
+<<<<<<< HEAD
 
         verify(organisationRepositoryMock).findByUsersId(users.get(0).getId());
         verify(organisationRepositoryMock).findByUsersId(users.get(1).getId());

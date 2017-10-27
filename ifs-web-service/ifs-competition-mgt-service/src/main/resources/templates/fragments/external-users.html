@@ -20,11 +20,11 @@
             </thead>
             <tbody>
             <tr th:each="user : ${users}">
-                <td th:text="${user.userResource.name}">Steve Smith</td>
+                <td th:text="${user.name}">Steve Smith</td>
                 <td th:text="${user.organisationName}">Empire Limited</td>
                 <td th:text="${user.organisationId}">10</td>
-                <td th:text="${user.userResource.email}">steve.smith@empire.com</td>
-                <td th:text="${user.userResource.status.displayName}">Verified</td>
+                <td th:text="${user.email}">steve.smith@empire.com</td>
+                <td th:text="${user.status.displayName}">Verified</td>
             </tr>
             </tbody>
         </table>

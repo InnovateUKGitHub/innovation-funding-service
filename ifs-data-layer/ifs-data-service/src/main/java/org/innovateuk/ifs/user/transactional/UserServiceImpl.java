@@ -14,9 +14,10 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
+import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,8 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
+import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoleNames;
+import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -83,7 +86,10 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     private EthnicityMapper ethnicityMapper;
 
     @Autowired
-    private OrganisationRepository organisationRepository;
+    private UserOrganisationRepository userOrganisationRepository;
+
+    @Autowired
+    private UserOrganisationMapper userOrganisationMapper;
 
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
@@ -223,15 +229,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Override
     public ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes) {
-        /*List<User> users = userRepository.findByRolesNameInOrderByEmailAsc(roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()));
-        List<UserOrganisationResource> userResources = simpleMap(users, user -> {
-            List<Organisation> organisations = organisationRepository.findByUsersId(user.getId());
-            return new UserOrganisationResource(user.getName(), organisations.get(0).getName(), organisations.get(0).getId(), user.getEmail(), user.getStatus().getDisplayName());
-        });
-        return serviceSuccess(userResources);*/
-
-        return serviceSuccess(userRepository.findAllExternalUserOrganisations());
-
+        return serviceSuccess(simpleMap(userOrganisationRepository.findByUserRolesNameInOrderByIdUserEmailAsc(externalApplicantRoleNames()), userOrganisationMapper::mapToResource));
     }
 
     private List<UserResource> sortByName(List<UserResource> userResources) {
