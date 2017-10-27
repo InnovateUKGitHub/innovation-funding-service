@@ -19,12 +19,15 @@
                 UK</p>
             <p>Enter the figures from the following fields on the Je-S form:</p>
             <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +']}')} ? 'form-group-error'">
-                <label class="form-label" for="tsb-ref">
+                <label class="form-label" th:for="|formInput[cost-${academicFinance.tsbReference?.id}-tsb_reference]|">
           		    		<span class="form-label-bold">TSB reference</span>
                       <span class="form-hint">This number is found at the top of your Je-S form</span>
                       <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.tsbReference?.id})" />
                 </label>
-                <input class="form-control" id="tsb-ref" type="text" th:name="cost- + ${academicFinance.tsbReference?.id} + -tsb_reference"
+                <input type="text"
+                       class="form-control"
+                       th:name="${'cost-' + academicFinance.tsbReference?.id + '-tsb_reference'}"
+                       th:id="|formInput[cost-${academicFinance.tsbReference?.id}-tsb_reference]|"
                        th:value="${academicFinance.tsbReference?.value}"
                        th:readonly="${readonly}"
                        required="required"
