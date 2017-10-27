@@ -475,10 +475,6 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         }
     }
 
-    private ServiceResult<RejectionReason> getRejectionReason(final RejectionReasonResource rejectionReason) {
-        return find(rejectionReasonRepository.findOne(rejectionReason.getId()), notFoundError(RejectionReason.class, rejectionReason.getId()));
-    }
-
     private String getInviteCompetitionName(AssessmentPanelParticipant participant) {
         return participant.getInvite().getTarget().getName();
     }
