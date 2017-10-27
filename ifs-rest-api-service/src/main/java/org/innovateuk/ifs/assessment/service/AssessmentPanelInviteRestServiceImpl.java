@@ -16,7 +16,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
  * REST service for managing {@link InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource}s
  */
 
-
 @Service
 public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implements AssessmentPanelInviteRestService {
 
@@ -86,6 +85,16 @@ public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implem
                 .fromPath(baseUrl);
 
         return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.longsListType());
+    }
+
+    @Override
+    public RestResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId) {
+        String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "getAllInvitesByUser", userId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromPath(baseUrl);
+
+        return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.assessmentPanelParticipantResourceListType());
     }
 
     @Override

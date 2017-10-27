@@ -24,6 +24,13 @@ public class ExternalInviteResource {
     public ExternalInviteResource() {
     }
 
+    public ExternalInviteResource(String name, String email, Long applicationId, InviteStatus status) {
+        this.name = name;
+        this.email = email;
+        this.applicationId = applicationId;
+        this.status = status;
+    }
+
     public String getName() {
         return name;
     }
