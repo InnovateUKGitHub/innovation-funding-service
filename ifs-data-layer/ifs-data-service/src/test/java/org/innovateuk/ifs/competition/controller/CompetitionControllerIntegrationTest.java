@@ -18,7 +18,16 @@ import org.innovateuk.ifs.competition.resource.fixtures.CompetitionCoFundersReso
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryGroup;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
+import org.innovateuk.ifs.project.financechecks.repository.CostCategoryGroupRepository;
+import org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepository;
+import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
+import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.threads.domain.Note;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
@@ -39,6 +48,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -57,7 +67,13 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.FEEDBACK_RELEASED;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
+import static org.innovateuk.ifs.project.builder.CostBuilder.newCost;
+import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
+import static org.innovateuk.ifs.project.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
+import static org.innovateuk.ifs.project.builder.CostCategoryTypeBuilder.newCostCategoryType;
+import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
@@ -115,6 +131,18 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Autowired
     private NoteRepository noteRepository;
 
+    @Autowired
+    private SpendProfileRepository spendProfileRepository;
+
+    @Autowired
+    private CostCategoryRepository costCategoryRepository;
+
+    @Autowired
+    private CostCategoryGroupRepository costCategoryGroupRepository;
+
+    @Autowired
+    private CostCategoryTypeRepository costCategoryTypeRepository;
+
     private static final Long COMPETITION_ID = 1L;
 
     private static final String COMPETITION_NAME_UPDATED = "Competition name updated";
@@ -161,11 +189,41 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     private void setupUserData() {
-        projectFinanceUser = newUser().withRoles(newRole().withName("project_finance", "dummy_role").withType(UserRoleType.PROJECT_FINANCE, UserRoleType.INNOVATION_LEAD).buildSet(2)).withUid("uid2").withFirstName("z").withLastName("y").withEmailAddress("z@y.com").withCreatedOn(ZonedDateTime.now()).withCreatedBy(userMapper.mapToDomain(getSystemRegistrationUser())).build();
+        projectFinanceUser = newUser()
+                .withRoles(newRole()
+                        .withName("project_finance", "dummy_role")
+                        .withType(UserRoleType.PROJECT_FINANCE, UserRoleType.INNOVATION_LEAD)
+                        .buildSet(2))
+                .withUid("uid2")
+                .withFirstName("z")
+                .withLastName("y")
+                .withEmailAddress("z@y.com")
+                .withCreatedOn(ZonedDateTime.now())
+                .withCreatedBy(userMapper.mapToDomain(getSystemRegistrationUser()))
+                .build();
         projectFinanceUser = userRepository.save(projectFinanceUser);
-        projectManagerUser = newUser().withRoles(newRole().withName("project_manager").withType(UserRoleType.PROJECT_MANAGER).buildSet(1)).withUid("uid1").withFirstName("a").withLastName("b").withEmailAddress("a@b.com").withCreatedOn(ZonedDateTime.now()).withCreatedBy(userMapper.mapToDomain(getSystemRegistrationUser())).build();
+        projectManagerUser = newUser()
+                .withRoles(newRole()
+                        .withName("project_manager")
+                        .withType(UserRoleType.PROJECT_MANAGER)
+                        .buildSet(1))
+                .withUid("uid1")
+                .withFirstName("a")
+                .withLastName("b")
+                .withEmailAddress("a@b.com")
+                .withCreatedOn(ZonedDateTime.now())
+                .withCreatedBy(userMapper.mapToDomain(getSystemRegistrationUser()))
+                .build();
         projectManagerUser = userRepository.save(projectManagerUser);
-        projectFinanceUserLogin = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).withCreatedOn(ZonedDateTime.now()).withCreatedBy("creator").withModifiedOn(ZonedDateTime.now()).withModifiedBy("modifier").build();
+        projectFinanceUserLogin = newUserResource()
+                .withRolesGlobal(singletonList(newRoleResource()
+                        .withType(UserRoleType.PROJECT_FINANCE)
+                        .build()))
+                .withCreatedOn(ZonedDateTime.now())
+                .withCreatedBy("creator")
+                .withModifiedOn(ZonedDateTime.now())
+                .withModifiedBy("modifier")
+                .build();
     }
 
     @Test
@@ -654,10 +712,11 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         competition1 = competitionRepository.save(competition1);
         Application application1 = newApplication().withCompetition(competition1).build();
         application1 = applicationRepository.save(application1);
-        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).build();
-        project1 = projectRepository.save(project1);
         Organisation organisation1 = newOrganisation().withId(23L).withName("Org1").build();
         organisation1 = organisationRepository.save(organisation1);
+        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).withPartnerOrganisations(asList(newPartnerOrganisation().withOrganisation(organisation1).build())).build();
+        project1 = projectRepository.save(project1);
+
         ProjectFinance projectFinance1 = newProjectFinance().withOrganisation(organisation1).withProject(project1).build();
         projectFinanceRepository.save(projectFinance1);
 
@@ -689,10 +748,11 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         competition1 = competitionRepository.save(competition1);
         Application application1 = newApplication().withCompetition(competition1).build();
         application1 = applicationRepository.save(application1);
-        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).build();
-        project1 = projectRepository.save(project1);
         Organisation organisation1 = newOrganisation().withId(23L).withName("Org1").build();
         organisation1 = organisationRepository.save(organisation1);
+        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).withPartnerOrganisations(asList(newPartnerOrganisation().withOrganisation(organisation1).build())).build();
+        project1 = projectRepository.save(project1);
+
         ProjectFinance projectFinance1 = newProjectFinance().withOrganisation(organisation1).withProject(project1).build();
         projectFinanceRepository.save(projectFinance1);
 
@@ -722,10 +782,11 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         competition1 = competitionRepository.save(competition1);
         Application application1 = newApplication().withCompetition(competition1).withName("app1").build();
         application1 = applicationRepository.save(application1);
-        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).build();
-        project1 = projectRepository.save(project1);
         Organisation organisation1 = newOrganisation().withId(23L).withName("Org1").build();
         organisation1 = organisationRepository.save(organisation1);
+        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).withPartnerOrganisations(asList(newPartnerOrganisation().withOrganisation(organisation1).build())).build();
+        project1 = projectRepository.save(project1);
+
         ProjectFinance projectFinance1 = newProjectFinance().withOrganisation(organisation1).withProject(project1).build();
         projectFinance1 = projectFinanceRepository.save(projectFinance1);
 
@@ -761,8 +822,9 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         competition2 = competitionRepository.save(competition2);
         Application application2 = newApplication().withCompetition(competition2).withId(application1.getId() + 1).withName("app2").build();
         application2 = applicationRepository.save(application2);
-        Project project2 = newProject().withId(project1.getId() + 1).withName("project2").withApplication(application2).build();
+        Project project2 = newProject().withId(project1.getId() + 1).withName("project2").withApplication(application2).withPartnerOrganisations(asList(newPartnerOrganisation().withOrganisation(organisation1).build())).build();
         project2 = projectRepository.save(project2);
+
         ProjectFinance projectFinance2 = newProjectFinance().withOrganisation(organisation1).withProject(project2).build();
         projectFinance2 = projectFinanceRepository.save(projectFinance2);
         Post postCreatedByProjectFinanceOnDifferentCompetition = new Post(5L, projectFinanceUser, "query2", emptyList(), ZonedDateTime.now());
@@ -822,10 +884,20 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         competition1 = competitionRepository.save(competition1);
         Application application1 = newApplication().withCompetition(competition1).build();
         application1 = applicationRepository.save(application1);
-        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).build();
-        project1 = projectRepository.save(project1);
         Organisation organisation1 = newOrganisation().withId(23L).withName("Org1").build();
         organisation1 = organisationRepository.save(organisation1);
+        Organisation organisation2 = newOrganisation().withId(27L).withName("aOrg2").build();
+        organisation2 = organisationRepository.save(organisation2);
+        Project project1 = newProject()
+                .withId(27L)
+                .withName("project1")
+                .withApplication(application1)
+                .withPartnerOrganisations(asList(
+                        newPartnerOrganisation().withOrganisation(organisation1).build(),
+                        newPartnerOrganisation().withOrganisation(organisation2).build()))
+                .build();
+        project1 = projectRepository.save(project1);
+
         ProjectFinance projectFinance1 = newProjectFinance().withOrganisation(organisation1).withProject(project1).build();
         projectFinance1 = projectFinanceRepository.save(projectFinance1);
 
@@ -842,8 +914,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                 ZonedDateTime.now());
         queryRepository.save(queryCreatedByProjectFinance);
 
-        Organisation organisation2 = newOrganisation().withId(27L).withName("aOrg2").build();
-        organisation2 = organisationRepository.save(organisation2);
+
         ProjectFinance projectFinance2 = newProjectFinance().withOrganisation(organisation2).withProject(project1).build();
         projectFinance2 = projectFinanceRepository.save(projectFinance2);
 
@@ -882,10 +953,10 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         competition1 = competitionRepository.save(competition1);
         Application application1 = newApplication().withCompetition(competition1).build();
         application1 = applicationRepository.save(application1);
-        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).build();
-        project1 = projectRepository.save(project1);
         Organisation organisation1 = newOrganisation().withId(23L).withName("Org1").build();
         organisation1 = organisationRepository.save(organisation1);
+        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).withPartnerOrganisations(asList(newPartnerOrganisation().withOrganisation(organisation1).build())).build();
+        project1 = projectRepository.save(project1);
         ProjectFinance projectFinance1 = newProjectFinance().withOrganisation(organisation1).withProject(project1).build();
         projectFinance1 = projectFinanceRepository.save(projectFinance1);
 
@@ -904,7 +975,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
         Application application2 = newApplication().withId(application1.getId() + 1).withCompetition(competition1).build();
         application2 = applicationRepository.save(application2);
-        Project project2 = newProject().withId(29L).withName("aproject2").withApplication(application2).build();
+        Project project2 = newProject().withId(29L).withName("aproject2").withApplication(application2).withPartnerOrganisations(asList(newPartnerOrganisation().withOrganisation(organisation1).build())).build();
         project2 = projectRepository.save(project2);
         ProjectFinance projectFinance2 = newProjectFinance().withOrganisation(organisation1).withProject(project2).build();
         projectFinance2 = projectFinanceRepository.save(projectFinance2);
@@ -934,6 +1005,87 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         // check ordering by application id and organisation name
         assertEquals(new CompetitionOpenQueryResource(application1.getId(), organisation1.getId(), organisation1.getName(), project1.getId(), project1.getName()), openQueriesResult.getSuccessObject().get(0));
         assertEquals(new CompetitionOpenQueryResource(application2.getId(), organisation1.getId(), organisation1.getName(), project2.getId(), project2.getName()), openQueriesResult.getSuccessObject().get(1));
+    }
+
+    @Test
+    @Transactional
+    public void countOpenQueriesSpendProfileGenerated() throws Exception {
+        setupUserData();
+        Competition competition1 = newCompetition().build();
+        competition1 = competitionRepository.save(competition1);
+        Application application1 = newApplication().withCompetition(competition1).build();
+        application1 = applicationRepository.save(application1);
+        Organisation organisation1 = newOrganisation().withId(23L).withName("Org1").build();
+        organisation1 = organisationRepository.save(organisation1);
+
+        Project project1 = newProject().withId(27L).withName("project1").withApplication(application1).withPartnerOrganisations(asList(newPartnerOrganisation().withOrganisation(organisation1).build())).build();
+        project1 = projectRepository.save(project1);
+        ProjectFinance projectFinance1 = newProjectFinance().withOrganisation(organisation1).withProject(project1).build();
+        projectFinance1 = projectFinanceRepository.save(projectFinance1);
+
+        Post postCreatedByProjectFinanceOnThreadCreatedByProjectFinance = new Post(1L, projectFinanceUser, "query1", emptyList(), ZonedDateTime.now());
+
+        Post postCreatedByProjectManagerOnThreadCreatedByProjectFinance = new Post(2L, projectManagerUser, "response", emptyList(), ZonedDateTime.now().plusMinutes(1L));
+
+        Query queryCreatedByProjectFinance = new Query(1L,
+                projectFinance1.getId(),
+                "org.innovateuk.ifs.finance.domain.ProjectFinance",
+                asList(postCreatedByProjectFinanceOnThreadCreatedByProjectFinance, postCreatedByProjectManagerOnThreadCreatedByProjectFinance),
+                FinanceChecksSectionType.ELIGIBILITY,
+                "title1",
+                ZonedDateTime.now());
+        queryRepository.save(queryCreatedByProjectFinance);
+
+        // spend profiles have been generated for 2nd project - so it will not appear in count/queries
+        Application application2 = newApplication().withId(application1.getId() + 1).withCompetition(competition1).build();
+        application2 = applicationRepository.save(application2);
+        Project project2 = newProject().withId(29L).withName("aproject2").withApplication(application2).withPartnerOrganisations(asList(newPartnerOrganisation().withOrganisation(organisation1).build())).build();
+        project2 = projectRepository.save(project2);
+        ProjectFinance projectFinance2 = newProjectFinance().withOrganisation(organisation1).withProject(project2).build();
+        projectFinance2 = projectFinanceRepository.save(projectFinance2);
+
+        CostCategoryGroup costCategoryGroup = newCostCategoryGroup().withDescription("ccg").build();
+        costCategoryGroup = costCategoryGroupRepository.save(costCategoryGroup);
+        CostCategory costCategory = newCostCategory().withName("cc").withLabel("lbl").withCostCategoryGroup(costCategoryGroup).build();
+        costCategory = costCategoryRepository.save(costCategory);
+        CostCategoryType costCategoryType = newCostCategoryType().withName("cct").withCostCategoryGroup(costCategoryGroup).build();
+        costCategoryType = costCategoryTypeRepository.save(costCategoryType);
+
+        SpendProfile spendProfile2 = newSpendProfile()
+                .withOrganisation(organisation1)
+                .withProject(project2)
+                .withGeneratedDate(new GregorianCalendar())
+                .withGeneratedBy(projectFinanceUser)
+                .withCostCategoryType(costCategoryType)
+                .withEligibleCostsGroup(asList(newCost().withCostCategory(costCategory).withValue(BigDecimal.ONE).build()))
+                .withSpendProfileFigures(asList(newCost().withCostCategory(costCategory).withValue(BigDecimal.ONE).build()))
+                .withApproval(ApprovalType.UNSET)
+                .build();
+         spendProfileRepository.save(spendProfile2);
+
+        Post postCreatedByProjectFinancePartner2 = new Post(3L, projectFinanceUser, "query2", emptyList(), ZonedDateTime.now());
+
+        Post postCreatedByProjectManagerPartner2 = new Post(4L, projectManagerUser, "response2", emptyList(), ZonedDateTime.now().plusMinutes(1L));
+
+        Query queryCreatedByProjectFinancePartner2 = new Query(2L,
+                projectFinance2.getId(),
+                "org.innovateuk.ifs.finance.domain.ProjectFinance",
+                asList(postCreatedByProjectFinancePartner2, postCreatedByProjectManagerPartner2),
+                FinanceChecksSectionType.ELIGIBILITY,
+                "title2",
+                ZonedDateTime.now());
+        queryRepository.save(queryCreatedByProjectFinancePartner2);
+
+        setLoggedInUser(projectFinanceUserLogin);
+
+        RestResult<Long> openQueriesCountResult = controller.countOpenQueries(competition1.getId());
+        assertTrue(openQueriesCountResult.isSuccess());
+        assertEquals(1L, openQueriesCountResult.getSuccessObject().longValue());
+
+        RestResult<List<CompetitionOpenQueryResource>> openQueriesResult = controller.getOpenQueries(competition1.getId());
+        assertTrue(openQueriesResult.isSuccess());
+        assertEquals(1, openQueriesResult.getSuccessObject().size());
+        assertEquals(new CompetitionOpenQueryResource(application1.getId(), organisation1.getId(), organisation1.getName(), project1.getId(), project1.getName()), openQueriesResult.getSuccessObject().get(0));
     }
 
     private List<Long> createCreatedAssessmentsWithCompetition(Long competitionId, UserResource assessor, int numberOfAssessments, ActivityState created) {

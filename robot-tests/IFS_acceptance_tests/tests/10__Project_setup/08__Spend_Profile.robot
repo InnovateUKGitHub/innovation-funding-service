@@ -64,6 +64,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               IFS-1576 Allow changes to Target start date until generation of Spend Profile
 ...
 ...               IFS-1579 Allow change of Finance Contact until generation of GOL
+...
+...               IFS-2062 Row to be taken off from Query responses tab once SP is generated
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -105,14 +107,37 @@ Project Finance cancels the generation of the Spend Profile
     Then the user should see the text in the page    This will generate a flat spend profile for all project partners.
     When the user clicks the button/link    jQuery=button:contains("Cancel")
 
-Project Finance generates the Spend Profile
-    [Documentation]    INFUND-5194, INFUND-5987
+# Below 2 Query/SP tests are added in this file as they depend on approving all pre-requisites and generating SP
+Project finance sends a query to lead organisation
+    [Documentation]    IFS-2062
+    [Tags]  HappyPath
+    Given the user navigates to the page      ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check/organisation/${Katz_Id}/query
+    When the user clicks the button/link      link=Post a new query
+    And the user enters text to a text field  id=queryTitle  Eligibility query's title
+    And the user enters text to a text field  css=.editor    Eligibility query
+    Then the user clicks the button/link      jQuery=.button:contains("Post Query")
+
+Lead partner responds to query
+    [Documentation]    IFS-2062
+    [Tags]  HappyPath
+    [Setup]  Log in as a different user        &{lead_applicant_credentials_sp}
+    Given the user navigates to the page       ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/finance-checks
+    When the user clicks the button/link       link=Respond
+    When the user enters text to a text field  css=.editor  Responding to finance query
+    Then the user clicks the button/link       jQuery=.button:contains("Post response")
+
+Project Finance generates the Spend Profile and should not see query responses flagged
+    [Documentation]    INFUND-5194, INFUND-5987, IFS-2062
     [Tags]    HappyPath
+    [Setup]  log in as a different user     &{internal_finance_credentials}
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check
     When the user clicks the button/link    css=.generate-spend-profile-main-button
     And the user clicks the button/link     css=#generate-spend-profile-modal-button
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element    css=#table-project-status tr:nth-of-type(5) td:nth-of-type(4).ok
+    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/queries
+    Then the user should not see the element  link=${Katz_Name}
     And the user reads his email            ${PS_SP_APPLICATION_PM_EMAIL}  Your spend profile is available  The finance checks for all partners in the project have now been completed
 
 Lead partner can view spend profile page
