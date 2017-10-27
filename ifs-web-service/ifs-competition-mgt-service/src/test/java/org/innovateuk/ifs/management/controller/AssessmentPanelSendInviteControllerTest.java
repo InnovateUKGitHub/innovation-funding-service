@@ -106,7 +106,7 @@ public class AssessmentPanelSendInviteControllerTest extends BaseControllerMockM
         when(assessmentPanelInviteRestService.getAllInvitesToResend(competition.getId(), inviteIds)).thenReturn(restSuccess(invite));
 
         ResendInviteForm expectedForm = new ResendInviteForm();
-        expectedForm.setSubject("Invitation to assess 'Photonics for health'");
+        expectedForm.setSubject("Invitation to assessment panel for 'Photonics for health'");
         expectedForm.setInviteIds(inviteIds);
 
         SendInvitesViewModel expectedViewModel = new SendInvitesViewModel(competition.getId(), "Photonics for health", recipients, "Readonly content");
