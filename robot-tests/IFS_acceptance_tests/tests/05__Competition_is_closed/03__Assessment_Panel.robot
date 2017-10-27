@@ -76,7 +76,7 @@ Assessor recieves the invite to panel
     [Setup]  the user clicks the button/link  link=Invite
     Given the user clicks the button/link     link=Review and send invites
     When the user clicks the button/link      jQuery=button:contains("Send invite")
-    Then the user should see the element       jQuery=.column-quarter:contains("2") small:contains("Invited")
+    Then the user should see the element      jQuery=.column-quarter:contains("2") small:contains("Invited")
     And the user should see the element       jQuery=.column-quarter:contains("2") small:contains("Assessors on invite list")
     And the user reads his email              ${panel_assessor_ben}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
     And the user reads his email              ${panel_assessor_joel}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
@@ -129,8 +129,11 @@ Comp Admin can see the rejected and accepted invitation
     [Setup]  Log in as a different user        &{Comp_admin1_credentials}
     Given the user navigates to the page       ${SERVER}/management/assessment/panel/competition/${CLOSED_COMPETITION}/assessors/overview
     And the user should see the element        jQuery=td:contains("Joel George") ~ td:contains("Invite declined")
-    When the user clicks the button/link        link=Accepted
-    Then the user should see the element        jQuery=td:contains("Benjamin Nixon") ~ td:contains("Materials, process and manufacturing design technologies")
+    And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Declined")
+    When the user clicks the button/link       link=Accepted
+    Then the user should see the element       jQuery=td:contains("Benjamin Nixon") ~ td:contains("Materials, process and manufacturing design technologies")
+    And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Accepted")
+    And the user should see the element        jQuery=.column-quarter:contains(0) small:contains("Assessors on invite list")
     When the user clicks the button/link       link=Overview
     Then the user should not see the element   jQuery=td:contains("Benjamin Nixon")
 
