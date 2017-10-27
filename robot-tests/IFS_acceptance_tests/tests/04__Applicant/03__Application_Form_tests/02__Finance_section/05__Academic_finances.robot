@@ -90,7 +90,6 @@ Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
     [Tags]
     When the user navigates to the finance overview of the academic
-    And the user opens the link in new window  ${valid_pdf}
     Then the user should not see an error in the page
     [Teardown]    the user goes back to the previous page
 
@@ -156,7 +155,6 @@ Academic finance overview
     [Tags]
     Given the user navigates to the finance overview of the academic
     Then the finance table should be correct
-    When the user clicks the button/link  link=testing.pdf (opens in a new window)
     Then the user should not see an error in the page
     [Teardown]    The user marks the academic application finances as incomplete
 
