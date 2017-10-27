@@ -11,7 +11,7 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 
 /**
- * Builder for Organisation entities.
+ * Builder for UserOrganisation entities.
  */
 public class UserOrganisationBuilder extends BaseBuilder<UserOrganisation, UserOrganisationBuilder> {
 
