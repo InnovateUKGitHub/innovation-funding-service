@@ -75,8 +75,8 @@ Assessor recieves the invite to panel
     When the user clicks the button/link      jQuery=button:contains("Send invite")
     Then the user should see the element       jQuery=.column-quarter:contains("2") small:contains("Invited")
     And the user should see the element       jQuery=.column-quarter:contains("2") small:contains("Assessors on invite list")
-    And the user reads his email              ${panel_assessor_ben}  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
-    And the user reads his email              ${panel_assessor_joel}  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
+    And the user reads his email              ${panel_assessor_ben}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
+    And the user reads his email              ${panel_assessor_joel}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
 
 Bulk add assessor to invite list
     [Documentation]  IFS-31
@@ -113,7 +113,7 @@ Assesor is able to reject the invitation from email
     [Documentation]  IFS-37
     [Tags]
     [Setup]  Logout as user
-    Given the user reads his email and clicks the link  ${panel_assessor_joel}  Invitation to assess '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
+    Given the user reads his email and clicks the link  ${panel_assessor_joel}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
     When the user selects the radio button              acceptInvitation  false
     And The user clicks the button/link                 jQuery=button:contains("Confirm")
     And the user clicks the button/link                 link=Sign in
