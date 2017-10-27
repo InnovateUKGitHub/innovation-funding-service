@@ -338,6 +338,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ParticipantStatusMapper participantStatusMapperMock;
 
     @Mock
+    protected AssessmentPanelParticipantMapper assessmentPanelParticipantMapperMock;
+
+    @Mock
     protected InviteProjectRepository inviteProjectRepositoryMock;
 
     @Mock
