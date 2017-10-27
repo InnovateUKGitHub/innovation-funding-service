@@ -12,7 +12,6 @@ import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 
-
 /**
  * An invitation for an assessor to an assessment panel.
  */

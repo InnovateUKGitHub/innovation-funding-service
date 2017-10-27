@@ -150,6 +150,7 @@ the user fills in Overhead costs
     run keyword if  '${overheadsCost}'=='Calculate'  the user chooses Calculate overheads option  ${totalCosts}
     run keyword if  '${overheadsCost}'=='labour costs'  the user chooses 20% overheads option
 #    run keyword if  '${overheadsCost}'=='No overhead'  the user chooses No overhead costs
+# The above line is commented out because we do not use the 3rd option yet. Once we do we can enable it.
 
 the user chooses Calculate overheads option
     [Arguments]  ${totalCosts}
