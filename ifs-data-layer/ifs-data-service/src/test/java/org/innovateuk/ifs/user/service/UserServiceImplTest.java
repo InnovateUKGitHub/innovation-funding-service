@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -510,15 +509,11 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testFindAllByProcessRoles(){
         List<User> users = newUser().build(2);
         when(userRepositoryMock.findByRolesNameInOrderByEmailAsc(externalApplicantRoles().stream().map(UserRoleType::getName).collect(Collectors.toSet()))).thenReturn(users);
-        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(newOrganisation().build(1));
 
         ServiceResult<List<UserOrganisationResource>> result = service.findAllByProcessRoles(externalApplicantRoles());
 
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccessObject().size());
-
-        verify(organisationRepositoryMock).findByUsersId(users.get(0).getId());
-        verify(organisationRepositoryMock).findByUsersId(users.get(1).getId());
     }
 
     @Override
