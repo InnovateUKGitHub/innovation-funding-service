@@ -787,7 +787,6 @@ the user is able to configure the new question
     the user clicks the button/link       css=input[type="submit"]
 
 the user should be able to see the read only view of question correctly
-    capture large screenshot
     the user clicks the button/link  jQuery=a:contains("Tell us how your project is innovative.")
     the user should see the element  jQuery=dt:contains("Question heading") + dd:contains("Tell us how your project is innovative")
     the user should see the element  jQuery=dt:contains("Question title") + dd:contains("Please provide us with more inforrmation on how your project is different from pre-existing projects.")
@@ -799,7 +798,8 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery=dt:contains("Scored") + dd:contains("Yes")
     the user should see the element  jQuery=dt:contains("Out of") + dd:contains("10")
     the user should see the element  jQuery=dt:contains("Written feedback") + dd:contains("Yes")
-    the user should see the element  jQuery=dt:contains("Guidance title") + dd:contains("The better you understand the problem the simpler your explanation is.")
+    the user should see the element  jQuery=dt:contains("Guidance title") + dd:contains("Please bare in mind on how well the applicant is able to justify his arguments.")
+    the user should see the element  jQuery=dt:contains("Guidance") + dd:contains("The better you understand the problem the simpler your explanation is.")
     the user should see the element  jQuery=dt:contains("9-10") + dd:contains("This the 9-10 Justification")
     the user should see the element  jQuery=dt:contains("7-8") + dd:contains("This the 7-8 Justification")
     the user should see the element  jQuery=dt:contains("4-6") + dd:contains("This the 4-6 Justification")
