@@ -453,12 +453,16 @@ Adding a new Assessed Application Question
     When the user clicks the button/link   css=input[type="submit"]  #Save and close
     Then the user should the server side validation working
     When the user is able to configure the new question
-
+    Then the user should be able to see the read only view of question correctly
 
 Removing an Assessed Application Question
     [Documentation]  IFS-182
     [Tags]
-
+    Given the user clicks the button/link     jQuery=a:contains("Costs and value for money")
+    When the user clicks the button/link      css=button[name="deleteQuestion"]
+    Then the user should not see the element  jQuery=a:contains("Costs and value for money")
+    When the user clicks the button/link      jQuery=li:contains("Additionality") button:contains("Remove")
+    Then the user should not see the element  jQuery=a:contains("Costs and value for money")
 
 Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773
@@ -762,24 +766,46 @@ the user should the server side validation working
     the user should see a field error  Please enter a justification.
 
 the user is able to configure the new question
-    the user enters text to a text field  id=question.shortTitle  Tell us how your project is Innovative.
     the user enters text to a text field  id=question.title  Please provide us with more inforrmation on how your project is different from pre-existing projects.
+    the user enters text to a text field  id=question.shortTitle  Tell us how your project is innovative.
     the user enters text to a text field  id=question.subTitle  Adding value on existing projects is important to InnovateUK.
     the user enters text to a text field  id=question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
+    the user enters text to a text field  css=.editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id=question.maxWords  500
     the user selects the radio button     question.appendix  1
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10
     the user selects the radio button     question.writtenFeedback  1
     the user enters text to a text field  question.assessmentGuidanceTitle  Please bare in mind on how well the applicant is able to justify his arguments.
+    the user enters text to a text field  question.assessmentGuidance   The better you understand the problem the simpler your explanation is.
     the user enters text to a text field  guidanceRows[0].justification  This the 9-10 Justification
     the user enters text to a text field  guidanceRows[1].justification  This the 7-8 Justification
     the user enters text to a text field  guidanceRows[2].justification  This the 4-6 Justification
-    the user enters text to a text field  guidanceRows[4].justification  This the 3-4 Justification
+    the user enters text to a text field  guidanceRows[3].justification  This the 3-4 Justification
     the user enters text to a text field  guidanceRows[4].justification  This the 1-2 Justification
     the user enters text to a text field  question.assessmentMaxWords  120
     the user clicks the button/link       css=input[type="submit"]
 
+the user should be able to see the read only view of question correctly
+    the user clicks the button/link  jQuery=a:contains("Tell us how your project is Innovative.")
+    the user should see the element  jQuery=dt:contains("Question heading") + dd:contains("Tell us how your project is innovative")
+    the user should see the element  jQuery=dt:contains("Question title") + dd:contains("Please provide us with more inforrmation on how your project is different from pre-existing projects.")
+    the user should see the element  jQuery=dt:contains("Question subtitle") + dd:contains("Adding value on existing projects is important to InnovateUK.")
+    the user should see the element  jQuery=dt:contains("Guidance title") + dd:contains("Innovation is crucial to the continuing success of any organization.")
+    the user should see the element  jQuery=dt:contains("Guidance") + dd:contains("Please use Microsoft Word where possible.")
+    the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("500")
+    the user should see the element  jQuery=dt:contains("Appendix") + dd:contains("Yes")
+    the user should see the element  jQuery=dt:contains("Scored") + dd:contains("Yes")
+    the user should see the element  jQuery=dt:contains("Out of") + dd:contains("10")
+    the user should see the element  jQuery=dt:contains("Written feedback") + dd:contains("Yes")
+    the user should see the element  jQuery=dt:contains("Guidance title") + dd:contains("The better you understand the problem the simpler your explanation is.")
+    the user should see the element  jQuery=dt:contains("9-10") + dd:contains("This the 9-10 Justification")
+    the user should see the element  jQuery=dt:contains("7-8") + dd:contains("This the 7-8 Justification")
+    the user should see the element  jQuery=dt:contains("4-6") + dd:contains("This the 4-6 Justification")
+    the user should see the element  jQuery=dt:contains("3-4") + dd:contains("This the 3-4 Justification")
+    the user should see the element  jQuery=dt:contains("1-2") + dd:contains("This the 1-2 Justification")
+    the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("120")
+    the user clicks the button/link  link=Return to application questions
 
 
 
