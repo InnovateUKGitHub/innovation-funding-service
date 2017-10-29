@@ -13,25 +13,20 @@ ${compType_Generic}    Generic
 *** Keywords ***
 the user edits the assessed question information
     the user enters text to a text field    id=question.maxWords    100
-    the user enters text to a text field    id=question.scoreTotal    100
+    the user enters text to a text field    id=question.scoreTotal  10
     the user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
     the user clicks the button/link    jQuery=button:contains("+Add guidance row")
-    the user enters text to a text field    id=guidanceRows[5].scoreFrom    11
-    the user enters text to a text field    id=guidanceRows[5].scoreTo    12
+    the user enters text to a text field    id=guidanceRows[5].scoreFrom    0
+    the user enters text to a text field    id=guidanceRows[5].scoreTo    1
     the user enters text to a text field    id=guidanceRows[5].justification    This is a justification
     the user clicks the button/link    id=remove-guidance-row-2
 
-the user sees the correct assessed question information
-    the user should see the text in the page    Assessment of this question
-    the user should see the text in the page    Business opportunity guidance
-    the user should see the text in the page    11
-    the user should see the text in the page    12
-    the user should see the text in the page    This is a justification
-    the user should see the text in the page    100
-    the user should see the text in the page    Written feedback
-    the user should see the text in the page    Scored
-    the user should see the text in the page    Out of
-    the user should not see the text in the page    The business opportunity is plausible
+the user sees the correct read only view of the question
+    the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("100")
+    the user should see the element  jQuery=dd p:contains("Business opportunity guidance")
+    the user should see the element  jQuery=dt:contains("0-1") + dd:contains("This is a justification")
+    the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("10")
+    the user should not see the text in the page  The business opportunity is plausible
 
 the user fills in the CS Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}

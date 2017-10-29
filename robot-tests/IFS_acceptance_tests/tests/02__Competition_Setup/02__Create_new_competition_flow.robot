@@ -352,48 +352,51 @@ Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
     [Tags]    HappyPath
     [Setup]  The user navigates to the page  ${COMP_MANAGEMENT_COMP_SETUP}
-    When The user clicks the button/link    link=Application
-    Then The user should see the text in the page  Sector competition questions
-    And the user should see the element    link=1. Need or challenge
-    And the user should see the element    link=2. Approach and innovation
-    And the user should see the element    link=3. Team and resources
-    And the user should see the element    link=4. Market awareness
-    And the user should see the element    link=5. Outcomes and route to market
-    And the user should see the element    link=6. Wider impacts
-    And the user should see the element    link=7. Project management
-    And the user should see the element    link=8. Risks
-    And the user should see the element    link=9. Additionality
-    And the user should see the element    link=10. Costs and value for money
-    And the user should see the element    link=Application details
-    And the user should see the element    link=Project summary
-    And the user should see the element    link=Public description
-    And the user should see the element    link=Scope
-    And the user should see the element    link=Finances
+    #Writing the following selectors using jQuery in order to avoidhardcoded numbers.
+    When The user clicks the button/link  link=Application
+    Then the user should see the element  jQuery= h2:contains("Sector competition questions")
+    When the user should see the element  link=Application details
+    Then the user should see the element  link=Project summary
+    And the user should see the element   link=Public description
+    And the user should see the element   link=Scope
+    When the user should see the element  jQuery=a:contains("Need or challenge")
+    Then the user should see the element  jQuery=a:contains("Approach and innovation")
+    And the user should see the element   jQuery=a:contains("Team and resources")
+    And the user should see the element   jQuery=a:contains("Market awareness")
+    And the user should see the element   jQuery=a:contains("Outcomes and route to market")
+    And the user should see the element   jQuery=a:contains("Wider impacts")
+    And the user should see the element   jQuery=a:contains("Project management")
+    And the user should see the element   jQuery=a:contains("Risks")
+    And the user should see the element   jQuery=a:contains("Additionality")
+    And the user should see the element   jQuery=a:contains("Costs and value for money")
+    And the user should see the element   jQuery=.buttonlink:contains("Add question")
+    And the user should see the element   link=Finances
 
 Application: Need or challenge
     [Documentation]    INFUND-5632 INFUND-5685 INFUND-5630 INFUND-6283
-    When the user clicks the button/link    link=1. Need or challenge
-    Then the user should see the element    jQuery=h1:contains("Need or challenge")
-    When the user clicks the button/link    jQuery=a:contains("Edit this question")
+    [Tags]
+    When the user clicks the button/link    jQuery=h4 a:contains("Need or challenge")
+    Then the user should see the element    jQuery=dt:contains("Question heading") + dd:contains("Need or challenge")
+    When the user clicks the button/link    link=Edit this question
     And the user edits the assessed question information
-    And The user clicks the button/link    jQuery=.button[value="Save and close"]
-    And the user clicks the button/link    link=1. Need or challenge
-    And the user sees the correct assessed question information
-    And the user clicks the button/link    jQuery=a:contains("Edit this question")
-    And the user selects the radio button    question.writtenFeedback    0
-    And the user selects the radio button    question.scored    0
+    And The user clicks the button/link     css=.button[value="Save and close"]
+    When the user clicks the button/link    jQuery=h4 a:contains("Need or challenge")
+    Then the user sees the correct read only view of the question
+    When the user clicks the button/link    link=Edit this question
+    And the user selects the radio button   question.writtenFeedback  0
+    And the user selects the radio button   question.scored  0
     And the user should not be able to edit the assessed question feedback
-    And the user clicks the button/link    jQuery=.button[value="Save and close"]
-    And the user clicks the button/link    link=1. Need or challenge
+    And the user clicks the button/link     jQuery=.button[value="Save and close"]
+    And the user clicks the button/link     jQuery=h4 a:contains("Need or challenge")
     Then the user should not see the assessed question feedback
-    [Teardown]    The user clicks the button/link    link=Application
+    [Teardown]  The user clicks the button/link  link=Application
 
 Application: Application details
     [Documentation]    INFUND-5633
     Given the user clicks the button/link    link=Application details
     And the user should see the element    jQuery=h1:contains("Application details")
     And the user should see the text in the page    These are the default questions included in the application details section.
-    When the user clicks the button/link    jQuery=a:contains("Edit this question")
+    When the user clicks the button/link    link=Edit this question
     And the user selects the radio button    useResubmissionQuestion    false
     And The user clicks the button/link    jQuery=button:contains("Save and close")
     And the user clicks the button/link    link=Application details
@@ -402,13 +405,11 @@ Application: Application details
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Scope
-    [Documentation]    INFUND-5634
-    ...
-    ...    INFUND-5635
-    Given the user clicks the button/link    link=Scope
-    And the user should see the element    jQuery=h1:contains("Scope")
-    And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
-    When the user clicks the button/link    jQuery=a:contains("Edit this question")
+    [Documentation]  INFUND-5634 INFUND-5635
+    Given the user clicks the button/link         link=Scope
+#    Then the user should see the element          jQuery=h1:contains("Scope")  TODO  IFS-2052
+    And the user should see the text in the page  You can edit this question for the applicant as well as the guidance for assessors.
+    When the user clicks the button/link    link=Edit this question
     And The user fills the empty question fields
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Scope
@@ -417,13 +418,13 @@ Application: Scope
 
 Application: Scope Assessment questions
     [Documentation]    INFUND-5631    INFUND-6044  INFUND-6283
-    Given the user clicks the button/link    jQuery=a:contains("Edit this question")
+    Given the user clicks the button/link    link=Edit this question
     And the user selects the radio button    question.writtenFeedback    1
     And the user fills the scope assessment questions
     When the user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Scope
     Then the user checks the scope assessment questions
-    And the user clicks the button/link    jQuery=a:contains("Edit this question")
+    And the user clicks the button/link    link=Edit this question
     And the user selects the radio button    question.writtenFeedback    0
     And the user should not be able to edit the scope feedback
     And the user clicks the button/link    jQuery=.button[value="Save and close"]
@@ -432,19 +433,32 @@ Application: Scope Assessment questions
     [Teardown]    The user clicks the button/link    link=Application
 
 Application: Project Summary
-    [Documentation]    INFUND-5636
-    ...
-    ...    INFUND-5637
+    [Documentation]  INFUND-5636 INFUND-5637
     Given the user clicks the button/link    link=Project summary
-    And the user should see the element    jQuery=h1:contains("Project summary")
+#    And the user should see the element    jQuery=h1:contains("Project summary")  TODO IFS-2052
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
-    When the user clicks the button/link    jQuery=a:contains("Edit this question")
+    When the user clicks the button/link    link=Edit this question
     And The user fills the empty question fields
     And The user clicks the button/link    css=.button[value="Save and close"]
     And the user clicks the button/link    link=Project summary
     Then The user should see the text in the page    Project summary
     And the user checks the question fields
     [Teardown]    The user clicks the button/link    link=Application
+
+
+Adding a new Assessed Application Question
+    [Documentation]  IFS-182
+    [Tags]
+    Given the user clicks the button/link  css=p button[type="submit"]  #Add question link
+    When the user clicks the button/link   css=input[type="submit"]  #Save and close
+    Then the user should the server side validation working
+    When the user is able to configure the new question
+
+
+Removing an Assessed Application Question
+    [Documentation]  IFS-182
+    [Tags]
+
 
 Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773
@@ -453,7 +467,7 @@ Application: Finances
     Given the user clicks the button/link    link=Finances
     Then the user should see the element     jQuery=h1:contains("Application finances")
     And the user should see the element      jQuery=.panel:contains("The competition template will select the following finance sections for each partner.")
-    When the user clicks the button/link     jQuery=.button:contains("Edit this question")
+    When the user clicks the button/link     link=Edit this question
     Then the user should see the element     css=input:checked ~ label[for="full-application-finance-yes"]
     And the user should see the element      css=label[for="full-application-finance-no"]
     # Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
@@ -492,7 +506,7 @@ Application: Edit again should mark as incomplete
     [Tags]
     [Setup]    the user navigates to the page   ${landingPage}
     Given the user clicks the button/link       link=Application details
-    When the user clicks the button/link        jQuery=a:contains("Edit this question")
+    When the user clicks the button/link        link=Edit this question
     And The user clicks the button/link         jQuery=button:contains("Save and close")
     Then The user should see the element        jQuery=button:contains(Done)
     And The user clicks the button/link         link=Competition setup
@@ -741,3 +755,31 @@ the user enters multiple innovation areas
 
 The user should not see the selected option again
     List Should not Contain Value    css=[id="innovationAreaCategoryIds[1]"]    Biosciences
+
+the user should the server side validation working
+    #TODO Amend the following to cover error-summary. Cover radio buttons as well - IFS-?
+    the user should see a field error  This field cannot be left blank.
+    the user should see a field error  Please enter a justification.
+
+the user is able to configure the new question
+    the user enters text to a text field  id=question.shortTitle  Tell us how your project is Innovative.
+    the user enters text to a text field  id=question.title  Please provide us with more inforrmation on how your project is different from pre-existing projects.
+    the user enters text to a text field  id=question.subTitle  Adding value on existing projects is important to InnovateUK.
+    the user enters text to a text field  id=question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
+    the user enters text to a text field  id=question.maxWords  500
+    the user selects the radio button     question.appendix  1
+    the user selects the radio button     question.scored  1
+    the user enters text to a text field  question.scoreTotal  10
+    the user selects the radio button     question.writtenFeedback  1
+    the user enters text to a text field  question.assessmentGuidanceTitle  Please bare in mind on how well the applicant is able to justify his arguments.
+    the user enters text to a text field  guidanceRows[0].justification  This the 9-10 Justification
+    the user enters text to a text field  guidanceRows[1].justification  This the 7-8 Justification
+    the user enters text to a text field  guidanceRows[2].justification  This the 4-6 Justification
+    the user enters text to a text field  guidanceRows[4].justification  This the 3-4 Justification
+    the user enters text to a text field  guidanceRows[4].justification  This the 1-2 Justification
+    the user enters text to a text field  question.assessmentMaxWords  120
+    the user clicks the button/link       css=input[type="submit"]
+
+
+
+
