@@ -20,6 +20,11 @@ import java.util.stream.Stream;
 
 @Service
 public class DefaultApplicationQuestionFactory {
+
+    private static final Integer DEFAULT_APPLICANT_WORD_COUNT = 400;
+    private static final Integer DEFAULT_FEEDBACK_WORD_COUNT = 100;
+    private static final Integer DEFAULT_MAXIMUM_SCORE = 10;
+
     @Autowired
     private FormValidatorRepository formValidatorRepository;
 
@@ -28,21 +33,22 @@ public class DefaultApplicationQuestionFactory {
         FormValidator notEmptyValidator = formValidatorRepository.findByClazzName(NotEmptyValidator.class.getName());
         FormValidator wordCountValidator = formValidatorRepository.findByClazzName(WordCountValidator.class.getName());
 
-        FormInput maxWordCountInput = buildMaxWordCountInput(competition, notEmptyValidator, wordCountValidator);
+        FormInput maxWordCountInput = buildApplicantTextInput(competition, notEmptyValidator, wordCountValidator);
         FormInput questionScoreInput = buildQuestionScoreInput(competition, notEmptyValidator);
         FormInput feedbackInput = buildFeedbackInput(competition, notEmptyValidator, wordCountValidator);
         FormInput appendixInput = buildAppendixInput(competition);
 
         Question question = new Question();
         question.setCompetition(competition);
+        question.setAssessorMaximumScore(DEFAULT_MAXIMUM_SCORE);
         question.setFormInputs(Arrays.asList(maxWordCountInput, questionScoreInput, feedbackInput, appendixInput));
 
         return question;
     }
 
-    private FormInput buildMaxWordCountInput(Competition competition, FormValidator notEmptyValidator, FormValidator wordCountValidator) {
+    private FormInput buildApplicantTextInput(Competition competition, FormValidator notEmptyValidator, FormValidator wordCountValidator) {
         FormInput input = new FormInput();
-        input.setWordCount(400);
+        input.setWordCount(DEFAULT_APPLICANT_WORD_COUNT);
         input.setType(FormInputType.TEXTAREA);
         input.setCompetition(competition);
         input.setIncludedInApplicationSummary(true);
@@ -87,7 +93,7 @@ public class DefaultApplicationQuestionFactory {
 
     private FormInput buildFeedbackInput(Competition competition, FormValidator notEmptyValidator, FormValidator wordCountValidator) {
         FormInput input = new FormInput();
-        input.setWordCount(100);
+        input.setWordCount(DEFAULT_FEEDBACK_WORD_COUNT);
         input.setType(FormInputType.TEXTAREA);
         input.setCompetition(competition);
         input.setIncludedInApplicationSummary(false);
@@ -104,7 +110,7 @@ public class DefaultApplicationQuestionFactory {
         justificationRow2.setSubject("3,4");
         GuidanceRow justificationRow3 = new GuidanceRow();
         justificationRow3.setPriority(2);
-        justificationRow3.setSubject("4,6");
+        justificationRow3.setSubject("5,6");
         GuidanceRow justificationRow4 = new GuidanceRow();
         justificationRow4.setPriority(1);
         justificationRow4.setSubject("7,8");
