@@ -787,7 +787,8 @@ the user is able to configure the new question
     the user clicks the button/link       css=input[type="submit"]
 
 the user should be able to see the read only view of question correctly
-    the user clicks the button/link  jQuery=a:contains("Tell us how your project is Innovative.")
+    capture large screenshot
+    the user clicks the button/link  jQuery=a:contains("Tell us how your project is innovative.")
     the user should see the element  jQuery=dt:contains("Question heading") + dd:contains("Tell us how your project is innovative")
     the user should see the element  jQuery=dt:contains("Question title") + dd:contains("Please provide us with more inforrmation on how your project is different from pre-existing projects.")
     the user should see the element  jQuery=dt:contains("Question subtitle") + dd:contains("Adding value on existing projects is important to InnovateUK.")
