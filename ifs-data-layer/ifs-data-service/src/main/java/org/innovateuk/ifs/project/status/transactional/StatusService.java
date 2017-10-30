@@ -12,12 +12,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.Optional;
 
 public interface StatusService {
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @SecuredBySpring(value = "READ_COMPETITION_STATUS", securedType = CompetitionProjectsStatusResource.class,
             description = "Comp Admins and project finance users should be able to access the current status of the competition")
     ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(final Long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @SecuredBySpring(value = "READ_PROJECT_STATUS", securedType = ProjectStatusResource.class,
             description = "Comp Admins and project finance users should be able to access the current status of the project")
     ServiceResult<ProjectStatusResource> getProjectStatusByProjectId(Long projectId);

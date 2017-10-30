@@ -13,11 +13,14 @@ public class ProjectSetupDashboardViewModel {
 
     private List<CompetitionSearchResultItem> competitions;
     protected CompetitionCountResource counts;
+    Boolean supportView;
 
     public ProjectSetupDashboardViewModel(List<CompetitionSearchResultItem> competitions,
-                                          CompetitionCountResource counts) {
+                                          CompetitionCountResource counts,
+                                          Boolean supportView) {
         this.competitions = competitions;
         this.counts = counts;
+        this.supportView = supportView;
     }
 
     public List<CompetitionSearchResultItem> getCompetitions() {
@@ -34,5 +37,13 @@ public class ProjectSetupDashboardViewModel {
 
     public void setCounts(CompetitionCountResource counts) {
         this.counts = counts;
+    }
+
+    public Boolean getSupportView() {
+        return supportView;
+    }
+
+    public void setSupportView(Boolean supportView) {
+        this.supportView = supportView;
     }
 }

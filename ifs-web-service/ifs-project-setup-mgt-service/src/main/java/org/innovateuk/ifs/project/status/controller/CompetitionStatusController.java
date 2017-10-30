@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.project.status.controller;
 
 import org.apache.commons.io.IOUtils;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
-import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionStatusViewModel;
+import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -45,14 +44,13 @@ public class CompetitionStatusController {
     private CompetitionsRestService competitionsRestService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
-    public String viewCompetitionStatus(Model model, UserResource loggedInUser,
-                                        @PathVariable Long competitionId) {
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support')")
+    public String viewCompetitionStatus(@PathVariable Long competitionId) {
         return format("redirect:/competition/%s/status/all", competitionId);
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support')")
     public String viewCompetitionStatusAll(Model model, UserResource loggedInUser,
                                            @PathVariable Long competitionId) {
         model.addAttribute("model",

@@ -59,12 +59,12 @@ public class CompetitionManagementDashboardController {
     }
 
     @GetMapping("/dashboard/project-setup")
-    public String projectSetup(Model model) {
+    public String projectSetup(Model model, UserResource user) {
         final List<CompetitionSearchResultItem> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
-
+        boolean supportView = user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
         model.addAttribute(MODEL_ATTR,
                 new ProjectSetupDashboardViewModel(projectSetupCompetitions,
-                        competitionDashboardSearchService.getCompetitionCounts()));
+                        competitionDashboardSearchService.getCompetitionCounts(), supportView));
 
         return TEMPLATE_PATH + "projectSetup";
     }

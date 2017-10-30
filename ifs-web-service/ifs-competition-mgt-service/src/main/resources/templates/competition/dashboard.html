@@ -31,7 +31,7 @@
             <a th:href="@{'/dashboard/non-ifs'}" th:text="'Non-IFS ('+${counts.nonIfsCount}+')'"></a>
         </li>
 
-        <li id="section-4" th:class="${selectedTab == 'projectSetup' ? 'selected' : ''}" th:unless="${supportView}">
+        <li id="section-4" th:class="${selectedTab == 'projectSetup' ? 'selected' : ''}">
             <a th:href="@{'/dashboard/project-setup'}" th:text="'Project setup ('+${counts.projectSetupCount}+')'"></a>
         </li>
 
