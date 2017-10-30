@@ -62,8 +62,8 @@ CompAdmin can add an assessor to invite list
     Then the user should see the element     jQuery=td:contains("Benjamin Nixon") + td:contains(${panel_assessor_ben})
     And the user should see the element      jQuery=td:contains("Joel George") + td:contains(${panel_assessor_joel})
     And the user should see the element      jQuery=td:contains("Madeleine Martin") + td:contains("madeleine.martin@gmail.com")
-    And the user clicks the button/link      link=Find
-    And the user should not see the element  jQuery=td:contains("Benjamin Nixon")
+    When the user clicks the button/link      link=Find
+    Then the user should not see the element  jQuery=td:contains("Benjamin Nixon")
     And the user should not see the element  jQuery=td:contains("Joel George")
     And the user should not see the element  jquery=tr:contains("Madeleine Martin")
 
@@ -72,8 +72,8 @@ CompAdmin can remove assessor from invite list
     [Tags]
     Given the user clicks the button/link    link=Invite
     When the user clicks the button/link     jQuery=td:contains("Madeleine Martin") ~ td:contains("Remove")
-    Then the user clicks the button/link     link=Find
-    And the user should see the element      jQuery=tr:contains("Madeleine Martin")
+    And the user clicks the button/link      link=Find
+    Then the user should see the element     jQuery=tr:contains("Madeleine Martin")
 
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-1560
