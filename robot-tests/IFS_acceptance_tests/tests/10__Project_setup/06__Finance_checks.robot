@@ -1101,9 +1101,9 @@ Project finance user adds, modifies and removes labour rows
     When the user expands the section              Labour
     And the user clicks the button/link            jQuery=h3:contains("Labour") + #collapsible-0 a:contains("Edit")
     And the user clicks the button/link            jQuery=h3:contains("Labour") + #collapsible-0 button:contains("Add another role")
-    And the user adds data into labour row         7  test  2000  100
+    And the user adds data into labour row         4  test  2000  100
     And the user clicks the button/link            jQuery=h3:contains("Labour") + #collapsible-0 button:contains("Add another role")
-    And the user adds data into labour row         9  test 1  1450  100
+    And the user adds data into labour row         5  test 1  1450  100
     Then verify percentage and total               1    3%    £ 5,886
     When the user clicks the button/link           jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(3) button:contains('Remove')
     And the user clears the text from the element  jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossAnnualSalary"]
