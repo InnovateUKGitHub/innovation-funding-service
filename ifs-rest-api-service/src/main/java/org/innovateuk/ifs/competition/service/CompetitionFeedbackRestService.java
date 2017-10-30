@@ -7,7 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import java.util.List;
 
 /**
- * TODO
+ * Rest service for handling Feedback and assessing actions on Competitions
  */
 public interface CompetitionFeedbackRestService {
 

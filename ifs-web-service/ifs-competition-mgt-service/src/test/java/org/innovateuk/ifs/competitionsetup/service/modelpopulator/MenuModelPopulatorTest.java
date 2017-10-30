@@ -18,6 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
@@ -42,7 +43,7 @@ public class MenuModelPopulatorTest {
 
 	@Before
     public void setup() {
-        Map<CompetitionSetupSection, Boolean> statuses = asMap(CompetitionSetupSection.INITIAL_DETAILS, true, CompetitionSetupSection.CONTENT, false);
+        Map<CompetitionSetupSection, Optional<Boolean>> statuses = asMap(CompetitionSetupSection.INITIAL_DETAILS, true, CompetitionSetupSection.CONTENT, false);
         when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(RestResult.restSuccess(statuses));
     }
 

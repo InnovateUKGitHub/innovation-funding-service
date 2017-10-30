@@ -15,9 +15,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.com
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSetupSubsectionStatusMap;
 
 /**
- * CompetitionsRestServiceImpl is a utility for CRUD operations on {@link CompetitionResource}.
- * This class connects to the { org.innovateuk.ifs.competition.controller.CompetitionController}
- * through a REST call.
+ * Implements {@link CompetitionSetupRestService}
  */
 @Service
 public class CompetitionSetupRestServiceImpl extends BaseRestService implements CompetitionSetupRestService {

@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 
 import java.util.Map;
 
 
 /**
- * Interface for CRUD operations on {@link CompetitionResource} related data.
+ * Interface for getting and saving statuses on in setup for questions.
  */
 public interface QuestionSetupRestService {
 

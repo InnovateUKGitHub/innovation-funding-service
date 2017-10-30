@@ -21,9 +21,6 @@ import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.IN
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 
-/**
- *
- */
 public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionSetupRestServiceImpl> {
 
     private static final String competitionSetupRestURL = "/competition/setup";

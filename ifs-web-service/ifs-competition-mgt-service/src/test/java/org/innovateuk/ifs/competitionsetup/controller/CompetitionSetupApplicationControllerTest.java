@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
@@ -54,7 +55,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     private static final Long COMPETITION_ID = 12L;
     private static final Long QUESTION_ID = 1L;
-    private static final String URL_PREFIX = "/competition/setup/"+COMPETITION_ID+"/section/application";
+    private static final String URL_PREFIX = String.format("/competition/setup/%d/section/application", COMPETITION_ID);
     private static final CompetitionResource UNEDITABLE_COMPETITION = newCompetitionResource()
             .withCompetitionStatus(CompetitionStatus.OPEN)
             .withSetupComplete(true)
@@ -72,6 +73,9 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     @Mock
     private CompetitionSetupPopulator competitionSetupPopulator;
+
+    @Mock
+    private QuestionSetupRestService questionSetupRestService;
 
     @Override
     protected CompetitionSetupApplicationController supplyControllerUnderTest() { return new CompetitionSetupApplicationController(); }
@@ -677,6 +681,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         verify(competitionSetupQuestionService, atLeastOnce()).getQuestion(QUESTION_ID);
         verify(competitionSetupRestService, never()).update(competition);
         verify(competitionSetupRestService).markSectionInComplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
+        verify(questionSetupRestService, times(1)).markQuestionSetupInComplete(competition.getId(), QUESTION_ID);
     }
 
     @Test

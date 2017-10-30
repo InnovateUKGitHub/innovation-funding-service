@@ -11,7 +11,7 @@ import java.util.Optional;
 
 
 /**
- * Interface for CRUD operations on {@link CompetitionResource} related data.
+ * Interface for CRUD operations on {@link CompetitionResource} related data when in setup.
  */
 public interface CompetitionSetupRestService {
     RestResult<Void> update(CompetitionResource competition);

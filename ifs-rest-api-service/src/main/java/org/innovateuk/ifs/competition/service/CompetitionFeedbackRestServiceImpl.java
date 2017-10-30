@@ -12,7 +12,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.com
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSearchResultItemListType;
 
 /**
- * CompetitionsFeedbackRestService TODO
+ * Implements {@link CompetitionFeedbackRestService}
  */
 @Service
 public class CompetitionFeedbackRestServiceImpl extends BaseRestService implements CompetitionFeedbackRestService {
