@@ -50,9 +50,8 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
 
     @Override
     public ServiceResult<Map<Long, Boolean>> getQuestionStatuses(Long competitionId, CompetitionSetupSection parentSection) {
-        SetupStatusResource parentSectionStatus = setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId)
-                .getSuccessObjectOrThrowException();
-        List<SetupStatusResource> setupStatuses = getSetupStatusByTargetAndParentId(competitionId, parentSectionStatus);
+        Long parentSectionStatusId = getParentIdStatusObjectOrCreateOne(competitionId, parentSection);
+        List<SetupStatusResource> setupStatuses = getSetupStatusByTargetAndParentId(competitionId, parentSectionStatusId);
 
         return ServiceResult.serviceSuccess(setupStatuses
                 .stream()
@@ -60,9 +59,9 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
                 .collect(toMap(SetupStatusResource::getClassPk, SetupStatusResource::getCompleted)));
     }
 
-    private List<SetupStatusResource> getSetupStatusByTargetAndParentId(Long competitionId, SetupStatusResource parentSectionStatus) {
+    private List<SetupStatusResource> getSetupStatusByTargetAndParentId(Long competitionId, Long parentSectionStatus) {
         return setupStatusService
-                    .findByTargetClassNameAndTargetIdAndParentId(Competition.class.getName(), competitionId, parentSectionStatus.getId())
+                    .findByTargetClassNameAndTargetIdAndParentId(Competition.class.getName(), competitionId, parentSectionStatus)
                     .getSuccessObjectOrThrowException();
     }
 
