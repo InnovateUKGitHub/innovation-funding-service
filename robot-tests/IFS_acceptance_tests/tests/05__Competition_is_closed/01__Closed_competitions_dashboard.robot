@@ -47,7 +47,7 @@ Invite Assessors
     ...    INFUND-7362
     [Tags]
     When the user clicks the button/Link    link=Invite assessors to assess the competition
-    Then The user should see the element    link=Overview
+    Then The user should see the element    link=Pending and rejected
     And the user should see the element    link=Find
     And the user should see the element    link=Invite
     [Teardown]    The user clicks the button/link    link=Competition
