@@ -14,7 +14,8 @@ Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door"
 ...               INFUND-7488 Create 'Competition' > 'Scope' tab for external "Front Door" view of competition scope
 ...
 ...               INFUND-7490 Create Competition > How to apply tab for external "Front Door" view of competition eligibility
-
+...
+...               IFS-1969 As a comp exec I am able to set a Funding type of Loan in Public content > Summary
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  MySQL
@@ -100,6 +101,7 @@ Competition information and search: ReadOnly
 Summary: server side validation and autosave
     [Documentation]    INFUND-6916  INFUND-7486
     [Tags]
+    # Using Loan as a funding Type in order to check the ticket IFS-1969
     Given the user clicks the button/link         link=Summary
     And the user should see the text in the page  Text entered into this section will appear in the summary tab
     When the user clicks the button/link          jQuery=.button:contains("Save and review")
@@ -112,6 +114,7 @@ Summary: server side validation and autosave
 Summary: User enters valid values and saves
     [Documentation]    INFUND-6916  INFUND-7486
     [Tags]  HappyPath
+    # Using Loan as a funding Type in order to check the ticket IFS-1969
     Given the internal user navigates to public content  ${public_content_competition_name}
     And the user clicks the button/link        link=Summary
     When the user enters valid data in the summary details
@@ -126,11 +129,11 @@ Summary: User enters valid values and saves
     And the user should see the element      css=li:nth-child(2) .task-status-complete
 
 Summary: Contains the correct values when viewed
-    [Documentation]    INFUND-6916, INFUND-7486
+    [Documentation]    INFUND-6916, INFUND-7486, IFS-1969
     [Tags]
     When the user clicks the button/link      link=Summary
     Then the user should see the element      jQuery=h2:contains("Funding type")
-    And the user should see the element       jQuery=div:contains("Grant")
+    And the user should see the element       jQuery=div:contains("Loan")
     Then the user should see the element      jQuery=h2:contains("Project size")
     And the user should see the element       jQuery=div:contains("10 millions")
     And the user should see the element       jQuery=h2:contains("A nice new Heading")
@@ -373,12 +376,12 @@ Guest user can filter competitions by Keywords
     Then the user should see the element       jQuery=a:contains("${public_content_competition_name}")
 
 Guest user can see the updated Summary information
-    [Documentation]  INFUND-7486
+    [Documentation]  INFUND-7486 IFS-1969
     [Tags]
     Given the user clicks the button/link                  link=Public content competition
     And the user clicks the button/link                    link=Summary
     Then the user should see the element                   jQuery=.column-third:contains("Description") ~ .column-two-thirds:contains("This is a Summary description")
-    And the user should see the element                    jQuery=.column-third:contains("Funding type") ~ .column-two-thirds:contains("Grant")
+    And the user should see the element                    jQuery=.column-third:contains("Funding type") ~ .column-two-thirds:contains("Loan")
     And the user should see the element                    jQuery=.column-third:contains("Project size") ~ .column-two-thirds:contains("10 millions")
     And the user should see the element                    jQuery=.column-third:contains("A nice new Heading") ~ .column-two-thirds:contains("Ut enim ad minim veniam,")
     Then guest user downloads the file                     ${server}/competition/${competitionId}/download/43  ${DOWNLOAD_FOLDER}/summary.pdf
@@ -463,7 +466,7 @@ User creates a new competition
 
 the user enters valid data in the summary details
     The user enters text to a text field    css=.editor  This is a Summary description
-    the user selects the radio button       fundingType    Grant
+    the user selects the radio button       fundingType  Loan
     the user enters text to a text field    id=projectSize   10 millions
 
 the user enters valid data in the eligibility details
@@ -493,7 +496,7 @@ the user can add and remove multiple content groups
     Then the user should see the element       jQuery=h1:contains("Attempt to upload a large file")
     And the user goes back to the previous page
     And the user reloads the page
-    # TODO this reload is required for now due to INFUND-8358
+    # TODO this reload is required for now due to IFS-559
     And the user should not see an error in the page
     And the user clicks the button/link       jQuery=button:contains("Remove section"):eq(1)
     Then the user should not see the element  id=contentGroups[2].heading
