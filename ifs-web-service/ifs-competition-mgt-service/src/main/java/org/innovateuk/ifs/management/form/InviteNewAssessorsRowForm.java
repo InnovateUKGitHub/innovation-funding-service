@@ -2,13 +2,26 @@ package org.innovateuk.ifs.management.form;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.innovateuk.ifs.commons.validation.ValidationConstants;
+
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 public class InviteNewAssessorsRowForm {
 
+
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.name.invalid}")
+    @Size.List ({
+            @Size(min=2, message="{validation.standard.name.length.min}"),
+            @Size(max=70, message="{validation.standard.name.length.max}"),
+    })
     @NotEmpty(message = "{validation.standard.name.required}")
     private String name;
 
+    @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
+    @Size(max = 256, message = "{validation.standard.email.length.max}")
     @NotEmpty(message = "{validation.inviteNewAssessorsForm.invites.email.required}")
     private String email;
 
