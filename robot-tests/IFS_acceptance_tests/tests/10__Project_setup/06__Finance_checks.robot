@@ -76,6 +76,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-7580 The participation levels of this project are within the required range
 ...
 ...               INFUND-654 Project Finance user has approved viability but date stamp is incorrect
+...
+...               IFS-1904 Only 1 row is saved on adding multiple new rows in eligibility > finances as internal user
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -1090,6 +1092,27 @@ Non Lead-Partner can view only the external version of finance checks eligibilit
     Then the user should see the element    jQuery=h2:contains("Detailed finances")
     And the user verifies the financial sub-totals for external version under the Detailed-finances     £59,430    £1,954     £80,000    £5,050    £10,600    £10,000     £5,000
     And the user should see the element    css=input[id="total-cost"][value="£172,034"]
+
+Project finance user adds, modifies and removes labour rows
+    [Documentation]    IFS-1904
+    [Tags]
+    [Setup]  Log in as a different user            &{internal_finance_credentials}
+    Given the user navigates to the page           ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/finance-check/organisation/${PS_GOL_APPLICATION_LEAD_ORGANISATION_ID}/eligibility
+    When the user expands the section              Labour
+    And the user clicks the button/link            jQuery=h3:contains("Labour") + #collapsible-0 a:contains("Edit")
+    And the user clicks the button/link            jQuery=h3:contains("Labour") + #collapsible-0 button:contains("Add another role")
+    And the user adds data into labour row         7  test  2000  100
+    And the user clicks the button/link            jQuery=h3:contains("Labour") + #collapsible-0 button:contains("Add another role")
+    And the user adds data into labour row         9  test 1  1450  100
+    Then verify percentage and total               1    3%    £ 5,886
+    When the user clicks the button/link           jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(3) button:contains('Remove')
+    And the user clears the text from the element  jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossAnnualSalary"]
+    And the user enters text to a text field       jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossAnnualSalary"]    100
+    And the user clicks the button/link            css=section:nth-of-type(1) button[name=save-eligibility]
+    Then verify percentage and total               1    2%    £ 4,748
+    And the user should see the element            jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(6) input[value="£ 1,626"]
+    And the user should see the element            jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(8) input[value="£ 1,179"]
+    And the user should not see the element        jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(4) input[value="£ 976"]  # This is the row which was removed
 
 *** Keywords ***
 Custom suite setup

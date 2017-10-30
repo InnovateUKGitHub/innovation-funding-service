@@ -224,6 +224,14 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<CompetitionParticipantResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<AssessmentPanelInviteResource>> assessmentPanelInviteResourceListType() {
+        return new ParameterizedTypeReference<List<AssessmentPanelInviteResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<AssessmentPanelParticipantResource>> assessmentPanelParticipantResourceListType() {
+        return new ParameterizedTypeReference<List<AssessmentPanelParticipantResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<AssessmentResource>> assessmentResourceListType() {
         return new ParameterizedTypeReference<List<AssessmentResource>>() {};
     }

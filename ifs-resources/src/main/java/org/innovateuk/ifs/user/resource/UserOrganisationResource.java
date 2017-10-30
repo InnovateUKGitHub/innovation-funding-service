@@ -17,6 +17,10 @@ public class UserOrganisationResource {
     public UserOrganisationResource() {
     }
 
+    public UserOrganisationResource(UserResource userResource) {
+        this.userResource = userResource;
+    }
+
     public UserResource getUserResource() {
         return userResource;
     }

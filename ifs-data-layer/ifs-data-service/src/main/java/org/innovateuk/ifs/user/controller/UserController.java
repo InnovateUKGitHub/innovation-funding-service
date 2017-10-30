@@ -72,9 +72,9 @@ public class UserController {
         return baseUserService.getUserById(id).toGetResponse();
     }
 
-    @GetMapping("/findByRole/{userRoleName}")
-    public RestResult<List<UserResource>> findByRole(@PathVariable("userRoleName") final String userRoleName) {
-        return baseUserService.findByProcessRole(UserRoleType.fromName(userRoleName)).toGetResponse();
+    @GetMapping("/findByRole/{userRole}")
+    public RestResult<List<UserResource>> findByRole(@PathVariable("userRole") final UserRoleType userRole) {
+        return baseUserService.findByProcessRole(userRole).toGetResponse();
     }
 
     @GetMapping("/internal/active")
