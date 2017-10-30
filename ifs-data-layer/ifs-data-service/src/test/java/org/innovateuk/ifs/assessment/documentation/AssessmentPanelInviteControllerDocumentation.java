@@ -216,6 +216,7 @@ public class AssessmentPanelInviteControllerDocumentation extends BaseController
                 ));
     }
 
+    @Test
     public void getAllInvitesToResend() throws Exception {
         long competitionId = 1L;
         List<Long> inviteIds = asList(1L, 2L);

@@ -9,6 +9,10 @@ import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.AssessorPanelSelectionForm;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsAcceptedModelPopulator;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsFindModelPopulator;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsInviteModelPopulator;
+import org.innovateuk.ifs.management.form.AssessorPanelSelectionForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.model.PanelInviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.PanelInviteAssessorsInviteModelPopulator;
@@ -52,6 +56,9 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
 
     @Autowired
     private PanelInviteAssessorsInviteModelPopulator panelInviteAssessorsInviteModelPopulator;
+
+    @Autowired
+    private PanelInviteAssessorsAcceptedModelPopulator panelInviteAssessorsAcceptedModelPopulator;
 
     protected String getCookieName() {
         return SELECTION_FORM;
@@ -227,6 +234,22 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
         model.addAttribute("originQuery", originQuery);
 
         return "assessors/panel-invite";
+    }
+
+    @GetMapping("/accepted")
+    public String accepted(Model model,
+                           @PathVariable("competitionId") long competitionId,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam MultiValueMap<String, String> queryParams) {
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_ACCEPTED, queryParams);
+
+        model.addAttribute("model", panelInviteAssessorsAcceptedModelPopulator.populateModel(
+                competitionId,
+                page,
+                originQuery
+        ));
+
+        return "assessors/panel-accepted";
     }
 
     @PostMapping(value = "/invite", params = {"remove"})

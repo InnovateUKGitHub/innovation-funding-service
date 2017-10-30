@@ -13,6 +13,7 @@ import org.innovateuk.ifs.management.form.AssessorPanelSelectionForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsAcceptedModelPopulator;
 import org.innovateuk.ifs.management.model.PanelInviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.PanelInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.*;
@@ -30,6 +31,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import javax.servlet.http.Cookie;
 import java.net.URLDecoder;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,6 +78,10 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
     @Spy
     @InjectMocks
     private PanelInviteAssessorsInviteModelPopulator panelInviteAssessorsInviteModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private PanelInviteAssessorsAcceptedModelPopulator panelInviteAssessorsAcceptedModelPopulator;
 
     @Spy
     @InjectMocks
@@ -368,6 +374,54 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
         inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
         inOrder.verify(assessmentPanelInviteRestService).getCreatedInvites(competition.getId(), page);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void accepted() throws Exception {
+        int page = 1;
+        List<ParticipantStatusResource> status = Collections.singletonList(ACCEPTED);
+
+        List<AssessorInviteOverviewResource> assessorInviteOverviewResources = setUpAssessorInviteOverviewResources();
+
+        AssessorInviteOverviewPageResource pageResource = newAssessorInviteOverviewPageResource()
+                .withContent(assessorInviteOverviewResources)
+                .build();
+
+        when(assessmentPanelInviteRestService.getInvitationOverview(competition.getId(), page, status))
+                .thenReturn(restSuccess(pageResource));
+
+        MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}/assessors/accepted", competition.getId())
+                .param("page", "1"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/panel-accepted"))
+                .andReturn();
+
+        assertCompetitionDetails(competition, result);
+        assertInviteAccepted(assessorInviteOverviewResources, result);
+
+        InOrder inOrder = inOrder(competitionRestService,  assessmentPanelInviteRestService);
+        inOrder.verify(competitionRestService).getCompetitionById(competition.getId());
+        inOrder.verify(assessmentPanelInviteRestService).getInvitationOverview(competition.getId(), page, status);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    private void assertInviteAccepted(List<AssessorInviteOverviewResource> expectedInviteAccepted, MvcResult result) {
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof PanelInviteAssessorsAcceptedViewModel);
+        PanelInviteAssessorsAcceptedViewModel model = (PanelInviteAssessorsAcceptedViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals(expectedInviteAccepted.size(), model.getAssessors().size());
+
+        forEachWithIndex(expectedInviteAccepted, (i, inviteOverviewResource) -> {
+            PanelOverviewAssessorRowViewModel overviewAssessorRowViewModel = model.getAssessors().get(i);
+            assertEquals(inviteOverviewResource.getName(), overviewAssessorRowViewModel.getName());
+            assertEquals(formatInnovationAreas(inviteOverviewResource.getInnovationAreas()), overviewAssessorRowViewModel.getInnovationAreas());
+            assertEquals(inviteOverviewResource.isCompliant(), overviewAssessorRowViewModel.isCompliant());
+            assertEquals(inviteOverviewResource.getBusinessType(), overviewAssessorRowViewModel.getBusinessType());
+            assertEquals(inviteOverviewResource.getStatus(), overviewAssessorRowViewModel.getStatus());
+            assertEquals(inviteOverviewResource.getDetails(), overviewAssessorRowViewModel.getDetails());
+            assertEquals(inviteOverviewResource.getInviteId(), overviewAssessorRowViewModel.getInviteId());
+        });
     }
 
     @Test
