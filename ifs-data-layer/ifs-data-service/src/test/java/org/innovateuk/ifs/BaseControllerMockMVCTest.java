@@ -62,6 +62,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.TEXT_PLAIN;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -377,14 +378,14 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     /**
      * A useful shorthand way of documenting a Controller method for simple uploading of a file (binary data and metadata)
      */
-    protected RestDocumentationResultHandler documentFileUploadMethod(RestDocumentationResultHandler document) {
-        return documentFileUploadMethod(document, emptyList(), emptyList());
+    protected RestDocumentationResultHandler documentFileUploadMethod(String docPath) {
+        return documentFileUploadMethod(docPath, emptyList(), emptyList());
     }
 
     /**
      * A useful shorthand way of documenting a Controller method for simple uploading of a file (binary data and metadata)
      */
-    protected RestDocumentationResultHandler documentFileUploadMethod(RestDocumentationResultHandler document,
+    protected RestDocumentationResultHandler documentFileUploadMethod(String docPath,
                                                                       List<Pair<String, String>> additionalRequestParameters,
                                                                       List<Pair<String, String>> additionalHeaders) {
 
@@ -398,7 +399,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         headers.add(headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user"));
         additionalHeaders.forEach(nvp -> headers.add(headerWithName(nvp.getKey()).description(nvp.getValue())));
 
-        return document.snippets(
+        return document(docPath,
                 requestParameters(
                         requestParameters.toArray(new ParameterDescriptor[requestParameters.size()])
                 ),
@@ -417,14 +418,14 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     /**
      * A useful shorthand way of documenting a Controller method for simple updating of a file (binary data and metadata)
      */
-    protected RestDocumentationResultHandler documentFileUpdateMethod(RestDocumentationResultHandler document) {
-        return documentFileUpdateMethod(document, emptyList(), emptyList());
+    protected RestDocumentationResultHandler documentFileUpdateMethod(String docPath) {
+        return documentFileUpdateMethod(docPath, emptyList(), emptyList());
     }
 
     /**
      * A useful shorthand way of documenting a Controller method for simple updating of a file (binary data and metadata)
      */
-    protected RestDocumentationResultHandler documentFileUpdateMethod(RestDocumentationResultHandler document,
+    protected RestDocumentationResultHandler documentFileUpdateMethod(String docPath,
                                                                     List<Pair<String, String>> additionalRequestParameters,
                                                                     List<Pair<String, String>> additionalHeaders) {
 
@@ -438,7 +439,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         headers.add(headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user"));
         additionalHeaders.forEach(nvp -> headers.add(headerWithName(nvp.getKey()).description(nvp.getValue())));
 
-        return document.snippets(
+        return document(docPath,
                 requestParameters(
                         requestParameters.toArray(new ParameterDescriptor[requestParameters.size()])
                 ),
@@ -451,31 +452,31 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     /**
      * A useful shorthand way of documenting a Controller method for simple deleting of a file
      */
-    protected RestDocumentationResultHandler documentFileDeleteMethod(RestDocumentationResultHandler document) {
-        return documentFileDeleteMethod(document, emptyList(), emptyList());
+    protected RestDocumentationResultHandler documentFileDeleteMethod(String docPath) {
+        return documentFileDeleteMethod(docPath, emptyList(), emptyList());
     }
 
     /**
      * A useful shorthand way of documenting a Controller method for simple deleting of a file
      */
-    protected RestDocumentationResultHandler documentFileDeleteMethod(RestDocumentationResultHandler document,
+    protected RestDocumentationResultHandler documentFileDeleteMethod(String docPath,
                                                                     List<Pair<String, String>> additionalRequestParameters,
                                                                     List<Pair<String, String>> additionalHeaders) {
 
-        return documentFileMethodWithEmptyResponseBody(document, additionalRequestParameters, additionalHeaders);
+        return documentFileMethodWithEmptyResponseBody(docPath, additionalRequestParameters, additionalHeaders);
     }
 
     /**
      * A useful shorthand way of documenting a Controller method for simple getting of a file's details (a FileEntryResource)
      */
-    protected RestDocumentationResultHandler documentFileGetDetailsMethod(RestDocumentationResultHandler document) {
-        return documentFileGetDetailsMethod(document, emptyList(), emptyList());
+    protected RestDocumentationResultHandler documentFileGetDetailsMethod(String docPath) {
+        return documentFileGetDetailsMethod(docPath, emptyList(), emptyList());
     }
 
     /**
      * A useful shorthand way of documenting a Controller method for simple getting of a file's details (a FileEntryResource)
      */
-    protected RestDocumentationResultHandler documentFileGetDetailsMethod(RestDocumentationResultHandler document,
+    protected RestDocumentationResultHandler documentFileGetDetailsMethod(String docPath,
                                                                           List<Pair<String, String>> additionalRequestParameters,
                                                                           List<Pair<String, String>> additionalHeaders) {
 
@@ -486,7 +487,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         headers.add(headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user"));
         additionalHeaders.forEach(nvp -> headers.add(headerWithName(nvp.getKey()).description(nvp.getValue())));
 
-        return document.snippets(
+        return document(docPath,
                 requestParameters(
                         requestParameters.toArray(new ParameterDescriptor[requestParameters.size()])
                 ),
@@ -504,21 +505,21 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     /**
      * A useful shorthand way of documenting a Controller method for simple getting of a file's contents (binary data)
      */
-    protected RestDocumentationResultHandler documentFileGetContentsMethod(RestDocumentationResultHandler document) {
-        return documentFileGetContentsMethod(document, emptyList(), emptyList());
+    protected RestDocumentationResultHandler documentFileGetContentsMethod(String docPath) {
+        return documentFileGetContentsMethod(docPath, emptyList(), emptyList());
     }
 
     /**
      * A useful shorthand way of documenting a Controller method for simple getting of a file's contents (binary data)
      */
-    protected RestDocumentationResultHandler documentFileGetContentsMethod(RestDocumentationResultHandler document,
+    protected RestDocumentationResultHandler documentFileGetContentsMethod(String docPath,
                                                                            List<Pair<String, String>> additionalRequestParameters,
                                                                            List<Pair<String, String>> additionalHeaders) {
 
-        return documentFileMethodWithEmptyResponseBody(document, additionalRequestParameters, additionalHeaders);
+        return documentFileMethodWithEmptyResponseBody(docPath, additionalRequestParameters, additionalHeaders);
     }
 
-    private RestDocumentationResultHandler documentFileMethodWithEmptyResponseBody(RestDocumentationResultHandler document, List<Pair<String, String>> additionalRequestParameters, List<Pair<String, String>> additionalHeaders) {
+    private RestDocumentationResultHandler documentFileMethodWithEmptyResponseBody(String docPath, List<Pair<String, String>> additionalRequestParameters, List<Pair<String, String>> additionalHeaders) {
 
         List<ParameterDescriptor> requestParameters = new ArrayList<>();
         additionalRequestParameters.forEach(nvp -> requestParameters.add(parameterWithName(nvp.getKey()).description(nvp.getValue())));
@@ -527,7 +528,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         headers.add(headerWithName("IFS_AUTH_TOKEN").description("The authentication token for the logged in user"));
         additionalHeaders.forEach(nvp -> headers.add(headerWithName(nvp.getKey()).description(nvp.getValue())));
 
-        return document.snippets(
+        return document(docPath,
                 requestParameters(
                         requestParameters.toArray(new ParameterDescriptor[requestParameters.size()])
                 ),

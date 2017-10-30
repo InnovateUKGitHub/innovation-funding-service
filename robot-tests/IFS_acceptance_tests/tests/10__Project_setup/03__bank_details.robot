@@ -18,6 +18,8 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-8276 Content: Bank Details: should not say "each"
 ...
 ...               INFUND-8688 Experian response - Error message if wrong bank details are submitted
+...
+...               IFS-1881 Project Setup internal project dashboard navigation
 
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
@@ -78,9 +80,10 @@ Bank details server side validations
     [Documentation]    INFUND-3010
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Submit bank account details")
-    Then the user should see an error    Please enter an account number.
-    And the user should see an error    Please enter a sort code.
-    And the user should see an error    You need to select a billing address before you can continue.
+    And the user clicks the button/link    jQuery=[role="dialog"] .button:contains("Submit")
+    Then the user should see an error    Please enter a valid account number.
+    And the user should see an error    Please enter a valid sort code.
+    And the user should see an error    You need to select an address before you can continue.
 
 Bank details client side validations
     [Documentation]    INFUND-3010, INFUND-6887, INFUND-6482
@@ -109,7 +112,7 @@ Bank details client side validations
     Then the user should not see the text in the page    Please enter a sort code.
     And the user should not see the text in the page    Please enter a valid sort code.
     When the user selects the radio button    addressType    REGISTERED
-    Then the user should not see the text in the page    You need to select a billing address before you can continue.
+    Then the user should not see the text in the page    You need to select an address before you can continue.
 
 Bank account postcode lookup
     [Documentation]    INFUND-3282
@@ -275,12 +278,12 @@ Project Finance can see the progress of partners bank details
 
 
 IFS Admin can see Bank Details
-    [Documentation]    INFUND-4903, INFUND-4903, IFS-603
+    [Documentation]    INFUND-4903, INFUND-4903, IFS-603, IFS-1881
     [Tags]  HappyPath
     [Setup]  log in as a different user            &{ifs_admin_user_credentials}
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=${PS_BD_Competition_Name}
-    Then the user should see the element          jQuery=h2:contains("Projects in setup")
+    Then the user should see the element          link=All projects
     And the user should see the element           css=#table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(3)
     When the user clicks the button/link          css=#table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(3) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
@@ -331,10 +334,10 @@ the project finance user downloads the bank details
 
 the user opens the excel and checks the content
     ${contents}=                    read csv file  ${DOWNLOAD_FOLDER}/bank_details.csv
-    ${vitruvius_details}=           get from list  ${contents}  9
+    ${vitruvius_details}=           get from list  ${contents}  3
     ${vitruvius}=                   get from list  ${vitruvius_details}  0
     should be equal                 ${vitruvius}  ${Vitruvius_Name}
-    ${Armstrong_Butler_details}=    get from list  ${contents}  10
+    ${Armstrong_Butler_details}=    get from list  ${contents}  5
     ${Armstrong_Butler}=            get from list  ${Armstrong_Butler_details}  0
     should be equal                 ${Armstrong_Butler}  ${Armstrong_Butler_Name}
     ${application_number}=          get from list  ${vitruvius_details}  1

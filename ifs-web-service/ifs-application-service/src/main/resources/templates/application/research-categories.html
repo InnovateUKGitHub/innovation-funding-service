@@ -13,7 +13,7 @@
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Research category',subTitle=${model.currentCompetitionName},size='heading-xlarge'" />
 
-    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
         <div class="form-group" th:classappend="${#fields.hasErrors('*{__researchCategoryChoice__}')} ? 'form-group-error'">
             <div class="message-alert extra-margin-bottom" th:if="${model.hasApplicationFinances}">
                 <h2 class="heading-small no-margin">What type of research are you undertaking in this project?</h2>
@@ -24,12 +24,12 @@
 
             <fieldset>
                 <legend class="extra-margin-bottom">
-                    <span class="heading-medium">Research category</span>
+                    <h2 class="heading-medium">Research category</h2>
                     <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a
                         href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development"
                         target="_blank">Innovate UK funding rules</a>.</span>
                     <th:block th:if="${#fields.hasErrors('researchCategoryChoice')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryChoice')}" th:text="${err}" />
+                        <span class="error-message"  th:each="err : ${#fields.errors('researchCategoryChoice')}" th:text="${err}"></span>
                     </th:block>
                 </legend>
                 <th:block th:each="researchCategory : ${model.availableResearchCategories}">

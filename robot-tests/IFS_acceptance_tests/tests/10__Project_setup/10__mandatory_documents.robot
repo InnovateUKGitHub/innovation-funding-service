@@ -24,12 +24,19 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               INFUND-5490 document upload non-user
 ...
 ...               IFS-218 After rejection of mandatory documents, lead partner has a submit button
+...
+...               IFS-1864 Sole applicants do not have to provide a collaboration agreement document
+...
+...               IFS-1881 Project Setup internal project dashboard navigation
 Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
 *** Variables ***
+
+${PROJ_WITH_SOLE_APPLICANT}  ${project_ids["High-speed rail and its effects on soil compaction"]}
+${USER_BECKY_ORG_PUBSECTOR}  becky.mason@gmail.com
 
 *** Test Cases ***
 Non-lead partner cannot upload either document
@@ -38,10 +45,10 @@ Non-lead partner cannot upload either document
     Given Log in as a different user   &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager will need to upload the following
+    And The user should see the element  jQuery=li:contains("waiting") p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
-    And the user should see the text in the page   Only the Project Manager can upload and submit additional documents
+    And the user should see the element   jQuery=p:contains("Only the Project Manager can upload and submit additional documents")
 
 Lead partner cannot upload either document
     [Documentation]    INFUND-3011, INFUND-5490
@@ -49,10 +56,10 @@ Lead partner cannot upload either document
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager will need to upload the following
+    And The user should see the element  jQuery=li:contains("waiting") p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
-    And the user should see the text in the page   Only the Project Manager can upload and submit additional documents
+    And the user should see the element   jQuery=p:contains("Only the Project Manager can upload and submit additional documents")
 
 PM cannot submit when both documents are not uploaded
     [Documentation]    INFUND-3012, INFUND-5490
@@ -60,7 +67,7 @@ PM cannot submit when both documents are not uploaded
     Given log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     When the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
-    And the user should see the text in the page   Only the Project Manager can upload and submit additional documents
+    And the user should see the element   jQuery=p:contains("Only the Project Manager can upload and submit additional documents")
     #Then the user should see the 2 Upload buttons
     And the user should see the element    css=label[for="collaborationAgreement"]
     And the user should see the element    css=label[for="exploitationPlan"]
@@ -295,12 +302,12 @@ Non-lead partner can still view both documents after submitting
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
 
 CompAdmin can see uploaded files
-    [Documentation]    INFUND-4621
+    [Documentation]    INFUND-4621, IFS-1881
     [Tags]    HappyPath
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
     When the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element    jQuery=h2:contains("Projects in setup")
+    Then the user should see the element   link=All projects
     When the user clicks the button/link    css=#table-project-status tr:nth-child(2) td:nth-child(7) a
     Then the user should see the text in the page    Collaboration agreement
     When the user clicks the button/link    css=.uploaded-file:nth-of-type(1)
@@ -318,7 +325,7 @@ CompAdmin rejects other documents
     And the user clicks the button/link    jQuery=.modal-reject-docs button:contains("Cancel")
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=button:contains("Reject documents")
-    And the user clicks the button/link    jQuery=.modal-reject-docs .button:contains("Reject Documents")
+    And the user clicks the button/link    jQuery=.modal-reject-docs .button:contains("Reject documents")
     Then the user should see the text in the page    These documents have been reviewed and rejected. We have returned them to the Project Manager.
 
 
@@ -356,7 +363,7 @@ After rejection, lead partner cannot upload either document
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager will need to upload the following
+    And The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -423,7 +430,7 @@ After rejection, non-lead partner cannot upload either document
     [Setup]    log in as a different user   &{collaborator1_credentials}
     Given the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element    css=.progress-list ul > li.waiting:nth-of-type(7)
-    And The user should see the text in the page    Your Project Manager will need to upload the following
+    And The user should see the element  jQuery=p:contains("Your Project Manager needs to upload the following")
     When the user clicks the button/link    link=Other documents
     Then the user should not see the text in the page    Upload
 
@@ -512,11 +519,11 @@ Project Finance is able to Approve and Reject
 
 
 Project Finance user can click the link and go back to the Competition Dashboard page
-    [Documentation]    INFUND-5516, INFUND-7345
+    [Documentation]    INFUND-5516, INFUND-7345, IFS-1881
     [Tags]
     When the user clicks the button/link           link=Projects in setup
     Then the user should not see an error in the page
-    And the user should see the text in the page   Projects in setup
+    And the user should see the element            link=All projects
     [Teardown]    the user goes back to the previous page
 
 # This is bank details and finance test but has been placed here as the required project is used here
@@ -550,7 +557,7 @@ CompAdmin approves other documents
     And the user clicks the button/link    jQuery=.modal-accept-docs button:contains("Cancel")
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=button:contains("Accept documents")
-    And the user clicks the button/link    jQuery=.modal-accept-docs .button:contains("Accept Documents")
+    And the user clicks the button/link    jQuery=.modal-accept-docs .button:contains("Accept documents")
     Then the user should see the text in the page    The documents provided have been approved.
 
 Partners can see the documents approved
@@ -578,7 +585,6 @@ CompAdmin can see Project status updated
     Then the user should see the element    jQuery=tr:nth-child(2):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(6)
 
-
 Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 , INFUND-5543
     [Tags]    Experian    HappyPath
@@ -589,6 +595,46 @@ Status updates correctly for internal user's table
     And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status
     And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action
     And the user should see the element    css=#table-project-status tr:nth-of-type(2) td:nth-of-type(6).status.ok
+
+# Project used for sole applicant tests - High-speed rail and its effects on soil compaction -
+# has lead org type of Public sector, charity or non Je-S registered research organisation
+Sole applicant uploads only exploitation plan and submits
+    [Documentation]  IFS-1864
+    [Tags]  HappyPath
+    [Setup]  log in as a different user  ${USER_BECKY_ORG_PUBSECTOR}  ${short_password}
+    Given the user navigates to the page  ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
+    And the user clicks the button/link  link=Other documents
+    Then the user should not see the text in the page  Collaboration
+    And the user should see the element  jQuery=h2:contains("Exploitation plan")
+    And the user should not see the element  jQuery=.button.enabled:contains("Submit document")
+    When choose file  name=exploitationPlan  ${upload_folder}/${valid_pdf}  # This line uploads valid pdf file as exploitation plan
+    And the user clicks the button/link  jQuery=.button:contains("Submit document")
+    And the user clicks the button/link  jQuery=.button:contains("Submit")
+    And the user clicks the button/link  link=Project setup status
+    Then the user should see the element   jQuery=ul li.waiting h2:contains("Other documents")
+
+CompAdmin sees uploaded file and approves it
+    [Documentation]    IFS-1864
+    [Tags]    HappyPath
+    [Setup]    Log in as a different user  &{Comp_admin1_credentials}
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJ_WITH_SOLE_APPLICANT}/partner/documents
+    Then the user should not see the text in the page  Collaboration
+    And the user should see the element   jQuery=h2:contains("Exploitation plan")
+    When the user clicks the button/link  css=.uploaded-file:nth-of-type(1)
+    Then the user should see the file without error
+    When the user clicks the button/link  jQuery=button:contains("Accept document")
+    And the user clicks the button/link  jQuery=.modal-accept-doc .button:contains("Accept document")
+    Then the user should see the element  jQuery=p:contains("The document provided has been approved.")
+
+Sole applicant can see documents approval
+    [Documentation]    IFS-1864
+    [Tags]
+    [Setup]  log in as a different user   ${USER_BECKY_ORG_PUBSECTOR}  ${short_password}
+    When the user navigates to the page   ${server}/project-setup/project/${PROJ_WITH_SOLE_APPLICANT}
+    Then the user should see the element  css=ul li.complete:nth-child(7)
+    When the user clicks the button/link  link=Other documents
+    Then the user should see the element  jQuery=.success-alert h2:contains("This document has been approved by Innovate UK.")
+
 
 *** Keywords ***
 

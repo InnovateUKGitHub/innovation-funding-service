@@ -31,14 +31,12 @@ function upgradeServices {
     oc apply -f os-files-tmp/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f os-files-tmp/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
     oc apply -f os-files-tmp/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f os-files-tmp/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f os-files-tmp/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
 
-    # shib & idp
-    if $(isNamedEnvironment $TARGET); then
-        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/56-${TARGET}-idp.yml
-        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/named-envs/5-${TARGET}-shib.yml
-    else
-        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/56-idp.yml
-        oc apply ${SVC_ACCOUNT_CLAUSE} -f os-files-tmp/shib/5-shib.yml
+    # The SIL stub is required in all environments, in one form or another, except for production
+    if ! $(isProductionEnvironment ${TARGET}); then
+        oc apply -f os-files-tmp/sil-stub/80-sil-stub.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
     watchStatus
@@ -58,6 +56,11 @@ function forceReload {
     oc rollout latest dc/idp ${SVC_ACCOUNT_CLAUSE}
     oc rollout latest dc/shib ${SVC_ACCOUNT_CLAUSE}
 
+    # The SIL stub is required in all environments, in one form or another, except for production
+    if ! $(isProductionEnvironment ${TARGET}); then
+        oc rollout latest dc/sil-stub ${SVC_ACCOUNT_CLAUSE}
+    fi
+
     watchStatus
 }
 
@@ -71,6 +74,11 @@ function watchStatus {
     rolloutStatus registration-svc
     rolloutStatus idp
     rolloutStatus shib
+
+    # The SIL stub is required in all environments, in one form or another, except for production
+    if ! $(isProductionEnvironment ${TARGET}); then
+        rolloutStatus sil-stub
+    fi
 }
 
 function rolloutStatus {

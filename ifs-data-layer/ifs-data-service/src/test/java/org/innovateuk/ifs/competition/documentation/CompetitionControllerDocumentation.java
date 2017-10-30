@@ -3,23 +3,19 @@ package org.innovateuk.ifs.competition.documentation;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
-import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.documentation.CompetitionCountResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionSearchResultDocs;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -33,8 +29,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
@@ -47,17 +41,10 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     CompetitionService competitionService;
     @Mock
     CompetitionSetupService competitionSetupService;
-    private RestDocumentationResultHandler document;
 
     @Override
     protected CompetitionController supplyControllerUnderTest() {
         return new CompetitionController();
-    }
-
-    @Before
-    public void setup() {
-        this.document = document("competition/{method-name}",
-                preprocessResponse(prettyPrint()));
     }
 
     @Test
@@ -416,6 +403,39 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                         "competition/{method-name}",
                         responseFields(
                                 fieldWithPath("[]").description("list of competitions, which have had feedback released, that the authenticated user has access to")
+                        )
+                ));
+    }
+
+    @Test
+    public void getOpenQueryCount() throws Exception {
+        when(competitionService.countAllOpenQueries(321L)).thenReturn(serviceSuccess(1L));
+
+        mockMvc.perform(get("/competition/{id}/queries/open/count", 321L))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the competition whose open queries are being counted")
+                        )
+                ));
+    }
+
+    @Test
+    public void getOpenQueries() throws Exception {
+        when(competitionService.findAllOpenQueries(321L)).thenReturn(serviceSuccess(Arrays.asList(
+                new CompetitionOpenQueryResource(1L, 2L, "a", 3L, "b"),
+                new CompetitionOpenQueryResource(1L, 2L, "a", 3L, "b"))));
+
+        mockMvc.perform(get("/competition/{id}/queries/open", 321L))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the competition whose open queries are being retrieved")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").description("list of open queries")
                         )
                 ));
     }

@@ -12,8 +12,8 @@ ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=
 ENV SHIBBOLETH_LDAP_BASE_DN="dc=nodomain" \
     SHIBBOLETH_LDAP_PPOLICY_ATTRIB="cn=PPolicy,ou=Policies" \
     SHIBBOLETH_LDAP_USER="cn=admin,dc=nodomain" \
-    SHIBBOLETH_LDAP_PASSWORD="default" \
-    SHIBBOLETH_LDAP_URL="ldaps://ldap:8389" \
+    LDAP_PASSWORD="default" \
+    LDAP_URL="ldaps://ldap:8389" \
     SHIBBOLETH_LDAP_PORT="8389" \
     SHIBBOLETH_LDAP_REQUIRE_VALID_P_POLICY="true" \
     SHIBBOLETH_API_KEYS="1234567890"

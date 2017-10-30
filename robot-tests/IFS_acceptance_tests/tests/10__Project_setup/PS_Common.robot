@@ -153,7 +153,6 @@ ${project_address_page}                 ${project_in_setup_details_page}/project
 ${internal_competition_status}          ${server}/project-setup-management/competition/${PROJECT_SETUP_COMPETITION}/status
 ${notified_application_competition_status}   ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status
 
-
 #Bank details
 ${account_one}   51406795
 ${sortCode_one}  404745
@@ -186,22 +185,22 @@ partner fills in his bank details
     [Arguments]  ${email}  ${project}  ${account_number}  ${sort_code}
     log in as a different user                       ${email}    ${short_password}
     the user navigates to the page                   ${server}/project-setup/project/${project}/bank-details
-    the user enters text to a text field             id=bank-acc-number  ${account_number}
-    the user enters text to a text field             id=bank-sort-code  ${sort_code}
+    the user enters text to a text field             id=accountNumber  ${account_number}
+    the user enters text to a text field             id=sortCode  ${sort_code}
     the user clicks the button twice                 css=label[for="address-use-org"]
     the user sees that the radio button is selected  addressType  REGISTERED  # Added this check to give extra execution time
     the user should see the element                  css=#registeredAddress
     wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
     wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]
 
-Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
-    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
-
 finance contacts are selected and bank details are approved
     log in as a different user      &{lead_applicant_credentials}
     the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details
     ${finance_contact}  ${val}=  Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery=#project-details-finance tr:nth-of-type(1):contains("Yes")
     run keyword if  '${finance_contact}' == 'PASS'  run keywords  partners submit their finance contacts  bank details are approved for all businesses
+
+Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     The user logs-in in new browser  &{lead_applicant_credentials}
@@ -299,7 +298,7 @@ project finance approves other documents
     log in as a different user       &{internal_finance_credentials}
     the user navigates to the page   ${SERVER}/project-setup-management/project/${project}/partner/documents
     the user clicks the button/link  jQuery=.button:contains("Accept documents")
-    the user clicks the button/link  jQuery=.modal-accept-docs .button:contains("Accept Documents")
+    the user clicks the button/link  jQuery=.modal-accept-docs .button:contains("Accept documents")
 
 project finance generates the Spend Profile
     [Arguments]  ${lead}  ${partner}  ${academic_partner}  ${project}

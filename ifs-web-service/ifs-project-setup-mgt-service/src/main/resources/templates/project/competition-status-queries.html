@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Setup Dashboard: Query Responses'" />
+</head>
+<body class="project-management">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content" class="full-width">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <div class="grid-container">
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionName},subTitle=|${model.competitionId}: Innovate UK|,size='heading-xlarge'" />
+            </div>
+        </div>
+    </div>
+    <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'queries'}, competitionId=${model.competitionId}, openQueryCount=${model.openQueryCount}, showAllTabs=${model.showTabs})" />
+
+    <th:block th:if="${model.openQueries.size() > 0}">
+        <div>
+            <table id="table-project-organisation-query-status" class="table-overview extra-margin-bottom">
+                <thead>
+                    <tr>
+                        <th scope="col">Application number</th>
+                        <th scope="col">Project title</th>
+                        <th scope="col">Response</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="query : ${model.openQueries}">
+                        <td th:text="${query.applicationId}" />
+                        <td th:text="${query.projectName}"/>
+                        <td><a th:text="${query.organisationName}" th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${query.projectId},organisationId=${query.organisationId})}" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+    <th:block th:unless="${model.openQueries.size() > 0}">
+        There are no outstanding queries.
+    </th:block>
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

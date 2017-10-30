@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -74,6 +75,46 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
+    // TODO update when IFS-2072 is addressed (track Spend Profile states via workflow)
+    public static final String COUNT_OPEN_QUERIES = "SELECT COUNT(DISTINCT t.classPk) " +
+            "FROM Post post " +
+            "JOIN post.thread t " +
+            "JOIN post.author u " +
+            "JOIN ProjectFinance pf ON pf.id = t.classPk " +
+            "JOIN pf.project pr " +
+            "JOIN pr.application a " +
+            "WHERE t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
+            "    AND TYPE(t) = Query " +
+            "    AND 0 = (SELECT COUNT(id) FROM u.roles r WHERE r.name = 'project_finance') " +
+            "    AND a.competition.id = :competitionId " +
+            "    AND (post.thread.id, post.createdOn) IN ( " +
+            "        SELECT p.thread.id, MAX(p.createdOn) " +
+            "        FROM Post p " +
+            "        WHERE p.thread.id = t.id " +
+            "        GROUP BY p.thread.id) " +
+            "    AND (SELECT COUNT(id) FROM pr.spendProfiles sp) != (SELECT COUNT(id) FROM pr.partnerOrganisations po)";
+
+    // TODO update when IFS-2072 is addressed (track Spend Profile states via workflow)
+    public static final String GET_OPEN_QUERIES = "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name) " +
+            "FROM Post post " +
+            "JOIN post.thread t " +
+            "JOIN post.author u " +
+            "JOIN ProjectFinance pf ON pf.id = t.classPk " +
+            "JOIN pf.project pr " +
+            "JOIN pr.application a " +
+            "JOIN pf.organisation o " +
+            "WHERE t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
+            "    AND TYPE(t) = Query " +
+            "    AND 0 = (SELECT COUNT(id) FROM u.roles r WHERE r.name = 'project_finance') " +
+            "    AND a.competition.id = :competitionId " +
+            "    AND (post.thread.id, post.createdOn) IN ( " +
+            "        SELECT p.thread.id, MAX(p.createdOn) " +
+            "        FROM Post p " +
+            "        WHERE p.thread.id = t.id " +
+            "        GROUP BY p.thread.id) "  +
+            "    AND (SELECT COUNT(id) FROM pr.spendProfiles sp) != (SELECT COUNT(id) FROM pr.partnerOrganisations po) " +
+            "GROUP BY pr.application.id, o.id, pr.id " +
+            "ORDER BY pr.application.id, o.name";
 
     @Query(LIVE_QUERY)
     List<Competition> findLive();
@@ -108,7 +149,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(SEARCH_QUERY_SUPPORT_USER)
     Page<Competition> searchForSupportUser(@Param("searchQuery") String searchQuery, Pageable pageable);
 
-
     List<Competition> findByName(String name);
 
     Competition findById(Long id);
@@ -129,4 +169,11 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     @Query(FEEDBACK_RELEASED_COUNT_QUERY)
     Long countFeedbackReleased();
+
+    @Query(COUNT_OPEN_QUERIES)
+    Long countOpenQueries(@Param("competitionId") Long competitionId);
+
+    @Query(GET_OPEN_QUERIES)
+    List<CompetitionOpenQueryResource> getOpenQueryByCompetition(@Param("competitionId") long competitionId);
+
 }
