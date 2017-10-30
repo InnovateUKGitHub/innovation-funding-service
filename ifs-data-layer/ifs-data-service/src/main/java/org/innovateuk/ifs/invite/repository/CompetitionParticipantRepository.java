@@ -131,11 +131,6 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
 
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
-    int countByCompetitionIdAndRoleAndStatusAndInviteIdIn(long competitionId,
-                                                          CompetitionParticipantRole role,
-                                                          ParticipantStatus status,
-                                                          List<Long> inviteIds);
-
     @Query(PARTICIPANTS_WITHOUT_ASSESSMENTS)
     Page<CompetitionAssessmentParticipant> findParticipantsWithoutAssessments(@Param("compId") long competitionId,
                                                                     @Param("role") CompetitionParticipantRole role,
