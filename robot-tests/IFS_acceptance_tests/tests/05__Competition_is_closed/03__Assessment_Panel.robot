@@ -17,6 +17,9 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...
 ...               IFS-1563 Assessment panels - Invite assessors to panel - Accepted tab
 
+...
+...               IFS-1565 Assessment panels - Invite assessors to panel - Remove assessors from Invite list
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -54,14 +57,25 @@ CompAdmin can add an assessor to invite list
     [Documentation]  IFS-31
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link  link=Find
-    Given the user clicks the button/link     jQuery=tr:contains("Benjamin Nixon") label
-    And the user clicks the button/link       jQuery=tr:contains("Joel George") label
-    When the user clicks the button/link      jQuery=button:contains("Add selected to invite list")
-    And the user should see the element       jQuery=td:contains("Joel George") + td:contains("${panel_assessor_joel}")
-    Then the user should see the element      jQuery=td:contains("Benjamin Nixon") + td:contains("${panel_assessor_ben}")
+    Given the user clicks the button/link    jQuery=tr:contains("Benjamin Nixon") label
+    And the user clicks the button/link      jQuery=tr:contains("Joel George") label
+    And the user clicks the button/link      jquery=tr:contains("Madeleine Martin") label
+    When the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
+    Then the user should see the element     jQuery=td:contains("Benjamin Nixon") + td:contains(${panel_assessor_ben})
+    And the user should see the element      jQuery=td:contains("Joel George") + td:contains(${panel_assessor_joel})
+    And the user should see the element      jQuery=td:contains("Madeleine Martin") + td:contains("madeleine.martin@gmail.com")
     When the user clicks the button/link      link=Find
     Then the user should not see the element  jQuery=td:contains("Benjamin Nixon")
-    And the user should not see the element   jQuery=td:contains("Joel George")
+    And the user should not see the element  jQuery=td:contains("Joel George")
+    And the user should not see the element  jquery=tr:contains("Madeleine Martin")
+
+CompAdmin can remove assessor from invite list
+    [Documentation]  IFS-1565
+    [Tags]
+    Given the user clicks the button/link    link=Invite
+    When the user clicks the button/link     jQuery=td:contains("Madeleine Martin") ~ td:contains("Remove")
+    And the user clicks the button/link      link=Find
+    Then the user should see the element     jQuery=tr:contains("Madeleine Martin")
 
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-1560
