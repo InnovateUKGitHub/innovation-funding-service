@@ -136,7 +136,7 @@ Comp Admin can see the rejected and accepted invitation
     Then the user should see the element       jQuery=td:contains("Benjamin Nixon") ~ td:contains("Materials, process and manufacturing design technologies")
     And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Accepted")
     And the user should see the element        jQuery=.column-quarter:contains(0) small:contains("Assessors on invite list")
-    When the user clicks the button/link       link=Overview
+    When the user clicks the button/link       link=Pending and rejected
     Then the user should not see the element   jQuery=td:contains("Benjamin Nixon")
 
 *** Keywords ***
