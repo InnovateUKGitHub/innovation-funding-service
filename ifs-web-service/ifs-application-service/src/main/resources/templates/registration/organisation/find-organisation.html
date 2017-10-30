@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <!-- todo: make hasFormErrors a bit better by adding in viewmodel, IFS-2033 --> 
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${(#fields.hasErrors('${organisationForm.*}') or #fields.hasErrors('${organisationForm.addressForm.*}')) and (organisationForm.organisationSearching or organisationForm.addressForm.triedToSave or organisationForm.addressForm.triedToSearch)}" />
+    <!-- todo: make hasFormErrors a bit better by adding in viewmodel, IFS-2033 -->
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${(#fields.hasErrors('${organisationForm.organisationSearchName}') and organisationForm.organisationSearching) or (#fields.hasErrors('${organisationForm.addressForm.*}') and  (organisationForm.addressForm.triedToSave or organisationForm.addressForm.triedToSearch))}" />
 </head>
 <body th:with="context='applicant'" class="create-application-find-business">
 
