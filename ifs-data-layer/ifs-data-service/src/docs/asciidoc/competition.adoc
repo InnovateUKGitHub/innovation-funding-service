@@ -154,3 +154,26 @@ include::{snippets}/competition/feedback-released/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition/feedback-released/curl-request.adoc[]
+
+=== Get count of open queries for competition
+==== Request
+include::{snippets}/competition/get-open-query-count/http-request.adoc[]
+include::{snippets}/competition/get-open-query-count/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/get-open-query-count/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/get-open-query-count/curl-request.adoc[]
+
+=== Get open queries for competition
+==== Request
+include::{snippets}/competition/get-open-queries/http-request.adoc[]
+include::{snippets}/competition/get-open-queries/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/get-open-queries/http-response.adoc[]
+include::{snippets}/competition/get-open-queries/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/get-open-queries/curl-request.adoc[]

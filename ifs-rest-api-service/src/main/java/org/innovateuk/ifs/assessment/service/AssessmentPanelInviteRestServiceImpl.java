@@ -16,7 +16,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
  * REST service for managing {@link InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource}s
  */
 
-
 @Service
 public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implements AssessmentPanelInviteRestService {
 
@@ -89,6 +88,16 @@ public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implem
     }
 
     @Override
+    public RestResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId) {
+        String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "getAllInvitesByUser", userId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromPath(baseUrl);
+
+        return getWithRestResult(builder.toUriString(), ParameterizedTypeReferences.assessmentPanelParticipantResourceListType());
+    }
+
+    @Override
     public RestResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId) {
         String baseUrl = format("%s/%s/%s", assessmentPanelInviteRestUrl, "getNonAcceptedAssessorInviteIds", competitionId);
 
@@ -111,6 +120,26 @@ public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implem
         builder.queryParam("statuses", convertedStatusesList);
 
         return getWithRestResult(builder.toUriString(), AssessorInviteOverviewPageResource.class);
+    }
+
+    @Override
+    public RestResult<AssessmentPanelInviteResource> openInvite(String inviteHash) {
+        return postWithRestResultAnonymous(format("%s/%s/%s", assessmentPanelInviteRestUrl, "openInvite", inviteHash), AssessmentPanelInviteResource.class);
+    }
+
+    @Override
+    public RestResult<Void> acceptInvite(String inviteHash) {
+        return postWithRestResult(format("%s/%s/%s", assessmentPanelInviteRestUrl, "acceptInvite", inviteHash), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> rejectInvite(String inviteHash) {
+        return postWithRestResultAnonymous(format("%s/%s/%s", assessmentPanelInviteRestUrl, "rejectInvite", inviteHash), Void.class);
+    }
+
+    @Override
+    public RestResult<Boolean> checkExistingUser(String inviteHash) {
+        return getWithRestResultAnonymous(format("%s/%s/%s", assessmentPanelInviteRestUrl, "checkExistingUser", inviteHash), Boolean.class);
     }
 }
 

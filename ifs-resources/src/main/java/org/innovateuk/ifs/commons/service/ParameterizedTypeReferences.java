@@ -16,6 +16,7 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
+import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -223,6 +224,14 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<CompetitionParticipantResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<AssessmentPanelInviteResource>> assessmentPanelInviteResourceListType() {
+        return new ParameterizedTypeReference<List<AssessmentPanelInviteResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<AssessmentPanelParticipantResource>> assessmentPanelParticipantResourceListType() {
+        return new ParameterizedTypeReference<List<AssessmentPanelParticipantResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<AssessmentResource>> assessmentResourceListType() {
         return new ParameterizedTypeReference<List<AssessmentResource>>() {};
     }
@@ -245,5 +254,13 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<ApplicationSummaryResource>> competitionSummaryResourceListType() {
         return new ParameterizedTypeReference<List<ApplicationSummaryResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryResourceListType() {
+        return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryListType() {
+        return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
     }
 }
