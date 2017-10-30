@@ -123,7 +123,7 @@
                 </div>
 
                 <div th:if="${model.userLeadApplicant and !model.leadOrganisation}">
-                    <div class="alignright">
+                    <div class="alignleft">
                         <a th:href="${model.organisationExists} ?
                         @{/application/{applicationId}/team/update/existing/{organisationId}(applicationId=${model.applicationId}, organisationId=${model.organisationId}, deleteOrganisation='')} :
                         @{/application/{applicationId}/team/update/invited/{organisationId}(applicationId=${model.applicationId}, organisationId=${model.inviteOrganisationId}, deleteOrganisation='')} "

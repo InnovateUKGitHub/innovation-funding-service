@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.invite.resource.InviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -106,7 +108,7 @@ public class ApplicationTeamModelPopulator {
         boolean editable = userLeadApplicant || isUserMemberOfOrganisation(loggedInUserId, inviteOrganisationResource);
         return new ApplicationTeamOrganisationRowViewModel(inviteOrganisationResource.getOrganisation(),
                 inviteOrganisationResource.getId(), getOrganisationName(inviteOrganisationResource), inviteOrganisationResource.getOrganisationTypeName(), leadOrganisation,
-                inviteOrganisationResource.getInviteResources().stream().map(this::getApplicantViewModel).collect(toList()), editable);
+                inviteOrganisationResource.getInviteResources().stream().sorted(Comparator.comparing(a -> a.getSentOn(), Comparator.nullsFirst(Comparator.naturalOrder()))).map(this::getApplicantViewModel).collect(toList()), editable);
     }
 
     private ApplicationTeamApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource) {
