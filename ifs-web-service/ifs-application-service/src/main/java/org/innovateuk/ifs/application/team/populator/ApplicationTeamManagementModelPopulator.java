@@ -47,7 +47,10 @@ public class ApplicationTeamManagementModelPopulator {
         OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
         boolean requestForLeadOrganisation = isRequestForLeadOrganisation(organisationId, leadOrganisationResource);
 
-        return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
+        ApplicationTeamManagementViewModel result = populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
+
+        result.setApplicants(result.getApplicants().stream().sorted(Comparator.comparing(a -> a.getPendingSince(), Comparator.nullsFirst(Comparator.naturalOrder()))).collect(Collectors.toList()));
+        return result;
     }
 
     public ApplicationTeamManagementViewModel populateModelByInviteOrganisationId(Long applicationId, Long inviteOrganisationId, long loggedInUserId) {
@@ -73,10 +76,7 @@ public class ApplicationTeamManagementModelPopulator {
                     applicationResource, leadApplicant, userLeadApplicant, inviteOrganisationResource);
         }
 
-        ApplicationTeamManagementViewModel result = populateModelForNonLeadOrganisation(applicationResource, userLeadApplicant, inviteOrganisationResource);
-
-        result.setApplicants(result.getApplicants().stream().sorted(Comparator.comparing(a -> a.getPendingSince())).collect(Collectors.toList()));
-        return result;
+        return populateModelForNonLeadOrganisation(applicationResource, userLeadApplicant, inviteOrganisationResource);
     }
 
     private ApplicationTeamManagementViewModel populateModelForLeadOrganisation(Long organisationId, String organisationName,
