@@ -96,7 +96,7 @@
                 <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}"
                       enctype="multipart/form-data">
 
-                    <!-- To eat up any enter key presses thereby preventing first submit button to trigger See IFS-1905-->
+                    <!--/* To eat up any enter key presses thereby preventing first submit button to trigger See IFS-1905 */-->
                     <button class="hidden-save" type="submit" aria-hidden="true" tabindex="-1" name="save-eligibility">Save form</button>
 
                     <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
