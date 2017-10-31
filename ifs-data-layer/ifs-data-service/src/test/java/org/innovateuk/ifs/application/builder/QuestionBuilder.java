@@ -36,12 +36,12 @@ public class QuestionBuilder extends BaseBuilder<Question, QuestionBuilder> {
                 .withQuestionNumber("1");
     }
 
-    public QuestionBuilder withQuestionNumber(String value) {
-        return with(question -> setField("questionNumber", value, question));
+    public QuestionBuilder withQuestionNumber(String... value) {
+        return withArray((name, object) -> setField("questionNumber", name, object), value);
     }
 
-    public QuestionBuilder withPriority(int priority) {
-        return with(question -> setField("priority", priority, question));
+    public QuestionBuilder withPriority(Integer... priority) {
+        return withArray((name, object) -> setField("priority", name, object), priority);
     }
     
     public QuestionBuilder withQuestionType(QuestionType type) {

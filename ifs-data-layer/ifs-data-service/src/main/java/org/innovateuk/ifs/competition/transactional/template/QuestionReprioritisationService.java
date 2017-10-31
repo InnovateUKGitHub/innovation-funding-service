@@ -10,9 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class QuestionPriorityServiceImpl {
+public class QuestionReprioritisationService {
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private QuestionRenumberingService questionRenumberingService;
 
     private static final String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
 
@@ -22,19 +25,16 @@ public class QuestionPriorityServiceImpl {
         Question assessedQuestionWithHighestPriority = questionRepository.findFirstByCompetitionIdAndSectionNameOrderByPriorityDesc(createdQuestion.getCompetition().getId(), ASSESSED_QUESTIONS_SECTION_NAME);
         createdQuestion.setPriority(assessedQuestionWithHighestPriority.getPriority() + 1);
 
-        updateFollowingQuestionsPrioritiesByDelta(1, createdQuestion.getPriority(), createdQuestion.getCompetition().getId());
+        questionRenumberingService.updateAssessedQuestionsNumbers(createdQuestion.getCompetition().getId());
 
-        Question prioritisedQuestion = questionRepository.save(createdQuestion);
-        updateAssessedQuestionsNumbers(prioritisedQuestion.getCompetition().getId());
-
-        return prioritisedQuestion;
+        return questionRepository.save(createdQuestion);
     }
 
     @Transactional
     @NotSecured("Must be secured by other services.")
     public void reprioritiseAssessedQuestionsAfterDeletion(Question deletedQuestion) {
         updateFollowingQuestionsPrioritiesByDelta(-1, deletedQuestion.getPriority(), deletedQuestion.getCompetition().getId());
-        updateAssessedQuestionsNumbers(deletedQuestion.getCompetition().getId());
+        questionRenumberingService.updateAssessedQuestionsNumbers(deletedQuestion.getCompetition().getId());
     }
 
     private void updateFollowingQuestionsPrioritiesByDelta(int delta, Integer priority, Long competitionId) {
@@ -43,18 +43,5 @@ public class QuestionPriorityServiceImpl {
         subsequentQuestions.stream().forEach(question -> question.setPriority(question.getPriority() + delta));
 
         questionRepository.save(subsequentQuestions);
-    }
-
-    private void updateAssessedQuestionsNumbers(Long competitionId) {
-        List<Question> assessedQuestions = questionRepository.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competitionId, ASSESSED_QUESTIONS_SECTION_NAME);
-
-        Integer questionNumber = 1;
-
-        for(Question question : assessedQuestions) {
-            question.setQuestionNumber(questionNumber.toString());
-            questionNumber++;
-        }
-
-        questionRepository.save(assessedQuestions);
     }
 }
