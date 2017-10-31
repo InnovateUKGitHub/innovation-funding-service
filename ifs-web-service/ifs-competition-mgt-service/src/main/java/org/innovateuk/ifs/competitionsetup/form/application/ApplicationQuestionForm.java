@@ -25,6 +25,7 @@ public class ApplicationQuestionForm extends AbstractApplicationQuestionForm {
         this.guidanceRows = guidanceRows;
     }
 
+    @Override
     public boolean isRemovable() {
         return removable;
     }
