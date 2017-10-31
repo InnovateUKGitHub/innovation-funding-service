@@ -56,28 +56,30 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
         return find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId))
-                .andOnSuccess(question -> {
-                    CompetitionSetupQuestionResource setupResource = new CompetitionSetupQuestionResource();
+                .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
+    }
 
-                    question.getFormInputs().forEach(formInput -> {
-                        if (FormInputScope.ASSESSMENT.equals(formInput.getScope())) {
-                            mapAssessmentFormInput(formInput, setupResource);
-                        } else {
-                            mapApplicationFormInput(formInput, setupResource);
-                        }
-                    });
+    public ServiceResult<CompetitionSetupQuestionResource> mapQuestionToSuperQuestionResource(Question question) {
+        CompetitionSetupQuestionResource setupResource = new CompetitionSetupQuestionResource();
 
-                    setupResource.setScoreTotal(question.getAssessorMaximumScore());
-                    setupResource.setNumber(question.getQuestionNumber());
-                    setupResource.setShortTitle(question.getShortName());
-                    setupResource.setTitle(question.getName());
-                    setupResource.setSubTitle(question.getDescription());
-                    setupResource.setQuestionId(question.getId());
-                    setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
-                    setupResource.setShortTitleEditable(isShortNameEditable(setupResource.getType()));
+        question.getFormInputs().forEach(formInput -> {
+            if (FormInputScope.ASSESSMENT.equals(formInput.getScope())) {
+                mapAssessmentFormInput(formInput, setupResource);
+            } else {
+                mapApplicationFormInput(formInput, setupResource);
+            }
+        });
 
-                    return serviceSuccess(setupResource);
-                });
+        setupResource.setScoreTotal(question.getAssessorMaximumScore());
+        setupResource.setNumber(question.getQuestionNumber());
+        setupResource.setShortTitle(question.getShortName());
+        setupResource.setTitle(question.getName());
+        setupResource.setSubTitle(question.getDescription());
+        setupResource.setQuestionId(question.getId());
+        setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
+        setupResource.setShortTitleEditable(isShortNameEditable(setupResource.getType()));
+
+        return serviceSuccess(setupResource);
     }
 
     private void mapApplicationFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
@@ -125,7 +127,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(Long competitionId) {
         return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
                 .andOnSuccess(competition -> competitionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition))
-                .andOnSuccess(question -> getByQuestionId(question.getId()));
+                .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
     }
 
     @Override
