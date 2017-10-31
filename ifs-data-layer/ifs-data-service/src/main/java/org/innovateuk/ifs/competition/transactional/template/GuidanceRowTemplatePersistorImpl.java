@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.domain.GuidanceRow;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -14,8 +14,11 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Service
-public class GuidanceRowTemplatePersistorServiceImpl implements GuidanceRowTemplatePersistorService {
+/**
+ * Transactional component providing functions for persisting copies of GuidanceRows by their parent FormInput entity object.
+ */
+@Component
+public class GuidanceRowTemplatePersistorImpl implements BaseChainedTemplatePersistor<List<GuidanceRow>, FormInput> {
     @Autowired
     private GuidanceRowRepository guidanceRowRepository;
 

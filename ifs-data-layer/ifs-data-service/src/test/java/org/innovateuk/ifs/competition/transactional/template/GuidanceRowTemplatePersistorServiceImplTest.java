@@ -6,9 +6,9 @@ import org.junit.Test;
 /**
  * TODO: Add description
  */
-public class GuidanceRowTemplatePersistorServiceImplTest extends BaseServiceUnitTest<GuidanceRowTemplatePersistorServiceImpl> {
-    public GuidanceRowTemplatePersistorServiceImpl supplyServiceUnderTest() {
-        return new GuidanceRowTemplatePersistorServiceImpl();
+public class GuidanceRowTemplatePersistorServiceImplTest extends BaseServiceUnitTest<GuidanceRowTemplatePersistorImpl> {
+    public GuidanceRowTemplatePersistorImpl supplyServiceUnderTest() {
+        return new GuidanceRowTemplatePersistorImpl();
     }
 
     @Test

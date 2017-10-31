@@ -6,7 +6,7 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,13 +19,16 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentEvent.FEEDBACK;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-@Service
-public class FormInputTemplatePersistorServiceImpl implements FormInputTemplatePersistorService {
+/**
+ * Transactional component providing functions for persisting copies of FormInputs by their parent Question entity object.
+ */
+@Component
+public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersistor<List<FormInput>, Question> {
     @Autowired
     private FormInputRepository formInputRepository;
 
     @Autowired
-    private GuidanceRowTemplatePersistorServiceImpl guidanceRowTemplateService;
+    private GuidanceRowTemplatePersistorImpl guidanceRowTemplateService;
 
     @PersistenceContext
     private EntityManager entityManager;

@@ -6,9 +6,9 @@ import org.junit.Test;
 /**
  * TODO: Add description
  */
-public class FormInputTemplatePersistorServiceTest extends BaseServiceUnitTest<FormInputTemplatePersistorService> {
-    public FormInputTemplatePersistorService supplyServiceUnderTest() {
-        return new FormInputTemplatePersistorServiceImpl();
+public class FormInputTemplatePersistorServiceTest extends BaseServiceUnitTest<FormInputTemplatePersistor> {
+    public FormInputTemplatePersistor supplyServiceUnderTest() {
+        return new FormInputTemplatePersistorImpl();
     }
 
     @Test

@@ -13,10 +13,10 @@ import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorServiceImpl;
+import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
 import org.innovateuk.ifs.competition.transactional.template.DefaultApplicationQuestionCreator;
 import org.innovateuk.ifs.competition.transactional.template.QuestionReprioritisationService;
-import org.innovateuk.ifs.competition.transactional.template.QuestionTemplatePersistorServiceImpl;
+import org.innovateuk.ifs.competition.transactional.template.QuestionTemplatePersistorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +31,9 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.transactional.CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY;
 
+/**
+ * Service that can create Competition template copies and add and delete Questions to competitions.
+ */
 @Service
 public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemplateService {
     @Autowired
@@ -40,10 +43,10 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private DefaultApplicationQuestionCreator defaultApplicationQuestionCreator;
 
     @Autowired
-    private CompetitionTemplatePersistorServiceImpl competitionTemplatePersistor;
+    private CompetitionTemplatePersistorImpl competitionTemplatePersistor;
 
     @Autowired
-    private QuestionTemplatePersistorServiceImpl questionTemplatePersistorServiceImpl;
+    private QuestionTemplatePersistorImpl questionTemplatePersistorServiceImpl;
 
     @Autowired
     private AssessorCountOptionRepository assessorCountOptionRepository;
