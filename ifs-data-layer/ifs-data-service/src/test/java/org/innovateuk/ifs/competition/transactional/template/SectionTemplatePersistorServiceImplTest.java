@@ -3,9 +3,9 @@ package org.innovateuk.ifs.competition.transactional.template;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.junit.Test;
 
-public class SectionTemplatePersistorServiceImplTest extends BaseServiceUnitTest<SectionTemplatePersistorServiceImpl> {
-    public SectionTemplatePersistorServiceImpl supplyServiceUnderTest() {
-        return new SectionTemplatePersistorServiceImpl();
+public class SectionTemplatePersistorServiceImplTest extends BaseServiceUnitTest<SectionTemplatePersistorImpl> {
+    public SectionTemplatePersistorImpl supplyServiceUnderTest() {
+        return new SectionTemplatePersistorImpl();
     }
 
     @Test

@@ -6,9 +6,9 @@ import org.junit.Test;
 /**
  * TODO: Add description
  */
-public class QuestionTemplatePersistorServiceImplTest extends BaseServiceUnitTest<QuestionTemplatePersistorServiceImpl> {
-    public QuestionTemplatePersistorServiceImpl supplyServiceUnderTest() {
-        return new QuestionTemplatePersistorServiceImpl();
+public class QuestionTemplatePersistorServiceImplTest extends BaseServiceUnitTest<QuestionTemplatePersistorImpl> {
+    public QuestionTemplatePersistorImpl supplyServiceUnderTest() {
+        return new QuestionTemplatePersistorImpl();
     }
 
     @Test

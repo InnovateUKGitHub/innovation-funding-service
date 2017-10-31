@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -14,13 +14,18 @@ import java.util.function.Function;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
-@Service
-public class QuestionTemplatePersistorServiceImpl implements QuestionTemplatePersistorService {
+
+/**
+ * Transactional component providing functions for persisting copies of Questions by their parent Section or Question template entity object.
+ */
+
+@Component
+public class QuestionTemplatePersistorImpl implements BaseChainedTemplatePersistor<List<Question>, Section>, BaseTemplatePersistor<List<Question>> {
     @Autowired
     private QuestionRepository questionRepository;
 
     @Autowired
-    private FormInputTemplatePersistorServiceImpl formInputTemplateService;
+    private FormInputTemplatePersistorImpl formInputTemplateService;
 
     @PersistenceContext
     private EntityManager entityManager;

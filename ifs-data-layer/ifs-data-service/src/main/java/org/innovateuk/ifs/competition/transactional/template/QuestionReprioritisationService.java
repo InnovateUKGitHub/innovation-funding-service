@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+/**
+ * Service that can reorder questions by priority after creation or deletion.
+ */
 @Service
 public class QuestionReprioritisationService {
     @Autowired
