@@ -241,7 +241,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         if(CompetitionSetupSubsection.QUESTIONS.equals(subsection) ||
                 CompetitionSetupSubsection.PROJECT_DETAILS.equals(subsection)) {
             AbstractApplicationQuestionForm form = (AbstractApplicationQuestionForm) competitionSetupForm;
-            questionSetupRestService.markQuestionSetupComplete(competitionId, form.getQuestion().getQuestionId());
+            questionSetupRestService.markQuestionSetupComplete(competitionId, CompetitionSetupSection.APPLICATION_FORM, form.getQuestion().getQuestionId());
         }
     }
 

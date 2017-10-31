@@ -15,16 +15,16 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.lon
 @Service
 public class QuestionSetupRestServiceImpl extends BaseRestService implements QuestionSetupRestService {
 
-    private String questionSetupRestURL = "/question/setup";
+    private static final String questionSetupRestURL = "/question/setup";
 
     @Override
-    public RestResult<Void> markQuestionSetupComplete(long competitionId, long questionId) {
-        return putWithRestResult(String.format("%s/markAsComplete/%d/%d", questionSetupRestURL, questionId, competitionId), Void.class);
+    public RestResult<Void> markQuestionSetupComplete(long competitionId, CompetitionSetupSection parentSection, long questionId) {
+        return putWithRestResult(String.format("%s/markAsComplete/%d/%s/%d", questionSetupRestURL, competitionId, parentSection, questionId), Void.class);
     }
 
     @Override
-    public RestResult<Void> markQuestionSetupInComplete(long competitionId, long questionId) {
-        return putWithRestResult(String.format("%s/markAsInComplete/%d/%d", questionSetupRestURL, questionId, competitionId), Void.class);
+    public RestResult<Void> markQuestionSetupIncomplete(long competitionId, CompetitionSetupSection parentSection, long questionId) {
+        return putWithRestResult(String.format("%s/markAsIncomplete/%d/%s/%d", questionSetupRestURL, competitionId, parentSection, questionId), Void.class);
     }
 
     @Override

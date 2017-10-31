@@ -11,9 +11,9 @@ import java.util.Map;
  */
 public interface QuestionSetupRestService {
 
-    RestResult<Void> markQuestionSetupComplete(long competitionId, long questionId);
+    RestResult<Void> markQuestionSetupComplete(long competitionId, CompetitionSetupSection parentSection, long questionId);
 
-    RestResult<Void> markQuestionSetupInComplete(long competitionId, long questionId);
+    RestResult<Void> markQuestionSetupIncomplete(long competitionId, CompetitionSetupSection parentSection, long questionId);
 
     RestResult<Map<Long, Boolean>> getQuestionStatuses(long competitionId, CompetitionSetupSection parentSection);
 }

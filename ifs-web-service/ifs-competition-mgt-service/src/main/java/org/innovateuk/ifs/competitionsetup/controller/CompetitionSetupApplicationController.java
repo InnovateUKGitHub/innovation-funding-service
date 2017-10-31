@@ -383,7 +383,7 @@ public class CompetitionSetupApplicationController {
             LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competition.getId(), CompetitionSetupSection.APPLICATION_FORM));
             return "redirect:/dashboard";
         } else {
-            questionIdOpt.ifPresent(questionId -> questionSetupRestService.markQuestionSetupInComplete(competition.getId(), questionId));
+            questionIdOpt.ifPresent(questionId -> questionSetupRestService.markQuestionSetupIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM, questionId));
             subsectionOpt.ifPresent(competitionSetupSubsection -> competitionSetupRestService.markSubSectionInComplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM, competitionSetupSubsection));
             competitionSetupRestService.markSectionInComplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
             return successAction.get();

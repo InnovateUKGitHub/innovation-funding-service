@@ -374,16 +374,15 @@ Application: Need or challenge
     [Documentation]    INFUND-5632 INFUND-5685 INFUND-5630 INFUND-6283
     When the user clicks the button/link    link=Need or challenge
     Then the user should see the element    jQuery=h1:contains("Need or challenge")
-    When the user clicks the button/link    jQuery=a:contains("Edit this question")
-    And the user edits the assessed question information
-    And The user clicks the button/link    jQuery=.button[value="Save and close"]
+    When the user edits the assessed question information
+    And The user clicks the button/link    css=.button[value="Done"]
     And the user clicks the button/link    link=Need or challenge
     And the user sees the correct assessed question information
     And the user clicks the button/link    jQuery=a:contains("Edit this question")
     And the user selects the radio button    question.writtenFeedback    0
     And the user selects the radio button    question.scored    0
     And the user should not be able to edit the assessed question feedback
-    And the user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    css=.button[value="Done"]
     And the user clicks the button/link    link=Need or challenge
     Then the user should not see the assessed question feedback
     [Teardown]    The user clicks the button/link    link=Application
@@ -393,9 +392,8 @@ Application: Application details
     Given the user clicks the button/link    link=Application details
     And the user should see the element    jQuery=h1:contains("Application details")
     And the user should see the text in the page    These are the default questions included in the application details section.
-    When the user clicks the button/link    jQuery=a:contains("Edit this question")
-    And the user selects the radio button    useResubmissionQuestion    false
-    And The user clicks the button/link    jQuery=button:contains("Save and close")
+    When the user selects the radio button    useResubmissionQuestion    false
+    And The user clicks the button/link    css=.button[value="Done"]
     And the user clicks the button/link    link=Application details
     Then The user should see the text in the page    Application details
     And the user should see the text in the page    No
@@ -408,9 +406,8 @@ Application: Scope
     Given the user clicks the button/link    link=Scope
     And the user should see the element    jQuery=h1:contains("Scope")
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
-    When the user clicks the button/link    jQuery=a:contains("Edit this question")
-    And The user fills the empty question fields
-    And The user clicks the button/link    jQuery=.button[value="Save and close"]
+    When The user fills the empty question fields
+    And The user clicks the button/link    css=.button[value="Done"]
     And the user clicks the button/link    link=Scope
     Then The user should see the text in the page    Scope
     And the user checks the question fields
@@ -420,13 +417,13 @@ Application: Scope Assessment questions
     Given the user clicks the button/link    jQuery=a:contains("Edit this question")
     And the user selects the radio button    question.writtenFeedback    1
     And the user fills the scope assessment questions
-    When the user clicks the button/link    jQuery=.button[value="Save and close"]
+    When the user clicks the button/link    css=.button[value="Done"]
     And the user clicks the button/link    link=Scope
     Then the user checks the scope assessment questions
     And the user clicks the button/link    jQuery=a:contains("Edit this question")
     And the user selects the radio button    question.writtenFeedback    0
     And the user should not be able to edit the scope feedback
-    And the user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    css=.button[value="Done"]
     And the user clicks the button/link    link=Scope
     Then the user should not see the scope feedback
     [Teardown]    The user clicks the button/link    link=Application
@@ -440,7 +437,7 @@ Application: Project Summary
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And The user fills the empty question fields
-    And The user clicks the button/link    css=.button[value="Save and close"]
+    And The user clicks the button/link    css=.button[value="Done"]
     And the user clicks the button/link    link=Project summary
     Then The user should see the text in the page    Project summary
     And the user checks the question fields
@@ -459,7 +456,7 @@ Application: Finances
     # Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
     When the user selects the radio button   includeGrowthTable  include-growth-table-no
     And the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
-    And The user clicks the button/link      jQuery=button:contains("Save and close")
+    And The user clicks the button/link      jQuery=button:contains("Done")
     Then the user navigates to the page      ${landingPage}
     When the user clicks the button/link     link=Finances
     Then the user should see the element     jQuery=dt:contains("Include project growth table") ~ dd:contains("No")
@@ -493,7 +490,7 @@ Application: Edit again should mark as incomplete
     [Setup]    the user navigates to the page   ${landingPage}
     Given the user clicks the button/link       link=Application details
     When the user clicks the button/link        jQuery=a:contains("Edit this question")
-    And The user clicks the button/link         jQuery=button:contains("Save and close")
+    And The user clicks the button/link         jQuery=button:contains("Done")
     Then The user should see the element        jQuery=button:contains(Done)
     And The user clicks the button/link         link=Competition setup
     Then the user should not see the element    css=li:nth-child(5) .task-status-complete

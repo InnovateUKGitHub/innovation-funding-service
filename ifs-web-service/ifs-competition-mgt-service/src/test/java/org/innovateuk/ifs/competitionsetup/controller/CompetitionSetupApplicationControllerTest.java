@@ -681,7 +681,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         verify(competitionSetupQuestionService, atLeastOnce()).getQuestion(QUESTION_ID);
         verify(competitionSetupRestService, never()).update(competition);
         verify(competitionSetupRestService).markSectionInComplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
-        verify(questionSetupRestService, times(1)).markQuestionSetupInComplete(competition.getId(), QUESTION_ID);
+        verify(questionSetupRestService, times(1)).markQuestionSetupIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM, QUESTION_ID);
     }
 
     @Test
