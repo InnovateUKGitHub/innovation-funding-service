@@ -21,7 +21,7 @@ public class InviteNewAssessorsRowForm {
     private String name;
 
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
-    @Size(max = 256, message = "{validation.standard.email.length.max}")
+    @Size(max = 254, message = "{validation.standard.email.length.max}")
     @NotEmpty(message = "{validation.inviteNewAssessorsForm.invites.email.required}")
     private String email;
 
