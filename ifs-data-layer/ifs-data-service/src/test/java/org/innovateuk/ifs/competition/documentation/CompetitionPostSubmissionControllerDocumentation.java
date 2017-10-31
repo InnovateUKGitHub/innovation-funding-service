@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.competition.controller.CompetitionFeedbackController;
+import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.competition.controller.CompetitionPostSubmissionController;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.junit.Test;
@@ -11,6 +12,9 @@ import java.util.Arrays;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Mockito.only;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -19,15 +23,16 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CompetitionFeedbackControllerDocumentation extends BaseControllerMockMVCTest<CompetitionFeedbackController> {
+public class CompetitionPostSubmissionControllerDocumentation extends BaseControllerMockMVCTest<CompetitionPostSubmissionController> {
     @Mock
     private CompetitionService competitionService;
 
     @Override
-    protected CompetitionFeedbackController supplyControllerUnderTest() {
-        return new CompetitionFeedbackController();
+    protected CompetitionPostSubmissionController supplyControllerUnderTest() {
+        return new CompetitionPostSubmissionController();
     }
 
     @Test
@@ -37,7 +42,7 @@ public class CompetitionFeedbackControllerDocumentation extends BaseControllerMo
         when(competitionService.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
         when(assessorServiceMock.notifyAssessorsByCompetition(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/competition/feedback/{id}/notify-assessors", competitionId))
+        mockMvc.perform(put("/competition/postSubmission/{id}/notify-assessors", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -54,7 +59,7 @@ public class CompetitionFeedbackControllerDocumentation extends BaseControllerMo
         when(competitionService.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
         when(applicationServiceMock.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(put("/competition/feedback/{id}/release-feedback", competitionId))
+        mockMvc.perform(put("/competition/postSubmission/{id}/release-feedback", competitionId))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -68,7 +73,7 @@ public class CompetitionFeedbackControllerDocumentation extends BaseControllerMo
     public void feedbackReleased() throws Exception {
         when(competitionService.findFeedbackReleasedCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
 
-        mockMvc.perform(get("/competition/feedback/feedback-released"))
+        mockMvc.perform(get("/competition/postSubmission/feedback-released"))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -82,7 +87,7 @@ public class CompetitionFeedbackControllerDocumentation extends BaseControllerMo
     public void getOpenQueryCount() throws Exception {
         when(competitionService.countAllOpenQueries(321L)).thenReturn(serviceSuccess(1L));
 
-        mockMvc.perform(get("/competition/feedback/{id}/queries/open/count", 321L))
+        mockMvc.perform(get("/competition/postSubmission/{id}/queries/open/count", 321L))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -98,7 +103,7 @@ public class CompetitionFeedbackControllerDocumentation extends BaseControllerMo
                 new CompetitionOpenQueryResource(1L, 2L, "a", 3L, "b"),
                 new CompetitionOpenQueryResource(1L, 2L, "a", 3L, "b"))));
 
-        mockMvc.perform(get("/competition/feedback/{id}/queries/open", 321L))
+        mockMvc.perform(get("/competition/postSubmission/{id}/queries/open", 321L))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -111,5 +116,43 @@ public class CompetitionFeedbackControllerDocumentation extends BaseControllerMo
                 ));
     }
 
+    @Test
+    public void findUnsuccessfulApplications() throws Exception {
+        final Long competitionId = 1L;
+        int pageIndex = 0;
+        int pageSize = 20;
+        String sortField = "id";
 
+        ApplicationPageResource applicationPage = new ApplicationPageResource();
+
+        when(competitionService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
+
+        mockMvc.perform(get("/competition/postSubmission/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}", competitionId, pageIndex, pageSize, sortField))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(applicationPage)))
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("The competition for which unsuccessful applications need to be found")
+                        )
+                ));
+
+        verify(competitionService, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
+
+    }
+
+    @Test
+    public void closeAssessment() throws Exception {
+        Long competitionId = 2L;
+        when(competitionService.closeAssessment(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/competition/postSubmission/{id}/close-assessment", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("id of the competition to close the assessment of")
+                        )
+                ));
+    }
 }

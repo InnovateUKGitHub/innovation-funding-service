@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.controller.QuestionSetupStatusController;
+import org.innovateuk.ifs.application.controller.QuestionSetupController;
 import org.innovateuk.ifs.application.transactional.QuestionSetupService;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.junit.Test;
@@ -18,14 +18,14 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class QuestionSetupStatusControllerDocumentation extends BaseControllerMockMVCTest<QuestionSetupStatusController> {
+public class QuestionSetupControllerDocumentation extends BaseControllerMockMVCTest<QuestionSetupController> {
 
     @Mock
     private QuestionSetupService questionSetupService;
 
     @Override
-    protected QuestionSetupStatusController supplyControllerUnderTest() {
-        return new QuestionSetupStatusController();
+    protected QuestionSetupController supplyControllerUnderTest() {
+        return new QuestionSetupController();
     }
 
     @Test
@@ -35,12 +35,12 @@ public class QuestionSetupStatusControllerDocumentation extends BaseControllerMo
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(questionSetupService.markQuestionInSetupAsComplete(questionId, competitionId, parentSection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(put("/question/setup/markAsComplete/{competitionId}/{parentSection}/{questionId}", competitionId, parentSection, questionId))
+        mockMvc.perform(put("/question/setup/mark-as-complete/{competitionId}/{parentSection}/{questionId}", competitionId, parentSection, questionId))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "question/setup/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on what the section should be marked as complete"),
+                                parameterWithName("competitionId").description("id of the competition on which the section should be marked as complete"),
                                 parameterWithName("questionId").description("the id of the question to mark as complete"),
                                 parameterWithName("parentSection").description("the parent section of the section that needs to be marked as complete")
                         )
@@ -54,12 +54,12 @@ public class QuestionSetupStatusControllerDocumentation extends BaseControllerMo
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(questionSetupService.markQuestionInSetupAsIncomplete(questionId, competitionId, parentSection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(put("/question/setup/markAsIncomplete/{competitionId}/{parentSection}/{questionId}", competitionId, parentSection, questionId))
+        mockMvc.perform(put("/question/setup/mark-as-incomplete/{competitionId}/{parentSection}/{questionId}", competitionId, parentSection, questionId))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "question/setup/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on what the section should be marked as incomplete"),
+                                parameterWithName("competitionId").description("id of the competition on which the section should be marked as incomplete"),
                                 parameterWithName("questionId").description("the id of the question to mark as incomplete"),
                                 parameterWithName("parentSection").description("the parent section of the section that needs to be marked as complete")
                         )
@@ -72,13 +72,13 @@ public class QuestionSetupStatusControllerDocumentation extends BaseControllerMo
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(questionSetupService.getQuestionStatuses(competitionId, parentSection)).thenReturn(serviceSuccess(asMap(1L, Boolean.TRUE)));
 
-        mockMvc.perform(get("/question/setup/getStatuses/{competitionId}/{parentSection}", competitionId, parentSection))
+        mockMvc.perform(get("/question/setup/get-statuses/{competitionId}/{parentSection}", competitionId, parentSection))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "question/setup/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("id of the competition of the questions where status is from listed"),
-                                parameterWithName("parentSection").description("the parent section of the questions where status is from listed")
+                                parameterWithName("competitionId").description("id of the competition which contains the questions on which to perform the status query"),
+                                parameterWithName("parentSection").description("the parent section of the questions on which to perform the status query")
                         )
                 ));
     }

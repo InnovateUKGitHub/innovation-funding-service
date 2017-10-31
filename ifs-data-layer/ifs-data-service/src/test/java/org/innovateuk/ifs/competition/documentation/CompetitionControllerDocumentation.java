@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
@@ -147,31 +146,6 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void findUnsuccessfulApplications() throws Exception {
-        final Long competitionId = 1L;
-        int pageIndex = 0;
-        int pageSize = 20;
-        String sortField = "id";
-
-        ApplicationPageResource applicationPage = new ApplicationPageResource();
-
-        when(competitionService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
-
-        mockMvc.perform(get("/competition/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}", competitionId, pageIndex, pageSize, sortField))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(applicationPage)))
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The competition for which unsuccessful applications need to be found")
-                        )
-                ));
-
-        verify(competitionService, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
-
-    }
-
-    @Test
     public void count() throws Exception {
         CompetitionCountResource resource = new CompetitionCountResource();
         when(competitionService.countCompetitions()).thenReturn(serviceSuccess(resource));
@@ -202,21 +176,6 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
                                 parameterWithName("size").description("The number of competitions per page")
                         ),
                         responseFields(CompetitionSearchResultDocs.competitionSearchResultFields)
-                ));
-    }
-
-    @Test
-    public void closeAssessment() throws Exception {
-        Long competitionId = 2L;
-        when(competitionService.closeAssessment(competitionId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/competition/{id}/close-assessment", competitionId))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition to close the assessment of")
-                        )
                 ));
     }
 

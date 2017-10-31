@@ -1,3 +1,5 @@
+-- Converts all the current progress of the competition setup statuses to the new setup status table
+
 -- Convert the Home section
 INSERT INTO `setup_status` (`completed`, `class_name`, `class_pk`, `target_class_name`, `target_id`)
 SELECT css.status, 'org.innovateuk.ifs.competition.resource.CompetitionSetupSection', 1, 'org.innovateuk.ifs.competition.domain.Competition', css.competition_id

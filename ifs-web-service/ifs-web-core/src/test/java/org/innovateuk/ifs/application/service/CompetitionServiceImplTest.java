@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -94,21 +93,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void findUnsuccessfulApplications() throws Exception {
-        Long competitionId = 1L;
-        int pageNumber = 0;
-        int pageSize = 20;
-        String sortField = "id";
-
-        ApplicationPageResource applicationPage = new ApplicationPageResource();
-        when(competitionRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField)).thenReturn(restSuccess(applicationPage));
-
-        ApplicationPageResource result = service.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField);
-        assertEquals(applicationPage, result);
-        verify(competitionRestService, only()).findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField);
-    }
-
-    @Test
     public void getAllCompetitionTypes() throws Exception {
         CompetitionTypeResource type1 = newCompetitionTypeResource().withStateAid(false).withName("Type 1").withId(1L).build();
 
@@ -136,15 +120,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         final List<AssessorCountOptionResource> found = service.getAssessorOptionsForCompetitionType(1L);
         assertEquals(1, found.size());
         assertEquals(Long.valueOf(1L), found.get(0).getId());
-    }
-
-    @Test
-    public void closeAssessment() throws Exception {
-        Long competitionId = Long.MAX_VALUE;
-        when(competitionRestService.closeAssessment(competitionId)).thenReturn(restSuccess());
-
-        service.closeAssessment(competitionId);
-        verify(competitionRestService, only()).closeAssessment(competitionId);
     }
 
     @Test

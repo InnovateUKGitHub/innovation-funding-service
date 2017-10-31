@@ -97,18 +97,18 @@ public class ApplicationLandingModelPopulator implements CompetitionSetupSection
 
     private Boolean checkStatusesComplete(Map<CompetitionSetupSubsection, Boolean> subSectionsStatuses, Map<Long, Boolean> questionStatuses,
                                           List<QuestionResource> questions, List<QuestionResource> projectDetails) {
-        return !subSectionsInComplete(subSectionsStatuses) &&
-                !questionsInComplete(questionStatuses, questions) &&
-                !questionsInComplete(questionStatuses, projectDetails);
+        return !hasIncompleteSections(subSectionsStatuses) &&
+                !hasIncompleteQuestions(questionStatuses, questions) &&
+                !hasIncompleteQuestions(questionStatuses, projectDetails);
     }
 
-    private boolean questionsInComplete(Map<Long, Boolean> questionStatuses, List<QuestionResource> questions) {
+    private boolean hasIncompleteQuestions(Map<Long, Boolean> questionStatuses, List<QuestionResource> questions) {
         return questions.stream()
                 .map(questionResource -> questionStatuses.getOrDefault(questionResource.getId(), Boolean.FALSE))
                 .anyMatch(aBoolean -> aBoolean.equals(Boolean.FALSE));
     }
 
-    private boolean subSectionsInComplete(Map<CompetitionSetupSubsection, Boolean> subSectionsStatuses) {
+    private boolean hasIncompleteSections(Map<CompetitionSetupSubsection, Boolean> subSectionsStatuses) {
         return subSectionsStatuses.entrySet().stream()
                 .filter(entry -> asList(CompetitionSetupSubsection.FINANCES, CompetitionSetupSubsection.APPLICATION_DETAILS).contains(entry.getKey()))
                 .anyMatch(entry -> entry.getValue().equals(Boolean.FALSE));

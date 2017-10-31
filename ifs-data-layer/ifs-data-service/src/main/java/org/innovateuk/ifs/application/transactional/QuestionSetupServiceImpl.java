@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import static java.util.stream.Collectors.toMap;
 
 /**
@@ -34,7 +36,7 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
     @Override
     public ServiceResult<SetupStatusResource> markQuestionInSetupAsComplete(Long questionId, Long competitionId, CompetitionSetupSection parentSection) {
         SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, questionId, parentSection);
-        setupStatus.setCompleted(Boolean.TRUE);
+        setupStatus.setCompleted(TRUE);
 
         return setupStatusService.saveSetupStatus(setupStatus);
     }
@@ -43,7 +45,7 @@ public class QuestionSetupServiceImpl extends BaseTransactionalService implement
     @Override
     public ServiceResult<SetupStatusResource> markQuestionInSetupAsIncomplete(Long questionId, Long competitionId, CompetitionSetupSection parentSection) {
         SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, questionId, parentSection);
-        setupStatus.setCompleted(Boolean.FALSE);
+        setupStatus.setCompleted(FALSE);
 
         return setupStatusService.saveSetupStatus(setupStatus);
     }

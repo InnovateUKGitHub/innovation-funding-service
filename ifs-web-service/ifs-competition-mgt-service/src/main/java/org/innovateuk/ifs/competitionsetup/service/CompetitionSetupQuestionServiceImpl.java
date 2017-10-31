@@ -53,17 +53,17 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
 
     @Override
     public ServiceResult<Void> validateApplicationQuestions(CompetitionResource competitionResource, LandingPageForm form, BindingResult bindingResult) {
-        boolean questionsInComplete = questionsInComplete(competitionResource.getId());
-        boolean sectionsInComplete = requiredSectionsInComplete(competitionResource.getId());
+        boolean incompleteQuestions = hasIncompleteQuestions(competitionResource.getId());
+        boolean incompleteSections = hasIncompleteSections(competitionResource.getId());
 
-        if (questionsInComplete || sectionsInComplete) {
+        if (incompleteQuestions || incompleteSections) {
             return serviceFailure(Collections.emptyList());
         } else {
             return competitionSetupRestService.markSectionComplete(competitionResource.getId(), CompetitionSetupSection.APPLICATION_FORM).toServiceResult();
         }
     }
 
-    private boolean requiredSectionsInComplete(Long competitionId) {
+    private boolean hasIncompleteSections(Long competitionId) {
         Map<CompetitionSetupSubsection, Optional<Boolean>> sectionSetupStatusAsMap = competitionSetupRestService
                 .getSubsectionStatuses(competitionId)
                 .getSuccessObjectOrThrowException();
@@ -74,7 +74,7 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
                 .anyMatch(aBoolean -> aBoolean.equals(Boolean.FALSE));
     }
 
-    private boolean questionsInComplete(Long competitionId) {
+    private boolean hasIncompleteQuestions(Long competitionId) {
         List<Long> allQuestions = getAllQuestionIds(competitionId);
         Map<Long, Boolean> questionSetupStatuses = questionSetupRestService.getQuestionStatuses(competitionId, CompetitionSetupSection.APPLICATION_FORM).getSuccessObjectOrThrowException();
 

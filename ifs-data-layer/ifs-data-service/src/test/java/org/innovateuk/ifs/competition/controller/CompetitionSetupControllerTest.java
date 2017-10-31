@@ -62,7 +62,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionSetupServiceMock.markSectionComplete(competitionId, section))
                 .thenReturn(serviceSuccess(setupStatusResource));
 
-        mockMvc.perform(get("/competition/setup/sectionStatus/complete/{competitionId}/{section}",
+        mockMvc.perform(put("/competition/setup/section-status/complete/{competitionId}/{section}",
                 competitionId, section))
                 .andExpect(status().is2xxSuccessful());
 
@@ -78,7 +78,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionSetupServiceMock.markSectionIncomplete(competitionId, section))
                 .thenReturn(serviceSuccess(setupStatusResource));
 
-        mockMvc.perform(get("/competition/setup/sectionStatus/incomplete/{competitionId}/{section}",
+        mockMvc.perform(put("/competition/setup/section-status/incomplete/{competitionId}/{section}",
                 competitionId, section))
                 .andExpect(status().is2xxSuccessful());
 
@@ -94,7 +94,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         when(competitionSetupServiceMock.getSectionStatuses(competitionId)).thenReturn(serviceSuccess(sectionStatuses));
 
-        mockMvc.perform(get("/competition/setup/sectionStatus/{competitionId}", competitionId))
+        mockMvc.perform(get("/competition/setup/section-status/{competitionId}", competitionId))
                 .andExpect(status().is2xxSuccessful());
 
         verify(competitionSetupServiceMock, only()).getSectionStatuses(competitionId);
@@ -110,7 +110,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionSetupServiceMock.markSubsectionComplete(competitionId, parentSection, subsection))
                 .thenReturn(serviceSuccess(setupStatusResource));
 
-        mockMvc.perform(get("/competition/setup/subsectionStatus/complete/{competitionId}/{parentSection}/{subsection}",
+        mockMvc.perform(put("/competition/setup/subsection-status/complete/{competitionId}/{parentSection}/{subsection}",
                 competitionId, parentSection, subsection))
                 .andExpect(status().is2xxSuccessful());
 
@@ -128,7 +128,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         when(competitionSetupServiceMock.markSubsectionIncomplete(competitionId, parentSection, subsection))
                 .thenReturn(serviceSuccess(setupStatusResource));
 
-        mockMvc.perform(get("/competition/setup/subsectionStatus/incomplete/{competitionId}/{parentSection}/{subsection}",
+        mockMvc.perform(put("/competition/setup/subsection-status/incomplete/{competitionId}/{parentSection}/{subsection}",
                 competitionId, parentSection, subsection))
                 .andExpect(status().is2xxSuccessful());
 
@@ -143,7 +143,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         when(competitionSetupServiceMock.getSubsectionStatuses(competitionId)).thenReturn(serviceSuccess(subsectionStatuses));
 
-        mockMvc.perform(get("/competition/setup/subsectionStatus/{competitionId}", competitionId))
+        mockMvc.perform(get("/competition/setup/subsection-status/{competitionId}", competitionId))
                 .andExpect(status().is2xxSuccessful());
 
         verify(competitionSetupServiceMock, only()).getSubsectionStatuses(competitionId);

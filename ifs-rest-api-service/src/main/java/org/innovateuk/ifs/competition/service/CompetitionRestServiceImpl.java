@@ -1,14 +1,11 @@
 package org.innovateuk.ifs.competition.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -56,13 +53,6 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
     }
 
     @Override
-    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField) {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        String uriWithParams = buildPaginationUri(competitionsRestURL +  "/" + competitionId + "/unsuccessful-applications", pageNumber, pageSize, sortField, params);
-        return getWithRestResult(uriWithParams, ApplicationPageResource.class);
-    }
-
-    @Override
     public RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
         return getWithRestResult(competitionsRestURL + "/search/" + page + "/" + size + "?searchQuery=" + searchQuery, CompetitionSearchResult.class);
     }
@@ -105,10 +95,5 @@ public class CompetitionRestServiceImpl extends BaseRestService implements Compe
     @Override
     public RestResult<List<CompetitionTypeResource>> getCompetitionTypes() {
         return getWithRestResult(competitionsTypesRestURL + "/findAll", competitionTypeResourceListType());
-    }
-
-    @Override
-    public RestResult<Void> closeAssessment(long competitionId) {
-        return putWithRestResult(String.format("%s/%s/close-assessment", competitionsRestURL, competitionId), Void.class);
     }
 }

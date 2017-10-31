@@ -2,7 +2,6 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -20,9 +19,6 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
 
-/**
- *
- */
 public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionRestServiceImpl> {
 
     private static final String competitionsRestURL = "/competition";
@@ -161,22 +157,6 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     }
 
     @Test
-    public void findUnsuccessfulApplications() {
-
-        int pageNumber = 0;
-        int pageSize = 20;
-        String sortField = "id";
-
-        ApplicationPageResource applicationPage = new ApplicationPageResource();
-
-        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/unsuccessful-applications?page=0&size=20&sort=id", ApplicationPageResource.class, applicationPage);
-
-        ApplicationPageResource result = service.findUnsuccessfulApplications(123L, pageNumber, pageSize, sortField).getSuccessObject();
-        assertNotNull(result);
-        Assert.assertEquals(applicationPage, result);
-    }
-
-    @Test
     public void countCompetitions() {
         CompetitionCountResource returnedResponse = new CompetitionCountResource();
 
@@ -199,14 +179,5 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         CompetitionSearchResult responses = service.searchCompetitions(searchQuery, page, size).getSuccessObject();
         assertNotNull(responses);
         Assert.assertEquals(returnedResponse, responses);
-    }
-
-    @Test
-    public void closeAssessment() {
-        long competitionId = 1L;
-        setupPutWithRestResultExpectations(competitionsRestURL + "/" + competitionId + "/close-assessment",HttpStatus.OK);
-
-        RestResult<Void> result = service.closeAssessment(competitionId);
-        assertTrue(result.isSuccess());
     }
 }

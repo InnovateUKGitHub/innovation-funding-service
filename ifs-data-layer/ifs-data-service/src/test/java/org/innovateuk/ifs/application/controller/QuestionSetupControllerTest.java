@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class QuestionSetupStatusControllerTest extends BaseControllerMockMVCTest<QuestionSetupStatusController> {
+public class QuestionSetupControllerTest extends BaseControllerMockMVCTest<QuestionSetupController> {
 
     private static final String BASE_URL = "/question/setup";
 
@@ -25,8 +25,8 @@ public class QuestionSetupStatusControllerTest extends BaseControllerMockMVCTest
     private QuestionSetupService questionSetupService;
 
     @Override
-    protected QuestionSetupStatusController supplyControllerUnderTest() {
-        return new QuestionSetupStatusController();
+    protected QuestionSetupController supplyControllerUnderTest() {
+        return new QuestionSetupController();
     }
 
     @Test
@@ -37,7 +37,7 @@ public class QuestionSetupStatusControllerTest extends BaseControllerMockMVCTest
 
         when(questionSetupService.markQuestionInSetupAsComplete(questionId, competitionId, parentSection)).thenReturn(serviceSuccess(newSetupStatusResource().build()));
 
-        mockMvc.perform(put(BASE_URL + "/markAsComplete/{competitionId}/{parentSection}/{questionId}", competitionId, parentSection, questionId))
+        mockMvc.perform(put(BASE_URL + "/mark-as-complete/{competitionId}/{parentSection}/{questionId}", competitionId, parentSection, questionId))
             .andExpect(status().isOk());
 
         verify(questionSetupService, only()).markQuestionInSetupAsComplete(questionId, competitionId, parentSection);
@@ -51,7 +51,7 @@ public class QuestionSetupStatusControllerTest extends BaseControllerMockMVCTest
 
         when(questionSetupService.markQuestionInSetupAsIncomplete(questionId, competitionId, parentSection)).thenReturn(serviceSuccess(newSetupStatusResource().build()));
 
-        mockMvc.perform(put(BASE_URL + "/markAsIncomplete/{competitionId}/{parentSection}/{questionId}", competitionId, parentSection, questionId))
+        mockMvc.perform(put(BASE_URL + "/mark-as-incomplete/{competitionId}/{parentSection}/{questionId}", competitionId, parentSection, questionId))
                 .andExpect(status().isOk());
 
         verify(questionSetupService, only()).markQuestionInSetupAsIncomplete(questionId, competitionId, parentSection);
@@ -65,7 +65,7 @@ public class QuestionSetupStatusControllerTest extends BaseControllerMockMVCTest
 
         when(questionSetupService.getQuestionStatuses(competitionId, parentSection)).thenReturn(serviceSuccess(resultMap));
 
-        mockMvc.perform(get(BASE_URL + "/getStatuses/{competitionId}/{parentSection}", competitionId, parentSection))
+        mockMvc.perform(get(BASE_URL + "/get-statuses/{competitionId}/{parentSection}", competitionId, parentSection))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(resultMap)));
 

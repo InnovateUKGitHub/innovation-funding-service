@@ -384,8 +384,8 @@ public class CompetitionSetupApplicationController {
             return "redirect:/dashboard";
         } else {
             questionIdOpt.ifPresent(questionId -> questionSetupRestService.markQuestionSetupIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM, questionId));
-            subsectionOpt.ifPresent(competitionSetupSubsection -> competitionSetupRestService.markSubSectionInComplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM, competitionSetupSubsection));
-            competitionSetupRestService.markSectionInComplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
+            subsectionOpt.ifPresent(competitionSetupSubsection -> competitionSetupRestService.markSubSectionIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM, competitionSetupSubsection));
+            competitionSetupRestService.markSectionIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
             return successAction.get();
         }
     }

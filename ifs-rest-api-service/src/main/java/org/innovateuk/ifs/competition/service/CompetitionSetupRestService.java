@@ -22,11 +22,11 @@ public interface CompetitionSetupRestService {
 
     RestResult<Void> markSectionComplete(long competitionId, CompetitionSetupSection section);
 
-    RestResult<Void> markSectionInComplete(long competitionId, CompetitionSetupSection section);
+    RestResult<Void> markSectionIncomplete(long competitionId, CompetitionSetupSection section);
 
     RestResult<Void> markSubSectionComplete(long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection);
 
-    RestResult<Void> markSubSectionInComplete(long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection);
+    RestResult<Void> markSubSectionIncomplete(long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection);
 
     RestResult<String> generateCompetitionCode(long competitionId, ZonedDateTime openingDate);
 
