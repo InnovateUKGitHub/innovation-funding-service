@@ -709,8 +709,19 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
         BindingResult bindingResult = returnedForm.getBindingResult();
 
-        assertEquals("Please enter a name.", bindingResult.getFieldError("invites[0].name").getDefaultMessage());
-        assertEquals("Please enter an email address.", bindingResult.getFieldError("invites[0].email").getDefaultMessage());
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(3, bindingResult.getFieldErrorCount());
+
+        assertEquals(2, bindingResult.getFieldErrorCount("invites[0].name"));
+        assertEquals(1, bindingResult.getFieldErrorCount("invites[0].email"));
+
+        assertTrue(bindingResult.getFieldErrors("invites[0].name").stream()
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("The name should have at least {2} characters.")));
+        assertTrue(bindingResult.getFieldErrors("invites[0].name").stream()
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a name.")));
+        assertTrue(bindingResult.getFieldErrors("invites[0].email").stream()
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter an email address.")));
 
         InOrder inOrder = inOrder(competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
