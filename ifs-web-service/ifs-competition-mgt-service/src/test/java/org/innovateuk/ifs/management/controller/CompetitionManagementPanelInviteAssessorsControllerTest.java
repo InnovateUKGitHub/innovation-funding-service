@@ -67,8 +67,7 @@ import static org.innovateuk.ifs.util.CompressionUtil.getCompressedString;
 import static org.innovateuk.ifs.util.CompressionUtil.getDecompressedString;
 import static org.innovateuk.ifs.util.JsonUtil.getObjectFromJson;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -424,6 +423,50 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
             assertEquals(inviteOverviewResource.getDetails(), overviewAssessorRowViewModel.getDetails());
             assertEquals(inviteOverviewResource.getInviteId(), overviewAssessorRowViewModel.getInviteId());
         });
+    }
+
+    @Test
+    public void removeInviteFromInviteView() throws Exception {
+        String email = "firstname.lastname@example.com";
+
+        when(assessmentPanelInviteRestService.deleteInvite(email, competition.getId())).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("remove", email)
+                .param("page", "5"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/invite?page=5", competition.getId())))
+                .andReturn();
+
+        verify(assessmentPanelInviteRestService, only()).deleteInvite(email, competition.getId());
+    }
+
+    @Test
+    public void removeInviteFromInviteView_defaultParams() throws Exception {
+        String email = "firstname.lastname@example.com";
+
+        when(assessmentPanelInviteRestService.deleteInvite(email, competition.getId())).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("remove", email))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/invite?page=0", competition.getId())))
+                .andReturn();
+
+        verify(assessmentPanelInviteRestService, only()).deleteInvite(email, competition.getId());
+    }
+
+    @Test
+    public void removeAllInvitesFromInviteView() throws Exception {
+        when(assessmentPanelInviteRestService.deleteAllInvites(competition.getId())).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/panel/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("removeAll", ""))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/assessment/panel/competition/%s/assessors/invite?page=0", competition.getId())))
+                .andReturn();
+
+        verify(assessmentPanelInviteRestService).deleteAllInvites(competition.getId());
     }
 
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {
