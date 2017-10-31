@@ -3,12 +3,19 @@ package org.innovateuk.ifs.management.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.form.*;
-import org.innovateuk.ifs.management.model.*;
+import org.innovateuk.ifs.management.form.AssessorPanelSelectionForm;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsAcceptedModelPopulator;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsFindModelPopulator;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsInviteModelPopulator;
+import org.innovateuk.ifs.management.form.AssessorPanelSelectionForm;
+import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsFindModelPopulator;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsFindViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -39,6 +46,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 public class CompetitionManagementPanelInviteAssessorsController extends CompetitionManagementCookieController<AssessorPanelSelectionForm> {
 
     private static final String SELECTION_FORM = "assessorPanelSelectionForm";
+    private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
     private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
@@ -48,6 +56,9 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
 
     @Autowired
     private PanelInviteAssessorsInviteModelPopulator panelInviteAssessorsInviteModelPopulator;
+
+    @Autowired
+    private PanelInviteAssessorsAcceptedModelPopulator panelInviteAssessorsAcceptedModelPopulator;
 
     protected String getCookieName() {
         return SELECTION_FORM;
@@ -223,6 +234,49 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
         model.addAttribute("originQuery", originQuery);
 
         return "assessors/panel-invite";
+    }
+
+    @GetMapping("/accepted")
+    public String accepted(Model model,
+                           @PathVariable("competitionId") long competitionId,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam MultiValueMap<String, String> queryParams) {
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_ACCEPTED, queryParams);
+
+        model.addAttribute("model", panelInviteAssessorsAcceptedModelPopulator.populateModel(
+                competitionId,
+                page,
+                originQuery
+        ));
+
+        return "assessors/panel-accepted";
+    }
+
+    @PostMapping(value = "/invite", params = {"remove"})
+    public String removeInviteFromInviteView(Model model,
+                                             @PathVariable("competitionId") long competitionId,
+                                             @RequestParam(name = "remove") String email,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
+        deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
+        return redirectToInvite(competitionId, page);
+    }
+
+    @PostMapping(value = "/invite", params = {"removeAll"})
+    public String removeAllInvitesFromInviteView(Model model,
+                                                 @PathVariable("competitionId") long competitionId,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
+        deleteAllInvites(competitionId).getSuccessObjectOrThrowException();
+        return redirectToInvite(competitionId, page);
+    }
+
+    private ServiceResult<Void> deleteInvite(String email, long competitionId) {
+        return assessmentPanelInviteRestService.deleteInvite(email, competitionId).toServiceResult();
+    }
+
+    private ServiceResult<Void> deleteAllInvites(long competitionId) {
+        return assessmentPanelInviteRestService.deleteAllInvites(competitionId).toServiceResult();
     }
 
     private String redirectToInvite(long competitionId, int page) {

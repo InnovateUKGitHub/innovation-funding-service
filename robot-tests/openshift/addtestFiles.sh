@@ -54,9 +54,8 @@ function addTestFiles() {
 
     DATA_SERVICE_POD=$(oc get pods | grep data-service | awk '{ print $1 }')
 
-    oc rsh ${DATA_SERVICE_POD} apk update
-    oc rsh ${DATA_SERVICE_POD} apk add rsync
-    oc rsh ${DATA_SERVICE_POD} apk add mysql-client
+    oc rsh ${DATA_SERVICE_POD} apt-get update
+    oc rsh ${DATA_SERVICE_POD} apt-get install -yq rsync mysql-client
 
     clearDownFileRepository
     echo "***********Adding test files***************"

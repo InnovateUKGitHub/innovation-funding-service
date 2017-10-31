@@ -106,8 +106,11 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
                 List<FinanceFormField> fields = entry.getValue();
 
                 if(id == -1L) {
-                    List<List<FinanceFormField>> fieldsSeparated = unsavedFieldsManager.separateFields(fields);
-                    for(List<FinanceFormField> fieldGroup: fieldsSeparated) {
+                    Map<String,List<FinanceFormField>> grouped = unsavedFieldsManager.separateGroups(fields);
+
+                    for(Map.Entry<String, List<FinanceFormField>> groupedEntry : grouped.entrySet()) {
+
+                        List<FinanceFormField> fieldGroup = groupedEntry.getValue();
                         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(null, fieldGroup);
                         if (costItem != null && fieldGroup.size() > 0) {
                             Long questionId = Long.valueOf(fieldGroup.get(0).getQuestionId());
