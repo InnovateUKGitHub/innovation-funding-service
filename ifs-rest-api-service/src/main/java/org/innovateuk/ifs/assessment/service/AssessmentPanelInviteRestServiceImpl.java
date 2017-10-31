@@ -141,5 +141,26 @@ public class AssessmentPanelInviteRestServiceImpl extends BaseRestService implem
     public RestResult<Boolean> checkExistingUser(String inviteHash) {
         return getWithRestResultAnonymous(format("%s/%s/%s", assessmentPanelInviteRestUrl, "checkExistingUser", inviteHash), Boolean.class);
     }
+
+    @Override
+    public RestResult<Void> deleteInvite(String email, long competitionId) {
+        String baseUrl = format("%s/%s", assessmentPanelInviteRestUrl, "deleteInvite");
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("competitionId", competitionId)
+                .queryParam("email", email);
+
+        return deleteWithRestResult(builder.toUriString(), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> deleteAllInvites(long competitionId) {
+        String baseUrl = format("%s/%s", assessmentPanelInviteRestUrl, "deleteAllInvites");
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("competitionId", competitionId);
+
+        return deleteWithRestResult(builder.toUriString(), Void.class);
+    }
 }
 
