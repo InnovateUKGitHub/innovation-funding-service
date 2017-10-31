@@ -504,9 +504,12 @@ Application:Costs and value for money
     [Documentation]    IFS-743
     [Tags]
     When the user clicks the button/link        link=Costs and value for money
+    When the user enters text to a text field
     and the user clicks the button/link         css=.button[value="Done"]
 
-#    hope to finsh all sections as done then done will be viisble
+#TODO edit initial details and check the application questions still retain values
+
+
 
 Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773
@@ -543,16 +546,27 @@ Complete button disabled when sections are edited
     And the user clicks the button/link   link=Competition setup
     Then the user should see the element  css=#compCTA[disabled="disabled"]
 #    Add check for IFS-1856 ie click on disabled Complete should not give ISE
+    When the user clicks the button/link   css=#compCTA[disabled="disabled"]
+    then the user should not see an error in the page
     When the user clicks the button/link  link=Eligibility
     And the user clicks the button/link   jQuery=button:contains("Done")
     And the user clicks the button/link   link=Competition setup
 #    The following steps will move the comp from "In preparation" to "Ready to Open" state
+# This also checks that complete button is visible when user edits a section
     Then the user clicks the button/link  jQuery=a:contains("Complete")
     And the user clicks the button/link   jQuery=a:contains("Done")
+#    TODO change the text to see elemnt keyword
+    And the user should see the text in the page  Setup of this competition has now been completed and will automatically open on the date set.
+    When the user clicks the button/link   link=All competitions
+    And the user navigates to the page     ${CA_UpcomingComp}
+    Then the competition should show in the correct section  css=section:nth-of-type(2) ul    Test competition
+    # The above line checks that the section 'Ready to Open' there is a competition named Test competition
+
 
 Application: Edit again should mark as incomplete
     [Documentation]    INFUND-5964
-    [Tags]
+    [Tags]  Pending
+#    TODO this would be a duplicate check as above test
     [Setup]    the user navigates to the page   ${landingPage}
     Given the user clicks the button/link       link=Application details
     When the user clicks the button/link        jQuery=a:contains("Edit this question")
@@ -561,10 +575,11 @@ Application: Edit again should mark as incomplete
     And The user clicks the button/link         link=Competition setup
     Then the user should not see the element    css=li:nth-child(5) .task-status-complete
 
-Ready To Open button is visible when the user re-opens a section
+Complete button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
     [Tags]  Pending
-    # TODO Pending due to IFS-493
+    # TODO Pending due to IFS-493:
+#    This is covered already
     [Setup]
     Given The user should see the element    jQuery=.button:contains("Complete")
     When The user clicks the button/link    link=Initial details
@@ -579,6 +594,7 @@ User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
     [Tags]  Pending
     # TODO Pending due to IFS-493
+#    this is covered too
     When the user clicks the button/link   jQuery=button:contains("Complete")
     Then the user clicks the button/link   jQuery=button:contains("Done")
     And the user should see the text in the page  Setup of this competition has now been completed and will automatically open on the date set.
