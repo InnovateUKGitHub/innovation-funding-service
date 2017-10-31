@@ -56,22 +56,22 @@
 
     <ul class="inline-nav">
         <li class="not-selected">
-            <a th:href="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Find</a>
+            <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Find</a>
         </li>
         <li class="not-selected">
-            <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
+            <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
         </li>
         <li class="not-selected">
-            <a th:href="@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Pending and rejected</a>
+            <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Pending and rejected</a>
         </li>
         <li class="selected">
-            <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
+            <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
         </li>
     </ul>
 
     <div class="grid-row">
         <div class="column-three-quarters">
-            <h2 class="heading-small no-margin-top">View assessors who have accepted the invite to assess this competition.</h2>
+            <h2 class="heading-small no-margin-top">View assessors who have accepted an invite to the assessment panel.</h2>
             <br>
         </div>
     </div>
@@ -107,7 +107,7 @@
             </td>
         </tr>
         <tr th:if="${#lists.isEmpty(model.assessors)}">
-            <td colspan="4">There are no assessors invited to this competition.</td>
+            <td colspan="4">There are no assessors who have accepted invites to this assessment panel.</td>
         </tr>
         </tbody>
     </table>

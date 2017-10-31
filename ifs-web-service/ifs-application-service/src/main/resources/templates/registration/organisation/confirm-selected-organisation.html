@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${#fields.hasErrors('${organisationForm.*}')}" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${#fields.hasErrors('${organisationForm.useSearchResultAddress}') or (#fields.hasErrors('${organisationForm.addressForm.*}') and  (organisationForm.addressForm.triedToSave or organisationForm.addressForm.triedToSearch))}" />
 </head>
 <body th:with="context='applicant'" class="create-application-organisation">
 
