@@ -477,45 +477,43 @@ Project finance user can see the lead partner's information about eligibility
 Finance checks eligibility validations
     [Documentation]    INFUND-4833
     [Tags]
-    When the user clicks the button/link             jQuery=section:nth-of-type(1) button:contains("Labour")
+    When the user expands the section                Labour
     And the user clicks the button/link              jQuery=section:nth-of-type(1) a:contains("Edit")
     When the user enters text to a text field        css=[name^="labour-labourDaysYearly"]    -230
-    Then the user should see the text in the page    This field should be 1 or higher
-    When the user clicks the button/link             css=section:nth-of-type(1) .button[name=save-eligibility]
-    Then the user should see the text in the page    This field should be 1 or higher
-    And the user clicks the button/link              jQuery=section:nth-of-type(1) button:contains("Labour")
+    And the user clicks the button/link              css=section:nth-of-type(1) .button[name="save-eligibility"]
+    Then the user should see a field error           This field should be 1 or higher.
+    And the user collapses the section               Labour
     And the user reloads the page
-    When the user clicks the button/link             jQuery=section:nth-of-type(3) button:contains("Materials")
+    When the user expands the section                Materials
     And the user clicks the button/link              jQuery=section:nth-of-type(3) a:contains("Edit")
     When the user clicks the button/link             jQuery=section:nth-of-type(3) button[name=add_cost]
     When the user enters text to a text field        css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
-    And the user clicks the button/link              css=section:nth-of-type(3) .button[name=save-eligibility]
-    Then the user should see the text in the page    This field cannot be left blank
-    And the user clicks the button/link              jQuery=section:nth-of-type(3) button:contains("Materials")
+    And the user clicks the button/link              css=section:nth-of-type(3) .button[name="save-eligibility"]
+    Then the user should see a field error           This field cannot be left blank
+    And the user collapses the section               Materials
     And the user reloads the page
-    When the user clicks the button/link             jQuery=section:nth-of-type(4) button:contains("Capital usage")
+    When the user expands the section                Capital usage
     And the user clicks the button/link              jQuery=section:nth-of-type(4) a:contains("Edit")
     When the user enters text to a text field        css=section:nth-of-type(4) #capital_usage div:nth-child(1) div:nth-of-type(6) input   200
-    Then the user should see the text in the page    This field should be 100 or lower
-    And the user clicks the button/link              jQuery=section:nth-of-type(4) button:contains("Capital usage")
+    Then the user should see a field error           This field should be 100 or lower
+    And the user collapses the section               Capital usage
     And the user reloads the page
-    When the user clicks the button/link             jQuery=section:nth-of-type(6) button:contains("Travel and subsistence")
+    When the user expands the section                Travel and subsistence
     And the user clicks the button/link              jQuery=section:nth-of-type(6) a:contains("Edit")
     When the user clicks the button/link             css=section:nth-of-type(6) button[name=add_cost]
     And the user enters text to a text field         css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    123
-    When the user clicks the button/link             jQuery=section:nth-of-type(6) .button[name=save-eligibility]
-    Then the user should see the text in the page     This field cannot be left blank
-    And the user clicks the button/link             jQuery=section:nth-of-type(6) button:contains("Travel and subsistence")
+    When the user clicks the button/link             jQuery=section:nth-of-type(6) .button[name="save-eligibility"]
+    Then the user should see a field error           This field cannot be left blank
+    And the user collapses the section               Travel and subsistence
     And the user reloads the page
     When the user clicks the button/link             jQuery=section:nth-of-type(7) button:contains("Other costs")
     And the user clicks the button/link              jQuery=section:nth-of-type(7) a:contains("Edit")
-    When the user clicks the button/link            jQuery=section:nth-of-type(7) button[name=add_cost]
-    And the user enters text to a text field        css=#other-costs-table tr:nth-child(2) td:nth-child(2) input  5000
-    When the user clicks the button/link           css=section:nth-of-type(7) .button[name=save-eligibility]
-    Then the user should see the text in the page    This field cannot be left blank
-    And the user clicks the button/link             jQuery=section:nth-of-type(7) button:contains("Other costs")
+    When the user clicks the button/link             jQuery=section:nth-of-type(7) button[name=add_cost]
+    And the user enters text to a text field         css=#other-costs-table tr:nth-child(2) td:nth-child(2) input  5000
+    When the user clicks the button/link             css=section:nth-of-type(7) .button[name="save-eligibility"]
+    Then the user should see a field error           This field cannot be left blank
     When the user clicks the button/link             link=Finance checks
-    When the user clicks the button/link             jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
+    Then the user clicks the button/link             jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")
 
 Project finance user can amend all sections of eligibility for lead
     [Documentation]    INFUND-4834
@@ -1310,7 +1308,7 @@ Project finance user amends travel details in eligibility for lead
     And the user should not see the element         css=section:nth-of-type(6) .button[name=save-eligibility]
 
 Project finance user amends other costs details in eligibility for lead
-    When the user clicks the button/link            jQuery=section:nth-of-type(7) button:contains("Other costs")
+    When the user expands the section               Other costs
     Then verify percentage and total                7    1%    £1,100
     When the user clicks the button/link            jQuery=section:nth-of-type(7) a:contains("Edit")
     And the user enters text to a text field        css=#other-costs-table tr:nth-child(1) td:nth-child(1) textarea    some other costs
@@ -1321,7 +1319,7 @@ Project finance user amends other costs details in eligibility for lead
     #TODO: IFS-1128 And the user enters text to a text field    jQuery=#other-costs-table tr:nth-child(4) td:nth-child(2) input    5750
     #TODO: IFS-1128 Then verify percentage and total    7    5%    £10,750
     #TODO: IFS-1128 When the user should see the element    css=#other-costs-table tr:nth-of-type(2) td:nth-of-type(3) button
-    When the user clicks the button/link            jQuery=section:nth-of-type(7) .button[name=save-eligibility]
+    When the user clicks the button/link            css=section:nth-of-type(7) .button[name=save-eligibility]
     Then verify total costs of project              £170,080
     And the user should see the element             jQuery=section:nth-of-type(7) a:contains("Edit")
     And the user should not see the element         css=section:nth-of-type(7) .button[name=save-eligibility]
