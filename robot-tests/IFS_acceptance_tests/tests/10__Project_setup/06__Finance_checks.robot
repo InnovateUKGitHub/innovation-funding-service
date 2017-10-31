@@ -1111,8 +1111,8 @@ Project finance user adds, modifies and removes labour rows
     And the user clicks the button/link            css=section:nth-of-type(1) button[name=save-eligibility]
     Then verify percentage and total               1    2%    £4,748
     And the user should see the element            jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(3) td:contains("£1,626")
-    And the user should see the element            jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(4) td:contains(£1,179")
-    And the user should not see the element        jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(5) td:contains(£976")  # This is the row which was removed
+    And the user should see the element            jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(4) td:contains("£1,179")
+    And the user should not see the element        jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(5) td:contains("£976")  # This is the row which was removed
 
 *** Keywords ***
 Custom suite setup
