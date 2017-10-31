@@ -2,7 +2,6 @@ package org.innovateuk.ifs.form.repository;
 
 import org.innovateuk.ifs.form.domain.FormValidator;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -14,6 +13,6 @@ import java.util.List;
 public interface FormValidatorRepository extends PagingAndSortingRepository<FormValidator, Long> {
 	@Override
     List<FormValidator> findAll();
-    FormValidator findById(@Param("id") Long id);
-    FormValidator findByClazzName(@Param("title") String title);
+    FormValidator findById(Long id);
+    FormValidator findByClazzName(String title);
 }
