@@ -45,12 +45,12 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
         when(competitionSetupService.markSectionComplete(competitionId, section)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(get("/competition/setup/sectionStatus/complete/{competitionId}/{section}", competitionId, section))
+        mockMvc.perform(get("/competition/setup/section-status/complete/{competitionId}/{section}", competitionId, section))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on what the section should be marked as complete"),
+                                parameterWithName("competitionId").description("id of the competition on which the section should be marked as complete"),
                                 parameterWithName("section").description("the section to mark as complete")
                         ),
                         responseFields(setupStatusResourceFields)
@@ -63,12 +63,12 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
         when(competitionSetupService.markSectionIncomplete(competitionId, section)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(get("/competition/setup/sectionStatus/incomplete/{competitionId}/{section}", competitionId, section))
+        mockMvc.perform(get("/competition/setup/section-status/incomplete/{competitionId}/{section}", competitionId, section))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on what the section should be marked as incomplete"),
+                                parameterWithName("competitionId").description("id of the competition on which the section should be marked as incomplete"),
                                 parameterWithName("section").description("the section to mark as incomplete")
                         ),
                         responseFields(setupStatusResourceFields)
@@ -82,12 +82,12 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(competitionSetupService.markSubsectionComplete(competitionId, parentSection, subsection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(get("/competition/setup/subsectionStatus/complete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection))
+        mockMvc.perform(get("/competition/setup/subsection-status/complete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on what the section should be marked as complete"),
+                                parameterWithName("competitionId").description("id of the competition on which the section should be marked as complete"),
                                 parameterWithName("parentSection").description("the parent section of the section that needs to be marked as complete"),
                                 parameterWithName("subsection").description("the subsection to mark as complete")
                         ),
@@ -102,12 +102,12 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(competitionSetupService.markSubsectionIncomplete(competitionId, parentSection, subsection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(get("/competition/setup/subsectionStatus/incomplete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection))
+        mockMvc.perform(get("/competition/setup/subsection-status/incomplete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on what the section should be marked as incomplete"),
+                                parameterWithName("competitionId").description("id of the competition on which the section should be marked as incomplete"),
                                 parameterWithName("parentSection").description("the parent section of the section that needs to be marked as incomplete"),
                                 parameterWithName("subsection").description("the subsection to mark as incomplete")
                         ),

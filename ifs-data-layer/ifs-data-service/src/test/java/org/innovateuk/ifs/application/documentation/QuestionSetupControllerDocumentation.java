@@ -40,7 +40,7 @@ public class QuestionSetupControllerDocumentation extends BaseControllerMockMVCT
                 .andDo(document(
                         "question/setup/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on what the section should be marked as complete"),
+                                parameterWithName("competitionId").description("id of the competition on which the section should be marked as complete"),
                                 parameterWithName("questionId").description("the id of the question to mark as complete"),
                                 parameterWithName("parentSection").description("the parent section of the section that needs to be marked as complete")
                         )
@@ -59,7 +59,7 @@ public class QuestionSetupControllerDocumentation extends BaseControllerMockMVCT
                 .andDo(document(
                         "question/setup/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on what the section should be marked as incomplete"),
+                                parameterWithName("competitionId").description("id of the competition on which the section should be marked as incomplete"),
                                 parameterWithName("questionId").description("the id of the question to mark as incomplete"),
                                 parameterWithName("parentSection").description("the parent section of the section that needs to be marked as complete")
                         )
@@ -77,8 +77,8 @@ public class QuestionSetupControllerDocumentation extends BaseControllerMockMVCT
                 .andDo(document(
                         "question/setup/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("id of the competition of the questions where status is from listed"),
-                                parameterWithName("parentSection").description("the parent section of the questions where status is from listed")
+                                parameterWithName("competitionId").description("id of the competition which contains the questions on which to perform the status query"),
+                                parameterWithName("parentSection").description("the parent section of the questions on which to perform the status query")
                         )
                 ));
     }

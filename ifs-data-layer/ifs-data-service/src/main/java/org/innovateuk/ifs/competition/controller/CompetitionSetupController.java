@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Controller for handling competition that are in setup
+ * Controller for handling competitions that are in setup
  */
 @RestController
 @RequestMapping("/competition/setup")
@@ -46,43 +46,43 @@ public class CompetitionSetupController {
         return competitionSetupService.copyFromCompetitionTypeTemplate(competitionId, competitionType).toPostResponse();
     }
 
-    @PostMapping("/generateCompetitionCode/{id}")
+    @PostMapping("/generate-competitionCode/{id}")
     public RestResult<String> generateCompetitionCode(@RequestBody ZonedDateTime dateTime, @PathVariable("id") final Long id) {
         return competitionSetupService.generateCompetitionCode(id, dateTime).toGetResponse();
     }
 
-    @GetMapping("/sectionStatus/complete/{competitionId}/{section}")
+    @PutMapping("/section-status/complete/{competitionId}/{section}")
     public RestResult<SetupStatusResource> markSectionComplete(@PathVariable("competitionId") final Long competitionId,
                                                                @PathVariable("section") final CompetitionSetupSection section) {
         return competitionSetupService.markSectionComplete(competitionId, section).toGetResponse();
     }
 
-    @GetMapping("/sectionStatus/incomplete/{competitionId}/{section}")
+    @PutMapping("/section-status/incomplete/{competitionId}/{section}")
     public RestResult<SetupStatusResource> markSectionIncomplete(@PathVariable("competitionId") final Long competitionId,
                                                                  @PathVariable("section") final CompetitionSetupSection section) {
         return competitionSetupService.markSectionIncomplete(competitionId, section).toGetResponse();
     }
 
-    @GetMapping("/subsectionStatus/complete/{competitionId}/{parentSection}/{subsection}")
+    @PutMapping("/subsection-status/complete/{competitionId}/{parentSection}/{subsection}")
     public RestResult<SetupStatusResource> markSubsectionComplete(@PathVariable("competitionId") final Long competitionId,
                                                                   @PathVariable("parentSection") final CompetitionSetupSection parentSection,
                                                                   @PathVariable("subsection") final CompetitionSetupSubsection subsection) {
         return competitionSetupService.markSubsectionComplete(competitionId, parentSection, subsection).toGetResponse();
     }
 
-    @GetMapping("/subsectionStatus/incomplete/{competitionId}/{parentSection}/{subsection}")
+    @PutMapping("/subsection-status/incomplete/{competitionId}/{parentSection}/{subsection}")
     public RestResult<SetupStatusResource> markSubsectionIncomplete(@PathVariable("competitionId") final Long competitionId,
                                                                     @PathVariable("parentSection") final CompetitionSetupSection parentSection,
                                                                     @PathVariable("subsection") final CompetitionSetupSubsection subsection) {
         return competitionSetupService.markSubsectionIncomplete(competitionId, parentSection, subsection).toGetResponse();
     }
 
-    @GetMapping("/sectionStatus/{competitionId}")
+    @GetMapping("/section-status/{competitionId}")
     public RestResult<Map<CompetitionSetupSection, Optional<Boolean>>> getSectionStatuses(@PathVariable("competitionId") final Long competitionId) {
         return competitionSetupService.getSectionStatuses(competitionId).toGetResponse();
     }
 
-    @GetMapping("/subsectionStatus/{competitionId}")
+    @GetMapping("/subsection-status/{competitionId}")
     public RestResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(@PathVariable("competitionId") final Long competitionId) {
         return competitionSetupService.getSubsectionStatuses(competitionId).toGetResponse();
     }

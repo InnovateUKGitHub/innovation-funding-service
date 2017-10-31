@@ -19,9 +19,6 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.com
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSearchResultItemListType;
 import static org.junit.Assert.*;
 
-/**
- *
- */
 public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionPostSubmissionRestServiceImpl> {
 
     private static final String competitionsRestURL = "/competition/postSubmission";

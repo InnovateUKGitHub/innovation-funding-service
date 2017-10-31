@@ -5,6 +5,7 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
@@ -81,7 +82,7 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
         ZonedDateTime openingDate = ZonedDateTime.of(2016, 2, 1, 0, 0, 0, 0, ZoneId.systemDefault());
         Long competitionId = Long.MAX_VALUE;
         String competitionCode = "1602-1";
-        setupPostWithRestResultExpectations(String.format("%s/generateCompetitionCode/%s", competitionSetupRestURL, competitionId), String.class, openingDate, competitionCode, HttpStatus.OK);
+        setupPostWithRestResultExpectations(String.format("%s/generate-competition-code/%s", competitionSetupRestURL, competitionId), String.class, openingDate, competitionCode, HttpStatus.OK);
 
         String response = service.generateCompetitionCode(competitionId, openingDate).getSuccessObject();
         assertNotNull(response);
@@ -107,11 +108,55 @@ public class CompetitionSetupRestServiceMocksTest extends BaseRestServiceUnitTes
     }
 
     @Test
+    public void testMarkSectionComplete() {
+        final Long competitionId = 4L;
+        final CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
+        setupPutWithRestResultExpectations(String.format("%s/section-status/complete/%s/%s", competitionSetupRestURL, competitionId, section), Void.class, null, null );
+
+        RestResult<Void> result = service.markSectionComplete(competitionId, section);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testMarkSectionIncomplete() {
+        final Long competitionId = 4L;
+        final CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
+        setupPutWithRestResultExpectations(String.format("%s/section-status/incomplete/%s/%s", competitionSetupRestURL, competitionId, section), Void.class, null, null );
+
+        RestResult<Void> result = service.markSectionIncomplete(competitionId, section);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testMarkSubSectionComplete() {
+        final Long competitionId = 4L;
+        final CompetitionSetupSection parentSection = CompetitionSetupSection.INITIAL_DETAILS;
+        final CompetitionSetupSubsection subsection = CompetitionSetupSubsection.FINANCES;
+
+        setupPutWithRestResultExpectations(String.format("%s/subsection-status/complete/%s/%s/%s", competitionSetupRestURL, competitionId, parentSection, subsection), Void.class, null, null );
+
+        RestResult<Void> result = service.markSubSectionComplete(competitionId, parentSection, subsection);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testMarkSubSectionIncomplete() {
+        final Long competitionId = 4L;
+        final CompetitionSetupSection parentSection = CompetitionSetupSection.INITIAL_DETAILS;
+        final CompetitionSetupSubsection subsection = CompetitionSetupSubsection.FINANCES;
+
+        setupPutWithRestResultExpectations(String.format("%s/subsection-status/incomplete/%s/%s/%s", competitionSetupRestURL, competitionId, parentSection, subsection), Void.class, null, null );
+
+        RestResult<Void> result = service.markSubSectionIncomplete(competitionId, parentSection, subsection);
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void getSectionStatuses() {
         final Long competitionId = 342L;
 
         Map<CompetitionSetupSection, Optional<Boolean>> expectedResult = asMap(INITIAL_DETAILS, Optional.of(TRUE), ELIGIBILITY, Optional.empty());
-        setupGetWithRestResultExpectations(competitionSetupRestURL + "/sectionStatus/" + competitionId, competitionSetupSectionStatusMap(), expectedResult, HttpStatus.OK);
+        setupGetWithRestResultExpectations(competitionSetupRestURL + "/section-status/" + competitionId, competitionSetupSectionStatusMap(), expectedResult, HttpStatus.OK);
 
         RestResult<Map<CompetitionSetupSection, Optional<Boolean>>> result = service.getSectionStatuses(competitionId);
 

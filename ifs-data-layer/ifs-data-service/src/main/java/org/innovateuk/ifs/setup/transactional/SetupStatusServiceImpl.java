@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * Implements {@link SetupStatusService}
@@ -27,21 +29,21 @@ public class SetupStatusServiceImpl implements SetupStatusService {
 
     @Override
     public ServiceResult<List<SetupStatusResource>> findByTargetClassNameAndTargetId(String targetClassName, Long targetId) {
-        return ServiceResult.serviceSuccess((List<SetupStatusResource>) setupStatusMapper
+        return serviceSuccess((List<SetupStatusResource>) setupStatusMapper
                 .mapToResource(setupStatusRepository
                         .findByTargetClassNameAndTargetId(targetClassName, targetId)));
     }
 
     @Override
     public ServiceResult<List<SetupStatusResource>> findByTargetClassNameAndTargetIdAndParentId(String targetClassName, Long targetId, Long parentId) {
-        return ServiceResult.serviceSuccess((List<SetupStatusResource>) setupStatusMapper
+        return serviceSuccess((List<SetupStatusResource>) setupStatusMapper
                 .mapToResource(setupStatusRepository
                         .findByTargetClassNameAndTargetIdAndParentId(targetClassName, targetId, parentId)));
     }
 
     @Override
     public ServiceResult<List<SetupStatusResource>> findByClassNameAndParentId(String className, Long parentId) {
-        return ServiceResult.serviceSuccess((List<SetupStatusResource>) setupStatusMapper
+        return serviceSuccess((List<SetupStatusResource>) setupStatusMapper
                 .mapToResource(setupStatusRepository
                         .findByClassNameAndParentId(className, parentId)));
     }
@@ -50,9 +52,9 @@ public class SetupStatusServiceImpl implements SetupStatusService {
     public ServiceResult<SetupStatusResource> findSetupStatus(String className, Long classPk) {
         Optional<SetupStatus> resultOpt = setupStatusRepository.findByClassNameAndClassPk(className, classPk);
         if(resultOpt.isPresent()) {
-            return ServiceResult.serviceSuccess(setupStatusMapper.mapToResource(resultOpt.get()));
+            return serviceSuccess(setupStatusMapper.mapToResource(resultOpt.get()));
         }
-        return ServiceResult.serviceFailure(notFoundError(SetupStatus.class, classPk, className));
+        return serviceFailure(notFoundError(SetupStatus.class, classPk, className));
     }
 
     @Override
@@ -60,16 +62,16 @@ public class SetupStatusServiceImpl implements SetupStatusService {
         Optional<SetupStatus> resultOpt = setupStatusRepository.findByClassNameAndClassPkAndTargetClassNameAndTargetId(className, classPk, targetClassName, targetId);
 
         if(resultOpt.isPresent()) {
-            return ServiceResult.serviceSuccess(setupStatusMapper.mapToResource(resultOpt.get()));
+            return serviceSuccess(setupStatusMapper.mapToResource(resultOpt.get()));
         }
-        return ServiceResult.serviceFailure(notFoundError(SetupStatus.class, classPk, className));
+        return serviceFailure(notFoundError(SetupStatus.class, classPk, className));
     }
 
     @Override
     public ServiceResult<SetupStatusResource> saveSetupStatus(SetupStatusResource setupStatusResource) {
         SetupStatus setupStatusToSave = setupStatusMapper.mapToDomain(setupStatusResource);
 
-        return ServiceResult.serviceSuccess(
+        return serviceSuccess(
                 setupStatusMapper
                         .mapToResource(setupStatusRepository
                                 .save(setupStatusToSave)));

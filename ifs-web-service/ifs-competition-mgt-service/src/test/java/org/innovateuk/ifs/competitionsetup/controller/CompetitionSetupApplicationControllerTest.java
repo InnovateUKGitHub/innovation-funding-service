@@ -105,7 +105,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(view().name("competition/finances"));
 
         verify(competitionSetupRestService, never()).update(competition);
-        verify(competitionSetupRestService).markSectionInComplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
+        verify(competitionSetupRestService).markSectionIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
     }
 
     @Test
@@ -587,7 +587,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         assertEquals(CompetitionSetupSection.APPLICATION_FORM, viewModel.getGeneral().getCurrentSection());
 
         verify(competitionSetupRestService, never()).update(competition);
-        verify(competitionSetupRestService).markSectionInComplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
+        verify(competitionSetupRestService).markSectionIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
     }
 
     private GeneralSetupViewModel getBasicGeneralViewModel(CompetitionSetupSection section, CompetitionResource competition, Boolean editable) {
@@ -680,7 +680,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         verify(competitionSetupQuestionService, atLeastOnce()).getQuestion(QUESTION_ID);
         verify(competitionSetupRestService, never()).update(competition);
-        verify(competitionSetupRestService).markSectionInComplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
+        verify(competitionSetupRestService).markSectionIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
         verify(questionSetupRestService, times(1)).markQuestionSetupIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM, QUESTION_ID);
     }
 

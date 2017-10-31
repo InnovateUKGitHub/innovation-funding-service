@@ -18,21 +18,21 @@ public class QuestionSetupController {
     @Autowired
     private QuestionSetupService questionSetupService;
 
-    @PutMapping("/markAsComplete/{competitionId}/{parentSection}/{questionId}")
+    @PutMapping("/mark-as-complete/{competitionId}/{parentSection}/{questionId}")
     public RestResult<Void> markQuestionSetupAsComplete(@PathVariable("competitionId") final Long competitionId,
                                                         @PathVariable("parentSection") final CompetitionSetupSection parentSection,
                                                         @PathVariable("questionId") final Long questionId){
         return questionSetupService.markQuestionInSetupAsComplete(questionId, competitionId, parentSection).toPutResponse();
     }
 
-    @PutMapping("/markAsIncomplete/{competitionId}/{parentSection}/{questionId}")
+    @PutMapping("/mark-as-incomplete/{competitionId}/{parentSection}/{questionId}")
     public RestResult<Void> markQuestionSetupAsInComplete(@PathVariable("competitionId") final Long competitionId,
                                                           @PathVariable("parentSection") final CompetitionSetupSection parentSection,
                                                           @PathVariable("questionId") final Long questionId){
         return questionSetupService.markQuestionInSetupAsIncomplete(questionId, competitionId, parentSection).toPutResponse();
     }
 
-    @GetMapping("/getStatuses/{competitionId}/{parentSection}")
+    @GetMapping("/get-statuses/{competitionId}/{parentSection}")
     public RestResult<Map<Long, Boolean>> getQuestionStatuses(@PathVariable("competitionId") final Long competitionId,
                                                               @PathVariable("parentSection") final CompetitionSetupSection parentSection){
         return questionSetupService.getQuestionStatuses(competitionId, parentSection).toGetResponse();

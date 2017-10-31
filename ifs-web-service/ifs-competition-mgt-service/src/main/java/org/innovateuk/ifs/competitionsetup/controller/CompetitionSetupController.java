@@ -112,7 +112,7 @@ public class CompetitionSetupController {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        competitionSetupRestService.markSectionInComplete(competitionId, section).getSuccessObjectOrThrowException();
+        competitionSetupRestService.markSectionIncomplete(competitionId, section).getSuccessObjectOrThrowException();
         if (!competition.isSetupAndLive()) {
             competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
         }

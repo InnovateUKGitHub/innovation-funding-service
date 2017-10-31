@@ -200,7 +200,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     public void setSectionAsIncomplete() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withName("Test competition").withCompetitionCode("Code").withCompetitionType(2L).build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-        when(competitionSetupRestService.markSectionInComplete(anyLong(), any(CompetitionSetupSection.class))).thenReturn(restSuccess());
+        when(competitionSetupRestService.markSectionIncomplete(anyLong(), any(CompetitionSetupSection.class))).thenReturn(restSuccess());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/initial/edit"))
                 .andExpect(status().is3xxRedirection())
@@ -711,7 +711,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
         sectionSetupStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
-//        competition.setSectionSetupStatus(sectionSetupStatus);
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
