@@ -81,9 +81,10 @@ public class CompetitionManagementDashboardController {
     }
 
     @GetMapping("/dashboard/previous")
-    public String previous(Model model) {
+    public String previous(Model model, UserResource user) {
+        boolean supportView = user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
         model.addAttribute(MODEL_ATTR, new PreviousDashboardViewModel(competitionDashboardSearchService.getPreviousCompetitions().stream().sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate())).collect(Collectors.toList()),
-                competitionDashboardSearchService.getCompetitionCounts()));
+                competitionDashboardSearchService.getCompetitionCounts(), supportView));
 
         return TEMPLATE_PATH + "previous";
     }

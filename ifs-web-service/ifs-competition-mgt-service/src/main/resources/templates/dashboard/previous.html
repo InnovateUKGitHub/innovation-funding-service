@@ -14,7 +14,7 @@
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
     </form>
-    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'previous'}, counts=${model.counts}, supportView=false)" />
+    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'previous'}, counts=${model.counts}, supportView=${model.supportView})" />
 
     <section th:with="previousComps=${model.competitions}">
         <h2 class="heading-medium"
