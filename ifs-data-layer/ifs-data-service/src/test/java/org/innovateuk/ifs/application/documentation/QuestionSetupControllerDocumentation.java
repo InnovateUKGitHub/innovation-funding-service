@@ -35,7 +35,7 @@ public class QuestionSetupControllerDocumentation extends BaseControllerMockMVCT
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(questionSetupService.markQuestionInSetupAsComplete(questionId, competitionId, parentSection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(put("/question/setup/markAsComplete/{competitionId}/{parentSection}/{questionId}", competitionId, parentSection, questionId))
+        mockMvc.perform(put("/question/setup/mark-as-complete/{competitionId}/{parentSection}/{questionId}", competitionId, parentSection, questionId))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "question/setup/{method-name}",
@@ -54,7 +54,7 @@ public class QuestionSetupControllerDocumentation extends BaseControllerMockMVCT
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(questionSetupService.markQuestionInSetupAsIncomplete(questionId, competitionId, parentSection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(put("/question/setup/markAsIncomplete/{competitionId}/{parentSection}/{questionId}", competitionId, parentSection, questionId))
+        mockMvc.perform(put("/question/setup/mark-as-incomplete/{competitionId}/{parentSection}/{questionId}", competitionId, parentSection, questionId))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "question/setup/{method-name}",
@@ -72,7 +72,7 @@ public class QuestionSetupControllerDocumentation extends BaseControllerMockMVCT
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(questionSetupService.getQuestionStatuses(competitionId, parentSection)).thenReturn(serviceSuccess(asMap(1L, Boolean.TRUE)));
 
-        mockMvc.perform(get("/question/setup/getStatuses/{competitionId}/{parentSection}", competitionId, parentSection))
+        mockMvc.perform(get("/question/setup/get-statuses/{competitionId}/{parentSection}", competitionId, parentSection))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "question/setup/{method-name}",

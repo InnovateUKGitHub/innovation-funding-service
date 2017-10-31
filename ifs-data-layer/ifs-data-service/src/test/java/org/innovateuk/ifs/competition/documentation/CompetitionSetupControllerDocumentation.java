@@ -45,7 +45,7 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
         when(competitionSetupService.markSectionComplete(competitionId, section)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(get("/competition/setup/section-status/complete/{competitionId}/{section}", competitionId, section))
+        mockMvc.perform(put("/competition/setup/section-status/complete/{competitionId}/{section}", competitionId, section))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -63,7 +63,7 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
         when(competitionSetupService.markSectionIncomplete(competitionId, section)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(get("/competition/setup/section-status/incomplete/{competitionId}/{section}", competitionId, section))
+        mockMvc.perform(put("/competition/setup/section-status/incomplete/{competitionId}/{section}", competitionId, section))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -82,7 +82,7 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(competitionSetupService.markSubsectionComplete(competitionId, parentSection, subsection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(get("/competition/setup/subsection-status/complete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection))
+        mockMvc.perform(put("/competition/setup/subsection-status/complete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
@@ -102,7 +102,7 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
         CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
         when(competitionSetupService.markSubsectionIncomplete(competitionId, parentSection, subsection)).thenReturn(serviceSuccess(setupStatusResourceBuilder.build()));
 
-        mockMvc.perform(get("/competition/setup/subsection-status/incomplete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection))
+        mockMvc.perform(put("/competition/setup/subsection-status/incomplete/{competitionId}/{parentSection}/{subsection}", competitionId, parentSection, subsection))
                 .andExpect(status().isOk())
                 .andDo(document(
                         "competition/{method-name}",
