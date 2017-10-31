@@ -60,7 +60,7 @@
                     <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
                 </li>
                 <li class="not-selected">
-                    <a th:href="@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Overview</a>
+                    <a th:href="@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Pending and rejected</a>
                 </li>
                 <li class="not-selected">
                     <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
@@ -198,7 +198,7 @@
                             <th scope="col">Email address</th>
                             <th scope="col">Innovation area</th>
                             <th scope="col">Contract and DOI</th>
-                            <td scope="col">
+                            <td scope="col" class="alignright">
                                 <button name="removeAll" class="buttonlink alignright"
                                         th:if="${!#lists.isEmpty(model.assessors)}">
                                     Remove all

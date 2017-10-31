@@ -115,9 +115,6 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         CompetitionInvite competitionInvite = setUpCompetitionInvite(competition, SENT, innovationArea);
         CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant(competitionInvite);
 
-        AssessmentPanelInvite assessmentPanelInvite = setUpAssessmentPanelInvite(competition, SENT);
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentPanelInvite);
-
         CompetitionInviteResource expected = newCompetitionInviteResource().withCompetitionName("my competition").build();
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
         Profile profile = newProfile().withId(profileId).build();
@@ -759,7 +756,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withCompetitionName("Competition in Assessor Panel")
                 .withUser(1L)
                 .build(2);
-        
+
         when(assessmentPanelParticipantRepositoryMock.findByUserIdAndRole(1L, PANEL_ASSESSOR)).thenReturn(assessmentPanelParticipants);
         when(assessmentPanelParticipantMapperMock.mapToResource(assessmentPanelParticipants.get(0))).thenReturn(expected.get(0));
         when(assessmentPanelParticipantMapperMock.mapToResource(assessmentPanelParticipants.get(1))).thenReturn(expected.get(1));
@@ -770,6 +767,65 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         InOrder inOrder = inOrder(assessmentPanelParticipantRepositoryMock);
         inOrder.verify(assessmentPanelParticipantRepositoryMock).findByUserIdAndRole(1L, PANEL_ASSESSOR);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void deleteInvite() {
+        String email = "tom@poly.io";
+        long competitionId = 11L;
+
+        AssessmentPanelInvite assessmentPanelInvite = newAssessmentPanelInvite()
+                .withStatus(CREATED)
+                .build();
+
+        when(assessmentPanelInviteRepositoryMock.getByEmailAndCompetitionId(email, competitionId)).thenReturn(assessmentPanelInvite);
+
+        service.deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
+
+        InOrder inOrder = inOrder(assessmentPanelInviteRepositoryMock);
+        inOrder.verify(assessmentPanelInviteRepositoryMock).getByEmailAndCompetitionId(email, competitionId);
+        inOrder.verify(assessmentPanelInviteRepositoryMock).delete(assessmentPanelInvite);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void deleteInvite_sent() {
+        String email = "tom@poly.io";
+        long competitionId = 11L;
+        AssessmentPanelInvite assessmentPanelInvite = newAssessmentPanelInvite()
+                .withStatus(SENT)
+                .build();
+
+        when(assessmentPanelInviteRepositoryMock.getByEmailAndCompetitionId(email, competitionId)).thenReturn(assessmentPanelInvite);
+
+        ServiceResult<Void> serviceResult = service.deleteInvite(email, competitionId);
+
+        assertTrue(serviceResult.isFailure());
+
+        verify(assessmentPanelInviteRepositoryMock).getByEmailAndCompetitionId(email, competitionId);
+        verifyNoMoreInteractions(assessmentPanelInviteRepositoryMock);
+    }
+
+    @Test
+    public void deleteAllInvites() throws Exception {
+        long competitionId = 1L;
+
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(newCompetition().build());
+
+        assertTrue(service.deleteAllInvites(competitionId).isSuccess());
+
+        verify(competitionRepositoryMock).findOne(competitionId);
+    }
+
+    @Test
+    public void deleteAllInvites_noCompetition() throws Exception {
+        long competitionId = 1L;
+
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(null);
+
+        assertFalse(service.deleteAllInvites(competitionId).isSuccess());
+
+        verify(competitionRepositoryMock).findOne(competitionId);
     }
 
     private void assertNotExistingAssessorUser(AssessorInviteOverviewResource assessorInviteOverviewResource) {

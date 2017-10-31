@@ -35,8 +35,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -306,5 +305,33 @@ public class AssessmentPanelInviteControllerTest extends BaseControllerMockMVCTe
                 .andExpect(content().json(toJson(expectedPageResource)));
 
         verify(assessmentPanelInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status);
+    }
+
+    @Test
+    public void deleteInvite() throws Exception {
+        String email = "firstname.lastname@example.com";
+        long competitionId = 1L;
+
+        when(assessmentPanelInviteServiceMock.deleteInvite(email, competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/assessmentpanelinvite/deleteInvite")
+                .param("email", email)
+                .param("competitionId", String.valueOf(competitionId)))
+                .andExpect(status().isNoContent());
+
+        verify(assessmentPanelInviteServiceMock, only()).deleteInvite(email, competitionId);
+    }
+
+    @Test
+    public void deleteAllInvites() throws Exception {
+        long competitionId = 1L;
+
+        when(assessmentPanelInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/assessmentpanelinvite/deleteAllInvites")
+                .param("competitionId", String.valueOf(competitionId)))
+                .andExpect(status().isNoContent());
+
+        verify(assessmentPanelInviteServiceMock).deleteAllInvites(competitionId);
     }
 }
