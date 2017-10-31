@@ -534,7 +534,7 @@ Project Finance user can edit and save Lead Partner's 20% of labour costs option
     And the user clicks the button/link         jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link         css=[data-target="overhead-default-percentage"] label
     Then verify percentage and total            2    7%   £11,886
-    When the user clicks the button/link        css=button[name="save-eligibility"]
+    When the user clicks the button/link        css=.button[name="save-eligibility"]
     Then the user should see the text in the element        css=section:nth-of-type(2) span[class='finance-total']:nth-of-type(3) span    20%
     And the user should see the text in the element         css=section:nth-of-type(2) span[class='finance-total']:nth-of-type(1)   £11,886
     And the user should see the element         jQuery=section:nth-of-type(2) a:contains("Edit")
@@ -547,7 +547,7 @@ Project Finance user can Edit and Save Lead Partner's no overhead costs option
     And the user clicks the button/link    css=[data-target="overhead-none"] label
     Then the user should see the element     jQuery=h3:contains("No overhead costs")
     And the user should see the element     jQuery=p:contains("You are not currently applying for overhead costs")
-    When the user clicks the button/link    css=button[name="save-eligibility"]
+    When the user clicks the button/link    css=.button[name="save-eligibility"]
     Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
     And the user should see the element     jQuery=section:nth-of-type(2) button:contains("£0")
 
@@ -556,12 +556,12 @@ Project Finance user can edit and save Lead Partner's calculate overheads option
     [Tags]
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link    css=[data-target="overhead-total"] label
-    And the user clicks the button/link    css=button[name="save-eligibility"]
+    And the user clicks the button/link    css=.button[name="save-eligibility"]
     Then the user should see the element    jQuery=section:nth-of-type(2) button span:contains("0%")
     And the user should see the element     jQuery=section:nth-of-type(2) button span:contains("£0")
     When the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     css=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  ${empty}
-    And the user clicks the button/link     css=button[name="save-eligibility"]
+    And the user clicks the button/link     css=.button[name="save-eligibility"]
     And the user clicks the button/link    jQuery=.button-secondary:contains("Return to finance checks")
 
 Project Finance user can enter overhead values for Lead Partner manually
@@ -570,7 +570,7 @@ Project Finance user can enter overhead values for Lead Partner manually
     When the user clicks the button/link    css=a.eligibility-0
     And the user clicks the button/link    jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field     css=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
-    Then the user clicks the button/link    css=button[name="save-eligibility"]
+    Then the user clicks the button/link    css=.button[name="save-eligibility"]
     Then verify percentage and total        2    1%   £1,954
     When the user clicks the button/link    jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     Then verify total costs of project      £172,034
@@ -682,7 +682,7 @@ Project Finance user can edit and save partner's 20% of labour costs option
     And the user clicks the button/link         jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link         css=[data-target="overhead-default-percentage"] label
     Then verify percentage and total            2    7%   £11,886
-    When the user clicks the button/link        css=button[name="save-eligibility"]
+    When the user clicks the button/link        css=.button[name="save-eligibility"]
     Then the user should see the text in the element        css=section:nth-of-type(2) span[class='finance-total']:nth-of-type(3) span    20%
     And the user should see the text in the element         css=section:nth-of-type(2) span[class='finance-total']:nth-of-type(1)   £11,886
     And the user should see the element         jQuery=section:nth-of-type(2) a:contains("Edit")
@@ -695,7 +695,7 @@ Project Finance user can edit and save Partner's no overhead costs option
     And the user clicks the button/link         css=[data-target="overhead-none"] label
     Then the user should see the element        jQuery=h3:contains("No overhead costs")
     And the user should see the element         jQuery=p:contains("You are not currently applying for overhead costs")
-    When the user clicks the button/link        css=button[name="save-eligibility"]
+    When the user clicks the button/link        css=.button[name="save-eligibility"]
     Then the user should see the element        jQuery=section:nth-of-type(2) button span:contains("0%")
     And the user should see the element         jQuery=section:nth-of-type(2) button:contains("£0")
 
@@ -704,19 +704,19 @@ Project Finance user can edit and save in Partner's calculate overheads option
     [Tags]
     When the user clicks the button/link        jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user clicks the button/link         css=[data-target="overhead-total"] label
-    And the user clicks the button/link         css=button[name="save-eligibility"]
+    And the user clicks the button/link         css=.button[name="save-eligibility"]
     Then the user should see the element        jQuery=section:nth-of-type(2) button span:contains("0%")
     And the user should see the element         jQuery=section:nth-of-type(2) button span:contains("£0")
     When the user clicks the button/link        jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field    css=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  ${empty}
-    And the user clicks the button/link         css=button[name="save-eligibility"]
+    And the user clicks the button/link         css=.button[name="save-eligibility"]
 
 Project Finance user can enter overhead values for partner manually
     [Documentation]     INFUND-7577
     [Tags]
     When the user clicks the button/link         jQuery=section:nth-of-type(2) a:contains("Edit")
     And the user enters text to a text field    css=section:nth-of-type(2) input[id^="cost-overheads"][id$="calculate"]  1954
-    Then the user clicks the button/link        css=button[name="save-eligibility"]
+    Then the user clicks the button/link        css=.button[name="save-eligibility"]
     Then verify percentage and total            2    1%   £1,954
     When the user clicks the button/link        jQuery=section:nth-of-type(2) button:contains("Overhead costs")
     Then verify total costs of project          £172,034
