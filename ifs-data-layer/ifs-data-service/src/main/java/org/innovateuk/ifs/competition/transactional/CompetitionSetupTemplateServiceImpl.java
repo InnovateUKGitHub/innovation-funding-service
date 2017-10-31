@@ -61,7 +61,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private QuestionReprioritisationService questionPriorityService;
 
     @Override
-    public ServiceResult<Competition> createCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
+    public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
         CompetitionType competitionType = competitionTypeRepository.findOne(competitionTypeId);
         Competition template = competitionType.getTemplate();
 
@@ -86,7 +86,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     }
 
     @Override
-    public ServiceResult<Question> createDefaultForApplicationSection(Competition competition) {
+    public ServiceResult<Question> addDefaultAssessedQuestionToCompetition(Competition competition) {
         //Perform checks
         if (competition == null || competitionIsNotInSetupOrReadyToOpenState(competition)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
@@ -104,7 +104,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     }
 
     @Override
-    public ServiceResult<Void> deleteQuestionInApplicationSection(Long questionId) {
+    public ServiceResult<Void> deleteAssessedQuestionInCompetition(Long questionId) {
         Question question = questionRepository.findOne(questionId);
 
         if (question.getCompetition() == null || !question.getCompetition().getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {

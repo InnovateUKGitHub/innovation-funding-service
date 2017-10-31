@@ -79,7 +79,7 @@ public class CompetitionSetupServiceImplTest {
 		long typeId = 4L;
 		long competitionId = 2L;
     	Competition competitionTemplate = newCompetition().build();
-		when(competitionSetupTemplateService.createCompetitionByCompetitionTemplate(competitionId, typeId)).thenReturn(ServiceResult.serviceSuccess(competitionTemplate));
+		when(competitionSetupTemplateService.initializeCompetitionByCompetitionTemplate(competitionId, typeId)).thenReturn(ServiceResult.serviceSuccess(competitionTemplate));
 
 		ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(competitionId, typeId);
     	assertTrue(result.isSuccess());

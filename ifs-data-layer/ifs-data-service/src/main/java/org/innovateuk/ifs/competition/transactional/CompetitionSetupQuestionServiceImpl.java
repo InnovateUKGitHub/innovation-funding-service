@@ -124,14 +124,14 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     @Transactional
     public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(Long competitionId) {
         return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
-                .andOnSuccess(competition -> competitionSetupTemplateService.createDefaultForApplicationSection(competition))
+                .andOnSuccess(competition -> competitionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition))
                 .andOnSuccess(question -> getByQuestionId(question.getId()));
     }
 
     @Override
     @Transactional
     public ServiceResult<Void> delete(Long questionId) {
-        competitionSetupTemplateService.deleteQuestionInApplicationSection(questionId);
+        competitionSetupTemplateService.deleteAssessedQuestionInCompetition(questionId);
 
         return serviceSuccess();
     }

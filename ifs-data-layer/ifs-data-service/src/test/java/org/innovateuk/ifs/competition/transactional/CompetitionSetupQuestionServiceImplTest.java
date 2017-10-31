@@ -229,7 +229,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
     @Test
     public void test_delete() {
         long questionId = 1L;
-        when(competitionSetupTemplateService.deleteQuestionInApplicationSection(questionId)).thenReturn(serviceSuccess());
+        when(competitionSetupTemplateService.deleteAssessedQuestionInCompetition(questionId)).thenReturn(serviceSuccess());
         ServiceResult<Void> result = service.delete(questionId);
         assertTrue(result.isSuccess());
     }
@@ -241,7 +241,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         Competition competition = newCompetition().build();
         Question newlyCreatedQuestion = newQuestion().withId(questionId).build();
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
-        when(competitionSetupTemplateService.createDefaultForApplicationSection(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
+        when(competitionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceSuccess(newlyCreatedQuestion));
         when(questionRepository.findOne(questionId)).thenReturn(newlyCreatedQuestion);
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
@@ -266,7 +266,7 @@ public class CompetitionSetupQuestionServiceImplTest extends BaseServiceUnitTest
         Long competitionId = 22L;
         Competition competition = newCompetition().build();
         when(competitionRepositoryMock.findById(competitionId)).thenReturn(competition);
-        when(competitionSetupTemplateService.createDefaultForApplicationSection(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
+        when(competitionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition)).thenReturn(serviceFailure(COMPETITION_NOT_EDITABLE));
 
         ServiceResult<CompetitionSetupQuestionResource> result = service.createByCompetitionId(competitionId);
         assertTrue(result.isFailure());
