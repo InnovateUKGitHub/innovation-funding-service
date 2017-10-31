@@ -1104,15 +1104,15 @@ Project finance user adds, modifies and removes labour rows
     And the user adds data into labour row         4  test  2000  100
     And the user clicks the button/link            jQuery=h3:contains("Labour") + #collapsible-0 button:contains("Add another role")
     And the user adds data into labour row         5  test 1  1450  100
-    Then verify percentage and total               1    3%    £ 5,886
+    Then verify percentage and total               1    3%    £5,886
     When the user clicks the button/link           jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(3) button:contains('Remove')
     And the user clears the text from the element  jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossAnnualSalary"]
     And the user enters text to a text field       jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(1) [name^="labour-grossAnnualSalary"]    100
     And the user clicks the button/link            css=section:nth-of-type(1) button[name=save-eligibility]
-    Then verify percentage and total               1    2%    £ 4,748
-    And the user should see the element            jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(6) input[value="£ 1,626"]
-    And the user should see the element            jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(8) input[value="£ 1,179"]
-    And the user should not see the element        jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(4) input[value="£ 976"]  # This is the row which was removed
+    Then verify percentage and total               1    2%    £4,748
+    And the user should see the element            jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(6) input[value="£1,626"]
+    And the user should see the element            jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(8) input[value="£1,179"]
+    And the user should not see the element        jQuery=h3:contains("Labour") + #collapsible-0 tr:nth-of-type(4) input[value="£976"]  # This is the row which was removed
 
 *** Keywords ***
 Custom suite setup
