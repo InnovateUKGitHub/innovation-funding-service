@@ -15,7 +15,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorServiceImpl;
 import org.innovateuk.ifs.competition.transactional.template.DefaultApplicationQuestionFactory;
-import org.innovateuk.ifs.competition.transactional.template.QuestionPriorityServiceImpl;
+import org.innovateuk.ifs.competition.transactional.template.QuestionReprioritisationService;
 import org.innovateuk.ifs.competition.transactional.template.QuestionTemplatePersistorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,7 +58,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private QuestionRepository questionRepository;
 
     @Autowired
-    private QuestionPriorityServiceImpl questionPriorityService;
+    private QuestionReprioritisationService questionPriorityService;
 
     @Override
     public ServiceResult<Competition> createCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {

@@ -15,11 +15,21 @@ public class ApplicationQuestionForm extends AbstractApplicationQuestionForm {
     @Valid
     private List<GuidanceRowForm> guidanceRows = new ArrayList<>();
 
+    private boolean removable;
+
     public List<GuidanceRowForm> getGuidanceRows() {
         return guidanceRows;
     }
 
     public void setGuidanceRows(List<GuidanceRowForm> guidanceRows) {
         this.guidanceRows = guidanceRows;
+    }
+
+    public boolean isRemovable() {
+        return removable;
+    }
+
+    public void setRemovable(boolean removable) {
+        this.removable = removable;
     }
 }
