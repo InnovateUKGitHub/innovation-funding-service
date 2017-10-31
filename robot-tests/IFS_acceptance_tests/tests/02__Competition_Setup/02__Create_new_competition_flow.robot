@@ -407,7 +407,7 @@ Application: Application details
 Application: Scope
     [Documentation]  INFUND-5634 INFUND-5635
     Given the user clicks the button/link         link=Scope
-#    Then the user should see the element          jQuery=h1:contains("Scope")  TODO  IFS-2052
+    Then the user should see the element          jQuery=h1:contains("Scope")
     And the user should see the text in the page  You can edit this question for the applicant as well as the guidance for assessors.
     When the user clicks the button/link    link=Edit this question
     And The user fills the empty question fields
@@ -435,7 +435,7 @@ Application: Scope Assessment questions
 Application: Project Summary
     [Documentation]  INFUND-5636 INFUND-5637
     Given the user clicks the button/link    link=Project summary
-#    And the user should see the element    jQuery=h1:contains("Project summary")  TODO IFS-2052
+    And the user should see the element      jQuery=h1:contains("Project summary")
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     When the user clicks the button/link    link=Edit this question
     And The user fills the empty question fields
