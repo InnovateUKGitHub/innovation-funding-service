@@ -14,11 +14,10 @@ import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHa
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
@@ -40,13 +39,12 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static org.innovateuk.ifs.workflow.resource.State.*;
+import static org.innovateuk.ifs.workflow.resource.State.IN_PANEL;
 
 /**
  * Transactional and secured service providing operations around {@link org.innovateuk.ifs.assessment.domain.Assessment} data.
@@ -76,7 +74,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
 
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
 
 
     @Override
@@ -174,7 +172,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     private int getParticipantCountStatistic(long competitionId, ParticipantStatus status, List<Long> inviteIds) {
-        return competitionParticipantRepository.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, ASSESSOR, status, inviteIds);
+        return assessmentPanelParticipantRepository.countByCompetitionIdAndRoleAndStatusAndInviteIdIn(competitionId, PANEL_ASSESSOR, status, inviteIds);
     }
 
     @Override

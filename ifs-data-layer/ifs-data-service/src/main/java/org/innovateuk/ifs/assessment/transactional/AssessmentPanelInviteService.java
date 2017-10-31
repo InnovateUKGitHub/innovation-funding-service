@@ -2,15 +2,15 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
+import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.data.domain.Pageable;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.springframework.security.access.method.P;
-import org.springframework.security.access.prepost.PreAuthorize;
-
 import java.util.List;
-
 
 /**
  * Service for managing {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite}s.
@@ -59,6 +59,11 @@ public interface AssessmentPanelInviteService {
             description = "The Competition Admin user and Project Finance users can create assessment panel invites for existing users")
     ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInvites);
 
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'READ_ASSESSMENT_PANEL_INVITES')")
+    @SecuredBySpring(value = "READ_ASSESSMENT_PANEL_INVITES",
+            description = "An Assessor can view assessor panel invites provided that the invites belong to them")
+    ServiceResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId);
+
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_PANEL_INVITE_OVERVIEW_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve assessment panel invitation overview by competition")
@@ -94,4 +99,14 @@ public interface AssessmentPanelInviteService {
             description = "The System Registration user can check for the presence of a User on an invite or the presence of a User with the invited e-mail address",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "DELETE_INVITE",
+            description = "The Competition Admins and Project Finance users can delete an assessment panel invite")
+    ServiceResult<Void> deleteInvite(String email, long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "DELETE_ALL_INVITES",
+            description = "The Competition Admins and Project Finance users can delete all the assessment panel invites")
+    ServiceResult<Void> deleteAllInvites(long competitionId);
 }
