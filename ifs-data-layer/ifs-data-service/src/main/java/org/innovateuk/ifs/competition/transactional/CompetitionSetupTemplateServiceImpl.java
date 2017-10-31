@@ -27,6 +27,7 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.transactional.CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY;
@@ -36,6 +37,8 @@ import static org.innovateuk.ifs.competition.transactional.CompetitionSetupServi
  */
 @Service
 public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemplateService {
+    private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
+
     @Autowired
     private SectionRepository sectionRepository;
 
@@ -90,12 +93,11 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     @Override
     public ServiceResult<Question> addDefaultAssessedQuestionToCompetition(Competition competition) {
-        //Perform checks
         if (competition == null || competitionIsNotInSetupOrReadyToOpenState(competition)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        Section applicationQuestionsSection = sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), "Application questions");
+        Section applicationQuestionsSection = sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), ASSESSED_QUESTIONS_SECTION_NAME);
         Question question = defaultApplicationQuestionCreator.buildQuestion(competition);
         question.setSection(applicationQuestionsSection);
         question.setCompetition(competition);
@@ -108,7 +110,11 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     @Override
     public ServiceResult<Void> deleteAssessedQuestionInCompetition(Long questionId) {
-        Question question = questionRepository.findOne(questionId);
+        Question question = questionRepository.findFirstByIdAndSectionName(questionId, ASSESSED_QUESTIONS_SECTION_NAME);
+
+        if(questionRepository.countByCompetitionIdAndSectionName(question.getCompetition().getId(), ASSESSED_QUESTIONS_SECTION_NAME) <= 1) {
+            return serviceFailure(new Error(GENERAL_FORBIDDEN));
+        }
 
         if (question.getCompetition() == null || !question.getCompetition().getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
