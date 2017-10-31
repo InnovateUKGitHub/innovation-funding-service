@@ -4,7 +4,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.service.CompetitionFeedbackRestService;
+import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +25,7 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
     private CompetitionRestService competitionRestService;
 
     @Autowired
-    private CompetitionFeedbackRestService competitionFeedbackRestService;
+    private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
 
     @Override
@@ -50,7 +50,7 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
 
     @Override
     public List<CompetitionSearchResultItem> getPreviousCompetitions() {
-        return competitionFeedbackRestService.findFeedbackReleasedCompetitions().getSuccessObjectOrThrowException();
+        return competitionPostSubmissionRestService.findFeedbackReleasedCompetitions().getSuccessObjectOrThrowException();
     }
 
     @Override

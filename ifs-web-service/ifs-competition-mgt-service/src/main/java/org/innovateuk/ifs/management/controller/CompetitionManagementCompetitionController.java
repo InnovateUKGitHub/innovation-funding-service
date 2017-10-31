@@ -4,7 +4,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.service.CompetitionFeedbackRestService;
+import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class CompetitionManagementCompetitionController {
     private CompetitionService competitionService;
 
     @Autowired
-    private CompetitionFeedbackRestService competitionFeedbackRestService;
+    private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @Autowired
     private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
@@ -48,19 +48,19 @@ public class CompetitionManagementCompetitionController {
 
     @PostMapping("/{competitionId}/close-assessment")
     public String closeAssessment(@PathVariable("competitionId") Long competitionId) {
-        competitionService.closeAssessment(competitionId).getSuccessObjectOrThrowException();
+        competitionPostSubmissionRestService.closeAssessment(competitionId).getSuccessObjectOrThrowException();
         return "redirect:/competition/" + competitionId;
     }
 
     @PostMapping("/{competitionId}/notify-assessors")
     public String notifyAssessors(@PathVariable("competitionId") Long competitionId) {
-        competitionFeedbackRestService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
+        competitionPostSubmissionRestService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
         return "redirect:/competition/" + competitionId;
     }
 
     @PostMapping("/{competitionId}/release-feedback")
     public String releaseFeedback(@PathVariable("competitionId") Long competitionId) {
-        competitionFeedbackRestService.releaseFeedback(competitionId);
+        competitionPostSubmissionRestService.releaseFeedback(competitionId);
         return "redirect:/dashboard/project-setup";
     }
 }

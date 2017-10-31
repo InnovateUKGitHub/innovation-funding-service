@@ -4,8 +4,8 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.service.CompetitionFeedbackRestService;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInFlightStatsModelPopulator;
@@ -28,7 +28,6 @@ import java.util.List;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
@@ -55,7 +54,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     private MilestoneRestService milestoneRestService;
 
     @Mock
-    private CompetitionFeedbackRestService competitionFeedbackRestService;
+    private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @Mock
     private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
@@ -178,13 +177,13 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     public void closeAssessment() throws Exception {
         long competitionId = 1L;
 
-        when(competitionService.closeAssessment(competitionId)).thenReturn(serviceSuccess());
+        when(competitionPostSubmissionRestService.closeAssessment(competitionId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/close-assessment", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s", competitionId)));
 
-        verify(competitionService).closeAssessment(competitionId);
+        verify(competitionPostSubmissionRestService).closeAssessment(competitionId);
         verifyNoMoreInteractions(competitionService);
     }
 
@@ -192,13 +191,13 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     public void notifyAssessors() throws Exception {
         long competitionId = 1L;
 
-        when(competitionFeedbackRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
+        when(competitionPostSubmissionRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/notify-assessors", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s", competitionId)));
 
-        verify(competitionFeedbackRestService).notifyAssessors(competitionId);
+        verify(competitionPostSubmissionRestService).notifyAssessors(competitionId);
         verifyNoMoreInteractions(competitionService);
     }
 
@@ -206,13 +205,13 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     public void releaseFeedback() throws Exception {
         long competitionId = 1L;
 
-        when(competitionFeedbackRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
+        when(competitionPostSubmissionRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/{competitionId}/release-feedback", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard/project-setup"));
 
-        verify(competitionFeedbackRestService).releaseFeedback(competitionId);
+        verify(competitionPostSubmissionRestService).releaseFeedback(competitionId);
         verifyNoMoreInteractions(competitionService);
     }
 }

@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.service.AssessorCountOptionsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -80,11 +81,6 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public ApplicationPageResource findUnsuccessfulApplications(Long competitionId, int pageNumber, int pageSize, String sortField) {
-        return competitionRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField).getSuccessObjectOrThrowException();
-    }
-
-    @Override
     public List<OrganisationTypeResource> getOrganisationTypes(long id) {
         return competitionRestService.getCompetitionOrganisationType(id).getSuccessObjectOrThrowException();
     }
@@ -97,11 +93,6 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public List<AssessorCountOptionResource> getAssessorOptionsForCompetitionType(Long competitionTypeId) {
         return assessorCountOptionsRestService.findAllByCompetitionType(competitionTypeId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public ServiceResult<Void> closeAssessment(Long competitionId) {
-        return competitionRestService.closeAssessment(competitionId).toServiceResult();
     }
 
     @Override

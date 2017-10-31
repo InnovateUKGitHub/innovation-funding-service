@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -20,12 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/competition")
 public class CompetitionController {
-
-    private static final String DEFAULT_PAGE_NUMBER = "0";
-
-    private static final String DEFAULT_PAGE_SIZE = "20";
-
-    private static final String DEFAULT_SORT_BY = "id";
 
     @Autowired
     private CompetitionService competitionService;
@@ -88,20 +81,6 @@ public class CompetitionController {
     @GetMapping("/non-ifs")
     public RestResult<List<CompetitionSearchResultItem>> nonIfs() {
         return competitionService.findNonIfsCompetitions().toGetResponse();
-    }
-
-    @PutMapping("/{id}/close-assessment")
-    public RestResult<Void> closeAssessment(@PathVariable("id") final Long id) {
-        return competitionService.closeAssessment(id).toPutResponse();
-    }
-
-    @GetMapping("/{competitionId}/unsuccessful-applications")
-    public RestResult<ApplicationPageResource> findUnsuccessfulApplications(@PathVariable("competitionId") final Long competitionId,
-                                                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int pageIndex,
-                                                                            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                                                            @RequestParam(value = "sort", defaultValue = DEFAULT_SORT_BY) String sortField) {
-
-        return competitionService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField).toGetResponse();
     }
 
     @GetMapping("/search/{page}/{size}")

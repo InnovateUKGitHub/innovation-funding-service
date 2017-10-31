@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.status.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionFeedbackRestService;
+import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
@@ -35,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<CompetitionStatusController> {
 
     @Mock
-    private CompetitionFeedbackRestService competitionFeedbackRestService;
+    private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @Test
     public void testViewCompetitionStatusPage() throws Exception {
@@ -56,7 +56,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
 
         when(statusRestService.getCompetitionStatus(competitionId)).thenReturn(restSuccess(competitionProjectsStatus));
 
-        when(competitionFeedbackRestService.getCompetitionOpenQueriesCount(competitionId)).thenReturn(restSuccess(1L));
+        when(competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId)).thenReturn(restSuccess(1L));
 
         MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/status/all"))
                 .andExpect(view().name("project/competition-status-all"))
@@ -82,7 +82,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
                 .andReturn();
         CompetitionStatusViewModel viewModel = (CompetitionStatusViewModel) result.getModelAndView().getModel().get("model");
         Assert.assertEquals(false, viewModel.isShowTabs());
-        verify(competitionFeedbackRestService, never()).getCompetitionOpenQueriesCount(competitionId);
+        verify(competitionPostSubmissionRestService, never()).getCompetitionOpenQueriesCount(competitionId);
     }
 
     @Test
@@ -96,9 +96,9 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
         List<CompetitionOpenQueryResource> openQueries = Arrays.asList(new CompetitionOpenQueryResource(1L, 2L, "org", 3L, "proj"));
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
-        when(competitionFeedbackRestService.getCompetitionOpenQueriesCount(competitionId)).thenReturn(restSuccess(1L));
+        when(competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId)).thenReturn(restSuccess(1L));
 
-        when(competitionFeedbackRestService.getCompetitionOpenQueries(competitionId)).thenReturn(restSuccess(openQueries));
+        when(competitionPostSubmissionRestService.getCompetitionOpenQueries(competitionId)).thenReturn(restSuccess(openQueries));
 
 
         MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/status/queries"))
