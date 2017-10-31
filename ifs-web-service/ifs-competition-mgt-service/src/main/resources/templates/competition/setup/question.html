@@ -13,7 +13,7 @@
 
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()}" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.editable} ?  ${competitionSetupForm.question.shortTitle} : #{ifs.application.question.no_heading},subTitle=${competitionName},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${#strings.isEmpty(competitionSetupForm.question.shortTitle)} ? #{ifs.application.question.no_heading} : ${competitionSetupForm.question.shortTitle},subTitle=${competitionName},size='heading-xlarge'" />
 
     <p class="extra-margin" th:unless="${model.general.state.preventEdit}">
         You can edit this question for the applicant as well as the guidance for assessors. </p>
