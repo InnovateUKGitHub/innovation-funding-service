@@ -780,7 +780,7 @@ the user is able to configure the new question
     the user enters text to a text field  question.assessmentGuidance   The better you understand the problem the simpler your explanation is.
     the user enters text to a text field  guidanceRows[0].justification  This the 9-10 Justification
     the user enters text to a text field  guidanceRows[1].justification  This the 7-8 Justification
-    the user enters text to a text field  guidanceRows[2].justification  This the 4-6 Justification
+    the user enters text to a text field  guidanceRows[2].justification  This the 5-6 Justification
     the user enters text to a text field  guidanceRows[3].justification  This the 3-4 Justification
     the user enters text to a text field  guidanceRows[4].justification  This the 1-2 Justification
     the user enters text to a text field  question.assessmentMaxWords  120
@@ -802,7 +802,7 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery=dt:contains("Guidance") + dd:contains("The better you understand the problem the simpler your explanation is.")
     the user should see the element  jQuery=dt:contains("9-10") + dd:contains("This the 9-10 Justification")
     the user should see the element  jQuery=dt:contains("7-8") + dd:contains("This the 7-8 Justification")
-    the user should see the element  jQuery=dt:contains("4-6") + dd:contains("This the 4-6 Justification")
+    the user should see the element  jQuery=dt:contains("5-6") + dd:contains("This the 5-6 Justification")
     the user should see the element  jQuery=dt:contains("3-4") + dd:contains("This the 3-4 Justification")
     the user should see the element  jQuery=dt:contains("1-2") + dd:contains("This the 1-2 Justification")
     the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("120")
