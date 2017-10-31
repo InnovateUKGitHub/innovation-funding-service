@@ -8,5 +8,5 @@ public interface CompetitionTemplatePersistorService extends BaseTemplatePersist
     Competition persistByEntity(Competition precedingEntityType);
 
     @NotSecured("Has to be secured by calling service.")
-     void cleanByEntityId(Long competitionId);
+    void cleanByEntityId(Long competitionId);
 }

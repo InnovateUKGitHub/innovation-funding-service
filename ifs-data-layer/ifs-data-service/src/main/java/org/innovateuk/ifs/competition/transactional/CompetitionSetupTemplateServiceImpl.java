@@ -14,7 +14,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorServiceImpl;
-import org.innovateuk.ifs.competition.transactional.template.DefaultApplicationQuestionFactory;
+import org.innovateuk.ifs.competition.transactional.template.DefaultApplicationQuestionCreator;
 import org.innovateuk.ifs.competition.transactional.template.QuestionReprioritisationService;
 import org.innovateuk.ifs.competition.transactional.template.QuestionTemplatePersistorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private SectionRepository sectionRepository;
 
     @Autowired
-    private DefaultApplicationQuestionFactory defaultApplicationQuestionFactory;
+    private DefaultApplicationQuestionCreator defaultApplicationQuestionCreator;
 
     @Autowired
     private CompetitionTemplatePersistorServiceImpl competitionTemplatePersistor;
@@ -93,7 +93,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         }
 
         Section applicationQuestionsSection = sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), "Application questions");
-        Question question = defaultApplicationQuestionFactory.buildQuestion(competition);
+        Question question = defaultApplicationQuestionCreator.buildQuestion(competition);
         question.setSection(applicationQuestionsSection);
         question.setCompetition(competition);
 

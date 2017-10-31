@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
-public class DefaultApplicationQuestionFactory {
+public class DefaultApplicationQuestionCreator {
 
     private static final Integer DEFAULT_APPLICANT_WORD_COUNT = 400;
     private static final Integer DEFAULT_FEEDBACK_WORD_COUNT = 100;

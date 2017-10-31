@@ -26,7 +26,7 @@ public class QuestionTemplatePersistorServiceImpl implements QuestionTemplatePer
     private EntityManager entityManager;
 
     @Autowired
-    private DefaultApplicationQuestionFactory defaultApplicationQuestionFactory;
+    private DefaultApplicationQuestionCreator defaultApplicationQuestionCreator;
 
     @Transactional
     public List<Question> persistByEntity(List<Question> questions) {
