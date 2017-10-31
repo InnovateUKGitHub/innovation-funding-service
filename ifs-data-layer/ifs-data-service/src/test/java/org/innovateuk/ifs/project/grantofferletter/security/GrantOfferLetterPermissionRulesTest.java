@@ -212,28 +212,6 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testCompAdminsCanSendGrantOfferLetterDocuments() {
-
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-
-        setUpUserAsCompAdmin(project, user);
-
-        assertTrue(rules.contractsTeamSendGrantOfferLetter(project.getId(), user));
-    }
-
-    @Test
-    public void testNonCompAdminsCannotSendGrantOfferLetterDocuments() {
-
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-
-        setUpUserNotAsCompAdmin(project, user);
-
-        assertFalse(rules.contractsTeamSendGrantOfferLetter(project.getId(), user));
-    }
-
-    @Test
     public void testCompAdminsCanApproveSignedGrantOfferLetters() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -302,9 +280,9 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(projectFinanceUser()) || user.equals(compAdminUser())) {
-                assertTrue(rules.internalAdminUserCanViewSendGrantOfferLetterStatus(project, user));
+                assertTrue(rules.internalAdminAndSupportUserCanViewSendGrantOfferLetterStatus(project, user));
             } else {
-                assertFalse(rules.internalAdminUserCanViewSendGrantOfferLetterStatus(project, user));
+                assertFalse(rules.internalAdminAndSupportUserCanViewSendGrantOfferLetterStatus(project, user));
             }
         });
     }

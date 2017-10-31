@@ -5,10 +5,9 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.stereotype.Component;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
+
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 @PermissionRules
 @Component
@@ -25,7 +24,7 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             value = "DOWNLOAD_GRANT_OFFER",
             description = "Competitions team & Project Finance can download grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
     public boolean internalUsersCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);
+        return isInternalAdminOrSupport(user);
     }
 
     @PermissionRule(
@@ -40,7 +39,7 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             value = "VIEW_GRANT_OFFER",
             description = "Competitions team & Project Finance can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
     public boolean internalUsersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);
+        return isInternalAdminOrSupport(user);
     }
 
     @PermissionRule(
@@ -72,17 +71,10 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
-            value = "SEND_GRANT_OFFER_LETTER",
-            description = "Contracts team can send the grant offer letter")
-    public boolean contractsTeamSendGrantOfferLetter(Long projectId, UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN);
-    }
-
-    @PermissionRule(
             value = "APPROVE_SIGNED_GRANT_OFFER",
             description = "Competitions team & Project Finance can approve signed grant offer letter")
     public boolean internalUsersCanApproveSignedGrantOfferLetter(Long projectId, UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);
+        return isInternalAdmin(user);
     }
 
     @PermissionRule(
@@ -101,9 +93,9 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
-            description = "Internal users can view the send status of Grant Offer Letter for a project")
-    public boolean internalAdminUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
-        return isInternalAdmin(user);
+            description = "Internal and support users can view the send status of Grant Offer Letter for a project")
+    public boolean internalAdminAndSupportUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        return isInternalAdminOrSupport(user);
     }
 
     @PermissionRule(
