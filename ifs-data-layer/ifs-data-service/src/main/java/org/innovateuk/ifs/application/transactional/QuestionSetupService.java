@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public interface QuestionSetupService {
 
-    @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can mark sections incomplete")
+    @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can mark sections complete")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<SetupStatusResource> markQuestionInSetupAsComplete(Long questionId, Long competitionId, CompetitionSetupSection parentSection);
 

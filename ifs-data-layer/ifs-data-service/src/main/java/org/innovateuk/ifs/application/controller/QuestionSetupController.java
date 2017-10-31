@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 /**
- * Controller for handling statuses on the questions
+ * Controller for handling the statuses of the question resources during competition setup
  */
 @RestController
 @RequestMapping("/question/setup")
-public class QuestionSetupStatusController {
+public class QuestionSetupController {
 
     @Autowired
     private QuestionSetupService questionSetupService;

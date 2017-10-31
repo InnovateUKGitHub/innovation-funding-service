@@ -17,7 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class QuestionSetupStatusControllerTest extends BaseControllerMockMVCTest<QuestionSetupStatusController> {
+public class QuestionSetupControllerTest extends BaseControllerMockMVCTest<QuestionSetupController> {
 
     private static final String BASE_URL = "/question/setup";
 
@@ -25,8 +25,8 @@ public class QuestionSetupStatusControllerTest extends BaseControllerMockMVCTest
     private QuestionSetupService questionSetupService;
 
     @Override
-    protected QuestionSetupStatusController supplyControllerUnderTest() {
-        return new QuestionSetupStatusController();
+    protected QuestionSetupController supplyControllerUnderTest() {
+        return new QuestionSetupController();
     }
 
     @Test
