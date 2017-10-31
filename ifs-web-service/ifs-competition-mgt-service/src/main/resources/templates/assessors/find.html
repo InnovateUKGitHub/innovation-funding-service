@@ -62,7 +62,7 @@
             <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
         </li>
         <li class="not-selected">
-            <a th:href="@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Overview</a>
+            <a th:href="@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Pending and rejected</a>
         </li>
         <li class="not-selected">
             <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
@@ -120,7 +120,7 @@
           th:action="@{/competition/{competitionId}/assessors/find/addSelected(competitionId=${model.competitionId})}"
           th:object="${assessorSelectionForm}"
           data-multipage-select=""
-          novalidate="novalidate" 
+          novalidate="novalidate"
           th:attr="data-total-checkboxes=${model.pagination.totalCount}">
 
         <div class="grid-row sorting">

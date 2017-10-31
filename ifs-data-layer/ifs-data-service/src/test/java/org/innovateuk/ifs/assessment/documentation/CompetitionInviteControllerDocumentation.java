@@ -34,7 +34,8 @@ import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResour
 import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResourceDocs.competitionInviteStatisticsResourceFields;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -476,6 +477,24 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 ));
 
         verify(competitionInviteServiceMock, only()).deleteInvite(email, competitionId);
+    }
+
+    @Test
+    public void deleteAllInvites() throws Exception {
+        long competitionId = 1L;
+
+        when(competitionInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/competitioninvite/deleteAllInvites")
+                .param("competitionId", String.valueOf(competitionId)))
+                .andExpect(status().isNoContent())
+                .andDo(document("competitioninvite/{method-name}",
+                        requestParameters(
+                                parameterWithName("competitionId").description("Id of the competition")
+                        )
+                ));
+
+        verify(competitionInviteServiceMock, only()).deleteAllInvites(competitionId);
     }
 
     @Test
