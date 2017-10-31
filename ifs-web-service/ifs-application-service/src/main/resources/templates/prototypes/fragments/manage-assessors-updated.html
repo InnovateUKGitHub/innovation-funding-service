@@ -1193,6 +1193,231 @@
 </div>
 
 
+<!-- =========================== Manage assessors innovation areas =========================== -->
+<th:block th:fragment="prototype-assessor-innovation-areas">
+    <fieldset>
+        <legend>
+            <h2 class="heading-medium">Innovation areas</h2>
+                <th:block th:if="${assessor == 'non-registered'}">
+                    <p class="form-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
+                </th:block>
+        </legend>
+        <div class="collapsible">
+            <h2>Emerging and enabling
+                <span class="input-counter">0 selected</span>
+            </h2>
+            <fieldset class="collapsible-content">
+                <legend class="visuallyhidden">Emerging and enabling</legend>
+                <div class="multiple-choice">
+                    <input id="innovation-area-1-1" name="innovation-area" type="checkbox" value="Creative industries" />
+                    <label for="innovation-area-1-1">Creative industries</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-1-2" name="innovation-area" type="checkbox" value="Digital industries" />
+                    <label for="innovation-area-1-2">Digital industries</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-1-3" name="innovation-area" type="checkbox" value="Digital technology" />
+                    <label for="innovation-area-1-3">Digital technology</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-1-4" name="innovation-area" type="checkbox" value="Electronics, sensors and photonics" />
+                    <label for="innovation-area-1-4">Electronics, sensors and photonics</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-1-5" name="innovation-area" type="checkbox" value="Robotics and autonomous systems" />
+                    <label for="innovation-area-1-5">Robotics and autonomous systems</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-1-6" name="innovation-area" type="checkbox" value="Space technology" />
+                    <label for="innovation-area-1-6">Space technology</label>
+                </div>
+            </fieldset>
 
+            <h2>Health and life sciences
+                <span class="input-counter">0 selected</span>
+            </h2>
+            <fieldset class="collapsible-content">
+                <legend class="visuallyhidden">Emerging and enabling</legend>
+                <div class="multiple-choice">
+                    <input id="innovation-area-2-1" name="innovation-area" type="checkbox" value="Advanced therapies" />
+                    <label for="innovation-area-2-1">Advanced therapies</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-2-2" name="innovation-area" type="checkbox" value="Biosciences" />
+                    <label for="innovation-area-2-2">Biosciences</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-2-3" name="innovation-area" type="checkbox" value="Diagnostics, medical technology and devices" />
+                    <label for="innovation-area-2-3">Diagnostics, medical technology and devices</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-2-4" name="innovation-area" type="checkbox" value="Digital health" />
+                    <label for="innovation-area-2-4">Digital health</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-2-5" name="innovation-area" type="checkbox" value="Independent living and wellbeing" />
+                    <label for="innovation-area-2-5">Independent living and wellbeing</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-2-6" name="innovation-area" type="checkbox" value="Precision medicine" />
+                    <label for="innovation-area-2-6">Precision medicine</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-2-7" name="innovation-area" type="checkbox" value="Preclinical technologies and drug target discovery" />
+                    <label for="innovation-area-2-7">Preclinical technologies and drug target discovery</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-2-8" name="innovation-area" type="checkbox" value="Therapeutics and medicines development" />
+                    <label for="innovation-area-2-8">Therapeutics and medicines development</label>
+                </div>
+            </fieldset>
+
+            <h2 class="open">Infrastructure systems
+                <span class="input-counter">0 selected</span>
+            </h2>
+            <fieldset class="collapsible-content">
+                <legend class="visuallyhidden">Emerging and enabling</legend>
+                <div class="multiple-choice">
+                    <input id="innovation-area-3-1" name="innovation-area" type="checkbox" value="Connected transport" />
+                    <label for="innovation-area-3-1">Connected transport</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-3-2" name="innovation-area" type="checkbox" value="Energy - other" />
+                    <label for="innovation-area-3-2">Energy - other</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-3-3" name="innovation-area" type="checkbox" value="Energy efficiency" />
+                    <label for="innovation-area-3-3">Energy efficiency</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-3-4" name="innovation-area" type="checkbox" value="Energy systems" />
+                    <label for="innovation-area-3-4">Energy systems</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-3-5" name="innovation-area" type="checkbox" value="Nuclear fission" />
+                    <label for="innovation-area-3-5">Nuclear fission</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-3-6" name="innovation-area" type="checkbox" value="Offshore wind" />
+                    <label for="innovation-area-3-6">Offshore wind</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-3-7" name="innovation-area" type="checkbox" value="Smart infrastructure" />
+                    <label for="innovation-area-3-7">Smart infrastructure</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-3-8" name="innovation-area" type="checkbox" value="Urban living" />
+                    <label for="innovation-area-3-8">Urban living</label>
+                </div>
+            </fieldset>
+
+
+            <h2 class="open">Materials and manufacturing
+                <span class="input-counter">0 selected</span>
+            </h2>
+            <fieldset class="collapsible-content">
+                <legend class="visuallyhidden">Emerging and enabling</legend>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-1" name="innovation-area" type="checkbox" value="Additive layer manufacturing (ALM)" />
+                    <label for="innovation-area-4-1">Additive layer manufacturing (ALM)</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-2" name="innovation-area" type="checkbox" value="Assembly / disassembly / joining" />
+                    <label for="innovation-area-4-2">Assembly / disassembly / joining</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-3" name="innovation-area" type="checkbox" value="Ceramic / electronic / functional materials" />
+                    <label for="innovation-area-4-3">Ceramic / electronic / functional materials</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-4" name="innovation-area" type="checkbox" value="Chemical / bio processes" />
+                    <label for="innovation-area-4-4">Chemical / bio processes</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-5" name="innovation-area" type="checkbox" value="Composite materials" />
+                    <label for="innovation-area-4-5">Composite materials</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-6" name="innovation-area" type="checkbox" value="Digital manufacturing" />
+                    <label for="innovation-area-4-6">Digital manufacturing</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-7" name="innovation-area" type="checkbox" value="Electronic materials and manufacturing" />
+                    <label for="innovation-area-4-7">Electronic materials and manufacturing</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-8" name="innovation-area" type="checkbox" value="Forming technologies" />
+                    <label for="innovation-area-4-8">Forming technologies</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-9" name="innovation-area" type="checkbox" value="Materials, process and manufacturing design technologies" />
+                    <label for="innovation-area-4-9">Materials, process and manufacturing design technologies</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-10" name="innovation-area" type="checkbox" value="Forming technologies" />
+                    <label for="innovation-area-4-10">Forming technologies</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-11" name="innovation-area" type="checkbox" value="Materials, process and manufacturing design technologies" />
+                    <label for="innovation-area-4-11">Materials, process and manufacturing design technologies</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-12" name="innovation-area" type="checkbox" value="Metals / metallurgy" />
+                    <label for="innovation-area-4-12">Metals / metallurgy</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-13" name="innovation-area" type="checkbox" value="Nanotechnology / nanomaterials" />
+                    <label for="innovation-area-4-13">Nanotechnology / nanomaterials</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-14" name="innovation-area" type="checkbox" value="Polymers and plastics" />
+                    <label for="innovation-area-4-14">Polymers and plastics</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-15" name="innovation-area" type="checkbox" value="Surface engineering, coatings and thin films" />
+                    <label for="innovation-area-4-15">Surface engineering, coatings and thin films</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-4-15" name="innovation-area" type="checkbox" value="Sustainable materials" />
+                    <label for="innovation-area-4-15">Sustainable materials</label>
+                </div>
+            </fieldset>
+
+
+            <h2 class="open">Transport
+                <span class="input-counter">0 selected</span>
+            </h2>
+            <fieldset class="collapsible-content">
+                <legend class="visuallyhidden">Emerging and enabling</legend>
+                <div class="multiple-choice">
+                    <input id="innovation-area-5-1" name="innovation-area" type="checkbox" value="Connected and autonomous vehicles" />
+                    <label for="innovation-area-5-1">Connected and autonomous vehicles</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-5-2" name="innovation-area" type="checkbox" value="Energy and automotive" />
+                    <label for="innovation-area-5-2">Energy and automotive</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-5-3" name="innovation-area" type="checkbox" value="Low carbon vehicles" />
+                    <label for="innovation-area-5-3">Low carbon vehicles</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-5-4" name="innovation-area" type="checkbox" value="Marine transport" />
+                    <label for="innovation-area-5-4">Marine transport</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-5-5" name="innovation-area" type="checkbox" value="Other transport" />
+                    <label for="innovation-area-5-5">Other transport</label>
+                </div>
+                <div class="multiple-choice">
+                    <input id="innovation-area-5-6" name="innovation-area" type="checkbox" value="Rail transport" />
+                    <label for="innovation-area-5-6">Rail transport</label>
+                </div>
+            </fieldset>
+
+        </div>
+    </fieldset>
+</th:block>
 
 </html>

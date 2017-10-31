@@ -183,7 +183,7 @@
                                         <a th:href="${(param.status != null ? '/prototypes/5052-view-applications?comp=' + param.status[0] : '/prototypes/5052-view-applications?comp=Open')}" class="" th:classappend="${(param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Applications: All, submitted, non-submitted, ineligible</a>
                                       </li>
                                       <li>
-                                        <a th:href="${(param.status != null ? '/prototypes/5062-manage-assessors?comp=' + param.status[0] : '/prototypes/5062-manage-assessors?comp=Open')}" class="">Invite assessors to assess the competition</a>
+                                        <a th:href="${(param.status != null ? '/prototypes/5062-manage-assessors?comp=' + param.status[0] : '/prototypes/IFS-6-invite-assessors?comp=Open')}" class="">Invite assessors to assess the competition</a>
                                       </li>
                                       <li>
                                         <a th:href="${(param.status != null ? '/prototypes/5052-manage-assessments?comp=' + param.status[0] : '/prototypes/5052-manage-assessments')}" class="" th:classappend="${(param.status == null or param.status[0] == 'Open' or param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Assessor management: Assignments</a>

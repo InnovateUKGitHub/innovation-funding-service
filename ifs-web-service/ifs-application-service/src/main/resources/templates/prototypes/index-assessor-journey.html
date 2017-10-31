@@ -25,11 +25,40 @@
 
 	<th:block th:insert="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='demo'" />
 
-    <h1 class="heading-large">Manage assessment panel - comp administrators</h1>
+    <h1 class="heading-large">Competition administrators</h1>
 
     <ul class="list list-bullet">
-        <li><a href="/prototypes/5721-dashboard?status=Closed">Competiton dashboard</a></li>
+        <li><a href="/prototypes/3115-comp-dashboard">Competiton dashboard</a></li>
     </ul>
+
+    <h2 class="heading-medium">Invite assessors</h2>
+
+    <ul class="list list-bullet">
+        <li><a href="/prototypes/IFS-6-invite-assessors?comp=Open">Invite assessor - find tab</a></li>
+        <li><a href="/prototypes/IFS-6-invite-assessors?tab=invite&comp=Open">Invite assessor - invite tab</a></li>
+    </ul>
+
+    <h2 class="heading-medium">Manage assessors</h2>
+
+    <ul class="list list-bullet">
+        <li><a href="/prototypes/IFS-6-manage-assessors-active">Manage assessors - active tab</a></li>
+        <li><a href="/prototypes/IFS-6-manage-assessors-active?tab=inactive">Manage assessors - inactive tab</a></li>
+        <li><a href="/prototypes/IFS-6-manage-assessors-active?tab=pending">Manage assessors - pending tab 0 selections</a></li>
+        <li><a href="/prototypes/IFS-6-assessor-profile-update?action=new">Manage assessors - add a new assessor</a></li>
+        <li><a href="/prototypes/IFS-6-manage-assessors-active?tab=pending&#38;pending=1">Manage assessors - pending tab 1 selection</a></li>
+        <li><a href="/prototypes/IFS-6-assessor-profile-update?action=new">Add a new assessor</a></li>
+    </ul>
+
+    <h2 class="heading-medium">Assessor profile</h2>
+
+    <ul class="list-list-bullet">
+        <li><a href="/prototypes/IFS-6-assessor-profile.html">Assessor profile - skills tab</a></li>
+        <li><a href="/prototypes/IFS-6-assessor-profile.html?tab=doi">Assessor profile - DOI tab</a></li>
+        <li><a href="/prototypes/IFS-6-assessor-profile.html?tab=history">Assessor profile - history tab</a></li>
+        <li><a href="/prototypes/IFS-6-assessor-profile-update">Edit profile</a></li>
+    </ul>
+
+    <hr />
 
     <h2 class="heading-medium">Manage assessment panel</h2>
 

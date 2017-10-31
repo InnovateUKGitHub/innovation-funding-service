@@ -243,81 +243,81 @@
 
             <div class="grid-row">
                 <div class="column-three-quarters">
-                    <h2 class="heading-small no-margin-top">Find registered assessors and add them to your invite list for this competition.</h2>
+                    <h2 class="heading-small no-margin-top">Find registered assessors. Add them to the invite list using the tickboxes.</h2>
                 </div>
             </div>
 
-            <!--
-            <form method="GET">
-              <div class="search-filters extra-margin">
-                  <div class="grid-row">
-                    <div class="column-two-thirds">
-                      <label class="form-label" for="filterInnovationArea">Innovation area</label>
-                      <select name="innovationArea" id="filterInnovationArea" class="form-control extra-margin-bottom">
-                        <option value="" selected="selected">Any</option>
-                        <optgroup label="Open">
+            <th:block th:if="${invite == 'assessor-comp'}">
+                <form method="GET">
+                  <div class="search-filters extra-margin">
+                      <div class="grid-row">
+                        <div class="column-two-thirds">
+                          <label class="form-label" for="filterInnovationArea">Innovation area</label>
+                          <select name="innovationArea" id="filterInnovationArea" class="form-control extra-margin-bottom">
+                            <option value="" selected="selected">Any</option>
+                            <optgroup label="Open">
 
-                        </optgroup><optgroup label="Health and life sciences">
-                        <option value="16">Advanced therapies</option>
-                        <option value="19">Biosciences</option>
-                        <option value="18">Diagnostics, medical technology and devices</option>
-                        <option value="20">Digital health</option>
-                        <option value="21">Independent living and wellbeing</option>
-                        <option value="17">Precision medicine</option>
-                        <option value="47">Preclinical technologies and drug target discovery</option>
-                        <option value="48">Therapeutic and medicine development</option>
-                        </optgroup><optgroup label="Materials and manufacturing">
-                        <option value="39">Additive layer manufacturing (ALM)</option>
-                        <option value="24">Assembly / disassembly / joining</option>
-                        <option value="38">Ceramic / electronic / functional materials</option>
-                        <option value="40">Chemical / bio processes</option>
-                        <option value="44">Composite materials</option>
-                        <option value="22">Digital manufacturing</option>
-                        <option value="42">Electronic materials and manufacturing</option>
-                        <option value="23">Forming technologies</option>
-                        <option value="25">Materials, process and manufacturing design technologies</option>
-                        <option value="45">Metals / metallurgy</option>
-                        <option value="26">Nanotechnology / nanomaterials</option>
-                        <option value="46">Polymers and plastics</option>
-                        <option value="41">Surface engineering, coatings and thin films</option>
-                        <option value="43">Sustainable materials</option>
-                        </optgroup><optgroup label="Emerging and enabling">
-                        <option value="12">Creative industries</option>
-                        <option value="5">Digital industries</option>
-                        <option value="14">Digital technology</option>
-                        <option value="10">Electronics, sensors and photonics</option>
-                        <option value="7">Emerging technology</option>
-                        <option value="8">Robotics and autonomous systems</option>
-                        <option value="6">Satellite applications</option>
-                        <option value="15">Space technology</option>
-                        </optgroup><optgroup label="Infrastructure systems">
-                        <option value="27">Connected transport</option>
-                        <option value="37">Energy - other</option>
-                        <option value="36">Energy efficiency</option>
-                        <option value="30">Energy systems</option>
-                        <option value="31">Nuclear fission</option>
-                        <option value="32">Offshore wind</option>
-                        <option value="29">Smart infrastructure</option>
-                        <option value="28">Urban living</option>
-                        </optgroup><optgroup label="Transport">
-                        <option value="56">Connected and autonomous vehicles</option>
-                        <option value="51">Energy and automotive</option>
-                        <option value="52">Low carbon vehicles</option>
-                        <option value="53">Marine transport</option>
-                        <option value="54">Other transport</option>
-                        <option value="55">Rail transport</option>
-                        </optgroup>
-                      </select>
-                      <a href="?page=0">Clear all filters</a>
+                            </optgroup><optgroup label="Health and life sciences">
+                            <option value="16">Advanced therapies</option>
+                            <option value="19">Biosciences</option>
+                            <option value="18">Diagnostics, medical technology and devices</option>
+                            <option value="20">Digital health</option>
+                            <option value="21">Independent living and wellbeing</option>
+                            <option value="17">Precision medicine</option>
+                            <option value="47">Preclinical technologies and drug target discovery</option>
+                            <option value="48">Therapeutic and medicine development</option>
+                            </optgroup><optgroup label="Materials and manufacturing">
+                            <option value="39">Additive layer manufacturing (ALM)</option>
+                            <option value="24">Assembly / disassembly / joining</option>
+                            <option value="38">Ceramic / electronic / functional materials</option>
+                            <option value="40">Chemical / bio processes</option>
+                            <option value="44">Composite materials</option>
+                            <option value="22">Digital manufacturing</option>
+                            <option value="42">Electronic materials and manufacturing</option>
+                            <option value="23">Forming technologies</option>
+                            <option value="25">Materials, process and manufacturing design technologies</option>
+                            <option value="45">Metals / metallurgy</option>
+                            <option value="26">Nanotechnology / nanomaterials</option>
+                            <option value="46">Polymers and plastics</option>
+                            <option value="41">Surface engineering, coatings and thin films</option>
+                            <option value="43">Sustainable materials</option>
+                            </optgroup><optgroup label="Emerging and enabling">
+                            <option value="12">Creative industries</option>
+                            <option value="5">Digital industries</option>
+                            <option value="14">Digital technology</option>
+                            <option value="10">Electronics, sensors and photonics</option>
+                            <option value="7">Emerging technology</option>
+                            <option value="8">Robotics and autonomous systems</option>
+                            <option value="6">Satellite applications</option>
+                            <option value="15">Space technology</option>
+                            </optgroup><optgroup label="Infrastructure systems">
+                            <option value="27">Connected transport</option>
+                            <option value="37">Energy - other</option>
+                            <option value="36">Energy efficiency</option>
+                            <option value="30">Energy systems</option>
+                            <option value="31">Nuclear fission</option>
+                            <option value="32">Offshore wind</option>
+                            <option value="29">Smart infrastructure</option>
+                            <option value="28">Urban living</option>
+                            </optgroup><optgroup label="Transport">
+                            <option value="56">Connected and autonomous vehicles</option>
+                            <option value="51">Energy and automotive</option>
+                            <option value="52">Low carbon vehicles</option>
+                            <option value="53">Marine transport</option>
+                            <option value="54">Other transport</option>
+                            <option value="55">Rail transport</option>
+                            </optgroup>
+                          </select>
+                          <a href="?page=0">Clear all filters</a>
+                        </div>
+                        <div class="column-third">
+                            <button class="button">Filter</button>
+                        </div>
                     </div>
-                    <div class="column-third">
-                        <button class="button">Filter</button>
-                    </div>
-                </div>
-              </div>
-            </form>
+                  </div>
+                </form>
+            </th:block>
 
-            -->
 
             <div class="grid-row sorting extra-margin">
                 <div class="column-half">
@@ -734,58 +734,33 @@
 
             <div class="grid-row">
                 <div class="column-three-quarters">
-                    <h2 class="heading-small no-margin-top extra-margin-bottom">Invite one or more people to become an assessor for this panel assessment.</h2>
+                    <h2 class="heading-small no-margin-top extra-margin-bottom">
+                        <th:block th:if="${invite == null}">Invite one or more people to become an assessor for this panel assessment</th:block>
+                        <th:block th:if="${invite == 'assessor-comp'}">Invite assessors to this competiton</th:block>
+                    </h2>
                 </div>
             </div>
 
-            <!-- <details class="extra-margin-bottom">
-                <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
+            <div>
+                <details th:unless="${site == 'rc'}">
+                    <summary><span class="summary">Add an unregistered assessor to your list</span></summary>
 
-                <div class="panel">
-                    <form th:action="${#httpServletRequest.requestURI}">
-                        <p>Enter the new assessor's details below and then add them to your invite list.</p>
+                    <div class="panel">
+                        <form th:action="${#httpServletRequest.requestURI}">
+                            <p>Enter new assessor's details below and then add them to your invite list.</p>
 
-                        <div class="form-group">
-                            <label for="grouped-innovation-area" class="form-label-bold">Innovation area</label>
+                            <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-areas" th:with="assessor='non-registered'" />
 
-                            <p class="form-hint">The innovation area will remain the same until you click 'Add assessors to list'.</p>
-
-                            <select class="form-control js-progressive-group-select" aria-label="Innovation sector">
-                              <option value="">Please select an innovation sector</option>
-                              <option value="Open">Open</option>
-                              <option value="Health and life sciences">Health and life sciences</option>
-                              <option value="Materials and manufacturing">Materials and manufacturing</option>
-                              <option value="Emerging and enabling">Emerging and enabling</option>
-                              <option value="Infrastructure systems">Infrastructure systems</option>
-                              <option value="Transport">Transport</option>
-                            </select>
-
-                            <select class="form-control js-progressive-group-selectl" aria-labelledby="innovation-area" id="grouped-innovation-area" disabled="">
-                                <option value="">Please select an innovation area</option>
-                            </select>
-                        </div>
-
-                        <div class="table-display-stacked">
-                            <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-                                <thead>
+                            <div class="table-display-stacked extra-margin-top">
+                                <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+                                    <thead>
                                     <tr>
                                         <th id="invite-label-assessor-name" scope="col" class="width-40-percent">Name</th>
                                         <th id="invite-label-assessor-email" scope="col" class="width-40-percent">Email</th>
                                         <th scope="col"><span class="visuallyhidden">Remove</span></th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <input type="text" id="assessor-name-one" name="assessor-name-one" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
-                                        </td>
-                                        <td>
-                                            <input type="text" id="assessor-email-one" name="assessor-email-one" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
-                                        </td>
-                                        <td>
-
-                                        </td>
-                                    </tr>
+                                    </thead>
+                                    <tbody>
                                     <tr id="prototype-assessor-row-two">
                                         <td>
                                             <input type="text" id="assessor-name-two" name="assessor-name-two" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
@@ -797,22 +772,23 @@
                                             <a href="#" id="prototype-remove-two">Remove</a>
                                         </td>
                                     </tr>
-                                </tbody>
-                            </table>
-                            <p class="extra-margin alignright">
-                                <a href="#" id="prototype-assessor-add-row">Add another assessor of this type</a>
-                            </p>
-                        </div>
+                                    </tbody>
+                                </table>
+                                <p class="extra-margin-top alignright">
+                                    <a href="#" id="prototype-assessor-add-row">Add another assessor of this type</a>
+                                </p>
+                            </div>
 
-                        <div class="alignright extra-margin">
-                            <input type="hidden" name="status" value="invite-new" />
-                            <input type="hidden" name="tab" value="invite" />
-                            <a class="button no-margin " id="prototype-add-assessors">Add assessors to list</a>
-                        </div>
+                            <div>
+                                <input type="hidden" name="status" value="invite-new" />
+                                <input type="hidden" name="tab" value="invite" />
+                                <a class="button no-margin " id="prototype-add-assessors">Add assessors to list</a>
+                            </div>
 
-                    </form>
-                </div>
-            </details> -->
+                        </form>
+                    </div>
+                </details>
+            </div>
 
             <div class="grid-row sorting">
               <div class="column-half">
