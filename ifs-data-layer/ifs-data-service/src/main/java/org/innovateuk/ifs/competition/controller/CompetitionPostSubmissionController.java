@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Controller for handling feedback part of the competition
+ * Controller for handling the competition after submission of the application phase
  */
 @RestController
 @RequestMapping("/competition/postSubmission")
