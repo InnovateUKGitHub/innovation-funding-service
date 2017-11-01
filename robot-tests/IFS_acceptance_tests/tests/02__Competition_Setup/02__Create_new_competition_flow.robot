@@ -622,7 +622,7 @@ The Applicant is able to apply to the competition once is Open and see the corre
     [Documentation]  IFS-182
     [Tags]  HappyPath  MySQL
     [Setup]  the competition moves to Open state
-    Given log in as a different user  ${lead_applicant}
+    Given log in as a different user           &{lead_applicant_credentials}
     And logged in user applies to competition  ${competitionTitle}
     Then the user should see the element       jQuery=li:contains("Tell us how your project is innovative.")
     And the user should not see the element    jQuery=li:contains("Costs and value for money")
@@ -838,4 +838,4 @@ the user should be able to see the read only view of question correctly
 the competition moves to Open state
     ${yesterday} =  get yesterday
     Connect to Database  @{database}
-    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE competition_id=`${competitionId}` AND `type`='OPEN_DATE';
+    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
