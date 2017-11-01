@@ -393,7 +393,6 @@ Application: Application details
     And the user should see the element    jQuery=h1:contains("Application details")
     And the user should see the text in the page    These are the default questions included in the application details section.
     When the user selects the radio button    useResubmissionQuestion    false
-#    And The user clicks the button/link    css=.button[value="Done"]
     And the user clicks the button/link     jQuery=.button:contains("Done")
     And the user clicks the button/link    link=Application details
     Then The user should see the text in the page    Application details
@@ -545,7 +544,7 @@ Complete button is visible when all sections are complete
     When the user clicks the button/link   link=Competition setup
     Then the user clicks the button/link  jQuery=a:contains("Complete")
     And the user clicks the button/link   jQuery=a:contains("Done")
-    And the user should see the text in the page  Setup of competition has now been completed and will automatically open on the date set.
+    And the user should see the text in the page  jQuery=p:contains("Setup of competition has now been completed and will automatically open on the date set.")
     When the user clicks the button/link   link=All competitions
     And the user navigates to the page     ${CA_UpcomingComp}
     Then the competition should show in the correct section  css=section:nth-of-type(2) ul    Test competition
@@ -581,7 +580,6 @@ Assessor: Mark as Done then Edit again
 Assessor: Should have a Green Check
     [Documentation]  INFUND-5641
     [Tags]  HappyPath
-    # TODO Pending due to IFS-493
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=li:contains("Assessors") span:contains("Complete")
 
