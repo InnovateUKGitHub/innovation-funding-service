@@ -30,7 +30,7 @@ public class QuestionSetupRestServiceTest extends BaseRestServiceUnitTest<Questi
         final Long competitionId = 2L;
         final CompetitionSetupSection parentSection = APPLICATION_FORM;
         final Long questionId = 4L;
-        setupPutWithRestResultExpectations(String.format("%s/markAsComplete/%d/%s/%d", questionSetupRestURL, competitionId, parentSection, questionId), Void.class, null, null);
+        setupPutWithRestResultExpectations(String.format("%s/mark-as-complete/%d/%s/%d", questionSetupRestURL, competitionId, parentSection, questionId), Void.class, null, null);
 
         RestResult<Void> result = service.markQuestionSetupComplete(competitionId, parentSection, questionId);
 
@@ -42,7 +42,7 @@ public class QuestionSetupRestServiceTest extends BaseRestServiceUnitTest<Questi
         final Long competitionId = 2L;
         final CompetitionSetupSection parentSection = APPLICATION_FORM;
         final Long questionId = 4L;
-        setupPutWithRestResultExpectations(String.format("%s/markAsIncomplete/%d/%s/%d", questionSetupRestURL, competitionId, parentSection, questionId), Void.class, null, null);
+        setupPutWithRestResultExpectations(String.format("%s/mark-as-incomplete/%d/%s/%d", questionSetupRestURL, competitionId, parentSection, questionId), Void.class, null, null);
 
         RestResult<Void> result = service.markQuestionSetupIncomplete(competitionId, parentSection, questionId);
 
@@ -52,7 +52,7 @@ public class QuestionSetupRestServiceTest extends BaseRestServiceUnitTest<Questi
     @Test
     public void testGetQuestionStatuses() {
         Map<Long, Boolean> resultToReturn = asMap(232L, TRUE, 487L, FALSE);
-        setupGetWithRestResultExpectations(questionSetupRestURL + "/getStatuses/1/APPLICATION_FORM", longStatusMap(), resultToReturn);
+        setupGetWithRestResultExpectations(questionSetupRestURL + "/get-statuses/1/APPLICATION_FORM", longStatusMap(), resultToReturn);
 
         Map<Long, Boolean> resultStatuses = service.getQuestionStatuses(1L, APPLICATION_FORM).getSuccessObject();
 

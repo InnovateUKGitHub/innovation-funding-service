@@ -19,16 +19,16 @@ public class QuestionSetupRestServiceImpl extends BaseRestService implements Que
 
     @Override
     public RestResult<Void> markQuestionSetupComplete(long competitionId, CompetitionSetupSection parentSection, long questionId) {
-        return putWithRestResult(String.format("%s/markAsComplete/%d/%s/%d", questionSetupRestURL, competitionId, parentSection, questionId), Void.class);
+        return putWithRestResult(String.format("%s/mark-as-complete/%d/%s/%d", questionSetupRestURL, competitionId, parentSection, questionId), Void.class);
     }
 
     @Override
     public RestResult<Void> markQuestionSetupIncomplete(long competitionId, CompetitionSetupSection parentSection, long questionId) {
-        return putWithRestResult(String.format("%s/markAsIncomplete/%d/%s/%d", questionSetupRestURL, competitionId, parentSection, questionId), Void.class);
+        return putWithRestResult(String.format("%s/mark-as-incomplete/%d/%s/%d", questionSetupRestURL, competitionId, parentSection, questionId), Void.class);
     }
 
     @Override
     public RestResult<Map<Long, Boolean>> getQuestionStatuses(long competitionId, CompetitionSetupSection parentSection) {
-        return getWithRestResult(String.format("%s/getStatuses/%d/%s", questionSetupRestURL, competitionId, parentSection), longStatusMap());
+        return getWithRestResult(String.format("%s/get-statuses/%d/%s", questionSetupRestURL, competitionId, parentSection), longStatusMap());
     }
 }
