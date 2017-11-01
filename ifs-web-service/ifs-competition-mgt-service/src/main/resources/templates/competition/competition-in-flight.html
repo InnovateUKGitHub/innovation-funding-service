@@ -29,7 +29,7 @@
                         <dd th:text="${model.innovationArea}">Health care</dd>
 
                         <dt>Funding available</dt>
-                        <dd th:text="'£'+${#numbers.formatDecimal(model.funding, 0 , 'COMMA', 0, 'POINT')}">&pound;250,000</dd>
+                        <dd>&pound;<th:block th:text="${#numbers.formatInteger(model.funding, 0, 'DEFAULT')}">&pound;250,000</th:block></dd>
 
                         <dt>Innovation Lead</dt>
                         <dd th:text="${model.lead}">Mark Daily</dd>
