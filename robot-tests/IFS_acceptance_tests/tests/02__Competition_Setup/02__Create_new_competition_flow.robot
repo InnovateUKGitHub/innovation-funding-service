@@ -509,10 +509,10 @@ Complete button is visible when all sections are complete
     # The following steps will move the comp from "In preparation" to "Ready to Open" state
     # This also checks that complete button is visible when user edits a section
     When the user clicks the button/link    link=Public content
-    And the user fills in the Public content and publishes   Test competition
-    When the user clicks the button/link   link=Competition setup
-    Then the user clicks the button/link   link=Complete
-    And the user should see the element    jQuery=p:contains("Setup of competition has now been completed and will automatically open on the date set.")
+    Then the user fills in the Public content and publishes   Test competition
+    And the user clicks the button/link   link=Competition setup
+    When the user clicks the button/link   link=Complete
+    Then the user should see the element    jQuery=p:contains("Setup of competition has now been completed and will automatically open on the date set.")
     And the user clicks the button/link    link=Done
     When the user clicks the button/link   link=All competitions
     And the user navigates to the page     ${CA_UpcomingComp}
