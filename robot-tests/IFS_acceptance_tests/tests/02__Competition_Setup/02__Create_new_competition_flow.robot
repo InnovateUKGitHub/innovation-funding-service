@@ -441,67 +441,21 @@ Application: Project Summary
     And the user clicks the button/link    link=Project summary
     Then The user should see the text in the page    Project summary
     And the user checks the question fields
-    [Teardown]    The user clicks the button/link    link=Application
 
-Application:Public description
-    [Documentation]    IFS-743
+Application: marking questions as complete
+    [Documentation]  IFS-743
     [Tags]
-    When the user clicks the button/link        link=Public description
-    and the user clicks the button/link         css=.button[value="Done"]
-
-Application:Approach and innovation
-    [Documentation]    IFS-743
-    [Tags]
-    When the user clicks the button/link        link=Approach and innovation
-    and the user clicks the button/link         css=.button[value="Done"]
-
-Application:Team and resources
-    [Documentation]    IFS-743
-    [Tags]
-    When the user clicks the button/link        link=Team and resources
-    and the user clicks the button/link         css=.button[value="Done"]
-
-Application:Market awareness
-    [Documentation]    IFS-743
-    [Tags]
-    When the user clicks the button/link        link=Market awareness
-    and the user clicks the button/link         css=.button[value="Done"]
-
-Application:Outcomes and route to market
-    [Documentation]    IFS-743
-    [Tags]
-    When the user clicks the button/link        link=Outcomes and route to market
-    and the user clicks the button/link         css=.button[value="Done"]
-
-Application:Wider impacts
-    [Documentation]    IFS-743
-    [Tags]
-    When the user clicks the button/link        link=Wider impacts
-    and the user clicks the button/link         css=.button[value="Done"]
-
-Application:Project management
-    [Documentation]    IFS-743
-    [Tags]
-    When the user clicks the button/link        link=Project management
-    and the user clicks the button/link         css=.button[value="Done"]
-
-Application:Risks
-    [Documentation]    IFS-743
-    [Tags]
-    When the user clicks the button/link        link=Risks
-    and the user clicks the button/link         css=.button[value="Done"]
-
-Application:Additionality
-    [Documentation]    IFS-743
-    [Tags]
-    When the user clicks the button/link        link=Additionality
-    and the user clicks the button/link         css=.button[value="Done"]
-
-Application:Costs and value for money
-    [Documentation]    IFS-743
-    [Tags]
-    When the user clicks the button/link        link=Costs and value for money
-    and the user clicks the button/link         css=.button[value="Done"]
+    When the user clicks the button/link           link=Application
+    Then the user marks each question as complete  Public description
+    And the user marks each question as complete   Approach and innovation
+    And the user marks each question as complete   Team and resources
+    And the user marks each question as complete   Market awareness
+    And the user marks each question as complete   Outcomes and route to market
+    And the user marks each question as complete   Wider impacts
+    And the user marks each question as complete   Project management
+    And the user marks each question as complete   Risks
+    And the user marks each question as complete   Additionality
+    And the user marks each question as complete   Costs and value for money
 
 Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773
@@ -516,12 +470,27 @@ Application: Finances
     And the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
     And The user clicks the button/link      jQuery=button:contains("Done")
 
-Application: Mark as done should display green tick
+Application: Done enabled when all questions are marked as complete
     [Documentation]    INFUND-5964
-    Given The user clicks the button/link       jQuery=button:contains(Done)
+    Given the user should see the element      jQuery=li:contains("Application details") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Project summary") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Public description") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Scope") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Need or challenge") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Approach and innovation") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Team and resources") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Market awareness") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Outcomes and route to market") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Wider impacts") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Project management") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Risks") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Additionality") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Costs and value for money") .task-status-complete
+    And the user should see the element        jQuery=li:contains("Finances") .task-status-complete
+    When The user clicks the button/link        jQuery=button:contains("Done")
     Then The user should not see the element    jQuery=button:contains(Done)
     And The user clicks the button/link         link=Competition setup
-    Then the user should see the element        css=li:nth-child(5) .task-status-complete
+    Then the user should see the element        jQuery=li:contains("Application") .task-status-complete
 
 Complete button disabled when sections are edited
     [Documentation]  IFs-648
@@ -532,7 +501,7 @@ Complete button disabled when sections are edited
     Then the user should see the element  css=#compCTA[disabled="disabled"]
     When the user clicks the button/link  link=Eligibility
     And the user clicks the button/link   jQuery=button:contains("Done")
-    And the user clicks the button/link   link=Competition setup
+   [Teardown]  And the user clicks the button/link   link=Competition setup
 
 Complete button is visible when all sections are complete
     [Documentation]    INFUND-4468
@@ -542,9 +511,9 @@ Complete button is visible when all sections are complete
     When the user clicks the button/link    link=Public content
     And the user fills in the Public content and publishes   Test competition
     When the user clicks the button/link   link=Competition setup
-    Then the user clicks the button/link  jQuery=a:contains("Complete")
-    And the user clicks the button/link   jQuery=a:contains("Done")
+    Then the user clicks the button/link   link=Complete
     And the user should see the text in the page  jQuery=p:contains("Setup of competition has now been completed and will automatically open on the date set.")
+    And the user clicks the button/link    link=Done
     When the user clicks the button/link   link=All competitions
     And the user navigates to the page     ${CA_UpcomingComp}
     Then the competition should show in the correct section  css=section:nth-of-type(2) ul    Test competition
@@ -581,7 +550,7 @@ Assessor: Should have a Green Check
     [Documentation]  INFUND-5641
     [Tags]  HappyPath
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    jQuery=li:contains("Assessors") span:contains("Complete")
+    Then the user should see the element    jQuery=li:contains("Assessors") .task-status-complete
 
 Innovation leads can be added to a competition
     [Documentation]    IFS-192, IFS-1104
@@ -762,3 +731,8 @@ the user enters multiple innovation areas
 
 The user should not see the selected option again
     List Should not Contain Value    css=[id="innovationAreaCategoryIds[1]"]    Biosciences
+
+the user marks each question as complete
+    [Arguments]  ${question_link}
+    the user clicks the button/link  link=${question_link}
+    the user clicks the button/link  css=.button[value="Done"]
