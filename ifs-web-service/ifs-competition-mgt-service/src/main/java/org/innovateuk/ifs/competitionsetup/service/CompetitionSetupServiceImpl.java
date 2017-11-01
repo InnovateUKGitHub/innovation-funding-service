@@ -275,13 +275,17 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId()).getSuccessObjectOrThrowException();
 		
 		Optional<CompetitionSetupSection> notDoneSection = getRequiredSectionsForReadyToOpen().stream()
-                .filter(section -> (!statuses.get(section).isPresent() || !statuses.get(section).get()))
+                .filter(section -> isNotDoneSection(statuses, section))
                 .findFirst();
 
 		return !notDoneSection.isPresent();
 	}
 
-	@Override
+    private boolean isNotDoneSection(Map<CompetitionSetupSection, Optional<Boolean>> statuses, CompetitionSetupSection section) {
+        return (!statuses.get(section).isPresent() || !statuses.get(section).get());
+    }
+
+    @Override
 	public ServiceResult<Void> setCompetitionAsReadyToOpen(Long competitionId) {
 		CompetitionResource competitionResource = competitionService.getById(competitionId);
 		if (competitionResource.getCompetitionStatus() == CompetitionStatus.READY_TO_OPEN) {

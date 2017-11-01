@@ -96,10 +96,7 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     public ServiceResult<Void> publishByCompetitionId(Long competitionId) {
         return find(publicContentRepository.findByCompetitionId(competitionId), notFoundError(PublicContent.class, competitionId))
                 .andOnSuccess(this::publish)
-                .andOnSuccess(() -> {
-                    competitionSetupService.markSectionComplete(competitionId, CONTENT);
-                    serviceSuccess();
-                });
+                .andOnSuccess(() -> { competitionSetupService.markSectionComplete(competitionId, CONTENT); });
     }
 
     private ServiceResult<Void> publish(PublicContent publicContent) {
