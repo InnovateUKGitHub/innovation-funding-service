@@ -45,8 +45,9 @@ public class CompetitionSetupController {
         return competitionSetupService.copyFromCompetitionTypeTemplate(competitionId, competitionType).toPostResponse();
     }
 
-    @PostMapping("/generate-competitionCode/{id}")
-    public RestResult<String> generateCompetitionCode(@RequestBody ZonedDateTime dateTime, @PathVariable("id") final Long id) {
+    @PostMapping("/generate-competition-code/{id}")
+    public RestResult<String> generateCompetitionCode(@RequestBody ZonedDateTime dateTime,
+                                                      @PathVariable("id") final Long id) {
         return competitionSetupService.generateCompetitionCode(id, dateTime).toGetResponse();
     }
 
