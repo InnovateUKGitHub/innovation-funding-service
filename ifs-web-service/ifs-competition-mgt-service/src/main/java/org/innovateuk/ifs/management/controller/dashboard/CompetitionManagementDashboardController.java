@@ -9,7 +9,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.viewmodel.dashboard.*;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -17,8 +16,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.stream.Collectors.joining;
 
@@ -41,9 +41,8 @@ public class CompetitionManagementDashboardController {
 
     @GetMapping("/dashboard/live")
     public String live(Model model, UserResource user){
-        boolean supportView = user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions = competitionDashboardSearchService.getLiveCompetitions();
-        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(liveCompetitions, getCompetitionCountResource(liveCompetitions), supportView));
+        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(liveCompetitions, getCompetitionCountResource(liveCompetitions), new DashboardTabsViewModel(user)));
         return TEMPLATE_PATH + "live";
     }
 
@@ -60,40 +59,36 @@ public class CompetitionManagementDashboardController {
 
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model, UserResource user) {
-        final List<CompetitionSearchResultItem> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
-        boolean supportView = user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
+        final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
         model.addAttribute(MODEL_ATTR,
                 new ProjectSetupDashboardViewModel(projectSetupCompetitions,
-                        competitionDashboardSearchService.getCompetitionCounts(), supportView));
+                        competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
 
         return TEMPLATE_PATH + "projectSetup";
     }
 
     @GetMapping("/dashboard/upcoming")
-    public String upcoming(Model model) {
+    public String upcoming(Model model, UserResource user) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> upcomingCompetitions = competitionDashboardSearchService.getUpcomingCompetitions();
 
         model.addAttribute(MODEL_ATTR, new UpcomingDashboardViewModel(upcomingCompetitions,
                 competitionDashboardSearchService.getCompetitionCounts(),
-                formatInnovationAreaNames(upcomingCompetitions)));
+                formatInnovationAreaNames(upcomingCompetitions), new DashboardTabsViewModel(user)));
 
         return TEMPLATE_PATH + "upcoming";
     }
 
     @GetMapping("/dashboard/previous")
     public String previous(Model model, UserResource user) {
-        boolean supportView = user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD);
-        model.addAttribute(MODEL_ATTR, new PreviousDashboardViewModel(competitionDashboardSearchService.getPreviousCompetitions().stream().sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate())).collect(Collectors.toList()),
-                competitionDashboardSearchService.getCompetitionCounts(), supportView));
+        model.addAttribute(MODEL_ATTR, new PreviousDashboardViewModel(competitionDashboardSearchService.getPreviousCompetitions(),
+                competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
 
         return TEMPLATE_PATH + "previous";
     }
 
     @GetMapping("/dashboard/non-ifs")
-    public String nonIfs(Model model) {
-        model.addAttribute(MODEL_ATTR, new NonIFSDashboardViewModel(competitionDashboardSearchService.getNonIfsCompetitions(),
-                competitionDashboardSearchService.getCompetitionCounts()));
-
+    public String nonIfs(Model model, UserResource user) {
+        model.addAttribute(MODEL_ATTR, new NonIFSDashboardViewModel(competitionDashboardSearchService.getNonIfsCompetitions(), competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
         return TEMPLATE_PATH + "non-ifs";
     }
 
@@ -104,7 +99,7 @@ public class CompetitionManagementDashboardController {
         String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
         model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page - 1));
         model.addAttribute("searchQuery", searchQuery);
-        model.addAttribute("supportView", user.hasRole(UserRoleType.SUPPORT) || user.hasRole(UserRoleType.INNOVATION_LEAD));
+        model.addAttribute("tabs", new DashboardTabsViewModel(user));
         return TEMPLATE_PATH + "search";
     }
 

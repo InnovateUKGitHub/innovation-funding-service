@@ -14,9 +14,9 @@
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
     </form>
-    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'projectSetup'}, counts=${model.counts}, supportView=${model.supportView})" />
+    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'projectSetup'}, counts=${model.counts}, tabs=${model.tabs})" />
 
-    <section th:with="projectSetupComps=${model.competitions}">
+    <section th:with="projectSetupComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}">
         <h2 class="heading-medium"
             th:text="'Project setup ('+${model.counts.projectSetupCount}+')'"></h2>
         <ul class="list-overview">
