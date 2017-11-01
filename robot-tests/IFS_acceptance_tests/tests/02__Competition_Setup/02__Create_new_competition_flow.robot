@@ -421,6 +421,7 @@ Application: Scope Assessment questions
     When the user clicks the button/link    css=.button[value="Done"]
     And the user clicks the button/link    link=Scope
     Then the user checks the scope assessment questions
+    And the user should not see the element  css=input
     And the user clicks the button/link    jQuery=a:contains("Edit this question")
     And the user selects the radio button    question.writtenFeedback    0
     And the user should not be able to edit the scope feedback
@@ -449,8 +450,6 @@ Application:Public description
     [Tags]
     When the user clicks the button/link        link=Public description
     and the user clicks the button/link         css=.button[value="Done"]
-
-# TODO sections each section mark as complete
 
 Application:Approach and innovation
     [Documentation]    IFS-743
@@ -504,12 +503,7 @@ Application:Costs and value for money
     [Documentation]    IFS-743
     [Tags]
     When the user clicks the button/link        link=Costs and value for money
-    When the user enters text to a text field
     and the user clicks the button/link         css=.button[value="Done"]
-
-#TODO edit initial details and check the application questions still retain values
-
-
 
 Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773
@@ -544,10 +538,9 @@ Complete button disabled when sections are edited
     When the user clicks the button/link  link=Eligibility
     And the user clicks the button/link   jQuery=button:contains("Edit")
     And the user clicks the button/link   link=Competition setup
-    Then the user should see the element  css=#compCTA[disabled="disabled"]
+    Then the element should be disabled   css=#compCTA[disabled="disabled"]
+#    Then the user should see the element  css=#compCTA[disabled="disabled"]
 #    Add check for IFS-1856 ie click on disabled Complete should not give ISE
-    When the user clicks the button/link   css=#compCTA[disabled="disabled"]
-    then the user should not see an error in the page
     When the user clicks the button/link  link=Eligibility
     And the user clicks the button/link   jQuery=button:contains("Done")
     And the user clicks the button/link   link=Competition setup
@@ -561,7 +554,6 @@ Complete button disabled when sections are edited
     And the user navigates to the page     ${CA_UpcomingComp}
     Then the competition should show in the correct section  css=section:nth-of-type(2) ul    Test competition
     # The above line checks that the section 'Ready to Open' there is a competition named Test competition
-
 
 Application: Edit again should mark as incomplete
     [Documentation]    INFUND-5964
@@ -632,14 +624,14 @@ Assessor: Mark as Done then Edit again
 
 Assessor: Should have a Green Check
     [Documentation]  INFUND-5641
-    [Tags]  HappyPath  Pending
+    [Tags]  HappyPath
     # TODO Pending due to IFS-493
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    jQuery=li:contains("Assessors") > img[alt$="section is done"]
-    And the user clicks the button/link     jQuery=.button:contains("Complete")
-    And the user clicks the button/link     jQuery=button:contains("Done")
-    When the user navigates to the page     ${CA_UpcomingComp}
-    Then the user should see the element    h2:contains("In preparation") ~ ul:contains("Test competition")
+#    And the user clicks the button/link     jQuery=.button:contains("Complete")
+#    And the user clicks the button/link     jQuery=button:contains("Done")
+#    When the user navigates to the page     ${CA_UpcomingComp}
+#    Then the user should see the element    h2:contains("In preparation") ~ ul:contains("Test competition")
 
 Innovation leads can be added to a competition
     [Documentation]    IFS-192, IFS-1104
