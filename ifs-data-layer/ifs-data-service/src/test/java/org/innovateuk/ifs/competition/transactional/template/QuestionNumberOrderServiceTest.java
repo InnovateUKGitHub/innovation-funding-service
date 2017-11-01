@@ -9,10 +9,11 @@ import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.mockito.Matchers.refEq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-/**
- * TODO: Add description
- */
 public class QuestionNumberOrderServiceTest extends BaseServiceUnitTest<QuestionNumberOrderService> {
 
     private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
@@ -25,16 +26,26 @@ public class QuestionNumberOrderServiceTest extends BaseServiceUnitTest<Question
     public void updateAssessedQuestionsNumbers() throws Exception {
         Competition competition = newCompetition().withId(1L).build();
 
-//        when(questionRepositoryMock.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), ASSESSED_QUESTIONS_SECTION_NAME, newlyCreatedQuestion.getPriority()));
-
         List<Question> existingQuestions = newQuestion()
-                .withId(1L, 2L, 3L, 4L)
-                .withPriority(1, 2, 4, 3)
-                .withQuestionNumber("1", "2", "3", null)
+                .withId(1L, 2L, 4L, 3L)
+                .withPriority(1, 2, 3, 4)
+                .withQuestionNumber("1", "6", "3", null)
                 .withCompetition(competition)
                 .build(4);
 
+        when(questionRepositoryMock.findByCompetitionIdAndSectionNameOrderByPriorityAsc(competition.getId(), ASSESSED_QUESTIONS_SECTION_NAME))
+                .thenReturn(existingQuestions);
 
+        service.updateAssessedQuestionsNumbers(competition.getId());
+
+        List<Question> updatedAssessedQuestions = newQuestion()
+                .withId(1L, 2L, 4L, 3L)
+                .withPriority(1, 2, 3, 4)
+                .withQuestionNumber("1", "2", "3", "4")
+                .withCompetition(competition)
+                .build(4);
+
+        verify(questionRepositoryMock, times(1)).save(refEq(updatedAssessedQuestions));
     }
 
 }

@@ -28,9 +28,11 @@ public class QuestionPriorityOrderService {
         Question assessedQuestionWithHighestPriority = questionRepository.findFirstByCompetitionIdAndSectionNameOrderByPriorityDesc(createdQuestion.getCompetition().getId(), ASSESSED_QUESTIONS_SECTION_NAME);
         createdQuestion.setPriority(assessedQuestionWithHighestPriority.getPriority() + 1);
 
+        Question questionSaved = questionRepository.save(createdQuestion);
+
         questionNumberOrderService.updateAssessedQuestionsNumbers(createdQuestion.getCompetition().getId());
 
-        return questionRepository.save(createdQuestion);
+        return questionSaved;
     }
 
     @Transactional
