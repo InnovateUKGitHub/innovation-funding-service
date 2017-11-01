@@ -177,20 +177,20 @@ the finance summary calculations should be correct
     Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(2)    ${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}
     Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(2)    ${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}
     Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(2)    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(1) td:nth-of-type(3)    £${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(3)    £${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(3)    £${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(3)    £${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(1) td:nth-of-type(5)    £${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(5)    £${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(5)    £${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(5)    £${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(1) td:nth-of-type(3)    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(3)    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(3)    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(3)    ${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(1) td:nth-of-type(5)    ${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(5)    ${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(5)    ${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(5)    ${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}
 
 the finance Project cost breakdown calculations should be correct
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(1) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(2) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(4) td:nth-of-type(1)    £${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(1) td:nth-of-type(1)    ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(2) td:nth-of-type(1)    ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(3) td:nth-of-type(1)    ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(4) td:nth-of-type(1)    ${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
 
 the applicant edits the Subcontracting costs section
     the user clicks the button/link    link=Your project costs
@@ -204,9 +204,9 @@ the applicant edits the Subcontracting costs section
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
 the user should see the correct finances change
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
     Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}
 
 The calculations should be correct
     [Arguments]    ${LIST_LOCATOR}    ${SUMMARY_LOCATOR}

@@ -106,8 +106,8 @@ Read only view of the other funding
     [Tags]
     Given the user clicks the button/link  link=Your funding
     Then the user should see the element   jQuery=dt:contains("Funding level") + dd:contains("43")
-    And the user clicks the button/link    jQuery=th:contains("uncle") ~ td:contains("£ 15,000")
-    And the user clicks the button/link    jQuery=th:contains("grandma") ~ td:contains("£ 200,000")
+    And the user clicks the button/link    jQuery=th:contains("uncle") ~ td:contains("£15,000")
+    And the user clicks the button/link    jQuery=th:contains("grandma") ~ td:contains("£200,000")
     And the user should see the element    jQuery=button:contains("Edit")
 
 *** Keywords ***
@@ -136,7 +136,7 @@ the user adds more rows in other funding
     the user enters text to a text field  css=tr:nth-of-type(3) input[name*=fundingAmount]  200000
     the user moves focus to the element   jQuery=button:contains("Mark as complete")
     wait for autosave
-    Textfield Value Should Be             jQuery=label:contains("Total other funding") + input    £ 235,000
+    Textfield Value Should Be             jQuery=label:contains("Total other funding") + input    £235,000
 
 the user changes the research category
     [Documentation]    INFUND-8260

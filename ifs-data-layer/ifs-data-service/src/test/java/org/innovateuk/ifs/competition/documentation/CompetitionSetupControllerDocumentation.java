@@ -15,14 +15,13 @@ import org.springframework.http.MediaType;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceBuilder;
 import static org.innovateuk.ifs.documentation.SetupStatusResourceDocs.setupStatusResourceBuilder;
-import static org.innovateuk.ifs.documentation.SetupStatusResourceDocs.setupStatusResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -52,8 +51,7 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
                         pathParameters(
                                 parameterWithName("competitionId").description("id of the competition on which the section should be marked as complete"),
                                 parameterWithName("section").description("the section to mark as complete")
-                        ),
-                        responseFields(setupStatusResourceFields)
+                        )
                 ));
     }
 
@@ -70,8 +68,7 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
                         pathParameters(
                                 parameterWithName("competitionId").description("id of the competition on which the section should be marked as incomplete"),
                                 parameterWithName("section").description("the section to mark as incomplete")
-                        ),
-                        responseFields(setupStatusResourceFields)
+                        )
                 ));
     }
 
@@ -90,8 +87,7 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
                                 parameterWithName("competitionId").description("id of the competition on which the section should be marked as complete"),
                                 parameterWithName("parentSection").description("the parent section of the section that needs to be marked as complete"),
                                 parameterWithName("subsection").description("the subsection to mark as complete")
-                        ),
-                        responseFields(setupStatusResourceFields)
+                        )
                 ));
     }
 
@@ -110,8 +106,7 @@ public class CompetitionSetupControllerDocumentation extends BaseControllerMockM
                                 parameterWithName("competitionId").description("id of the competition on which the section should be marked as incomplete"),
                                 parameterWithName("parentSection").description("the parent section of the section that needs to be marked as incomplete"),
                                 parameterWithName("subsection").description("the subsection to mark as incomplete")
-                        ),
-                        responseFields(setupStatusResourceFields)
+                        )
                 ));
     }
 
