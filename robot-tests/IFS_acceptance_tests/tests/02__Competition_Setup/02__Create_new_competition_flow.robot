@@ -66,8 +66,8 @@ Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
 
 *** Variables ***
-${landingPage}    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
 ${peter_freeman}  Peter Freeman
+${competitionTitle}  Test competition
 
 *** Test Cases ***
 User can create a new competition
@@ -75,7 +75,7 @@ User can create a new competition
     [Tags]    HappyPath
     Given the user navigates to the page       ${CA_UpcomingComp}
     When the user clicks the button/link       jQuery=.button:contains("Create competition")
-    And The user should not see the element    jQuery= button:contains("Complete")
+    And The user should see the element        css=#compCTA[disabled]
     And The user should not see the element    link=Funding information
     And The user should not see the element    link=Eligibility
     And The user should not see the element    link=Milestones
@@ -158,13 +158,13 @@ Initial Details - drop down menu is populated with comp admin users
 Initial details - Comp Type and Date should not be editable
     [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
     [Tags]    HappyPath
-    And the user enters text to a text field  css=#title  Test competition
+    And the user enters text to a text field  css=#title  ${competitionTitle}
     And The element should be disabled        css=#competitionTypeId
     And The element should be disabled        css=#openingDateDay
     And the user clicks the button/link       jQuery=button:contains("Done")
     Then the user should see the text in the page   1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
-    And the user should see the text in the page    Test competition
+    And the user should see the text in the page    ${competitionTitle}
     And the user should see the text in the page    Open
     And the user should see the text in the page    Biosciences
     And the user should see the text in the page    Creative industries
@@ -173,9 +173,9 @@ Initial details - Comp Type and Date should not be editable
 Initial details - should have a green check
     [Documentation]    INFUND-3002
     [Tags]    HappyPath
-    When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    css=li:nth-child(1) .task-status-complete
-    And the user should not see the element    jQuery=button:contains("Complete")
+    When The user clicks the button/link     link=Competition setup
+    Then the user should see the element     jQuery=li:contains("Initial details") .task-status-complete
+    And the user should see the element      css=#compCTA[disabled]
 
 User should have access to all the sections
     [Documentation]    INFUND-4725, IFS-1104
@@ -208,7 +208,7 @@ New application shows in Preparation section with the new name
     Given the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     And The user clicks the button/link   link=All competitions
     And the user navigates to the page    ${CA_UpcomingComp}
-    Then the competition should show in the correct section    css=section:nth-of-type(1) > ul    Test competition    #This keyword checks if the new competition shows in the "In preparation" test
+    Then the user should see the element  jQuery=section:contains("In preparation") li:contains("${competitionTitle}")
 
 Funding information: calculations
     [Documentation]    INFUND-2985
@@ -259,7 +259,7 @@ Funding information: should have a green check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(2) .task-status-complete
-    And the user should not see the element    jQuery=button:contains("Complete")
+    And the user should see the element     css=#compCTA[disabled]
 
 Eligibility: Contain the correct options
     [Documentation]  INFUND-2989 INFUND-2990 INFUND-9225
@@ -311,7 +311,7 @@ Eligibility: Should have a Green Check
     [Tags]    HappyPath
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(3) .task-status-complete
-    And the user should not see the element    jQuery=button:contains("Complete")
+    And the user should see the element     css=#compCTA[disabled]
 
 Milestones: Page should contain the correct fields
     [Documentation]    INFUND-2993
@@ -346,7 +346,7 @@ Milestones: Green check should show
     [Tags]
     When The user clicks the button/link    link=Competition setup
     Then the user should see the element    css=li:nth-child(4) .task-status-complete
-    And the user should not see the element    jQuery=button:contains("Complete")
+    And the user should see the element     css=#compCTA[disabled]
 
 Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
@@ -467,7 +467,6 @@ Removing an Assessed Application Question
 Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773
     [Tags]  HappyPath
-    [Setup]  the user navigates to the page  ${landingPage}
     Given the user clicks the button/link    link=Finances
     Then the user should see the element     jQuery=h1:contains("Application finances")
     And the user should see the element      jQuery=.panel:contains("The competition template will select the following finance sections for each partner.")
@@ -477,70 +476,89 @@ Application: Finances
     # Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
     When the user selects the radio button   includeGrowthTable  include-growth-table-no
     And the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
-    And The user clicks the button/link      jQuery=button:contains("Save and close")
-    Then the user navigates to the page      ${landingPage}
+    And The user clicks the button/link      css=button[type="submit"]  #Save and close
     When the user clicks the button/link     link=Finances
     Then the user should see the element     jQuery=dt:contains("Include project growth table") ~ dd:contains("No")
-    Then the user should see the element     jQuery=dt:contains("Funding rules for this competition") ~ dd:contains("Funding rules for this competition are now entered.")
+    And the user should see the element      jQuery=dt:contains("Funding rules for this competition") ~ dd:contains("Funding rules for this competition are now entered.")
+    [Teardown]  the user clicks the button/link  link=Return to application questions
 
 Application: Mark as done should display green tick
     [Documentation]    INFUND-5964
-    [Setup]    the user navigates to the page   ${landingPage}
-    Given The user clicks the button/link       jQuery=button:contains(Done)
-    Then The user should not see the element    jQuery=button:contains(Done)
-    And The user clicks the button/link         link=Competition setup
-    Then the user should see the element        css=li:nth-child(5) .task-status-complete
+    [Tags]
+    Given The user clicks the button/link     css=button.button  #Done button
+    Then The user should not see the element  css=button.button
+    When The user clicks the button/link      link=Return to setup overview
+    Then the user should see the element      jQuery=li:contains("Application") .task-status-complete
+
+Public content is required for a Competition to be setup
+    [Documentation]
+    [Tags]
+    Given the user clicks the button/link  link=Public content
+    When the user fills in the Public content and publishes  GrowthTable
+    And the user clicks the button/link    link=Return to setup overview
+    Then the user should see the element   jQuery=li:contains("Public content") .task-status-complete
+
 
 Complete button disabled when sections are edited
     [Documentation]  IFs-648
     [Tags]
+    Given the user should see the element  css=#compCTA
     When the user clicks the button/link  link=Eligibility
     And the user clicks the button/link   jQuery=button:contains("Edit")
     And the user clicks the button/link   link=Competition setup
     Then the user should see the element  css=#compCTA[disabled="disabled"]
     When the user clicks the button/link  link=Eligibility
     And the user clicks the button/link   jQuery=button:contains("Done")
-    And the user clicks the button/link   link=Competition setup
-#    The following steps will move the comp from "In preparation" to "Ready to Open" state
-    Then the user clicks the button/link  jQuery=a:contains("Complete")
-    And the user clicks the button/link   jQuery=a:contains("Done")
+    And the user clicks the button/link   link=Return to setup overview
+    Then the user should not see the element  css=#compCTA[disabled="disabled"]
 
-Application: Edit again should mark as incomplete
-    [Documentation]    INFUND-5964
+Moving competition to Ready to Open state
+    [Documentation]
     [Tags]
-    [Setup]    the user navigates to the page   ${landingPage}
-    Given the user clicks the button/link       link=Application details
-    When the user clicks the button/link        link=Edit this question
-    And The user clicks the button/link         jQuery=button:contains("Save and close")
-    Then The user should see the element        jQuery=button:contains(Done)
-    And The user clicks the button/link         link=Competition setup
-    Then the user should not see the element    css=li:nth-child(5) .task-status-complete
+#    The following steps will move the comp from "In preparation" to "Ready to Open" state
+    When the user clicks the button/link  css=#compCTA
+    Then the user clicks the button/link  jQuery=.button:contains("Done")
+    When the user navigates to the page   ${CA_UpcomingComp}
+    Then the user should see the element  jQuery=section:contains("Ready to open") li:contains("${competitionTitle}")
+
+Requesting the id of this Competition
+    [Documentation]  retriving the id of the competition so that we can use it in urls
+    [Tags]  MySQL
+    ${competitionId} =  get comp id from comp title  ${competitionTitle}
+    Set suite variable  ${competitionId}
 
 Ready To Open button is visible when the user re-opens a section
     [Documentation]    INFUND-4468
-    [Tags]  Pending
-    # TODO Pending due to IFS-493
-    [Setup]
-    Given The user should see the element    jQuery=.button:contains("Complete")
-    When The user clicks the button/link    link=Initial details
-    And the user clicks the button/link    jQuery=.button:contains("Edit")
-    And The user clicks the button/link    link=Competition setup
-    Then the user should not see the element    jQuery=.button:contains("Complete")
+    [Tags]
+    [Setup]  the user navigates to the page  ${server}/management/competition/setup/${competitionId}
+    When The user clicks the button/link     link=Initial details
+    And the user clicks the button/link      jQuery=.button:contains("Edit")
+    And The user clicks the button/link      link=Competition setup
+    Then the user should see the element     css=#compCTA[disabled="disabled"]
     [Teardown]    Run keywords    Given The user clicks the button/link    link=Initial details
     ...    AND    The user clicks the button/link    jQuery=button:contains("Done")
     ...    AND    And The user clicks the button/link    link=Competition setup
 
+Application: Edit again should mark as incomplete
+    [Documentation]    INFUND-5964
+    [Tags]
+    [Setup]  the user clicks the button/link    link=Application
+    Given the user clicks the button/link       link=Application details
+    When the user clicks the button/link        link=Edit this question
+    And the user navigates to the page          ${server}/management/competition/setup/${competitionId}
+    Then the user should see the element        css=#compCTA[disabled="disabled"]
+    When the user navigates to the page         ${server}/management/competition/setup/${competitionId}/section/application/landing-page
+    Then the user clicks the button/link        jQuery=button:contains("Done")
+
 User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
-    [Tags]  Pending
-    # TODO Pending due to IFS-493
-    When the user clicks the button/link   jQuery=button:contains("Complete")
-    Then the user clicks the button/link   jQuery=button:contains("Done")
-    And the user should see the text in the page  Setup of this competition has now been completed and will automatically open on the date set.
+    [Tags]
+    [Setup]  the user navigates to the page  ${server}/management/competition/setup/${competitionId}
+    When the user clicks the button/link     css=#compCTA
+    Then the user clicks the button/link     jQuery=.button:contains("Done")
     When the user clicks the button/link   link=All competitions
     And the user navigates to the page     ${CA_UpcomingComp}
-    Then the competition should show in the correct section  css=section:nth-of-type(2) ul    Test competition
-    # The above line checks that the section 'Ready to Open' there is a competition named Test competition
+    Then the user should see the element   jQuery=section:contains("Ready to open") li:contains("${competitionTitle}")
 
 Assessor: Contain the correct options
     [Documentation]    INFUND-5641
@@ -571,14 +589,13 @@ Assessor: Mark as Done then Edit again
 
 Assessor: Should have a Green Check
     [Documentation]  INFUND-5641
-    [Tags]  HappyPath  Pending
-    # TODO Pending due to IFS-493
+    [Tags]  HappyPath
     When The user clicks the button/link    link=Competition setup
-    Then the user should see the element    jQuery=li:contains("Assessors") > img[alt$="section is done"]
-    And the user clicks the button/link     jQuery=.button:contains("Complete")
-    And the user clicks the button/link     jQuery=button:contains("Done")
+    Then the user should see the element    jQuery=li:contains("Assessors") .task-status-complete
+    And the user clicks the button/link     css=#compCTA
+    And the user clicks the button/link     jQuery=.button:contains("Done")
     When the user navigates to the page     ${CA_UpcomingComp}
-    Then the user should see the element    h2:contains("In preparation") ~ ul:contains("Test competition")
+    Then the user should see the element    jQuery=section:contains("Ready to open") li:contains("${competitionTitle}")
 
 Innovation leads can be added to a competition
     [Documentation]    IFS-192, IFS-1104
@@ -807,6 +824,3 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery=dt:contains("1-2") + dd:contains("This the 1-2 Justification")
     the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("120")
     the user clicks the button/link  link=Return to application questions
-
-
-
