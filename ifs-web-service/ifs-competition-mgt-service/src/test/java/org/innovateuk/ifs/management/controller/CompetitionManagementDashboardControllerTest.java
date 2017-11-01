@@ -25,9 +25,12 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.is;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.COMPETITION_SETUP;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -77,6 +80,8 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     @Test
     public void liveDashboard() throws Exception {
 
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
+
         Mockito.when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/live"))
@@ -90,13 +95,13 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         LiveDashboardViewModel viewModel = (LiveDashboardViewModel) model;
         assertEquals(competitions, viewModel.getCompetitions());
         assertEquals(counts, viewModel.getCounts());
-        assertEquals(false, viewModel.isSupportView());
+        assertTrue(viewModel.getTabs().live());
     }
 
     @Test
     public void projectSetupDashboard() throws Exception {
 
-        Mockito.when(competitionDashboardSearchService.getProjectSetupCompetitions()).thenReturn(competitions.get(INNOVATION_AREA_NAME_ONE));
+        Mockito.when(competitionDashboardSearchService.getProjectSetupCompetitions()).thenReturn(competitions);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/project-setup"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -107,7 +112,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertTrue(model.getClass().equals(ProjectSetupDashboardViewModel.class));
 
         ProjectSetupDashboardViewModel viewModel = (ProjectSetupDashboardViewModel) model;
-        assertEquals(competitions.get(INNOVATION_AREA_NAME_ONE), viewModel.getCompetitions());
+        assertEquals(competitions.get(INNOVATION_AREA_NAME_ONE), viewModel.getCompetitions().get(PROJECT_SETUP));
         assertEquals(counts, viewModel.getCounts());
     }
 
@@ -141,7 +146,10 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         List<CompetitionSearchResultItem> competitions = new ArrayList<>();
         CompetitionCountResource counts = new CompetitionCountResource();
 
-        Mockito.when(competitionDashboardSearchService.getNonIfsCompetitions()).thenReturn(competitions);
+        Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitionMap = new HashMap<>();
+        competitionMap.put(COMPETITION_SETUP, competitions);
+
+        Mockito.when(competitionDashboardSearchService.getNonIfsCompetitions()).thenReturn(competitionMap);
         Mockito.when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/non-ifs"))
@@ -153,7 +161,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertTrue(model.getClass().equals(NonIFSDashboardViewModel.class));
 
         NonIFSDashboardViewModel viewModel = (NonIFSDashboardViewModel) model;
-        assertEquals(competitions, viewModel.getCompetitions());
+        assertEquals(competitionMap, viewModel.getCompetitions());
         assertEquals(counts, viewModel.getCounts());
     }
 
@@ -165,7 +173,10 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         competitions.add(newCompetitionSearchResultItem().withId(222L).withOpenDate(ZonedDateTime.now().plusMinutes(10L)).build());
         CompetitionCountResource counts = new CompetitionCountResource();
 
-        Mockito.when(competitionDashboardSearchService.getPreviousCompetitions()).thenReturn(competitions);
+        Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitionMap = new HashMap<>();
+        competitionMap.put(PROJECT_SETUP, competitions);
+
+        Mockito.when(competitionDashboardSearchService.getPreviousCompetitions()).thenReturn(competitionMap);
         Mockito.when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
 
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/previous"))
@@ -177,8 +188,8 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         assertTrue(model.getClass().equals(PreviousDashboardViewModel.class));
 
         PreviousDashboardViewModel viewModel = (PreviousDashboardViewModel) model;
-        assertEquals(competitions.get(1), viewModel.getCompetitions().get(0));
-        assertEquals(competitions.get(0), viewModel.getCompetitions().get(1));
+        assertEquals(competitions.get(1), viewModel.getCompetitions().get(PROJECT_SETUP).get(1));
+        assertEquals(competitions.get(0), viewModel.getCompetitions().get(PROJECT_SETUP).get(0));
         assertEquals(counts, viewModel.getCounts());
     }
 
@@ -256,7 +267,11 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         LiveDashboardViewModel viewModel = (LiveDashboardViewModel) model;
         assertEquals(competitions, viewModel.getCompetitions());
         assertEquals(counts, viewModel.getCounts());
-        assertEquals(true, viewModel.isSupportView());
+        assertTrue(viewModel.getTabs().live());
+        assertTrue(viewModel.getTabs().projectSetup());
+        assertTrue(viewModel.getTabs().previous());
+        assertFalse(viewModel.getTabs().nonIFS());
+        assertFalse(viewModel.getTabs().upcoming());
     }
 
     @Test
@@ -277,7 +292,11 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         LiveDashboardViewModel viewModel = (LiveDashboardViewModel) model;
         assertEquals(competitions, viewModel.getCompetitions());
         assertEquals(counts, viewModel.getCounts());
-        assertEquals(true, viewModel.isSupportView());
+        assertEquals(true, viewModel.getTabs().live());
+        assertEquals(false, viewModel.getTabs().nonIFS());
+        assertEquals(false, viewModel.getTabs().upcoming());
+        assertEquals(false, viewModel.getTabs().projectSetup());
+        assertEquals(false, viewModel.getTabs().previous());
     }
 
     @Override
