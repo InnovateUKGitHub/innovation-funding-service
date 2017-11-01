@@ -39,8 +39,8 @@ import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsServ
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
-import org.innovateuk.ifs.competition.transactional.template.QuestionRenumberingService;
-import org.innovateuk.ifs.competition.transactional.template.QuestionReprioritisationService;
+import org.innovateuk.ifs.competition.transactional.template.QuestionNumberOrderService;
+import org.innovateuk.ifs.competition.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
@@ -707,10 +707,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationInitialCreationService organisationInitialCreationServiceMock;
 
     @Mock
-    protected QuestionReprioritisationService questionReprioritisationService;
+    protected QuestionPriorityOrderService questionPriorityOrderServiceMock;
 
     @Mock
-    protected QuestionRenumberingService questionRenumberingService;
+    protected QuestionNumberOrderService questionNumberOrderServiceMock;
 
     @Before
     public void setupMockInjection() {

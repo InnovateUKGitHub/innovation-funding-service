@@ -15,7 +15,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
 import org.innovateuk.ifs.competition.transactional.template.DefaultApplicationQuestionCreator;
-import org.innovateuk.ifs.competition.transactional.template.QuestionReprioritisationService;
+import org.innovateuk.ifs.competition.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.competition.transactional.template.QuestionTemplatePersistorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,12 +25,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_FORBIDDEN;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.transactional.CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Service that can create Competition template copies and add and delete Questions to competitions.
@@ -64,24 +66,28 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private QuestionRepository questionRepository;
 
     @Autowired
-    private QuestionReprioritisationService questionPriorityService;
+    private QuestionPriorityOrderService questionPriorityService;
 
     @Override
     public ServiceResult<Competition> initializeCompetitionByCompetitionTemplate(Long competitionId, Long competitionTypeId) {
         CompetitionType competitionType = competitionTypeRepository.findOne(competitionTypeId);
+
+        if (competitionType == null) {
+            return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
+        }
+
         Competition template = competitionType.getTemplate();
+        if (template == null) {
+            return serviceFailure(new Error(COMPETITION_NO_TEMPLATE));
+        }
 
         Competition competition = competitionRepository.findById(competitionId);
-        competition.setCompetitionType(competitionType);
-        competition = setDefaultAssessorPayAndCount(competition);
-
         if (competition == null || competitionIsNotInSetupState(competition)) {
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        if (template == null) {
-            return serviceFailure(new Error(COMPETITION_NO_TEMPLATE));
-        }
+        competition.setCompetitionType(competitionType);
+        competition = setDefaultAssessorPayAndCount(competition);
 
         competitionTemplatePersistor.cleanByEntityId(competitionId);
 
@@ -97,7 +103,11 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
             return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
         }
 
-        Section applicationQuestionsSection = sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), ASSESSED_QUESTIONS_SECTION_NAME);
+        return find(sectionRepository.findFirstByCompetitionIdAndName(competition.getId(), ASSESSED_QUESTIONS_SECTION_NAME), notFoundError(Section.class))
+                .andOnSuccess(section -> initializeAndPersistQuestion(section, competition));
+    }
+
+    private ServiceResult<Question> initializeAndPersistQuestion(Section applicationQuestionsSection, Competition competition) {
         Question question = defaultApplicationQuestionCreator.buildQuestion(competition);
         question.setSection(applicationQuestionsSection);
         question.setCompetition(competition);
@@ -110,17 +120,20 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
     @Override
     public ServiceResult<Void> deleteAssessedQuestionInCompetition(Long questionId) {
-        Question question = questionRepository.findFirstByIdAndSectionName(questionId, ASSESSED_QUESTIONS_SECTION_NAME);
+        return find(questionRepository.findFirstByIdAndSectionName(questionId, ASSESSED_QUESTIONS_SECTION_NAME), notFoundError(Question.class))
+                .andOnSuccess(question -> deleteQuestion(question));
+    }
+
+    private ServiceResult<Void> deleteQuestion(Question question) {
+        if (question.getCompetition() == null || competitionIsNotInSetupOrReadyToOpenState(question.getCompetition())) {
+            return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
+        }
 
         if(questionRepository.countByCompetitionIdAndSectionName(question.getCompetition().getId(), ASSESSED_QUESTIONS_SECTION_NAME) <= 1) {
             return serviceFailure(new Error(GENERAL_FORBIDDEN));
         }
 
-        if (question.getCompetition() == null || !question.getCompetition().getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {
-            return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
-        }
-
-        questionTemplatePersistorServiceImpl.deleteEntityById(questionId);
+        questionTemplatePersistorServiceImpl.deleteEntityById(question.getId());
         questionPriorityService.reprioritiseAssessedQuestionsAfterDeletion(question);
 
         return serviceSuccess();

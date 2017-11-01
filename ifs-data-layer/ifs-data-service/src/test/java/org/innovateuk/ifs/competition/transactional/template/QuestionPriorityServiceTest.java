@@ -13,12 +13,12 @@ import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.*;
 
 
-public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionReprioritisationService>{
+public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionPriorityOrderService>{
 
     private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
 
-    public QuestionReprioritisationService supplyServiceUnderTest() {
-        return new QuestionReprioritisationService();
+    public QuestionPriorityOrderService supplyServiceUnderTest() {
+        return new QuestionPriorityOrderService();
     }
 
     @Test
@@ -42,7 +42,7 @@ public class QuestionPriorityServiceTest extends BaseServiceUnitTest<QuestionRep
         Question expectedQuestion = newlyCreatedQuestion;
         expectedQuestion.setPriority(4);
 
-        verify(questionRenumberingService).updateAssessedQuestionsNumbers(expectedQuestion.getCompetition().getId());
+        verify(questionNumberOrderServiceMock).updateAssessedQuestionsNumbers(expectedQuestion.getCompetition().getId());
         verify(questionRepositoryMock, times(1)).save(refEq(expectedQuestion));
     }
 

@@ -1,13 +1,10 @@
 package org.innovateuk.ifs.competition.transactional.template;
 
-import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.junit.Test;
 
-/**
- * TODO: Add description
- */
-public class FormInputTemplatePersistorServiceTest extends BaseServiceUnitTest<FormInputTemplatePersistor> {
-    public FormInputTemplatePersistor supplyServiceUnderTest() {
+public class FormInputTemplatePersistorServiceTest extends BaseUnitTestMocksTest {
+    public FormInputTemplatePersistorImpl supplyServiceUnderTest() {
         return new FormInputTemplatePersistorImpl();
     }
 

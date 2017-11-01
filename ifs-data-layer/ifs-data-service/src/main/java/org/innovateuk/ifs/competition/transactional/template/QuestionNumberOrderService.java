@@ -13,7 +13,7 @@ import java.util.List;
  * Service that can renumber questions by their set priority.
  */
 @Service
-public class QuestionRenumberingService {
+public class QuestionNumberOrderService {
     @Autowired
     private QuestionRepository questionRepository;
 

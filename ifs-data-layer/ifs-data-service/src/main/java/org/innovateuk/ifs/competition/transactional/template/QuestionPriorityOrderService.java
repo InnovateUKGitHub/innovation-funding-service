@@ -13,12 +13,12 @@ import java.util.List;
  * Service that can reorder questions by priority after creation or deletion.
  */
 @Service
-public class QuestionReprioritisationService {
+public class QuestionPriorityOrderService {
     @Autowired
     private QuestionRepository questionRepository;
 
     @Autowired
-    private QuestionRenumberingService questionRenumberingService;
+    private QuestionNumberOrderService questionNumberOrderService;
 
     private static final String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
 
@@ -28,7 +28,7 @@ public class QuestionReprioritisationService {
         Question assessedQuestionWithHighestPriority = questionRepository.findFirstByCompetitionIdAndSectionNameOrderByPriorityDesc(createdQuestion.getCompetition().getId(), ASSESSED_QUESTIONS_SECTION_NAME);
         createdQuestion.setPriority(assessedQuestionWithHighestPriority.getPriority() + 1);
 
-        questionRenumberingService.updateAssessedQuestionsNumbers(createdQuestion.getCompetition().getId());
+        questionNumberOrderService.updateAssessedQuestionsNumbers(createdQuestion.getCompetition().getId());
 
         return questionRepository.save(createdQuestion);
     }
@@ -37,7 +37,7 @@ public class QuestionReprioritisationService {
     @NotSecured("Must be secured by other services.")
     public void reprioritiseAssessedQuestionsAfterDeletion(Question deletedQuestion) {
         updateFollowingQuestionsPrioritiesByDelta(-1, deletedQuestion.getPriority(), deletedQuestion.getCompetition().getId());
-        questionRenumberingService.updateAssessedQuestionsNumbers(deletedQuestion.getCompetition().getId());
+        questionNumberOrderService.updateAssessedQuestionsNumbers(deletedQuestion.getCompetition().getId());
     }
 
     private void updateFollowingQuestionsPrioritiesByDelta(int delta, Integer priority, Long competitionId) {

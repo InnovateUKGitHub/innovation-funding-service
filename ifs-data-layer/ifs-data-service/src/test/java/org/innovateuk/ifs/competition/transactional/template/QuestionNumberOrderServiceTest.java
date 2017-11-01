@@ -13,12 +13,12 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 /**
  * TODO: Add description
  */
-public class QuestionRenumberingServiceTest extends BaseServiceUnitTest<QuestionRenumberingService> {
+public class QuestionNumberOrderServiceTest extends BaseServiceUnitTest<QuestionNumberOrderService> {
 
     private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
 
-    public QuestionRenumberingService supplyServiceUnderTest() {
-        return new QuestionRenumberingService();
+    public QuestionNumberOrderService supplyServiceUnderTest() {
+        return new QuestionNumberOrderService();
     }
 
     @Test

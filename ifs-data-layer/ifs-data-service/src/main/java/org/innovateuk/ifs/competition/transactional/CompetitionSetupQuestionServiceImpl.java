@@ -59,7 +59,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                 .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
     }
 
-    public ServiceResult<CompetitionSetupQuestionResource> mapQuestionToSuperQuestionResource(Question question) {
+    private ServiceResult<CompetitionSetupQuestionResource> mapQuestionToSuperQuestionResource(Question question) {
         CompetitionSetupQuestionResource setupResource = new CompetitionSetupQuestionResource();
 
         question.getFormInputs().forEach(formInput -> {
