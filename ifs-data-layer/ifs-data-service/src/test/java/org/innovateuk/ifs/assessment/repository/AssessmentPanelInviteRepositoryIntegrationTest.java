@@ -1,20 +1,13 @@
 package org.innovateuk.ifs.assessment.repository;
 
-import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.AssessmentPanelInvite;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
-import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
-import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
-import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -32,18 +25,10 @@ import java.util.List;
 
 import static com.google.common.collect.ImmutableSet.of;
 import static com.google.common.collect.Sets.newHashSet;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
-import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -185,5 +170,27 @@ public class AssessmentPanelInviteRepositoryIntegrationTest extends BaseReposito
     public void save_duplicateHash() {
         repository.save(new AssessmentPanelInvite(userMapper.mapToDomain(getPaulPlum()), "sameHash", competition));
         repository.save(new AssessmentPanelInvite(userMapper.mapToDomain(getFelixWilson()), "sameHash", competition));
+    }
+
+    @Test
+    public void deleteByCompetitionIdAndStatus() throws Exception {
+        List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
+                .withCompetition(competition)
+                .withEmail("test1@test.com", "test2@test.com")
+                .withHash("hash1", "hash2")
+                .withName("Test Tester 1", "Test Tester 2")
+                .build(2);
+
+        HashSet<InviteStatus> inviteStatuses = newHashSet(CREATED);
+
+        repository.save(invites);
+        flushAndClearSession();
+
+        assertEquals(2, repository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
+
+        repository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED);
+        flushAndClearSession();
+
+        assertEquals(0, repository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
     }
 }

@@ -3,12 +3,14 @@ package org.innovateuk.ifs.invite.domain;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.user.domain.User;
 
-import javax.persistence.*;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-
 
 /**
  * An invitation for an assessor to an assessment panel.
@@ -25,7 +27,7 @@ public class AssessmentPanelInvite extends Invite<Competition, AssessmentPanelIn
     }
 
     /**
-     * An existing User invited to a Competition.
+     * An existing User invited to an Assessment Panel.
      */
     public AssessmentPanelInvite(final User existingUser, final String hash, Competition competition) {
         super(existingUser.getName(), existingUser.getEmail(), hash, CREATED);

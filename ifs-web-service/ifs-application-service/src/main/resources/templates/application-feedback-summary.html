@@ -45,7 +45,7 @@
                         <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
 
                         <h3 class="heading-small extra-margin">Total project cost</h3>
-                        <p th:text="'£'+${#numbers.formatDecimal(totalFundingSought, 0, 'COMMA', 0, 'POINT')}">£203,567</p>
+                        <p>&pound;<th:block th:text="${#numbers.formatInteger(totalFundingSought, 0, 'DEFAULT')}">203,567</th:block></p>
                     </div>
                 </div>
             </div>

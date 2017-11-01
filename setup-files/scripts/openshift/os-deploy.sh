@@ -34,6 +34,11 @@ function deploy() {
         oc create -f os-files-tmp/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
     fi
 
+    # The SIL stub is required in all environments, in one form or another, except for production
+    if ! $(isProductionEnvironment ${TARGET}); then
+        oc create -f os-files-tmp/sil-stub/ ${SVC_ACCOUNT_CLAUSE}
+    fi
+
     oc create -f os-files-tmp/ ${SVC_ACCOUNT_CLAUSE}
     oc create -f os-files-tmp/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc create -f os-files-tmp/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}

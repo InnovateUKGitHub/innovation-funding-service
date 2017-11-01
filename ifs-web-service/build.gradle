@@ -10,6 +10,13 @@ project(':ifs-web-service').bootRepackage {
 
 jar.enabled = false
 
+// This is necessary because the java plugin is also applied to
+// the ifs-web-service project, which does _not_ build a jar.
+bootRepackage.enabled = false
+
+// Necessary to not build a jar for the ifs-web-core project.
+jar.enabled = false
+
 subprojects {
 
     // ifs-web-core is not a docker project.
@@ -43,7 +50,7 @@ subprojects {
          */
         task prepareDockerInput {
             dependsOn getNewRelicAgent
-            dependsOn build
+            dependsOn bootRepackage
             def inputDir = project.file("$project.buildDir/docker")
 
             doFirst {
@@ -57,7 +64,7 @@ subprojects {
                     }
                 }
                 copy {
-                    from jar
+                    from bootRepackage.outputs
                     into inputDir
                 }
                 copy {
@@ -73,7 +80,7 @@ subprojects {
         }
 
         task buildDocker(type: DockerBuildImage) {
-            dependsOn ":docker:oracle-jre:buildDocker"
+            dependsOn ":docker:app-base-image:buildDocker"
             dependsOn prepareDockerInput
 
             tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
@@ -89,7 +96,12 @@ subprojects {
 
         bootRepackage {
             mainClass = 'org.innovateuk.ifs.Application'
-            //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+            classifier = "autostart"
+        //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+
+            // By explicitly adding the inputs and outputs to this task, we can utilize the `incremental build' feature.
+            inputs.files(jar.outputs)
+            outputs.file file(jar.archiveName.toString().replace(".jar", "-autostart.jar"))
         }
     }
 }

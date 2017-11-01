@@ -26,6 +26,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               IFS-218 After rejection of mandatory documents, lead partner has a submit button
 ...
 ...               IFS-1864 Sole applicants do not have to provide a collaboration agreement document
+...
+...               IFS-1881 Project Setup internal project dashboard navigation
 Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -300,12 +302,12 @@ Non-lead partner can still view both documents after submitting
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
 
 CompAdmin can see uploaded files
-    [Documentation]    INFUND-4621
+    [Documentation]    INFUND-4621, IFS-1881
     [Tags]    HappyPath
     [Setup]    Log in as a different user  &{Comp_admin1_credentials}
     When the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element    jQuery=h2:contains("Projects in setup")
+    Then the user should see the element   link=All projects
     When the user clicks the button/link    css=#table-project-status tr:nth-child(2) td:nth-child(7) a
     Then the user should see the text in the page    Collaboration agreement
     When the user clicks the button/link    css=.uploaded-file:nth-of-type(1)
@@ -517,11 +519,11 @@ Project Finance is able to Approve and Reject
 
 
 Project Finance user can click the link and go back to the Competition Dashboard page
-    [Documentation]    INFUND-5516, INFUND-7345
+    [Documentation]    INFUND-5516, INFUND-7345, IFS-1881
     [Tags]
     When the user clicks the button/link           link=Projects in setup
     Then the user should not see an error in the page
-    And the user should see the text in the page   Projects in setup
+    And the user should see the element            link=All projects
     [Teardown]    the user goes back to the previous page
 
 # This is bank details and finance test but has been placed here as the required project is used here
@@ -531,9 +533,9 @@ Project finance can see zero funding for partner in bank details
     When partners submit bank details
     And log in as a different user                     &{collaborator1_credentials}
     And the user navigates to the page                 ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-checks/eligibility
-    Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(2)    £ 200,903    # Total costs
+    Then the user should see the text in the element    css=.table-overview tr:nth-child(1) td:nth-child(2)    £200,903    # Total costs
     And the user should see the text in the element     css=.table-overview tr:nth-child(1) td:nth-child(3)     0%          # % Grant
-    And the user should see the text in the element     css=.table-overview tr:nth-child(1) td:nth-child(4)     £ 0         # Funding sought
+    And the user should see the text in the element     css=.table-overview tr:nth-child(1) td:nth-child(4)     0         # Funding sought
     When log in as a different user                     &{internal_finance_credentials}
     And the user navigates to the page                 ${SERVER}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
     Then the user should see the element                jQuery=.read-only span:contains("No action required")
