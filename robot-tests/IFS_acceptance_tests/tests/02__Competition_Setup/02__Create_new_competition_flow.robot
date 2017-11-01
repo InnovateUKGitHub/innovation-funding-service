@@ -512,7 +512,7 @@ Complete button is visible when all sections are complete
     And the user fills in the Public content and publishes   Test competition
     When the user clicks the button/link   link=Competition setup
     Then the user clicks the button/link   link=Complete
-    And the user should see the text in the page  jQuery=p:contains("Setup of competition has now been completed and will automatically open on the date set.")
+    And the user should see the element    jQuery=p:contains("Setup of competition has now been completed and will automatically open on the date set.")
     And the user clicks the button/link    link=Done
     When the user clicks the button/link   link=All competitions
     And the user navigates to the page     ${CA_UpcomingComp}
