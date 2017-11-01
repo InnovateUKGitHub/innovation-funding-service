@@ -64,6 +64,7 @@ Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
+Resource          ../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
 ${peter_freeman}  Peter Freeman
@@ -462,7 +463,7 @@ Removing an Assessed Application Question
     When the user clicks the button/link      css=button[name="deleteQuestion"]
     Then the user should not see the element  jQuery=a:contains("Costs and value for money")
     When the user clicks the button/link      jQuery=li:contains("Additionality") button:contains("Remove")
-    Then the user should not see the element  jQuery=a:contains("Costs and value for money")
+    Then the user should not see the element  jQuery=a:contains("Additionality")
 
 Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773
@@ -497,7 +498,6 @@ Public content is required for a Competition to be setup
     When the user fills in the Public content and publishes  GrowthTable
     And the user clicks the button/link    link=Return to setup overview
     Then the user should see the element   jQuery=li:contains("Public content") .task-status-complete
-
 
 Complete button disabled when sections are edited
     [Documentation]  IFs-648
@@ -617,6 +617,16 @@ Innovation leads can be added to a competition
     And the user should see the element       jQuery=span.total-count:contains("0")
     When the user clicks the button/link      jQuery=.inline-nav a:contains("Find")
     Then the user should see the element      jQuery=td:contains(${peter_freeman}) button:contains("Add")
+
+The Applicant is able to apply to the competition once is Open and see the correct Questions
+    [Documentation]  IFS-182
+    [Tags]  HappyPath  MySQL
+    [Setup]  the competition moves to Open state
+    Given log in as a different user  ${lead_applicant}
+    And logged in user applies to competition  ${competitionTitle}
+    Then the user should see the element       jQuery=li:contains("Tell us how your project is innovative.")
+    And the user should not see the element    jQuery=li:contains("Costs and value for money")
+    And the user should not see the element    jQuery=li:contains("Additionality")
 
 *** Keywords ***
 the user moves focus and waits for autosave
@@ -824,3 +834,8 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery=dt:contains("1-2") + dd:contains("This the 1-2 Justification")
     the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("120")
     the user clicks the button/link  link=Return to application questions
+
+the competition moves to Open state
+    ${yesterday} =  get yesterday
+    Connect to Database  @{database}
+    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE competition_id=`${competitionId}` AND `type`='OPEN_DATE';
