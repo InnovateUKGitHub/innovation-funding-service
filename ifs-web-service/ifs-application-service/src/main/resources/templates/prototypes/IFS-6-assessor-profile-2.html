@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="competition-management">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-comp-admin-header" th:with="status='loggedIn'" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+
+  	<!-- HARDCODED PROTOTYPE HTML -->
+
+    <div class="sub-header">
+      <a href="/prototypes/IFS-6-manage-assessors-active" class="link-back">Back</a>
+    </div>
+
+    <h1 class="heading-xlarge">Assessor profile</h1>
+
+    <th:block th:if="${param.deactivateAssessor != null}">
+        <div class="message-alert">
+            <h2 class="heading-small no-margin">This assessor has been deactivated with the reason:</h2>
+            <p th:text="${param.deactivateAssessor[0]}">REASON</p>
+        </div>
+    </th:block>
+
+    <h2 class="heading-medium">Assessor details</h2>
+
+    <h3 class="heading-small">Name</h3>
+    <p>Veronica Lederman</p>
+
+    <h3 class="heading-small">Address</h3>
+
+    <h3 class="heading-small">Email address</h3>
+    <p><a href="#">mailto:veronica.lederman@innovateuk.test</a></p>
+
+    <ul class="inline-nav extra-margin-top">
+        <li th:class="${(param.tab == null or param.tab[0] == 'skills' ? 'selected' : 'not-selected' )}"><a href="?tab=skills">Skills</a></li>
+        <li th:class="${(param.tab != null and param.tab[0] == 'doi' ? 'selected' : 'not-selected' )}"><a href="?tab=doi">DOI</a></li>
+        <li th:class="${(param.tab != null and param.tab[0] == 'history' ? 'selected' : 'not-selected' )}"><a href="?tab=history">Assessment history</a></li>
+    </ul>
+
+    <th:block th:if="${param.tab == null or param.tab[0] == 'skills'}">
+        <h2 class="heading-medium">Innovation areas</h2>
+
+        <h3 class="heading-small">Emerging and enabling</h3>
+        <ul class="task-list no-margin">
+            <li>Creative industries</li>
+            <li>Digital industries</li>
+        </ul>
+        <h3 class="heading-small">Health and life sciences</h3>
+        <ul class="task-list">
+            <li>Advanced therapies</li>
+        </ul>
+
+        <div class="upload-section" style="border: none;">
+            <h3 class="heading-small no-margin">Work history</h3>
+            <p><a href="#">Assessor work history.pdf (opens in a new window)</a></p>
+        </div>
+
+        <div class="form-footer">
+            <div class="form-footer__actions"><a href="/prototypes/IFS-6-assessor-profile-update-2">Edit</a></div>
+            <div class="form-footer__info">
+                <span class="textarea-footer"></span>
+                <span class="update-label">Created by IFS Web System User on </span>
+                <span class="update-details">13 September 2017</span>
+            </div>
+        </div>
+
+        <div class="extra-margin-top">
+            <th:block th:unless="${param.deactivateAssessor != null}">
+                <a href="#" data-js-modal="deactivate-assessor">Deactivate assessor</a>
+            </th:block>
+
+            <th:block th:if="${param.deactivateAssessor != null}">
+                <a href="#" data-js-modal="reactivate-assessor">Reactivate assessor</a>
+            </th:block>
+        </div>
+
+        <div class="deactivate-assessor" role="dialog" aria-hidden="true">
+            <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
+            <form th:action="${#httpServletRequest.requestURI}">
+                <fieldset class="inline">
+                    <legend>
+                        <h2 class="heading-medium no-margin">Deactivate assessor</h2>
+                    </legend>
+
+                    <p>Please select the reason for deactivating this assessor</p>
+
+                    <div class="multiple-choice">
+                        <input id="deactivate-assessor-1" type="radio" name="deactivateAssessor" value="Training required" required>
+                        <label for="deactivate-assessor-1">Training required</label>
+                    </div>
+                    <div class="multiple-choice">
+                        <input id="deactivate-assessor-1" type="radio" name="deactivateAssessor" value="Retired" required>
+                        <label for="deactivate-assessor-1">Retired</label>
+                    </div>
+                </fieldset>
+
+                <div class="extra-margin-top">
+                    <button class="button">Submit</button>
+                    <button aria-label="Close Popup" type="button" class="button button-clear js-close">Cancel</button>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="reactivate-assessor" role="dialog" aria-hidden="true">
+            <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
+            <form th:action="${#httpServletRequest.requestURI}">
+
+                <h2 class="heading-medium no-margin">Reactivate assessor</h2>
+                <p>Are you sure you want to reactivate this assessor?</p>
+
+                <div class="extra-margin-top">
+                    <button class="button">Yes, reactivate</button>
+                    <button aria-label="Close Popup" type="button" class="button button-clear js-close">Cancel</button>
+                </div>
+
+            </form>
+        </div>
+
+        <div class="modal-overlay" aria-hidden="true"></div>
+
+    </th:block>
+
+    <th:block th:if="${param.tab != null and param.tab[0] == 'doi'}">
+        <h2 class="heading-medium">Declaration of interest</h2>
+
+        <h3 class="heading-small no-margin-bottom">Principal employer and role</h3>
+        <p>University of Sheffield <br /> Professor</p>
+
+        <h3 class="heading-small no-margin-bottom">Professional affiliations</h3>
+        <p>None declared</p>
+
+        <h3 class="heading-small extra-margin-top">Appointments, directorships and consultancies</h3>
+        <table>
+            <thead>
+            <tr>
+                <th scope="col">Organisation</th>
+                <th scope="col">Role</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    Plum planning
+                </td>
+                <td>
+                    CTO
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <h3 class="heading-small">Other financial interests</h3>
+        <p>None declared</p>
+
+        <h3 class="heading-small extra-margin-top">Close family members' appointments, directorships and consultancies</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Relation</th>
+                    <th>Organisation</th>
+                    <th>Position</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Wife</td>
+                    <td>Robotics international</td>
+                    <td>CTO</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3 class="heading-small">Close family members' other financial inerests</h3>
+        <p>None declared</p>
+
+    </th:block>
+
+    <th:block th:if="${param.tab != null and param.tab[0] == 'history'}">
+        <div class="collapsible">
+            <h2 class="open">Competition 1</h2>
+            <div class="collapsible-content">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Application numer</th>
+                            <th>Title</th>
+                            <th>Lead organisation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><a href="#">141</a></td>
+                            <td>Evolution of the global phosphorus cycle</td>
+                            <td>Alpha Ltd</td>
+                        </tr>
+                        <tr>
+                            <td><a href="#">145</a></td>
+                            <td>Planetary science Pluto's telltale heart</td>
+                            <td>Beta Ltd</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="open">Competition 2</h2>
+            <div class="collapsible-content">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Application numer</th>
+                        <th>Title</th>
+                        <th>Lead organisation</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><a href="#">141</a></td>
+                        <td>Evolution of the global phosphorus cycle</td>
+                        <td>Alpha Ltd</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">145</a></td>
+                        <td>Planetary science Pluto's telltale heart</td>
+                        <td>Beta Ltd</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="open">Competition 3</h2>
+            <div class="collapsible-content">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Application numer</th>
+                        <th>Title</th>
+                        <th>Lead organisation</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><a href="#">141</a></td>
+                        <td>Evolution of the global phosphorus cycle</td>
+                        <td>Alpha Ltd</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">145</a></td>
+                        <td>Planetary science Pluto's telltale heart</td>
+                        <td>Beta Ltd</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h2 class="open">Competition 4</h2>
+            <div class="collapsible-content">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Application numer</th>
+                        <th>Title</th>
+                        <th>Lead organisation</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><a href="#">141</a></td>
+                        <td>Evolution of the global phosphorus cycle</td>
+                        <td>Alpha Ltd</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#">145</a></td>
+                        <td>Planetary science Pluto's telltale heart</td>
+                        <td>Beta Ltd</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
+
+  	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+</body>
+</html>
