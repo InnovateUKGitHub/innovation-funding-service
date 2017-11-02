@@ -26,7 +26,7 @@ public class CompetitionTemplatePersistorImpl implements BaseTemplatePersistor<C
     @Transactional
     public void cleanByEntityId(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
-        sectionTemplateService.cleanForPrecedingEntity(competition);
+        sectionTemplateService.cleanForParentEntity(competition);
     }
 
     @Override
@@ -36,9 +36,7 @@ public class CompetitionTemplatePersistorImpl implements BaseTemplatePersistor<C
 
         Competition competition = competitionRepository.save(template);
         template.setId(competition.getId());
-        sectionTemplateService.persistByPrecedingEntity(template);
-
-        template.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
+        sectionTemplateService.persistByParentEntity(template);
 
         return competition;
     }

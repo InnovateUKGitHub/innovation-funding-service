@@ -34,15 +34,15 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
     private EntityManager entityManager;
 
     @Override
-    public List<FormInput> persistByPrecedingEntity(Question question) {
+    public List<FormInput> persistByParentEntity(Question question) {
         return simpleMap(question.getFormInputs(), createFunction(question));
     }
 
     @Override
-    public void cleanForPrecedingEntity(Question question) {
+    public void cleanForParentEntity(Question question) {
         List<FormInput> formInputs = question.getFormInputs();
 
-        formInputs.stream().forEach(formInput -> guidanceRowTemplateService.cleanForPrecedingEntity(formInput));
+        formInputs.stream().forEach(formInput -> guidanceRowTemplateService.cleanForParentEntity(formInput));
         formInputs.stream().forEach(formInput -> entityManager.detach(formInput));
         formInputRepository.delete(formInputs);
     }
@@ -60,7 +60,7 @@ public class FormInputTemplatePersistorImpl implements BaseChainedTemplatePersis
             formInput.setFormValidators(copy);
             formInput.setActive(isSectorCompetitionWithScopeQuestion(question.getCompetition(), question, formInput) ? false : formInput.getActive());
             formInputRepository.save(formInput);
-            formInput.setGuidanceRows(guidanceRowTemplateService.persistByPrecedingEntity(formInput));
+            formInput.setGuidanceRows(guidanceRowTemplateService.persistByParentEntity(formInput));
             return formInput;
         };
     }

@@ -28,7 +28,7 @@ public class SectionTemplatePersistorImpl implements BaseChainedTemplatePersisto
     private EntityManager entityManager;
 
     @Override
-    public List<Section> persistByPrecedingEntity(Competition template) {
+    public List<Section> persistByParentEntity(Competition template) {
         if (template.getSections() == null) {
             return null;
         }
@@ -41,7 +41,7 @@ public class SectionTemplatePersistorImpl implements BaseChainedTemplatePersisto
     }
 
     @Override
-    public void cleanForPrecedingEntity(Competition competition) {
+    public void cleanForParentEntity(Competition competition) {
         getTopLevelSections(competition).stream().forEach(section -> cleanForPrecedingEntityRecursively(section));
     }
 
@@ -63,7 +63,7 @@ public class SectionTemplatePersistorImpl implements BaseChainedTemplatePersisto
             section.setParentSection(parentSection);
             sectionRepository.save(section);
 
-            questionTemplatePersistorServiceServiceImpl.persistByPrecedingEntity(section);
+            questionTemplatePersistorServiceServiceImpl.persistByParentEntity(section);
 
             createChildSectionsRecursively(competition, section);
 
@@ -74,7 +74,7 @@ public class SectionTemplatePersistorImpl implements BaseChainedTemplatePersisto
     private void cleanForPrecedingEntityRecursively(Section section) {
         section.getChildSections().stream().forEach(s -> cleanForPrecedingEntityRecursively(s));
 
-        questionTemplatePersistorServiceServiceImpl.cleanForPrecedingEntity(section);
+        questionTemplatePersistorServiceServiceImpl.cleanForParentEntity(section);
 
         entityManager.detach(section);
         sectionRepository.delete(section);

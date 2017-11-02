@@ -39,24 +39,24 @@ public class QuestionTemplatePersistorImpl implements BaseChainedTemplatePersist
     }
 
     @Transactional
-    public List<Question> persistByPrecedingEntity(Section section) {
+    public List<Question> persistByParentEntity(Section section) {
         return simpleMap(section.getQuestions(), createQuestionFunction(section));
     }
 
     @Transactional
     public void deleteEntityById(Long questionId) {
         Question question = questionRepository.findOne(questionId);
-        formInputTemplateService.cleanForPrecedingEntity(question);
+        formInputTemplateService.cleanForParentEntity(question);
 
         entityManager.detach(question);
         questionRepository.delete(questionId);
     }
 
     @Transactional
-    public void cleanForPrecedingEntity(Section section) {
+    public void cleanForParentEntity(Section section) {
         List<Question> questions = section.getQuestions();
         if(questions != null) {
-            questions.stream().forEach(question -> formInputTemplateService.cleanForPrecedingEntity(question));
+            questions.stream().forEach(question -> formInputTemplateService.cleanForParentEntity(question));
 
             questions.stream().forEach(question -> entityManager.detach(question));
             questionRepository.delete(questions);
@@ -69,7 +69,7 @@ public class QuestionTemplatePersistorImpl implements BaseChainedTemplatePersist
             question.setId(null);
             questionRepository.save(question);
 
-            question.setFormInputs(formInputTemplateService.persistByPrecedingEntity(question));
+            question.setFormInputs(formInputTemplateService.persistByParentEntity(question));
             return question;
         };
     }

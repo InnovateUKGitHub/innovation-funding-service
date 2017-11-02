@@ -26,7 +26,7 @@ public class GuidanceRowTemplatePersistorImpl implements BaseChainedTemplatePers
     private EntityManager entityManager;
 
     @Transactional
-    public List<GuidanceRow> persistByPrecedingEntity(FormInput formInput) {
+    public List<GuidanceRow> persistByParentEntity(FormInput formInput) {
         return formInput.getGuidanceRows() == null ? Collections.emptyList() : formInput.getGuidanceRows().stream().map(createFormInputGuidanceRow(formInput)).collect(Collectors.toList());
     }
 
@@ -41,10 +41,10 @@ public class GuidanceRowTemplatePersistorImpl implements BaseChainedTemplatePers
     }
 
     @Transactional
-    public void cleanForPrecedingEntity(FormInput formInput) {
+    public void cleanForParentEntity(FormInput formInput) {
         List<GuidanceRow> scoreRows = formInput.getGuidanceRows();
         if(scoreRows.size() > 0) {
-            scoreRows.stream().forEach(scoreRow -> entityManager.detach(scoreRow));
+            scoreRows.forEach(scoreRow -> entityManager.detach(scoreRow));
             guidanceRowRepository.delete(scoreRows);
         }
     }

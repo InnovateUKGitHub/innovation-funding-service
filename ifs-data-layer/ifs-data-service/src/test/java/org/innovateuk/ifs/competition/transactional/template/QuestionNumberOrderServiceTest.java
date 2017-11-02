@@ -10,9 +10,6 @@ import java.util.List;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 
-/**
- * TODO: Add description
- */
 public class QuestionNumberOrderServiceTest extends BaseServiceUnitTest<QuestionNumberOrderService> {
 
     private static String ASSESSED_QUESTIONS_SECTION_NAME = "Application questions";
