@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
@@ -155,16 +156,19 @@ public class AssessmentFeedbackController {
         List<AssessorFormInputResponseResource> assessorResponses = getAssessorResponses(assessmentId, questionId);
         Map<Long, AssessorFormInputResponseResource> mappedResponses = simpleToMap(assessorResponses, AssessorFormInputResponseResource::getFormInput);
         mappedResponses.forEach((k, v) -> form.addFormInput(k.toString(), v.getValue()));
-        addScopeToForm(form, mappedResponses, questionId);
+        processScopeInput(form, mappedResponses, questionId);
+
         return form;
     }
 
-    private void addScopeToForm(Form form, Map<Long, AssessorFormInputResponseResource> mappedResponses, long questionId) {
-        FormInputResource scopeInput = getScopeFormInput(getAssessmentFormInputsForQuestion(questionId));
+    private void processScopeInput(Form form, Map<Long, AssessorFormInputResponseResource> mappedResponses, long questionId) {
+        Optional<FormInputResource> scopeInput = getScopeFormInput(getAssessmentFormInputsForQuestion(questionId));
 
-        if (scopeInput != null && !mappedResponses.containsKey(scopeInput.getId())) {
-            form.addFormInput(scopeInput.getId().toString(), "none");
-        }
+        scopeInput.ifPresent(scope -> {
+            if (!mappedResponses.containsKey(scope.getId())) {
+                form.addFormInput(scope.getId().toString(), "none");
+            }
+        });
     }
 
     private List<FormInputResource> getAssessmentFormInputsForQuestion(long questionId) {
@@ -204,11 +208,10 @@ public class AssessmentFeedbackController {
         return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccessObjectOrThrowException();
     }
 
-    private FormInputResource getScopeFormInput(List<FormInputResource> formInputs) {
+    private Optional<FormInputResource> getScopeFormInput(List<FormInputResource> formInputs) {
         return formInputs.stream()
                 .filter(input -> input.getType().equals(ASSESSOR_APPLICATION_IN_SCOPE))
-                .findAny()
-                .orElse(null);
+                .findAny();
     }
 
     private AssessorFormInputResponsesResource getFormInputResponses(Form form, List<FormInputResource> formInputs, long assessmentId) {
