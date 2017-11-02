@@ -67,8 +67,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     public static final String NON_IFS_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE nonIfs = TRUE";
 
-    public static final String FEEDBACK_RELEASED_QUERY =
-            "SELECT c FROM Competition c WHERE " +
+    public static final String FEEDBACK_RELEASED_QUERY = "SELECT c FROM Competition c WHERE " +
             "EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
