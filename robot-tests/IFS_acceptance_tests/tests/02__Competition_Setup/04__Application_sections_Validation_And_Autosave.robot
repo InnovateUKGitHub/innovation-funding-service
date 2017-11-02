@@ -20,18 +20,13 @@ Business opportunity Server-side validations setup questions
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank.
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank.
     And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank.
-    [Teardown]  the user enters text to a text field   jQuery=label:contains(Question title)  Business opportunity
+    [Teardown]  Enter question title again
 
 Application questions mark as done validations
     [Documentation]    INFUND-6468
     [Tags]
     When the user clicks the button/link    link=Application
     Then the user should not see the element   css=.button[value="Done"]
-#    And the user clicks the button/link      css=.button[value="Done"]
-#    And the user should see the text in the page    Unable to mark as complete.
-#    And the user should see the text in the page    view the application section(s) to resolve the error.
-#    And The user clicks the button/link    link=No question header entered
-#    And the user clicks the button/link    jQuery=.button:contains("Done")
 
 Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
@@ -167,3 +162,10 @@ User creates a new competition for Application tests
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
     And the user clicks the button/link    jQuery=button:contains("Done")
     And the user clicks the button/link    link=Competition setup
+
+Enter question title again
+    the user enters text to a text field    id=question.title    Test title
+    the user enters text to a text field    id=question.shortTitle    Business opportunity
+    Capture large screenshot
+    And the user clicks the button/link    css=.button[value="Done"]
+    Capture large screenshot
