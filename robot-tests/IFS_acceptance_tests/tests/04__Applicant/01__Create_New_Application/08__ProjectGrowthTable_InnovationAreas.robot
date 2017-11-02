@@ -23,7 +23,7 @@ Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 *** Variables ***
 ${compWithoutGrowth}         FromCompToNewAppl without GrowthTable
 ${applicationWithoutGrowth}  NewApplFromNewComp without GrowthTable
-${compWithGrowth}            All-Innov-Areas With GrowthTable
+${compWithGrowth}            All-Innov-Areas With GrowthTable    #of Sector Competition type
 ${applicationWithGrowth}     All-Innov-Areas Application With GrowthTable
 ${newUsersEmail}             liam@innovate.com
 ${ineligibleMessage}         The application must be started by the lead applicant. Your organisation is not eligible to be the lead applicant in this competition.

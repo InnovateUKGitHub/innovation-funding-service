@@ -522,7 +522,7 @@ Moving competition to Ready to Open state
     Then the user should see the element  jQuery=section:contains("Ready to open") li:contains("${competitionTitle}")
 
 Requesting the id of this Competition
-    [Documentation]  retriving the id of the competition so that we can use it in urls
+    [Documentation]  retrieving the id of the competition so that we can use it in urls
     [Tags]  MySQL
     ${competitionId} =  get comp id from comp title  ${competitionTitle}
     Set suite variable  ${competitionId}
@@ -621,12 +621,12 @@ Innovation leads can be added to a competition
 The Applicant is able to apply to the competition once is Open and see the correct Questions
     [Documentation]  IFS-182
     [Tags]  HappyPath  MySQL
-    [Setup]  the competition moves to Open state
-    Given log in as a different user           &{lead_applicant_credentials}
-    And logged in user applies to competition  ${competitionTitle}
-    Then the user should see the element       jQuery=li:contains("Tell us how your project is innovative.")
-    And the user should not see the element    jQuery=li:contains("Costs and value for money")
-    And the user should not see the element    jQuery=li:contains("Additionality")
+    [Setup]  the competition moves to Open state  ${competitionId}
+    Given log in as a different user              &{lead_applicant_credentials}
+    And logged in user applies to competition     ${competitionTitle}
+    Then the user should see the element          jQuery=li:contains("Tell us how your project is innovative.")
+    And the user should not see the element       jQuery=li:contains("Costs and value for money")
+    And the user should not see the element       jQuery=li:contains("Additionality")
 
 *** Keywords ***
 the user moves focus and waits for autosave
@@ -791,51 +791,3 @@ the user should the server side validation working
     #TODO Amend the following to cover error-summary. Cover radio buttons as well - IFS-?
     the user should see a field error  This field cannot be left blank.
     the user should see a field error  Please enter a justification.
-
-the user is able to configure the new question
-    the user enters text to a text field  id=question.title  Please provide us with more inforrmation on how your project is different from pre-existing projects.
-    the user enters text to a text field  id=question.shortTitle  Tell us how your project is innovative.
-    the user enters text to a text field  id=question.subTitle  Adding value on existing projects is important to InnovateUK.
-    the user enters text to a text field  id=question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
-    the user enters text to a text field  css=.editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
-    the user enters text to a text field  id=question.maxWords  500
-    the user selects the radio button     question.appendix  1
-    the user selects the radio button     question.scored  1
-    the user enters text to a text field  question.scoreTotal  10
-    the user selects the radio button     question.writtenFeedback  1
-    the user enters text to a text field  question.assessmentGuidanceTitle  Please bare in mind on how well the applicant is able to justify his arguments.
-    the user enters text to a text field  question.assessmentGuidance   The better you understand the problem the simpler your explanation is.
-    the user enters text to a text field  guidanceRows[0].justification  This the 9-10 Justification
-    the user enters text to a text field  guidanceRows[1].justification  This the 7-8 Justification
-    the user enters text to a text field  guidanceRows[2].justification  This the 5-6 Justification
-    the user enters text to a text field  guidanceRows[3].justification  This the 3-4 Justification
-    the user enters text to a text field  guidanceRows[4].justification  This the 1-2 Justification
-    the user enters text to a text field  question.assessmentMaxWords  120
-    the user clicks the button/link       css=input[type="submit"]
-
-the user should be able to see the read only view of question correctly
-    the user clicks the button/link  jQuery=a:contains("Tell us how your project is innovative.")
-    the user should see the element  jQuery=dt:contains("Question heading") + dd:contains("Tell us how your project is innovative")
-    the user should see the element  jQuery=dt:contains("Question title") + dd:contains("Please provide us with more inforrmation on how your project is different from pre-existing projects.")
-    the user should see the element  jQuery=dt:contains("Question subtitle") + dd:contains("Adding value on existing projects is important to InnovateUK.")
-    the user should see the element  jQuery=dt:contains("Guidance title") + dd:contains("Innovation is crucial to the continuing success of any organization.")
-    the user should see the element  jQuery=dt:contains("Guidance") + dd:contains("Please use Microsoft Word where possible.")
-    the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("500")
-    the user should see the element  jQuery=dt:contains("Appendix") + dd:contains("Yes")
-    the user should see the element  jQuery=dt:contains("Scored") + dd:contains("Yes")
-    the user should see the element  jQuery=dt:contains("Out of") + dd:contains("10")
-    the user should see the element  jQuery=dt:contains("Written feedback") + dd:contains("Yes")
-    the user should see the element  jQuery=dt:contains("Guidance title") + dd:contains("Please bare in mind on how well the applicant is able to justify his arguments.")
-    the user should see the element  jQuery=dt:contains("Guidance") + dd:contains("The better you understand the problem the simpler your explanation is.")
-    the user should see the element  jQuery=dt:contains("9-10") + dd:contains("This the 9-10 Justification")
-    the user should see the element  jQuery=dt:contains("7-8") + dd:contains("This the 7-8 Justification")
-    the user should see the element  jQuery=dt:contains("5-6") + dd:contains("This the 5-6 Justification")
-    the user should see the element  jQuery=dt:contains("3-4") + dd:contains("This the 3-4 Justification")
-    the user should see the element  jQuery=dt:contains("1-2") + dd:contains("This the 1-2 Justification")
-    the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("120")
-    the user clicks the button/link  link=Return to application questions
-
-the competition moves to Open state
-    ${yesterday} =  get yesterday
-    Connect to Database  @{database}
-    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
