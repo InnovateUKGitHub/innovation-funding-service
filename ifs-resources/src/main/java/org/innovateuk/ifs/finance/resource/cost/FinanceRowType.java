@@ -2,38 +2,50 @@ package org.innovateuk.ifs.finance.resource.cost;
 
 import org.innovateuk.ifs.form.resource.FormInputType;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.FinanceRowOptions.INCLUDE_IN_SPEND_PROFILE;
 
 /**
  * FinanceRow types are used to identify the different categories that costs can have
  */
 public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
-    LABOUR("labour", true, "Labour"),
-    OVERHEADS("overheads", true, "Overheads"),
-    MATERIALS("materials", true, "Materials"),
-    CAPITAL_USAGE("capital_usage", true, "Capital usage"),
-    SUBCONTRACTING_COSTS("subcontracting", true, "Subcontracting"),
-    TRAVEL("travel", true, "Travel and subsistence"),
-    OTHER_COSTS("other_costs", true, "Other costs"),
+    LABOUR("labour", "Labour", singletonList(INCLUDE_IN_SPEND_PROFILE)),
+    OVERHEADS("overheads", "Overheads", singletonList(INCLUDE_IN_SPEND_PROFILE)),
+    MATERIALS("materials", "Materials", singletonList(INCLUDE_IN_SPEND_PROFILE)),
+    CAPITAL_USAGE("capital_usage", "Capital usage", singletonList(INCLUDE_IN_SPEND_PROFILE)),
+    SUBCONTRACTING_COSTS("subcontracting", "Subcontracting", singletonList(INCLUDE_IN_SPEND_PROFILE)),
+    TRAVEL("travel", "Travel and subsistence", singletonList(INCLUDE_IN_SPEND_PROFILE)),
+    OTHER_COSTS("other_costs", "Other costs", singletonList(INCLUDE_IN_SPEND_PROFILE)),
     YOUR_FINANCE("your_finance"),
-    FINANCE("finance", true, "Finance"),
-    OTHER_FUNDING("other_funding", true, "Other Funding"),
+    FINANCE("finance", "Finance"),
+    OTHER_FUNDING("other_funding", "Other Funding"),
     ACADEMIC("academic");
 
-    private String type;
-    private boolean spendCostCategory;
-    private String name;
-
-    FinanceRowType(String type) {
-        this(type, false, null);
+    enum FinanceRowOptions {
+        INCLUDE_IN_SPEND_PROFILE
     }
 
-    FinanceRowType(String type, boolean spendCostCategory, String name) {
+    private String type;
+    private String name;
+    private List<FinanceRowOptions> financeRowOptionsList;
+
+    FinanceRowType(String type) {
+        this(type, null);
+    }
+
+    FinanceRowType(String type, String name) {
+        this(type, name, emptyList());
+    }
+
+    FinanceRowType(String type, String name, List<FinanceRowOptions> financeRowOptionsList) {
         this.type = type;
-        this.spendCostCategory = spendCostCategory;
         this.name = name;
+        this.financeRowOptionsList = financeRowOptionsList;
     }
 
     public static FinanceRowType fromType(FormInputType formInputType) {
@@ -55,8 +67,9 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
         return FormInputType.findByName(getType());
     }
 
-    public boolean isSpendCostCategory() {
-        return spendCostCategory;
+    @Override
+    public boolean isIncludedInSpendProfile() {
+        return financeRowOptionsList.stream().anyMatch(financeRowOptions -> financeRowOptions.equals(INCLUDE_IN_SPEND_PROFILE));
     }
 
     @Override

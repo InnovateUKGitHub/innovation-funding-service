@@ -14,18 +14,18 @@ import java.util.Map;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 /**
- * This class represents a populated CompetitionProjectStatusViewModel.
+ * This class represents a populated CompetitionStatusViewModel.
  */
 public class PopulatedCompetitionStatusViewModel {
     private final UserResource user;
     private final CompetitionProjectsStatusResource competitionProjectsStatus;
     private final CompetitionStatusViewModel viewModel;
 
-    public PopulatedCompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatus, UserResource user) {
+    public PopulatedCompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatus, UserResource user, long openQueryCount, boolean showTabs) {
         this.user = user;
         this.competitionProjectsStatus = competitionProjectsStatus;
         final boolean canExportBankDetails = user.hasRole(PROJECT_FINANCE);
-        this.viewModel = new CompetitionStatusViewModel(competitionProjectsStatus, canExportBankDetails, projectStatusPermissions());
+        this.viewModel = new CompetitionStatusViewModel(competitionProjectsStatus, canExportBankDetails, projectStatusPermissions(), openQueryCount, showTabs);
     }
 
     public CompetitionStatusViewModel get() {

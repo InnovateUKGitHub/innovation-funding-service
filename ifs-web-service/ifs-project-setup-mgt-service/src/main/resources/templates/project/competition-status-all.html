@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Setup Dashboard: Navigation'" />
+</head>
+<body class="project-management">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content" class="full-width">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <div class="grid-container">
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionProjectsStatusResource.competitionName},subTitle=|${model.competitionProjectsStatusResource.competitionNumber}: Innovate UK|,size='heading-xlarge'" />
+            </div>
+        </div>
+    </div>
+    <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount}, showAllTabs=${model.showTabs})" />
+    <div class="grid-container">
+        <div th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
+            <hr />
+            <div class="warning-alert"><p>There are currently no active projects in this competition.</p></div>
+        </div>
+    </div>
+    <div class="table-overflow" th:unless="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
+      <table id="table-project-status" class="icon-table">
+        <thead>
+          <tr>
+            <th scope="col">Project</th>
+            <th class="status" scope="col">Project details</th>
+            <th class="status" scope="col">MO</th>
+            <th class="status" scope="col">Bank details</th>
+            <th class="status" scope="col">Finance checks</th>
+            <th class="status" scope="col">Spend profile</th>
+            <th class="status" scope="col">Other docs</th>
+            <th class="status" scope="col">GOL</th>
+          </tr>
+        </thead>
+        <tbody class="cell-border-right">
+          <tr th:each="project : ${model.competitionProjectsStatusResource.projectStatusResources}">
+              <th scope="row">
+                <div class="heading-small no-margin" th:text="${project.projectTitle}" />
+                  <!--/*  origin must one of org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin */-->
+                <a th:text="${project.applicationNumber}" th:href="${'/management/competition/'+model.competitionProjectsStatusResource.competitionNumber+'/application/'+project.applicationNumber+'?origin=PROJECT_SETUP_MANAGEMENT_STATUS'}" />
+                <small>
+                  <th:block th:text="${project.numberOfPartners > 1 ? project.numberOfPartners+' partners' : project.numberOfPartners+' partner'}" /><br/>
+                  <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
+                </small>
+              </th>
+              <th:block th:insert="project/fragments :: project-status-table(${project.projectDetailsStatus}, 'project-details')" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
+
+              <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
+                        th:insert="project/fragments :: project-status-table(${project.monitoringOfficerStatus}, 'MO')" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
+              <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
+                        th:insert="project/fragments :: project-status-table(${project.monitoringOfficerStatus}, 'MO')" />
+
+              <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessBankDetails}"
+                        th:insert="project/fragments :: project-status-table(${project.bankDetailsStatus}, 'bank-details')" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/review-all-bank-details'}" />
+              <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessBankDetails}"
+                        th:insert="project/fragments :: project-status-table(${project.bankDetailsStatus}, 'bank-details')" />
+
+              <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
+                        th:insert="project/fragments :: project-status-table(${project.financeChecksStatus}, 'finance-checks')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/finance-check'}" />
+              <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessFinanceChecks}"
+                        th:insert="project/fragments :: project-status-table(${project.financeChecksStatus}, 'finance-checks')"/>
+
+              <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
+                        th:insert="project/fragments :: project-status-table(${project.spendProfileStatus}, 'spend-profile')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/spend-profile/approval'}" />
+              <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessSpendProfile}"
+                        th:insert="project/fragments :: project-status-table(${project.spendProfileStatus}, 'spend-profile')" />
+
+              <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessOtherDocuments}"
+                        th:insert="project/fragments :: project-status-table(${project.otherDocumentsStatus}, 'other-documents')" th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/partner/documents'}" />
+              <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessOtherDocuments}"
+                        th:insert="project/fragments :: project-status-table(${project.otherDocumentsStatus}, 'other-documents')" />
+
+              <th:block th:if="${model.statusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
+                        th:insert="project/fragments :: project-status-table(${model.statusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()},'GOL')"
+                        th:with="url=${'/project-setup-management/project/'+project.projectNumber+'/grant-offer-letter/send'}" />
+              <th:block th:unless="${model.statusPermissions.get(project.getApplicationNumber()).canAccessGrantOfferLetterSend}"
+                        th:insert="project/fragments :: project-status-table(${model.statusPermissions.get(project.getApplicationNumber()).getGrantOfferLetterActivityStatus()},'GOL')" />
+
+          </tr>
+        </tbody>
+        <tfoot class="bank-export">
+          <tr th:if="${model.canExportBankDetails}">
+            <td colspan="3"></td>
+            <td class="aligncentre">
+              <a th:href="@{/competition/{competitionId}/status/bank-details/export(competitionId=${model.competitionProjectsStatusResource.competitionNumber})}">Export all bank details</a>
+            </td>
+            <td colspan="4"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

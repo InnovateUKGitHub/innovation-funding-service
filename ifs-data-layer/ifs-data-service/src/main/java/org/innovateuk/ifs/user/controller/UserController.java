@@ -9,6 +9,7 @@ import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -29,6 +30,7 @@ import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.resource.UserRelatedURLs.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 
 /**
  * This RestController exposes CRUD operations to both the
@@ -70,9 +72,9 @@ public class UserController {
         return baseUserService.getUserById(id).toGetResponse();
     }
 
-    @GetMapping("/findByRole/{userRoleName}")
-    public RestResult<List<UserResource>> findByRole(@PathVariable("userRoleName") final String userRoleName) {
-        return baseUserService.findByProcessRole(UserRoleType.fromName(userRoleName)).toGetResponse();
+    @GetMapping("/findByRole/{userRole}")
+    public RestResult<List<UserResource>> findByRole(@PathVariable("userRole") final UserRoleType userRole) {
+        return baseUserService.findByProcessRole(userRole).toGetResponse();
     }
 
     @GetMapping("/internal/active")
@@ -113,6 +115,11 @@ public class UserController {
     @GetMapping("/findAll/")
     public RestResult<List<UserResource>> findAll() {
         return baseUserService.findAll().toGetResponse();
+    }
+
+    @GetMapping("/findAllExternal")
+    public RestResult<List<UserOrganisationResource>> findAllExternal() {
+        return userService.findAllByProcessRoles(externalApplicantRoles()).toGetResponse();
     }
 
     @GetMapping("/findByEmail/{email}/")

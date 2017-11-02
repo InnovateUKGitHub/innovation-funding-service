@@ -4,10 +4,7 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
-import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -17,6 +14,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -229,6 +227,15 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         verifyNoMoreInteractions(rules);
     }
 
+    @Test
+    public void countOpenQueries() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countAllOpenQueries(1L), PROJECT_FINANCE);
+    }
+
+    @Test
+    public void findAllOpenQueries() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findAllOpenQueries(1L), PROJECT_FINANCE);
+    }
 
     private void runAsRole(UserRoleType roleType, Runnable serviceCall) {
         setLoggedInUser(
@@ -342,6 +349,16 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         @Override
         public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
             return serviceSuccess(newCompetitionSearchResultItem().build(2));
+        }
+
+        @Override
+        public ServiceResult<List<CompetitionOpenQueryResource>> findAllOpenQueries(Long competitionId) {
+            return serviceSuccess(emptyList());
+        }
+
+        @Override
+        public ServiceResult<Long>countAllOpenQueries(Long competitionId) {
+            return serviceSuccess(0L);
         }
     }
 }

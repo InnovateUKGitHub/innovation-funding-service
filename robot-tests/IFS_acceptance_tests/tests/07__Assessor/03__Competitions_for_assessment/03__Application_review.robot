@@ -121,7 +121,7 @@ Scope: Status in the overview is updated
     [Tags]    HappyPath
     Given the user clicks the button/link                    link=Back to your assessment overview
     And the user clicks the button/link                      link=Scope
-    When the user selects the index from the drop-down menu  1    id=research-category
+    When the user selects the index from the drop-down menu  1    css=.research-category
     And the user clicks the button/link                      jQuery=label:contains("Yes")
     And The user enters text to a text field                 css=.editor    Testing feedback field when "Yes" is selected.
     And the user clicks the button/link                      jquery=button:contains("Save and return to assessment overview")
@@ -172,6 +172,7 @@ Economic Benefit: word count
     Given I open one of the application questions          link=4. Economic benefit
     And I should see word count underneath feedback form   Words remaining: 100
     When I enter feedback of words                         102
+    And the user clicks the button/link                    jQuery=button:contains("Save and return to assessment overview")
     Then the user should see a summary error               Maximum word count exceeded. Please reduce your word count to 100.
     When I enter feedback of words                         10
     Then I should see word count underneath feedback form  Words remaining: 90
@@ -180,7 +181,7 @@ Economic Benefit: word count
 Economic Benefit: Autosave
     [Documentation]    INFUND-3780
     [Tags]
-    When the user selects the option from the drop-down menu  9    id=assessor-question-score
+    When the user selects the option from the drop-down menu  9    css=.assessor-question-score
     And the user enters text to a text field                  css=.editor    This is to test the feedback entry.
     And the user clicks the button/link                       jQuery=a:contains(Back to your assessment overview)
     And the user clicks the button/link                       link=4. Economic benefit
@@ -246,23 +247,23 @@ the user clicks previous and goes to the page
 the finance summary total should be correct
     Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
     Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(3)    30%
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    £57,803
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    £2,468
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    £140,632
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    £200,903
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    £57,803
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    £2,468
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    £140,632
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    57,803
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    200,903
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    57,803
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    2,468
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    140,632
 
 the project cost breakdown total should be correct
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    £200,903
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(3)    £3,081
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(4)    £0
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(5)    £100,200
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(6)    £552
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(7)    £90,000
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(8)    £5,970
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(9)    £1,100
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    200,903
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(3)    3,081
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(4)    0
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(5)    100,200
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(6)    552
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(7)    90,000
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(8)    5,970
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(9)    1,100
 
 The status of the appllications should be correct
     [Arguments]    ${APPLICATION}    ${STATUS}

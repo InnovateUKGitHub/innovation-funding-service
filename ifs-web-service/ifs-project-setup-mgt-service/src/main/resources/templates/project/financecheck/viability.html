@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Viability'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Viability',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body>
 <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -11,6 +11,13 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" />
+
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to update viability.</h2>
+        Please review
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+    </div>
+
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${competitionTitle},size='heading-xlarge',smallText=${model.organisationName == model.leadPartnerOrganisation} ? '(Lead Partner)'" />
     <hr/>
 
@@ -20,33 +27,23 @@
         </div>
     </th:block>
 
-    <th:block th:object="${form}">
-        <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
-            <h2 class="heading-medium error-summary-heading">Unable to update viability.</h2>
-            Please review
-            <ul class="error-summary-list">
-                <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
-            </ul>
-        </div>
-    </th:block>
-
     <table class="table-overview">
       <thead>
         <tr>
           <th scope="col">Total costs</th>
           <th scope="col" class="numeric">% Grant</th>
           <th scope="col" class="numeric">Total project cost</th>
-          <th scope="col" class="numeric">Grant applied for</th>
-          <th scope="col" class="numeric">Other public sector funding</th>
+          <th scope="col" class="numeric">Grant applied for (&pound;)</th>
+          <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>&pound;<th:block th:text="${#numbers.formatInteger(model.totalCosts,1,'COMMA')}" /></td>
-          <td th:text="${model.percentageGrant+'%'}" class="numeric" />
-          <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.contributionToProject,1,'COMMA')}" /></td>
-          <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'COMMA')}" /></td>
-          <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.otherPublicSectorFunding,1,'COMMA')}" /></td>
+          <td>&pound;<th:block th:text="${#numbers.formatInteger(model.totalCosts,1,'DEFAULT')}" /></td>
+          <td th:text="${model.percentageGrant+'%'}" class="numeric"></td>
+          <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(model.contributionToProject,1,'DEFAULT')}" /></td>
+          <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.fundingSought,1,'DEFAULT')}" /></td>
+          <td class="numeric"><th:block th:text="${#numbers.formatInteger(model.otherPublicSectorFunding,1,'DEFAULT')}" /></td>
         </tr>
       </tbody>
     </table>

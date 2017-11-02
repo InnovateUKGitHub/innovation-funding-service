@@ -181,9 +181,9 @@ the academic partner fills the finances
     wait for autosave
 
 the calculations should be correct and the totals rounded to the second decimal
-    Textfield Value Should Be  id=subtotal-directly-allocated    £ 3,000
-    Textfield Value Should Be  id=subtotal-exceptions    £ 2,000
-    Textfield Value Should Be  id=total    £ 9,000
+    Textfield Value Should Be  id=subtotal-directly-allocated    £3,000
+    Textfield Value Should Be  id=subtotal-exceptions    £2,000
+    Textfield Value Should Be  id=total    £9,000
 
 the academic partner uploads a file
     [Arguments]    ${file_name}
@@ -192,12 +192,12 @@ the academic partner uploads a file
 
 the finance table should be correct
     Wait Until Element Contains Without Screenshots  css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £9,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)    £3,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)    £1,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(4)    £1,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    £0
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(7)    £1,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    £3,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)    3,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)    1,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(4)    1,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    0
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(7)    1,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    3,000
 
 Lead applicant marks the finances as complete
     Log in as a different user                       &{lead_applicant_credentials}

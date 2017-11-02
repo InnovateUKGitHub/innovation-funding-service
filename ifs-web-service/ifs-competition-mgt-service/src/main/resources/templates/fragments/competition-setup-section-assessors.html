@@ -1,6 +1,10 @@
 
 <!-- =================== Comp setup section - Assessors (6) ============================== -->
 <th:block th:fragment="section-content">
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
+    </div>
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment',size='heading-xlarge'" />
 
@@ -34,9 +38,9 @@
                           <span class="error-message"  th:each="err : ${#fields.errors('assessorPay')}" th:text="${err}"></span>
                     </th:block>
                 </label>
-                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" maxlength="8"
+                <input class="form-control width-medium" id="assessorPay" name="assessorPay" type="number" min="0" max="99999999"
                         th:value="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0)}"
-                       data-th-attr="data-maxlength-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
+                       data-th-attr="data-max-errormessage=#{validation.assessorsform.assessorPay.max.amount.invalid},
                                      data-min-errormessage=#{validation.assessorsform.assessorPay.min},
                                      data-required-errormessage=#{validation.assessorsform.assessorPay.required}"
                        th:errorclass="form-control-error"
@@ -120,7 +124,7 @@
                 <dd th:text="${competitionSetupForm.assessorCount}"></dd>
 
                 <dt>How much do assessors receive per application?</dt>
-                <dd th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')}"></dd>
+                <dd>&pound;<th:block th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'DEFAULT')}"></dd>
 
                 <dt>Enable assessment panel for this competition?</dt>
                 <dd th:text="${competitionSetupForm.hasAssessmentPanel} ? 'Yes' : 'No' "/>
