@@ -1,10 +1,10 @@
 #!/bin/bash
-echo '************************************************************************************************************'
-echo '* IFS                                                                                                      *'
-echo '* Modified script which does not chown the $DATADIR.                                                       *'
-echo '* This is because OpenShift does not run as this script as root and so chown causes permissions violations *'
-echo '* This script may not work with a $DATADIR other than /var/lib/mysql/                                      *'
-echo '************************************************************************************************************'
+echo '*********************************************************************************************************'
+echo '* IFS                                                                                                   *'
+echo '* Modified script which does not chown the $DATADIR.                                                    *'
+echo '* This is because OpenShift does not run this script as root and so chown causes permissions violations *'
+echo '* This script may not work with a $DATADIR other than /var/lib/mysql/                                   *'
+echo '*********************************************************************************************************'
 set -eo pipefail
 
 # if command starts with an option, prepend mysqld
