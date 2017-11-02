@@ -125,15 +125,40 @@ the user fills in the CS Milestones
 the user marks the Application as done
     [Arguments]  ${growthTable}
     the user clicks the button/link  link=Application
+    the application questions are marked complete except finances
     the user fills in the Finances questions  ${growthTable}
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
+the application questions are marked complete except finances
+    [Documentation]  IFS-743
+    [Tags]
+    the user marks each question as complete  Application details
+    the user marks each question as complete  Project summary
+    the user marks each question as complete  Public description
+    the user marks each question as complete  Scope
+    the user marks each question as complete  Business opportunity
+    the user marks each question as complete  Potential market
+    the user marks each question as complete  Project exploitation
+    the user marks each question as complete  Economic benefit
+    the user marks each question as complete  Technical approach
+    the user marks each question as complete  Innovation
+    the user marks each question as complete  Risks
+    the user marks each question as complete  Project team
+    the user marks each question as complete  Funding
+    the user marks each question as complete  Adding value
+
+the user marks each question as complete
+    [Arguments]  ${question_link}
+    the user clicks the button/link  link=${question_link}
+    run keyword and ignore error without screenshots   the user clicks the button/link  jQuery=.button:contains("Done")
+    run keyword and ignore error without screenshots   the user clicks the button/link  css=.button[value="Done"]
+
 the user fills in the Finances questions
     [Arguments]  ${growthTable}
     the user clicks the button/link       link=Finances
-    the user clicks the button/link       jQuery=.button:contains("Edit this question")
+    the user clicks the button/link       jQuery=.button:contains("Done")
     the user selects the radio button     includeGrowthTable  include-growth-table-${growthTable}
     the user enters text to a text field  css=.editor  Those are the rules that apply to Finances
     the user clicks the button/link       css=button[type="submit"]

@@ -86,7 +86,7 @@ Finances are editable (Ready to Open)
     And the user should see the element          jQuery=h1:contains("Application finances")
     When the user clicks the button/link         jQuery=a:contains("Edit this question")
     Then if textarea is empty the proper validation messages are shown
-    When the user clicks the button/link         jQuery=.button:contains("Save and close")
+#    When the user clicks the button/link         jQuery=.button:contains("Save and close")
     And the user clicks the button/link          jQuery=button:contains("Done")
     [Teardown]  the user clicks the button/link  link=Competition setup
 
