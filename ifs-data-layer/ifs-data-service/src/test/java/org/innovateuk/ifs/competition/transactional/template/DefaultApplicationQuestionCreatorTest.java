@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<DefaultApplicationQuestionCreator> {
-    private static final Long ASSESSOR_MAXIMUM_DEFAULT = 10L;
+    private static final Integer ASSESSOR_MAXIMUM_DEFAULT = 10;
 
     @Mock
     private FormValidatorRepository formValidatorRepositoryMock;

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.viewmodel;
 
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -24,6 +25,6 @@ public class ApplicationLandingViewModel extends CompetitionSetupViewModel {
     }
 
     public boolean multipleAssessedQuestionsLeft() {
-        return questions != null && questions.size() > 1;
+        return !CollectionUtils.isEmpty(questions) && questions.size() > 1;
     }
 }
