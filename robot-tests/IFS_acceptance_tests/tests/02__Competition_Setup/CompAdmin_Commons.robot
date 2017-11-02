@@ -49,7 +49,6 @@ the user fills in the CS Initial details
     the user clicks the button/link                      link=Competition setup
     the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete
 
-
 the user fills in the CS Funding Information
     the user clicks the button/link       link=Funding information
     the user enters text to a text field  id=funders[0].funder  FunderName FamilyName
@@ -125,19 +124,15 @@ the user fills in the CS Milestones
 the user marks the Application as done
     [Arguments]  ${growthTable}
     the user clicks the button/link  link=Application
-    the application questions are marked complete except finances
+    the user marks application details as complete
+    Run Keyword If  '${growthTable}' == 'yes'   the assessed questions are marked complete except finances(sector type)
+    Run Keyword If  '${growthTable}' == 'no'    the assessed questions are marked complete except finances(programme type)
     the user fills in the Finances questions  ${growthTable}
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
-the application questions are marked complete except finances
-    [Documentation]  IFS-743
-    [Tags]
-    the user marks each question as complete  Application details
-    the user marks each question as complete  Project summary
-    the user marks each question as complete  Public description
-    the user marks each question as complete  Scope
+the assessed questions are marked complete except finances(programme type)
     the user marks each question as complete  Business opportunity
     the user marks each question as complete  Potential market
     the user marks each question as complete  Project exploitation
@@ -149,16 +144,35 @@ the application questions are marked complete except finances
     the user marks each question as complete  Funding
     the user marks each question as complete  Adding value
 
+the assessed questions are marked complete except finances(sector type)
+    the user marks each question as complete  Need or challenge
+    the user marks each question as complete  Approach and innovation
+    the user marks each question as complete  Team and resources
+    the user marks each question as complete  Market awareness
+    the user marks each question as complete  Outcomes and route to market
+    the user marks each question as complete  Wider impacts
+    the user marks each question as complete  Project management
+    the user marks each question as complete  Risks
+    the user marks each question as complete  Additionality
+    the user marks each question as complete  Costs and value for money
+
+the user marks application details as complete
+    the user marks each question as complete  Application details
+    the user marks each question as complete  Project summary
+    the user marks each question as complete  Public description
+    the user marks each question as complete  Scope
+
 the user marks each question as complete
     [Arguments]  ${question_link}
     the user clicks the button/link  link=${question_link}
+    #TODO once IFS-2052 addresses common way of defining the elements we can remove the run keyord and ignore here
     run keyword and ignore error without screenshots   the user clicks the button/link  jQuery=.button:contains("Done")
     run keyword and ignore error without screenshots   the user clicks the button/link  css=.button[value="Done"]
 
 the user fills in the Finances questions
     [Arguments]  ${growthTable}
     the user clicks the button/link       link=Finances
-    the user clicks the button/link       jQuery=.button:contains("Done")
+    the user clicks the button/link  jQuery=.button:contains("Done")
     the user selects the radio button     includeGrowthTable  include-growth-table-${growthTable}
     the user enters text to a text field  css=.editor  Those are the rules that apply to Finances
     the user clicks the button/link       css=button[type="submit"]
