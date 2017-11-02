@@ -228,9 +228,9 @@ Funding information: calculations
     And the user should see the element    jQuery=Button:contains("Remove")
     And the user enters text to a text field    id=funders[1].funder    FunderName2
     And the user enters text to a text field    id=funders[1].funderBudget    1000
-    Then the total should be correct    Total: £ 21,000
+    Then the total should be correct    Total: £21,000
     When the user clicks the button/link    jQuery=Button:contains("Remove")
-    Then the total should be correct    Total: £ 20,000
+    Then the total should be correct    Total: £20,000
 
 Funding information: can be saved
     [Documentation]    INFUND-3182

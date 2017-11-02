@@ -138,7 +138,7 @@ the assessed questions are marked complete except finances(programme type)
     the user marks each question as complete  Potential market
     the user marks each question as complete  Project exploitation
     the user marks each question as complete  Economic benefit
-    the user marks each question as complete  Technical acomp_typepproach
+    the user marks each question as complete  Technical approach
     the user marks each question as complete  Innovation
     the user marks each question as complete  Risks
     the user marks each question as complete  Project team

@@ -23,8 +23,8 @@ Business opportunity Server-side validations setup questions
     [Teardown]  Enter question title again
 
 Application questions mark as done validations
-    [Documentation]    INFUND-6468
-    [Tags]
+    [Documentation]    INFUND-6468  IFS-743
+    [Tags]  HappyPath
     When the user clicks the button/link    link=Application
     Then the user should not see the element   css=.button[value="Done"]
 
@@ -166,4 +166,4 @@ User creates a new competition for Application tests
 Enter question title again
     the user enters text to a text field    id=question.title    Test title
     the user enters text to a text field    id=question.shortTitle    Business opportunity
-    And the user clicks the button/link    css=.button[value="Done"]
+    the user clicks the button/link         css=.button[value="Done"]
