@@ -53,7 +53,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToMonitoringOfficerSectionHappyPath() {
         when(setupProgressCheckerMock.canAccessMonitoringOfficer()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessMonitoringOfficerSection(null));
+        assertEquals(ACCESSIBLE, internalUser.canAccessMonitoringOfficerSection(newUserResource().withRolesGlobal(newRoleResource().withType(COMP_ADMIN).build(1)).build()));
 
         verifyInteractions(
                 mock -> mock.canAccessMonitoringOfficer()
@@ -116,7 +116,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToSpendProfileSectionHappyPath() {
         when(setupProgressCheckerMock.isSpendProfileSubmitted()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessSpendProfileSection(null));
+        assertEquals(ACCESSIBLE, internalUser.canAccessSpendProfileSection(newUserResource().withRolesGlobal(newRoleResource().withType(COMP_ADMIN).build(1)).build()));
 
         verifyInteractions(
                 mock -> mock.isSpendProfileApproved(),
@@ -140,7 +140,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
         when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
         when(setupProgressCheckerMock.isOtherDocumentsRejected()).thenReturn(false);
-        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
+        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(newUserResource().withRolesGlobal(newRoleResource().withType(COMP_ADMIN).build(1)).build()));
 
         verifyInteractions(
                 mock -> mock.isOtherDocumentsSubmitted()
@@ -151,7 +151,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     public void testCheckAccessToOtherDocumentsSectionDocsApproved() {
         when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
         when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
+        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(newUserResource().withRolesGlobal(newRoleResource().withType(COMP_ADMIN).build(1)).build()));
 
         verifyInteractions(
                 mock -> mock.isOtherDocumentsSubmitted()
@@ -163,7 +163,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
         when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(false);
         when(setupProgressCheckerMock.isOtherDocumentsRejected()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(null));
+        assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(newUserResource().withRolesGlobal(newRoleResource().withType(COMP_ADMIN).build(1)).build()));
 
         verifyInteractions(
                 mock -> mock.isOtherDocumentsSubmitted()
