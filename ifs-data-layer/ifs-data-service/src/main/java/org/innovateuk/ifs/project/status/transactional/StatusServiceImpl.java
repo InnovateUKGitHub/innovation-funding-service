@@ -7,20 +7,20 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
+import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
-import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
-import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -41,10 +41,9 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -222,12 +221,21 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private ProjectActivityStates createMonitoringOfficerCompetitionStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
-        if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
-            return monitoringOfficer.isPresent() ? COMPLETE : ACTION_REQUIRED;
-        } else {
-            return NOT_STARTED;
-        }
-
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
+            if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
+                if(monitoringOfficer.isPresent())
+                    return COMPLETE;
+                else {
+                    if(isSupport(user)){
+                        return NOT_STARTED;
+                    } else {
+                        return ACTION_REQUIRED;
+                    }
+                }
+            } else {
+                return NOT_STARTED;
+            }
+        }).getSuccessObject();
     }
 
     private ProjectActivityStates getOtherDocumentsStatus(Project project) {
