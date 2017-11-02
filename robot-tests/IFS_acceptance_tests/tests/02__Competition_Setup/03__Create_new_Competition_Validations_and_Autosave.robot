@@ -197,7 +197,6 @@ Application finances: validation empty
     [Setup]    The user navigates to the Validation competition
     Given the user clicks the button/link     link=Application
     And the user clicks the button/link       link=Finances
-#    And the user clicks the button/link       jQuery=a:contains("Edit this question")
     And the user enters text to a text field  css=.editor  ${EMPTY}
     When the user moves focus to the element  jQuery=button:contains("Done")
     Then the user should see an error         This field cannot be left blank.
