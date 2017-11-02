@@ -94,7 +94,7 @@ public class GrantClaimCostPopulatorTest {
 
         assertThat(viewModel.isComplete(), equalTo(true));
         assertThat(viewModel.getCostCategory(), equalTo(category));
-        assertThat(viewModel.getViewmode(), equalTo("approved"));
+        assertThat(viewModel.getViewmode(), equalTo("readonly"));
         assertThat(viewModel.getMaximumGrantClaimPercentage(), equalTo(MAXIMUM_GRANT_CLAIM));
         assertThat(viewModel.getOrganisationGrantClaimPercentage(), equalTo(GRANT_CLAIM));
         assertThat(viewModel.getOrganisationGrantClaimPercentageId(), equalTo(GRANT_CLAIM_ID));

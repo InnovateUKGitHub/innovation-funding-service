@@ -270,7 +270,7 @@ the application list is correct before changes
 the available assessors information is correct
     the user should see the element    jQuery=.assessors-available td:nth-child(1):contains('Paul Plum')
     the user should see the element    jQuery=.assessors-available td:nth-child(2):contains('Town Planning, Construction')
-    the user should see the element    jQuery=.assessors-available td:nth-child(3):contains('11')
+    the user should see the element    jQuery=.assessors-available td:nth-child(3):contains('10')
     the user should see the element    jQuery=.assessors-available td:nth-child(4):contains('7')
     the user should see the element    jQuery=.assessors-available td:nth-child(5):contains('0')
 
@@ -279,7 +279,7 @@ the assigned list is correct before notification
     the user should see the element    jQuery=.assessors-assigned td:nth-child(2):contains("Academic")
     the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("Urban living")
     the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("infrastructure")
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(4):contains("12")
+    the user should see the element    jQuery=tr:eq(1) td:nth-child(4):contains("11")
     the user should see the element    jQuery=tr:eq(1) td:nth-child(5):contains("8")
     the user should see the element    jQuery=tr:eq(1) td:nth-child(6):contains("-")
     the user should see the element    jQuery=tr:eq(1) td:nth-child(7):contains("-")
@@ -291,7 +291,7 @@ the previously assigned list is correct
     the user should see the element    jQuery=.assessors-previous td:nth-child(2):contains('Academic')
     the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('Urban living')
     the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('infrastructure')
-    the user should see the element    jQuery=.assessors-previous td:nth-child(4):contains('11')
+    the user should see the element    jQuery=.assessors-previous td:nth-child(4):contains('10')
     the user should see the element    jQuery=.assessors-previous td:nth-child(5):contains('7')
 
 the user see the correct key statistics
