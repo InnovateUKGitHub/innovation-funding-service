@@ -20,6 +20,7 @@ Business opportunity Server-side validations setup questions
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank.
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank.
     And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank.
+    [Teardown]  the user enters text to a text field   jQuery=label:contains(Question title)  Business opportunity
 
 Application questions mark as done validations
     [Documentation]    INFUND-6468
