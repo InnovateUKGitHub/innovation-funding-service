@@ -1,4 +1,10 @@
 #!/bin/bash
+echo '************************************************************************************************************'
+echo '* IFS                                                                                                      *'
+echo '* Modified script which does not chown the $DATADIR.                                                       *'
+echo '* This is because OpenShift does not run as this script as root and so chown causes permissions violations *'
+echo '* This script may not work with a $DATADIR other than /var/lib/mysql/                                      *'
+echo '************************************************************************************************************'
 set -eo pipefail
 
 # if command starts with an option, prepend mysqld
@@ -27,6 +33,19 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
 			echo >&2 '  You need to specify one of MYSQL_ROOT_PASSWORD, MYSQL_ALLOW_EMPTY_PASSWORD and MYSQL_RANDOM_ROOT_PASSWORD'
 			exit 1
 		fi
+
+        if [ ! $DATADIR = '/var/lib/mysql/' ]; then
+            echo '***************************************************************************************'
+            echo '* IFS                                                                                 *'
+            echo '* The $DATADIR is not set to /var/lib/mysql. This may not work.                       *'
+            echo '* Note /var/lib/mysql exist in the base Dockerfile image with the correct permissions *'
+            echo '***************************************************************************************'
+            mkdir -p "$DATADIR"
+        fi
+
+#IFS This chown causes issues with OpenShift as the script is not run as root.
+#IFS This is not an issue if using /var/lib/mysql as permissions are already set correctly.
+#IFS    chown -R mysql:mysql "$DATADIR"
 
 		echo 'Initializing database'
 		mysql_install_db --user=mysql --datadir="$DATADIR" --rpm --keep-my-cnf
@@ -115,6 +134,9 @@ if [ "$1" = 'mysqld' -a -z "$wantHelp" ]; then
 		echo
 	fi
 
+#IFS This chown causes issues with OpenShift as the script is not run as root.
+#IFS This is not an issue if using /var/lib/mysql as permissions are already set correctly.
+#IFS chown -R mysql:mysql "$DATADIR"
 
 fi
 
