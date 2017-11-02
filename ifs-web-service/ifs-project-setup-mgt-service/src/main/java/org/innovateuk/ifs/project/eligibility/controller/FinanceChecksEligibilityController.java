@@ -199,7 +199,7 @@ public class FinanceChecksEligibilityController {
         financeHandler.getProjectFinanceModelManager(organisationType).addCost(model, costItem, projectId, organisationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
-        return String.format("project/financecheck/fragments/finance:: %s_row(viewmode='edit')", costType.getType());
+        return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
