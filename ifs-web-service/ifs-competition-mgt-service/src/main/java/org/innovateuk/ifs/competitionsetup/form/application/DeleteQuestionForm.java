@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competitionsetup.form;
+package org.innovateuk.ifs.competitionsetup.form.application;
 
 /**
  * Bean to contain the question id that will be deleted in Competition Setup.

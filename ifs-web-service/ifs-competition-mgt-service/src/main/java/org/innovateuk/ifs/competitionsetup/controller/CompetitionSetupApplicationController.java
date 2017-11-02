@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupQuestionRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.form.DeleteQuestionForm;
+import org.innovateuk.ifs.competitionsetup.form.application.DeleteQuestionForm;
 import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
 import org.innovateuk.ifs.competitionsetup.form.LandingPageForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsForm;
