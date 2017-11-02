@@ -24,17 +24,19 @@ Business opportunity Server-side validations setup questions
 Application questions mark as done validations
     [Documentation]    INFUND-6468
     [Tags]
-    Given the user clicks the button/link    link=Application
-    And the user clicks the button/link    css=.button[value="Done"]
-    And the user should see the text in the page    Unable to mark as complete.
-    And the user should see the text in the page    view the application section(s) to resolve the error.
-    And The user clicks the button/link    link=No question header entered
-    And the user clicks the button/link    jQuery=.button:contains("Done")
+    When the user clicks the button/link    link=Application
+    Then the user should not see the element   css=.button[value="Done"]
+#    And the user clicks the button/link      css=.button[value="Done"]
+#    And the user should see the text in the page    Unable to mark as complete.
+#    And the user should see the text in the page    view the application section(s) to resolve the error.
+#    And The user clicks the button/link    link=No question header entered
+#    And the user clicks the button/link    jQuery=.button:contains("Done")
 
 Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
     [Tags]    HappyPath
-    Given the user leaves all the assessment questions empty
+    Given the user clicks the button/link      link=Business opportunity
+    And the user leaves all the assessment questions empty
     When the user clicks the button/link    css=.button[value="Done"]
     Then the user should see the text in the page    Please enter a from score.
     And the user should see the text in the page    Please enter a to score.

@@ -197,13 +197,12 @@ Application finances: validation empty
     [Setup]    The user navigates to the Validation competition
     Given the user clicks the button/link     link=Application
     And the user clicks the button/link       link=Finances
-    And the user clicks the button/link       jQuery=a:contains("Edit this question")
+#    And the user clicks the button/link       jQuery=a:contains("Edit this question")
     And the user enters text to a text field  css=.editor  ${EMPTY}
-    When the user moves focus to the element  jQuery=button:contains("Save and close")
+    When the user moves focus to the element  jQuery=button:contains("Done")
     Then the user should see an error         This field cannot be left blank.
     And the user enters text to a text field  css=.editor  Funding rules for this competition added
-    And the user clicks the button/link       jQuery=button:contains("Save and close")
-
+    And the user clicks the button/link       jQuery=button:contains("Done")
 
 Application finances: able to edit the field
     [Documentation]  IFS-630
@@ -211,10 +210,8 @@ Application finances: able to edit the field
     [Setup]  The user navigates to the Validation competition
     Given the user clicks the button/link      link=Application
     And the user clicks the button/link        link=Finances
-    And the user should see the element        jQuery=.button:contains("Edit this question")
     When the user clicks the button/link       link=Edit this question
     Then the user enters text to a text field  css=.editor  Funding rules for this competition updated
-    And the user clicks the button/link        jQuery=button:contains("Save and close")
     And the user clicks the button/link        jQuery=button:contains("Done")
     And the user should not see an error in the page
 
