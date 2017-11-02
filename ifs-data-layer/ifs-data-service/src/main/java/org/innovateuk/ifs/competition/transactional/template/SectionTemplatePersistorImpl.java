@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -45,22 +46,21 @@ public class SectionTemplatePersistorImpl implements BaseChainedTemplatePersisto
         getTopLevelSections(competition).stream().forEach(section -> cleanForPrecedingEntityRecursively(section));
     }
 
-    private List<Section> getTopLevelSections(Competition competition) {
-        return competition.getSections().stream()
-                    .filter(s -> s.getParentSection() == null)
-                    .collect(Collectors.toList());
-    }
-
     private List<Section> createChildSectionsRecursively(Competition competition, Section parentSectionTemplate) {
-        return parentSectionTemplate.getChildSections().stream().map(section -> createChildSectionRecursively(competition, parentSectionTemplate).apply(section)).collect(Collectors.toList());
+        if(parentSectionTemplate.getChildSections() != null) {
+            return parentSectionTemplate.getChildSections().stream().map(section -> createChildSectionRecursively(competition, parentSectionTemplate).apply(section)).collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 
     private Function<Section, Section> createChildSectionRecursively(Competition competition, Section parentSection) {
         return (Section section) -> {
             entityManager.detach(section);
-            section.setCompetition(competition);
+
             section.setId(null);
+            section.setCompetition(competition);
             section.setParentSection(parentSection);
+
             sectionRepository.save(section);
 
             questionTemplatePersistorServiceServiceImpl.persistByParentEntity(section);
@@ -72,11 +72,19 @@ public class SectionTemplatePersistorImpl implements BaseChainedTemplatePersisto
     }
 
     private void cleanForPrecedingEntityRecursively(Section section) {
-        section.getChildSections().stream().forEach(s -> cleanForPrecedingEntityRecursively(s));
+        if(section.getChildSections() != null) {
+            section.getChildSections().stream().forEach(s -> cleanForPrecedingEntityRecursively(s));
+        }
 
         questionTemplatePersistorServiceServiceImpl.cleanForParentEntity(section);
 
         entityManager.detach(section);
         sectionRepository.delete(section);
+    }
+
+    private List<Section> getTopLevelSections(Competition competition) {
+        return competition.getSections().stream()
+                .filter(s -> s.getParentSection() == null)
+                .collect(Collectors.toList());
     }
 }
