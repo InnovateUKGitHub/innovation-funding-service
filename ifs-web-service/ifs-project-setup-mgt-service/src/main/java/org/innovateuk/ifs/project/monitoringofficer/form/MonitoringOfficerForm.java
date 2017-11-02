@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.project.monitoringofficer.form;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -33,7 +33,7 @@ public class MonitoringOfficerForm extends BaseBindingResultTarget {
 
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     @NotEmpty(message = "{validation.invite.email.required}")
-    @Size(max = 256, message = "{validation.standard.email.length.max}")
+    @Size(max = 254, message = "{validation.standard.email.length.max}")
     private String emailAddress;
 
     @NotEmpty(message = "{validation.standard.phonenumber.required}")
