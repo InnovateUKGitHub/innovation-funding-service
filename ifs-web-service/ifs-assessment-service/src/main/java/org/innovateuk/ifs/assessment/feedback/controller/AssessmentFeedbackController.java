@@ -43,6 +43,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.mappingFieldErrorToField;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
+import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Controller
@@ -120,9 +121,7 @@ public class AssessmentFeedbackController {
         Supplier<String> failureView = () -> doViewQuestion(model, assessmentId, getQuestionForAssessment(questionId, assessmentId));
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT)
-                    .getSuccessObjectOrThrowException();
-
+            List<FormInputResource> formInputs = getAssessmentFormInputsForQuestion(questionId);
             AssessorFormInputResponsesResource responses = getFormInputResponses(form, formInputs, assessmentId);
             RestResult<Void> updateResult = assessorFormInputResponseRestService.updateFormInputResponses(responses);
 
@@ -156,7 +155,21 @@ public class AssessmentFeedbackController {
         List<AssessorFormInputResponseResource> assessorResponses = getAssessorResponses(assessmentId, questionId);
         Map<Long, AssessorFormInputResponseResource> mappedResponses = simpleToMap(assessorResponses, AssessorFormInputResponseResource::getFormInput);
         mappedResponses.forEach((k, v) -> form.addFormInput(k.toString(), v.getValue()));
+        addScopeToForm(form, mappedResponses, questionId);
         return form;
+    }
+
+    private void addScopeToForm(Form form, Map<Long, AssessorFormInputResponseResource> mappedResponses, long questionId) {
+        FormInputResource scopeInput = getScopeFormInput(getAssessmentFormInputsForQuestion(questionId));
+
+        if (scopeInput != null && !mappedResponses.containsKey(scopeInput.getId())) {
+            form.addFormInput(scopeInput.getId().toString(), "none");
+        }
+    }
+
+    private List<FormInputResource> getAssessmentFormInputsForQuestion(long questionId) {
+        return formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT)
+                .getSuccessObjectOrThrowException();
     }
 
     private String doViewQuestion(Model model, long assessmentId, QuestionResource question) {
@@ -189,6 +202,13 @@ public class AssessmentFeedbackController {
 
     private List<FormInputResource> getApplicationFormInputs(long questionId) {
         return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccessObjectOrThrowException();
+    }
+
+    private FormInputResource getScopeFormInput(List<FormInputResource> formInputs) {
+        return formInputs.stream()
+                .filter(input -> input.getType().equals(ASSESSOR_APPLICATION_IN_SCOPE))
+                .findAny()
+                .orElse(null);
     }
 
     private AssessorFormInputResponsesResource getFormInputResponses(Form form, List<FormInputResource> formInputs, long assessmentId) {

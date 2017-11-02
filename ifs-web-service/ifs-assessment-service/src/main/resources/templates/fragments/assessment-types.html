@@ -84,16 +84,18 @@
 
 <!-- =================== Assessment feedback scope ============================== -->
 <div th:fragment="assessor_application_in_scope (field)">
+    <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[__${field.id}__]}')} ? 'form-group-error'">
     <h2 class="heading-small">Is this application in scope?</h2>
     <fieldset class="inline">
-        <legend class="visuallyhidden" th:id="formInput[__${field.id}__]">Is this application in scope?</legend>
-        <div class="form-group">
+        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
+        <legend class="visuallyhidden" th:id="formInput[__${field.id}__]" >Is this application in scope?</legend>
             <div class="multiple-choice" th:each="option : ${ { true, false } }">
-                <input th:id="'in-scope-'+${option}" th:field="*{formInput[__${field.id}__]}" th:value="${option}" type="radio" />
+                <input th:id="'in-scope-'+${option}" th:field="*{formInput[__${field.id}__]}" th:value="${option}" type="radio"/>
                 <label th:for="'in-scope-'+${option}" th:text="${option ? 'Yes' : 'No'}">Yes/No</label>
             </div>
-        </div>
+        <input th:id="in-scope-none" th:field="*{formInput[__${field.id}__]}" value="none" type="radio" style="display:none"/>
     </fieldset>
+    </div>
 </div>
 
 
