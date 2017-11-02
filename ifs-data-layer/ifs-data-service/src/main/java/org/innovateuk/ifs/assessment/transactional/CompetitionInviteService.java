@@ -17,19 +17,19 @@ import java.util.Optional;
  */
 public interface CompetitionInviteService {
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GET_ALL_CREATED_INVITES",
             description = "Competition Admins and Project Finance users can get all invites that have been created for a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GET_ALL_INVITES_TO_RESEND",
             description = "Competition Admins and Project Finance users can get all invites to be resent for a competition")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<AssessorInvitesToSendResource> getAllInvitesToResend(long competitionId, List<Long> inviteIds);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GET_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can get a competition invite that has been created")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<AssessorInvitesToSendResource> getInviteToSend(long inviteId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
@@ -121,28 +121,28 @@ public interface CompetitionInviteService {
             description = "The Competition Admin user and Project Finance users can create competition invites for existing users")
     ServiceResult<Void> inviteUsers(List<ExistingUserStagedInviteResource> existingUserStagedInvites);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "SEND_ALL_INVITES",
             description = "The Competition Admins and Project Finance users can send all competition invites")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> sendAllInvites(long competitionId, AssessorInviteSendResource assessorInvitesToSendResource);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "RESEND_INVITE",
             description = "The Competition Admins and Project Finance users can send a competition invite")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> resendInvite(long inviteId, AssessorInviteSendResource assessorInviteSendResource);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "RESEND_INVITES",
             description = "The Competition Admins and Project Finance users can send a competition invite")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> resendInvites(List<Long> inviteIds, AssessorInviteSendResource assessorInviteSendResource);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "DELETE_INVITE",
             description = "The Competition Admins and Project Finance users can delete a competition invite")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> deleteInvite(String email, long competitionId);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "DELETE_ALL_INVITES",
             description = "The Competition Admins and Project Finance users can delete all the competition invites")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<Void> deleteAllInvites(long competitionId);
 }

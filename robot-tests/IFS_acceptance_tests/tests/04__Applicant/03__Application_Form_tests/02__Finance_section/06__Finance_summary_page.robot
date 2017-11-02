@@ -66,7 +66,7 @@ Your Finance includes Finance summary table for lead applicant
     [Tags]
     [Setup]  log in as a different user            &{lead_applicant_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    Then the finance summary table in Your Finances has correct values for lead  £72,611  30%  £0  £8,000,000  £0
+    Then the finance summary table in Your Finances has correct values for lead  £72,611  30%  0  8,000,000  0
     And the user clicks the button/link            link=Return to application overview
 
 Your Finance includes Finance summary table for collaborator
@@ -150,7 +150,7 @@ Support User can see read only summary for lead
     [Tags]  Support
     [Setup]  The user clicks the button/link       css=.finance-summary tbody tr:nth-of-type(1) th a
     When the user should see the text in the page  Please complete your project finances.
-    Then the finance summary table in Your Finances has correct values for lead  £72,611  30%  £0  £8,000,000  £0
+    Then the finance summary table in Your Finances has correct values for lead  £72,611  30%  0  8,000,000  0
 
 Support User can see read only summary for collaborator
     [Documentation]  IFS-401
@@ -212,7 +212,7 @@ Innovation lead can see read only summary for lead
     [Tags]  InnovationLead
     [Setup]  The user clicks the button/link  css=.finance-summary tbody tr:nth-of-type(1) th a
     When the user should see the text in the page       Please complete your project finances.
-    Then the finance summary table in Your Finances has correct values for lead  £200,903  30%  £57,803  £2,468  £140,632
+    Then the finance summary table in Your Finances has correct values for lead  £200,903  30%  57,803  2,468  140,632
 
 Innovation lead can see read only summary for collaborator
     [Documentation]  IFS-802
@@ -253,14 +253,14 @@ Innovation lead can see read only view of Your funding
     Then the user should see the text in the page  Please complete your project finances.
     When the user clicks the button/link           jQuery=a:contains("Your funding")
     Then the user should see the element           jQuery=dt:contains("Funding level") + dd:contains("30%")
-    And the user should see the element            jQuery=th:contains("Lottery") ~ td:contains("£ 2,468")
+    And the user should see the element            jQuery=th:contains("Lottery") ~ td:contains("£2,468")
 
 *** Keywords ***
 the finance summary calculations should be correct
     the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£349,046")
-    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£58,793")
-    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£502,468")
-    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("£140,632")
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("58,793")
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("502,468")
+    the user should see the element  jQuery=.finance-summary tbody tr:last-of-type:contains("140,632")
 
 the finance Funding breakdown calculations should be correct
     the user should see the element  jQuery=.project-cost-breakdown th:contains("${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}") + td:contains("£147,153")
@@ -287,16 +287,16 @@ the finance summary table in Your Finances has correct values for collaborator
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(2)  % Grant
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(2)  100%
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(3)  Funding sought
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  £990
+    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  990
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(4)  Other public sector funding
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(4)  £0
+    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(4)  0
     the user sees the text in the element  css=.form-group tr:nth-of-type(1) th:nth-of-type(5)  Contribution to project
-    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  £0
+    the user sees the text in the element  css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  0
 
 the contribution to project and funding sought should be 0 and not a negative number
     the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  £0
-    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  £0
+    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(3)  0
+    the user sees the text in the element     css=.form-group tr:nth-of-type(1) td:nth-of-type(5)  0
 
 Green check should be visible
     Page Should Contain Image  css=.finance-summary tr:nth-of-type(1) img[src*="/images/field/tick-icon"]
@@ -318,7 +318,7 @@ Lead enters a valid research participation value
     wait for autosave
     the user enters text to a text field              css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input  1000
     wait for autosave
-    the user selects the checkbox                     id=agree-state-aid-page
+    the user selects the checkbox                     id=stateAidAgreed
     the user clicks the button/link                   jQuery= button:contains('Mark as complete')
     wait for autosave
 
@@ -338,7 +338,7 @@ the user fills in the funding information with bigger amount
     [Arguments]  ${Application}
     the user navigates to Your-finances page  ${Application}
     the user clicks the button/link           link=Your funding
-    the user enters text to a text field      css=#cost-financegrantclaim  30
+    the user enters text to a text field      css=[name^="finance-grantclaimpercentage"]  30
     click element                             jQuery=label:contains("Yes")
     the user enters text to a text field      css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input  8000000
     the user enters text to a text field      css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input  test2
@@ -347,14 +347,14 @@ the user fills in the funding information with bigger amount
 
 User verifies captial usage, subcontracting, travel and other costs for innovation lead
     the user expands the section     Capital usage
-    the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") + td:contains("Existing") + td:contains("12") + td:contains("2120")
-    the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") ~ td:contains("1200") + td:contains("60") + td:contains("£ 552")
+    the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") + td:contains("Existing") + td:contains("12") + td:contains("2,120")
+    the user should see the element  jQuery=#capital-usage-table td:contains("Depreciating Stuff") ~ td:contains("1,200") + td:contains("60") + td:contains("£552")
     the user collapses the section   Capital usage
     the user expands the section     Subcontracting costs
-    the user should see the element  jQuery=#subcontracting-table td:contains("Developers") + td:contains("UK") + td:contains("To develop stuff") + td:contains("£ 90,000")
+    the user should see the element  jQuery=#subcontracting-table td:contains("Developers") + td:contains("UK") + td:contains("To develop stuff") + td:contains("£90,000")
     the user collapses the section   Subcontracting costs
     the user expands the section     Travel and subsistence
-    the user should see the element  jQuery=#travel-costs-table td:contains("To visit colleagues") + td:contains("15") + td:contains("398") + td:contains("£ 5,970")
+    the user should see the element  jQuery=#travel-costs-table td:contains("To visit colleagues") + td:contains("15") + td:contains("398") + td:contains("£5,970")
     the user collapses the section   Travel and subsistence
     the user expands the section     Other costs
     the user should see the element  jQuery=#other-costs-table td:contains("Some more costs") + td:contains("1,100")
@@ -375,14 +375,14 @@ User verifies labour, overhead costs and materials for innovation lead
 
 User verifies captial usage, subcontracting, travel and other costs
     the user expands the section     Capital usage
-    the user should see the element  jQuery=#capital-usage-table td:contains("some description") + td:contains("New") + td:contains("10") + td:contains("5000")
-    the user should see the element  jQuery=#capital-usage-table td:contains("some description") ~ td:contains("25") + td:contains("100") + td:contains("£ 4975")
+    the user should see the element  jQuery=#capital-usage-table td:contains("some description") + td:contains("New") + td:contains("10") + td:contains("5,000")
+    the user should see the element  jQuery=#capital-usage-table td:contains("some description") ~ td:contains("25") + td:contains("100") + td:contains("£4,975")
     the user collapses the section   Capital usage
     the user expands the section     Subcontracting costs
-    the user should see the element  jQuery=#subcontracting-table td:contains("SomeName") + td:contains("Netherlands") + td:contains("Quality Assurance") + td:contains("£ 1,000")
+    the user should see the element  jQuery=#subcontracting-table td:contains("SomeName") + td:contains("Netherlands") + td:contains("Quality Assurance") + td:contains("£1,000")
     the user collapses the section   Subcontracting costs
     the user expands the section     Travel and subsistence
-    the user should see the element  jQuery=#travel-costs-table td:contains("test") + td:contains("10") + td:contains("100") + td:contains("£ 1,000")
+    the user should see the element  jQuery=#travel-costs-table td:contains("test") + td:contains("10") + td:contains("100") + td:contains("£1,000")
     the user collapses the section   Travel and subsistence
     the user expands the section     Other costs
     the user should see the element  jQuery=#other-costs-table td:contains("some other costs") + td:contains("50")
@@ -391,7 +391,7 @@ User verifies captial usage, subcontracting, travel and other costs
 User verifies labour, overhead costs and materials
     the user expands the section     Labour
     the user should see the element  jQuery=dt:contains("Working days per year") ~ dd:contains("230")
-    the user should see the element  jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("120000") ~ td:contains("100")
+    the user should see the element  jQuery=.labour-costs-table td:contains("anotherrole") ~ td:contains("120,000") ~ td:contains("100")
     the user collapses the section   Labour
     the user expands the section     Overhead costs
     the user should see the element  jQuery=th:contains("20% of labour costs")

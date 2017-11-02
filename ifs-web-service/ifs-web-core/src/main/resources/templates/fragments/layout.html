@@ -4,9 +4,10 @@
 <!-- ===========================Place: <HEAD>=========================== -->
 <th:block th:fragment="head">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-
-    <title th:text="${pageTitle}+' - Innovation Funding Service'"></title>
-
+    <!--/* deal with null hasFormErrors for pages that don't have forms */-->
+    <th:block th:with="hasFormErrors=${hasFormErrors != null ? hasFormErrors : false}">
+        <title th:text="|${hasFormErrors ? 'Error: ' : ''} ${pageTitle} - Innovation Funding Service|"></title>
+    </th:block>
     <script type="text/javascript">
       if (!window.console) console = {log: function() {}, warn: function(){}};
     </script>
@@ -190,7 +191,9 @@
 <th:block th:fragment="header-sub">
     <div class="sub-header">
         <nav>
-            <a th:if="${linkTitle != null and linkUrl != null}"
+            <span th:if="${javascriptBackLink}"
+                  th:attr="data-javascript-back-link=${linkTitle}"></span>
+            <a th:if="${linkTitle != null and linkUrl != null and javascriptBackLink != true}"
                th:class="${linkClass != null ? linkClass : ''}"
                th:href="${linkUrl}"
                th:text="${linkTitle}" />

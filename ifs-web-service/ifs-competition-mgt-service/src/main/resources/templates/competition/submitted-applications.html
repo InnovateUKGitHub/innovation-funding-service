@@ -74,8 +74,8 @@
                             <th scope="col">Lead</th>
                             <th scope="col">Innovation area</th>
                             <th scope="col">Number of partners</th>
-                            <th scope="col">Grant requested (£)</th>
-                            <th scope="col">Total project cost (£)</th>
+                            <th scope="col">Grant requested (&pound;)</th>
+                            <th scope="col">Total project cost (&pound;)</th>
                             <th scope="col" class="alignright" style="width: 10%">Duration (months)</th>
                         </tr>
                     </thead>
@@ -90,8 +90,8 @@
                             <td th:text="${row.lead}">PWC</td>
                             <td th:text="${row.innovationArea} ?: 'Not listed'">HVM</td>
                             <td th:text="${row.numberOfPartners}">5</td>
-                            <td th:text="${#numbers.formatInteger(row.grantRequested, 3, 'COMMA')}">£203,000</td>
-                            <td th:text="${#numbers.formatInteger(row.totalProjectCost, 3, 'COMMA')}">£324,000</td>
+                            <td th:text="${#numbers.formatInteger(row.grantRequested, 3, 'DEFAULT')}">£203,000</td>
+                            <td th:text="${#numbers.formatInteger(row.totalProjectCost, 3, 'DEFAULT')}">£324,000</td>
                             <td class="alignright" th:text="${row.durationInMonths}">12</td>
                         </tr>
                     </tbody>
