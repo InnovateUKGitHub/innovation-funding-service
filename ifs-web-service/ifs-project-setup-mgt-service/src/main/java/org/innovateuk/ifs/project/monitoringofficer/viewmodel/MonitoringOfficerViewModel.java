@@ -42,6 +42,7 @@ public class MonitoringOfficerViewModel {
         this.competitionSummary = competitionSummary;
         this.existingMonitoringOfficer = existingMonitoringOfficer;
         this.editMode = editMode;
+        this.editable = editable;
     }
 
     public Long getProjectId() {
