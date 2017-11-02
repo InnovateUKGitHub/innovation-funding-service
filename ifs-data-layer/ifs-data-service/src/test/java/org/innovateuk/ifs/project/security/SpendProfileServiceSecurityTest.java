@@ -26,6 +26,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SUPPORT;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
@@ -170,13 +171,13 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     @Test
     public void testGetSpendProfileStatusByProjectId() {
 
-        List<UserRoleType> nonCompAdminRoles = getNonProjectFinanceUserRoles();
+        List<UserRoleType> nonCompAdminRoles = getNonInternalAdminOrSupportUserRoles();
         nonCompAdminRoles.forEach(role -> {
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
                 classUnderTest.getSpendProfileStatusByProjectId(1L);
-                Assert.fail("Should not have been able to create project from application without the global Comp Admin role");
+                Assert.fail("Should not have been able to obtain status for spend profile with role " + role.getName());
             } catch (AccessDeniedException e) {
                 // expected behaviour
             }
@@ -276,6 +277,11 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
         public ServiceResult<SpendProfileCSVResource> getSpendProfileCSV(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
             return null;
         }
+    }
+
+    private List<UserRoleType> getNonInternalAdminOrSupportUserRoles() {
+        return asList(UserRoleType.values()).stream().filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN && type != SUPPORT)
+                .collect(toList());
     }
 
     private List<UserRoleType> getNonProjectFinanceUserRoles() {

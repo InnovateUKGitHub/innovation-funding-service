@@ -279,7 +279,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
         ProjectResource project = newProjectResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser()) || user.equals(compAdminUser())) {
+            if (user.equals(projectFinanceUser()) || user.equals(compAdminUser()) || user.equals(supportUser())) {
                 assertTrue(rules.internalAdminAndSupportUserCanViewSendGrantOfferLetterStatus(project, user));
             } else {
                 assertFalse(rules.internalAdminAndSupportUserCanViewSendGrantOfferLetterStatus(project, user));

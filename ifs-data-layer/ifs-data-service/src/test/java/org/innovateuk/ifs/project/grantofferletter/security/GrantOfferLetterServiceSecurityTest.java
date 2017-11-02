@@ -258,7 +258,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.isGrantOfferLetterAlreadySent(123L), () -> {
-            verify(projectGrantOfferPermissionRules).internalAdminUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalAdminAndSupportUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verify(projectGrantOfferPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -293,7 +293,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.getGrantOfferLetterWorkflowState(123L), () -> {
-            verify(projectGrantOfferPermissionRules).internalAdminUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalAdminAndSupportUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verify(projectGrantOfferPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
