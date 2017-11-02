@@ -83,6 +83,8 @@ public class CompetitionSetupServiceImplTest {
 
 		ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(competitionId, typeId);
     	assertTrue(result.isSuccess());
+
+    	verify(competitionSetupTemplateService, times(1)).initializeCompetitionByCompetitionTemplate(competitionId, typeId);
     }
 
 	@Test
