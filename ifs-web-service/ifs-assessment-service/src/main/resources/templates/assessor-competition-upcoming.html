@@ -19,7 +19,7 @@
                 <h2 class="heading-medium no-margin" th:text="|${#temporals.format(model.assessmentPeriodDateFrom,dateFormat)} to ${#temporals.format(model.assessmentPeriodDateTo,dateFormat)}: Assessment period|"></h2>
                 <p>Assessment period for reading, scoring, providing written comments and submitting to our online
                     service. Each assessor could receive up to 10 applications to assess. This depends on the
-                    application response. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatDecimal(model.assessorPay,0, 'COMMA', 0, 'POINT')}">100</th:block> per application.</p>
+                    application response. Our assessment fee for this competition is &pound;<th:block th:text="${#numbers.formatInteger(model.assessorPay,0, 'DEFAULT')}">100</th:block> per application.</p>
 
                 <p th:if="${model.assessorBriefingDate}">The assessor briefing is mandatory. It will consist of a one
                     hour webinar on <th:block th:text="${#temporals.format(model.assessorBriefingDate,dateFormat)}">21 March 2017</th:block>.</p>
