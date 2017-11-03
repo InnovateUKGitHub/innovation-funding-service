@@ -1,9 +1,8 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
-import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
@@ -30,10 +29,7 @@ public class PanelInviteAssessorsOverviewModelPopulator extends PanelInviteAsses
     private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
 
     @Autowired
-    private CategoryRestService categoryRestService;
-
-    @Autowired
-    private CompetitionsRestService competitionsRestService;
+    private CompetitionRestService competitionsRestService;
 
     public PanelInviteAssessorsOverviewViewModel populateModel(long competitionId,
                                                           int page,

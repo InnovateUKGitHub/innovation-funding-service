@@ -229,9 +229,9 @@ Funding information: calculations
     And the user should see the element    jQuery=Button:contains("Remove")
     And the user enters text to a text field    id=funders[1].funder    FunderName2
     And the user enters text to a text field    id=funders[1].funderBudget    1000
-    Then the total should be correct    £21,000
+    Then the total should be correct    Total: £21,000
     When the user clicks the button/link    jQuery=Button:contains("Remove")
-    Then the total should be correct    £20,000
+    Then the total should be correct    Total: £20,000
 
 Funding information: can be saved
     [Documentation]    INFUND-3182
@@ -387,8 +387,8 @@ Application: Need or challenge
     And the user selects the radio button   question.writtenFeedback  0
     And the user selects the radio button   question.scored  0
     And the user should not be able to edit the assessed question feedback
-    And the user clicks the button/link     jQuery=.button[value="Save and close"]
-    And the user clicks the button/link     jQuery=h4 a:contains("Need or challenge")
+    And the user clicks the button/link    css=.button[value="Done"]
+    And the user clicks the button/link    jQuery=h4 a:contains("Need or challenge")
     Then the user should not see the assessed question feedback
     [Teardown]  The user clicks the button/link  link=Application
 
@@ -422,13 +422,14 @@ Application: Scope Assessment questions
     Given the user clicks the button/link    link=Edit this question
     And the user selects the radio button    question.writtenFeedback    1
     And the user fills the scope assessment questions
-    When the user clicks the button/link    jQuery=.button[value="Save and close"]
+    When the user clicks the button/link    css=.button[value="Done"]
     And the user clicks the button/link    link=Scope
     Then the user checks the scope assessment questions
+    And the user should not see the element  css=input
     And the user clicks the button/link    link=Edit this question
     And the user selects the radio button    question.writtenFeedback    0
     And the user should not be able to edit the scope feedback
-    And the user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    css=.button[value="Done"]
     And the user clicks the button/link    link=Scope
     Then the user should not see the scope feedback
     [Teardown]    The user clicks the button/link    link=Application
@@ -440,11 +441,25 @@ Application: Project Summary
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     When the user clicks the button/link    link=Edit this question
     And The user fills the empty question fields
-    And The user clicks the button/link    css=.button[value="Save and close"]
+    And The user clicks the button/link    css=.button[value="Done"]
     And the user clicks the button/link    link=Project summary
     Then The user should see the text in the page    Project summary
     And the user checks the question fields
-    [Teardown]    The user clicks the button/link    link=Application
+
+Application: marking questions as complete
+    [Documentation]  IFS-743
+    [Tags]
+    When the user clicks the button/link      link=Application
+    Then the user marks question as complete  Public description
+    And the user marks question as complete   Approach and innovation
+    And the user marks question as complete   Team and resources
+    And the user marks question as complete   Market awareness
+    And the user marks question as complete   Outcomes and route to market
+    And the user marks question as complete   Wider impacts
+    And the user marks question as complete   Project management
+    And the user marks question as complete   Risks
+    And the user marks question as complete   Additionality
+    And the user marks question as complete   Costs and value for money
 
 
 Adding a new Assessed Application Question
@@ -483,7 +498,7 @@ Application: Finances
     And the user should see the element      jQuery=dt:contains("Funding rules for this competition") ~ dd:contains("Funding rules for this competition are now entered.")
     [Teardown]  the user clicks the button/link  link=Return to application questions
 
-Application: Mark as done should display green tick
+Application: Done enabled when all questions are marked as complete
     [Documentation]    INFUND-5964
     [Tags]
     Given The user clicks the button/link     css=button.button  #Done button
@@ -637,7 +652,7 @@ the total should be correct
     [Arguments]    ${Total}
     mouse out    css=input
     Focus    jQuery=button:contains("Done")
-    Wait Until Element Contains Without Screenshots    css=p.no-margin    ${Total}
+    Wait Until Element Contains Without Screenshots    css=p.no-margin  ${Total}
 
 the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10
@@ -791,3 +806,9 @@ the user should the server side validation working
     #TODO Amend the following to cover error-summary. Cover radio buttons as well - IFS-?
     the user should see a field error  This field cannot be left blank.
     the user should see a field error  Please enter a justification.
+the user marks question as complete
+    [Arguments]  ${question_link}
+    the user should not see the element  jQuery=li:contains("${question_link}") .task-status-complete
+    the user clicks the button/link      link=${question_link}
+    the user clicks the button/link      css=.button[value="Done"]
+    the user should see the element      jQuery=li:contains("${question_link}") .task-status-complete

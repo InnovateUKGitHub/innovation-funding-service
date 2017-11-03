@@ -1,19 +1,30 @@
 package org.innovateuk.ifs.competitionsetup.viewmodel;
 
 import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Map;
 
 public class ApplicationLandingViewModel extends CompetitionSetupViewModel {
     private List<QuestionResource> questions;
     private List<QuestionResource> projectDetails;
+    private Map<CompetitionSetupSubsection, Boolean> subsectionStatuses;
+    private Map<Long, Boolean> questionStatuses;
+    private Boolean allComplete;
 
-    public ApplicationLandingViewModel(GeneralSetupViewModel generalSetupViewModel, List<QuestionResource> questions, List<QuestionResource> projectDetails) {
+    public ApplicationLandingViewModel(GeneralSetupViewModel generalSetupViewModel, List<QuestionResource> questions, List<QuestionResource> projectDetails,
+                                       Map<CompetitionSetupSubsection, Boolean> subsectionStatuses,
+                                       Map<Long, Boolean> questionStatuses,
+                                       Boolean allComplete) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.questions = questions;
         this.projectDetails = projectDetails;
+        this.subsectionStatuses = subsectionStatuses;
+        this.questionStatuses = questionStatuses;
+        this.allComplete = allComplete;
     }
 
     public List<QuestionResource> getQuestions() {
@@ -26,5 +37,17 @@ public class ApplicationLandingViewModel extends CompetitionSetupViewModel {
 
     public boolean multipleAssessedQuestionsLeft() {
         return !CollectionUtils.isEmpty(questions) && questions.size() > 1;
+    }
+
+    public Map<CompetitionSetupSubsection, Boolean> getSubsectionStatuses() {
+        return subsectionStatuses;
+    }
+
+    public Map<Long, Boolean> getQuestionStatuses() {
+        return questionStatuses;
+    }
+
+    public Boolean getAllComplete() {
+        return allComplete;
     }
 }

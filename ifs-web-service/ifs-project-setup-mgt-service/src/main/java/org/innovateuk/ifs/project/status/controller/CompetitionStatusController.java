@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.project.status.controller;
 
 import org.apache.commons.io.IOUtils;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
-import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionStatusViewModel;
+import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -42,7 +42,10 @@ public class CompetitionStatusController {
     private BankDetailsRestService bankDetailsRestService;
 
     @Autowired
-    private CompetitionsRestService competitionsRestService;
+    private CompetitionRestService CompetitionRestService;
+
+    @Autowired
+    private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
@@ -58,7 +61,7 @@ public class CompetitionStatusController {
         model.addAttribute("model",
                 new PopulatedCompetitionStatusViewModel(statusRestService.getCompetitionStatus(competitionId).getSuccessObjectOrThrowException(),
                         loggedInUser,
-                        loggedInUser.hasRole(UserRoleType.PROJECT_FINANCE) ? competitionsRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException() : 0L,
+                        loggedInUser.hasRole(UserRoleType.PROJECT_FINANCE) ? competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException() : 0L,
                         loggedInUser.hasRole(UserRoleType.PROJECT_FINANCE)).get());
         return "project/competition-status-all";
     }
@@ -68,9 +71,9 @@ public class CompetitionStatusController {
     public String viewCompetitionStatusQueries(Model model, UserResource loggedInUser,
                                               @PathVariable Long competitionId) {
         model.addAttribute("model",
-                new CompetitionOpenQueriesViewModel(competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException(),
-                        competitionsRestService.getCompetitionOpenQueries(competitionId).getSuccessObjectOrThrowException(),
-                        competitionsRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException(),
+                new CompetitionOpenQueriesViewModel(CompetitionRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException(),
+                        competitionPostSubmissionRestService.getCompetitionOpenQueries(competitionId).getSuccessObjectOrThrowException(),
+                        competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException(),
                         true));
         return "project/competition-status-queries";
     }

@@ -33,7 +33,7 @@
 
         <th:block th:insert="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.question}, ${model.editable})" />
         <div class="extra-margin">
-            <input type="submit" class="button button-large" value="Save and close"/>
+            <input type="submit" class="button button-large" value="Done"/>
         </div>
     </form>
     <th:block th:unless="${model.editable}">

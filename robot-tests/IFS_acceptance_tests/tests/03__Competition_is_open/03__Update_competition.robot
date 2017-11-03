@@ -72,7 +72,7 @@ Assessed Questions are editable (Ready to Open)
     Then the user should see the element    jQuery=h1:contains("Business opportunity")
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     And the user edits the assessed question information
-    And the user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    jQuery=.button[value="Done"]
     And wait for autosave
     When the user clicks the button/link    link=Business opportunity
     Then the user sees the correct assessed question information
@@ -86,7 +86,6 @@ Finances are editable (Ready to Open)
     And the user should see the element          jQuery=h1:contains("Application finances")
     When the user clicks the button/link         jQuery=a:contains("Edit this question")
     Then if textarea is empty the proper validation messages are shown
-    When the user clicks the button/link         jQuery=.button:contains("Save and close")
     And the user clicks the button/link          jQuery=button:contains("Done")
     [Teardown]  the user clicks the button/link  link=Competition setup
 
@@ -167,7 +166,7 @@ Public Description is not editable (Open)
     And the user should see the element    jquery=h1:contains("Public description")
     Then The user should not see the element    css = input
     And The user should not see the element    jQuery=.button:contains("Edit this question")
-    And The user should not see the element    jQuery=.button[value="Save and close"]
+    And The user should not see the element    jQuery=.button[value="Done"]
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 Project Summary is not editable (Open)
@@ -177,7 +176,7 @@ Project Summary is not editable (Open)
     And the user should see the element    jquery=h1:contains("Project summary")
     Then The user should not see the element    css = input
     And The user should not see the element    jQuery=.button:contains("Edit this question")
-    And The user should not see the element    jQuery=.button[value="Save and close"]
+    And The user should not see the element    jQuery=.button[value="Done"]
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 Scope is not editable (Open)
@@ -187,7 +186,7 @@ Scope is not editable (Open)
     Then the user should see the element    jquery=h1:contains("Scope")
     And The user should not see the element    css = input
     And The user should not see the element    jQuery=.button:contains("Edit this question")
-    And The user should not see the element    jQuery=.button[value="Save and close"]
+    And The user should not see the element    jQuery=.button[value="Done"]
     [Teardown]    The user clicks the button/link    link = Return to application questions
 
 Finances not editable (Open)
@@ -272,12 +271,12 @@ the user can see the open date of the competition belongs to the future
 the user is able to change the value of the fields
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/detail/edit
     the user selects the radio button    useResubmissionQuestion    use-resubmission-question-no
-    the user clicks the button/link    jQuery=.button:contains("Save and close")
+    the user clicks the button/link    jQuery=.button:contains("Done")
     the user clicks the button/link    link=Application details
     the user should see the element    jQuery=dl dt:contains("Resubmission") + dd:contains("No")
     the user clicks the button/link    jQuery=.button:contains("Edit this question")
     the user clicks the button/link    jQuery=label[for="use-resubmission-question-yes"]
-    the user clicks the button/link    jQuery=.button:contains("Save and close")
+    the user clicks the button/link    jQuery=.button:contains("Done")
     the user clicks the button/link    link=Application details
     the user should see the element    jQuery=dl dt:contains("Resubmission") + dd:contains("Yes")
 
@@ -300,9 +299,11 @@ return the database to its previous status
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `id`='6';
 
 the user moves the competition back again
-    the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
-    the user clicks the button/link    jQuery=.button:contains("Complete")
-    the user clicks the button/link    jQuery=.button:contains("Done")
+    the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}/section/application/landing-page
+    the user clicks the button/link    jQuery=button:contains("Done")   # this action  is marking appication section complete
+    the user clicks the button/link    link=Competition setup
+    the user clicks the button/link    link=Complete
+    the user clicks the button/link    link=Done
     the user closes the browser
 
 the user fills in the milestone data with valid information

@@ -10,9 +10,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.CREATED;
 
-/**
- *
- */
 public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionSetupQuestionRestServiceImpl> {
 
     private static final String competitionsRestURL = "/competition-setup-question";
