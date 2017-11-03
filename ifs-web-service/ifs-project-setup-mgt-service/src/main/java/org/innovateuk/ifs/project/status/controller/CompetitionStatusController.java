@@ -98,7 +98,7 @@ public class CompetitionStatusController {
                         openQueryCount,
                         pendingSpendProfiles.size(),
                         true));
-        return "project/competition-status-spend-profile";
+        return "project/competition-pending-spend-profiles";
     }
 
     @PreAuthorize("hasAuthority('project_finance')")
