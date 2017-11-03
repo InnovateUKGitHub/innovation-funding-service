@@ -14,7 +14,6 @@ Business opportunity Server-side validations setup questions
     [Tags]    HappyPath
     Given The user clicks the button/link  link=Application
     And The user clicks the button/link    jQuery=a:contains("Business opportunity")
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     When the user leaves all the question field empty
     And The user clicks the button/link                             css=.button[value="Done"]
     Then the validation error above the question should be visible  jQuery=label:contains(Question title)  This field cannot be left blank.
@@ -26,7 +25,7 @@ Business opportunity Server-side validations setup questions
 Application questions mark as done validations
     [Documentation]    INFUND-6468
     [Tags]
-    [Setup]  the user marks the Application as done  yes
+    [Setup]  the user marks the Application as done  yes  Programme
     Given the user clicks the button/link            link=Application
     Then the user clicks the button/link             jQuery=button:contains("Done")
     And the user should see a summary error          view the application section(s) to resolve the error.
@@ -34,9 +33,9 @@ Application questions mark as done validations
 Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
     [Tags]    HappyPath
-    [Setup]  the user clicks the button/link  jQuery=a:contains("Edit this question")
-    And the user clicks the button/link       link=Edit this questionGiven the user clicks the button/link      link=Business opportunity
-    And the userleaves all the assessment questions empty
+    [Setup]
+    Given the user clicks the button/link      link=Business opportunity
+    Then the user leaves all the assessment questions empty
     When the user clicks the button/link    css=.button[value="Done"]
     Then the user should see the text in the page    Please enter a from score.
     And the user should see the text in the page    Please enter a to score.

@@ -168,7 +168,7 @@ the user marks application details as complete
 
 the user marks each question as complete
     [Arguments]  ${question_link}
-    the user clicks the button/link  link=${question_link}
+    the user clicks the button/link  jQuery=a:contains("${question_link}")
     #TODO once IFS-2052 addresses common way of defining the elements we can remove the run keyord and ignore here
     run keyword and ignore error without screenshots   the user clicks the button/link  jQuery=.button:contains("Done")
     run keyword and ignore error without screenshots   the user clicks the button/link  css=.button[value="Done"]
