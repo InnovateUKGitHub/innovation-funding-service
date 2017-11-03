@@ -6,7 +6,7 @@ import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.dashboard.viewmodel.ApplicantDashboardViewModel;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -51,7 +51,7 @@ public class ApplicantDashboardPopulator {
     private ProjectService projectService;
 
     @Autowired
-    private CompetitionsRestService competitionsRestService;
+    private CompetitionRestService competitionRestService;
 
 
     public ApplicantDashboardViewModel populate(Long userId) {
@@ -176,7 +176,7 @@ public class ApplicantDashboardPopulator {
 
     @SafeVarargs
     private final Map<Long, CompetitionResource> createCompetitionMap(Long userId, List<ApplicationResource>... resources) {
-        List<CompetitionResource> allUserCompetitions = competitionsRestService.getCompetitionsByUserId(userId).getSuccessObjectOrThrowException();
+        List<CompetitionResource> allUserCompetitions = competitionRestService.getCompetitionsByUserId(userId).getSuccessObjectOrThrowException();
 
         return combineLists(resources).stream()
                 .collect(

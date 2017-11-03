@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.EligibilityForm;
@@ -14,15 +17,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.time.ZonedDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
@@ -38,7 +40,7 @@ public class EligibilitySectionSaverTest {
 	private MilestoneRestService milestoneRestService;
 	
 	@Mock
-	private CompetitionService competitionService;
+	private CompetitionSetupRestService competitionSetupRestService;
 	
 	@Test
 	public void testSaveCompetitionSetupSection() {
@@ -52,6 +54,7 @@ public class EligibilitySectionSaverTest {
 		competitionSetupForm.setSingleOrCollaborative("collaborative");
 		
 		CompetitionResource competition = newCompetitionResource().build();
+		when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
 
 		service.saveSection(competition, competitionSetupForm);
 
@@ -62,7 +65,7 @@ public class EligibilitySectionSaverTest {
 		assertEquals(Integer.valueOf(30), competition.getMaxResearchRatio());
 		assertEquals(CollaborationLevel.COLLABORATIVE, competition.getCollaborationLevel());
 
-		verify(competitionService).update(competition);
+		verify(competitionSetupRestService).update(competition);
 	}
 
 	@Test
@@ -76,12 +79,12 @@ public class EligibilitySectionSaverTest {
 
 		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
 		competition.setMilestones(singletonList(10L));
-		when(competitionService.update(competition)).thenReturn(serviceSuccess());
+		when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
 
 		ServiceResult<Void> result = service.autoSaveSectionField(competition, form, "researchCategoryId", "35", null);
 
 		assertTrue(result.isSuccess());
-		verify(competitionService).update(competition);
+		verify(competitionSetupRestService).update(competition);
 
 		assertTrue(competition.getResearchCategories().contains(35L));
 	}
@@ -97,12 +100,12 @@ public class EligibilitySectionSaverTest {
 
 		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
 		competition.setMilestones(singletonList(10L));
-		when(competitionService.update(competition)).thenReturn(serviceSuccess());
+		when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
 
 		ServiceResult<Void> result = service.autoSaveSectionField(competition, form, "researchCategoryId", "35", null);
 
 		assertTrue(result.isSuccess());
-		verify(competitionService).update(competition);
+		verify(competitionSetupRestService).update(competition);
 
 		assertTrue(!competition.getResearchCategories().contains(35L));
 	}

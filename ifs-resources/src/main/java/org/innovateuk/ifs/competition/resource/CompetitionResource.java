@@ -67,9 +67,6 @@ public class CompetitionResource {
     private Integer assessorCount;
     private BigDecimal assessorPay;
 
-
-    private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
-
     private String activityCode;
 
     private boolean setupComplete = false;
@@ -110,11 +107,6 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean isSetupAndAfterNotifications() {
         return Boolean.TRUE.equals(setupComplete) && (fundersPanelDate != null && fundersPanelDate.isBefore(ZonedDateTime.now()));
-    }
-
-    @JsonIgnore
-    public boolean isInitialDetailsComplete() {
-        return sectionSetupStatus.containsKey(CompetitionSetupSection.INITIAL_DETAILS) || setupComplete;
     }
 
     public CompetitionStatus getCompetitionStatus() {
@@ -449,14 +441,6 @@ public class CompetitionResource {
         this.leadApplicantTypes = leadApplicantTypes;
     }
 
-    public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
-        return sectionSetupStatus;
-    }
-
-    public void setSectionSetupStatus(Map<CompetitionSetupSection, Boolean> sectionSetupStatus) {
-        this.sectionSetupStatus = sectionSetupStatus;
-    }
-
     public String getActivityCode() {
         return activityCode;
     }
@@ -586,7 +570,6 @@ public class CompetitionResource {
                 .append(researchCategories, that.researchCategories)
                 .append(assessorCount, that.assessorCount)
                 .append(assessorPay, that.assessorPay)
-                .append(sectionSetupStatus, that.sectionSetupStatus)
                 .append(activityCode, that.activityCode)
                 .append(hasAssessmentPanel, that.hasAssessmentPanel)
                 .append(hasInterviewStage, that.hasInterviewStage)
@@ -634,7 +617,6 @@ public class CompetitionResource {
                 .append(researchCategories)
                 .append(assessorCount)
                 .append(assessorPay)
-                .append(sectionSetupStatus)
                 .append(activityCode)
                 .append(setupComplete)
                 .append(useResubmissionQuestion)

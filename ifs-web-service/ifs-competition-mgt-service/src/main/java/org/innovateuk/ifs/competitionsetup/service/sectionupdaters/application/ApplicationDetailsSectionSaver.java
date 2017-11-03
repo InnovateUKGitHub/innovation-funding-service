@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters.application;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection
 public class ApplicationDetailsSectionSaver extends AbstractSectionSaver implements CompetitionSetupSubsectionSaver {
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionSetupRestService competitionSetupRestService;
 
     @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;
@@ -42,7 +42,7 @@ public class ApplicationDetailsSectionSaver extends AbstractSectionSaver impleme
 	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		ApplicationDetailsForm form = (ApplicationDetailsForm) competitionSetupForm;
 		competition.setUseResubmissionQuestion(form.isUseResubmissionQuestion());
-		return competitionService.update(competition);
+		return competitionSetupRestService.update(competition).toServiceResult();
 	}
 
 	@Override
