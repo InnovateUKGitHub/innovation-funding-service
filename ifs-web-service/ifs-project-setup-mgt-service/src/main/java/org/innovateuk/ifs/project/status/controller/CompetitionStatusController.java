@@ -87,7 +87,7 @@ public class CompetitionStatusController {
     @GetMapping("/pending-spend-profiles")
     @PreAuthorize("hasAnyAuthority('project_finance')")
     public String viewPendingSpendProfiles(Model model, UserResource loggedInUser,
-                                               @PathVariable Long competitionId) {
+                                           @PathVariable Long competitionId) {
 
         long openQueryCount = competitionsRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException();
         List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles = competitionsRestService.getPendingSpendProfiles(competitionId).getSuccessObjectOrThrowException();
