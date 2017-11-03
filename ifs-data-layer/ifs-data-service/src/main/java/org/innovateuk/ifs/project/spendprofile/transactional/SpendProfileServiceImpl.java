@@ -10,20 +10,15 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
-import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.CostCategoryResource;
-import org.innovateuk.ifs.project.finance.resource.EligibilityState;
-import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryRepository;
 import org.innovateuk.ifs.project.financechecks.repository.CostCategoryTypeRepository;
-import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
-import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -118,10 +113,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ProjectUsersHelper projectUsersHelper;
     @Autowired
     private EmailService projectEmailService;
-/*    @Autowired
-    private ViabilityWorkflowHandler viabilityWorkflowHandler;*/
-/*    @Autowired
-    private EligibilityWorkflowHandler eligibilityWorkflowHandler;*/
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -137,53 +128,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                                 }))
                 );
     }
-
-/*    private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
-        return (isViabilityApprovedOrNotApplicable(project))
-                .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
-                .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project));
-    }*/
-
-/*    private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
-
-        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
-
-        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                ViabilityState.REVIEW == viabilityWorkflowHandler.getState(partnerOrganisation));
-
-        if (!existingReviewablePartnerOrganisation.isPresent()) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
-        }
-    }
-
-    private ServiceResult<Void> isEligibilityApprovedOrNotApplicable(Project project) {
-
-        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
-
-        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                EligibilityState.REVIEW == eligibilityWorkflowHandler.getState(partnerOrganisation));
-
-        if (!existingReviewablePartnerOrganisation.isPresent()) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED);
-        }
-    }
-
-    private ServiceResult<Void> isSpendProfileAlreadyGenerated(Project project) {
-        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
-
-        Optional<PartnerOrganisation> partnerOrganisationWithSpendProfile = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getOrganisation().getId()).isPresent());
-
-        if (!partnerOrganisationWithSpendProfile.isPresent()) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED);
-        }
-    }*/
 
     private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
 
