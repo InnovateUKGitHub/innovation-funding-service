@@ -565,6 +565,29 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
+    public void updateFormInputResponse_scopeUnselected() throws Exception {
+        Long assessmentId = 1L;
+        String value = "none";
+        Long formInputId = 2L;
+
+        when(assessorFormInputResponseRestService.updateFormInputResponse(assessmentId, formInputId, value))
+                .thenReturn(restFailure(fieldError("fieldName", "value", "validation.assessor.scope.invalidScope")));
+
+        when(messageSource.getMessage("validation.assessor.scope.invalidScope", new Object[]{}, Locale.UK))
+                .thenReturn("Please select the scope.");
+
+        mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", assessmentId, formInputId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("value", value))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("success", is("false")));
+
+        verify(assessorFormInputResponseRestService, only()).updateFormInputResponse(assessmentId, formInputId, value);
+    }
+
+
+
+    @Test
     public void save() throws Exception {
         long assessmentId = 1L;
         long questionId = 2L;

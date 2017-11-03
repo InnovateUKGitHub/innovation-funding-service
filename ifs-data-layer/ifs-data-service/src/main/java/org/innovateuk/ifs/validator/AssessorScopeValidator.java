@@ -1,11 +1,8 @@
 package org.innovateuk.ifs.validator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
-
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
 import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 
@@ -22,7 +19,7 @@ public class AssessorScopeValidator extends BaseValidator {
 
         if (ASSESSOR_APPLICATION_IN_SCOPE == response.getFormInput().getType()) {
             String value = response.getValue();
-            if (!value.equals("true") && !value.equals("false")) {
+            if (!"true".equals(value) && !"false".equals(value)) {
                 rejectValue(errors, "value", "validation.assessor.scope.invalidScope", response.getFormInput().getId());
             }
         }
