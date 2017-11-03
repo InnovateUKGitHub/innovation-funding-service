@@ -379,21 +379,21 @@ Application: Need or challenge
     [Tags]
     Given the user should not see the element  jQuery=li:contains("${amendedQuestion}") .task-status-complete
     When the user clicks the button/link    jQuery=h4 a:contains("${amendedQuestion}")
-    And the user clicks the button/link     css=input[type="submit"]
+    And the user clicks the button/link     css=button[type="submit"]
     And the user clicks the button/link     jQuery=h4 a:contains("${amendedQuestion}")
     Then the user should see the element    jQuery=dt:contains("Question heading") + dd:contains("${amendedQuestion}")
     # The above steps verify that when the question is not completed and you click it, you land on the edit mode
     # If question is completed and you click it, you should land on the read only mode.
     When the user clicks the button/link    link=Edit this question
     And the user edits the assessed question information
-    And The user clicks the button/link     css=input[type="submit"]
+    And The user clicks the button/link     css=button[type="submit"]
     When the user clicks the button/link    jQuery=h4 a:contains("${amendedQuestion}")
     Then the user sees the correct read only view of the question
     When the user clicks the button/link    link=Edit this question
     And the user selects the radio button   question.writtenFeedback  0
     And the user selects the radio button   question.scored  0
     And the user should not be able to edit the assessed question feedback
-    And the user clicks the button/link     jQuery=input[type="submit"]
+    And the user clicks the button/link     jQuery=button[type="submit"]
     And the user clicks the button/link     jQuery=h4 a:contains("${amendedQuestion}")
     Then the user should not see the assessed question feedback
     [Teardown]  The user clicks the button/link  link=Application
@@ -416,7 +416,7 @@ Application: Scope
     Then the user should see the element          jQuery=h1:contains("Scope")
     And the user should see the text in the page  You can edit this question for the applicant as well as the guidance for assessors.
     When The user fills the empty question fields
-    And The user clicks the button/link    jQuery=input[type="submit"]
+    And The user clicks the button/link    css=button[type="submit"]
     And the user clicks the button/link    link=Scope
     Then The user should see the text in the page    Scope
     And the user checks the question fields
@@ -426,13 +426,13 @@ Application: Scope Assessment questions
     Given the user clicks the button/link    link=Edit this question
     And the user selects the radio button    question.writtenFeedback    1
     And the user fills the scope assessment questions
-    When the user clicks the button/link    jQuery=input[type="submit"]
+    When the user clicks the button/link    css=button[type="submit"]
     And the user clicks the button/link    link=Scope
     Then the user checks the scope assessment questions
     And the user clicks the button/link    link=Edit this question
     And the user selects the radio button    question.writtenFeedback    0
     And the user should not be able to edit the scope feedback
-    And the user clicks the button/link    jQuery=input[type="submit"]
+    And the user clicks the button/link    css=button[type="submit"]
     And the user clicks the button/link    link=Scope
     Then the user should not see the scope feedback
     [Teardown]    The user clicks the button/link    link=Application
@@ -443,7 +443,7 @@ Application: Project Summary
     And the user should see the element      jQuery=h1:contains("Project summary")
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
     When The user fills the empty question fields
-    And The user clicks the button/link    css=input[type="submit"]
+    And The user clicks the button/link    css=button[type="submit"]
     And the user clicks the button/link    link=Project summary
     Then The user should see the text in the page    Project summary
     And the user checks the question fields
@@ -468,7 +468,7 @@ Adding a new Assessed Application Question
     [Documentation]  IFS-182
     [Tags]
     Given the user clicks the button/link  css=p button[type="submit"]  #Add question link
-    When the user clicks the button/link   css=input[type="submit"]  #Save and close
+    When the user clicks the button/link   css=button[type="submit"]
     Then the user should the server side validation working
     When the user is able to configure the new question
     Then the user should be able to see the read only view of question correctly
@@ -817,5 +817,5 @@ the user marks question as complete
     [Arguments]  ${question_link}
     the user should not see the element  jQuery=li:contains("${question_link}") .task-status-complete
     the user clicks the button/link      jQuery=a:contains("${question_link}")
-    the user clicks the button/link      css=.button[value="Done"]
+    the user clicks the button/link      css=button[type="submit"]
     the user should see the element      jQuery=li:contains("${question_link}") .task-status-complete
