@@ -126,7 +126,7 @@ the user marks the Application as done
     the user fills in the Finances questions  ${growthTable}
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
-#    the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
+    the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
 the assessed questions are marked complete except finances(programme type)
     the user marks each question as complete  Business opportunity
