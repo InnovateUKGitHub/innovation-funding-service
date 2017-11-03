@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.Mock;
@@ -28,6 +29,9 @@ public class QuestionTemplatePersistorImplTest extends BaseServiceUnitTest<Quest
 
     @Mock
     private FormInputTemplatePersistorImpl formInputTemplatePersistorMock;
+
+    @Mock
+    private SetupStatusRepository setupStatusRepository;
 
     @Test
     public void persistByEntity_questionIsBeingSavedAndFormInputPersistCalledInCorrectOrder() throws Exception {
@@ -84,9 +88,10 @@ public class QuestionTemplatePersistorImplTest extends BaseServiceUnitTest<Quest
 
         service.deleteEntityById(question.getId());
 
-        InOrder inOrder = inOrder(formInputTemplatePersistorMock, entityManagerMock, questionRepositoryMock);
+        InOrder inOrder = inOrder(formInputTemplatePersistorMock, entityManagerMock, questionRepositoryMock, setupStatusRepository);
         inOrder.verify(formInputTemplatePersistorMock).cleanForParentEntity(question);
         inOrder.verify(entityManagerMock).detach(question);
+        inOrder.verify(setupStatusRepository).deleteByClassNameAndClassPk(Question.class.getName(), question.getId());
         inOrder.verify(questionRepositoryMock).delete(question.getId());
     }
 
@@ -97,13 +102,15 @@ public class QuestionTemplatePersistorImplTest extends BaseServiceUnitTest<Quest
 
         service.cleanForParentEntity(section);
 
-        InOrder inOrder = inOrder(formInputTemplatePersistorMock, entityManagerMock, questionRepositoryMock);
+        InOrder inOrder = inOrder(formInputTemplatePersistorMock, entityManagerMock, questionRepositoryMock, setupStatusRepository);
         inOrder.verify(formInputTemplatePersistorMock).cleanForParentEntity(questions.get(0));
-        inOrder.verify(formInputTemplatePersistorMock).cleanForParentEntity(questions.get(1));
-
         inOrder.verify(entityManagerMock).detach(questions.get(0));
-        inOrder.verify(entityManagerMock).detach(questions.get(1));
+        inOrder.verify(setupStatusRepository).deleteByClassNameAndClassPk(Question.class.getName(), questions.get(0).getId());
+        inOrder.verify(questionRepositoryMock).delete(questions.get(0).getId());
 
-        inOrder.verify(questionRepositoryMock).delete(questions);
+        inOrder.verify(formInputTemplatePersistorMock).cleanForParentEntity(questions.get(1));
+        inOrder.verify(entityManagerMock).detach(questions.get(1));
+        inOrder.verify(setupStatusRepository).deleteByClassNameAndClassPk(Question.class.getName(), questions.get(1).getId());
+        inOrder.verify(questionRepositoryMock).delete(questions.get(1).getId());
     }
 }
