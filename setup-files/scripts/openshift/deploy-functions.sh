@@ -340,9 +340,6 @@ function pushApplicationImages() {
         ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
     docker tag innovateuk/registration-service:latest \
         ${REGISTRY}/${PROJECT}/registration-service:${VERSION}
-# qqRP switch function for named environments
-    docker tag ifs-mysql:5.6.29 \
-        ${REGISTRY}/${PROJECT}/ifs-mysql:5.6.29
 
     docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
 
@@ -357,8 +354,14 @@ function pushApplicationImages() {
     docker push ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
     docker push ${REGISTRY}/${PROJECT}/registration-service:${VERSION}
+}
 
-# qqRP switch function for named environments
+function pushIfsMysqlDatabase(){
+    docker tag ifs-mysql:5.6.29 \
+        ${REGISTRY}/${PROJECT}/ifs-mysql:5.6.29
+
+    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
+
     docker push ${REGISTRY}/${PROJECT}/ifs-mysql:5.6.29
 }
 
