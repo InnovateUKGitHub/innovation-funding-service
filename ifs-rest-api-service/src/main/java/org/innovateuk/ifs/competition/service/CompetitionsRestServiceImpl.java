@@ -199,4 +199,9 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     public RestResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(long competitionId) {
         return getWithRestResult(competitionsRestURL + "/" + competitionId + "/pending-spend-profiles", competitionPendingSpendProfilesResourceListType());
     }
+
+    @Override
+    public RestResult<Integer> countPendingSpendProfiles(long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/count-pending-spend-profiles", Integer.class);
+    }
 }
