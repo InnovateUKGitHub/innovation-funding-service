@@ -445,17 +445,17 @@ Application: Project Summary
 Application: marking questions as complete
     [Documentation]  IFS-743
     [Tags]
-    When the user clicks the button/link           link=Application
-    Then the user marks each question as complete  Public description
-    And the user marks each question as complete   Approach and innovation
-    And the user marks each question as complete   Team and resources
-    And the user marks each question as complete   Market awareness
-    And the user marks each question as complete   Outcomes and route to market
-    And the user marks each question as complete   Wider impacts
-    And the user marks each question as complete   Project management
-    And the user marks each question as complete   Risks
-    And the user marks each question as complete   Additionality
-    And the user marks each question as complete   Costs and value for money
+    When the user clicks the button/link      link=Application
+    Then the user marks question as complete  Public description
+    And the user marks question as complete   Approach and innovation
+    And the user marks question as complete   Team and resources
+    And the user marks question as complete   Market awareness
+    And the user marks question as complete   Outcomes and route to market
+    And the user marks question as complete   Wider impacts
+    And the user marks question as complete   Project management
+    And the user marks question as complete   Risks
+    And the user marks question as complete   Additionality
+    And the user marks question as complete   Costs and value for money
 
 Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773
@@ -468,25 +468,11 @@ Application: Finances
     # Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
     When the user selects the radio button   includeGrowthTable  include-growth-table-no
     And the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
-    And The user clicks the button/link      jQuery=button:contains("Done")
+    Then The user clicks the button/link      jQuery=button:contains("Done")
+    And the user should see the element       jQuery=li:contains("Finances") .task-status-complete
 
 Application: Done enabled when all questions are marked as complete
-    [Documentation]    INFUND-5964
-    Given the user should see the element      jQuery=li:contains("Application details") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Project summary") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Public description") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Scope") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Need or challenge") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Approach and innovation") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Team and resources") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Market awareness") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Outcomes and route to market") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Wider impacts") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Project management") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Risks") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Additionality") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Costs and value for money") .task-status-complete
-    And the user should see the element        jQuery=li:contains("Finances") .task-status-complete
+    [Documentation]    INFUND-5964git
     When The user clicks the button/link        jQuery=button:contains("Done")
     Then The user should not see the element    jQuery=button:contains(Done)
     And The user clicks the button/link         link=Competition setup
@@ -732,7 +718,9 @@ the user enters multiple innovation areas
 The user should not see the selected option again
     List Should not Contain Value    css=[id="innovationAreaCategoryIds[1]"]    Biosciences
 
-the user marks each question as complete
+the user marks question as complete
     [Arguments]  ${question_link}
-    the user clicks the button/link  link=${question_link}
-    the user clicks the button/link  css=.button[value="Done"]
+    the user should not see the element  jQuery=li:contains("${question_link}") .task-status-complete
+    the user clicks the button/link      link=${question_link}
+    the user clicks the button/link      css=.button[value="Done"]
+    the user should see the element      jQuery=li:contains("${question_link}") .task-status-complete
