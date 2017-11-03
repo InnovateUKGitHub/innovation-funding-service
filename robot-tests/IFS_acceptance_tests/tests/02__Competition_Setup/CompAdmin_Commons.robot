@@ -331,7 +331,7 @@ the user is able to configure the new question
     the user enters text to a text field  guidanceRows[3].justification  This the 3-4 Justification
     the user enters text to a text field  guidanceRows[4].justification  This the 1-2 Justification
     the user enters text to a text field  question.assessmentMaxWords  120
-    the user clicks the button/link       css=input[type="submit"]
+    the user clicks the button/link       css=button[type="submit"]
 
 the user should be able to see the read only view of question correctly
     the user clicks the button/link  jQuery=a:contains("Tell us how your project is innovative.")
