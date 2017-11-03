@@ -486,9 +486,8 @@ Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773
     [Tags]  HappyPath
     Given the user clicks the button/link    link=Finances
-    Then the user should see the element     jQuery=h1:contains("Application finances")
+    When the user should see the element     jQuery=h1:contains("Application finances")
     And the user should see the element      jQuery=.panel:contains("The competition template will select the following finance sections for each partner.")
-    When the user clicks the button/link     link=Edit this question
     Then the user should see the element     css=input:checked ~ label[for="full-application-finance-yes"]
     And the user should see the element      css=label[for="full-application-finance-no"]
     # Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
