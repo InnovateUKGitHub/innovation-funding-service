@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.transactional.template;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
+import org.innovateuk.ifs.setup.repository.SetupStatusRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,9 @@ public class QuestionTemplatePersistorImpl implements BaseChainedTemplatePersist
     @Autowired
     private FormInputTemplatePersistorImpl formInputTemplateService;
 
+    @Autowired
+    private SetupStatusRepository setupStatusRepository;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -45,21 +49,23 @@ public class QuestionTemplatePersistorImpl implements BaseChainedTemplatePersist
 
     @Transactional
     public void deleteEntityById(Long questionId) {
-        Question question = questionRepository.findOne(questionId);
+        deleteQuestion(questionRepository.findOne(questionId));
+    }
+
+    public void deleteQuestion(Question question) {
         formInputTemplateService.cleanForParentEntity(question);
 
         entityManager.detach(question);
-        questionRepository.delete(questionId);
+
+        setupStatusRepository.deleteByClassNameAndClassPk(Question.class.getName(), question.getId());
+        questionRepository.delete(question.getId());
     }
 
     @Transactional
     public void cleanForParentEntity(Section section) {
         List<Question> questions = section.getQuestions();
         if(questions != null) {
-            questions.stream().forEach(question -> formInputTemplateService.cleanForParentEntity(question));
-
-            questions.stream().forEach(question -> entityManager.detach(question));
-            questionRepository.delete(questions);
+            questions.stream().forEach(question -> deleteQuestion(question));
         }
     }
 
