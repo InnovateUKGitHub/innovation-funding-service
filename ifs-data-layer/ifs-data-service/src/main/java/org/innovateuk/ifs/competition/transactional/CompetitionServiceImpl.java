@@ -364,36 +364,26 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    @Transactional
     public ServiceResult<List<CompetitionOpenQueryResource>> findAllOpenQueries(Long competitionId) {
         return serviceSuccess(competitionRepository.getOpenQueryByCompetition(competitionId));
     }
 
     @Override
-    @Transactional
     public ServiceResult<Long> countAllOpenQueries(Long competitionId) {
         return serviceSuccess(competitionRepository.countOpenQueries(competitionId));
     }
 
     @Override
-    @Transactional
     public ServiceResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(Long competitionId) {
 
         List<Project> projects = projectRepository.findByApplicationCompetitionId(competitionId);
 
         List<Project> projectsAwaitingSpendProfileGeneration = simpleFilter(projects, project -> {
             ServiceResult<Void> result = canSpendProfileCanBeGenerated(project);
-            if (result.isSuccess()) {
-                return true;
-            } else {
-                return false;
-            }
+            return result.isSuccess();
         });
 
-        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles =
-                simpleMap(projectsAwaitingSpendProfileGeneration, this::convert);
-
-        return serviceSuccess(pendingSpendProfiles);
+        return serviceSuccess(simpleMap(projectsAwaitingSpendProfileGeneration, this::convert));
     }
 
     private CompetitionPendingSpendProfilesResource convert(Project project) {

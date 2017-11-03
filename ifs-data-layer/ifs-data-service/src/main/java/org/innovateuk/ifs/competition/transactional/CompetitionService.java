@@ -89,6 +89,6 @@ public interface CompetitionService {
     ServiceResult<Long> countAllOpenQueries(Long competitionId);
 
     @PreAuthorize("hasAnyAuthority('project_finance')")
-    @SecuredBySpring(value = "GET_PENDING_SPEND_PROFILE_GENERATION", description = "Project finance users can get projects for which Spend Profile generation is pending, for a given competition")
+    @SecuredBySpring(value = "GET_PENDING_SPEND_PROFILES", description = "Project finance users can get projects for which Spend Profile generation is pending, for a given competition")
     ServiceResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(Long competitionId);
 }
