@@ -749,7 +749,8 @@
                         <form th:action="${#httpServletRequest.requestURI}">
                             <p>Enter new assessor's details below and then add them to your invite list.</p>
 
-                            <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-areas" th:with="assessor='non-registered'" />
+                            <th:block th:if="${param.version != null and param.version[0] == 'v1'}" th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-areas" th:with="assessor='non-registered'" />
+                            <th:block th:if="${param.version == null or param.version[0] == 'v2'}" th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-areas-full-list" th:with="assessor='non-registered'" />
 
                             <div class="table-display-stacked extra-margin-top">
                                 <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">

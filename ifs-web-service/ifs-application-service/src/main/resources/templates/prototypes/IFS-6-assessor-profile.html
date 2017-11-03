@@ -26,6 +26,9 @@
         <div class="message-alert">
             <h2 class="heading-small no-margin">This assessor has been deactivated with the reason:</h2>
             <p th:text="${param.deactivateAssessor[0]}">REASON</p>
+            <th:block th:if="${param.rejectText != null}">
+                <p th:text="${param.rejectText[0]}"></p>
+            </th:block>
         </div>
     </th:block>
 
@@ -36,8 +39,14 @@
 
     <h3 class="heading-small">Address</h3>
 
+    <h3 class="heading-small">Phone number</h3>
+    <p>01423 456789</p>
+
     <h3 class="heading-small">Email address</h3>
-    <p><a href="#">mailto:adren.pimenta@innovateuk.test</a></p>
+    <p><a href="#">adren.pimenta@innovateuk.test</a></p>
+
+    <h3 class="heading-small">Assessor type</h3>
+    <p>Academic</p>
 
     <ul class="inline-nav extra-margin-top">
         <li th:class="${(param.tab == null or param.tab[0] == 'skills' ? 'selected' : 'not-selected' )}"><a href="?tab=skills">Skills</a></li>
@@ -48,20 +57,30 @@
     <th:block th:if="${param.tab == null or param.tab[0] == 'skills'}">
         <h2 class="heading-medium">Innovation areas</h2>
 
-        <h3 class="heading-small">Emerging and enabling</h3>
-        <ul class="task-list no-margin">
-            <li>Creative industries</li>
-            <li>Digital industries</li>
-        </ul>
-        <h3 class="heading-small">Health and life sciences</h3>
-        <ul class="task-list">
-            <li>Advanced therapies</li>
-        </ul>
+        <th:block th:if="${param.version != null and param.version[0] == 'v1'}">
+            <h3 class="heading-small">Emerging and enabling</h3>
+            <ul class="task-list no-margin">
+                <li>Creative industries</li>
+                <li>Digital industries</li>
+            </ul>
+            <h3 class="heading-small">Health and life sciences</h3>
+            <ul class="task-list">
+                <li>Advanced therapies</li>
+            </ul>
 
-        <div class="upload-section" style="border: none;">
-            <h3 class="heading-small no-margin">Work history</h3>
-            <p><a href="#">Assessor work history.pdf (opens in a new window)</a></p>
-        </div>
+            <div class="upload-section" style="border: none;">
+                <h3 class="heading-small no-margin">Work history</h3>
+                <p><a href="#">Assessor work history.pdf (opens in a new window)</a></p>
+            </div>
+        </th:block>
+
+        <th:block th:if="${param.version == null or param.version[0] == 'v2'}">
+            <ul class="task-list">
+                <li>Creative industries</li>
+                <li>Digital industries</li>
+                <li>Advanced therapies</li>
+            </ul>
+        </th:block>
 
         <div class="form-footer">
             <div class="form-footer__actions"><a href="/prototypes/IFS-6-assessor-profile-update">Edit</a></div>
@@ -72,60 +91,136 @@
             </div>
         </div>
 
-        <div class="extra-margin-top">
+        <th:block th:if="${param.version == null or param.version[0] == 'v1'}">
+
             <th:block th:unless="${param.deactivateAssessor != null}">
-                <a href="#" data-js-modal="deactivate-assessor">Deactivate assessor</a>
+                <details class="extra-margin-top">
+                    <summary><span class="summary">Deactivate assessor</span></summary>
+
+                    <div class="panel">
+                        <form th:action="${#httpServletRequest.requestURI}">
+                            <fieldset>
+                                <legend>
+                                    <h2 class="heading-medium no-margin">Deactivate assessor</h2>
+                                </legend>
+
+                                <p>Please select the reason for deactivating this assessor.</p>
+
+                                <div class="multiple-choice">
+                                    <input id="deactivate-assessor-1" type="radio" name="deactivateAssessor" value="Training required" required>
+                                    <label for="deactivate-assessor-1">Training required</label>
+                                </div>
+                                <div class="multiple-choice">
+                                    <input id="deactivate-assessor-2" type="radio" name="deactivateAssessor" value="Retired" required>
+                                    <label for="deactivate-assessor-2">Retired</label>
+                                </div>
+
+                                <div class="textarea-wrapped word-count panel panel-border" style="border: none;" id="reject-dialog">
+                                    <label for="reject-text">
+                                        Reason for training
+                                    </label>
+                                    <textarea name="rejectText" id="reject-text" cols="30" rows="5" data-editor="md" required="required" data-required-errormessage="Please enter some text." data-max_words="100" data-maxwordslength="100" data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100.">
+                            </textarea>
+                                    <div class="form-footer">
+                                        <div class="form-footer__info">
+                                    <span class="count-label">
+                                        <span aria-live="polite" class="count-down positive">Words remaining: 100</span>
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </fieldset>
+
+                            <div class="extra-margin-top">
+                                <button class="button">Submit</button>
+                                <button aria-label="Close Popup" type="button" class="button button-clear js-close">Cancel</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </details>
             </th:block>
 
             <th:block th:if="${param.deactivateAssessor != null}">
-                <a href="#" data-js-modal="reactivate-assessor">Reactivate assessor</a>
+                <details class="extra-margin-top">
+                    <summary><span class="summary">Reactivate assessor</span></summary>
+
+                    <div class="panel">
+                        <form th:action="${#httpServletRequest.requestURI}">
+
+                            <h2 class="heading-medium no-margin">Reactivate assessor</h2>
+                            <p>Are you sure you want to reactivate this assessor?</p>
+
+                            <div class="extra-margin-top">
+                                <button class="button">Yes, reactivate</button>
+                                <button aria-label="Close Popup" type="button" class="button button-clear js-close">Cancel</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </details>
             </th:block>
-        </div>
 
-        <div class="deactivate-assessor" role="dialog" aria-hidden="true">
-            <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
-            <form th:action="${#httpServletRequest.requestURI}">
-                <fieldset class="inline">
-                    <legend>
-                        <h2 class="heading-medium no-margin">Deactivate assessor</h2>
-                    </legend>
+        </th:block>
 
-                    <p>Please select the reason for deactivating this assessor</p>
+        <th:block th:if="${param.version != null and param.version[0] == 'v1'}">
 
-                    <div class="multiple-choice">
-                        <input id="deactivate-assessor-1" type="radio" name="deactivateAssessor" value="Training required" required>
-                        <label for="deactivate-assessor-1">Training required</label>
+            <div class="extra-margin-top">
+                <th:block th:unless="${param.deactivateAssessor != null}">
+                    <a href="#" data-js-modal="deactivate-assessor">Deactivate assessor</a>
+                </th:block>
+
+                <th:block th:if="${param.deactivateAssessor != null}">
+                    <a href="#" data-js-modal="reactivate-assessor">Reactivate assessor</a>
+                </th:block>
+            </div>
+
+            <div class="deactivate-assessor" role="dialog" aria-hidden="true">
+                <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
+                <form th:action="${#httpServletRequest.requestURI}">
+                    <fieldset class="inline">
+                        <legend>
+                            <h2 class="heading-medium no-margin">Deactivate assessor</h2>
+                        </legend>
+
+                        <p>Please select the reason for deactivating this assessor</p>
+
+                        <div class="multiple-choice">
+                            <input id="deactivate-assessor-1" type="radio" name="deactivateAssessor" value="Training required" required>
+                            <label for="deactivate-assessor-1">Training required</label>
+                        </div>
+                        <div class="multiple-choice">
+                            <input id="deactivate-assessor-2" type="radio" name="deactivateAssessor" value="Retired" required>
+                            <label for="deactivate-assessor-2">Retired</label>
+                        </div>
+                    </fieldset>
+
+                    <div class="extra-margin-top">
+                        <button class="button">Submit</button>
+                        <button aria-label="Close Popup" type="button" class="button button-clear js-close">Cancel</button>
                     </div>
-                    <div class="multiple-choice">
-                        <input id="deactivate-assessor-1" type="radio" name="deactivateAssessor" value="Retired" required>
-                        <label for="deactivate-assessor-1">Retired</label>
+
+                </form>
+            </div>
+
+            <div class="reactivate-assessor" role="dialog" aria-hidden="true">
+                <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
+                <form th:action="${#httpServletRequest.requestURI}">
+
+                    <h2 class="heading-medium no-margin">Reactivate assessor</h2>
+                    <p>Are you sure you want to reactivate this assessor?</p>
+
+                    <div class="extra-margin-top">
+                        <button class="button">Yes, reactivate</button>
+                        <button aria-label="Close Popup" type="button" class="button button-clear js-close">Cancel</button>
                     </div>
-                </fieldset>
 
-                <div class="extra-margin-top">
-                    <button class="button">Submit</button>
-                    <button aria-label="Close Popup" type="button" class="button button-clear js-close">Cancel</button>
-                </div>
+                </form>
+            </div>
 
-            </form>
-        </div>
+            <div class="modal-overlay" aria-hidden="true"></div>
 
-        <div class="reactivate-assessor" role="dialog" aria-hidden="true">
-            <button class="js-close close" type="button" aria-label="Close Popup">Close</button>
-            <form th:action="${#httpServletRequest.requestURI}">
-
-                <h2 class="heading-medium no-margin">Reactivate assessor</h2>
-                <p>Are you sure you want to reactivate this assessor?</p>
-
-                <div class="extra-margin-top">
-                    <button class="button">Yes, reactivate</button>
-                    <button aria-label="Close Popup" type="button" class="button button-clear js-close">Cancel</button>
-                </div>
-
-            </form>
-        </div>
-
-        <div class="modal-overlay" aria-hidden="true"></div>
+        </th:block>
 
     </th:block>
 
@@ -299,7 +394,14 @@
 
 <script type="text/javascript">
 	// <![CDATA[
+		$('#reject-dialog').hide()
 
+		$('#deactivate-assessor-1').on('click', function(event) {
+			$('#reject-dialog').show();
+		});
+		$('#deactivate-assessor-2').on('click', function(event) {
+			$('#reject-dialog').hide();
+		});
 	// ]]>
 </script>
 </body>

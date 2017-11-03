@@ -36,8 +36,6 @@
 
     <th:block th:if="${param.tab == null or param.tab[0] == 'active'}">
 
-        <h2 class="heading-small no-margin-top">Active</h2>
-
         <span class="heading-xlarge no-margin">12</span>
         <span class="heading-small">active assessors</span>
 
@@ -114,7 +112,6 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'inactive'}">
-        <h2 class="heading-small no-margin-top">Inactive</h2>
 
         <span class="heading-xlarge no-margin">8</span>
         <span class="heading-small">inactive internal users</span>
@@ -135,7 +132,7 @@
                         <td>Retired</td>
                     </tr>
                     <tr>
-                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Training+required">Julie Nunes</a></td>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Training+required&#38;rejectText=Lack+of+experience">Julie Nunes</a></td>
                         <td><a href="#">julie.nunes@innovateuk.test</a></td>
                         <td>Training required</td>
                     </tr>
@@ -150,12 +147,12 @@
                         <td>Retired</td>
                     </tr>
                     <tr>
-                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Training+required">Ralph Nunes</a></td>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Training+required&#38;rejectText=Lack+of+experience">Ralph Nunes</a></td>
                         <td><a href="#">ralph.nunes@innovateuk.test</a></td>
                         <td>Training required</td>
                     </tr>
                     <tr>
-                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Training+required">Richard Nunes</a></td>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Training+required&#38;rejectText=Lack+of+experience">Richard Nunes</a></td>
                         <td><a href="#">richard.nunes@innovateuk.test</a></td>
                         <td>Training required</td>
                     </tr>
@@ -176,7 +173,6 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'pending'}">
-        <h2 class="heading-small no-margin-top">Pending</h2>
 
         <span class="heading-xlarge no-margin" th:text="${param.pending != null and param.pending[0] ==  '1' ? '1' : '0' }">0</span>
         <span class="heading-small">pending assessors</span>

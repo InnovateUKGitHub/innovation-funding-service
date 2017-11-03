@@ -34,7 +34,7 @@
 
         <th:block th:unless="${param.action != null and param.action[0] == 'new'}">
             <h3 class="heading-small">Email address</h3>
-            <p><a href="#">mailto:adren.pimenta@innovateuk.test</a></p>
+            <p><a href="#">adren.pimenta@innovateuk.test</a></p>
         </th:block>
 
         <th:block th:if="${param.action != null and param.action[0] == 'new'}">
@@ -44,7 +44,8 @@
             </div>
         </th:block>
 
-        <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-areas"/>
+        <th:block th:if="${param.version != null and param.version[0] == 'v1'}" th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-areas" />
+        <th:block th:if="${param.version == null or param.version[0] == 'v2'}" th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-areas-full-list" />
 
         <div class="extra-margin-top">
             <th:block th:if="${param.action != null and param.action[0] == 'new'}">
