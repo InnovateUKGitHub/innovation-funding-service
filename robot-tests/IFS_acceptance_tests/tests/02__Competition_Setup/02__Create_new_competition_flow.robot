@@ -472,7 +472,7 @@ Application: Finances
     And the user should see the element       jQuery=li:contains("Finances") .task-status-complete
 
 Application: Done enabled when all questions are marked as complete
-    [Documentation]    INFUND-5964git
+    [Documentation]    INFUND-5964
     When The user clicks the button/link        jQuery=button:contains("Done")
     Then The user should not see the element    jQuery=button:contains(Done)
     And The user clicks the button/link         link=Competition setup
