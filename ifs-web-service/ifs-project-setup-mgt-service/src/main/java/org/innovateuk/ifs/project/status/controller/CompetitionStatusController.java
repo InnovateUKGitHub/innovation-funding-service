@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.status.controller;
 
 import org.apache.commons.io.IOUtils;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionPendingSpendProfilesResource;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
@@ -74,7 +73,6 @@ public class CompetitionStatusController {
     @PreAuthorize("hasAnyAuthority('project_finance')")
     public String viewCompetitionStatusQueries(Model model, UserResource loggedInUser,
                                               @PathVariable Long competitionId) {
-
         model.addAttribute("model",
                 new CompetitionOpenQueriesViewModel(competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException(),
                         competitionsRestService.getCompetitionOpenQueries(competitionId).getSuccessObjectOrThrowException(),
