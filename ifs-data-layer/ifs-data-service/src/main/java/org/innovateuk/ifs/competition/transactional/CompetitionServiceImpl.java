@@ -20,6 +20,7 @@ import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -372,5 +373,32 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Transactional
     public ServiceResult<Long> countAllOpenQueries(Long competitionId) {
         return serviceSuccess(competitionRepository.countOpenQueries(competitionId));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(Long competitionId) {
+
+        List<Project> projects = projectRepository.findByApplicationCompetitionId(competitionId);
+
+        List<Project> projectsAwaitingSpendProfileGeneration = simpleFilter(projects, project -> {
+            ServiceResult<Void> result = canSpendProfileCanBeGenerated(project);
+            if (result.isSuccess()) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles =
+                simpleMap(projectsAwaitingSpendProfileGeneration, this::convert);
+
+        return serviceSuccess(pendingSpendProfiles);
+    }
+
+    private CompetitionPendingSpendProfilesResource convert(Project project) {
+
+        return new CompetitionPendingSpendProfilesResource(project.getApplication().getId(),
+                project.getId(), project.getName());
     }
 }

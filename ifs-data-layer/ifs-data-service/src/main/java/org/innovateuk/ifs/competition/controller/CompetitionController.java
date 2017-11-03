@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -210,6 +211,11 @@ public class CompetitionController {
     @GetMapping("/{id}/queries/open/count")
     public RestResult<Long> countOpenQueries(@PathVariable("id") Long competitionId) {
         return competitionService.countAllOpenQueries(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/{competitionId}/pending-spend-profiles")
+    public RestResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(@PathVariable(value = "competitionId") Long competitionId) {
+        return competitionService.getPendingSpendProfiles(competitionId).toGetResponse();
     }
 
 }
