@@ -69,6 +69,7 @@ Resource          ../04__Applicant/Applicant_Commons.robot
 *** Variables ***
 ${peter_freeman}  Peter Freeman
 ${competitionTitle}  Test competition
+${amendedQuestion}  Need or challenge
 
 *** Test Cases ***
 User can create a new competition
@@ -360,7 +361,7 @@ Application - Application process Page
     Then the user should see the element  link=Project summary
     And the user should see the element   link=Public description
     And the user should see the element   link=Scope
-    When the user should see the element  jQuery=a:contains("Need or challenge")
+    When the user should see the element  jQuery=a:contains("${amendedQuestion}")
     Then the user should see the element  jQuery=a:contains("Approach and innovation")
     And the user should see the element   jQuery=a:contains("Team and resources")
     And the user should see the element   jQuery=a:contains("Market awareness")
@@ -376,43 +377,46 @@ Application - Application process Page
 Application: Need or challenge
     [Documentation]    INFUND-5632 INFUND-5685 INFUND-5630 INFUND-6283
     [Tags]
-    When the user clicks the button/link    jQuery=h4 a:contains("Need or challenge")
-    Then the user should see the element    jQuery=dt:contains("Question heading") + dd:contains("Need or challenge")
+    Given the user should not see the element  jQuery=li:contains("${amendedQuestion}") .task-status-complete
+    When the user clicks the button/link    jQuery=h4 a:contains("${amendedQuestion}")
+    And the user clicks the button/link     css=input[type="submit"]
+    And the user clicks the button/link     jQuery=h4 a:contains("${amendedQuestion}")
+    Then the user should see the element    jQuery=dt:contains("Question heading") + dd:contains("${amendedQuestion}")
+    # The above steps verify that when the question is not completed and you click it, you land on the edit mode
+    # If question is completed and you click it, you should land on the read only mode.
     When the user clicks the button/link    link=Edit this question
     And the user edits the assessed question information
-    And The user clicks the button/link     css=.button[value="Save and close"]
-    When the user clicks the button/link    jQuery=h4 a:contains("Need or challenge")
+    And The user clicks the button/link     css=input[type="submit"]
+    When the user clicks the button/link    jQuery=h4 a:contains("${amendedQuestion}")
     Then the user sees the correct read only view of the question
     When the user clicks the button/link    link=Edit this question
     And the user selects the radio button   question.writtenFeedback  0
     And the user selects the radio button   question.scored  0
     And the user should not be able to edit the assessed question feedback
-    And the user clicks the button/link    css=.button[value="Done"]
-    And the user clicks the button/link    jQuery=h4 a:contains("Need or challenge")
+    And the user clicks the button/link     jQuery=input[type="submit"]
+    And the user clicks the button/link     jQuery=h4 a:contains("${amendedQuestion}")
     Then the user should not see the assessed question feedback
     [Teardown]  The user clicks the button/link  link=Application
 
 Application: Application details
     [Documentation]    INFUND-5633
-    Given the user clicks the button/link    link=Application details
-    And the user should see the element    jQuery=h1:contains("Application details")
-    And the user should see the text in the page    These are the default questions included in the application details section.
-    When the user clicks the button/link    link=Edit this question
-    And the user selects the radio button    useResubmissionQuestion    false
-    And The user clicks the button/link    jQuery=button:contains("Save and close")
-    And the user clicks the button/link    link=Application details
-    Then The user should see the text in the page    Application details
-    And the user should see the text in the page    No
-    [Teardown]    The user clicks the button/link    link=Application
+    [Tags]
+    Given the user clicks the button/link         link=Application details
+    And the user should see the element           jQuery=h1:contains("Application details")
+    And the user should see the text in the page  These are the default questions included in the application details section.
+    When the user selects the radio button        useResubmissionQuestion  false
+    And The user clicks the button/link           css=button[type="submit"]
+    And the user clicks the button/link           link=Application details
+    Then the user should see the element          jQuery=dt:contains("Resubmission") + dd:contains("No")
+    [Teardown]  The user clicks the button/link   link=Application
 
 Application: Scope
     [Documentation]  INFUND-5634 INFUND-5635
     Given the user clicks the button/link         link=Scope
     Then the user should see the element          jQuery=h1:contains("Scope")
     And the user should see the text in the page  You can edit this question for the applicant as well as the guidance for assessors.
-    When the user clicks the button/link    link=Edit this question
-    And The user fills the empty question fields
-    And The user clicks the button/link    jQuery=.button[value="Save and close"]
+    When The user fills the empty question fields
+    And The user clicks the button/link    jQuery=input[type="submit"]
     And the user clicks the button/link    link=Scope
     Then The user should see the text in the page    Scope
     And the user checks the question fields
@@ -422,14 +426,13 @@ Application: Scope Assessment questions
     Given the user clicks the button/link    link=Edit this question
     And the user selects the radio button    question.writtenFeedback    1
     And the user fills the scope assessment questions
-    When the user clicks the button/link    css=.button[value="Done"]
+    When the user clicks the button/link    jQuery=input[type="submit"]
     And the user clicks the button/link    link=Scope
     Then the user checks the scope assessment questions
-    And the user should not see the element  css=input
     And the user clicks the button/link    link=Edit this question
     And the user selects the radio button    question.writtenFeedback    0
     And the user should not be able to edit the scope feedback
-    And the user clicks the button/link    css=.button[value="Done"]
+    And the user clicks the button/link    jQuery=input[type="submit"]
     And the user clicks the button/link    link=Scope
     Then the user should not see the scope feedback
     [Teardown]    The user clicks the button/link    link=Application
@@ -439,9 +442,8 @@ Application: Project Summary
     Given the user clicks the button/link    link=Project summary
     And the user should see the element      jQuery=h1:contains("Project summary")
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
-    When the user clicks the button/link    link=Edit this question
-    And The user fills the empty question fields
-    And The user clicks the button/link    css=.button[value="Done"]
+    When The user fills the empty question fields
+    And The user clicks the button/link    css=input[type="submit"]
     And the user clicks the button/link    link=Project summary
     Then The user should see the text in the page    Project summary
     And the user checks the question fields
@@ -809,6 +811,6 @@ the user should the server side validation working
 the user marks question as complete
     [Arguments]  ${question_link}
     the user should not see the element  jQuery=li:contains("${question_link}") .task-status-complete
-    the user clicks the button/link      link=${question_link}
+    the user clicks the button/link      jQuery=a:contains("${question_link}")
     the user clicks the button/link      css=.button[value="Done"]
     the user should see the element      jQuery=li:contains("${question_link}") .task-status-complete
