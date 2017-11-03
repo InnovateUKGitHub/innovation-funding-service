@@ -53,4 +53,8 @@ public interface ProjectService {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'READ')")
     ServiceResult<ProjectUserResource> getProjectManager(Long projectId);
+
+/*    @PreAuthorize("hasAnyAuthority('project_finance')")
+    @SecuredBySpring(value = "GET_PENDING_SPEND_PROFILE_GENERATION", description = "Project finance users can get projects for which Spend Profile generation is pending, for a given competition")
+    ServiceResult<List<CompetitionPendingSpendProfileGenerationResource>> getPendingSpendProfileGenerationByCompetitionId(Long competitionId);*/
 }

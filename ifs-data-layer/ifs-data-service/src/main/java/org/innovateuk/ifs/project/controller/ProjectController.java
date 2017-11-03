@@ -55,4 +55,9 @@ public class ProjectController {
     public RestResult<ProjectUserResource> getProjectManager(@PathVariable(value = "projectId") Long projectId) {
         return projectService.getProjectManager(projectId).toGetResponse();
     }
+
+/*    @GetMapping("/competition/{competitionId}/pending-spend-profile-generation")
+    public RestResult<ProjectUserResource> getPendingSpendProfileGenerationByCompetitionId(@PathVariable(value = "competitionId") Long competitionId) {
+        return projectService.getProjectManager(projectId).toGetResponse();
+    }*/
 }

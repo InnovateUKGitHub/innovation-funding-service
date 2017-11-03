@@ -181,6 +181,33 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return simpleMap(filtered, project -> projectMapper.mapToResource(project));
     }
 
+/*    @Override
+    @Transactional
+    public ServiceResult<List<CompetitionPendingSpendProfileGenerationResource>> getPendingSpendProfileGenerationByCompetitionId(Long competitionId) {
+
+        List<Project> projects = projectRepository.findByApplicationCompetitionId(competitionId);
+
+        List<Project> projectsAwaitingSpendProfileGeneration = simpleFilter(projects, project -> {
+            ServiceResult<Void> result = canSpendProfileCanBeGenerated(project);
+            if (result.isSuccess()) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        List<CompetitionPendingSpendProfileGenerationResource> pendingSpendProfileGeneration =
+                simpleMap(projectsAwaitingSpendProfileGeneration, this::convert);
+
+        return serviceSuccess(pendingSpendProfileGeneration);
+    }
+
+    private CompetitionPendingSpendProfileGenerationResource convert(Project project) {
+
+        return new CompetitionPendingSpendProfileGenerationResource(project.getApplication().getId(),
+                project.getId(), project.getName());
+    }*/
+
     @Override
     @Transactional
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
