@@ -18,7 +18,7 @@
             </div>
         </div>
     </div>
-    <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount}, showAllTabs=${model.showTabs})" />
+    <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'all'}, competitionId=${model.competitionProjectsStatusResource.competitionNumber}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
     <div class="grid-container">
         <div th:if="${#lists.isEmpty(model.competitionProjectsStatusResource.projectStatusResources)}">
             <hr />

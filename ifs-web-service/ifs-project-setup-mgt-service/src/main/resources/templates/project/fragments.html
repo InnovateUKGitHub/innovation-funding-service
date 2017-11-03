@@ -60,7 +60,7 @@
     </th:block>
 </th:block>
 
-<div th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount, showAllTabs)">
+<div th:fragment="project-dashboard-navigation(selectedTab, competitionId, openQueryCount, pendingSpendProfilesCount, showAllTabs)">
     <ul class="inline-nav cf">
         <li id="section-1" th:class="${selectedTab == 'all' ? 'selected' : ''}">
             <a th:href="@{/competition/{competitionId}/status/all(competitionId=${competitionId})}">All projects</a>
@@ -69,6 +69,12 @@
         <th:block th:if="${showAllTabs}">
             <li id="section-2" th:class="${selectedTab == 'queries' ? 'selected' : ''}">
                 <a th:href="@{/competition/{competitionId}/status/queries(competitionId=${competitionId})}" th:text="'Query responses (' + ${openQueryCount} + ')'"></a>
+            </li>
+        </th:block>
+
+        <th:block th:if="${showAllTabs}">
+            <li id="section-3" th:class="${selectedTab == 'spend-profile' ? 'selected' : ''}">
+                <a th:href="@{/competition/{competitionId}/status/spend-profile(competitionId=${competitionId})}" th:text="'Spend Profile (' + ${pendingSpendProfilesCount} + ')'"></a>
             </li>
         </th:block>
     </ul>
