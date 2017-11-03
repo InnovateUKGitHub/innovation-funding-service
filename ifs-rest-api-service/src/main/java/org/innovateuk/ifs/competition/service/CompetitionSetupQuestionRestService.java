@@ -6,6 +6,6 @@ import org.innovateuk.ifs.competition.resource.*;
 public interface CompetitionSetupQuestionRestService {
 
     RestResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId);
-    RestResult<Void> save(CompetitionSetupQuestionResource competitionSetupQuestionResource);
 
+    RestResult<Void> save(CompetitionSetupQuestionResource competitionSetupQuestionResource);
 }
