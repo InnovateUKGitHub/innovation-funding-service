@@ -15,7 +15,7 @@ Business opportunity Server-side validations setup questions
     Given The user clicks the button/link  link=Application
     And The user clicks the button/link    jQuery=a:contains("Business opportunity")
     When the user leaves all the question field empty
-    And The user clicks the button/link                             css=.button[value="Done"]
+    And The user clicks the button/link                             css=button[type="submit"]
     Then the validation error above the question should be visible  jQuery=label:contains(Question title)  This field cannot be left blank.
     And the validation error above the question should be visible   jQuery=label:contains(Question guidance title)  This field cannot be left blank.
     And the validation error above the question should be visible   jQuery=label:contains(Question guidance)  This field cannot be left blank.
@@ -36,7 +36,7 @@ Business opportunity Sever-side validations assessment questions
     [Setup]
     Given the user clicks the button/link      link=Business opportunity
     Then the user leaves all the assessment questions empty
-    When the user clicks the button/link    css=.button[value="Done"]
+    When the user clicks the button/link    css=button[type="submit"]
     Then the user should see the text in the page    Please enter a from score.
     And the user should see the text in the page    Please enter a to score.
     And the user should see the text in the page    Please enter a justification.
@@ -69,7 +69,7 @@ Business opportunity: Autosave
 Business opportunity: Mark as done
     [Documentation]    INFUND-5629
     [Tags]    HappyPath
-    When The user clicks the button/link    css=.button[value="Done"]
+    When The user clicks the button/link    css=button[type="submit"]
     And the user clicks the button/link    jQuery=a:contains("Test Heading")
     Then The user should see the text in the page    Test Heading
     And The user should see the text in the page    Test title
@@ -85,7 +85,7 @@ Scope: Sever-side validations assessment questions
     [Tags]
     Given the user clicks the button/link    link=Scope
     When the user clicks the button/link    jQuery=Button:contains("+Add guidance row")
-    And the user clicks the button/link    css=.button[value="Done"]
+    And the user clicks the button/link    css=button[type="submit"]
     Then the user should see the text in the page    Please enter a value.
     And the user should see the text in the page    Please enter a justification.
     And The user clicks the button/link    id=remove-guidance-row-2
@@ -121,7 +121,7 @@ the validation error above the question should be visible
 
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
-    focus    css=.button[value="Done"]
+    focus    css=button[type="submit"]
     Wait Until Element Is Not Visible Without Screenshots    css=error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
@@ -170,4 +170,4 @@ User creates a new competition for Application tests
 Enter question title again
     the user enters text to a text field    id=question.title    Test title
     the user enters text to a text field    id=question.shortTitle    Business opportunity
-    the user clicks the button/link         css=.button[value="Done"]
+    the user clicks the button/link         css=button[type="submit"]
