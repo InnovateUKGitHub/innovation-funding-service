@@ -479,8 +479,8 @@ Removing an Assessed Application Question
     Given the user clicks the button/link     jQuery=a:contains("Costs and value for money")
     When the user clicks the button/link      css=button[name="deleteQuestion"]
     Then the user should not see the element  jQuery=a:contains("Costs and value for money")
-    When the user clicks the button/link      jQuery=li:contains("Additionality") button:contains("Remove")
-    Then the user should not see the element  jQuery=a:contains("Additionality")
+    When the user should see the element      jQuery=li:contains("Additionality") .task-status-complete
+    Then the user should not see the element  jQuery=li:contains("Additionality") button:contains("Remove")
 
 Application: Finances
     [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773
@@ -643,7 +643,6 @@ The Applicant is able to apply to the competition once is Open and see the corre
     And logged in user applies to competition     ${competitionTitle}
     Then the user should see the element          jQuery=li:contains("Tell us how your project is innovative.")
     And the user should not see the element       jQuery=li:contains("Costs and value for money")
-    And the user should not see the element       jQuery=li:contains("Additionality")
 
 *** Keywords ***
 the user moves focus and waits for autosave
