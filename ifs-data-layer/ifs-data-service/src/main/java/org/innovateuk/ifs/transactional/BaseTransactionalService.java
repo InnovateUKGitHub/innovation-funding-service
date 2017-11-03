@@ -10,20 +10,32 @@ import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.finance.resource.ViabilityState;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
+import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_OPEN_OR_LATER;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -49,6 +61,15 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
 
     @Autowired
     protected AddressTypeRepository addressTypeRepository;
+
+    @Autowired
+    private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Autowired
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
+
+    @Autowired
+    private SpendProfileRepository spendProfileRepository;
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -94,6 +115,53 @@ public abstract class BaseTransactionalService extends RootTransactionalService 
                     }
                 }
         );
+    }
+
+    protected ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
+        return (isViabilityApprovedOrNotApplicable(project))
+                .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
+                .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project));
+    }
+
+    private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
+
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+
+        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
+                ViabilityState.REVIEW == viabilityWorkflowHandler.getState(partnerOrganisation));
+
+        if (!existingReviewablePartnerOrganisation.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
+        }
+    }
+
+    private ServiceResult<Void> isEligibilityApprovedOrNotApplicable(Project project) {
+
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+
+        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
+                EligibilityState.REVIEW == eligibilityWorkflowHandler.getState(partnerOrganisation));
+
+        if (!existingReviewablePartnerOrganisation.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED);
+        }
+    }
+
+    private ServiceResult<Void> isSpendProfileAlreadyGenerated(Project project) {
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+
+        Optional<PartnerOrganisation> partnerOrganisationWithSpendProfile = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
+                spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getOrganisation().getId()).isPresent());
+
+        if (!partnerOrganisationWithSpendProfile.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED);
+        }
     }
 
     protected ServiceResult<Application> getApplication(final Long id) {

@@ -118,10 +118,10 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ProjectUsersHelper projectUsersHelper;
     @Autowired
     private EmailService projectEmailService;
-    @Autowired
-    private ViabilityWorkflowHandler viabilityWorkflowHandler;
-    @Autowired
-    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
+/*    @Autowired
+    private ViabilityWorkflowHandler viabilityWorkflowHandler;*/
+/*    @Autowired
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;*/
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
@@ -138,13 +138,13 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 );
     }
 
-    private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
+/*    private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
         return (isViabilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
                 .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project));
-    }
+    }*/
 
-    private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
+/*    private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
 
         List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
 
@@ -183,7 +183,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         } else {
             return serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED);
         }
-    }
+    }*/
 
     private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
 
