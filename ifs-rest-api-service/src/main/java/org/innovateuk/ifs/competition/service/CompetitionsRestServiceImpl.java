@@ -194,4 +194,9 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     public RestResult<Long> getCompetitionOpenQueriesCount(long competitionId) {
         return getWithRestResult(competitionsRestURL + "/" + competitionId + "/queries/open/count", Long.class);
     }
+
+    @Override
+    public RestResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/pending-spend-profiles", competitionPendingSpendProfilesResourceListType());
+    }
 }

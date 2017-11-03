@@ -49,4 +49,5 @@ public interface CompetitionsRestService {
     RestResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions();
     RestResult<List<CompetitionOpenQueryResource>> getCompetitionOpenQueries(long competitionId);
     RestResult<Long> getCompetitionOpenQueriesCount(long competitionId);
+    RestResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(long competitionId);
 }
