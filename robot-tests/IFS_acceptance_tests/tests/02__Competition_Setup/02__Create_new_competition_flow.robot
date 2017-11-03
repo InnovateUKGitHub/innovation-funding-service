@@ -565,16 +565,23 @@ Application: Edit again should mark as incomplete
     Then the user should see the element        css=#compCTA[disabled="disabled"]
     When the user navigates to the page         ${server}/management/competition/setup/${competitionId}/section/application/landing-page
     Then the user clicks the button/link        jQuery=button:contains("Done")
+    When the user clicks the button/link        link=Application details
+    And the user clicks the button/link         css=button[type="submit"]
+    Then the user should see the element        jQuery=li:contains("Application details") .task-status-complete
+
 
 User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
     [Tags]
-    [Setup]  the user navigates to the page  ${server}/management/competition/setup/${competitionId}
+    [Setup]  the user navigates to the page  ${server}/management/competition/setup/${competitionId}/section/application/landing-page
+    And the user clicks the button/link      css=button.button
+    Given the user navigates to the page     ${server}/management/competition/setup/${competitionId}
+    And the user should see the element      jQuery=li:contains("Application") .task-status-complete
     When the user clicks the button/link     css=#compCTA
     Then the user clicks the button/link     jQuery=.button:contains("Done")
-    When the user clicks the button/link   link=All competitions
-    And the user navigates to the page     ${CA_UpcomingComp}
-    Then the user should see the element   jQuery=section:contains("Ready to open") li:contains("${competitionTitle}")
+    When the user clicks the button/link     link=All competitions
+    And the user navigates to the page       ${CA_UpcomingComp}
+    Then the user should see the element     jQuery=section:contains("Ready to open") li:contains("${competitionTitle}")
 
 Assessor: Contain the correct options
     [Documentation]    INFUND-5641
