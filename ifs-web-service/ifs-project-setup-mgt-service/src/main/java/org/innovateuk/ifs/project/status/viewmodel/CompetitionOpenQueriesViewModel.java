@@ -10,11 +10,11 @@ public class CompetitionOpenQueriesViewModel {
     private String competitionName;
     private List<CompetitionOpenQueryResource> openQueries;
     private long openQueryCount;
-    private long pendingSpendProfilesCount;
+    private int pendingSpendProfilesCount;
     private boolean showTabs;
 
     public CompetitionOpenQueriesViewModel(CompetitionResource competition, List<CompetitionOpenQueryResource> openQueries,
-                                           long openQueryCount, long pendingSpendProfilesCount, boolean showTabs) {
+                                           long openQueryCount, int pendingSpendProfilesCount, boolean showTabs) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
         this.openQueries = openQueries;
@@ -31,7 +31,7 @@ public class CompetitionOpenQueriesViewModel {
 
     public long getOpenQueryCount() { return openQueryCount; }
 
-    public long getPendingSpendProfilesCount() { return pendingSpendProfilesCount; }
+    public int getPendingSpendProfilesCount() { return pendingSpendProfilesCount; }
 
     public boolean isShowTabs() { return showTabs; }
 }

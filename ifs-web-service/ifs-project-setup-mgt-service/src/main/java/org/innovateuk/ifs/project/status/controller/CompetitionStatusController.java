@@ -60,14 +60,12 @@ public class CompetitionStatusController {
                                            @PathVariable Long competitionId) {
 
         boolean isUserRoleProjectFinance = loggedInUser.hasRole(UserRoleType.PROJECT_FINANCE);
-        //TODO - This call will be replaced with an actual count call after optimisation in the data layer
-        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles = competitionsRestService.getPendingSpendProfiles(competitionId).getSuccessObjectOrThrowException();
 
         model.addAttribute("model",
                 new PopulatedCompetitionStatusViewModel(statusRestService.getCompetitionStatus(competitionId).getSuccessObjectOrThrowException(),
                         loggedInUser,
                         isUserRoleProjectFinance ? competitionsRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException() : 0L,
-                        isUserRoleProjectFinance ? pendingSpendProfiles.size() : 0L,
+                        isUserRoleProjectFinance ? competitionsRestService.countPendingSpendProfiles(competitionId).getSuccessObjectOrThrowException() : 0,
                         loggedInUser.hasRole(UserRoleType.PROJECT_FINANCE)).get());
         return "project/competition-status-all";
     }
@@ -77,19 +75,16 @@ public class CompetitionStatusController {
     public String viewCompetitionStatusQueries(Model model, UserResource loggedInUser,
                                               @PathVariable Long competitionId) {
 
-        //TODO - This call will be replaced with an actual count call after optimisation in the data layer
-        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles = competitionsRestService.getPendingSpendProfiles(competitionId).getSuccessObjectOrThrowException();
-
         model.addAttribute("model",
                 new CompetitionOpenQueriesViewModel(competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException(),
                         competitionsRestService.getCompetitionOpenQueries(competitionId).getSuccessObjectOrThrowException(),
                         competitionsRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException(),
-                        pendingSpendProfiles.size(),
+                        competitionsRestService.countPendingSpendProfiles(competitionId).getSuccessObjectOrThrowException(),
                         true));
         return "project/competition-status-queries";
     }
 
-    @GetMapping("/spend-profile")
+    @GetMapping("/pending-spend-profiles")
     @PreAuthorize("hasAnyAuthority('project_finance')")
     public String viewPendingSpendProfiles(Model model, UserResource loggedInUser,
                                                @PathVariable Long competitionId) {
