@@ -60,8 +60,10 @@
                 <th:block th:if="${model.questionStatuses.get(question.id)}">
                     <div class="task">
                         <h4 class="heading-small">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}"
-                               th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}">Question Title</a>
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}">
+                                <th:block th:text="${question.questionNumber} + '. '"></th:block>
+                                <th:block th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
+                            </a>
                         </h4>
                     </div>
                     <div class="task-status-complete"><span>Complete</span></div>
@@ -69,8 +71,10 @@
                 <th:block th:unless="${model.questionStatuses.get(question.id)}">
                     <div class="task">
                         <h4 class="heading-small">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id}, questionId=${question.id})}"
-                               th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}">Question Title</a>
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id}, questionId=${question.id})}">
+                                <th:block th:text="${question.questionNumber} + '. '"></th:block>
+                                <th:block th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
+                            </a>
                         </h4>
                     </div>
                     <div th:if="${model.multipleAssessedQuestionsLeft()}" class="task-status">
