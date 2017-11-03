@@ -260,6 +260,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<CompetitionPendingSpendProfilesResource>> competitionPendingSpendProfilesResourceListType() {
+        return new ParameterizedTypeReference<List<CompetitionPendingSpendProfilesResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryListType() {
         return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
     }
