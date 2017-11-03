@@ -91,4 +91,8 @@ public interface CompetitionService {
     @PreAuthorize("hasAnyAuthority('project_finance')")
     @SecuredBySpring(value = "GET_PENDING_SPEND_PROFILES", description = "Project finance users can get projects for which Spend Profile generation is pending, for a given competition")
     ServiceResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(Long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('project_finance')")
+    @SecuredBySpring(value = "COUNT_PENDING_SPEND_PROFILES", description = "Project finance users can count projects for which Spend Profile generation is pending, for a given competition")
+    ServiceResult<Integer> countPendingSpendProfiles(Long competitionId);
 }

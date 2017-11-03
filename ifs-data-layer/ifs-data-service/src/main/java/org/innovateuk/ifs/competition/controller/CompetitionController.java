@@ -218,4 +218,9 @@ public class CompetitionController {
         return competitionService.getPendingSpendProfiles(competitionId).toGetResponse();
     }
 
+    @GetMapping("/{competitionId}/count-pending-spend-profiles")
+    public RestResult<Integer> countPendingSpendProfiles(@PathVariable(value = "competitionId") Long competitionId) {
+        return competitionService.countPendingSpendProfiles(competitionId).toGetResponse();
+    }
+
 }
