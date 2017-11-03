@@ -585,8 +585,6 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         verify(assessorFormInputResponseRestService, only()).updateFormInputResponse(assessmentId, formInputId, value);
     }
 
-
-
     @Test
     public void save() throws Exception {
         long assessmentId = 1L;
