@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Setup Dashboard: Spend Profile'" />
+</head>
+<body class="project-management">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content" class="full-width">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <div class="grid-container">
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionName},subTitle=|${model.competitionId}: Innovate UK|,size='heading-xlarge'" />
+            </div>
+        </div>
+    </div>
+    <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'spend-profile'}, competitionId=${model.competitionId}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
+
+    <th:block th:if="${model.pendingSpendProfiles.size() > 0}">
+        <div>
+            <table id="table-project-organisation-query-status" class="table-overview extra-margin-bottom">
+                <thead>
+                <tr>
+                    <th scope="col">Application number</th>
+                    <th scope="col">Project title</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="pendingSpendProfile : ${model.pendingSpendProfiles}">
+                    <td th:text="${pendingSpendProfile.applicationId}" />
+                    <td><a th:text="${pendingSpendProfile.projectName}" th:href="@{/project/{projectId}/finance-check/(projectId=${pendingSpendProfile.projectId})}" /></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+    <th:block th:unless="${model.pendingSpendProfiles.size() > 0}">
+        There are no outstanding Spend Profiles to generate.
+    </th:block>
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
