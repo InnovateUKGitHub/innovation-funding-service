@@ -60,7 +60,7 @@
                     <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
                 </li>
                 <li class="not-selected">
-                    <a th:href="@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Overview</a>
+                    <a th:href="@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Pending and rejected</a>
                 </li>
                 <li class="not-selected">
                     <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
@@ -136,7 +136,10 @@
                                                class="form-control width-full"
                                                required="required"
                                                th:errorclass="form-control-error"
-                                               th:attr="data-required-errormessage=#{validation.standard.name.required}"
+                                               th:attr="data-required-errormessage=#{validation.standard.name.required},
+                                                        data-minlength-errormessage=#{validation.standard.name.length.min(null,null,2)},
+                                                        data-maxlength-errormessage=#{validation.standard.name.length.max},
+                                                        data-invalid-errormessage=#{validation.standard.name.invalid}"
                                                th:field="*{invites[__${iterStat.index}__].name}"
                                         />
                                     </td>
@@ -150,7 +153,9 @@
                                                aria-labelledby="invite-label-assessor-email"
                                                class="form-control width-full"
                                                required="required"
-                                               th:attr="data-required-errormessage=#{validation.inviteNewAssessorsForm.invites.email.required}"
+                                               th:attr="data-maxlength-errormessage=#{validation.standard.email.length.max(256)},
+                                                        data-email-errormessage=#{validation.standard.email.format},
+                                                        data-required-errormessage=#{validation.inviteNewAssessorsForm.invites.email.required}"
                                                th:errorclass="form-control-error"
                                                th:field="*{invites[__${iterStat.index}__].email}"
                                         />
@@ -198,7 +203,7 @@
                             <th scope="col">Email address</th>
                             <th scope="col">Innovation area</th>
                             <th scope="col">Contract and DOI</th>
-                            <td scope="col">
+                            <td scope="col" class="alignright">
                                 <button name="removeAll" class="buttonlink alignright"
                                         th:if="${!#lists.isEmpty(model.assessors)}">
                                     Remove all

@@ -41,7 +41,7 @@
                 <p th:text="${model.projectSummary}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response for project summary.</p>
             </div>
 
-            <p class="heading-small">Review the project summary above to make sure:</p>
+            <h2 class="heading-medium">Review the project summary above to make sure:</h2>
             <ul class="list list-bullet">
                 <li>you do not have a conflict of interest with this application</li>
                 <li>the application fits within your area of expertise</li>
@@ -52,7 +52,7 @@
                 <div class="form-group" th:classappend="${#fields.hasErrors('assessmentAccept')} ? 'form-group-error'">
                     <fieldset>
                         <legend id="assessmentAccept">
-                            <span class="heading-medium">Select your ability to assess this application</span>
+                            <h2 class="heading-medium">Select your ability to assess this application</h2>
                             <th:block th:if="${#fields.hasErrors('assessmentAccept')}">
                                 <span class="error-message"  th:each="err : ${#fields.errors('assessmentAccept')}" th:text="${err}" />
                             </th:block>
