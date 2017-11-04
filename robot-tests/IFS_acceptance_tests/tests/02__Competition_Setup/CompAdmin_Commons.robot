@@ -168,7 +168,7 @@ the user marks application details as complete
 
 the user marks each question as complete
     [Arguments]  ${question_link}
-    the user clicks the button/link  jQuery=a:contains("${question_link}")
+    the user clicks the button/link  jQuery=h4 a:contains("${question_link}")
     the user clicks the button/link  css=button[type="submit"]
     the user should see the element  jQuery=li:contains("${question_link}") .task-status-complete
 

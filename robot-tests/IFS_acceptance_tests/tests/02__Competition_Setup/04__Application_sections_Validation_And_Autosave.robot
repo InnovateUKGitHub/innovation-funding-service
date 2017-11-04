@@ -22,20 +22,11 @@ Business opportunity Server-side validations setup questions
     And the validation error above the question should be visible   jQuery=label:contains(Max word count)  This field cannot be left blank.
     [Teardown]  Enter question title again
 
-Application questions mark as done validations
-    [Documentation]    INFUND-6468
-    [Tags]
-    [Setup]  the user marks the Application as done  yes  Programme
-    Given the user clicks the button/link            link=Application
-    Then the user clicks the button/link             jQuery=button:contains("Done")
-    And the user should see a summary error          view the application section(s) to resolve the error.
-
 Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
     [Tags]    HappyPath
     [Setup]
-    Given the user clicks the button/link      link=Business opportunity
-    Then the user leaves all the assessment questions empty
+    Given the user leaves all the assessment questions empty
     When the user clicks the button/link    css=button[type="submit"]
     Then the user should see the text in the page    Please enter a from score.
     And the user should see the text in the page    Please enter a to score.
@@ -62,7 +53,6 @@ Business opportunity: Autosave
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Application
     And The user clicks the button/link    jQuery=a:contains("Test Heading")
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then the user should see the correct inputs in the Applications questions form
     And the user should see the correct inputs in assessment questions
 
