@@ -37,6 +37,7 @@ import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -129,6 +130,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withEmail("email@example.com")
                 .withPassword("Passw0rd123")
                 .withAddress(addressResource)
+                .withRoles(new ArrayList(roles))
                 .build();
 
         Long profileId = 1L;

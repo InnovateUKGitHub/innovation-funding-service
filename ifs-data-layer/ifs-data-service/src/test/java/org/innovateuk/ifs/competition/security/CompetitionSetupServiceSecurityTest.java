@@ -123,7 +123,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource) {
+        public ServiceResult<CompetitionResource> save(Long id, CompetitionResource competitionResource) {
             return null;
         }
 

@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.user.resource.UserRoleType.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -147,6 +148,7 @@ public class UserResource {
     }
 
     public void setRoles(List<RoleResource> roles) {
+        roles.sort(comparing(RoleResource::getId));
         this.roles = roles;
     }
 
