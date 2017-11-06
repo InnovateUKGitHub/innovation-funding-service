@@ -75,8 +75,7 @@ Sort by Application number
 
 Finances are showing in the list
     [Documentation]    INFUND-7371
-    [Tags]    HappyPath    Pending
-    #TODO \ BAs need to discuss rounding discrepencies between this page and Applicant view - Agreed with VF
+    [Tags]    HappyPath
     Then the user should see the text in the page    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
     And the user should see the text in the page    ${DEFAULT_TOTAL_PROJECT_COST_WITH_COMMAS}
 
