@@ -12,28 +12,21 @@ Resource          CompAdmin_Commons.robot
 Business opportunity Server-side validations setup questions
     [Documentation]    INFUND-5629 INFUND-5685
     [Tags]    HappyPath
-    Given The user clicks the button/link    link=Application
-    And The user clicks the button/link    link=Business opportunity
+    Given The user clicks the button/link  link=Application
+    And The user clicks the button/link    jQuery=a:contains("Business opportunity")
     When the user leaves all the question field empty
-    And The user clicks the button/link    css=.button[value="Done"]
-    Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank.
-    And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank.
-    And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank.
-    And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank.
-    [Teardown]  Enter question title again
-
-Application questions mark as done validations
-    [Documentation]    INFUND-6468  IFS-743
-    [Tags]  HappyPath
-    When the user clicks the button/link    link=Application
-    Then the user should not see the element   css=.button[value="Done"]
+    And The user clicks the button/link                             css=button[type="submit"]
+    Then the validation error above the question should be visible  jQuery=label:contains(Question title)  This field cannot be left blank.
+    And the validation error above the question should be visible   jQuery=label:contains(Question guidance title)  This field cannot be left blank.
+    And the validation error above the question should be visible   jQuery=label:contains(Question guidance)  This field cannot be left blank.
+    And the validation error above the question should be visible   jQuery=label:contains(Max word count)  This field cannot be left blank.
 
 Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
     [Tags]    HappyPath
-    Given the user clicks the button/link      link=Business opportunity
-    And the user leaves all the assessment questions empty
-    When the user clicks the button/link    css=.button[value="Done"]
+    [Setup]
+    Given the user leaves all the assessment questions empty
+    When the user clicks the button/link    css=button[type="submit"]
     Then the user should see the text in the page    Please enter a from score.
     And the user should see the text in the page    Please enter a to score.
     And the user should see the text in the page    Please enter a justification.
@@ -45,10 +38,10 @@ Business opportunity: Client side validations
     And the user enters text to a text field    id=question.shortTitle    Test Heading
     And the user moves focus and waits for autosave
     And the user fills the empty assessment fields
-    Then the validation error above the question should not be visible    jQuery=label:contains(Question title)    This field cannot be left blank.
-    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank.
-    And the validation error above the question should not be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank.
-    And the validation error above the question should not be visible    jQuery=label:contains(Max word count)    This field cannot be left blank.
+    Then the validation error above the question should not be visible  jQuery=label:contains(Question title)    This field cannot be left blank.
+    And the validation error above the question should not be visible   jQuery=label:contains(Question guidance title)    This field cannot be left blank.
+    And the validation error above the question should not be visible   jQuery=label:contains(Question guidance)    This field cannot be left blank.
+    And the validation error above the question should not be visible   jQuery=label:contains(Max word count)    This field cannot be left blank.
     And the user should not see the text in the page    Please enter a from score.
     And the user should not see the text in the page    Please enter a to score.
     And the user should not see the text in the page    Please enter a justification.
@@ -58,15 +51,15 @@ Business opportunity: Autosave
     [Tags]  HappyPath
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Application
-    And The user clicks the button/link    link=Test Heading
+    And The user clicks the button/link    jQuery=a:contains("Test Heading")
     Then the user should see the correct inputs in the Applications questions form
     And the user should see the correct inputs in assessment questions
 
 Business opportunity: Mark as done
     [Documentation]    INFUND-5629
     [Tags]    HappyPath
-    When The user clicks the button/link    css=.button[value="Done"]
-    And the user clicks the button/link    link=Test Heading
+    When The user clicks the button/link    css=button[type="submit"]
+    And the user clicks the button/link    jQuery=a:contains("Test Heading")
     Then The user should see the text in the page    Test Heading
     And The user should see the text in the page    Test title
     And The user should see the text in the page    Subtitle test
@@ -81,7 +74,7 @@ Scope: Sever-side validations assessment questions
     [Tags]
     Given the user clicks the button/link    link=Scope
     When the user clicks the button/link    jQuery=Button:contains("+Add guidance row")
-    And the user clicks the button/link    css=.button[value="Done"]
+    And the user clicks the button/link    css=button[type="submit"]
     Then the user should see the text in the page    Please enter a value.
     And the user should see the text in the page    Please enter a justification.
     And The user clicks the button/link    id=remove-guidance-row-2
@@ -92,7 +85,7 @@ Scope: Sever-side validations assessment questions
 the user leaves all the question field empty
     Clear Element Text    css=.editor
     Press Key    css=.editor    \\8
-    focus    css=.button[value="Done"]
+    focus    css=button[type="submit"]
     wait for autosave
     The user enters text to a text field    id=question.shortTitle    ${EMPTY}
     the user moves focus and waits for autosave
@@ -117,7 +110,7 @@ the validation error above the question should be visible
 
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
-    focus    css=.button[value="Done"]
+    focus    css=button[type="submit"]
     Wait Until Element Is Not Visible Without Screenshots    css=error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
@@ -162,8 +155,3 @@ User creates a new competition for Application tests
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
     And the user clicks the button/link    jQuery=button:contains("Done")
     And the user clicks the button/link    link=Competition setup
-
-Enter question title again
-    the user enters text to a text field    id=question.title    Test title
-    the user enters text to a text field    id=question.shortTitle    Business opportunity
-    the user clicks the button/link         css=.button[value="Done"]
