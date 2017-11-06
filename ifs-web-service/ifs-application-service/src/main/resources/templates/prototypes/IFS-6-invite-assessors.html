@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
-	<link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body class="competition-management">
+<body class="dashboard-internal wide-page">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -12,17 +12,51 @@
 
 
 <main id="content">
-	<th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage assessment panel'}, ${'/prototypes/IFS-707-manage-assessment-panel?action=update'})" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/5721-dashboard'} + ${(param.comp != null ? '?status=' + param.comp[0] : '')})" />
+
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${'Invite assessors to attend'}, ${null})" />
+	<h2 class="heading-medium">Key statistics</h2>
 
-	<th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-assessor-intro" />
+	<div class="grid-row">
+		<div class="column-quarter">
+			<div class="highlight-panel">
+				<span class="heading-large">0</span><br />
+				<small>invited</small>
+			</div>
+		</div>
+		<div class="column-quarter">
+			<div class="highlight-panel">
+				<span class="heading-large">0</span><br />
+				<small>accepted</small>
+			</div>
+		</div>
+		<div class="column-quarter">
+			<div class="highlight-panel">
+				<span class="heading-large">0</span><br />
+				<small>declined</small>
+			</div>
+		</div>
+		<div class="column-quarter">
+			<div class="highlight-panel">
+				<span class="heading-large">0</span><br />
+				<small>assessors on invite list</small>
+			</div>
+		</div>
+	</div>
 
-	<ul class="inline-nav">
+	<dl class="standard-definition-list extra-margin-top">
+		<dt>Innovation sector</dt>
+		<dd>Materials and manufacturing</dd>
+
+		<dt>Innovation area</dt>
+		<dd>Digital manufacturing</dd>
+	</dl>
+
+	<ul class="inline-nav extra-margin-top">
 		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab == null or param.tab[0] == 'find' ? 'Item selected' : 'Item not selected' )}">
 			<a th:href="@{'?tab=find'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Find</a>
 		</li>
@@ -32,16 +66,16 @@
 		<li th:class="${(param.tab != null and param.tab[0] == 'overview' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'overview' ? 'Item selected' : 'Item not selected' )}">
 			<a th:href="@{'?tab=overview'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Overview</a>
 		</li>
-        <li th:class="${(param.tab != null and param.tab[0] == 'accepted' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'accepted' ? 'Item selected' : 'Item not selected' )}">
-            <a th:href="@{'?tab=accepted'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Accepted</a>
-        </li>
+		<li th:class="${(param.tab != null and param.tab[0] == 'accepted' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'accepted' ? 'Item selected' : 'Item not selected' )}">
+			<a th:href="@{'?tab=accepted'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Accepted</a>
+		</li>
 	</ul>
 
-	<th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-assessor-main-content" />
+	<th:block th:insert="prototypes/fragments/manage-assessment-panel :: prototype-assessor-main-content" th:with="invite='assessor-comp'"/>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-	<th:block th:insert="fragments/layout :: main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
 <th:block th:insert="fragments/layout :: footer" />
@@ -52,7 +86,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-  jQuery(document).ready(function(){
+	  jQuery(document).ready(function(){
 	function rowsSelected(){
 	  var count = jQuery('input[name="selectedAssessorIds"]:checked').length;
 	  jQuery('.applications-selected').html(count);
@@ -89,7 +123,5 @@
   });
 	// ]]>
 </script>
-
-
 </body>
 </html>

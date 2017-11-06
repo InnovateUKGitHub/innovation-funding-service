@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="competition-management">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-comp-admin-header" th:with="status='loggedIn'" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+
+  	<!-- HARDCODED PROTOTYPE HTML -->
+
+    <h1 class="heading-xlarge">
+        Manage assessors
+    </h1>
+
+    <p><a href="/prototypes/IFS-6-assessor-profile-update?action=new">Add a new assessor</a></p>
+
+    <ul class="inline-nav">
+        <li th:class="${(param.tab == null or param.tab[0] == 'active' ? 'selected' : 'not-selected' )}">
+            <a th:href="@{'?tab=active'}">Active (12)</a>
+        </li>
+        <li th:class="${(param.tab != null and param.tab[0] == 'inactive' ? 'selected' : 'not-selected' )}">
+            <a th:href="@{'?tab=inactive'}">Inactive (8)</a>
+        </li>
+        <li th:class="${(param.tab != null and param.tab[0] == 'pending' ? 'selected' : 'not-selected' )}">
+            <a th:href="@{${(param.pending != null and param.pending[0] ==  '1' ? '?tab=pending&#38;pending=1' : '?tab=pending')}}" th:text="${param.pending != null and param.pending[0] ==  '1' ? 'Pending (1)' : 'Pending (0)' }">Pending (0)</a>
+        </li>
+    </ul>
+
+    <th:block th:if="${param.tab == null or param.tab[0] == 'active'}">
+
+        <span class="heading-xlarge no-margin">12</span>
+        <span class="heading-small">active assessors</span>
+
+        <div class="table-overflow">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email address</th>
+                        <th scope="col">Contract and DOI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html">Arden Pimenta</a></td>
+                        <td><a href="#">arden.pimenta@innovateuk.test</a></td>
+                        <td><span class="no">No</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile-2.html">Veronica Lederman</a></td>
+                        <td><a href="#">veronica.lederman@innovateuk.test</a></td>
+                        <td><span class="yes">Yes</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html">Astle Pimenta</a></td>
+                        <td><a href="#">astle.pimenta@innovateuk.test</a></td>
+                        <td><span class="yes">Yes</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html">Ian Cooper</a></td>
+                        <td><a href="#">ian.cooper@innovateuk.test</a></td>
+                        <td><span class="yes">Yes</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html">John Doe</a></td>
+                        <td><a href="#">john.doe@innovateuk.test</a></td>
+                        <td><span class="yes">Yes</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html">Lee Bowman</a></td>
+                        <td><a href="#">lee.bowman@innovateuk.test</a></td>
+                        <td><span class="no">No</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html">Peter Freeman</a></td>
+                        <td><a href="#">peter.freeman@innovateuk.test</a></td>
+                        <td><span class="yes">Yes</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html">Rianne Almeida</a></td>
+                        <td><a href="#">rianne.almeida@innovateuk.test</a></td>
+                        <td><span class="yes">Yes</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html">Robert Johnson</a></td>
+                        <td><a href="#">rober.johnsona@innovateuk.test</a></td>
+                        <td><span class="no">No</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html">Sarah Greenwood</a></td>
+                        <td><a href="#">sarah.greenwood@innovateuk.test</a></td>
+                        <td><span class="yes">Yes</span></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html">Toby Reader</a></td>
+                        <td><a href="#">tody.reader@innovateuk.test</a></td>
+                        <td><span class="yes">Yes</span></td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+
+    </th:block>
+
+    <th:block th:if="${param.tab != null and param.tab[0] == 'inactive'}">
+
+        <span class="heading-xlarge no-margin">8</span>
+        <span class="heading-small">inactive internal users</span>
+
+        <div class="table-overflow">
+            <table>
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Email address</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Retired">Ari Nunes</a></td>
+                        <td><a href="#">ari.nunes@innovateuk.test</a></td>
+                        <td>Retired</td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Training+required&#38;rejectText=Lack+of+experience">Julie Nunes</a></td>
+                        <td><a href="#">julie.nunes@innovateuk.test</a></td>
+                        <td>Training required</td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Retired">Lucy Cavanaugh</a></td>
+                        <td><a href="#">lucy.cavanaugh@innovateuk.test</a></td>
+                        <td>Retired</td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Retired">Owain Walden</a></td>
+                        <td><a href="#">owain.walden@innovateuk.test</a></td>
+                        <td>Retired</td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Training+required&#38;rejectText=Lack+of+experience">Ralph Nunes</a></td>
+                        <td><a href="#">ralph.nunes@innovateuk.test</a></td>
+                        <td>Training required</td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Training+required&#38;rejectText=Lack+of+experience">Richard Nunes</a></td>
+                        <td><a href="#">richard.nunes@innovateuk.test</a></td>
+                        <td>Training required</td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Retired">Richard Place</a></td>
+                        <td><a href="#">richard.place@innovateuk.test</a></td>
+                        <td>Retired</td>
+                    </tr>
+                    <tr>
+                        <td><a href="/prototypes/IFS-6-assessor-profile.html?deactivateAssessor=Retired">Rudolph Place</a></td>
+                        <td><a href="#">rudolph.place@innovateuk.test</a></td>
+                        <td>Retired</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </th:block>
+
+    <th:block th:if="${param.tab != null and param.tab[0] == 'pending'}">
+
+        <span class="heading-xlarge no-margin" th:text="${param.pending != null and param.pending[0] ==  '1' ? '1' : '0' }">0</span>
+        <span class="heading-small">pending assessors</span>
+
+        <div class="table-overflow">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email address</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+
+                <th:block th:if="${param.pending != null and param.pending[0] ==  '1'}">
+                    <tbody>
+                        <tr>
+                            <td><a href="#">Carl Test</a></td>
+                            <td><a href="#">carl.test@email.com</a></td>
+                            <td>Invite sent: 12 Sep 2017</td>
+                        </tr>
+                    </tbody>
+                </th:block>
+
+
+            </table>
+        </div>
+    </th:block>
+
+
+
+  	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+	// <![CDATA[
+
+	// ]]>
+</script>
+</body>
+</html>
