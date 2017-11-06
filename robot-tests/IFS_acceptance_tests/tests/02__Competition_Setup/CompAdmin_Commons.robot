@@ -168,10 +168,9 @@ the user marks application details as complete
 
 the user marks each question as complete
     [Arguments]  ${question_link}
-    the user clicks the button/link  link=${question_link}
-    #TODO once IFS-2052 addresses common way of defining the elements we can remove the run keyord and ignore here
-    run keyword and ignore error without screenshots   the user clicks the button/link  jQuery=.button:contains("Done")
-    run keyword and ignore error without screenshots   the user clicks the button/link  css=.button[value="Done"]
+    the user clicks the button/link  jQuery=h4 a:contains("${question_link}")
+    the user clicks the button/link  css=button[type="submit"]
+    the user should see the element  jQuery=li:contains("${question_link}") .task-status-complete
 
 the user fills in the Finances questions
     [Arguments]  ${growthTable}
@@ -332,7 +331,7 @@ the user is able to configure the new question
     the user enters text to a text field  guidanceRows[3].justification  This the 3-4 Justification
     the user enters text to a text field  guidanceRows[4].justification  This the 1-2 Justification
     the user enters text to a text field  question.assessmentMaxWords  120
-    the user clicks the button/link       css=input[type="submit"]
+    the user clicks the button/link       css=button[type="submit"]
 
 the user should be able to see the read only view of question correctly
     the user clicks the button/link  jQuery=a:contains("Tell us how your project is innovative.")
