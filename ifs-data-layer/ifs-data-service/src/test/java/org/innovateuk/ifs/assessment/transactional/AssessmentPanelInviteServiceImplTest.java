@@ -718,7 +718,6 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
     @Test
     public void getAllInvitesByUser() throws Exception {
-
         User user = newUser()
                 .withId(1L)
                 .build();
@@ -767,11 +766,9 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
     @Test
     public void getAllInvitesByUser_invitesExpired() throws Exception {
-
         User user = newUser()
                 .withId(1L)
                 .build();
-
         Milestone milestone = newMilestone()
                 .withType(ASSESSMENT_PANEL)
                 .withDate(now().minusDays(2))
@@ -781,21 +778,18 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withName("Competition in Assessor Panel")
                 .withMilestones(singletonList(milestone))
                 .build();
-
         List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
                 .withEmail("paulplum@gmail.com")
                 .withHash("")
                 .withCompetition(competition)
                 .withUser(user)
                 .build(2);
-
         List<AssessmentPanelParticipant> assessmentPanelParticipants = newAssessmentPanelParticipant()
                 .withInvite(invites.get(0), invites.get(1))
                 .withStatus(PENDING)
                 .withCompetition(competition)
                 .withUser(user)
                 .build(2);
-
         List<AssessmentPanelParticipantResource> expected = newAssessmentPanelParticipantResource()
                 .withCompetition(2L)
                 .withCompetitionName("Competition in Assessor Panel")
@@ -812,8 +806,6 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         inOrder.verify(assessmentPanelParticipantRepositoryMock).findByUserIdAndRole(1L, PANEL_ASSESSOR);
         inOrder.verifyNoMoreInteractions();
     }
-
-
 
     @Test
     public void deleteInvite() {
@@ -876,7 +868,6 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
     @Test
     public void openInvite() throws Exception {
-
         Milestone milestone = newMilestone()
                 .withType(ASSESSMENT_PANEL)
                 .withDate(now().plusDays(1))
@@ -901,7 +892,6 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
     @Test
     public void openInvite_inviteExpired() throws Exception {
-
         Milestone milestone = newMilestone()
                 .withType(ASSESSMENT_PANEL)
                 .withDate(now().minusDays(1))
