@@ -7,11 +7,19 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...
 ...               IFS-1564 Assessment panels - Invite assessors to panel - Key statistics
 ...
-...               IFS-1561 Assessment panels - Invite assessors to panel - Overview tab and resend invites
+...               IFS-1561 INFUND-6453 Filter and pagination on 'Overview' tab of Invite assessors dashboard
+...
+...               INFUND-1985 Rename 'Overview' tab on Invite assessors dashboard to 'Pending and rejected'
 ...
 ...               IFS-1135 Assessment panels - Assessor dashboard 'Invitations to attend panel' box
 ...
 ...               IFS-37 Assessment panels - Accept/Reject Panel Invite
+...
+...               IFS-1563 Assessment panels - Invite assessors to panel - Accepted tab
+
+...
+...               IFS-1565 Assessment panels - Invite assessors to panel - Remove assessors from Invite list
+
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -37,26 +45,37 @@ Assessment panel links are active if the assessment panel has been set
     When the user clicks the button/link   link=Invite assessors to attend
     Then the user should see the element   jQuery=h1:contains("Invite assessors to panel")
 
-There are no Assessors in Invite and Overview tab before sending invite
+There are no Assessors in Invite and Pending and rejected tab before sending invite
     [Documentation]  IFS-1561
     [Tags]
     Given the user clicks the button/link  link=Invite
-    And the user should see the element    jQuery=tr:contains("There are no assessors to be invited to this competition.")
-    Then the user clicks the button/link   link=Overview
+    And the user should see the element    jQuery=tr:contains("There are no assessors to be invited to this panel.")
+    Then the user clicks the button/link   link=Pending and rejected
     And the user should see the element    jQuery=tr:contains("There are no assessors invited to this assessment panel.")
 
 CompAdmin can add an assessor to invite list
     [Documentation]  IFS-31
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link  link=Find
-    Given the user clicks the button/link     jQuery=tr:contains("Benjamin Nixon") label
-    And the user clicks the button/link       jQuery=tr:contains("Joel George") label
-    When the user clicks the button/link      jQuery=button:contains("Add selected to invite list")
-    And the user should see the element       jQuery=td:contains("Joel George") + td:contains("${panel_assessor_joel}")
-    Then the user should see the element      jQuery=td:contains("Benjamin Nixon") + td:contains("${panel_assessor_ben}")
+    Given the user clicks the button/link    jQuery=tr:contains("Benjamin Nixon") label
+    And the user clicks the button/link      jQuery=tr:contains("Joel George") label
+    And the user clicks the button/link      jquery=tr:contains("Madeleine Martin") label
+    When the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
+    Then the user should see the element     jQuery=td:contains("Benjamin Nixon") + td:contains(${panel_assessor_ben})
+    And the user should see the element      jQuery=td:contains("Joel George") + td:contains(${panel_assessor_joel})
+    And the user should see the element      jQuery=td:contains("Madeleine Martin") + td:contains("madeleine.martin@gmail.com")
     When the user clicks the button/link      link=Find
     Then the user should not see the element  jQuery=td:contains("Benjamin Nixon")
-    And the user should not see the element   jQuery=td:contains("Joel George")
+    And the user should not see the element  jQuery=td:contains("Joel George")
+    And the user should not see the element  jquery=tr:contains("Madeleine Martin")
+
+CompAdmin can remove assessor from invite list
+    [Documentation]  IFS-1565
+    [Tags]
+    Given the user clicks the button/link    link=Invite
+    When the user clicks the button/link     jQuery=td:contains("Madeleine Martin") ~ td:contains("Remove")
+    And the user clicks the button/link      link=Find
+    Then the user should see the element     jQuery=tr:contains("Madeleine Martin")
 
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-1560
@@ -73,7 +92,7 @@ Assessor recieves the invite to panel
     [Setup]  the user clicks the button/link  link=Invite
     Given the user clicks the button/link     link=Review and send invites
     When the user clicks the button/link      jQuery=button:contains("Send invite")
-    Then the user should see the element       jQuery=.column-quarter:contains("2") small:contains("Invited")
+    Then the user should see the element      jQuery=.column-quarter:contains("2") small:contains("Invited")
     And the user should see the element       jQuery=.column-quarter:contains("2") small:contains("Assessors on invite list")
     And the user reads his email              ${panel_assessor_ben}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
     And the user reads his email              ${panel_assessor_joel}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
@@ -91,7 +110,7 @@ Bulk add assessor to invite list
 CompAdmin resend invites to multiple assessors
     [Documentation]  IFS-1561
     [Tags]  HappyPath
-    [Setup]  the user clicks the button/link  link=Overview
+    [Setup]  the user clicks the button/link    link=Pending and rejected
     Given the user clicks the button/link     jQuery=tr:contains("Benjamin Nixon") label
     And the user clicks the button/link       jQuery=tr:contains("Joel George") label
     And the user clicks the button/link       jQuery=button:contains("Resend invites")
@@ -120,12 +139,19 @@ Assesor is able to reject the invitation from email
     And Logging in and Error Checking                   ${panel_assessor_joel}  ${short_password}
     Then the user should not see the element            jQuery=h2:contains("Invitations to attend panel")
 
-Comp Admin can see the rejected invitation
-    [Documentation]  IFS-37
+Comp Admin can see the rejected and accepted invitation
+    [Documentation]  IFS-37 IFS-1563
     [Tags]
-    [Setup]  Log in as a different user   &{Comp_admin1_credentials}
-    Given the user navigates to the page  ${SERVER}/management/assessment/panel/competition/${CLOSED_COMPETITION}/assessors/overview
-    Then the user should see the element  jQuery=td:contains("Joel George") ~ td:contains("Invite declined")
+    [Setup]  Log in as a different user        &{Comp_admin1_credentials}
+    Given the user navigates to the page       ${SERVER}/management/assessment/panel/competition/${CLOSED_COMPETITION}/assessors/overview
+    And the user should see the element        jQuery=td:contains("Joel George") ~ td:contains("Invite declined")
+    And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Declined")
+    When the user clicks the button/link       link=Accepted
+    Then the user should see the element       jQuery=td:contains("Benjamin Nixon") ~ td:contains("Materials, process and manufacturing design technologies")
+    And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Accepted")
+    And the user should see the element        jQuery=.column-quarter:contains(0) small:contains("Assessors on invite list")
+    When the user clicks the button/link       link=Pending and rejected
+    Then the user should not see the element   jQuery=td:contains("Benjamin Nixon")
 
 *** Keywords ***
 

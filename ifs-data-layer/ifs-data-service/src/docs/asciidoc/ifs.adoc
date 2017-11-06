@@ -130,6 +130,10 @@ include::assessor-count-options.adoc[]
 == Question
 include::question.adoc[]
 
+[[questionSetup]]
+== Question setup
+include::questionSetup.adoc[]
+
 [[section]]
 == Section
 include::section.adoc[]
@@ -201,10 +205,6 @@ include::formInput.adoc[]
 [[formInputResponse]]
 == FormInputResponse
 include::formInputResponse.adoc[]
-
-[[silstub]]
-== SIL stubbing endpoints
-include::silstub.adoc[]
 
 [[project]]
 == Project

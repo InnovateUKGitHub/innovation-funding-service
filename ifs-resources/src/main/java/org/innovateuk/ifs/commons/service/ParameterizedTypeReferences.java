@@ -10,7 +10,10 @@ import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.finance.resource.*;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
+import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
@@ -27,6 +30,7 @@ import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -262,5 +266,17 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryListType() {
         return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<Map<CompetitionSetupSection, Optional<Boolean>>> competitionSetupSectionStatusMap() {
+        return new ParameterizedTypeReference<Map<CompetitionSetupSection, Optional<Boolean>>>() {};
+    }
+
+    public static ParameterizedTypeReference<Map<CompetitionSetupSubsection, Optional<Boolean>>> competitionSetupSubsectionStatusMap() {
+        return new ParameterizedTypeReference<Map<CompetitionSetupSubsection, Optional<Boolean>>>() {};
+    }
+
+    public static ParameterizedTypeReference<Map<Long, Boolean>> longStatusMap() {
+        return new ParameterizedTypeReference<Map<Long, Boolean>>() {};
     }
 }

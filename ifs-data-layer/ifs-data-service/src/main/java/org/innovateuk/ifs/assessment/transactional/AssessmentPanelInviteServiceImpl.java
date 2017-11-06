@@ -490,10 +490,6 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         }
     }
 
-    private ServiceResult<RejectionReason> getRejectionReason(final RejectionReasonResource rejectionReason) {
-        return find(rejectionReasonRepository.findOne(rejectionReason.getId()), notFoundError(RejectionReason.class, rejectionReason.getId()));
-    }
-
     private String getInviteCompetitionName(AssessmentPanelParticipant participant) {
         return participant.getInvite().getTarget().getName();
     }
@@ -517,6 +513,25 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
             return serviceSuccess(invite);
         });
     }
+
+    @Override
+    public ServiceResult<Void> deleteInvite(String email, long competitionId) {
+        return getByEmailAndCompetition(email, competitionId).andOnSuccess(this::deleteInvite);
+    }
+
+    @Override
+    public ServiceResult<Void> deleteAllInvites(long competitionId) {
+        return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
+                .andOnSuccessReturnVoid(competition ->
+                        assessmentPanelInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
+    }
+
+    private ServiceResult<Void> deleteInvite(AssessmentPanelInvite invite) {
+        if (invite.getStatus() != CREATED) {
+            return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_INVITE_CANNOT_DELETE_ONCE_SENT, invite.getEmail()));
+        }
+
+        assessmentPanelInviteRepository.delete(invite);
+        return serviceSuccess();
+    }
 }
-
-
