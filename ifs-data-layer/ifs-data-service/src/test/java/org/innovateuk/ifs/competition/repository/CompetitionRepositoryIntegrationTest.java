@@ -6,9 +6,15 @@ import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.repository.ProjectRepository;
+import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +30,8 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 
+import static org.junit.Assert.*;
+
 public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionRepository> {
 
     @Autowired
@@ -33,9 +41,28 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     private MilestoneRepository milestoneRepository;
 
     @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
+
+    @Autowired
     @Override
     protected void setRepository(CompetitionRepository repository) {
         this.repository = repository;
+    }
+
+    private Long org1Id;
+    private Long org2Id;
+
+    @Before
+    public void setup() {
+        Organisation org = organisationRepository.findOneByName("Org1");
+        assertNotNull(org);
+        org1Id = org.getId();
+        org = organisationRepository.findOneByName("Org2");
+        assertNotNull(org);
+        org2Id = org.getId();
     }
 
     @Test
@@ -183,5 +210,100 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Assert.assertEquals("compWithNoInnovationLead", filteredSupportUserSearchResults.get(2).getName());
         Assert.assertEquals("openComp", filteredSupportUserSearchResults.get(3).getName());
         Assert.assertEquals("compReadyToOpen", filteredSupportUserSearchResults.get(4).getName());
+    }
+
+    @Test
+    public void oneQueryCreatedByProjectFinance() {
+        List<Competition> comps = repository.findByName("Comp21001");
+        assertTrue(comps.size() > 0);
+        assertEquals(0L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(0L, results.size());
+    }
+
+    @Test
+    public void oneQueryCreatedByProjectManager() {
+        List<Competition> comps = repository.findByName("Comp21002");
+        assertTrue(comps.size() > 0);
+        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, results.size());
+        List<Application> apps = applicationRepository.findByName("App21002");
+        assertEquals(1L, apps.size());
+        Long appId = apps.get(0).getId();
+        List<Project> projects = projectRepository.findByApplicationCompetitionId(comps.get(0).getId());
+        Project project = projects.stream().filter(p -> p.getName().equals("project 2")).findFirst().get();
+        assertNotNull(project);
+        Long projectId = project.getId();
+        assertEquals(new CompetitionOpenQueryResource(appId, org2Id, "Org2", projectId, "project 2"), results.get(0));
+    }
+
+    @Test
+    public void oneQueryCreatedByProjectFinanceWithResponseFromProjectManager() {
+        List<Competition> comps = repository.findByName("Comp21003");
+        assertTrue(comps.size() > 0);
+        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, results.size());
+        List<Application> apps = applicationRepository.findByName("App21003");
+        assertEquals(1L, apps.size());
+        Long appId = apps.get(0).getId();
+        List<Project> projects = projectRepository.findByApplicationCompetitionId(comps.get(0).getId());
+        Project project = projects.stream().filter(p -> p.getName().equals("project 3")).findFirst().get();
+        assertNotNull(project);
+        Long projectId = project.getId();
+        assertEquals(new CompetitionOpenQueryResource(appId, org1Id, "Org1", projectId, "project 3"), results.get(0));
+    }
+
+    @Test
+    public void twoOpenQueryResponsesFromDifferentPartners() {
+        List<Competition> comps = repository.findByName("Comp21005");
+        assertTrue(comps.size() > 0);
+        assertEquals(2L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(2L, results.size());
+        List<Application> apps = applicationRepository.findByName("App21005");
+        assertEquals(1L, apps.size());
+        Long appId = apps.get(0).getId();
+        List<Project> projects = projectRepository.findByApplicationCompetitionId(comps.get(0).getId());
+        Project project = projects.stream().filter(p -> p.getName().equals("project 5")).findFirst().get();
+        assertNotNull(project);
+        Long projectId = project.getId();
+        assertEquals(new CompetitionOpenQueryResource(appId, org1Id, "Org1", projectId, "project 5"), results.get(0));
+        assertEquals(new CompetitionOpenQueryResource(appId, org2Id, "Org2", projectId, "project 5"), results.get(1));
+    }
+
+    @Test
+    public void twoProjectsHaveOpenQueries() {
+        List<Competition> comps = repository.findByName("Comp21006");
+        assertTrue(comps.size() > 0);
+        assertEquals(2L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(2L, results.size());
+        List<Application> apps = applicationRepository.findByName("App21006a");
+        assertEquals(1L, apps.size());
+        Long appId = apps.get(0).getId();
+        List<Project> projects = projectRepository.findByApplicationCompetitionId(comps.get(0).getId());
+        Project project = projects.stream().filter(p -> p.getName().equals("project 6")).findFirst().get();
+        assertNotNull(project);
+        Long projectId = project.getId();
+        assertEquals(new CompetitionOpenQueryResource(appId, org1Id, "Org1", projectId, "project 6"), results.get(0));
+
+        apps = applicationRepository.findByName("App21006b");
+        assertEquals(1L, apps.size());
+        appId = apps.get(0).getId();
+        project = projects.stream().filter(p -> p.getName().equals("project 7")).findFirst().get();
+        assertNotNull(project);
+        projectId = project.getId();
+        assertEquals(new CompetitionOpenQueryResource(appId, org1Id, "Org1", projectId, "project 7"), results.get(1));
+    }
+
+    @Test
+    public void oneQueryCreatedByProjectFinanceWithResponseFromProjectManagerButWithSpendProfileGenerated() {
+        List<Competition> comps = repository.findByName("Comp21007");
+        assertTrue(comps.size() > 0);
+        assertEquals(0L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(0L, results.size());
     }
 }
