@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CollaborationLevel;
+import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
@@ -182,10 +184,6 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withAssessorPay(BigDecimal... assessorPay) {
         return withArraySetFieldByReflection("assessorPay", assessorPay);
-    }
-
-    public CompetitionResourceBuilder withSectionSetupStatus(Map<CompetitionSetupSection, Boolean> sectionSetupStatus) {
-        return with(competition -> setField("sectionSetupStatus", sectionSetupStatus, competition));
     }
 
     public CompetitionResourceBuilder withNonIfs(Boolean... nonIfs) {

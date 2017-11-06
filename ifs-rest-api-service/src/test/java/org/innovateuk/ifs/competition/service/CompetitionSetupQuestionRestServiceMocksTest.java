@@ -9,9 +9,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- *
- */
 public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionSetupQuestionRestServiceImpl> {
 
     private static final String competitionsRestURL = "/competition-setup-question";

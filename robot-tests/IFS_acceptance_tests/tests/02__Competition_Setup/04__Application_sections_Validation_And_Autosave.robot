@@ -14,29 +14,26 @@ Business opportunity Server-side validations setup questions
     [Tags]    HappyPath
     Given The user clicks the button/link    link=Application
     And The user clicks the button/link    link=Business opportunity
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     When the user leaves all the question field empty
-    And The user clicks the button/link    css=.button[value="Save and close"]
+    And The user clicks the button/link    css=.button[value="Done"]
     Then the validation error above the question should be visible    jQuery=label:contains(Question title)    This field cannot be left blank.
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance title)    This field cannot be left blank.
     And the validation error above the question should be visible    jQuery=label:contains(Question guidance)    This field cannot be left blank.
     And the validation error above the question should be visible    jQuery=label:contains(Max word count)    This field cannot be left blank.
+    [Teardown]  Enter question title again
 
 Application questions mark as done validations
-    [Documentation]    INFUND-6468
-    [Tags]
-    Given the user clicks the button/link    link=Application
-    And the user clicks the button/link    jQuery=button:contains("Done")
-    And the user should see the text in the page    Unable to mark as complete.
-    And the user should see the text in the page    view the application section(s) to resolve the error.
-    And The user clicks the button/link    link=No question header entered
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    [Documentation]    INFUND-6468  IFS-743
+    [Tags]  HappyPath
+    When the user clicks the button/link    link=Application
+    Then the user should not see the element   css=.button[value="Done"]
 
 Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
     [Tags]    HappyPath
-    Given the user leaves all the assessment questions empty
-    When the user clicks the button/link    jQuery=.button[value="Save and close"]
+    Given the user clicks the button/link      link=Business opportunity
+    And the user leaves all the assessment questions empty
+    When the user clicks the button/link    css=.button[value="Done"]
     Then the user should see the text in the page    Please enter a from score.
     And the user should see the text in the page    Please enter a to score.
     And the user should see the text in the page    Please enter a justification.
@@ -62,14 +59,13 @@ Business opportunity: Autosave
     Given the user moves focus and waits for autosave
     When the user clicks the button/link    link=Application
     And The user clicks the button/link    link=Test Heading
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then the user should see the correct inputs in the Applications questions form
     And the user should see the correct inputs in assessment questions
 
 Business opportunity: Mark as done
     [Documentation]    INFUND-5629
     [Tags]    HappyPath
-    When The user clicks the button/link    css=.button[value="Save and close"]
+    When The user clicks the button/link    css=.button[value="Done"]
     And the user clicks the button/link    link=Test Heading
     Then The user should see the text in the page    Test Heading
     And The user should see the text in the page    Test title
@@ -84,9 +80,8 @@ Scope: Sever-side validations assessment questions
     [Documentation]    INFUND-6444
     [Tags]
     Given the user clicks the button/link    link=Scope
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     When the user clicks the button/link    jQuery=Button:contains("+Add guidance row")
-    And the user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    css=.button[value="Done"]
     Then the user should see the text in the page    Please enter a value.
     And the user should see the text in the page    Please enter a justification.
     And The user clicks the button/link    id=remove-guidance-row-2
@@ -97,7 +92,7 @@ Scope: Sever-side validations assessment questions
 the user leaves all the question field empty
     Clear Element Text    css=.editor
     Press Key    css=.editor    \\8
-    focus    jQuery=.button[value="Save and close"]
+    focus    css=.button[value="Done"]
     wait for autosave
     The user enters text to a text field    id=question.shortTitle    ${EMPTY}
     the user moves focus and waits for autosave
@@ -122,7 +117,7 @@ the validation error above the question should be visible
 
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
-    focus    jQuery=.button[value="Save and close"]
+    focus    css=.button[value="Done"]
     Wait Until Element Is Not Visible Without Screenshots    css=error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
@@ -167,3 +162,8 @@ User creates a new competition for Application tests
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
     And the user clicks the button/link    jQuery=button:contains("Done")
     And the user clicks the button/link    link=Competition setup
+
+Enter question title again
+    the user enters text to a text field    id=question.title    Test title
+    the user enters text to a text field    id=question.shortTitle    Business opportunity
+    the user clicks the button/link         css=.button[value="Done"]

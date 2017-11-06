@@ -130,6 +130,10 @@ include::assessor-count-options.adoc[]
 == Question
 include::question.adoc[]
 
+[[questionSetup]]
+== Question setup
+include::questionSetup.adoc[]
+
 [[section]]
 == Section
 include::section.adoc[]
