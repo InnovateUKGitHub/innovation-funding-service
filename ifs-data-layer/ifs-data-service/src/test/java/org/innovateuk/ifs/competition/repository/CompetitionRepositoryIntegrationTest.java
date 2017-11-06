@@ -54,6 +54,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     private Long org1Id;
     private Long org2Id;
+    private List<Competition> existingSearchResults;
+    private long compId;
 
     @Before
     public void setup() {
@@ -63,9 +65,15 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         org = organisationRepository.findOneByName("Org2");
         assertNotNull(org);
         org2Id = org.getId();
+
+        // don't want to clash with integration test data loaded via SQL scripts
+        compId = repository.findAll().stream().max((c1, c2) -> c1.getId().compareTo(c2.getId())).get().getId();
+
+        existingSearchResults = repository.findAll();
     }
 
     @Test
+    @Rollback
     public void testFundedAndInformed() {
         Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
         compFundedAndInformed = repository.save(compFundedAndInformed);
@@ -79,6 +87,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     @Test
+    @Rollback
     public void testMultipleFundedAndInformed() {
         Competition compWithFeedBackReleased = newCompetition().withName("Comp1").withNonIfs(false).withSetupComplete(true).build();
         compWithFeedBackReleased = repository.save(compWithFeedBackReleased);
@@ -102,6 +111,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     @Test
+    @Rollback
     public void testFundedAndNotInformed() {
         Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
         compFundedAndInformed = repository.save(compFundedAndInformed);
@@ -114,6 +124,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     @Test
+    @Rollback
     public void testNotFundedAndInformed() {
         Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
         compFundedAndInformed = repository.save(compFundedAndInformed);
@@ -128,20 +139,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     @Test
     @Rollback
     public void testSearch() {
-        flushAndClearSession();
         User leadTechnologist = getUserByEmail("steve.smith@empire.com");
         User notLeadTechnologist = getUserByEmail("pete.tom@egg.com");
-
-        // don't want to clash with integration test data loaded via SQL scripts
-        long compId = repository.findAll().stream().max((c1, c2) -> c1.getId().compareTo(c2.getId())).get().getId();
-
-        // find any pre-existing competitions that would match, so we can ignore them when checking results
-        List<Competition> existingSearchResults = repository.findAll().stream()
-                .filter(c -> ((c.getName() != null && c.getName().contains("o"))
-                            || (c.getCompetitionType() != null && c.getCompetitionType().getName().contains("o")))
-                        && !c.isTemplate()
-                        && !c.isNonIfs()
-                        && c.getMilestones().stream().filter(m -> m.getType() == null || m.getType().equals(MilestoneType.OPEN_DATE)).count() >= 1).collect(Collectors.toList());
 
         Competition openComp = newCompetition().withName("openComp").withLeadTechnologist(leadTechnologist).withSetupComplete(true).withId(++compId).build();
         openComp = repository.save(openComp);
@@ -179,8 +178,6 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         milestoneRepository.save(openDateMilestoneInProjectSetup);
         Milestone feedbackReleasedMilestoneInProjectSetup = newMilestone().withCompetition(compInProjectSetup).withType(MilestoneType.FEEDBACK_RELEASED).withDate(ZonedDateTime.now().minusDays(1L)).build();
         milestoneRepository.save(feedbackReleasedMilestoneInProjectSetup);
-
-        flushAndClearSession();
 
         Pageable pageable = new PageRequest(0, 40);
 
