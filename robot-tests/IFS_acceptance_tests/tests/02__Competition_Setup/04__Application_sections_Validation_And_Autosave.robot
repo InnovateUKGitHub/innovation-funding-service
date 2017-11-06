@@ -20,7 +20,6 @@ Business opportunity Server-side validations setup questions
     And the validation error above the question should be visible   jQuery=label:contains(Question guidance title)  This field cannot be left blank.
     And the validation error above the question should be visible   jQuery=label:contains(Question guidance)  This field cannot be left blank.
     And the validation error above the question should be visible   jQuery=label:contains(Max word count)  This field cannot be left blank.
-    [Teardown]  Enter question title again
 
 Business opportunity Sever-side validations assessment questions
     [Documentation]    INFUND-5685
@@ -156,8 +155,3 @@ User creates a new competition for Application tests
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
     And the user clicks the button/link    jQuery=button:contains("Done")
     And the user clicks the button/link    link=Competition setup
-
-Enter question title again
-    the user enters text to a text field    id=question.title    Test title
-    the user enters text to a text field    id=question.shortTitle    Business opportunity
-    the user clicks the button/link         css=button[type="submit"]
