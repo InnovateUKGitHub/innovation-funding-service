@@ -101,7 +101,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Override
     @Transactional
-    public ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource) {
+    public ServiceResult<CompetitionResource> save(Long id, CompetitionResource competitionResource) {
         Competition competition = competitionMapper.mapToDomain(competitionResource);
 
         saveFunders(competitionResource);
@@ -118,7 +118,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingLeadTechnologistId) {
 
         return deleteExistingLeadTechnologist(competitionId, existingLeadTechnologistId)
-                .andOnSuccess(() -> update(competitionId, competitionResource))
+                .andOnSuccess(() -> save(competitionId, competitionResource))
                 .andOnSuccess(updatedCompetitionResource -> saveLeadTechnologist(updatedCompetitionResource));
     }
 

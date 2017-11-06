@@ -22,7 +22,7 @@ public interface CompetitionSetupService {
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource);
+    ServiceResult<CompetitionResource> save(Long id, CompetitionResource competitionResource);
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
