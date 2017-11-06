@@ -38,19 +38,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.time.ZonedDateTime.now;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
@@ -172,7 +171,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                     assessmentPanelInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
                     invite -> {
                         assessmentPanelParticipantRepository.save(
-                                new AssessmentPanelParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()))
+                                new AssessmentPanelParticipant(invite.send(loggedInUserSupplier.get(), now()))
                         );
 
                         return sendInviteNotification(
@@ -198,7 +197,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                         assessorInviteSendResource.getSubject(),
                         customTextPlain,
                         customTextHtml,
-                        invite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()),
+                        invite.sendOrResend(loggedInUserSupplier.get(), now()),
                         Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL
                 )
         ));
@@ -355,6 +354,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                 assessmentPanelParticipantRepository
                 .findByUserIdAndRole(userId, PANEL_ASSESSOR)
                 .stream()
+                        .filter(participant -> now().isAfter(participant.getInvite().getTarget().getAssessmentPanelDate()))
                 .map(assessmentPanelParticipantMapper::mapToResource)
                 .collect(toList()));
     }
@@ -497,7 +497,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     private ServiceResult<AssessmentPanelInvite> getByHashIfOpen(String inviteHash) {
         return getByHash(inviteHash).andOnSuccess(invite -> {
 
-            if (!EnumSet.of(CLOSED, IN_ASSESSMENT, FUNDERS_PANEL).contains(invite.getTarget().getCompetitionStatus())) {
+            if (invite.getTarget().getAssessmentPanelDate() == null || now().isAfter(invite.getTarget().getAssessmentPanelDate())) {
                 return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_INVITE_EXPIRED, invite.getTarget().getName()));
             }
 
