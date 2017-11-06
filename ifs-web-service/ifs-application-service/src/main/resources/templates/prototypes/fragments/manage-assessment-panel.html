@@ -747,7 +747,7 @@
 
                     <div class="panel">
                         <form th:action="${#httpServletRequest.requestURI}">
-                            <p>Enter new assessor's details below and then add them to your invite list.</p>
+                            <p>Enter the new assessor's details.</p>
 
                             <th:block th:if="${param.version != null and param.version[0] == 'v1'}" th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-areas" th:with="assessor='non-registered'" />
                             <th:block th:if="${param.version == null or param.version[0] == 'v2'}" th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-innovation-areas-full-list" th:with="assessor='non-registered'" />
