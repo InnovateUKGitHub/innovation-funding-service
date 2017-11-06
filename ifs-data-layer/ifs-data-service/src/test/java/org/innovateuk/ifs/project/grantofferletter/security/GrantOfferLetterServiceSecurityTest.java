@@ -149,6 +149,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
             verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
+            verify(projectGrantOfferPermissionRules).supportUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
