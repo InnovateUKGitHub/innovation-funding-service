@@ -65,10 +65,11 @@ public class SetupSectionInternalUser {
     }
 
     public SectionAccess canAccessSpendProfileSection(UserResource userResource) {
-
-        if (projectSetupProgressChecker.isSpendProfileApproved() || projectSetupProgressChecker.isSpendProfileSubmitted()) {
+        boolean approved = projectSetupProgressChecker.isSpendProfileApproved();
+        boolean submitted = projectSetupProgressChecker.isSpendProfileSubmitted();
+        if (approved || submitted) {
             if(isSupport(userResource)) {
-                if(projectSetupProgressChecker.isSpendProfileApproved()) {
+                if(approved) {
                     return ACCESSIBLE;
                 } else {
                     return NOT_ACCESSIBLE;
