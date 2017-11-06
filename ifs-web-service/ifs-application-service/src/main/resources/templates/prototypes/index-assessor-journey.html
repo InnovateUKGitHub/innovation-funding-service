@@ -13,7 +13,6 @@
 <header role="banner" id="global-header" class="">
   <div class="header-wrapper">
     <div class="header-global">
-
         <div th:include="fragments/elements :: header-logo"></div>
     </div>
   </div>
@@ -22,110 +21,146 @@
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
 
-
-
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<th:block th:insert="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='demo'" />
 
+    <h1 class="heading-large">Competition administrators</h1>
 
-	<section class="grid-row">
-		<div class="row">
-			<h1 class="heading-large">Manage assessment panel - comp administrators</h1>
+    <ul class="list list-bullet">
+        <li><a href="/prototypes/3115-comp-dashboard">Competiton dashboard</a></li>
+    </ul>
 
-            <ul class="list list-bullet">
-                <li><a href="/prototypes/5721-dashboard?status=Closed">Competiton dashboard</a></li>
-            </ul>
+    <h2 class="heading-medium">Invite assessors</h2>
 
-            <h2 class="heading-medium">Manage assessment panel</h2>
+    <ul class="list list-bullet">
+        <li><a href="/prototypes/IFS-6-invite-assessors?comp=Open">Invite assessor - find tab</a></li>
+        <li><a href="/prototypes/IFS-6-invite-assessors?tab=invite&comp=Open">Invite assessor - invite tab</a></li>
+    </ul>
 
-			<section>
-				<h2 class="heading-small">Manage assessors - <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-707">IFS-707</a>,
-                    <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-722">IFS-722</a></h2>
-				<ul class="list list-bullet">
-					<li>
-						<a href="/prototypes/IFS-707-manage-assessors">Find</a>
-					</li>
-					<li>
-						<a href="/prototypes/IFS-707-manage-assessors?tab=invite">Invite</a>
-					</li>
-                    <li>
-                        <a href="/prototypes/IFS-707-review-send">Review and send invites</a>
-                    </li>
-					<li>
-                        <a href="/prototypes/IFS-707-manage-assessors?tab=overview">Overview</a>
-                    </li>
-				</ul>
-			</section>
+    <h2 class="heading-medium">Manage assessors</h2>
 
-            <section>
-                <h2 class="heading-small">Manage applications - <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-806">IFS-806</a></h2>
-                <ul class="list list-bullet">
-                    <li>
-                        <a href="/prototypes/IFS-806-manage-applications">Assign application to panel</a>
-                    </li>
-                </ul>
-            </section>
+    <ul class="list list-bullet">
+        <li><a href="/prototypes/IFS-6-manage-assessors-active">Manage assessors - active tab</a></li>
+        <li><a href="/prototypes/IFS-6-manage-assessors-active?tab=inactive">Manage assessors - inactive tab</a></li>
+        <li><a href="/prototypes/IFS-6-manage-assessors-active?tab=pending">Manage assessors - pending tab 0 selections</a></li>
+        <li><a href="/prototypes/IFS-6-assessor-profile-update?action=new">Manage assessors - add a new assessor</a></li>
+        <li><a href="/prototypes/IFS-6-manage-assessors-active?tab=pending&#38;pending=1">Manage assessors - pending tab 1 selection</a></li>
+        <li><a href="/prototypes/IFS-6-assessor-profile-update?action=new">Add a new assessor</a></li>
+    </ul>
 
-            <section>
-                <h2 class="heading-small">Allocate applications to assessors - <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-806">IFS-806</a></h2>
-                <ul class="list list-bullet">
-                    <li>
-                        <a href="/prototypes/IFS-806-assign-applications">Allocate applicatiosn to assessors</a>
-                    </li>
-                    <li>
-                        <a href="/prototypes/IFS-806-assign-application-assessor?name=John%20Barnes">Allocate applications</a>
-                    </li>
-                </ul>
-            </section>
+    <h2 class="heading-medium">Assessor profile</h2>
 
-            <hr />
+    <ul class="list-list-bullet">
+        <li><a href="/prototypes/IFS-6-assessor-profile.html">Assessor profile - skills tab</a></li>
+        <li><a href="/prototypes/IFS-6-assessor-profile.html?tab=doi">Assessor profile - DOI tab</a></li>
+        <li><a href="/prototypes/IFS-6-assessor-profile.html?tab=history">Assessor profile - history tab</a></li>
+        <li><a href="/prototypes/IFS-6-assessor-profile-update">Edit profile</a></li>
+    </ul>
 
-            <h1 class="heading-large">Assessor invites to panel</h1>
+    <hr />
 
-            <section>
-                <h2 class="heading-small">Invite - <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-807">IFS-807</a></h2>
-                <ul class="list list-bullet">
-                    <li>
-                        <a href="/prototypes/IFS-807-email-panel-comp-invite">Email invite</a>
-                    </li>
-                    <li>
-                        <a href="/prototypes/IFS-807-panel-yes-no#">Invitation to panel assessment - accept / reject</a>
-                    </li>
-                </ul>
-            </section>
+    <h2 class="heading-medium">Manage assessment panel</h2>
 
-            <section>
-                <h2 class="heading-small">Assessor dashboard with applications - <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-807">IFS-807</a></h2>
-                <ul class="list list-bullet">
-                    <li>
-                        <a href="/prototypes/IFS-807-email-panel-apps-ready">Email notifying that applications are ready for selection</a>
-                    </li>
-                    <li>
-                        <a href="/prototypes/IFS-807-assessor-dashboard?acceptInvitation=true">Assessor dashboard <strong>with</strong> applications</a>
-                    </li>
-                    <li>
-                        <a href="/prototypes/IFS-807-apps-for-panel">Applications for panel</a>
-                    </li>
-                    <li>
-                        <a href="/prototypes/IFS-807-app-yes-no">Accept / reject application</a>
-                    </li>
-                    <li>
-                        <a href="/prototypes/IFS-807-app-readonly?acceptInvitation=true">Accepted application</a>
-                    </li>
-                    <li>
-                        <a href="/prototypes/IFS-807-apps-for-panel?status=noApplications">Assessor dashboard <strong>without</strong> applications</a>
-                    </li>
-                    <li>
-                        <a href="/prototypes/IFS-807-apps-for-panel?status=noApplications">Applications for panel - no applications assigned</a>
-                    </li>
-                </ul>
-            </section>
+    <section>
+        <h2 class="heading-small">Manage assessors - <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-707">IFS-707</a>,
+            <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-722">IFS-722</a></h2>
+        <ul class="list list-bullet">
+            <li>
+                <a href="/prototypes/IFS-707-manage-assessors">Find</a>
+            </li>
+            <li>
+                <a href="/prototypes/IFS-707-manage-assessors?tab=invite">Invite</a>
+            </li>
+            <li>
+                <a href="/prototypes/IFS-707-review-send">Review and send invites</a>
+            </li>
+            <li>
+                <a href="/prototypes/IFS-707-manage-assessors?tab=overview">Overview</a>
+            </li>
+        </ul>
+    </section>
 
-		</div>
-	</section>
+    <section>
+        <h2 class="heading-small">Manage applications - <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-806">IFS-806</a></h2>
+        <ul class="list list-bullet">
+            <li>
+                <a href="/prototypes/IFS-806-manage-applications">Assign application to panel</a>
+            </li>
+        </ul>
+    </section>
 
-	<!-- END OFHARDCODED PROTOTYPE HTML -->
+    <section>
+        <h2 class="heading-small">Allocate applications to assessors - <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-806">IFS-806</a></h2>
+        <ul class="list list-bullet">
+            <li>
+                <a href="/prototypes/IFS-806-assign-applications">Allocate applicatiosn to assessors</a>
+            </li>
+            <li>
+                <a href="/prototypes/IFS-806-assign-application-assessor?name=John%20Barnes">Allocate applications</a>
+            </li>
+        </ul>
+    </section>
+
+    <hr />
+
+    <h1 class="heading-large">Assessor invites to panel</h1>
+
+    <section>
+        <h2 class="heading-small">Invite - <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-807">IFS-807</a></h2>
+        <ul class="list list-bullet">
+            <li>
+                <a href="/prototypes/IFS-807-email-panel-comp-invite">Email invite</a>
+            </li>
+            <li>
+                <a href="/prototypes/IFS-807-panel-yes-no#">Invitation to panel assessment - accept / reject</a>
+            </li>
+        </ul>
+    </section>
+
+    <section>
+        <h2 class="heading-small">Assessor dashboard with applications - <a href="https://devops.innovateuk.org/issue-tracking/browse/IFS-807">IFS-807</a></h2>
+        <ul class="list list-bullet">
+            <li>
+                <a href="/prototypes/IFS-807-email-panel-apps-ready">Email notifying that applications are ready for selection</a>
+            </li>
+            <li>
+                <a href="/prototypes/IFS-807-assessor-dashboard?acceptInvitation=true">Assessor dashboard <strong>with</strong> applications</a>
+            </li>
+            <li>
+                <a href="/prototypes/IFS-807-apps-for-panel">Applications for panel</a>
+            </li>
+            <li>
+                <a href="/prototypes/IFS-807-app-yes-no">Accept / reject application</a>
+            </li>
+            <li>
+                <a href="/prototypes/IFS-807-app-readonly?acceptInvitation=true">Accepted application</a>
+            </li>
+            <li>
+                <a href="/prototypes/IFS-807-apps-for-panel?status=noApplications">Assessor dashboard <strong>without</strong> applications</a>
+            </li>
+            <li>
+                <a href="/prototypes/IFS-807-apps-for-panel?status=noApplications">Applications for panel - no applications assigned</a>
+            </li>
+        </ul>
+    </section>
+
+    <hr />
+
+    <h1 class="heading-large">Manage assessors</h1>
+
+    <section>
+        <ul>
+            <li>
+                <a href="/prototypes/3115-comp-dashboard?status=Closed">Link to manage assessors from comp admin header</a>
+            </li>
+        </ul>
+    </section>
+
+
+
+
+    <!-- END OFHARDCODED PROTOTYPE HTML -->
 
 
 
