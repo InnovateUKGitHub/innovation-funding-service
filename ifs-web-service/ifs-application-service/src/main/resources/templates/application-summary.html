@@ -51,11 +51,9 @@
                     <div class="message-alert">
                         <p>You will not be able to make changes to your application or resubmit after this point.</p>
                     </div>
-                    <div class="alignright-button">
-                        <a th:if="${applicationReadyForSubmit}" id="submit-application-button" class="button large no-margin-right" data-js-modal="modal-confirm-submit-application"
-                           th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}">Submit application</a>
-                        <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
-                    </div>
+                    <a th:if="${applicationReadyForSubmit}" id="submit-application-button" class="button extra-margin" data-js-modal="modal-confirm-submit-application"
+                       th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}">Submit application</a>
+                    <button disabled="disabled" class="button extra-margin" th:unless="${applicationReadyForSubmit}">Submit application</button>
                 </th:block>
 
                 <th:block th:unless="${userIsLeadApplicant}">

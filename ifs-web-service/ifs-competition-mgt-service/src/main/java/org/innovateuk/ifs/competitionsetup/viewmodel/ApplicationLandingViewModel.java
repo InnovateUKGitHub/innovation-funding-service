@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competitionsetup.viewmodel;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,10 @@ public class ApplicationLandingViewModel extends CompetitionSetupViewModel {
 
     public List<QuestionResource> getProjectDetails() {
         return projectDetails;
+    }
+
+    public boolean multipleAssessedQuestionsLeft() {
+        return !CollectionUtils.isEmpty(questions) && questions.size() > 1;
     }
 
     public Map<CompetitionSetupSubsection, Boolean> getSubsectionStatuses() {
