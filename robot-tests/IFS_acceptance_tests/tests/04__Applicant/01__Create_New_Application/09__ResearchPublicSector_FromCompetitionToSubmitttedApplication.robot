@@ -169,7 +169,6 @@ the project finance is able to download the Overheads file
 the internal user can see that the Generic competition has only one Application Question
     the user clicks the button/link  link=Application
     the user clicks the button/link  link=1. Edit this question
-    the user clicks the button/link  link=Edit this question
     the user is able to configure the new question
     the user should be able to see the read only view of question correctly
     the user clicks the button/link  link=Competition setup

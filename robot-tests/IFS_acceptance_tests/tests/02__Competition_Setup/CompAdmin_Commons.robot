@@ -122,7 +122,7 @@ the user marks the Application as done
     the user marks application details as complete
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
-    Run Keyword If  '${comp_type}' == 'Generic'  the assessed questions are marked complete except finances(generic type)
+    #No need to mark generic competition assessed question as complete as they already are.
     the user fills in the Finances questions  ${growthTable}
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
@@ -151,14 +151,6 @@ the assessed questions are marked complete except finances(sector type)
     the user marks each question as complete  Risks
     the user marks each question as complete  Additionality
     the user marks each question as complete  Costs and value for money
-
-the assessed questions are marked complete except finances(generic type)
-    the user marks each question as complete  Business opportunity
-    the user marks each question as complete  Potential market
-    the user marks each question as complete  Project exploitation
-    the user marks each question as complete  Economic benefit
-    the user marks each question as complete  Technical approach
-    the user marks each question as complete  Innovation
 
 the user marks application details as complete
     the user marks each question as complete  Application details
