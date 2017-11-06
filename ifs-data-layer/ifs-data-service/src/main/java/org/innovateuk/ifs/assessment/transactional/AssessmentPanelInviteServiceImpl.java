@@ -354,7 +354,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                 assessmentPanelParticipantRepository
                 .findByUserIdAndRole(userId, PANEL_ASSESSOR)
                 .stream()
-                        .filter(participant -> now().isAfter(participant.getInvite().getTarget().getAssessmentPanelDate()))
+                        .filter(participant -> now().isBefore(participant.getInvite().getTarget().getAssessmentPanelDate()))
                 .map(assessmentPanelParticipantMapper::mapToResource)
                 .collect(toList()));
     }

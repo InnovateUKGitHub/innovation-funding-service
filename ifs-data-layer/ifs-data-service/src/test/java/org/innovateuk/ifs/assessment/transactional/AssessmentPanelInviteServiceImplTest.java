@@ -725,7 +725,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
         Milestone milestone = newMilestone()
                 .withType(ASSESSMENT_PANEL)
-                .withDate(now().minusDays(1))
+                .withDate(now().plusDays(1))
                 .build();
         Competition competition = newCompetition()
                 .withId(2L)
@@ -764,6 +764,56 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         inOrder.verify(assessmentPanelParticipantRepositoryMock).findByUserIdAndRole(1L, PANEL_ASSESSOR);
         inOrder.verifyNoMoreInteractions();
     }
+
+    @Test
+    public void getAllInvitesByUser_invitesExpired() throws Exception {
+
+        User user = newUser()
+                .withId(1L)
+                .build();
+
+        Milestone milestone = newMilestone()
+                .withType(ASSESSMENT_PANEL)
+                .withDate(now().minusDays(2))
+                .build();
+        Competition competition = newCompetition()
+                .withId(2L)
+                .withName("Competition in Assessor Panel")
+                .withMilestones(singletonList(milestone))
+                .build();
+
+        List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
+                .withEmail("paulplum@gmail.com")
+                .withHash("")
+                .withCompetition(competition)
+                .withUser(user)
+                .build(2);
+
+        List<AssessmentPanelParticipant> assessmentPanelParticipants = newAssessmentPanelParticipant()
+                .withInvite(invites.get(0), invites.get(1))
+                .withStatus(PENDING)
+                .withCompetition(competition)
+                .withUser(user)
+                .build(2);
+
+        List<AssessmentPanelParticipantResource> expected = newAssessmentPanelParticipantResource()
+                .withCompetition(2L)
+                .withCompetitionName("Competition in Assessor Panel")
+                .withUser(1L)
+                .build(2);
+
+        when(assessmentPanelParticipantRepositoryMock.findByUserIdAndRole(1L, PANEL_ASSESSOR)).thenReturn(assessmentPanelParticipants);
+        when(assessmentPanelParticipantMapperMock.mapToResource(assessmentPanelParticipants.get(0))).thenReturn(expected.get(0));
+        when(assessmentPanelParticipantMapperMock.mapToResource(assessmentPanelParticipants.get(1))).thenReturn(expected.get(1));
+
+        List<AssessmentPanelParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccessObject();
+        assertTrue(actual.isEmpty());
+        InOrder inOrder = inOrder(assessmentPanelParticipantRepositoryMock);
+        inOrder.verify(assessmentPanelParticipantRepositoryMock).findByUserIdAndRole(1L, PANEL_ASSESSOR);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+
 
     @Test
     public void deleteInvite() {
