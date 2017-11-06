@@ -47,7 +47,7 @@ Project summary is editable (Ready to Open)
     And the user should see the element    jquery=h1:contains("Project summary")
     When the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then The user enters text to a text field    id=question.maxWords    100
-    And the user clicks the button/link    css=input.button.button-large
+    And the user clicks the button/link    jQuery=button:contains("Done")
 
 Public description should be editable (Ready to Open)
     [Documentation]    INFUND-6939
@@ -55,7 +55,7 @@ Public description should be editable (Ready to Open)
     Given the user clicks the button/link    link=Public description
     When the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then The user enters text to a text field    id= question.maxWords    100
-    And the user clicks the button/link    css=input.button.button-large
+    And the user clicks the button/link    jQuery=button:contains("Done")
 
 Scope is editable (Ready to Open)
     [Documentation]    INFUND-6940
@@ -63,19 +63,19 @@ Scope is editable (Ready to Open)
     Given The user clicks the button/link    link=Scope
     When the user clicks the button/link    jQuery=.button:contains("Edit this question")
     Then The user enters text to a text field    id= question.maxWords    100
-    And the user clicks the button/link    css=input.button.button-large
+    And the user clicks the button/link    jQuery=button:contains("Done")
 
 Assessed Questions are editable (Ready to Open)
     [Documentation]    INFUND-6936
     [Tags]
-    When the user clicks the button/link    link=Business opportunity
+    When the user clicks the button/link    jQuery=a:contains("Business opportunity")
     Then the user should see the element    jQuery=h1:contains("Business opportunity")
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     And the user edits the assessed question information
-    And the user clicks the button/link    jQuery=.button[value="Done"]
+    And the user clicks the button/link    jQuery=button:contains("Done")
     And wait for autosave
-    When the user clicks the button/link    link=Business opportunity
-    Then the user sees the correct assessed question information
+    When the user clicks the button/link    jQuery=a:contains("Business opportunity")
+    Then the user sees the correct read only view of the question
     And the user clicks the button/link    link = Return to application questions
 
 Finances are editable (Ready to Open)
@@ -142,7 +142,7 @@ Application details are not editable (Open)
 Assessed Questions are not editable (Open)
     [Documentation]    INFUND-6936
     [Tags]
-    When the user clicks the button/link    link=Business opportunity
+    When the user clicks the button/link    jQuery=a:contains("Business opportunity")
     And the user should see the element    jquery=h1:contains("Business opportunity")
     Then the user should not see the element    jquery=.button:contains("Edit")
     [Teardown]    The user clicks the button/link    link=Application

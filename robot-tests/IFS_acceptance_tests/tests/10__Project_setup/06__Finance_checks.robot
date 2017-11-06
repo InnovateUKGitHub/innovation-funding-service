@@ -846,7 +846,7 @@ Project finance user can view Lead Partner's changes to finances
     # the below figures are listed as:     RowNumber   TotalCosts    % Grant     FundingSought 	OtherPublicSectorFunding    ContributionToProject
     Then the categories are verified for Project finances section   1   £177,784   30%     53,335    2,468     121,981
     # the below figures are listed as:     RowNumber   Labour    Overheads     Materials 	CapitalUsage    Subcontracting     TravelandSubsistence    OtherCosts
-    And the categories are verified for Section changes    1   56,349     1,954      -20,200    4,498      -79,400       4,030        3,900
+    And the categories are verified for Section changes    1   56,349     1,954      -20,200    4,498      -79,400       4,030        9,650
 
 #1.materials section
 Project finance user can view Lead partner's changes for Materials
@@ -1255,7 +1255,7 @@ Project finance user amends materials details in eligibility for lead
     Then verify percentage and total                3    43%    £120,000
     When the user clicks the button/link            jQuery=#material-costs-table tr:nth-of-type(2) button:contains('Remove')
     Then verify percentage and total                3    34%    £80,000
-    When the user clicks the button/link            css.button[name=save-eligibility]
+    When the user clicks the button/link            css=.button[name=save-eligibility]
     Then verify total costs of project              £237,052
     And the user should see the element             jQuery=section:nth-of-type(3) a:contains("Edit")
     And the user should not see the element         css=.button[name=save-eligibility]

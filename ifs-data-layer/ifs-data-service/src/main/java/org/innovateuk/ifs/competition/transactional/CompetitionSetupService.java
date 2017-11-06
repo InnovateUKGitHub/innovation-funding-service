@@ -22,7 +22,7 @@ public interface CompetitionSetupService {
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource);
+    ServiceResult<CompetitionResource> save(Long id, CompetitionResource competitionResource);
 
     @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update competitions")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
@@ -63,10 +63,6 @@ public interface CompetitionSetupService {
     @SecuredBySpring(value = "CREATE", description = "Only those with either comp admin or project finance roles can copy from a competition type template")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId);
-
-    @SecuredBySpring(value = "CREATE", description = "Only those with either comp admin or project finance roles can copy from a competition template")
-    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
-    ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId);
 
     @SecuredBySpring(value = "CREATE", description = "Only those with either comp admin or project finance roles can create a non IFS competition")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")

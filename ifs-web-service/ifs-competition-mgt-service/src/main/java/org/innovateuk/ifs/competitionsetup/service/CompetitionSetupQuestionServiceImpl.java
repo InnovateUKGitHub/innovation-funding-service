@@ -42,6 +42,11 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     private QuestionSetupRestService questionSetupRestService;
 
     @Override
+    public ServiceResult<CompetitionSetupQuestionResource> createDefaultQuestion(Long competitionId) {
+        return competitionSetupQuestionRestService.addDefaultToCompetition(competitionId).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<CompetitionSetupQuestionResource> getQuestion(final Long questionId) {
         return competitionSetupQuestionRestService.getByQuestionId(questionId).toServiceResult();
     }
@@ -49,6 +54,11 @@ public class CompetitionSetupQuestionServiceImpl implements CompetitionSetupQues
     @Override
 	public ServiceResult<Void> updateQuestion(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         return competitionSetupQuestionRestService.save(competitionSetupQuestionResource).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> deleteQuestion(Long questionId) {
+        return competitionSetupQuestionRestService.deleteById(questionId).toServiceResult();
     }
 
     @Override
