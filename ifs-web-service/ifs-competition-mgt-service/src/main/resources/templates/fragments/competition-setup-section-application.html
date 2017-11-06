@@ -55,13 +55,15 @@
         </ul>
 
         <h3 class="heading-small">Assessed questions</h3>
-        <ul class="task-list">
+        <ul class="task-list no-margin-bottom">
             <li th:each="question : ${model.questions}">
                 <th:block th:if="${model.questionStatuses.get(question.id)}">
                     <div class="task">
                         <h4 class="heading-small">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}"
-                               th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}">Question Title</a>
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}">
+                                <th:block th:text="${question.questionNumber} + '. '"></th:block>
+                                <th:block th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
+                            </a>
                         </h4>
                     </div>
                     <div class="task-status-complete"><span>Complete</span></div>
@@ -69,15 +71,27 @@
                 <th:block th:unless="${model.questionStatuses.get(question.id)}">
                     <div class="task">
                         <h4 class="heading-small">
-                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id}, questionId=${question.id})}"
-                               th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}">Question Title</a>
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id}, questionId=${question.id})}">
+                                <th:block th:text="${question.questionNumber} + '. '"></th:block>
+                                <th:block th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
+                            </a>
                         </h4>
+                    </div>
+                    <div th:if="${model.multipleAssessedQuestionsLeft()}" class="task-status">
+                        <th:form>
+                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="buttonlink no-margin">Remove</button>
+                        </th:form>
                     </div>
                 </th:block>
             </li>
         </ul>
+        <th:form>
+            <p>
+                <button type="submit" name="createQuestion" class="buttonlink">Add question</button>
+            </p>
+        </th:form>
 
-        <h3 class="heading-small no-margin">Finances</h3>
+        <h3 class="heading-small">Finances</h3>
         <ul class="task-list">
             <li>
                 <th:block th:if="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).FINANCES)}">

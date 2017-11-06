@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
@@ -52,7 +53,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupApplicationControllerTest extends BaseControllerMockMVCTest<CompetitionSetupApplicationController> {
-
     private static final Long COMPETITION_ID = 12L;
     private static final Long QUESTION_ID = 1L;
     private static final String URL_PREFIX = String.format("/competition/setup/%d/section/application", COMPETITION_ID);
@@ -694,5 +694,50 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
         verify(competitionSetupQuestionService, never()).getQuestion(QUESTION_ID);
         verify(competitionSetupRestService, never()).update(UNEDITABLE_COMPETITION);
+    }
+
+    @Test
+    public void createQuestion() throws Exception {
+        CompetitionSetupQuestionResource competitionSetupQuestionResource = newCompetitionSetupQuestionResource().withQuestionId(10L).build();
+
+        when(competitionSetupQuestionService.createDefaultQuestion(COMPETITION_ID)).thenReturn(serviceSuccess(competitionSetupQuestionResource));
+
+        mockMvc.perform(post(URL_PREFIX + "/landing-page")
+                .param("createQuestion", "true"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:" + URL_PREFIX + "/question/10/edit"));
+
+        verify(competitionSetupQuestionService).createDefaultQuestion(COMPETITION_ID);
+    }
+
+    @Test
+    public void createQuestion_serviceErrorResultsInInternalServerErrorResponse() throws Exception {
+        Error error = Error.globalError("Something is wrong.");
+
+        when(competitionSetupQuestionService.createDefaultQuestion(COMPETITION_ID)).thenReturn(serviceFailure(error));
+
+        mockMvc.perform(post(URL_PREFIX + "/landing-page")
+                .param("createQuestion", "true"))
+                .andExpect(status().is5xxServerError());
+
+        verify(competitionSetupQuestionService).createDefaultQuestion(COMPETITION_ID);
+    }
+
+    @Test
+    public void testDeleteQuestion() throws Exception {
+        Long questionId = 1L;
+
+        CompetitionResource competition = newCompetitionResource().build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupQuestionService.deleteQuestion(questionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post(URL_PREFIX + "/landing-page")
+                .param("deleteQuestion", questionId.toString()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(model().hasNoErrors())
+                .andExpect(view().name("redirect:" + URL_PREFIX + "/landing-page"));
+
+        verify(competitionSetupQuestionService).deleteQuestion(questionId);
     }
 }
