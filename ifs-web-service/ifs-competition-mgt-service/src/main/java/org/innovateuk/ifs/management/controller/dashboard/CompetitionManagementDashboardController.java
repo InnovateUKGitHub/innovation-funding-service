@@ -23,7 +23,6 @@ import java.util.Map;
 import static java.util.stream.Collectors.joining;
 
 @Controller
-@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
 public class CompetitionManagementDashboardController {
     public static final String TEMPLATE_PATH = "dashboard/";
     private static final String MODEL_ATTR = "model";
@@ -34,11 +33,13 @@ public class CompetitionManagementDashboardController {
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/dashboard")
     public String dashboard() {
         return "redirect:/dashboard/live";
     }
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/dashboard/live")
     public String live(Model model, UserResource user){
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions = competitionDashboardSearchService.getLiveCompetitions();
@@ -57,6 +58,7 @@ public class CompetitionManagementDashboardController {
         return competitionCountResource;
     }
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model, UserResource user) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
@@ -67,6 +69,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "projectSetup";
     }
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @GetMapping("/dashboard/upcoming")
     public String upcoming(Model model, UserResource user) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> upcomingCompetitions = competitionDashboardSearchService.getUpcomingCompetitions();
@@ -78,6 +81,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "upcoming";
     }
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @GetMapping("/dashboard/previous")
     public String previous(Model model, UserResource user) {
         model.addAttribute(MODEL_ATTR, new PreviousDashboardViewModel(competitionDashboardSearchService.getPreviousCompetitions(),
@@ -86,12 +90,14 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "previous";
     }
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @GetMapping("/dashboard/non-ifs")
     public String nonIfs(Model model, UserResource user) {
         model.addAttribute(MODEL_ATTR, new NonIFSDashboardViewModel(competitionDashboardSearchService.getNonIfsCompetitions(), competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
         return TEMPLATE_PATH + "non-ifs";
     }
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/dashboard/search")
     public String search(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
                          @RequestParam(name = "page", defaultValue = "1") int page, Model model,
@@ -103,6 +109,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "search";
     }
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @GetMapping("/competition/create")
     public String create(){
         CompetitionResource competition = competitionSetupRestService.create().getSuccessObjectOrThrowException();
