@@ -21,8 +21,10 @@ import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.PrioritySorting;
@@ -69,6 +71,9 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
     @Autowired
     private FinanceRowService financeRowService;
+
+    @Autowired
+    private LoggedInUserSupplier loggedInUserSupplier;
 
     @Override
     public ServiceResult<CompetitionProjectsStatusResource> getCompetitionStatus(Long competitionId) {
@@ -221,21 +226,21 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
     }
 
     private ProjectActivityStates createMonitoringOfficerCompetitionStatus(final Optional<MonitoringOfficer> monitoringOfficer, final ProjectActivityStates leadProjectDetailsSubmitted) {
-        return getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
-            if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
-                if(monitoringOfficer.isPresent())
-                    return COMPLETE;
-                else {
-                    if(isSupport(user)){
-                        return NOT_STARTED;
-                    } else {
-                        return ACTION_REQUIRED;
-                    }
+        User user = loggedInUserSupplier.get();
+
+        if (leadProjectDetailsSubmitted.equals(COMPLETE)) {
+            if(monitoringOfficer.isPresent())
+                return COMPLETE;
+            else {
+                if(isSupport(user)){
+                    return NOT_STARTED;
+                } else {
+                    return ACTION_REQUIRED;
                 }
-            } else {
-                return NOT_STARTED;
             }
-        }).getSuccessObject();
+        } else {
+            return NOT_STARTED;
+        }
     }
 
     private ProjectActivityStates getOtherDocumentsStatus(Project project) {

@@ -110,11 +110,14 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
         CompetitionSearchResultItem competitionSearchResultItem = newCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.OPEN).withId(1L).build();
+        CompetitionSearchResultItem competitionSearchResultItemFeedbackReleased = newCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.ASSESSOR_FEEDBACK).withId(2L).build();
 
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
 
         assertTrue(rules.innovationLeadCanViewCompetitionAssignedToThemWithFeedbackNotReleasedInSearchResults(competitionSearchResultItem, innovationLeadAssignedToCompetition));
+        assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThemWithFeedbackNotReleasedInSearchResults(competitionSearchResultItemFeedbackReleased, innovationLeadAssignedToCompetition));
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThemWithFeedbackNotReleasedInSearchResults(competitionSearchResultItem, innovationLeadNotAssignedToCompetition));
+        assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThemWithFeedbackNotReleasedInSearchResults(competitionSearchResultItemFeedbackReleased, innovationLeadNotAssignedToCompetition));
     }
 
     @Test
@@ -123,30 +126,14 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
         List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
-
         CompetitionResource openCompetition= newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).withId(1L).build();
+        CompetitionResource feedbackReleasedCompetition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.PROJECT_SETUP).withId(2L).build();
+
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
+
         assertTrue(rules.innovationLeadCanViewCompetitionAssignedToThemWithFeedbackNotReleased(openCompetition, innovationLeadAssignedToCompetition));
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThemWithFeedbackNotReleased(openCompetition, innovationLeadNotAssignedToCompetition));
-
-        CompetitionResource feedbackReleasedCompetition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.PROJECT_SETUP).withId(1L).build();
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThemWithFeedbackNotReleased(feedbackReleasedCompetition, innovationLeadAssignedToCompetition));
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThemWithFeedbackNotReleased(feedbackReleasedCompetition, innovationLeadNotAssignedToCompetition));
     }
-
-    @Test
-    public void testOnlyInnovationLeadUsersAssignedToCompCanAccessCompInSearchResults() {
-        List<RoleResource> innovationLeadRoles = singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build());
-        UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
-        UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
-        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
-        CompetitionSearchResultItem competitionSearchResultItem = newCompetitionSearchResultItem().withCompetitionStatus(CompetitionStatus.OPEN).withId(1L).build();
-
-        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
-
-        assertTrue(rules.innovationLeadCanViewCompetitionAssignedToThemWithFeedbackNotReleasedInSearchResults(competitionSearchResultItem, innovationLeadAssignedToCompetition));
-        assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThemWithFeedbackNotReleasedInSearchResults(competitionSearchResultItem, innovationLeadNotAssignedToCompetition));
-    }
-
 }

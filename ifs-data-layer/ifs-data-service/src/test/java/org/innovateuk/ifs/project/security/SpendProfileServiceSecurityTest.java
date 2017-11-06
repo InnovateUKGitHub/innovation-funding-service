@@ -110,7 +110,8 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
         assertAccessDenied(() -> classUnderTest.getSpendProfileCSV(projectOrganisationCompositeId),
                 () -> {
                     verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).internalAdminAndSupportUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).internalAdminUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).supportUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
                     verify(projectFinancePermissionRules).leadPartnerCanViewAnySpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });

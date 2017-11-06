@@ -50,9 +50,16 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_SPEND_PROFILE_CSV",
-            description = "All internal admin and support users can view Spend Profile data of any applicant")
-    public boolean internalAdminAndSupportUsersCanSeeSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-        return isInternalAdminOrSupport(user);
+            description = "All internal admin users can view Spend Profile data of any applicant")
+    public boolean internalAdminUsersCanSeeSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isInternalAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_SPEND_PROFILE_CSV",
+            description = "Support users can view Spend Profile data of any applicant")
+    public boolean supportUsersCanSeeSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isSupport(user);
     }
 
     @PermissionRule(

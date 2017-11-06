@@ -2,9 +2,7 @@ package org.innovateuk.ifs.management.controller.dashboard;
 
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdminOrSupport;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 public class DashboardTabsViewModel {
     private UserResource userResource;
@@ -26,10 +24,10 @@ public class DashboardTabsViewModel {
     }
 
     public boolean projectSetup(){
-        return isInternalAdminOrSupport(userResource);
+        return isInternalAdmin(userResource) || isSupport(userResource);
     }
 
     public boolean previous(){
-        return isInternalAdminOrSupport(userResource);
+        return isInternalAdmin(userResource) || isSupport(userResource);
     }
 }

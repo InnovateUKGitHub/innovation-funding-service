@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.transactional;
 
+import org.assertj.core.util.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -790,6 +791,57 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 when(golWorkflowHandlerMock.isSent(project)).thenReturn(golIsSent);
         }
         return project;
+    }
+
+    /**
+     * Tests MO requirement for IFS-1307
+     */
+    @Test
+    public void testGetProjectStatusShowMOStatusForSupportAsNotStarted() {
+        Long projectId = 2345L;
+        Long organisationId = 123L;
+
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, ApprovalType.UNSET, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null);
+        Organisation o = newOrganisation().withId(organisationId).build();
+        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build());
+        project.setPartnerOrganisations(po);
+        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
+        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
+
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newBankDetails().withApproval(true).build());
+        when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
+        when(financeRowServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        // Status shown to support user when MO is set is COMPLETE
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(SUPPORT).build())).build());
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        assertTrue(result.isSuccess());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
+
+        // Status shown to support user when MO is not set is NOT_STARTED and not ACTION_REQUIRED
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(null);
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(SUPPORT).build())).build());
+        result = service.getProjectStatusByProjectId(projectId);
+        returnedProjectStatusResource = result.getSuccessObject();
+        assertTrue(result.isSuccess());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
+
+        // Status shown to comp admin user when MO is not set is ACTION_REQUIRED
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(COMP_ADMIN).build())).build());
+        result = service.getProjectStatusByProjectId(projectId);
+        returnedProjectStatusResource = result.getSuccessObject();
+        assertTrue(result.isSuccess());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getMonitoringOfficerStatus());
+
+        // Status shown to project finance user when MO is not set is ACTION_REQUIRED
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(PROJECT_FINANCE).build())).build());
+        result = service.getProjectStatusByProjectId(projectId);
+        returnedProjectStatusResource = result.getSuccessObject();
+        assertTrue(result.isSuccess());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getMonitoringOfficerStatus());
     }
 
     @Test

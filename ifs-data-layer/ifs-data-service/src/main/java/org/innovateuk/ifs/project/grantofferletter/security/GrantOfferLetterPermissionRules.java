@@ -24,7 +24,14 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             value = "DOWNLOAD_GRANT_OFFER",
             description = "Competitions team & Project Finance can download grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
     public boolean internalUsersCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isInternalAdminOrSupport(user);
+        return isInternalAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "DOWNLOAD_GRANT_OFFER",
+            description = "Support users can download grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
+    public boolean supportUsersCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
+        return isSupport(user);
     }
 
     @PermissionRule(
@@ -39,7 +46,14 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             value = "VIEW_GRANT_OFFER",
             description = "Competitions team & Project Finance can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
     public boolean internalUsersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isInternalAdminOrSupport(user);
+        return isInternalAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER",
+            description = "Support users can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
+    public boolean supportUsersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
+        return isSupport(user);
     }
 
     @PermissionRule(
@@ -93,9 +107,16 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
-            description = "Internal and support users can view the send status of Grant Offer Letter for a project")
-    public boolean internalAdminAndSupportUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
-        return isInternalAdminOrSupport(user);
+            description = "Internal users can view the send status of Grant Offer Letter for a project")
+    public boolean internalAdminUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        return isInternalAdmin(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Support users can view the send status of Grant Offer Letter for a project")
+    public boolean supportUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        return isSupport(user);
     }
 
     @PermissionRule(
