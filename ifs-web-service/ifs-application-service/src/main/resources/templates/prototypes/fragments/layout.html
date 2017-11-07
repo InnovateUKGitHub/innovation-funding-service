@@ -156,6 +156,59 @@
     </div>
 </div>
 
+<!-- ===========================Place: comp admin main <header>  =========================== -->
+
+<div th:fragment="prototype-comp-admin-header">
+    <header role="banner" id="global-header" class="with-proposition">
+        <th:block th:insert="fragments/elements :: notification" />
+
+        <div class="header-wrapper">
+            <div class="header-global">
+
+                <div class="header-logo">
+                    <a href="https://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
+                        <img src="/images/gov.uk_logotype_crown_invert_trans-b67c8964cddff14c05d04db0afa4855f.png" alt="" width="36" height="32"> GOV.UK
+                    </a>
+                </div>
+
+            </div>
+            <div class="header-proposition">
+                <div class="content">
+                    <a href="#proposition-links" class="js-header-toggle menu">Menu</a>
+
+                    <nav id="proposition-menu">
+                        <div>
+                            <a href="/competition/search" id="proposition-name">Innovation Funding Service</a>
+                            <ul id="proposition-links">
+
+                                <li>
+                                    <a href="/assessment/assessor/dashboard">Dashboard</a>
+                                </li>
+                                <li>
+                                    <a href="/prototypes/IFS-6-manage-assessors-active">Manage assessors</a>
+                                </li>
+
+                                <li>
+                                    <a href="https://ifs.local-dev/Logout">Sign out</a>
+                                </li>
+
+
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="grid-container phase-banner">
+        <p>
+            <strong class="phase-tag">BETA</strong>
+            <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
+        </p>
+    </div>
+</div>
+
 <!-- ===========================Place: main <header>  =========================== -->
 
 <div th:fragment="prototype-nav">

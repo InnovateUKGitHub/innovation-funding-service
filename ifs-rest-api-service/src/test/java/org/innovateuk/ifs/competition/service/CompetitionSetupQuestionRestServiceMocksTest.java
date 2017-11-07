@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static org.springframework.http.HttpStatus.CREATED;
 
 public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServiceUnitTest<CompetitionSetupQuestionRestServiceImpl> {
 
@@ -23,9 +24,10 @@ public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServic
         long questionId = 1L;
         CompetitionSetupQuestionResource expected = new CompetitionSetupQuestionResource();
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/" + questionId, CompetitionSetupQuestionResource.class, expected);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/getById/" + questionId, CompetitionSetupQuestionResource.class, expected);
 
         CompetitionSetupQuestionResource response = service.getByQuestionId(questionId).getSuccessObject();
+
         assertNotNull(response);
         Assert.assertEquals(expected, response);
     }
@@ -35,11 +37,33 @@ public class CompetitionSetupQuestionRestServiceMocksTest extends BaseRestServic
         long questionId = 1L;
         CompetitionSetupQuestionResource toSave = new CompetitionSetupQuestionResource();
         toSave.setQuestionId(questionId);
-        setupPutWithRestResultExpectations(competitionsRestURL + "/" + questionId, toSave);
+
+        setupPutWithRestResultExpectations(competitionsRestURL + "/save", toSave);
 
         RestResult<Void> response = service.save(toSave);
 
-        setupPutWithRestResultVerifications(competitionsRestURL + "/" + questionId, Void.class, toSave);
+        assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void test_deleteById() {
+        long questionId = 1L;
+        setupDeleteWithRestResultExpectations(competitionsRestURL + "/deleteById/" + questionId);
+
+        RestResult<Void> response = service.deleteById(questionId);
+
+        assertTrue(response.isSuccess());
+    }
+
+    @Test
+    public void test_addDefaultToCompetition() {
+        long competitionId = 1L;
+
+        CompetitionSetupQuestionResource expected = new CompetitionSetupQuestionResource();
+        setupPostWithRestResultExpectations(competitionsRestURL + "/addDefaultToCompetition/" + competitionId, CompetitionSetupQuestionResource.class, null, expected, CREATED);
+
+        RestResult<CompetitionSetupQuestionResource> response = service.addDefaultToCompetition(competitionId);
+
         assertTrue(response.isSuccess());
     }
 }
