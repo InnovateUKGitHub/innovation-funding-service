@@ -92,15 +92,15 @@ Next/Previous pagination on submitted applications
     [Tags]
     When the user clicks the button/link     jQuery=.pagination-label:contains("Next")
     Then the user should see the element     jQuery=.pagination-part-title:contains("1 to 20")
-    And the user should see the element      jQuery=.pagination-part-title:contains("41 to 41")
+    And the user should see the element      jQuery=.pagination-part-title:contains("41 to")
     And the user clicks the button/link      jQuery=.pagination-label:contains("Previous")
     And the user should not see the element  jQuery=.pagination-label:contains("Previous")
-    And the user should not see the element  jQuery=.pagination-part-title:contains("41 to 41")
+    And the user should not see the element  jQuery=.pagination-part-title:contains("41 to")
 
 Page list pagination on submitted applications
     [Documentation]    INFUND-8012
     [Tags]    HappyPath
-    When the user clicks the button/link     jQuery=a:contains("41 to 41")
+    When the user clicks the button/link     jQuery=a:contains("41 to")
     Then the user should see the element     jQuery=.pagination-label:contains("Previous")
     And the user should not see the element  jQuery=.pagination-label:contains("Next")
     [Teardown]    the user clicks the button/link    link=Applications
@@ -111,15 +111,15 @@ Next/Previous pagination on all applications
     [Setup]    the user clicks the button/link  link=All applications
     When the user clicks the button/link        jQuery=.pagination-label:contains("Next")
     Then the user should see the element        jQuery=.pagination-part-title:contains("1 to 20")
-    And the user should see the element         jQuery=.pagination-part-title:contains("41 to 46")
+    And the user should see the element         jQuery=.pagination-part-title:contains("41 to")
     When the user clicks the button/link        jQuery=.pagination-label:contains("Previous")
     Then the user should not see the element    jQuery=.pagination-label:contains("Previous")
-    And the user should not see the element     jQuery=.pagination-part-title:contains("41 to 46")
+    And the user should not see the element     jQuery=.pagination-part-title:contains("41 to")
 
 Page list pagination on all applications
     [Documentation]    INFUND-8010
     [Tags]
-    When the user clicks the button/link     jQuery=a:contains("41 to 46")
+    When the user clicks the button/link     jQuery=a:contains("41 to")
     Then the user should see the element     jQuery=.pagination-label:contains("Previous")
     And the user should not see the element  jQuery=.pagination-label:contains("Next")
 
