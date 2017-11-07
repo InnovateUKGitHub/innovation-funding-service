@@ -576,6 +576,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         when(messageSource.getMessage("validation.assessor.scope.invalidScope", new Object[]{}, Locale.UK))
                 .thenReturn("Please select the scope.");
 
+
         mockMvc.perform(post("/{assessmentId}/formInput/{formInputId}", assessmentId, formInputId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("value", value))
@@ -678,6 +679,61 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals("5000", bindingResult.getFieldError(formInputFeedbackField).getArguments()[1]);
         assertEquals("0", bindingResult.getFieldError(formInputFeedbackField).getArguments()[2]);
     }
+
+    @Test
+    public void save_scopeNotSelected() throws Exception {
+        Long applicationId = 1L;
+
+        CompetitionResource competitionResource = setupCompetitionResource();
+
+        AssessmentResource assessmentResource = setupAssessment(competitionResource.getId(), applicationId);
+
+        QuestionResource questionResource = setupQuestion(assessmentResource.getId());
+
+        setupQuestionNavigation(questionResource.getId(), empty(), empty());
+
+        List<FormInputResource> formInputs = setupAssessmentFormInputs(questionResource.getId(), ASSESSOR_APPLICATION_IN_SCOPE);
+
+        Long formInputIdScope = formInputs.get(0).getId();
+        String formInputScopeField = format("formInput[%s]", formInputIdScope);
+
+        AssessorFormInputResponsesResource responses = new AssessorFormInputResponsesResource(
+                newAssessorFormInputResponseResource()
+                        .with(id(null))
+                        .withAssessment(assessmentResource.getId())
+                        .withFormInput(formInputIdScope)
+                        .withValue("none")
+                        .build(1));
+
+        when(assessorFormInputResponseRestService.updateFormInputResponses(responses)).thenReturn(restFailure(
+                fieldError("responses[0].value", "Scope", "validation.assessor.scope.invalidScope")));
+
+        // For re-display of question view following the invalid data entry
+        List<FormInputResource> applicationFormInputs = setupApplicationFormInputs(questionResource.getId(), TEXTAREA);
+        setupApplicantResponses(applicationId, applicationFormInputs);
+
+        MvcResult result = mockMvc.perform(post("/{assessmentId}/question/{questionId}",
+                assessmentResource.getId(), questionResource.getId())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param(formInputScopeField, "none"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("form"))
+                .andExpect(view().name("assessment/application-question"))
+                .andReturn();
+
+        verify(assessorFormInputResponseRestService, only()).updateFormInputResponses(responses);
+
+        Form form = (Form) result.getModelAndView().getModel().get("form");
+
+        assertEquals("none", form.getFormInput(formInputIdScope.toString()));
+        BindingResult bindingResult = form.getBindingResult();
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(1, bindingResult.getFieldErrorCount());
+        assertTrue(bindingResult.hasFieldErrors(formInputScopeField));
+        assertEquals("validation.assessor.scope.invalidScope", bindingResult.getFieldError(formInputScopeField).getCode());
+    }
+
 
     @Test
     public void save_exceedWordLimit() throws Exception {
