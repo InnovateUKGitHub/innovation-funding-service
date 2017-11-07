@@ -7,14 +7,12 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionSetupQuestionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
 import org.innovateuk.ifs.competitionsetup.form.LandingPageForm;
-import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsForm;
-import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
-import org.innovateuk.ifs.competitionsetup.form.application.ApplicationProjectForm;
-import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
+import org.innovateuk.ifs.competitionsetup.form.application.*;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.service.populator.CompetitionSetupPopulator;
@@ -34,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -75,8 +74,32 @@ public class CompetitionSetupApplicationController {
     private CompetitionSetupPopulator competitionSetupPopulator;
 
     @Autowired
+    private CompetitionSetupQuestionRestService competitionSetupQuestionRestService;
+
+    @Autowired
     @Qualifier("mvcValidator")
     private Validator validator;
+
+    @PostMapping(value = "/landing-page", params = "createQuestion")
+    public String createQuestion(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
+        ServiceResult<CompetitionSetupQuestionResource> restResult = competitionSetupQuestionService.createDefaultQuestion(competitionId);
+
+        Function<CompetitionSetupQuestionResource, String> successViewFunction =
+                (question) -> String.format("redirect:/competition/setup/%d/section/application/question/%d/edit", competitionId, question.getQuestionId());
+        Supplier<String> successView = () -> successViewFunction.apply(restResult.getSuccessObjectOrThrowException());
+
+        return successView.get();
+    }
+
+    @PostMapping(value = "/landing-page", params = "deleteQuestion")
+    public String deleteQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
+                                 @PathVariable(COMPETITION_ID_KEY) long competitionId) {
+        competitionSetupQuestionService.deleteQuestion(deleteQuestionForm.getDeleteQuestion());
+
+        Supplier<String> view = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+
+        return view.get();
+    }
 
     @GetMapping("/landing-page")
     public String applicationProcessLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
@@ -231,7 +254,7 @@ public class CompetitionSetupApplicationController {
                                                BindingResult bindingResult,
                                                ValidationHandler validationHandler,
                                                @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                            Model model) {
+                                               Model model) {
         validateScopeGuidanceRows(competitionSetupForm, bindingResult);
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
