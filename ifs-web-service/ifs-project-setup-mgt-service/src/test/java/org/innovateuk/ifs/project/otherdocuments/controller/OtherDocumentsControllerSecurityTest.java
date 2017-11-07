@@ -19,7 +19,7 @@ public class OtherDocumentsControllerSecurityTest extends BaseProjectSetupContro
 
     @Test
     public void testGenerateSpendProfile() {
-        assertSecured(() -> classUnderTest.acceptOrRejectOtherDocuments(null, null, null, null, 123L, null));
+        assertSecured(() -> classUnderTest.acceptOrRejectOtherDocuments(null, null, null,123L));
     }
 
     @Test
@@ -34,7 +34,7 @@ public class OtherDocumentsControllerSecurityTest extends BaseProjectSetupContro
 
     @Test
     public void testViewOtherDocumentsPage() {
-        assertSecured(() -> classUnderTest.viewOtherDocumentsPage(null, null, 123L, null));
+        assertSecured(() -> classUnderTest.viewOtherDocumentsPage(null, null, 123L));
     }
     @Override
     protected Consumer<SetupSectionsPermissionRules> getVerification() {

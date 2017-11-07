@@ -8,12 +8,11 @@ include::{snippets}/competition-setup-question/get-by-question-id/http-response.
 include::{snippets}/competition-setup-question/get-by-question-id/response-fields.adoc[]
 
 ==== Curl Example
-include::{snippets}//competition-setup-question/get-by-question-id/curl-request.adoc[]
+include::{snippets}/competition-setup-question/get-by-question-id/curl-request.adoc[]
 
 === Save competition setup question
 ==== Request
 include::{snippets}/competition-setup-question/save/http-request.adoc[]
-include::{snippets}/competition-setup-question/save/path-parameters.adoc[]
 include::{snippets}/competition-setup-question/save/request-fields.adoc[]
 
 ==== Response
@@ -21,3 +20,26 @@ include::{snippets}/competition-setup-question/save/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition-setup-question/save/curl-request.adoc[]
+
+=== Add new default question to competition
+==== Request
+include::{snippets}/competition-setup-question/add-default-to-competition/http-request.adoc[]
+include::{snippets}/competition-setup-question/add-default-to-competition/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-setup-question/add-default-to-competition/http-response.adoc[]
+include::{snippets}/competition-setup-question/add-default-to-competition/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-setup-question/add-default-to-competition/curl-request.adoc[]
+
+=== Delete competition setup question
+==== Request
+include::{snippets}/competition-setup-question/delete-by-id/http-request.adoc[]
+include::{snippets}/competition-setup-question/delete-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition-setup-question/delete-by-id/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition-setup-question/delete-by-id/curl-request.adoc[]
