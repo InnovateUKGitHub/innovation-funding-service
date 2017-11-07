@@ -89,7 +89,7 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isInternalAdmin);
     }
 
-    @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "An internal user can access the Other Documents " +
+    @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "A support user can access the Other Documents " +
             "section when the lead partner submits the documents")
     public boolean supportCanAccessOtherDocumentsSection(Long projectId, UserResource user) {
         return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isSupport);
