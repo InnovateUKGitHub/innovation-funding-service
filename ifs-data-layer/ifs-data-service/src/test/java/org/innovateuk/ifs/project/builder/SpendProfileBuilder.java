@@ -1,6 +1,10 @@
 package org.innovateuk.ifs.project.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.financechecks.domain.Cost;
+import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
+import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -56,5 +60,21 @@ public class SpendProfileBuilder extends BaseBuilder<SpendProfile, SpendProfileB
 
     public SpendProfileBuilder withMarkedComplete(Boolean... completed) {
         return withArray((complete, spendProfile) -> setField("markedAsComplete", complete, spendProfile), completed);
+    }
+
+    public SpendProfileBuilder withProject(Project... projects) {
+        return withArray((project, spendProfile) -> setField("project", project, spendProfile), projects);
+    }
+
+    public SpendProfileBuilder withCostCategoryType(CostCategoryType... costCategoryTypes) {
+        return withArray((costCategoryType, spendProfile) -> setField("costCategoryType", costCategoryType, spendProfile), costCategoryTypes);
+    }
+
+    public SpendProfileBuilder withEligibleCostsGroup(List<Cost>... eligibleCostsGroups) {
+        return withArray((eligibleCostsGroup, spendProfile) -> setField("eligibleCosts", new CostGroup("Eligible costs for Partner Organisation", eligibleCostsGroup), spendProfile), eligibleCostsGroups);
+    }
+
+    public SpendProfileBuilder withSpendProfileFigures(List<Cost>... spendProfileFigures) {
+        return withArray((spendProfileFigure, spendProfile) -> setField("spendProfileFigures", new CostGroup("Spend Profile figures for Partner Organisation", spendProfileFigure), spendProfile), spendProfileFigures);
     }
 }

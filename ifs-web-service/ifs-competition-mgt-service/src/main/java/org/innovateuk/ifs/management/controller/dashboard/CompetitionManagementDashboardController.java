@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.management.controller.dashboard;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.viewmodel.dashboard.*;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -17,7 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.joining;
@@ -32,7 +34,7 @@ public class CompetitionManagementDashboardController {
     private CompetitionDashboardSearchService competitionDashboardSearchService;
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionSetupRestService competitionSetupRestService;
 
     @GetMapping("/dashboard")
     public String dashboard() {
@@ -109,7 +111,7 @@ public class CompetitionManagementDashboardController {
 
     @GetMapping("/competition/create")
     public String create(){
-        CompetitionResource competition = competitionService.create();
+        CompetitionResource competition = competitionSetupRestService.create().getSuccessObjectOrThrowException();
         return String.format("redirect:/competition/setup/%s", competition.getId());
     }
 

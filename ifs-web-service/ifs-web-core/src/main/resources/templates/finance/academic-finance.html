@@ -109,7 +109,7 @@
                     <div class="column-two-thirds">
                         <input class="form-control width-full" id="subtotal-resources" data-calculation-fields="#incurred-staff,#travel,#other"
                                data-calculation-operations="+" type="text" readonly="readonly"
-                               th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalIncurred(),0, 'COMMA', 0, 'POINT')}"/>
+                               th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalIncurred(),0, 'DEFAULT')}"/>
                     </div>
                 </div>
             </div>
@@ -182,7 +182,7 @@
                     <div class="column-two-thirds">
                         <input class="form-control width-full" data-calculation-fields="#investigators,#estates,#other-direct" data-calculation-operations="+"
                                readonly="readonly" id="subtotal-directly-allocated"
-                               th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalAllocated(),0, 'COMMA', 0, 'POINT')}"/>
+                               th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalAllocated(),0, 'DEFAULT')}"/>
                     </div>
                 </div>
             </div>
@@ -260,7 +260,7 @@
                     <div class="column-two-thirds">
                         <input id="subtotal-exceptions" class="form-control width-full" data-calculation-fields="#exceptions-staff,#exceptions-other-direct"
                                data-calculation-operations="+" readonly="readonly"
-                               th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalExceptions(),0, 'COMMA', 0, 'POINT')}"/>
+                               th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalExceptions(),0, 'DEFAULT')}"/>
                     </div>
                 </div>
             </div>
@@ -273,7 +273,7 @@
                         <input class="form-control width-full"
                                data-calculation-fields="#subtotal-resources,#indirect,#subtotal-directly-allocated,#subtotal-exceptions"
                                data-calculation-operations="+" id="total" readonly="readonly"
-                               th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotal(),0, 'COMMA', 0, 'POINT')}"/>
+                               th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotal(),0, 'DEFAULT')}"/>
                     </div>
                 </div>
             </div>

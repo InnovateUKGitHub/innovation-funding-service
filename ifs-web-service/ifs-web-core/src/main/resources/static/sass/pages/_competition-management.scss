@@ -225,6 +225,7 @@ $wide-page-width: 1400px;
   dt,
   dd {
     margin-bottom: 15px;
+    min-height: 25px;
 
     &.no-margin {
       margin: 0;

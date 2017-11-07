@@ -5,6 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.controller.dashboard.CompetitionManagementDashboardController;
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.viewmodel.dashboard.*;
@@ -26,6 +27,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -51,6 +53,9 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
 
     @Mock
     private CompetitionDashboardSearchService competitionDashboardSearchService;
+
+    @Mock
+    private CompetitionSetupRestService competitionSetupRestService;
 
     private CompetitionCountResource counts;
 
@@ -231,7 +236,7 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     public void createCompetition() throws Exception {
         Long competitionId = 1L;
 
-        when(competitionService.create()).thenReturn(newCompetitionResource().withId(competitionId).build());
+        when(competitionSetupRestService.create()).thenReturn(restSuccess(newCompetitionResource().withId(competitionId).build()));
 
         mockMvc.perform(get("/competition/create"))
                 .andExpect(status().is3xxRedirection())
