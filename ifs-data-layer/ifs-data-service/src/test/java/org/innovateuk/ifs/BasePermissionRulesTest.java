@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -141,8 +142,16 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         setupPartnerExpectations(project, user, true);
     }
 
+    protected void setupUserAsPartner(ProjectResource project, UserResource user, OrganisationResource organisation) {
+        setupPartnerExpectations(project, user, organisation, true);
+    }
+
     protected void setupUserNotAsPartner(ProjectResource project, UserResource user) {
         setupPartnerExpectations(project, user, false);
+    }
+
+    protected void setupUserNotAsPartner(ProjectResource project, UserResource user, OrganisationResource organisation) {
+        setupPartnerExpectations(project, user, organisation, false);
     }
 
     protected void setUpUserAsCompAdmin(ProjectResource project, UserResource user) {
@@ -171,6 +180,14 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
+    }
+
+    protected void setupPartnerExpectations(ProjectResource project, UserResource user, OrganisationResource organisation, boolean userIsPartner) {
+        Role partnerRole = newRole().build();
+        ProjectUser partnerProjectUser = newProjectUser().build();
+
+        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(project.getId(), user.getId(), organisation.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : null);
     }
 
     protected void setupUserAsLeadPartner(ProjectResource project, UserResource user) {

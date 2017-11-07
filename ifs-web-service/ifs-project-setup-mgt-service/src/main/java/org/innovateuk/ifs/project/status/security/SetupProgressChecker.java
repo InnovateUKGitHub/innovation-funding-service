@@ -89,4 +89,8 @@ class SetupProgressChecker {
     public boolean isGrantOfferLetterSent() {
         return projectStatus.getGrantOfferLetterSent();
     }
+
+    public boolean isGrantOfferLetterApproved() {
+        return COMPLETE.equals(projectStatus.getGrantOfferLetterStatus());
+    }
 }

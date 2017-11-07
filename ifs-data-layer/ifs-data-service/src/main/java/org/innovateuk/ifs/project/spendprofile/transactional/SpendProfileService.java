@@ -28,7 +28,7 @@ public interface SpendProfileService {
     @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can approve or reject a Spend Profile for any Project" )
     ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @SecuredBySpring(value = "GENERATE_SPEND_PROFILE", securedType = ProjectResource.class, description = "A member of the internal Finance Team can get the approved status of a Spend Profile for any Project" )
     ServiceResult<ApprovalType> getSpendProfileStatusByProjectId(Long projectId);
 

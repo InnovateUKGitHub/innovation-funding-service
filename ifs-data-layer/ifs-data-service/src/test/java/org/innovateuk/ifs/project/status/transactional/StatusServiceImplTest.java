@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.transactional;
 
+import org.assertj.core.util.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -10,20 +11,20 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.builder.MonitoringOfficerBuilder;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.project.domain.PartnerOrganisation;
+import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.monitoringofficer.domain.MonitoringOfficer;
-import org.innovateuk.ifs.project.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
-import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -33,12 +34,7 @@ import org.mockito.Mockito;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
@@ -68,7 +64,9 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -184,6 +182,10 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         Mockito.when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         Mockito.when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
         Mockito.when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
+
+        User internalUser = newUser().withRoles(newRole().withType(COMP_ADMIN).buildSet(1)).build();
+        when(userRepositoryMock.findOne(internalUser.getId())).thenReturn(internalUser);
+        setLoggedInUser(newUserResource().withId(internalUser.getId()).withRolesGlobal(singletonList(newRoleResource().withType(COMP_ADMIN).build())).build());
     }
 
     @Override
@@ -789,6 +791,57 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 when(golWorkflowHandlerMock.isSent(project)).thenReturn(golIsSent);
         }
         return project;
+    }
+
+    /**
+     * Tests MO requirement for IFS-1307
+     */
+    @Test
+    public void testGetProjectStatusShowMOStatusForSupportAsNotStarted() {
+        Long projectId = 2345L;
+        Long organisationId = 123L;
+
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, ApprovalType.UNSET, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null);
+        Organisation o = newOrganisation().withId(organisationId).build();
+        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build());
+        project.setPartnerOrganisations(po);
+        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
+        MonitoringOfficer monitoringOfficer = newMonitoringOfficer().build();
+
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newBankDetails().withApproval(true).build());
+        when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
+        when(financeRowServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        // Status shown to support user when MO is set is COMPLETE
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(SUPPORT).build())).build());
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        assertTrue(result.isSuccess());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
+
+        // Status shown to support user when MO is not set is NOT_STARTED and not ACTION_REQUIRED
+        when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(null);
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(SUPPORT).build())).build());
+        result = service.getProjectStatusByProjectId(projectId);
+        returnedProjectStatusResource = result.getSuccessObject();
+        assertTrue(result.isSuccess());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
+
+        // Status shown to comp admin user when MO is not set is ACTION_REQUIRED
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(COMP_ADMIN).build())).build());
+        result = service.getProjectStatusByProjectId(projectId);
+        returnedProjectStatusResource = result.getSuccessObject();
+        assertTrue(result.isSuccess());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getMonitoringOfficerStatus());
+
+        // Status shown to project finance user when MO is not set is ACTION_REQUIRED
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(PROJECT_FINANCE).build())).build());
+        result = service.getProjectStatusByProjectId(projectId);
+        returnedProjectStatusResource = result.getSuccessObject();
+        assertTrue(result.isSuccess());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getMonitoringOfficerStatus());
     }
 
     @Test
