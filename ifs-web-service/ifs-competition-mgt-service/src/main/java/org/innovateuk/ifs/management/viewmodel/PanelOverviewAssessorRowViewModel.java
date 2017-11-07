@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Holder of model attributes for the assessors shown in the 'Overview' tab of the Invite Assessors view.
  */
-public class PanelOverviewAssessorRowViewModel extends PanelInviteAssessorsRowViewModel {
+public class PanelOverviewAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
     private final BusinessType businessType;
     private final ParticipantStatusResource status;

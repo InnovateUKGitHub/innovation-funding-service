@@ -7,12 +7,12 @@ import java.util.List;
 /**
  * Holder of model attributes for the invited assessors shown in the 'Invite' tab of the Invite Assessors view.
  */
-public class InvitedAssessorRowViewModel extends InviteAssessorsRowViewModel {
+public class CompetitionInvitedAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
     private String email;
     private long inviteId;
 
-    public InvitedAssessorRowViewModel(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant, String email, long inviteId) {
+    public CompetitionInvitedAssessorRowViewModel(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant, String email, long inviteId) {
         super(id, name, innovationAreas, compliant);
         this.email = email;
         this.inviteId = inviteId;

@@ -8,13 +8,15 @@ import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsOverviewViewModel;
+import org.innovateuk.ifs.management.viewmodel.CompetitionInviteAssessorsOverviewViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
@@ -26,7 +28,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors 'Overview' view.
  */
 @Component
-public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelPopulator<InviteAssessorsOverviewViewModel> {
+public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelPopulator<CompetitionInviteAssessorsOverviewViewModel> {
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
@@ -37,17 +39,17 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
     @Autowired
     private CompetitionsRestService competitionsRestService;
 
-    public InviteAssessorsOverviewViewModel populateModel(long competitionId,
-                                                          int page,
-                                                          Optional<Long> innovationArea,
-                                                          Optional<ParticipantStatusResource> status,
-                                                          Optional<Boolean> compliant,
-                                                          String originQuery) {
+    public CompetitionInviteAssessorsOverviewViewModel populateModel(long competitionId,
+                                                                     int page,
+                                                                     Optional<Long> innovationArea,
+                                                                     Optional<ParticipantStatusResource> status,
+                                                                     Optional<Boolean> compliant,
+                                                                     String originQuery) {
         CompetitionResource competition = competitionsRestService
                 .getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        InviteAssessorsOverviewViewModel model = super.populateModel(competition);
+        CompetitionInviteAssessorsOverviewViewModel model = super.populateModel(competition);
 
         List<InnovationAreaResource> innovationAreasOptions = categoryRestService.getInnovationAreas()
                 .getSuccessObjectOrThrowException();
@@ -88,7 +90,7 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
     }
 
     @Override
-    protected InviteAssessorsOverviewViewModel createModel() {
-        return new InviteAssessorsOverviewViewModel();
+    protected CompetitionInviteAssessorsOverviewViewModel createModel() {
+        return new CompetitionInviteAssessorsOverviewViewModel();
     }
 }

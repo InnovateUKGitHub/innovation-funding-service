@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Holder of model attributes for the invited assessors shown in the 'Invite' tab of the Invite Assessors view.
  */
-public class PanelInvitedAssessorRowViewModel extends PanelInviteAssessorsRowViewModel {
+public class PanelInvitedAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
     private String email;
     private long inviteId;

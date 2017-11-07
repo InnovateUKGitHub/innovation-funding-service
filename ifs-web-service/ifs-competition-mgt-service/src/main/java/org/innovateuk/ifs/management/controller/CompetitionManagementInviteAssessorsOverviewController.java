@@ -2,17 +2,13 @@ package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.form.*;
+import org.innovateuk.ifs.management.form.OverviewAssessorsFilterForm;
+import org.innovateuk.ifs.management.form.OverviewSelectionForm;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsFindViewModel;
-import org.innovateuk.ifs.management.viewmodel.SendInvitesViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,18 +23,13 @@ import javax.validation.Valid;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
  * This controller handles the Overview tab for inviting assessors to a Competition.

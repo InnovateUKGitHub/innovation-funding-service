@@ -5,14 +5,20 @@ import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
+import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
+import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.form.*;
+import org.innovateuk.ifs.management.form.AssessorSelectionForm;
+import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
+import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
+import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
 import org.innovateuk.ifs.management.model.InviteAssessorsAcceptedModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsFindViewModel;
+import org.innovateuk.ifs.management.viewmodel.CompetitionInviteAssessorsFindViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -90,7 +96,7 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
 
         String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_FIND, queryParams);
         updateSelectionForm(request, response, competitionId, selectionForm, filterForm, filterChanged);
-        InviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, filterForm.getInnovationArea(), originQuery);
+        CompetitionInviteAssessorsFindViewModel inviteAssessorsFindViewModel = inviteAssessorsFindModelPopulator.populateModel(competitionId, page, filterForm.getInnovationArea(), originQuery);
 
         model.addAttribute("model", inviteAssessorsFindViewModel);
 

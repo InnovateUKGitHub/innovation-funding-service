@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsAcceptedViewModel;
+import org.innovateuk.ifs.management.viewmodel.CompetitionInviteAssessorsAcceptedViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors 'Accepted' view.
  */
 @Component
-public class InviteAssessorsAcceptedModelPopulator extends InviteAssessorsModelPopulator<InviteAssessorsAcceptedViewModel> {
+public class InviteAssessorsAcceptedModelPopulator extends InviteAssessorsModelPopulator<CompetitionInviteAssessorsAcceptedViewModel> {
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
@@ -34,14 +34,14 @@ public class InviteAssessorsAcceptedModelPopulator extends InviteAssessorsModelP
     @Autowired
     private CompetitionsRestService competitionsRestService;
 
-    public InviteAssessorsAcceptedViewModel populateModel(long competitionId,
-                                                          int page,
-                                                          String originQuery) {
+    public CompetitionInviteAssessorsAcceptedViewModel populateModel(long competitionId,
+                                                                     int page,
+                                                                     String originQuery) {
         CompetitionResource competition = competitionsRestService
                 .getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        InviteAssessorsAcceptedViewModel model = super.populateModel(competition);
+        CompetitionInviteAssessorsAcceptedViewModel model = super.populateModel(competition);
 
         AssessorInviteOverviewPageResource pageResource = competitionInviteRestService.getInvitationOverview(
                 competition.getId(),
@@ -74,5 +74,5 @@ public class InviteAssessorsAcceptedModelPopulator extends InviteAssessorsModelP
     }
 
     @Override
-    protected InviteAssessorsAcceptedViewModel createModel() { return new InviteAssessorsAcceptedViewModel(); }
+    protected CompetitionInviteAssessorsAcceptedViewModel createModel() { return new CompetitionInviteAssessorsAcceptedViewModel(); }
 }

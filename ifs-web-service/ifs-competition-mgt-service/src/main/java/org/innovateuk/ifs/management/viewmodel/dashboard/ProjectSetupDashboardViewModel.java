@@ -10,7 +10,6 @@ import java.util.List;
  */
 public class ProjectSetupDashboardViewModel {
 
-
     private List<CompetitionSearchResultItem> competitions;
     protected CompetitionCountResource counts;
 

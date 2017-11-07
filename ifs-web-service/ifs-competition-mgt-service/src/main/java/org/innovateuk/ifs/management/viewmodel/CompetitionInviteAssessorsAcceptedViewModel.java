@@ -6,12 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Holder of model attributes for the Invite assessors 'Overview' view.
+ * Holder of model attributes for the Invite assessors 'Accepted' view.
  */
-public class InviteAssessorsOverviewViewModel extends InviteAssessorsViewModel<OverviewAssessorRowViewModel> {
+public class CompetitionInviteAssessorsAcceptedViewModel extends CompetitionInviteAssessorsViewModel<OverviewAssessorRowViewModel> {
 
     private List<InnovationAreaResource> innovationAreaOptions = new ArrayList<>();
-    private boolean selectAllDisabled;
 
     public List<InnovationAreaResource> getInnovationAreaOptions() {
         return innovationAreaOptions;
@@ -19,13 +18,5 @@ public class InviteAssessorsOverviewViewModel extends InviteAssessorsViewModel<O
 
     public void setInnovationAreaOptions(List<InnovationAreaResource> innovationAreaOptions) {
         this.innovationAreaOptions = innovationAreaOptions;
-    }
-
-    public boolean isSelectAllDisabled() {
-        return selectAllDisabled;
-    }
-
-    public void setSelectAllDisabled(boolean selectAllDisabled) {
-        this.selectAllDisabled = selectAllDisabled;
     }
 }
