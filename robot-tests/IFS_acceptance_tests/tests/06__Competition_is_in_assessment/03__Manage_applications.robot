@@ -66,8 +66,8 @@ Filter assessors
     And the user should see the element                        jQuery=td:contains("Jenna Diaz")
     Then the user selects the option from the drop-down menu   Academic  id=businessType
     And the user clicks the button/link                        jQuery=.button:contains("Filter")
-    Then the user should see the element                   jQuery=td:contains("Felix Wilson")
-    And the user should not see the element                        jQuery=td:contains("Jenna Diaz")
+    Then the user should see the element                       jQuery=td:contains("Felix Wilson")
+    And the user should not see the element                    jQuery=td:contains("Jenna Diaz")
     [Teardown]    the user clicks the button/link  link=Clear all filters
 
 View assessor progress page
@@ -127,10 +127,10 @@ Assign an application to an assessor
 Filter by application number on the assessor page
     [Documentation]    IFS-400
     [Tags]
-    Given the user enters text to a text field    css=#filterSearch    ${Intelligent_water}
-    When the user clicks the button/link    jQuery=button:contains("Filter")
-    Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(1):contains("${Intelligent_water}")
-    And the user should not see the element    jQuery=.pagination-label:contains("Next")
+    Given the user enters text to a text field  css=#filterSearch    ${Intelligent_water}
+    When the user clicks the button/link        jQuery=button:contains("Filter")
+    Then the user should see the element        jQuery=tr:nth-child(1) td:nth-child(1):contains("${Intelligent_water}")
+    And the user should not see the element     jQuery=.pagination-label:contains("Next")
 
 Filtering of the applications
     [Documentation]    INFUND-8061
