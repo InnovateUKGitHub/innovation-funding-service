@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Holder of model attributes for the Invite assessors view.
  */
-public abstract class PanelInviteAssessorsViewModel<ViewModelRowType extends InviteAssessorsRowViewModel> {
+public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAssessorsRowViewModel> {
 
     private Long competitionId;
     private String competitionName;
@@ -19,10 +19,10 @@ public abstract class PanelInviteAssessorsViewModel<ViewModelRowType extends Inv
     private PaginationViewModel pagination;
     private String originQuery;
 
-    protected PanelInviteAssessorsViewModel() {
+    protected InviteAssessorsViewModel() {
     }
 
-    public long getCompetitionId() {
+    public Long getCompetitionId() {
         return competitionId;
     }
 

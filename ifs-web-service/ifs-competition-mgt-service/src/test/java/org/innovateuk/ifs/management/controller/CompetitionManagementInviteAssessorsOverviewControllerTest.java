@@ -10,9 +10,9 @@ import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.management.form.OverviewAssessorsFilterForm;
-import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInviteAssessorsOverviewViewModel;
-import org.innovateuk.ifs.management.viewmodel.CompetitionInviteAssessorsViewModel;
+import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +57,7 @@ public class CompetitionManagementInviteAssessorsOverviewControllerTest extends 
 
     @Spy
     @InjectMocks
-    private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
+    private CompetitionInviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
     @Override
     protected CompetitionManagementInviteAssessorsOverviewController supplyControllerUnderTest() {
@@ -191,7 +191,7 @@ public class CompetitionManagementInviteAssessorsOverviewControllerTest extends 
     }
 
     private void assertCompetitionDetails(CompetitionResource expectedCompetition, MvcResult result) {
-        CompetitionInviteAssessorsViewModel model = (CompetitionInviteAssessorsViewModel) result.getModelAndView().getModel().get("model");
+        InviteAssessorsViewModel model = (InviteAssessorsViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedCompetition.getId(), model.getCompetitionId());
         assertEquals(expectedCompetition.getName(), model.getCompetitionName());
@@ -199,12 +199,12 @@ public class CompetitionManagementInviteAssessorsOverviewControllerTest extends 
         assertStatistics(model);
     }
 
-    private void assertInnovationSectorAndArea(CompetitionResource expectedCompetition, CompetitionInviteAssessorsViewModel model) {
+    private void assertInnovationSectorAndArea(CompetitionResource expectedCompetition, InviteAssessorsViewModel model) {
         assertEquals(expectedCompetition.getInnovationSectorName(), model.getInnovationSector());
         assertEquals(StringUtils.join(expectedCompetition.getInnovationAreaNames(), ", "), model.getInnovationArea());
     }
 
-    private void assertStatistics(CompetitionInviteAssessorsViewModel model) {
+    private void assertStatistics(InviteAssessorsViewModel model) {
         assertEquals(inviteStatistics.getInvited(), model.getAssessorsInvited());
         assertEquals(inviteStatistics.getAccepted(), model.getAssessorsAccepted());
         assertEquals(inviteStatistics.getDeclined(), model.getAssessorsDeclined());

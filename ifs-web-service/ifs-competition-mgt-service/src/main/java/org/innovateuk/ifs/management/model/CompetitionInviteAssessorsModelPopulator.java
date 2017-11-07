@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
-import org.innovateuk.ifs.management.viewmodel.CompetitionInviteAssessorsViewModel;
+import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Build the model for the Invite assessors view.
  */
 @Component
-abstract class InviteAssessorsModelPopulator<ViewModelType extends CompetitionInviteAssessorsViewModel> {
+abstract class CompetitionInviteAssessorsModelPopulator<ViewModelType extends InviteAssessorsViewModel> {
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;

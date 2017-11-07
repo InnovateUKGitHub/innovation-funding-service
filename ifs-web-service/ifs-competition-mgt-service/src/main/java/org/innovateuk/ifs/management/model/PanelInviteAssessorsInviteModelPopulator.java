@@ -1,14 +1,13 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
-import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
-import org.innovateuk.ifs.category.resource.InnovationSectorResource;
-import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInvitePageResource;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
-import org.innovateuk.ifs.management.viewmodel.*;
+import org.innovateuk.ifs.management.viewmodel.InvitedAssessorRowViewModel;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
+import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsInviteViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +37,7 @@ public class PanelInviteAssessorsInviteModelPopulator extends PanelInviteAssesso
         AssessorCreatedInvitePageResource pageResource = assessmentPanelInviteRestService.getCreatedInvites(competition.getId(), page)
                 .getSuccessObjectOrThrowException();
 
-        List<PanelInvitedAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
+        List<InvitedAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
@@ -46,8 +45,8 @@ public class PanelInviteAssessorsInviteModelPopulator extends PanelInviteAssesso
         return model;
     }
 
-    private PanelInvitedAssessorRowViewModel getRowViewModel(AssessorCreatedInviteResource assessorCreatedInviteResource) {
-        return new PanelInvitedAssessorRowViewModel(
+    private InvitedAssessorRowViewModel getRowViewModel(AssessorCreatedInviteResource assessorCreatedInviteResource) {
+        return new InvitedAssessorRowViewModel(
                 assessorCreatedInviteResource.getId(),
                 assessorCreatedInviteResource.getName(),
                 assessorCreatedInviteResource.getInnovationAreas(),

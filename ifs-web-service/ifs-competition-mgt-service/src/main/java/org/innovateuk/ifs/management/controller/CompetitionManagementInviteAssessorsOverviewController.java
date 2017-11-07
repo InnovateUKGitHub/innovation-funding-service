@@ -6,9 +6,9 @@ import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.OverviewAssessorsFilterForm;
 import org.innovateuk.ifs.management.form.OverviewSelectionForm;
-import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
-import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
-import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsFindModelPopulator;
+import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsInviteModelPopulator;
+import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsOverviewModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -46,13 +46,13 @@ public class CompetitionManagementInviteAssessorsOverviewController extends Comp
     private CompetitionInviteRestService competitionInviteRestService;
 
     @Autowired
-    private InviteAssessorsFindModelPopulator inviteAssessorsFindModelPopulator;
+    private CompetitionInviteAssessorsFindModelPopulator inviteAssessorsFindModelPopulator;
 
     @Autowired
-    private InviteAssessorsInviteModelPopulator inviteAssessorsInviteModelPopulator;
+    private CompetitionInviteAssessorsInviteModelPopulator inviteAssessorsInviteModelPopulator;
 
     @Autowired
-    private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
+    private CompetitionInviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
     @Override
     protected String getCookieName() {

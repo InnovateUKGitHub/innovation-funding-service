@@ -14,10 +14,10 @@ import org.innovateuk.ifs.management.form.AssessorSelectionForm;
 import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
-import org.innovateuk.ifs.management.model.InviteAssessorsAcceptedModelPopulator;
-import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
-import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
-import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsAcceptedModelPopulator;
+import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsFindModelPopulator;
+import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsInviteModelPopulator;
+import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInviteAssessorsFindViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -58,16 +58,16 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
     private CompetitionInviteRestService competitionInviteRestService;
 
     @Autowired
-    private InviteAssessorsFindModelPopulator inviteAssessorsFindModelPopulator;
+    private CompetitionInviteAssessorsFindModelPopulator inviteAssessorsFindModelPopulator;
 
     @Autowired
-    private InviteAssessorsInviteModelPopulator inviteAssessorsInviteModelPopulator;
+    private CompetitionInviteAssessorsInviteModelPopulator inviteAssessorsInviteModelPopulator;
 
     @Autowired
-    private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
+    private CompetitionInviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
     @Autowired
-    private InviteAssessorsAcceptedModelPopulator inviteAssessorsAcceptedModelPopulator;
+    private CompetitionInviteAssessorsAcceptedModelPopulator inviteAssessorsAcceptedModelPopulator;
 
     protected String getCookieName() {
         return SELECTION_FORM;

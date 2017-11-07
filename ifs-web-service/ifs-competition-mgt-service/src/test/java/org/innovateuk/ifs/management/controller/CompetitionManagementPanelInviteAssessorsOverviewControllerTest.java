@@ -9,9 +9,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.management.model.PanelInviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
+import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsOverviewViewModel;
-import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsViewModel;
-import org.innovateuk.ifs.management.viewmodel.PanelOverviewAssessorRowViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -130,20 +130,20 @@ public class CompetitionManagementPanelInviteAssessorsOverviewControllerTest ext
     }
 
     private void assertCompetitionDetails(CompetitionResource expectedCompetition, MvcResult result) {
-        PanelInviteAssessorsViewModel model = (PanelInviteAssessorsViewModel) result.getModelAndView().getModel().get("model");
+        InviteAssessorsViewModel model = (InviteAssessorsViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals((long) expectedCompetition.getId(), model.getCompetitionId());
+        assertEquals(expectedCompetition.getId(), model.getCompetitionId());
         assertEquals(expectedCompetition.getName(), model.getCompetitionName());
         assertInnovationSectorAndArea(expectedCompetition, model);
         assertStatistics(model);
     }
 
-    private void assertInnovationSectorAndArea(CompetitionResource expectedCompetition, PanelInviteAssessorsViewModel model) {
+    private void assertInnovationSectorAndArea(CompetitionResource expectedCompetition, InviteAssessorsViewModel model) {
         assertEquals(expectedCompetition.getInnovationSectorName(), model.getInnovationSector());
         assertEquals(StringUtils.join(expectedCompetition.getInnovationAreaNames(), ", "), model.getInnovationArea());
     }
 
-    private void assertStatistics(PanelInviteAssessorsViewModel model) {
+    private void assertStatistics(InviteAssessorsViewModel model) {
         assertEquals(inviteStatistics.getInvited(), model.getAssessorsInvited());
         assertEquals(inviteStatistics.getAccepted(), model.getAssessorsAccepted());
         assertEquals(inviteStatistics.getDeclined(), model.getAssessorsDeclined());
@@ -157,7 +157,7 @@ public class CompetitionManagementPanelInviteAssessorsOverviewControllerTest ext
         assertEquals(expectedInviteOverviews.size(), model.getAssessors().size());
 
         forEachWithIndex(expectedInviteOverviews, (i, inviteOverviewResource) -> {
-            PanelOverviewAssessorRowViewModel overviewAssessorRowViewModel = model.getAssessors().get(i);
+            OverviewAssessorRowViewModel overviewAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(inviteOverviewResource.getName(), overviewAssessorRowViewModel.getName());
             assertEquals(formatInnovationAreas(inviteOverviewResource.getInnovationAreas()), overviewAssessorRowViewModel.getInnovationAreas());
             assertEquals(inviteOverviewResource.isCompliant(), overviewAssessorRowViewModel.isCompliant());

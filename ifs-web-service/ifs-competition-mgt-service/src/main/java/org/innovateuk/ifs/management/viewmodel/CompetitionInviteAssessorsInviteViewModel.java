@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * Holder of model attributes for the Invite assessors 'Invite' view.
  */
-public class CompetitionInviteAssessorsInviteViewModel extends CompetitionInviteAssessorsViewModel<CompetitionInvitedAssessorRowViewModel> {
+public class CompetitionInviteAssessorsInviteViewModel extends InviteAssessorsViewModel<InvitedAssessorRowViewModel> {
 
     private List<InnovationSectorResource> innovationSectorOptions;
 
