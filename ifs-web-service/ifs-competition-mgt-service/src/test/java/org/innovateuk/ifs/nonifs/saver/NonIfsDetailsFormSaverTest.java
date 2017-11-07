@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
@@ -54,6 +55,9 @@ public class NonIfsDetailsFormSaverTest {
     private CompetitionService competitionService;
 
     @Mock
+    private CompetitionSetupRestService competitionSetupRestService;
+
+    @Mock
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
 
     @Mock
@@ -68,7 +72,7 @@ public class NonIfsDetailsFormSaverTest {
         CompetitionResource competition = newCompetitionResource().withNonIfs(true).build();
         List<MilestoneResource> allMilestones = newMilestoneResource().build(1);
         when(competitionSetupMilestoneService.validateMilestoneDates(any())).thenReturn(emptyList());
-        when(competitionService.update(competition)).thenReturn(serviceSuccess());
+        when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
         when(milestoneRestService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(restSuccess(allMilestones));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(eq(allMilestones), any(), eq(competition.getId()))).thenReturn(serviceSuccess());
 

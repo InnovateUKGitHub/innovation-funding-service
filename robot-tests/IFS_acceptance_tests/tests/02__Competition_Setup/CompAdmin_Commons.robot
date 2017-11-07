@@ -13,25 +13,20 @@ ${compType_Generic}    Generic
 *** Keywords ***
 the user edits the assessed question information
     the user enters text to a text field    id=question.maxWords    100
-    the user enters text to a text field    id=question.scoreTotal    100
+    the user enters text to a text field    id=question.scoreTotal  10
     the user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
     the user clicks the button/link    jQuery=button:contains("+Add guidance row")
-    the user enters text to a text field    id=guidanceRows[5].scoreFrom    11
-    the user enters text to a text field    id=guidanceRows[5].scoreTo    12
+    the user enters text to a text field    id=guidanceRows[5].scoreFrom    0
+    the user enters text to a text field    id=guidanceRows[5].scoreTo    1
     the user enters text to a text field    id=guidanceRows[5].justification    This is a justification
     the user clicks the button/link    id=remove-guidance-row-2
 
-the user sees the correct assessed question information
-    the user should see the text in the page    Assessment of this question
-    the user should see the text in the page    Business opportunity guidance
-    the user should see the text in the page    11
-    the user should see the text in the page    12
-    the user should see the text in the page    This is a justification
-    the user should see the text in the page    100
-    the user should see the text in the page    Written feedback
-    the user should see the text in the page    Scored
-    the user should see the text in the page    Out of
-    the user should not see the text in the page    The business opportunity is plausible
+the user sees the correct read only view of the question
+    the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("100")
+    the user should see the element  jQuery=dd p:contains("Business opportunity guidance")
+    the user should see the element  jQuery=dt:contains("0-1") + dd:contains("This is a justification")
+    the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("10")
+    the user should not see the text in the page  The business opportunity is plausible
 
 the user fills in the CS Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}  ${compType}
@@ -48,7 +43,6 @@ the user fills in the CS Initial details
     the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup
     the user should see the element                      jQuery=div:contains("Initial details") ~ .task-status-complete
-
 
 the user fills in the CS Funding Information
     the user clicks the button/link       link=Funding information
@@ -123,17 +117,57 @@ the user fills in the CS Milestones
     the user should see the element       jQuery=div:contains("Milestones") ~ .task-status-complete
 
 the user marks the Application as done
-    [Arguments]  ${growthTable}
+    [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link  link=Application
+    the user marks application details as complete
+    Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
+    Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
+    #No need to mark generic competition assessed question as complete as they already are.
     the user fills in the Finances questions  ${growthTable}
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
+the assessed questions are marked complete except finances(programme type)
+    the user marks each question as complete  Business opportunity
+    the user marks each question as complete  Potential market
+    the user marks each question as complete  Project exploitation
+    the user marks each question as complete  Economic benefit
+    the user marks each question as complete  Technical approach
+    the user marks each question as complete  Innovation
+    the user marks each question as complete  Risks
+    the user marks each question as complete  Project team
+    the user marks each question as complete  Funding
+    the user marks each question as complete  Adding value
+
+the assessed questions are marked complete except finances(sector type)
+    the user marks each question as complete  Need or challenge
+    the user marks each question as complete  Approach and innovation
+    the user marks each question as complete  Team and resources
+    the user marks each question as complete  Market awareness
+    the user marks each question as complete  Outcomes and route to market
+    the user marks each question as complete  Wider impacts
+    the user marks each question as complete  Project management
+    the user marks each question as complete  Risks
+    the user marks each question as complete  Additionality
+    the user marks each question as complete  Costs and value for money
+
+the user marks application details as complete
+    the user marks each question as complete  Application details
+    the user marks each question as complete  Project summary
+    the user marks each question as complete  Public description
+    the user marks each question as complete  Scope
+
+the user marks each question as complete
+    [Arguments]  ${question_link}
+    the user clicks the button/link  jQuery=h4 a:contains("${question_link}")
+    the user clicks the button/link  css=button[type="submit"]
+    the user should see the element  jQuery=li:contains("${question_link}") .task-status-complete
+
 the user fills in the Finances questions
     [Arguments]  ${growthTable}
     the user clicks the button/link       link=Finances
-    the user clicks the button/link       jQuery=.button:contains("Edit this question")
+    the user clicks the button/link  jQuery=.button:contains("Done")
     the user selects the radio button     includeGrowthTable  include-growth-table-${growthTable}
     the user enters text to a text field  css=.editor  Those are the rules that apply to Finances
     the user clicks the button/link       css=button[type="submit"]
@@ -269,3 +303,52 @@ the user should see all live competitions
     the user should see the element  jQuery=h2:contains("In assessment")
     the user should see the element  jQuery=h2:contains("Panel")
     the user should see the element  jQuery=h2:contains("Inform")
+
+the user is able to configure the new question
+    the user enters text to a text field  id=question.title  Please provide us with more inforrmation on how your project is different from pre-existing projects.
+    the user enters text to a text field  id=question.shortTitle  Tell us how your project is innovative.
+    the user enters text to a text field  id=question.subTitle  Adding value on existing projects is important to InnovateUK.
+    the user enters text to a text field  id=question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
+    the user enters text to a text field  css=.editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
+    the user enters text to a text field  id=question.maxWords  500
+    the user selects the radio button     question.appendix  1
+    the user selects the radio button     question.scored  1
+    the user enters text to a text field  question.scoreTotal  10
+    the user selects the radio button     question.writtenFeedback  1
+    the user enters text to a text field  question.assessmentGuidanceTitle  Please bare in mind on how well the applicant is able to justify his arguments.
+    the user enters text to a text field  question.assessmentGuidance   The better you understand the problem the simpler your explanation is.
+    the user enters text to a text field  guidanceRows[0].justification  This the 9-10 Justification
+    the user enters text to a text field  guidanceRows[1].justification  This the 7-8 Justification
+    the user enters text to a text field  guidanceRows[2].justification  This the 5-6 Justification
+    the user enters text to a text field  guidanceRows[3].justification  This the 3-4 Justification
+    the user enters text to a text field  guidanceRows[4].justification  This the 1-2 Justification
+    the user enters text to a text field  question.assessmentMaxWords  120
+    the user clicks the button/link       css=button[type="submit"]
+
+the user should be able to see the read only view of question correctly
+    the user clicks the button/link  jQuery=a:contains("Tell us how your project is innovative.")
+    the user should see the element  jQuery=dt:contains("Question heading") + dd:contains("Tell us how your project is innovative")
+    the user should see the element  jQuery=dt:contains("Question title") + dd:contains("Please provide us with more inforrmation on how your project is different from pre-existing projects.")
+    the user should see the element  jQuery=dt:contains("Question subtitle") + dd:contains("Adding value on existing projects is important to InnovateUK.")
+    the user should see the element  jQuery=dt:contains("Guidance title") + dd:contains("Innovation is crucial to the continuing success of any organization.")
+    the user should see the element  jQuery=dt:contains("Guidance") + dd:contains("Please use Microsoft Word where possible.")
+    the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("500")
+    the user should see the element  jQuery=dt:contains("Appendix") + dd:contains("Yes")
+    the user should see the element  jQuery=dt:contains("Scored") + dd:contains("Yes")
+    the user should see the element  jQuery=dt:contains("Out of") + dd:contains("10")
+    the user should see the element  jQuery=dt:contains("Written feedback") + dd:contains("Yes")
+    the user should see the element  jQuery=dt:contains("Guidance title") + dd:contains("Please bare in mind on how well the applicant is able to justify his arguments.")
+    the user should see the element  jQuery=dt:contains("Guidance") + dd:contains("The better you understand the problem the simpler your explanation is.")
+    the user should see the element  jQuery=dt:contains("9-10") + dd:contains("This the 9-10 Justification")
+    the user should see the element  jQuery=dt:contains("7-8") + dd:contains("This the 7-8 Justification")
+    the user should see the element  jQuery=dt:contains("5-6") + dd:contains("This the 5-6 Justification")
+    the user should see the element  jQuery=dt:contains("3-4") + dd:contains("This the 3-4 Justification")
+    the user should see the element  jQuery=dt:contains("1-2") + dd:contains("This the 1-2 Justification")
+    the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("120")
+    the user clicks the button/link  link=Return to application questions
+
+the competition moves to Open state
+    [Arguments]  ${competitionId}
+    ${yesterday} =  get yesterday
+    Connect to Database  @{database}
+    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';

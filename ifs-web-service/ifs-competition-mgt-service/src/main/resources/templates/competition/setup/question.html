@@ -13,8 +13,7 @@
 
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:if="${model.general.currentSectionIsHome()}" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${model.general.competition.id})}" th:unless="${model.general.currentSectionIsHome()}" />
-
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.editable} ? |Edit '${competitionSetupForm.question.shortTitle}'| : ${competitionSetupForm.question.shortTitle},subTitle=${model.general.competition.name},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${#strings.isEmpty(competitionSetupForm.question.shortTitle)} ? #{ifs.application.question.no_heading} : ${competitionSetupForm.question.shortTitle},subTitle=${competitionName},size='heading-xlarge'" />
 
     <p class="extra-margin" th:unless="${model.general.state.preventEdit}">
         You can edit this question for the applicant as well as the guidance for assessors. </p>
@@ -34,7 +33,9 @@
 
         <th:block th:insert="fragments/competition-setup-section-elements :: application-question(${competitionSetupForm.question}, ${model.editable})" />
         <div class="extra-margin">
-            <input type="submit" class="button button-large" value="Save and close"/>
+            <button type="submit" class="button">
+                Done
+            </button>
         </div>
     </form>
     <th:block th:unless="${model.editable}">
@@ -44,6 +45,11 @@
         </div>
         <div class="extra-margin">
           <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/section/application(competitionId=${model.general.competition.id})}">Return to application questions</a>
+        </div>
+        <div class="extra-margin" th:if="${competitionSetupForm.isRemovable()}">
+            <form method="post" th:action="@{'/competition/setup/{competitionId}/section/application/landing-page'(competitionId=${model.general.competition.id})}">
+                <button type="submit" th:value="${competitionSetupForm.question.questionId}" name="deleteQuestion" class="buttonlink no-margin">Remove question</button>
+            </form>
         </div>
     </th:block>
 

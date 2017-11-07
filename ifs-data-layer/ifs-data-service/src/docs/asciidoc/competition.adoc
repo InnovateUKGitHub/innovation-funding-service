@@ -43,6 +43,40 @@ include::{snippets}/competition/mark-as-complete/http-response.adoc[]
 ==== Curl Example
 include::{snippets}/competition/mark-as-complete/curl-request.adoc[]
 
+=== Mark Competition Setup Section as Incomplete
+==== Request
+include::{snippets}/competition/mark-as-incomplete/http-request.adoc[]
+include::{snippets}/competition/mark-as-incomplete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/mark-as-incomplete/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/mark-as-incomplete/curl-request.adoc[]
+
+
+=== Mark Competition Setup Subsection as Complete
+==== Request
+include::{snippets}/competition/mark-subsection-as-complete/http-request.adoc[]
+include::{snippets}/competition/mark-subsection-as-complete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/mark-subsection-as-complete/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/mark-subsection-as-complete/curl-request.adoc[]
+
+=== Mark Competition Setup Subsection as Incomplete
+==== Request
+include::{snippets}/competition/mark-subsection-as-incomplete/http-request.adoc[]
+include::{snippets}/competition/mark-subsection-as-incomplete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/mark-subsection-as-incomplete/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/mark-subsection-as-incomplete/curl-request.adoc[]
+
 === Get all bank details for a competition as a csv export
 ==== Request
 include::{snippets}/competition/bank-details/export-bank-details/http-request.adoc[]

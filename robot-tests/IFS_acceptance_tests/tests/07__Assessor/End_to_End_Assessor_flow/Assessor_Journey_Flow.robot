@@ -15,7 +15,7 @@ Invite a new Assessor to assess a competition
     And the user clicks the button/link       jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link       link=Invite
     And the user clicks the button/link       jQuery=span:contains("Add a non-registered assessor to your list")
-    And The user enters text to a text field  css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input  E2E
+    And The user enters text to a text field  css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input  EtoE
     And The user enters text to a text field  css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input  ${Assessor_e2e["email"]}
     And the user selects the option from the drop-down menu  Emerging and enabling  css=.js-progressive-group-select
     And the user selects the option from the drop-down menu  Emerging technology  id=grouped-innovation-area
@@ -38,7 +38,7 @@ Resend the invite to the assessor again
     Given the user clicks the button/link     link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link       jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link       link=Pending and rejected
-    And the user clicks the button/link       jQuery=tr:contains("E2E") label
+    And the user clicks the button/link       jQuery=tr:contains("EtoE") label
     When the user clicks the button/link      jQuery=button:contains("Resend invites")
     And the user clicks the button/link       jQuery=.button:contains("Send invite")
     [Teardown]  The user closes the browser
@@ -81,7 +81,7 @@ CompAdmin should see Assessor's profile and Innovation Area
     Given the user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the user clicks the button/link    link=Accepted
-    When the user clicks the button/link   link=E2E
+    When the user clicks the button/link   link=EtoE
     And the user should see the element    jQuery=.heading-small:contains("Innovation areas") + ul:contains("Emerging technology")
 
 CompAdmin Invites assessor to assess an application

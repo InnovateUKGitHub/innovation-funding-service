@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.EligibilityForm;
 import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
@@ -25,7 +25,7 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 	public static final String LEAD_APPLICANT_TYPES = "leadApplicantTypes";
 
 	@Autowired
-	private CompetitionService competitionService;
+	private CompetitionSetupRestService competitionSetupRestService;
 	
 	@Override
 	public CompetitionSetupSection sectionToSave() {
@@ -59,18 +59,18 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 		
 		competition.setLeadApplicantTypes(eligibilityForm.getLeadApplicantTypes());
 		
-		return competitionService.update(competition);
+		return competitionSetupRestService.update(competition).toServiceResult();
 	}
 
 	@Override
 	protected ServiceResult<Void> handleIrregularAutosaveCase(CompetitionResource competitionResource, String fieldName, String value, Optional<Long> questionId) {
         if(RESEARCH_CATEGORY_ID.equals(fieldName)) {
             removeIfPresentAddIfNot(value, competitionResource.getResearchCategories());
-            return competitionService.update(competitionResource);
+            return competitionSetupRestService.update(competitionResource).toServiceResult();
         }
         if(LEAD_APPLICANT_TYPES.equals(fieldName)){
 			removeIfPresentAddIfNot(value, competitionResource.getLeadApplicantTypes());
-			return competitionService.update(competitionResource);
+			return competitionSetupRestService.update(competitionResource).toServiceResult();
 		}
 		return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
 	}

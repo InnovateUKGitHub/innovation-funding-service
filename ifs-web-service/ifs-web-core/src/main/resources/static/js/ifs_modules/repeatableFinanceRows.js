@@ -92,7 +92,7 @@ IFS.core.repeatableFinanceRows = (function () {
         var closestRow = removeButton.closest('[data-repeatable-row]')
         if (closestRow.length) {
           jQuery('[data-repeatable-row=' + closestRow.attr('data-repeatable-row') + ']').remove()
-          jQuery('body').trigger('updateSerializedFormState')
+          jQuery('body').trigger('recalculateAllFinances').trigger('updateSerializedFormState')
         }
       }
     },
