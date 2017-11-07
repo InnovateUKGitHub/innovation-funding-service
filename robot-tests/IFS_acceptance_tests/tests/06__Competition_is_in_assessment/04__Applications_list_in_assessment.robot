@@ -24,6 +24,7 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${Social_media}   ${application_ids["Living with Social Media"]}
+${Park_living}      ${application_ids["Park living"]}
 
 *** Test Cases ***
 Applications Dashboard
