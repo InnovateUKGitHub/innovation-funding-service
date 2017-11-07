@@ -16,9 +16,10 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-37 Assessment panels - Accept/Reject Panel Invite
 ...
 ...               IFS-1563 Assessment panels - Invite assessors to panel - Accepted tab
-
 ...
 ...               IFS-1565 Assessment panels - Invite assessors to panel - Remove assessors from Invite list
+...
+...               IFS-2114 Assessment panels - Invitation expiry
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
@@ -27,8 +28,10 @@ Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 ${assessment_panel}  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
-${panel_assessor_ben}    benjamin.nixon@gmail.com
-${panel_assessor_joel}  joel.george@gmail.com
+${panel_assessor_ben}        benjamin.nixon@gmail.com
+${panel_assessor_joel}       joel.george@gmail.com
+${panel_assessor_madeleine}  madeleine.martin@gmail.com
+${panel_assessor_riley}      riley.butler@gmail.com
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
@@ -60,14 +63,16 @@ CompAdmin can add an assessor to invite list
     Given the user clicks the button/link    jQuery=tr:contains("Benjamin Nixon") label
     And the user clicks the button/link      jQuery=tr:contains("Joel George") label
     And the user clicks the button/link      jquery=tr:contains("Madeleine Martin") label
+    And the user clicks the button/link      jquery=tr:contains("Riley Butler") label
     When the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
     Then the user should see the element     jQuery=td:contains("Benjamin Nixon") + td:contains(${panel_assessor_ben})
     And the user should see the element      jQuery=td:contains("Joel George") + td:contains(${panel_assessor_joel})
-    And the user should see the element      jQuery=td:contains("Madeleine Martin") + td:contains("madeleine.martin@gmail.com")
+    And the user should see the element      jQuery=td:contains("Madeleine Martin") + td:contains(${panel_assessor_madeleine})
+    And the user should see the element      jQuery=td:contains("Riley Butler") + td:contains(${panel_assessor_riley})
     When the user clicks the button/link      link=Find
     Then the user should not see the element  jQuery=td:contains("Benjamin Nixon")
-    And the user should not see the element  jQuery=td:contains("Joel George")
-    And the user should not see the element  jquery=tr:contains("Madeleine Martin")
+    And the user should not see the element   jQuery=td:contains("Joel George")
+    And the user should not see the element   jquery=tr:contains("Madeleine Martin")
 
 CompAdmin can remove assessor from invite list
     [Documentation]  IFS-1565
@@ -92,8 +97,8 @@ Assessor recieves the invite to panel
     [Setup]  the user clicks the button/link  link=Invite
     Given the user clicks the button/link     link=Review and send invites
     When the user clicks the button/link      jQuery=button:contains("Send invite")
-    Then the user should see the element      jQuery=.column-quarter:contains("2") small:contains("Invited")
-    And the user should see the element       jQuery=.column-quarter:contains("2") small:contains("Assessors on invite list")
+    Then the user should see the element      jQuery=.column-quarter:contains("3") small:contains("Invited")
+    And the user should see the element       jQuery=.column-quarter:contains("3") small:contains("Assessors on invite list")
     And the user reads his email              ${panel_assessor_ben}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
     And the user reads his email              ${panel_assessor_joel}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
 
@@ -103,7 +108,7 @@ Bulk add assessor to invite list
     [Setup]  the user clicks the button/link  link=Find
     Given the user selects the checkbox       select-all-check
     And the user clicks the button/link       jQuery=button:contains("Add selected to invite list")
-    And the user should see the element       jQuery=td:contains("Madeleine Martin") + td:contains("madeleine.martin@gmail.com")
+    And the user should see the element       jQuery=td:contains("Madeleine Martin") + td:contains(${panel_assessor_madeleine})
     When the user clicks the button/link      link=Find
     Then the user should see the element      jQuery=td:contains("No available assessors found")
 
@@ -149,9 +154,18 @@ Comp Admin can see the rejected and accepted invitation
     When the user clicks the button/link       link=Accepted
     Then the user should see the element       jQuery=td:contains("Benjamin Nixon") ~ td:contains("Materials, process and manufacturing design technologies")
     And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Accepted")
-    And the user should see the element        jQuery=.column-quarter:contains(0) small:contains("Assessors on invite list")
+    And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Assessors on invite list")
     When the user clicks the button/link       link=Pending and rejected
     Then the user should not see the element   jQuery=td:contains("Benjamin Nixon")
+
+Assessor tries to accept expired invitation
+    [Documentation]  IFS-2114
+    [Tags]
+    [Setup]   the assessment panel period changes in the db in the past
+    When the user reads his email and clicks the link   ${panel_assessor_riley}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
+    Then the user should see the text in the page       This invitation is now closed
+    [Teardown]  Run Keywords    Connect to Database     @{database}
+    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE type='ASSESSMENT_PANEL' AND competition_id=${competition_ids["${CLOSED_COMPETITION_NAME}"]};
 
 *** Keywords ***
 
@@ -159,6 +173,10 @@ Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${today} =  get today short month
     set suite variable  ${today}
+
+the assessment panel period changes in the db in the past
+    Connect to Database    @{database}
+    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2017-02-24 00:00:00' WHERE type='ASSESSMENT_PANEL' AND competition_id=${competition_ids["${CLOSED_COMPETITION_NAME}"]};
 
 enable assessment panel for the competition
     the user clicks the button/link    link=View and update competition setup
