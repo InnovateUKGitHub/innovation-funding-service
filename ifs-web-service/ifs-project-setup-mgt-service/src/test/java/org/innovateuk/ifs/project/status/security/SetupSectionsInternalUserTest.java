@@ -237,6 +237,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToOtherDocumentsSectionDocsRejected() {
         when(setupProgressCheckerMock.isOtherDocumentsSubmitted()).thenReturn(true);
+        when(setupProgressCheckerMock.isOtherDocumentsRejected()).thenReturn(true);
         assertEquals(ACCESSIBLE, internalUser.canAccessOtherDocumentsSection(newUserResource().withRolesGlobal(newRoleResource().withType(COMP_ADMIN).build(1)).build()));
 
         verifyInteractions(
@@ -283,6 +284,7 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
                 SetupProgressChecker::getRoleSpecificActivityState);
     }
 
+
     @Test
     public void testCheckSupportAccessToGrantOfferLetterSendSectionHappyPath() {
         when(setupProgressCheckerMock.isOtherDocumentsApproved()).thenReturn(true);
@@ -307,6 +309,15 @@ public class SetupSectionsInternalUserTest extends BaseUnitTest {
         verifyInteractions(SetupProgressChecker::isOtherDocumentsApproved,
                 SetupProgressChecker::isSpendProfileApproved,
                 SetupProgressChecker::isGrantOfferLetterApproved);
+    }
+
+    @Test
+    public void testCheckSupportAccessToGrantOfferLetterSection() {
+        when(setupProgressCheckerMock.isGrantOfferLetterSent()).thenReturn(true);
+
+        assertEquals(ACCESSIBLE, internalUser.canAccessGrantOfferLetterSection(getSupportUser()));
+
+        verifyInteractions(SetupProgressChecker::isGrantOfferLetterSent);
     }
 
     @Test
