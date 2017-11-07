@@ -9,7 +9,9 @@
             <span class="form-label-bold">Please select the research category for this project</span>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
         </label>
-        <select class="form-control research-category" th:id="formInput[__${field.id}__]" th:field="*{formInput[__${field.id}__]}">
+        <select class="form-control research-category" th:id="formInput[__${field.id}__]" th:field="*{formInput[__${field.id}__]}"
+                th:attr="data-required-errormessage=#{validation.application.research.category.required}"
+                required="required">
             <option value="">Please select...</option>
             <option th:each="category : ${model.researchCategories}"
                     th:value="${category.id}"
@@ -90,7 +92,9 @@
         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
         <legend class="visuallyhidden" th:id="formInput[__${field.id}__]" >Is this application in scope?</legend>
             <div class="multiple-choice" th:each="option : ${ { true, false } }">
-                <input th:id="'in-scope-'+${option}" th:field="*{formInput[__${field.id}__]}" th:value="${option}" type="radio"/>
+                <input th:id="'in-scope-'+${option}" th:field="*{formInput[__${field.id}__]}" th:value="${option}" type="radio"
+                       th:attr="data-required-errormessage=#{validation.assessor.scope.invalidScope}"
+                       required="required"/>
                 <label th:for="'in-scope-'+${option}" th:text="${option ? 'Yes' : 'No'}">Yes/No</label>
             </div>
         <input th:id="in-scope-none" th:field="*{formInput[__${field.id}__]}" value="none" type="radio" style="display:none"/>
