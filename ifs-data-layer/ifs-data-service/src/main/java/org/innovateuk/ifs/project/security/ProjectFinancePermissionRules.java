@@ -9,9 +9,7 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isCompAdmin;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 /**
  * Defines the permissions for interaction with project finances.
@@ -45,26 +43,30 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_SPEND_PROFILE_CSV",
-            description = "Partners and Comp Admin can view their own Spend Profile data")
-    public boolean partnersAndCompAdminCanViewTheirOwnSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-
-        return isCompAdmin(user) || partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId());
+            description = "Partners can view their own Spend Profile data")
+    public boolean partnersCanViewTheirOwnSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId());
     }
 
     @PermissionRule(
             value = "VIEW_SPEND_PROFILE_CSV",
-            description = "Project Finance and Comp Admin Users can view their own Spend Profile data")
-    public boolean projectFinanceUserAndCompAdminCanViewAnySpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
-
-        return isCompAdmin(user) || isProjectFinanceUser(user);
+            description = "All internal admin users can view Spend Profile data of any applicant")
+    public boolean internalAdminUsersCanSeeSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isInternalAdmin(user);
     }
 
     @PermissionRule(
             value = "VIEW_SPEND_PROFILE_CSV",
-            description = "Lead partner and Comp Admin view Spend Profile data")
-    public boolean leadPartnerAndCompAdminCanViewAnySpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+            description = "Support users can view Spend Profile data of any applicant")
+    public boolean supportUsersCanSeeSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isSupport(user);
+    }
 
-        return isCompAdmin(user) || isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
+    @PermissionRule(
+            value = "VIEW_SPEND_PROFILE_CSV",
+            description = "Lead partner can view Spend Profile data")
+    public boolean leadPartnerCanViewAnySpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
     }
 
     @PermissionRule(
