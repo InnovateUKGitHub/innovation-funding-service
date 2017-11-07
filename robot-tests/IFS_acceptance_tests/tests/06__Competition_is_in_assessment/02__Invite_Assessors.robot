@@ -110,17 +110,17 @@ Next/Previous pagination on Find tab
     [Tags]
     When the user clicks the button/link     jQuery=.pagination-label:contains("Next")
     Then the user should see the element     jQuery=.pagination-part-title:contains("1 to 20")
-    And the user should see the element      jQuery=.pagination-part-title:contains(41 to)
-    And the user clicks the button/link      jQuery=.pagination-label:contains(Previous)
-    And the user should not see the element  jQuery=.pagination-label:contains(Previous)
-    And the user should not see the element  jQuery=.pagination-part-title:contains(41 to)
+    And the user should see the element      jQuery=.pagination-part-title:contains("41 to")
+    And the user clicks the button/link      jQuery=.pagination-label:contains("Previous")
+    And the user should not see the element  jQuery=.pagination-label:contains("Previous")
+    And the user should not see the element  jQuery=.pagination-part-title:contains("41 to")
 
 Page list pagination on Find tab
     [Documentation]    INFUND-6403
     [Tags]
-    When the user clicks the button/link     jQuery=a:contains(41 to)
-    Then the user should see the element     jQuery=.pagination-label:contains(Previous)
-    And the user should not see the element  jQuery=.pagination-label:contains("Next)
+    When the user clicks the button/link     jQuery=a:contains("41 to")
+    Then the user should see the element     jQuery=.pagination-label:contains("Previous")
+    And the user should not see the element  jQuery=.pagination-label:contains("Next")
 
 The user can select the profile link
     [Documentation]    INFUND-6669
