@@ -16,6 +16,8 @@ import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
@@ -129,6 +131,12 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
     public void testGetProfileDetails() {
         loginPaulPlum();
 
+        // avoid Ids clashing with existing data
+        final Long profileId[] = {0L};
+        profileRepository.findAll().forEach(p -> {
+            profileId[0] = new Long(Math.max(p.getId().longValue(), profileId[0].longValue()));
+        });
+
         Long userId = getPaulPlum().getId();
         User user = userRepository.findOne(userId);
 
@@ -138,6 +146,7 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
                 .build();
         Profile profile = newProfile()
                 .withAddress(address)
+                .withId(profileId[0] + 1)
                 .build();
         profile = profileRepository.save(profile);
         user.setProfileId(profile.getId());
@@ -181,10 +190,17 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
         loginPaulPlum();
 
         User user = userRepository.findOne(getPaulPlum().getId());
+
+        // avoid Ids clashing with existing data
+        final Long profileId[] = {0L};
+        profileRepository.findAll().forEach(p -> {
+            profileId[0] = new Long(Math.max(p.getId().longValue(), profileId[0].longValue()));
+        });
         Long userId = user.getId();
         Profile profile = newProfile()
                 .withSkillsAreas("java developer")
                 .withAgreementSignedDate(now())
+                .withId(profileId[0] + 1)
                 .build();
         profile = profileRepository.save(profile);
 

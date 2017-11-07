@@ -25,8 +25,14 @@ public class ProfileRepositoryIntegrationTest extends BaseRepositoryIntegrationT
     public void saveWithInnovationArea() {
         loginPaulPlum();
 
+        // avoid Ids clashing with existing data
+        final Long profileId[] = {0L};
+        repository.findAll().forEach(p -> {
+            profileId[0] = new Long(Math.max(p.getId().longValue(), profileId[0].longValue()));
+        });
+
         InnovationArea innovationArea = innovationAreaRepository.findByName("Emerging technology");
-        Profile profile = newProfile().build();
+        Profile profile = newProfile().withId(profileId[0] + 1).build();
         Profile savedProfile = repository.save(profile);
         savedProfile.addInnovationArea(innovationArea);
         savedProfile = repository.save(savedProfile);
