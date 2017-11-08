@@ -2,14 +2,15 @@ package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.GuidanceRow;
+import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.form.domain.FormInput;
 
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 public class GuidanceRowBuilder extends BaseBuilder<GuidanceRow, GuidanceRowBuilder> {
 
@@ -27,12 +28,16 @@ public class GuidanceRowBuilder extends BaseBuilder<GuidanceRow, GuidanceRowBuil
                 .with(uniqueIds());
     }
 
+    public GuidanceRowBuilder withId(Long... ids) {
+        return withArray(BaseBuilderAmendFunctions::setId, ids);
+    }
+
     public GuidanceRowBuilder withFormInput(FormInput formInput) {
         return with(guidanceRow -> setField("formInput", formInput, guidanceRow));
     }
 
-    public GuidanceRowBuilder withSubject(String subject) {
-        return with(guidanceRow -> setField("subject", subject, guidanceRow));
+    public GuidanceRowBuilder withSubject(String... subjects) {
+        return withArraySetFieldByReflection("subject", subjects);
     }
 
     public GuidanceRowBuilder withJustification(String justification) {

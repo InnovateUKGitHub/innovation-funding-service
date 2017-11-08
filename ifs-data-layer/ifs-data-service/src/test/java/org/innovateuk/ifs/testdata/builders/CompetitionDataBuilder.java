@@ -143,7 +143,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
         updateFn.accept(competition);
 
-        competitionSetupService.update(competition.getId(), competition).getSuccessObjectOrThrowException();
+        competitionSetupService.save(competition.getId(), competition).getSuccessObjectOrThrowException();
 
         updateCompetitionInCompetitionData(data, competition.getId());
     }

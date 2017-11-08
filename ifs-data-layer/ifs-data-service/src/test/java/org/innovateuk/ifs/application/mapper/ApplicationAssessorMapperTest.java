@@ -90,7 +90,7 @@ public class ApplicationAssessorMapperTest extends BaseUnitTestMocksTest {
                             .build();
                 });
 
-        EnumSet<AssessmentState> assessmentStatesThatAreUnassigned = EnumSet.of(REJECTED, WITHDRAWN);
+        EnumSet<AssessmentState> assessmentStatesThatAreUnassigned = EnumSet.of(REJECTED, WITHDRAWN, SUBMITTED);
         EnumSet<AssessmentState> assessmentStatesThatAreAssigned = EnumSet.complementOf(assessmentStatesThatAreUnassigned);
         EnumSet<AssessmentState> assessmentStatesThatAreSubmitted = EnumSet.of(SUBMITTED);
 

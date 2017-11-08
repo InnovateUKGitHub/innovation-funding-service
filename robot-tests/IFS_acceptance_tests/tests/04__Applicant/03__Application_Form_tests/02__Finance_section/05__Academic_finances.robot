@@ -90,7 +90,6 @@ Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
     [Tags]
     When the user navigates to the finance overview of the academic
-    And the user opens the link in new window  ${valid_pdf}
     Then the user should not see an error in the page
     [Teardown]    the user goes back to the previous page
 
@@ -156,7 +155,6 @@ Academic finance overview
     [Tags]
     Given the user navigates to the finance overview of the academic
     Then the finance table should be correct
-    When the user clicks the button/link  link=testing.pdf (opens in a new window)
     Then the user should not see an error in the page
     [Teardown]    The user marks the academic application finances as incomplete
 
@@ -181,9 +179,9 @@ the academic partner fills the finances
     wait for autosave
 
 the calculations should be correct and the totals rounded to the second decimal
-    Textfield Value Should Be  id=subtotal-directly-allocated    £ 3,000
-    Textfield Value Should Be  id=subtotal-exceptions    £ 2,000
-    Textfield Value Should Be  id=total    £ 9,000
+    Textfield Value Should Be  id=subtotal-directly-allocated    £3,000
+    Textfield Value Should Be  id=subtotal-exceptions    £2,000
+    Textfield Value Should Be  id=total    £9,000
 
 the academic partner uploads a file
     [Arguments]    ${file_name}
@@ -192,12 +190,12 @@ the academic partner uploads a file
 
 the finance table should be correct
     Wait Until Element Contains Without Screenshots  css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £9,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)    £3,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)    £1,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(4)    £1,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    £0
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(7)    £1,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    £3,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)    3,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)    1,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(4)    1,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    0
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(7)    1,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    3,000
 
 Lead applicant marks the finances as complete
     Log in as a different user                       &{lead_applicant_credentials}

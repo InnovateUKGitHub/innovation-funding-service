@@ -35,6 +35,7 @@ import static org.innovateuk.ifs.publiccontent.builder.ContentSectionBuilder.new
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
+import static org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder.newSetupStatusResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -157,7 +158,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
                 newContentSection().withStatus(PublicContentStatus.COMPLETE).build(2)
         ).build();
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(publicContent);
-        when(competitionSetupService.markSectionComplete(COMPETITION_ID, CONTENT)).thenReturn(serviceSuccess());
+        when(competitionSetupService.markSectionComplete(COMPETITION_ID, CONTENT)).thenReturn(serviceSuccess(newSetupStatusResource().build()));
         mockPublicMilestonesValid(true);
 
         ServiceResult<Void> result = service.publishByCompetitionId(COMPETITION_ID);

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
@@ -13,7 +14,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.primitives.Longs.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.invite.builder.AssessmentPanelParticipantResourceBuilder.newAssessmentPanelParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
@@ -24,14 +27,15 @@ import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBui
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.*;
+import static org.innovateuk.ifs.user.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.data.domain.Sort.Direction.DESC;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -223,6 +227,26 @@ public class AssessmentPanelInviteControllerTest extends BaseControllerMockMVCTe
     }
 
     @Test
+    public void getAllInvitesByUser() throws Exception {
+        final long USER_ID = 12L;
+        AssessmentPanelInviteResource invite = newAssessmentPanelInviteResource()
+                .withCompetitionId(1L)
+                .withCompetitionName("Juggling craziness")
+                .withInviteHash("")
+                .withStatus(InviteStatus.SENT)
+                .build();
+
+        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource()
+                .withStatus(PENDING)
+                .withInvite(invite)
+                .build();
+        when(assessmentPanelInviteServiceMock.getAllInvitesByUser(USER_ID)).thenReturn(serviceSuccess(singletonList(assessmentPanelParticipantResource)));
+
+        mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesByUser/{user_id}", USER_ID))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void getAllInvitesToResend() throws Exception {
         AssessorInvitesToSendResource resource = newAssessorInvitesToSendResource().build();
         List<Long> inviteIds = asList(1L, 2L);
@@ -281,5 +305,33 @@ public class AssessmentPanelInviteControllerTest extends BaseControllerMockMVCTe
                 .andExpect(content().json(toJson(expectedPageResource)));
 
         verify(assessmentPanelInviteServiceMock, only()).getInvitationOverview(competitionId, pageable, status);
+    }
+
+    @Test
+    public void deleteInvite() throws Exception {
+        String email = "firstname.lastname@example.com";
+        long competitionId = 1L;
+
+        when(assessmentPanelInviteServiceMock.deleteInvite(email, competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/assessmentpanelinvite/deleteInvite")
+                .param("email", email)
+                .param("competitionId", String.valueOf(competitionId)))
+                .andExpect(status().isNoContent());
+
+        verify(assessmentPanelInviteServiceMock, only()).deleteInvite(email, competitionId);
+    }
+
+    @Test
+    public void deleteAllInvites() throws Exception {
+        long competitionId = 1L;
+
+        when(assessmentPanelInviteServiceMock.deleteAllInvites(competitionId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/assessmentpanelinvite/deleteAllInvites")
+                .param("competitionId", String.valueOf(competitionId)))
+                .andExpect(status().isNoContent());
+
+        verify(assessmentPanelInviteServiceMock).deleteAllInvites(competitionId);
     }
 }

@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.FunderRowForm;
@@ -19,7 +19,7 @@ import static java.util.Arrays.asList;
 public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulator {
 
     @Autowired
-    CompetitionService competitionService;
+	private CompetitionSetupRestService competitionSetupRestService;
 
 	@Override
 	public CompetitionSetupSection sectionToFill() {
@@ -44,7 +44,7 @@ public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulato
 			CompetitionFunderResource competitionFunderResource = initFirstFunder();
 			competitionSetupForm.setFunders(asList(new FunderRowForm(competitionFunderResource)));
 			competitionResource.setFunders(asList(competitionFunderResource));
-			competitionService.update(competitionResource);
+            competitionSetupRestService.update(competitionResource);
         }
 
         return competitionSetupForm;
