@@ -28,7 +28,7 @@ Resource          ../../resources/defaultResources.robot
 *** Variables ***
 ${Molecular_id}        ${application_ids['Molecular tree breeding']}
 ${Virtual_Reality_id}  ${application_ids['Living with Virtual Reality']}
-${Paul_Plum_id}        ${user_ids['Paul']}
+${Paul_Plum_id}        ${user_ids['${assessor_credentials["email"]}']}
 ${Intelligent_water}   ${application_ids['Intelligent water system']}
 
 *** Test Cases ***
