@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +23,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,6 +32,9 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
 
     @Mock
     private CompetitionRestService competitionRestService;
+
+    @Mock
+    CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @Test
     public void test_getLiveCompetitions() throws Exception {
@@ -53,10 +58,10 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
         CompetitionSearchResultItem resource2 = new CompetitionSearchResultItem(2L, "21", singleton("innovation area 2"), 123, "12/02/2016", CompetitionStatus.PROJECT_SETUP, "Special", 0, null, null, null);
         when(competitionRestService.findProjectSetupCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
 
-        List<CompetitionSearchResultItem> result = service.getProjectSetupCompetitions();
+        Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getProjectSetupCompetitions();
 
-        assertTrue(result.contains(resource1));
-        assertTrue(result.contains(resource2));
+        assertTrue(result.get(CompetitionStatus.PROJECT_SETUP).contains(resource1));
+        assertTrue(result.get(CompetitionStatus.PROJECT_SETUP).contains(resource2));
     }
 
     @Test
@@ -70,6 +75,32 @@ public class CompetitionDashboardSearchServiceImplTest extends BaseServiceUnitTe
         assertTrue(result.get(CompetitionStatus.COMPETITION_SETUP).contains(resource1));
         assertTrue(result.get(CompetitionStatus.READY_TO_OPEN).contains(resource2));
         assertEquals(result.get(CompetitionStatus.ASSESSOR_FEEDBACK), null);
+    }
+
+    @Test
+    public void test_getNonIfsCompetitions() throws Exception {
+        CompetitionSearchResultItem resource1 = newCompetitionSearchResultItem1().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
+        CompetitionSearchResultItem resource2 = newCompetitionSearchResultItem2().withCompetitionStatus(CompetitionStatus.OPEN).build();
+        when(competitionRestService.findNonIfsCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
+
+        Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getNonIfsCompetitions();
+
+        assertTrue(result.get(CompetitionStatus.COMPETITION_SETUP).contains(resource1));
+        assertTrue(result.get(CompetitionStatus.OPEN).contains(resource2));
+        assertEquals(result.get(CompetitionStatus.ASSESSOR_FEEDBACK), null);
+    }
+
+    @Test
+    public void test_getPreviousCompetitions() throws Exception {
+        CompetitionSearchResultItem resource1 = newCompetitionSearchResultItem1().withCompetitionStatus(CompetitionStatus.PROJECT_SETUP).build();
+        CompetitionSearchResultItem resource2 = newCompetitionSearchResultItem2().withCompetitionStatus(CompetitionStatus.CLOSED).build();
+        when(competitionPostSubmissionRestService.findFeedbackReleasedCompetitions()).thenReturn(restSuccess(Lists.newArrayList(resource1, resource2)));
+
+        Map<CompetitionStatus, List<CompetitionSearchResultItem>> result = service.getPreviousCompetitions();
+
+        assertTrue(result.get(CompetitionStatus.PROJECT_SETUP).contains(resource1));
+        assertTrue(result.get(CompetitionStatus.CLOSED).contains(resource2));
+        assertEquals(result.get(CompetitionStatus.OPEN), null);
     }
 
     @Test
