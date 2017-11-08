@@ -22,112 +22,107 @@ Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
+*** Variables ***
+${Social_media}   ${application_ids["Living with Social Media"]}
+${Park_living}      ${application_ids["Park living"]}
+
 *** Test Cases ***
 Applications Dashboard
     [Documentation]    INFUND-7367
     [Tags]    HappyPath
-    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    When The user clicks the button/link    jQuery=a:contains("Applications: All, submitted, ineligible")
-    Then The user should see the element    jQuery=a:contains(All applications)
+    Given The user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
+    When The user clicks the button/link   link=Applications: All, submitted, ineligible
+    Then The user should see the element   link=All applications
     And The user should see the element    link=Submitted applications
 
 Submitted applications
     [Documentation]    INFUND-7367 INFUND-7371
     [Tags]    HappyPath
-    When the user clicks the button/link    link=Submitted applications
-    Then the user should see the text in the page    Application number
-    And the user should see the text in the page    Project title
-    And the user should see the text in the page    Lead
-    And the user should see the text in the page    Innovation area
-    And the user should see the text in the page    Number of partners
-    And the user should see the text in the page    Grant requested (£)
-    And the user should see the text in the page    Total project cost (£)
-    And the user should see the text in the page    Duration (months)
-    And the user should see the text in the page    Filter applications
-    And the user should see the element    jQuery=td:contains("Intelligent Building") ~ td:nth-child(4):contains("Digital manufacturing")
-    And the user should see the element    jQuery=.pagination-part-title:contains(21 to 40)
+    When the user clicks the button/link  link=Submitted applications
+    And the user should see the element   jQuery=td:contains("Intelligent Building") ~ td:nth-child(4):contains("Digital manufacturing")
+    And the user should see the element   jQuery=.pagination-part-title:contains("21 to 40")
 
 Submitted applications Key Statistics
     [Documentation]    INFUND-7371
-    [Tags]    HappyPath    Pending
+    [Tags]    HappyPath  Pending
     # TODO Resolve issue with count Then the calculations should be correct    css=.grid-row li:nth-child(2) span
     Then both calculations in the page should show the same    css=.grid-row li:nth-child(2) span
 
 Submitted applications View completed applications
     [Documentation]    INFUND-7351
     [Tags]    HappyPath
-    Given the user clicks the button/link    link=19
-    And the user should see the text in the page    Application overview
-    When the user clicks the button/link    link=Back
-    Then the user should see the text in the page    Submitted applications
+    Given the user clicks the button/link          link=${Park_living}
+    And the user should see the text in the page   Application overview
+    When the user clicks the button/link           link=Back
+    Then the user should see the text in the page  Submitted applications
 
 Sort by Lead
     [Documentation]    INFUND-8012
     [Tags]    HappyPath
-    When the application list is sorted by    Lead
-    Then the applications should be sorted by column    3
+    When the application list is sorted by            Lead
+    Then the applications should be sorted by column  3
 
 Sort by Application number
     [Documentation]    INFUND-8012
     [Tags]
-    When the application list is sorted by    Application no.
-    Then the applications should be sorted by column    1
+    When the application list is sorted by            Application no.
+    Then the applications should be sorted by column  1
 
 Finances are showing in the list
     [Documentation]    INFUND-7371
     [Tags]    HappyPath
-    Then the user should see the text in the page    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
-    And the user should see the text in the page    ${DEFAULT_TOTAL_PROJECT_COST_WITH_COMMAS}
+    Then the user should see the text in the page  ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
+    And the user should see the text in the page   ${DEFAULT_TOTAL_PROJECT_COST_WITH_COMMAS}
 
 Only applications from this competition should be visible
     [Documentation]    INFUND-2311
-    Then the user should not see the element    link=${OPEN_COMPETITION_APPLICATION_5_NUMBER}
+    Then the user should not see the element  link=${OPEN_COMPETITION_APPLICATION_5_NUMBER}
 
 Filter by application number
     [Documentation]    INFUND-8012
     [Tags]    HappyPath
-    Given the user enters text to a text field    id=filterSearch    45
-    When the user clicks the button/link    jQuery=button:contains(Filter)
-    Then the user should see the text in the page    Living with Social Media
-    And the user should not see the element    jQuery=.pagination-label:contains(Next)
-    And the user clicks the button/link    jQuery=a:contains(Clear all filters)
-    Then the user should see the element    jQuery=.pagination-label:contains(Next)
+    Given the user enters text to a text field  id=filterSearch    ${Social_media}
+    When the user clicks the button/link        jQuery=button:contains("Filter")
+    Then the user should see the element        jQuery=td:contains("Living with Social Media")
+    And the user should not see the element     jQuery=.pagination-label:contains("Next")
+    And the user clicks the button/link         jQuery=a:contains("Clear all filters")
+    Then the user should see the element        jQuery=.pagination-label:contains("Next")
 
 Next/Previous pagination on submitted applications
     [Documentation]    INFUND-8012
     [Tags]
-    When the user clicks the button/link    jQuery=.pagination-label:contains(Next)
-    Then the user should see the element    jQuery=.pagination-part-title:contains(1 to 20)
-    And the user should see the element    jQuery=.pagination-part-title:contains(41 to 41)
-    And the user clicks the button/link    jQuery=.pagination-label:contains(Previous)
-    And the user should not see the element    jQuery=.pagination-label:contains(Previous)
-    And the user should not see the element    jQuery=.pagination-part-title:contains(41 to 41)
+    When the user clicks the button/link     jQuery=.pagination-label:contains("Next")
+    Then the user should see the element     jQuery=.pagination-part-title:contains("1 to 20")
+    And the user should see the element      jQuery=.pagination-part-title:contains("41 to")
+    And the user clicks the button/link      jQuery=.pagination-label:contains("Previous")
+    And the user should not see the element  jQuery=.pagination-label:contains("Previous")
+    And the user should not see the element  jQuery=.pagination-part-title:contains("41 to")
 
 Page list pagination on submitted applications
     [Documentation]    INFUND-8012
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=a:contains(41 to 41)
-    Then the user should see the element    jQuery=.pagination-label:contains(Previous)
-    And the user should not see the element    jQuery=.pagination-label:contains(Next)
+    When the user clicks the button/link     jQuery=a:contains("41 to")
+    Then the user should see the element     jQuery=.pagination-label:contains("Previous")
+    And the user should not see the element  jQuery=.pagination-label:contains("Next")
     [Teardown]    the user clicks the button/link    link=Applications
 
 Next/Previous pagination on all applications
     [Documentation]    INFUND-8010
     [Tags]    HappyPath
-    [Setup]    the user clicks the button/link    link=All applications
-    When the user clicks the button/link    jQuery=.pagination-label:contains(Next)
-    Then the user should see the element    jQuery=.pagination-part-title:contains(1 to 20)
-    And the user should see the element    jQuery=.pagination-part-title:contains(41 to 46)
-    And the user clicks the button/link    jQuery=.pagination-label:contains(Previous)
-    And the user should not see the element    jQuery=.pagination-label:contains(Previous)
-    And the user should not see the element    jQuery=.pagination-part-title:contains(41 to 46)
+    [Setup]    the user clicks the button/link  link=All applications
+    When the user clicks the button/link        jQuery=.pagination-label:contains("Next")
+    Then the user should see the element        jQuery=.pagination-part-title:contains("1 to 20")
+    And the user should see the element         jQuery=.pagination-part-title:contains("41 to")
+    When the user clicks the button/link        jQuery=.pagination-label:contains("Previous")
+    Then the user should not see the element    jQuery=.pagination-label:contains("Previous")
+    And the user should not see the element     jQuery=.pagination-part-title:contains("41 to")
 
 Page list pagination on all applications
     [Documentation]    INFUND-8010
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains(41 to 46)
-    Then the user should see the element    jQuery=.pagination-label:contains(Previous)
-    And the user should not see the element    jQuery=.pagination-label:contains(Next)
+    When the user clicks the button/link     jQuery=a:contains("41 to")
+    Then the user should see the element     jQuery=.pagination-label:contains("Previous")
+    And the user should not see the element  jQuery=.pagination-label:contains("Next")
 
 *** Keywords ***
 The calculations should be correct
