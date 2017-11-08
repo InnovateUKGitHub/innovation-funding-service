@@ -48,8 +48,8 @@
     <meta property="og:image" content="/images/opengraph-image.png" th:content="${@mvcResourceUrlProvider.getForLookupPath('/images/opengraph-image.png')}"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <script>
-        dataLayer = [];
+    <script type="text/javascript" th:inline="javascript" th:if="${dataLayer}">
+        dataLayer = [ [[${dataLayer}]] ];
     </script>
 
     <!-- Google Tag Manager -->
