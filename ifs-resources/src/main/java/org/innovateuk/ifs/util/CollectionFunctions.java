@@ -31,18 +31,20 @@ public final class CollectionFunctions {
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(CollectionFunctions.class);
 
+
     /**
      * Flatten the given 2-dimensional List into a 1-dimensional List
      *
-     * @param lists
+     * @param toFlatten
      * @param <T>
      * @return 1-dimensional list
      */
-    public static <T> List<T> flattenLists(List<List<T>> lists) {
-        return lists.stream()
-                .filter(l -> l != null)
-                .flatMap(Collection::stream)
-                .collect(toList());
+    public static <T> List<T> flattenLists(Collection<? extends Collection<T>> toFlatten){
+        return flattenLists(toFlatten, Function.identity());
+    }
+
+    public static <S, T> List<T> flattenLists(Collection<S> toFlatten, Function<S, ? extends Collection<T>> mapper) {
+        return toFlatten.stream().filter(Objects::nonNull).map(mapper).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     /**

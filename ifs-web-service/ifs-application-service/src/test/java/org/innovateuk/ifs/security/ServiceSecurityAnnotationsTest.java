@@ -1,17 +1,18 @@
-package org.innovateuk.ifs.commons.security;
+package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.commons.AbstractServiceSecurityAnnotationsTest;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.evaluator.RootCustomPermissionEvaluator;
-import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
-import org.innovateuk.ifs.security.UidAuthenticationService;
 import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.access.prepost.PreFilter;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -20,11 +21,13 @@ public class ServiceSecurityAnnotationsTest extends AbstractServiceSecurityAnnot
 
     @Override
     protected List<Class<?>> excludedClasses() {
-        return asList(
-                UidAuthenticationService.class,
-                StatelessAuthenticationFilter.class
-        );
+        return new ArrayList<>(); // asList(
+                //UidAuthenticationService.class,
+                //StatelessAuthenticationFilter.class
+//        );
     }
+
+
 
     @Override
     protected RootCustomPermissionEvaluator evaluator() {
@@ -34,7 +37,7 @@ public class ServiceSecurityAnnotationsTest extends AbstractServiceSecurityAnnot
 
     @Override
     protected List<Class<? extends Annotation>> classesToSecureAnnotations() {
-        return asList(Service.class);
+        return asList(Service.class, Controller.class);
     }
 
     @Override

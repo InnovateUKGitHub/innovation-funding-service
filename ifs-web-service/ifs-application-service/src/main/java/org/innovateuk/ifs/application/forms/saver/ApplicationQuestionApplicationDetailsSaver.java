@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.forms.saver;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,7 @@ import static org.springframework.util.StringUtils.hasText;
 @Service
 public class ApplicationQuestionApplicationDetailsSaver extends AbstractApplicationSaver {
 
+    @NotSecured("Not currently secured")
     public ValidationMessages handleApplicationDetailsValidationMessages(List<ValidationMessages> applicationMessages) {
         ValidationMessages toFieldErrors = new ValidationMessages();
 
@@ -36,6 +38,7 @@ public class ApplicationQuestionApplicationDetailsSaver extends AbstractApplicat
         return toFieldErrors;
     }
 
+    @NotSecured("Not currently secured")
     public void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
         if (updatedApplication == null) {
             return;

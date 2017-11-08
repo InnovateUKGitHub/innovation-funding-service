@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.security.evaluator.RootCustomPermissionEvaluat
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -18,6 +17,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.ProxyUtils.unwrapProxies;
 import static org.innovateuk.ifs.commons.ProxyUtils.unwrapProxy;
+import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.junit.Assert.*;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
@@ -30,6 +30,7 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
     protected abstract List<Class<?>> excludedClasses();
     protected abstract List<Class<? extends Annotation>> securityAnnotations();
     protected abstract RootCustomPermissionEvaluator evaluator();
+    protected abstract List<Class<? extends Annotation>> classesToSecureAnnotations();
 
     @Autowired
     protected ApplicationContext context;
@@ -103,7 +104,8 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
     }
 
     private Collection<Object> servicesToTest() {
-        Collection<Object> services = context.getBeansWithAnnotation(Service.class).values();
+        List<Object> services = flattenLists(classesToSecureAnnotations(), a -> context.getBeansWithAnnotation(a).values());
+
         for (Iterator<Object> i = services.iterator(); i.hasNext(); ) {
             Object service = i.next();
             excludedClasses().stream().filter(exclusion -> unwrapProxy(service).getClass().isAssignableFrom(exclusion)).forEach(exclusion -> {
