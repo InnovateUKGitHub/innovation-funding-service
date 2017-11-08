@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body class="dashboard-internal">
+<body class="competition-management">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -30,7 +30,7 @@
             <button class="button width-full" th:disabled="${param.action == null}">Confirm actions</button>
         </div>
         <div class="column-quarter">
-            <div class="highlight-panel highlight-panel--tall">
+            <div class="highlight-panel highlight-panel-padded">
                 <span class="heading-large" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
             </div>
         </div>
@@ -41,19 +41,19 @@
       <ul class="grid-row">
 
         <li class="column-quarter">
-          <div class="highlight-panel highlight-panel--tall">
+          <div class="highlight-panel highlight-panel-padded">
             <span class="heading-large">2</span><br /><small>Assessors pending</small>
           </div>
         </li>
 
         <li class="column-quarter">
-          <div class="highlight-panel highlight-panel--tall">
+          <div class="highlight-panel highlight-panel-padded">
             <span class="heading-large">3</span><br /><small>Assessors accepted</small>
           </div>
         </li>
 
         <li class="column-quarter">
-          <div class="highlight-panel highlight-panel--tall">
+          <div class="highlight-panel highlight-panel-padded">
             <span class="heading-large">7</span><br /><small>Applications assigned to panel</small>
           </div>
         </li>
@@ -62,7 +62,7 @@
 
       <!-- <h2 class="heading-medium">Panel navigation</h2> -->
 
-      <h2 class="heading-medium no-margin-bottom">Panel navigation</h2>
+      <h2 class="heading-medium">Panel navigation</h2>
 
       <ul class="link-list">
         <li><a href="/prototypes/IFS-707-manage-assessors">Invite assessors to attend</a></li>

@@ -13,24 +13,22 @@ import org.innovateuk.ifs.project.otherdocuments.viewmodel.OtherDocumentsViewMod
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static java.util.Collections.singletonList;
 
 /**
  * Controller backing the Other Documents page
@@ -53,26 +51,25 @@ public class OtherDocumentsController {
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping
     public String viewOtherDocumentsPage(Model model, @ModelAttribute(name = FORM_ATTR, binding = false) OtherDocumentsForm form,
-                                         @PathVariable("projectId") Long projectId,
-                                         UserResource loggedInUser) {
-        return doViewOtherDocumentsPage(model, form, projectId, loggedInUser);
+                                         @PathVariable("projectId") Long projectId) {
+        return doViewOtherDocumentsPage(model, form, projectId);
     }
 
-    private String doViewOtherDocumentsPage(Model model, OtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
+    private String doViewOtherDocumentsPage(Model model, OtherDocumentsForm form, Long projectId) {
 
-        OtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(form, projectId, loggedInUser);
+        OtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId);
         model.addAttribute("model", viewModel);
         model.addAttribute(FORM_ATTR, form);
         return "project/other-documents";
     }
 
-    private OtherDocumentsViewModel getOtherDocumentsViewModel(OtherDocumentsForm form, Long projectId, UserResource loggedInUser) {
+    private OtherDocumentsViewModel getOtherDocumentsViewModel(Long projectId) {
 
         ProjectResource project = projectService.getById(projectId);
         List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
         boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
 
-        Optional<FileEntryResource> collaborationAgreement = null;
+        Optional<FileEntryResource> collaborationAgreement = Optional.empty();
         if (collaborationAgreementRequired) {
             collaborationAgreement = otherDocumentsService.getCollaborationAgreementFileDetails(projectId);
         }
@@ -100,22 +97,18 @@ public class OtherDocumentsController {
 
     private Optional<ProjectUserResource> getProjectManagerResource(ProjectResource project) {
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(project.getId());
-        Optional<ProjectUserResource> projectManager = simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
-
-        return projectManager;
+        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping
     public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
-                                               BindingResult bindingResult,
                                                ValidationHandler validationhandler,
-                                               @PathVariable("projectId") Long projectId,
-                                               UserResource loggedInUser) {
+                                               @PathVariable("projectId") Long projectId) {
 
         return validationhandler.performActionOrBindErrorsToField("approved",
-                () -> doViewOtherDocumentsPage(model, form, projectId, loggedInUser),
-                () -> doViewOtherDocumentsPage(model, form, projectId, loggedInUser),
+                () -> doViewOtherDocumentsPage(model, form, projectId),
+                () -> doViewOtherDocumentsPage(model, form, projectId),
                 () -> otherDocumentsService.acceptOrRejectOtherDocuments(projectId, form.isApproved()));
     }
 
@@ -144,8 +137,7 @@ public class OtherDocumentsController {
     @GetMapping("/exploitation-plan")
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
-            @PathVariable("projectId") final Long projectId) {
+    ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(@PathVariable("projectId") final Long projectId) {
 
         final Optional<ByteArrayResource> content = otherDocumentsService.getExploitationPlanFile(projectId);
         final Optional<FileEntryResource> fileDetails = otherDocumentsService.getExploitationPlanFileDetails(projectId);

@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service.formpopulator.application;
 
+import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
@@ -23,6 +25,9 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 	@Autowired
 	private CompetitionSetupQuestionService competitionSetupQuestionService;
 
+	@Autowired
+	private SectionService sectionService;
+
 	@Override
 	public CompetitionSetupSubsection sectionToFill() {
 		return CompetitionSetupSubsection.QUESTIONS;
@@ -37,6 +42,10 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
 			CompetitionSetupQuestionResource questionResource = competitionSetupQuestionService.getQuestion(objectId.get()).getSuccessObjectOrThrowException();
 			competitionSetupForm.setQuestion(questionResource);
 
+			if(sectionContainsMoreThanOneQuestion(objectId.get())) {
+				competitionSetupForm.setRemovable(true);
+			}
+
 			competitionSetupForm.getQuestion().getGuidanceRows().forEach(guidanceRowResource ->  {
 				GuidanceRowForm grvm = new GuidanceRowForm(guidanceRowResource);
 				competitionSetupForm.getGuidanceRows().add(grvm);
@@ -47,6 +56,11 @@ public class ApplicationQuestionFormPopulator implements CompetitionSetupSubsect
         }
 
 		return competitionSetupForm;
+	}
+
+	private boolean sectionContainsMoreThanOneQuestion(Long questionId) {
+		SectionResource sectionServiceResult = sectionService.getSectionByQuestionId(questionId);
+		return sectionServiceResult.getQuestions().size() > 1;
 	}
 
 }

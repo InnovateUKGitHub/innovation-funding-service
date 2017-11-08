@@ -38,7 +38,7 @@ function deployFractal() {
 
     cleanUp
     cloneConfig
-    tailorAppInstance
+    tailorFractalInstance
     useContainerRegistry
     pushFractalImages
     deployFractal

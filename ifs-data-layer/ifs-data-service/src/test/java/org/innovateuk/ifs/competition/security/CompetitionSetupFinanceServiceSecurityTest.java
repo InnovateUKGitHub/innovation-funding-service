@@ -32,7 +32,7 @@ public class CompetitionSetupFinanceServiceSecurityTest extends BaseServiceSecur
     public void testSaveAllowedIfNoGlobalRolesAtAll() {
         try {
             classUnderTest.save(newCompetitionSetupFinanceResource().build());
-            fail("Should not have been able to save finance section without a global role");
+            fail("Should not have been able to update finance section without a global role");
         } catch (AccessDeniedException e) {
             // expected behaviour
         }
