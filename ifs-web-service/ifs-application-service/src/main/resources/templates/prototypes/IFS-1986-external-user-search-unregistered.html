@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Find external users'" />
+</head>
+<body class="competition-management">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkClass='link-back',linkUrl=@{/}"  />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Find external users',size='heading-large'" />
+
+
+    <form method="GET">
+        <div class="search-filters extra-margin">
+          <fieldset>
+              <legend class="heading-medium">Search users</legend>
+              <div class="grid-row">
+                  <div class="column-half">
+                    <div class="form-group">
+                      <label class="form-label" for="filterSearch">Search by</label>
+                      <input class="form-control extra-margin-bottom" id="filterSearch" name="searchTerm" minlength="3" required="required" value="" type="text">
+                      <a href="?">Clear search</a>
+                    </div>
+                  </div>
+                  <div class="column-half">
+                    <div class="form-group">
+                      <label class="form-label" for="filterCategory">Category</label>
+                      <select class="form-control" id="filterCategory" name="filterCategory">
+                        <option value="name">Name</option>
+                        <option value="organisation">Organisation name</option>
+                        <option value="email" selected>Email</option>
+                      </select>
+                      <div class="alignright">
+                        <button class="button">Search</button>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+          </fieldset>
+        </div>
+    </form>
+    <div>
+      <ul class="inline-nav cf">
+          <li><a th:href="@{/prototypes/IFS-1986-external-user-search.html?searchTerm={searchTerm}&filterCategory={filterCategory}(searchTerm=${param.searchTerm},filterCategory=${param.filterCategory})}">Registered</a></li>
+          <li class="selected"><a th:href="@{/prototypes/IFS-1986-external-user-search-unregistered.html?searchTerm={searchTerm}&filterCategory={filterCategory}(searchTerm=${param.searchTerm},filterCategory=${param.filterCategory})}">Unregistered</a></li>
+      </ul>
+      <p id="result-count">
+          <span class="heading-xlarge no-margin">38</span>
+          <span class="heading-small">invited users awaiting registration</span>
+      </p>
+      <div class="table-overflow">
+          <table>
+              <thead>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Organisation name</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Organisation ID</th>
+                    <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                  <tr>
+                      <td>Mark Smith</td>
+                      <td>Company Ltd.</td>
+                      <td>mark.smith@companyltd.com</td>
+                      <td>1233</td>
+                      <td>Sent</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+    </div>
+    <p id="no-results">
+      There are no results for this search
+    </p>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+<!--/* don't copy underneath as is prototype code */-->
+
+<script type="text/javascript">
+//<![CDATA[
+var list = [
+   {
+      "name":"Addie Cote",
+      "organisation":"Genesynk",
+      "email":"addiecote@genesynk.com",
+      "id":539,
+      "applicationId":3421
+   },
+   {
+      "name":"Aguilar Patrick",
+      "organisation":"Spherix",
+      "email":"aguilarpatrick@spherix.com",
+      "id":354,
+      "applicationId":6701
+   },
+   {
+      "name":"Allison Farley",
+      "organisation":"Beadzza",
+      "email":"allisonfarley@beadzza.com",
+      "id":502,
+      "applicationId":6104
+   },
+   {
+      "name":"Amanda Stein",
+      "organisation":"Insuresys",
+      "email":"amandastein@insuresys.com",
+      "id":855,
+      "applicationId":7519
+   },
+   {
+      "name":"Ayala Steele",
+      "organisation":"Helixo",
+      "email":"ayalasteele@helixo.com",
+      "id":598,
+      "applicationId":4828
+   },
+   {
+      "name":"Bass Shaw",
+      "organisation":"Exozent",
+      "email":"bassshaw@exozent.com",
+      "id":870,
+      "applicationId":4712
+   },
+   {
+      "name":"Beatriz Richard",
+      "organisation":"Corpulse",
+      "email":"beatrizrichard@corpulse.com",
+      "id":189,
+      "applicationId":7098
+   },
+   {
+      "name":"Betty Wood",
+      "organisation":"Digiprint",
+      "email":"bettywood@digiprint.com",
+      "id":372,
+      "applicationId":3125
+   },
+   {
+      "name":"Bonnie Mitchell",
+      "organisation":"Fiberox",
+      "email":"bonniemitchell@fiberox.com",
+      "id":616,
+      "applicationId":6432
+   },
+   {
+      "name":"Bowman Powers",
+      "organisation":"Zentia",
+      "email":"bowmanpowers@zentia.com",
+      "id":241,
+      "applicationId":5268
+   },
+   {
+      "name":"Bright Brooks",
+      "organisation":"Tribalog",
+      "email":"brightbrooks@tribalog.com",
+      "id":603,
+      "applicationId":8469
+   },
+   {
+      "name":"Campbell Dorsey",
+      "organisation":"Turnabout",
+      "email":"campbelldorsey@turnabout.com",
+      "id":708,
+      "applicationId":6079
+   },
+   {
+      "name":"Carolina Bird",
+      "organisation":"Inrt",
+      "email":"carolinabird@inrt.com",
+      "id":807,
+      "applicationId":3854
+   },
+   {
+      "name":"Charlotte Cohen",
+      "organisation":"Bleeko",
+      "email":"charlottecohen@bleeko.com",
+      "id":872,
+      "applicationId":7241
+   },
+   {
+      "name":"Chelsea Salas",
+      "organisation":"Inventure",
+      "email":"chelseasalas@inventure.com",
+      "id":754,
+      "applicationId":9486
+   },
+   {
+      "name":"Christensen Gaines",
+      "organisation":"Dancerity",
+      "email":"christensengaines@dancerity.com",
+      "id":977,
+      "applicationId":4952
+   },
+   {
+      "name":"Chrystal Dennis",
+      "organisation":"Imant",
+      "email":"chrystaldennis@imant.com",
+      "id":633,
+      "applicationId":454
+   },
+   {
+      "name":"Clay Wilkerson",
+      "organisation":"Capscreen",
+      "email":"claywilkerson@capscreen.com",
+      "id":324,
+      "applicationId":8880
+   },
+   {
+      "name":"Cornelia Mckee",
+      "organisation":"Xyqag",
+      "email":"corneliamckee@xyqag.com",
+      "id":927,
+      "applicationId":2176
+   },
+   {
+      "name":"Darlene Campbell",
+      "organisation":"Ersum",
+      "email":"darlenecampbell@ersum.com",
+      "id":554,
+      "applicationId":882
+   },
+   {
+      "name":"Deann Cooley",
+      "organisation":"Limage",
+      "email":"deanncooley@limage.com",
+      "id":716,
+      "applicationId":6034
+   },
+   {
+      "name":"Deborah Battle",
+      "organisation":"Niquent",
+      "email":"deborahbattle@niquent.com",
+      "id":472,
+      "applicationId":3748
+   },
+   {
+      "name":"Della Bright",
+      "organisation":"Ziore",
+      "email":"dellabright@ziore.com",
+      "id":488,
+      "applicationId":1921
+   },
+   {
+      "name":"Delores Dean",
+      "organisation":"Coash",
+      "email":"deloresdean@coash.com",
+      "id":765,
+      "applicationId":9404
+   },
+   {
+      "name":"Dickerson Cole",
+      "organisation":"Andershun",
+      "email":"dickersoncole@andershun.com",
+      "id":865,
+      "applicationId":2822
+   },
+   {
+      "name":"Durham Justice",
+      "organisation":"Viocular",
+      "email":"durhamjustice@viocular.com",
+      "id":976,
+      "applicationId":1204
+   },
+   {
+      "name":"Ella Lindsey",
+      "organisation":"Sybixtex",
+      "email":"ellalindsey@sybixtex.com",
+      "id":868,
+      "applicationId":2503
+   },
+   {
+      "name":"Ellen Hicks",
+      "organisation":"Ebidco",
+      "email":"ellenhicks@ebidco.com",
+      "id":917,
+      "applicationId":1195
+   },
+   {
+      "name":"Elsa Watts",
+      "organisation":"Xth",
+      "email":"elsawatts@xth.com",
+      "id":409,
+      "applicationId":856
+   },
+   {
+      "name":"Elvira Kelley",
+      "organisation":"Boilicon",
+      "email":"elvirakelley@boilicon.com",
+      "id":99,
+      "applicationId":7871
+   },
+   {
+      "name":"Erin Merrill",
+      "organisation":"Nexgene",
+      "email":"erinmerrill@nexgene.com",
+      "id":501,
+      "applicationId":441
+   },
+   {
+      "name":"Essie Wilkins",
+      "organisation":"Comvene",
+      "email":"essiewilkins@comvene.com",
+      "id":390,
+      "applicationId":7311
+   },
+   {
+      "name":"Frank Alvarado",
+      "organisation":"Prismatic",
+      "email":"frankalvarado@prismatic.com",
+      "id":200,
+      "applicationId":6079
+   },
+   {
+      "name":"Galloway Hughes",
+      "organisation":"Insuron",
+      "email":"gallowayhughes@insuron.com",
+      "id":537,
+      "applicationId":3948
+   },
+   {
+      "name":"Glenna Franklin",
+      "organisation":"Xerex",
+      "email":"glennafranklin@xerex.com",
+      "id":578,
+      "applicationId":3606
+   },
+   {
+      "name":"Goodman Williams",
+      "organisation":"Grupoli",
+      "email":"goodmanwilliams@grupoli.com",
+      "id":468,
+      "applicationId":5287
+   },
+   {
+      "name":"Goodwin Swanson",
+      "organisation":"Limozen",
+      "email":"goodwinswanson@limozen.com",
+      "id":503,
+      "applicationId":1888
+   },
+   {
+      "name":"Gray Chaney",
+      "organisation":"Tourmania",
+      "email":"graychaney@tourmania.com",
+      "id":668,
+      "applicationId":809
+   },
+   {
+      "name":"Griffin Valdez",
+      "organisation":"Buzzness",
+      "email":"griffinvaldez@buzzness.com",
+      "id":176,
+      "applicationId":693
+   },
+   {
+      "name":"Guadalupe Cooper",
+      "organisation":"Comverges",
+      "email":"guadalupecooper@comverges.com",
+      "id":721,
+      "applicationId":371
+   },
+   {
+      "name":"Harper Berry",
+      "organisation":"Izzby",
+      "email":"harperberry@izzby.com",
+      "id":258,
+      "applicationId":2628
+   },
+   {
+      "name":"Hattie Byrd",
+      "organisation":"Rubadub",
+      "email":"hattiebyrd@rubadub.com",
+      "id":756,
+      "applicationId":2138
+   },
+   {
+      "name":"Hester Hoffman",
+      "organisation":"Affluex",
+      "email":"hesterhoffman@affluex.com",
+      "id":866,
+      "applicationId":7077
+   },
+   {
+      "name":"Ila White",
+      "organisation":"Opticom",
+      "email":"ilawhite@opticom.com",
+      "id":964,
+      "applicationId":8221
+   },
+   {
+      "name":"Jacobson Alston",
+      "organisation":"Proxsoft",
+      "email":"jacobsonalston@proxsoft.com",
+      "id":511,
+      "applicationId":6498
+   },
+   {
+      "name":"Janis Rollins",
+      "organisation":"Toyletry",
+      "email":"janisrollins@toyletry.com",
+      "id":257,
+      "applicationId":6257
+   },
+   {
+      "name":"Jensen Hardy",
+      "organisation":"Plasmos",
+      "email":"jensenhardy@plasmos.com",
+      "id":468,
+      "applicationId":5502
+   },
+   {
+      "name":"Karyn Fowler",
+      "organisation":"Magneato",
+      "email":"karynfowler@magneato.com",
+      "id":408,
+      "applicationId":6988
+   },
+   {
+      "name":"Kathie Simon",
+      "organisation":"Cosmosis",
+      "email":"kathiesimon@cosmosis.com",
+      "id":502,
+      "applicationId":136
+   },
+   {
+      "name":"Katie Glover",
+      "organisation":"Handshake",
+      "email":"katieglover@handshake.com",
+      "id":334,
+      "applicationId":3261
+   },
+   {
+      "name":"Katy Bean",
+      "organisation":"Enersol",
+      "email":"katybean@enersol.com",
+      "id":177,
+      "applicationId":9634
+   },
+   {
+      "name":"Lesley Gonzalez",
+      "organisation":"Quantasis",
+      "email":"lesleygonzalez@quantasis.com",
+      "id":301,
+      "applicationId":1970
+   },
+   {
+      "name":"Lewis Hammond",
+      "organisation":"Quinex",
+      "email":"lewishammond@quinex.com",
+      "id":195,
+      "applicationId":5795
+   },
+   {
+      "name":"Lila Heath",
+      "organisation":"Hopeli",
+      "email":"lilaheath@hopeli.com",
+      "id":5,
+      "applicationId":2925
+   },
+   {
+      "name":"Lindsey Benjamin",
+      "organisation":"Skybold",
+      "email":"lindseybenjamin@skybold.com",
+      "id":528,
+      "applicationId":1783
+   },
+   {
+      "name":"Lorrie Moses",
+      "organisation":"Waab",
+      "email":"lorriemoses@waab.com",
+      "id":773,
+      "applicationId":9713
+   },
+   {
+      "name":"Macdonald Castro",
+      "organisation":"Franscene",
+      "email":"macdonaldcastro@franscene.com",
+      "id":361,
+      "applicationId":1530
+   },
+   {
+      "name":"Maddox Tucker",
+      "organisation":"Sureplex",
+      "email":"maddoxtucker@sureplex.com",
+      "id":836,
+      "applicationId":7854
+   },
+   {
+      "name":"Maggie Peters",
+      "organisation":"Micronaut",
+      "email":"maggiepeters@micronaut.com",
+      "id":658,
+      "applicationId":1021
+   },
+   {
+      "name":"Marisol Hansen",
+      "organisation":"Miracula",
+      "email":"marisolhansen@miracula.com",
+      "id":168,
+      "applicationId":502
+   },
+   {
+      "name":"Mitzi Rodriquez",
+      "organisation":"Tellifly",
+      "email":"mitzirodriquez@tellifly.com",
+      "id":102,
+      "applicationId":5628
+   },
+   {
+      "name":"Moran Rosario",
+      "organisation":"Zilch",
+      "email":"moranrosario@zilch.com",
+      "id":412,
+      "applicationId":6286
+   },
+   {
+      "name":"Moses Robinson",
+      "organisation":"Fishland",
+      "email":"mosesrobinson@fishland.com",
+      "id":997,
+      "applicationId":6468
+   },
+   {
+      "name":"Murray Cochran",
+      "organisation":"Neocent",
+      "email":"murraycochran@neocent.com",
+      "id":43,
+      "applicationId":256
+   },
+   {
+      "name":"Nadia Pugh",
+      "organisation":"Zilla",
+      "email":"nadiapugh@zilla.com",
+      "id":736,
+      "applicationId":5419
+   },
+   {
+      "name":"Nichole Snyder",
+      "organisation":"Codax",
+      "email":"nicholesnyder@codax.com",
+      "id":989,
+      "applicationId":6641
+   },
+   {
+      "name":"Ortega Hanson",
+      "organisation":"Bostonic",
+      "email":"ortegahanson@bostonic.com",
+      "id":606,
+      "applicationId":2807
+   },
+   {
+      "name":"Peterson Mcknight",
+      "organisation":"Geofarm",
+      "email":"petersonmcknight@geofarm.com",
+      "id":925,
+      "applicationId":7766
+   },
+   {
+      "name":"Polly Trujillo",
+      "organisation":"Digigen",
+      "email":"pollytrujillo@digigen.com",
+      "id":728,
+      "applicationId":6724
+   },
+   {
+      "name":"Prince Burns",
+      "organisation":"Rugstars",
+      "email":"princeburns@rugstars.com",
+      "id":710,
+      "applicationId":7257
+   },
+   {
+      "name":"Ramsey Tate",
+      "organisation":"Mixers",
+      "email":"ramseytate@mixers.com",
+      "id":818,
+      "applicationId":1219
+   },
+   {
+      "name":"Rodgers Woodard",
+      "organisation":"Spacewax",
+      "email":"rodgerswoodard@spacewax.com",
+      "id":393,
+      "applicationId":7183
+   },
+   {
+      "name":"Russo Stevenson",
+      "organisation":"Rodeology",
+      "email":"russostevenson@rodeology.com",
+      "id":626,
+      "applicationId":8056
+   },
+   {
+      "name":"Sanchez Tran",
+      "organisation":"Zentry",
+      "email":"sancheztran@zentry.com",
+      "id":429,
+      "applicationId":9177
+   },
+   {
+      "name":"Sandoval Robles",
+      "organisation":"Ecraze",
+      "email":"sandovalrobles@ecraze.com",
+      "id":30,
+      "applicationId":7012
+   },
+   {
+      "name":"Santiago Barton",
+      "organisation":"Aquacine",
+      "email":"santiagobarton@aquacine.com",
+      "id":664,
+      "applicationId":1553
+   },
+   {
+      "name":"Sherri Jennings",
+      "organisation":"Essensia",
+      "email":"sherrijennings@essensia.com",
+      "id":555,
+      "applicationId":5256
+   },
+   {
+      "name":"Sloan Lucas",
+      "organisation":"Dogspa",
+      "email":"sloanlucas@dogspa.com",
+      "id":866,
+      "applicationId":295
+   },
+   {
+      "name":"Sosa Dale",
+      "organisation":"Uneeq",
+      "email":"sosadale@uneeq.com",
+      "id":686,
+      "applicationId":6403
+   },
+   {
+      "name":"Swanson Berger",
+      "organisation":"Viasia",
+      "email":"swansonberger@viasia.com",
+      "id":652,
+      "applicationId":9549
+   },
+   {
+      "name":"Terry Lawson",
+      "organisation":"Zentix",
+      "email":"terrylawson@zentix.com",
+      "id":712,
+      "applicationId":6544
+   },
+   {
+      "name":"Verna Lynch",
+      "organisation":"Qnekt",
+      "email":"vernalynch@qnekt.com",
+      "id":155,
+      "applicationId":9724
+   },
+   {
+      "name":"Willa Lopez",
+      "organisation":"Viagrand",
+      "email":"willalopez@viagrand.com",
+      "id":293,
+      "applicationId":8529
+   },
+   {
+      "name":"Wooten Gross",
+      "organisation":"Sarasonic",
+      "email":"wootengross@sarasonic.com",
+      "id":126,
+      "applicationId":7988
+   },
+   {
+      "name":"York Molina",
+      "organisation":"Caxt",
+      "email":"yorkmolina@caxt.com",
+      "id":941,
+      "applicationId":2869
+   }
+]
+
+jQuery(document).ready(function(){
+
+
+  function getUrlParameter(sParam) {
+      var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+          sURLVariables = sPageURL.split('&'),
+          sParameterName,
+          i;
+      for (i = 0; i < sURLVariables.length; i++) {
+          sParameterName = sURLVariables[i].split('=');
+          if (sParameterName[0] === sParam) {
+              return sParameterName[1] === undefined ? true : sParameterName[1];
+          }
+      }
+      return false
+  };
+
+  function fillValues(value, category){
+    var filtered = list.filter(function(listObj){
+  	if(listObj[category].toLowerCase().indexOf(value.toLowerCase().trim()) !== -1){
+      return listObj
+      }
+    })
+
+    jQuery("tbody").empty();
+    if(filtered.length){
+      hasResults(true);
+      jQuery('.heading-xlarge.no-margin').text(filtered.length)
+      jQuery.each(filtered, function(index,value){
+         var html = `
+         <tr>
+            <td>${value.name}</td>
+            <td>${value.organisation}</td>
+            <td>${value.email}</td>
+            <td>${value.id}</td>
+            <td>${value.applicationId}</td>
+         </tr>
+         `
+         jQuery("tbody").append(html);
+      });
+    }
+    else {
+      hasResults(false);
+    }
+
+  }
+
+  function hasResults(status){
+    jQuery("#no-results").attr('aria-hidden',status);
+    jQuery('table,#result-count').attr('aria-hidden',!status);
+  }
+
+
+  jQuery('document').ready(function(){
+      jQuery('form + div, #no-results').attr('aria-hidden','true');
+
+      var searchTerm = getUrlParameter('searchTerm');
+      var filterCategory = getUrlParameter('filterCategory');
+
+      if(searchTerm && filterCategory){
+        jQuery('#filterSearch').val(searchTerm);
+        jQuery('#filterCategory').val(filterCategory);
+        fillValues(searchTerm, filterCategory);
+        jQuery('form + div').attr('aria-hidden','false');
+      }
+  })
+
+
+});
+
+
+//]]>
+</script>
+
+<!--/* don't copy above as is prototype code */-->
+
+</body>
+</html>
