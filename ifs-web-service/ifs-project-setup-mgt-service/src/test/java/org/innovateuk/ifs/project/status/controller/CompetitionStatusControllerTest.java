@@ -52,12 +52,15 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
         when(statusRestService.getCompetitionStatus(competitionId)).thenReturn(restSuccess(competitionProjectsStatus));
 
         when(competitionRestService.getCompetitionOpenQueriesCount(competitionId)).thenReturn(restSuccess(1L));
+        when(competitionRestService.countPendingSpendProfiles(competitionId)).thenReturn(restSuccess(4));
 
         MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/status/all"))
                 .andExpect(view().name("project/competition-status-all"))
                 .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)))
                 .andReturn();
         CompetitionStatusViewModel viewModel = (CompetitionStatusViewModel) result.getModelAndView().getModel().get("model");
+        Assert.assertEquals(1L, viewModel.getOpenQueryCount());
+        Assert.assertEquals(4, viewModel.getPendingSpendProfilesCount());
         Assert.assertEquals(true, viewModel.isShowTabs());
     }
 
@@ -76,8 +79,11 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(model().attribute("model", any(CompetitionStatusViewModel.class)))
                 .andReturn();
         CompetitionStatusViewModel viewModel = (CompetitionStatusViewModel) result.getModelAndView().getModel().get("model");
+        Assert.assertEquals(0L, viewModel.getOpenQueryCount());
+        Assert.assertEquals(0, viewModel.getPendingSpendProfilesCount());
         Assert.assertEquals(false, viewModel.isShowTabs());
         verify(competitionRestService, never()).getCompetitionOpenQueriesCount(competitionId);
+        verify(competitionRestService, never()).countPendingSpendProfiles(competitionId);
     }
 
     @Test
@@ -92,9 +98,8 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
 
         when(competitionRestService.getCompetitionById(competitionId)).thenReturn(restSuccess(competition));
         when(competitionRestService.getCompetitionOpenQueriesCount(competitionId)).thenReturn(restSuccess(1L));
-
         when(competitionRestService.getCompetitionOpenQueries(competitionId)).thenReturn(restSuccess(openQueries));
-
+        when(competitionRestService.countPendingSpendProfiles(competitionId)).thenReturn(restSuccess(4));
 
         MvcResult result = mockMvc.perform(get("/competition/" + competitionId + "/status/queries"))
                 .andExpect(view().name("project/competition-status-queries"))
@@ -110,6 +115,7 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
         Assert.assertEquals("org", viewModel.getOpenQueries().get(0).getOrganisationName());
         Assert.assertEquals(3L, viewModel.getOpenQueries().get(0).getProjectId().longValue());
         Assert.assertEquals("proj", viewModel.getOpenQueries().get(0).getProjectName());
+        Assert.assertEquals(4, viewModel.getPendingSpendProfilesCount());
         Assert.assertEquals(true, viewModel.isShowTabs());
     }
 
