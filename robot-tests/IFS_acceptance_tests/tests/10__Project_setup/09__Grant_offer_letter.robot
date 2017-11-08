@@ -34,6 +34,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-1578 Allow change of Project Manager until generation of GOL
 ...
 ...               IFS-1579 Allow change of Finance Contact until generation of GOL
+...
+...               IFS-1307 CSS access: Project Setup/Previous
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup    Upload
@@ -51,6 +53,17 @@ External user cannot view the GOL section before spend profiles have been approv
     And the user should not see the element    link=Grant offer letter
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(2) td.status.na:nth-of-type(7)
+
+Support user cannot access spend profile until it is approved
+    [Documentation]    IFS-1307
+    [Tags]
+    [Setup]  log in as a different user  &{support_user_credentials}
+    Given the user navigates to the page   ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
+    Then the user should see the element   jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(5).status.action  # Spend profile status
+    And the user should not see the element   jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(5).status.action a  # Spend profile link
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/review-all-bank-details  ${403_error_message}
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/finance-check-overview  ${403_error_message}
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/spend-profile/approval  ${403_error_message}
 
 GOL not generated before spend profiles have been approved
     [Documentation]    INFUND-6741
@@ -455,6 +468,22 @@ Academic finance contact receives an email when the GOL is approved
     [Tags]    Email    HappyPath
     Then the user reads his email    ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter which was uploaded for your project.
 
+Verify support users permissions in project setup tab
+    [Documentation]  IFS-1307
+    [Tags]
+    [Setup]    log in as a different user    &{support_user_credentials}
+    Given the user clicks the button/link    jQuery=a:contains("Project setup")
+    When the user clicks the button/link     link=${PS_MD_Competition_Name}
+    Then the user should see the element     jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(1).status.ok a  # Project details
+    And the user should see the element      jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(2).status.ok a  # MO
+    And the user should see the element      jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(3).status.ok    # Bank details
+    And the user should not see the element  jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(3).status.ok a  # Bank details link
+    And the user should see the element      jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(4).status.ok    # Finance checks
+    And the user should not see the element  jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(4).status.ok a  # Finance checks link
+    And the user should see the element      jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(5).status.ok a  # Spend profile
+    And the user should see the element      jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(6).status.ok a  # Other docs
+    And the user clicks the button/link      jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(7).status.ok a  # GOL
+    And the user should see the element      jQuery=.success-alert h2:contains("The grant offer letter has been received and accepted.")
 
 *** Keywords ***
 the user uploads a file
