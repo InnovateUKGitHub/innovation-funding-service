@@ -175,7 +175,7 @@ public class CompetitionSearchPopulatorTest {
 
         assertEquals(true, viewModel.hasNextPage());
         assertEquals(21, viewModel.getNextPageStart());
-        assertEquals(30, viewModel.getNextPageEnd());
+        assertEquals(21, viewModel.getNextPageEnd());
         assertEquals("innovationAreaId=10&keywords=test&page=2", viewModel.getNextPageLink());
 
     }
