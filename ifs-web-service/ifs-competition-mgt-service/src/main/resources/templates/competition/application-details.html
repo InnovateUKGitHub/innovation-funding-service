@@ -17,7 +17,7 @@
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.general.editable} ? 'Edit \'Application details\'' : 'Application details',subTitle=${model.general.competition.name},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application details',subTitle=${model.general.competition.name},size='heading-xlarge'" />
     <p>These are the default questions included in the application details section.</p>
 
     <form th:if="${model.editable}"
@@ -52,7 +52,7 @@
             </fieldset>
         </div>
 
-        <button type="submit" class="button">Save and close</button>
+        <button type="submit" class="button">Done</button>
     </form>
 
     <th:block th:unless="${model.editable}">

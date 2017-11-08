@@ -576,7 +576,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .withInvites(
                         newNewUserStagedInviteResource()
                                 .withEmail("test1@test.com", "test2@test.com")
-                                .withName("Tester 1", "Tester 2")
+                                .withName("Tester One", "Tester Two")
                                 .withInnovationAreaId(1L)
                                 .withCompetitionId(competition.getId())
                                 .build(2)
@@ -590,9 +590,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .param("inviteNewUsers", "")
                 .param("selectedInnovationArea", "1")
                 .param("invites[0].email", "test1@test.com")
-                .param("invites[0].name", "Tester 1")
+                .param("invites[0].name", "Tester One")
                 .param("invites[1].email", "test2@test.com")
-                .param("invites[1].name", "Tester 2")
+                .param("invites[1].name", "Tester Two")
                 .param("page", "5"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s/assessors/invite?page=5", competition.getId())));
@@ -606,7 +606,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .withInvites(
                         newNewUserStagedInviteResource()
                                 .withEmail("test1@test.com")
-                                .withName("Tester 1")
+                                .withName("Tester One")
                                 .withInnovationAreaId(1L)
                                 .withCompetitionId(competition.getId())
                                 .build(1)
@@ -620,7 +620,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .param("inviteNewUsers", "")
                 .param("selectedInnovationArea", "1")
                 .param("invites[0].email", "test1@test.com")
-                .param("invites[0].name", "Tester 1"))
+                .param("invites[0].name", "Tester One"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s/assessors/invite?page=0", competition.getId())));
 
@@ -709,8 +709,51 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
         BindingResult bindingResult = returnedForm.getBindingResult();
 
-        assertEquals("Please enter a name.", bindingResult.getFieldError("invites[0].name").getDefaultMessage());
-        assertEquals("Please enter an email address.", bindingResult.getFieldError("invites[0].email").getDefaultMessage());
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(3, bindingResult.getFieldErrorCount());
+
+        assertEquals(2, bindingResult.getFieldErrorCount("invites[0].name"));
+        assertEquals(1, bindingResult.getFieldErrorCount("invites[0].email"));
+
+        assertTrue(bindingResult.getFieldErrors("invites[0].name").stream()
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("The name should have at least {2} characters.")));
+        assertTrue(bindingResult.getFieldErrors("invites[0].name").stream()
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a name.")));
+        assertTrue(bindingResult.getFieldErrors("invites[0].email").stream()
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter an email address.")));
+
+        InOrder inOrder = inOrder(competitionInviteRestService, categoryRestServiceMock);
+        inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
+        inOrder.verify(categoryRestServiceMock).getInnovationSectors();
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void inviteNewUsersFromInviteView_invalidNameAndEmail() throws Exception {
+        int page = 0;
+
+        AssessorCreatedInvitePageResource expectedPageResource = newAssessorCreatedInvitePageResource()
+                .withContent(emptyList())
+                .build();
+
+        when(competitionInviteRestService.getCreatedInvites(competition.getId(), page)).thenReturn(restSuccess(expectedPageResource));
+        when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(emptyList()));
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("inviteNewUsers", "")
+                .param("selectedInnovationArea", "1")
+                .param("invites[0].email", "invalid")
+                .param("invites[0].name", "1234"))
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("assessors/invite"))
+                .andReturn();
+
+        InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        BindingResult bindingResult = returnedForm.getBindingResult();
+
+        assertEquals("Please enter a valid name.", bindingResult.getFieldError("invites[0].name").getDefaultMessage());
+        assertEquals("Please enter a valid email address.", bindingResult.getFieldError("invites[0].email").getDefaultMessage());
 
         InOrder inOrder = inOrder(competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);

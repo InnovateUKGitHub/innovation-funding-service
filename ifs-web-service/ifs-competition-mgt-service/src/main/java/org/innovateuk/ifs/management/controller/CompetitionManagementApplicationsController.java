@@ -105,7 +105,7 @@ public class CompetitionManagementApplicationsController {
         return "competition/ineligible-applications";
     }
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'ifs_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_admin')")
     @GetMapping("/unsuccessful")
     public String unsuccessfulApplications(Model model,
                                            HttpServletRequest request,
@@ -123,11 +123,10 @@ public class CompetitionManagementApplicationsController {
         return "competition/unsuccessful-applications";
     }
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'ifs_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_admin')")
     @GetMapping("/manage")
     public String manageApplications(Model model,
-                                     @PathVariable("competitionId") long competitionId,
-                                     UserResource loggedInUser) {
+                                     @PathVariable("competitionId") long competitionId) {
 
         model.addAttribute("model", navigateApplicationsModelPopulator.populateModel(competitionId));
         return "competition/navigate-applications";

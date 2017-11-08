@@ -3,7 +3,7 @@ package org.innovateuk.ifs.management.model;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsAcceptedViewModel;
@@ -32,12 +32,12 @@ public class CompetitionInviteAssessorsAcceptedModelPopulator extends Competitio
     private CategoryRestService categoryRestService;
 
     @Autowired
-    private CompetitionsRestService competitionsRestService;
+    private CompetitionRestService competitionRestService;
 
     public InviteAssessorsAcceptedViewModel populateModel(long competitionId,
                                                           int page,
                                                           String originQuery) {
-        CompetitionResource competition = competitionsRestService
+        CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
