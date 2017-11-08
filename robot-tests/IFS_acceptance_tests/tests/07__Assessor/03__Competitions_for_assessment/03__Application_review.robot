@@ -247,23 +247,23 @@ the user clicks previous and goes to the page
 the finance summary total should be correct
     Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £200,903
     Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(3)    30%
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    £57,803
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    £2,468
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    £140,632
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    £200,903
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    £57,803
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    £2,468
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    £140,632
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    57,803
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    2,468
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    140,632
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    200,903
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    57,803
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    2,468
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    140,632
 
 the project cost breakdown total should be correct
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    £200,903
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(3)    £3,081
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(4)    £0
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(5)    £100,200
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(6)    £552
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(7)    £90,000
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(8)    £5,970
-    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(9)    £1,100
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    200,903
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(3)    3,081
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(4)    0
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(5)    100,200
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(6)    552
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(7)    90,000
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(8)    5,970
+    Element Should Contain    css=.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(9)    1,100
 
 The status of the appllications should be correct
     [Arguments]    ${APPLICATION}    ${STATUS}

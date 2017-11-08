@@ -10,6 +10,7 @@ import org.innovateuk.ifs.commons.security.SecuritySetter;
 import org.innovateuk.ifs.commons.security.authentication.token.Authentication;
 import org.innovateuk.ifs.commons.service.HttpHeadersUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.rest.RestResultHandlingHttpMessageConverter;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
 import org.junit.Ignore;
@@ -31,7 +32,7 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.OK;
 
 /**
- * Tests for the {org.innovateuk.ifs.rest.RestResultHandlingHttpMessageConverter}, to assert that it can take successful
+ * Tests for the {@link RestResultHandlingHttpMessageConverter}, to assert that it can take successful
  * RestResults from Controllers and convert them into the "body" of the RestResult, and that it can take failing RestResults
  * and convert them into {@link RestErrorResponse} objects.
  */

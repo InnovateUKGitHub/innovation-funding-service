@@ -2,6 +2,7 @@ package org.innovateuk.ifs.nonifs.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.innovateuk.ifs.nonifs.formpopulator.NonIfsDetailsFormPopulator;
@@ -27,7 +28,6 @@ import java.util.function.Supplier;
 @Controller
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class NonIfsCompetitionController {
-    public static final String TEMPLATE_PATH = "dashboard/";
     private static final String FORM_ATTR = "form";
 
     @Autowired
@@ -40,9 +40,13 @@ public class NonIfsCompetitionController {
     @Autowired
     private CompetitionService competitionService;
 
+    @Autowired
+    private CompetitionSetupRestService competitionSetupRestService;
+
     @GetMapping("/non-ifs-competition/create")
     public String create() {
-        CompetitionResource competition = competitionService.createNonIfs();
+        CompetitionResource competition = competitionSetupRestService.createNonIfs()
+                .getSuccessObjectOrThrowException();
         return String.format("redirect:/non-ifs-competition/setup/%s", competition.getId());
     }
 

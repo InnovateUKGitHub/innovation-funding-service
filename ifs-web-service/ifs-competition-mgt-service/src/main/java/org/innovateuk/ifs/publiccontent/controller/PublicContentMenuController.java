@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.publiccontent.form.PublishForm;
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentMenuPopulator;
@@ -37,16 +38,19 @@ public class PublicContentMenuController {
     private PublicContentService publicContentService;
 
     @Autowired
-    private CompetitionsRestService competitionsRestService;
+    private CompetitionRestService competitionRestService;
+
+    @Autowired
+    private CompetitionSetupService competitionSetupService;
 
     @GetMapping("/{competitionId}")
     public String publicContentMenu(Model model,
                                     @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                     HttpServletRequest request) {
-        CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        if (!competition.isNonIfs() && !competition.isInitialDetailsComplete()) {
+        if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -60,10 +64,10 @@ public class PublicContentMenuController {
                           BindingResult bindingResult,
                           ValidationHandler validationHandler,
                           HttpServletRequest request) {
-        CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        if (!competition.isNonIfs() && !competition.isInitialDetailsComplete()) {
+        if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 

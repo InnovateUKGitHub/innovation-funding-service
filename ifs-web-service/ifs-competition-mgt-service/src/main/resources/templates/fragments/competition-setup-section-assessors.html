@@ -124,7 +124,7 @@
                 <dd th:text="${competitionSetupForm.assessorCount}"></dd>
 
                 <dt>How much do assessors receive per application?</dt>
-                <dd>&pound;<th:block th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'COMMA')}"></dd>
+                <dd>&pound;<th:block th:text="${#numbers.formatInteger(competitionSetupForm.assessorPay, 0, 'DEFAULT')}"></dd>
 
                 <dt>Enable assessment panel for this competition?</dt>
                 <dd th:text="${competitionSetupForm.hasAssessmentPanel} ? 'Yes' : 'No' "/>

@@ -23,13 +23,14 @@ public class MonitoringOfficerViewModel {
     private CompetitionSummaryResource competitionSummary;
     private boolean existingMonitoringOfficer;
     private boolean editMode;
+    private boolean editable;
     private List<String> primaryAddressLines;
 
     public MonitoringOfficerViewModel(Long projectId, String projectTitle, String area, AddressResource primaryAddress,
                                              LocalDate targetProjectStartDate, String projectManagerName,
                                              List<String> partnerOrganisationNames, String leadOrganisationName,
                                              CompetitionSummaryResource competitionSummary, boolean existingMonitoringOfficer,
-                                             boolean editMode) {
+                                             boolean editMode, boolean editable) {
         this.projectId = projectId;
         this.projectTitle = projectTitle;
         this.area = area;
@@ -41,6 +42,7 @@ public class MonitoringOfficerViewModel {
         this.competitionSummary = competitionSummary;
         this.existingMonitoringOfficer = existingMonitoringOfficer;
         this.editMode = editMode;
+        this.editable = editable;
     }
 
     public Long getProjectId() {
@@ -100,10 +102,14 @@ public class MonitoringOfficerViewModel {
     }
 
     public boolean isDisplayChangeMonitoringOfficerLink() {
-        return isReadOnly();
+        return isReadOnly() && isEditable();
     }
 
     public boolean isDisplayAssignMonitoringOfficerButton() {
-        return isEditMode();
+        return isEditMode() && isEditable();
+    }
+
+    public boolean isEditable() {
+        return editable;
     }
 }

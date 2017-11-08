@@ -39,7 +39,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -221,9 +220,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
-
         List<Competition> competitions = competitionRepository.findFeedbackReleased();
-        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
+        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition).stream().sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate())).collect(Collectors.toList()));
     }
 
     @Override

@@ -193,14 +193,14 @@ partner fills in his bank details
     wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  jQuery=.button:contains("Submit bank account details")
     wait until keyword succeeds without screenshots  30 s  500 ms  the user clicks the button/link  jQuery=.button[name="submit-app-details"]
 
-Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
-    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
-
 finance contacts are selected and bank details are approved
     log in as a different user      &{lead_applicant_credentials}
     the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/details
     ${finance_contact}  ${val}=  Run Keyword And Ignore Error Without Screenshots  the user should not see the element  jQuery=#project-details-finance tr:nth-of-type(1):contains("Yes")
     run keyword if  '${finance_contact}' == 'PASS'  run keywords  partners submit their finance contacts  bank details are approved for all businesses
+
+Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     The user logs-in in new browser  &{lead_applicant_credentials}
