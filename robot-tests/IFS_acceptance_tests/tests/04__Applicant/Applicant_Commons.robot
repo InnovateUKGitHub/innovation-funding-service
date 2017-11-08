@@ -228,7 +228,7 @@ the academic user fills in his finances
 the academic fills in the project costs
     [Arguments]  ${application}
     the user clicks the button/link       link=Your project costs
-    The user enters text to a text field  id=tsb-ref  ${application}
+    The user enters text to a text field  css=input[name$="tsb_reference"]  ${application}
     The user enters text to a text field  id=incurred-staff  999.999
     The user enters text to a text field  id=travel    999.999
     The user enters text to a text field  id=other    999.999

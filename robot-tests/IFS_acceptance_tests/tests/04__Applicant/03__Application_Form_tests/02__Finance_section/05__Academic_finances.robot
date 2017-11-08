@@ -127,8 +127,8 @@ Mark all as complete
     And the user navigates to the academic application finances
     And the user clicks the button/link            link=Your project costs
     And the user should see the element            link=testing.pdf (opens in a new window)
-    When the user enters text to a text field      id=tsb-ref    123123
-    Then textfield value should be                 id=tsb-ref    123123
+    When the user enters text to a text field      css=input[name$="tsb_reference"]  123123
+    Then textfield value should be                 css=input[name$="tsb_reference"]  123123
     When the user clicks the button/link           jQuery=button:contains("Mark as complete")
     Then the user should see the text in the page  Your finances
     And the user navigates to the finance overview of the academic
@@ -174,7 +174,7 @@ the academic partner fills the finances
     The user enters text to a text field  id=indirect    999.999
     The user enters text to a text field  id=exceptions-staff    999.999
     The user enters text to a text field  id=exceptions-other-direct    999.999
-    The user enters text to a text field  id=tsb-ref    123123
+    The user enters text to a text field  css=input[name$="tsb_reference"]  123123
     Mouse Out                             css=input
     wait for autosave
 
@@ -227,7 +227,7 @@ the applicant enters invalid inputs
     The user enters text to a text field  id=indirect    999.999
     The user enters text to a text field  id=exceptions-staff    999.999
     The user enters text to a text field  id=exceptions-other-direct    999.999
-    The user enters text to a text field  id=tsb-ref    ${EMPTY}
+    The user enters text to a text field  css=input[name$="tsb_reference"]   ${EMPTY}
 
 the field should not contain the currency symbol
     Textfield Value Should Be  id=incurred-staff    100
