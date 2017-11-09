@@ -177,3 +177,26 @@ include::{snippets}/competition/get-open-queries/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/competition/get-open-queries/curl-request.adoc[]
+
+=== Get projects for which Spend Profile generation is pending, for a given competition
+==== Request
+include::{snippets}/competition/get-pending-spend-profiles/http-request.adoc[]
+include::{snippets}/competition/get-pending-spend-profiles/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/get-pending-spend-profiles/http-response.adoc[]
+include::{snippets}/competition/get-pending-spend-profiles/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/get-pending-spend-profiles/curl-request.adoc[]
+
+=== Get count of projects for which Spend Profile generation is pending, for a given competition
+==== Request
+include::{snippets}/competition/count-pending-spend-profiles/http-request.adoc[]
+include::{snippets}/competition/count-pending-spend-profiles/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competition/count-pending-spend-profiles/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competition/count-pending-spend-profiles/curl-request.adoc[]
