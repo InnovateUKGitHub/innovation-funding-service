@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
+import org.innovateuk.ifs.competition.resource.CompetitionPendingSpendProfilesResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -12,6 +13,7 @@ import org.springframework.util.MultiValueMap;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionOpenQueryResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionPendingSpendProfilesResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSearchResultItemListType;
 
 /**
@@ -57,5 +59,16 @@ public class CompetitionPostSubmissionRestServiceImpl extends BaseRestService im
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         String uriWithParams = buildPaginationUri(competitionsRestURL +  "/" + competitionId + "/unsuccessful-applications", pageNumber, pageSize, sortField, params);
         return getWithRestResult(uriWithParams, ApplicationPageResource.class);
+    }
+
+
+    @Override
+    public RestResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/pending-spend-profiles", competitionPendingSpendProfilesResourceListType());
+    }
+
+    @Override
+    public RestResult<Integer> countPendingSpendProfiles(long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/count-pending-spend-profiles", Integer.class);
     }
 }

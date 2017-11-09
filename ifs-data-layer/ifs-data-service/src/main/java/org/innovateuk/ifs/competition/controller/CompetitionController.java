@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
+import org.innovateuk.ifs.competition.resource.CompetitionPendingSpendProfilesResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
@@ -93,5 +94,15 @@ public class CompetitionController {
     @GetMapping("/count")
     public RestResult<CompetitionCountResource> count() {
         return competitionService.countCompetitions().toGetResponse();
+    }
+
+    @GetMapping("/{competitionId}/pending-spend-profiles")
+    public RestResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(@PathVariable(value = "competitionId") Long competitionId) {
+        return competitionService.getPendingSpendProfiles(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/{competitionId}/count-pending-spend-profiles")
+    public RestResult<Integer> countPendingSpendProfiles(@PathVariable(value = "competitionId") Long competitionId) {
+        return competitionService.countPendingSpendProfiles(competitionId).toGetResponse();
     }
 }

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.resource.CompetitionPendingSpendProfilesResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -73,5 +74,35 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
                 .andExpect(status().isOk());
 
         verify(competitionServiceMock, only()).removeInnovationLead(competitionId, innovationLeadUserId);
+    }
+
+    @Test
+    public void getPendingSpendProfiles() throws Exception {
+        final Long competitionId = 1L;
+
+        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles = new ArrayList<>();
+        when(competitionServiceMock.getPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfiles));
+
+        mockMvc.perform(get("/competition/{competitionId}/pending-spend-profiles", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(pendingSpendProfiles)));
+
+        verify(competitionServiceMock, only()).getPendingSpendProfiles(competitionId);
+
+    }
+
+    @Test
+    public void countPendingSpendProfiles() throws Exception {
+        final Long competitionId = 1L;
+        final Integer pendingSpendProfileCount = 3;
+
+        when(competitionServiceMock.countPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfileCount));
+
+        mockMvc.perform(get("/competition/{competitionId}/count-pending-spend-profiles", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(pendingSpendProfileCount)));
+
+        verify(competitionServiceMock, only()).countPendingSpendProfiles(competitionId);
+
     }
 }
