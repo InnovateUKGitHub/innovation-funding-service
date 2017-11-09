@@ -2,7 +2,7 @@
 
 
 function getBuildLocation() {
-    echo "os-files-tmp"
+    echo "build/resources/main"
 }
 
 function isNamedEnvironment() {
@@ -415,14 +415,6 @@ function blockUntilServiceIsUp() {
     oc get routes ${SVC_ACCOUNT_CLAUSE}
 }
 
-function cloneConfig() {
-    cp -r os-files $(getBuildLocation)
-}
-
-function cleanUp() {
-    rm -rf $(getBuildLocation)
-    rm -rf shibboleth
-}
 
 function scaleDataService() {
     oc scale dc data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}

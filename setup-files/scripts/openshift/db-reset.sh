@@ -37,8 +37,6 @@ function dbReset() {
 }
 
 # Entry point
-cleanUp
-cloneConfig
 
 if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
 

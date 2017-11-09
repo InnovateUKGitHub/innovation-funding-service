@@ -3,6 +3,15 @@ if(project.hasProperty('profile') && profile == 'automated') {
     ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 }
 
+processResources {
+
+    from ('os-files') {
+        include '**/*.yml'
+    }
+    filesMatching("*.*") {
+        expand project.properties
+    }
+}
 
 // Production tasks
 
@@ -12,16 +21,19 @@ task osStageProduction(type:Exec) {
 }
 
 task osDeployProduction(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
 task osUpgradeProduction(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "production", project.version]
 }
 
 task dbAnonymisedDumpProduction(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "production", project.version]
 }
@@ -35,21 +47,25 @@ task osStageUat(type:Exec) {
 }
 
 task osDeployUat(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
 task osUpgradeUat(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
 task dbResetUat(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "uat", project.version]
 }
 
 task dbAnonymisedDumpUat(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "uat", project.version]
 }
@@ -63,11 +79,13 @@ task osStageDemo(type:Exec) {
 }
 
 task osDeployDemo(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "demo", project.version]
 }
 
 task osUpgradeDemo(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "demo", project.version]
 }
@@ -81,21 +99,25 @@ task osStageSysint(type:Exec) {
 }
 
 task osDeploySysint(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
 task osUpgradeSysint(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
 task dbResetSysint(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
 
 task osDeployFractalSysint(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
     args = [openshiftEnv, "sysint", project.version]
 }
@@ -109,16 +131,19 @@ task osStagePerf(type:Exec) {
 }
 
 task osDeployPerf(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "perf", project.version]
 }
 
 task osUpgradePerf(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "perf", project.version]
 }
 
 task dbResetPerf(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "perf", project.version]
 }
@@ -137,21 +162,25 @@ task osStageLocal(type:Exec) {
 }
 
 task osDeployLocal(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
 task osUpgradeLocal(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
 task dbResetLocal(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/db-reset.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
 task dbAnonymisedDumpLocal(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "local", project.version]
 }
@@ -165,21 +194,25 @@ task osStageRemote(type:Exec) {
 }
 
 task osDeployFractalRemote(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
 task osDeployRemote(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
 task osUpgradeRemote(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-upgrade.sh'
     args = [openshiftEnv, "remote", project.version]
 }
 
 task dbAnonymisedDumpRemote(type:Exec) {
+    dependsOn processResources
     executable = 'setup-files/scripts/openshift/db-anonymised-dump.sh'
     args = [openshiftEnv, "remote", project.version]
 }

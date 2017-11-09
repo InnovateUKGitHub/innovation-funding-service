@@ -49,8 +49,6 @@ function shibInit() {
 }
 
 # Entry point
-cleanUp
-cloneConfig
 tailorAppInstance
 useContainerRegistry
 deploy
@@ -67,4 +65,3 @@ then
     scaleDataService
 fi
 
-cleanUp

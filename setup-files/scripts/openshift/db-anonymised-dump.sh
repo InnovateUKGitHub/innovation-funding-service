@@ -71,10 +71,6 @@ function shutdownMysqlDumpPodAfterUse() {
 }
 
 # Entry point
-echo "cleanUp"
-cleanUp
-echo "cloneConfig"
-cloneConfig
 
 if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export DB_NAME=ifs

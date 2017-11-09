@@ -99,8 +99,6 @@ function rolloutStatus {
 }
 
 # Entry point
-cleanUp
-cloneConfig
 tailorAppInstance
 useContainerRegistry
 upgradeServices
