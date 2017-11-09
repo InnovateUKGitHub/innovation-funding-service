@@ -23,11 +23,11 @@
 
 <th:block th:fragment="global-alert-message">
     <div th:if="${alertMessages}" id="global-alert-message">
-        <div th:each="alertMessage : ${alertMessages}">
+        <th:block th:each="alertMessage : ${alertMessages}">
             <div class="event-alert event-warning no-animation">
                 <p><span ifs:utext="${alertMessage.message}"></span></p>
             </div>
-        </div>
+        </th:block>
     </div>
 </th:block>
 
