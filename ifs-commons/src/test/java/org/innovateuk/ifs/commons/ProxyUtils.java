@@ -11,7 +11,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class ProxyUtils {
 
     public static List<Object> unwrapProxies(Collection<Object> services) {
-        return simpleMap(services, s -> unwrapProxy(s));
+        return simpleMap(services, ProxyUtils::unwrapProxy);
     }
 
     public static Object unwrapProxy(Object service){
