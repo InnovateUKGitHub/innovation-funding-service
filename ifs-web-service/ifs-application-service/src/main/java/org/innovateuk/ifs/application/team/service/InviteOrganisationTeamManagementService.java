@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.team.service;
 
 import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class InviteOrganisationTeamManagementService extends AbstractTeamManagementService {
+
     public ApplicationTeamManagementViewModel createViewModel(long applicationId, long inviteOrganisationId, UserResource loggedInUser) {
         return applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
                 applicationId, inviteOrganisationId, loggedInUser.getId());

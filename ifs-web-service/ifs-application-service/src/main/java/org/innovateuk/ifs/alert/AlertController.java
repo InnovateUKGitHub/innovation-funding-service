@@ -3,6 +3,7 @@ package org.innovateuk.ifs.alert;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.resource.AlertType;
 import org.innovateuk.ifs.alert.service.AlertRestService;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ public class AlertController {
     @Autowired
     private AlertRestService alertRestService;
 
+    @NotSecured("Not currently secured")
     @GetMapping("/findAllVisibleByType/{type}")
     public
     @ResponseBody

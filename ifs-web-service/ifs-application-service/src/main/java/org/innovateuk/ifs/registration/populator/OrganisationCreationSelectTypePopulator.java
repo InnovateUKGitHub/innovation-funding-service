@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.registration.populator;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.registration.viewmodel.OrganisationCreationSelectTypeViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
@@ -19,6 +20,7 @@ public class OrganisationCreationSelectTypePopulator {
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
 
+    @NotSecured("Not currently secured")
     public OrganisationCreationSelectTypeViewModel populate() {
         List<OrganisationTypeResource> orgTypes = organisationTypeRestService.getAll().getSuccessObject()
                 .stream()

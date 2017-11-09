@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.invite.service;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 
@@ -8,5 +9,6 @@ import org.innovateuk.ifs.invite.resource.InviteUserResource;
  */
 public interface InviteUserService {
 
+    @NotSecured("Not currently secured")
     ServiceResult<Void> saveUserInvite(InviteUserResource inviteUserResource);
 }

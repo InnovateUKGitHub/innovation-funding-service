@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestServi
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +49,7 @@ public class InnovationAreaController {
     @Autowired
     private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
 
+    @NotSecured("Not currently secured")
     @GetMapping
     public String getInnovationAreas(Model model, @PathVariable("applicationId") Long applicationId, @PathVariable("questionId") Long questionId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
@@ -62,6 +64,7 @@ public class InnovationAreaController {
         return "application/innovation-areas";
     }
 
+    @NotSecured("Not currently secured")
     @PostMapping
     public String submitInnovationAreaChoice(@Valid @ModelAttribute("form") InnovationAreaForm innovationAreaForm, BindingResult bindingResult, HttpServletResponse response,
                                              ValidationHandler validationHandler, Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {

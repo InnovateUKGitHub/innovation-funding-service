@@ -3,6 +3,7 @@ package org.innovateuk.ifs.registration.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
@@ -29,8 +30,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 /**
  * Provides a base class for each of the organisation registration controllers.
  */
-@Controller
-public class AbstractOrganisationCreationController {
+public abstract class AbstractOrganisationCreationController {
 
     protected static final String BASE_URL = "/organisation/create";
     protected static final String LEAD_ORGANISATION_TYPE = "lead-organisation-type";
@@ -60,6 +60,7 @@ public class AbstractOrganisationCreationController {
 
     protected Validator validator;
 
+    @NotSecured("Not currently secured")
     @Autowired
     @Qualifier("mvcValidator")
     public void setValidator(Validator validator) {

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
     private SectionService sectionService;
 
     //TODO: IFS-673 - this function is calling the data layer 3 times, could be done in one call
+    @NotSecured("Not currently secured")
     public void handleMarkAcademicFinancesAsNotRequired(Long organisationType, SectionResource selectedSection, Long applicationId, Long competitionId, Long processRoleId) {
         if (SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType())
                 && OrganisationTypeEnum.RESEARCH.getId().equals(organisationType)) {
@@ -33,6 +35,7 @@ public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
         }
     }
 
+    @NotSecured("Not currently secured")
     public void handleStateAid(Map<String, String[]> params, ApplicationResource application, ApplicationForm form, SectionResource selectedSection) {
         if (isMarkSectionAsCompleteRequest(params)) {
             application.setStateAidAgreed(form.isStateAidAgreed());
@@ -41,6 +44,7 @@ public class ApplicationSectionFinanceSaver extends AbstractApplicationSaver {
         }
     }
 
+    @NotSecured("Not currently secured")
     public void handleRequestFundingRequests(Map<String, String[]> params, Long applicationId, Long competitionId, Long processRoleId) {
         if (isNotRequestingFundingRequest(params)) {
             setRequestingFunding(NOT_REQUESTING_FUNDING, applicationId, competitionId, processRoleId);

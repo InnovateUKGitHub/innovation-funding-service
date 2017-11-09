@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.service.AbstractTeamManagementService;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
@@ -37,6 +38,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
 
     protected abstract String getMappingFormatString(long applicationId, long organisationId);
 
+    @NotSecured("Not currently secured")
     @GetMapping
     public String getUpdateOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
@@ -50,6 +52,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         });
     }
 
+    @NotSecured("Not currently secured")
     @PostMapping(params = {"addStagedInvite"})
     public String addStagedInvite(Model model,
                                   @PathVariable("applicationId") long applicationId,
@@ -62,6 +65,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         });
     }
 
+    @NotSecured("Not currently secured")
     @PostMapping(params = {"removeStagedInvite"})
     public String removeStagedInvite(Model model,
                                      @PathVariable("applicationId") long applicationId,
@@ -72,6 +76,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
             redirectToOrganisationTeamPage(applicationId, organisationId));
     }
 
+    @NotSecured("Not currently secured")
     @PostMapping(params = {"executeStagedInvite"})
     public String inviteApplicant(Model model,
                                   @PathVariable("applicationId") long applicationId,
@@ -92,6 +97,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         });
     }
 
+    @NotSecured("Not currently secured")
     @PostMapping(params = {"removeInvite"})
     public String removeApplicant(Model model,
                                   @PathVariable("applicationId") long applicationId,
@@ -113,6 +119,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         }) ;
     }
 
+    @NotSecured("Not currently secured")
     @GetMapping(params = {"deleteOrganisation"})
     public String confirmDeleteInviteOrganisation(Model model,
                                                   @PathVariable("applicationId") long applicationId,
@@ -125,6 +132,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         });
     }
 
+    @NotSecured("Not currently secured")
     @PostMapping(params = {"deleteOrganisation"})
     public String deleteOrganisation(Model model,
                                      @PathVariable("applicationId") long applicationId,
@@ -143,15 +151,15 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         });
     }
 
-    public String redirectToApplicationTeamPage(long applicationId) {
+    protected String redirectToApplicationTeamPage(long applicationId) {
         return format("redirect:/application/%s/team", applicationId);
     }
 
-    public String redirectToOrganisationTeamPage(long applicationId, long organisationId) {
+    protected String redirectToOrganisationTeamPage(long applicationId, long organisationId) {
         return format("redirect:%s", getMappingFormatString(applicationId, organisationId));
     }
 
-    public String validateOrganisationAndApplicationIds(Long applicationId, Long organisationId, Supplier<String> supplier) {
+    protected String validateOrganisationAndApplicationIds(Long applicationId, Long organisationId, Supplier<String> supplier) {
         if(teamManagementService.applicationAndOrganisationIdCombinationIsValid(applicationId, organisationId)) {
             return supplier.get();
         }

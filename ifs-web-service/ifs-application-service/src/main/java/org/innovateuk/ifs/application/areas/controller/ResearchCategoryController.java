@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationResearchCategoryRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
@@ -50,6 +51,7 @@ public class ResearchCategoryController {
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
+    @NotSecured("Not currently secured")
     @GetMapping
     public String getResearchCategories(Model model, @PathVariable Long applicationId, @PathVariable Long questionId,
                                         HttpServletRequest request) {
@@ -69,6 +71,7 @@ public class ResearchCategoryController {
         return "application/research-categories";
     }
 
+    @NotSecured("Not currently secured")
     @PostMapping
     public String submitResearchCategoryChoice(@ModelAttribute("form") @Valid ResearchCategoryForm researchCategoryForm,
                                                BindingResult bindingResult,

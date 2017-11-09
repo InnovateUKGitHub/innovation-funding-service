@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,7 +50,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 		return serviceSuccess();
 	}
 
-	public boolean isAllowedFundingDecision(FundingDecision fundingDecision) {
+	private boolean isAllowedFundingDecision(FundingDecision fundingDecision) {
 		if(fundingDecision.equals(FundingDecision.UNDECIDED)) {
 			return false;
 		}

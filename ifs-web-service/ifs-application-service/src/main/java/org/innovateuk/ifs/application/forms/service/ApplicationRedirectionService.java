@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,7 @@ public class ApplicationRedirectionService {
     @Autowired
     private ApplicationService applicationService;
 
+    @NotSecured("Not currently secured")
     public String redirectToSection(SectionType type, Long applicationId) {
         ApplicationResource application = applicationService.getById(applicationId);
         List<SectionResource> sections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), type);
@@ -40,6 +42,7 @@ public class ApplicationRedirectionService {
         return "redirect:/application/" + applicationId;
     }
 
+    @NotSecured("Not currently secured")
     public String getRedirectUrl(HttpServletRequest request, Long applicationId, Optional<SectionType> sectionType) {
         if (request.getParameter("submit-section") == null
                 && (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||

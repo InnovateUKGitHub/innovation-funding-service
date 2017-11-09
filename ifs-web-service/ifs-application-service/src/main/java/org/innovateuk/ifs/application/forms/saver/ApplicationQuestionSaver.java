@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -54,6 +55,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
     @Autowired
     private ApplicationQuestionApplicationDetailsSaver detailsSaver;
 
+    @NotSecured("Not currently secured")
     public ValidationMessages saveApplicationForm(Long applicationId,
                                                   ApplicationForm form,
                                                   Long questionId,

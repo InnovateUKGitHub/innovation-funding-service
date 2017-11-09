@@ -71,15 +71,7 @@ public final class CollectionFunctions {
     }
 
     private static <T> List<T> doCombineLists(List<T>... lists) {
-        List<T> combinedList = new ArrayList<>();
-
-        for (List<T> list : lists) {
-            if (list != null && !list.isEmpty()) {
-                combinedList.addAll(list);
-            }
-        }
-
-        return combinedList;
+        return flattenLists(Arrays.asList(lists));
     }
 
     /**
@@ -237,22 +229,6 @@ public final class CollectionFunctions {
         return Optional.of(list.get(0));
     }
 
-    /**
-     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
-     *
-     * @param list
-     * @param mappingFn
-     * @param <T>
-     * @param <R>
-     * @return
-     */
-    public static <T, R> List<R> simpleMap(List<T> list, Function<T, R> mappingFn) {
-        if (list == null || list.isEmpty()) {
-            return emptyList();
-        }
-        return list.stream().map(mappingFn).collect(toList());
-    }
-
     public static <T, R> R[] simpleMapArray(T[] array, Function<T, R> mappingFn, Class<R> clazz) {
         if (array == null || array.length == 0){
             return (R[]) Array.newInstance(clazz, 0);
@@ -390,17 +366,17 @@ public final class CollectionFunctions {
     /**
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
      *
-     * @param set
+     * @param collection
      * @param mappingFn
      * @param <T>
      * @param <R>
      * @return
      */
-    public static <T, R> List<R> simpleMap(Set<T> set, Function<T, R> mappingFn) {
-        if (set == null || set.isEmpty()) {
+    public static <T, R> List<R> simpleMap(Collection<T> collection, Function<T, R> mappingFn) {
+        if (collection == null || collection.isEmpty()) {
             return emptyList();
         }
-        return set.stream().map(mappingFn).collect(toList());
+        return collection.stream().map(mappingFn).collect(toList());
     }
 
     /**
@@ -853,7 +829,7 @@ public final class CollectionFunctions {
 
     /**
      * A method that a list of length n with t the value of every element.
-     * @param int n - times to replicate t
+     * @param n - times to replicate t
      * @param <T>
      * @return
      */
