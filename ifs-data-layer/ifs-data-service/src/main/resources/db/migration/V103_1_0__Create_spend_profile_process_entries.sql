@@ -12,7 +12,7 @@ INSERT INTO activity_state (activity_type, state) VALUES
 INSERT INTO process (end_date, event, last_modified, start_date, process_type, target_id, participant_id, activity_state_id)
   SELECT null, d.event, NOW(), NOW(), 'SpendProfileProcess', d.target_id, d.participant_id, a.id
   FROM (
-    SELECT sp.project_id AS target_id, pu.id AS participant_id,
+    SELECT po.project_id AS target_id, pu.id AS participant_id,
         CASE
             WHEN sp.sp_count = po.partner_count AND sp.sp_count = spa.sp_approved_count THEN 'spend-profile-approved'
             WHEN sp.sp_count = po.partner_count AND sp.sp_count = spr.sp_rejected_count THEN 'spend-profile-rejected'
@@ -25,7 +25,7 @@ INSERT INTO process (end_date, event, last_modified, start_date, process_type, t
     LEFT JOIN (SELECT project_id, COUNT(organisation_id) AS sp_approved_count FROM spend_profile WHERE approval='APPROVED' GROUP BY project_id) AS spa ON sp.project_id = spa.project_id
     LEFT JOIN (SELECT project_id, COUNT(organisation_id) AS sp_rejected_count FROM spend_profile WHERE approval='REJECTED' GROUP BY project_id) AS spr ON sp.project_id = spr.project_id
     LEFT JOIN (SELECT project_id, COUNT(organisation_id) AS sp_ready_to_submit_count FROM spend_profile WHERE approval='UNSET' AND marked_as_complete ='1' GROUP BY project_id) AS sprtc ON sp.project_id = sprtc.project_id
-    JOIN project p ON p.id = sp.project_id
+    JOIN project p ON p.id = po.project_id
     JOIN application app ON app.id = p.application_id
     JOIN process_role pr ON pr.application_id = app.id AND pr.role_id = 1
     JOIN project_user pu ON pu.project_id = p.id AND pu.user_id = pr.user_id and pu.project_role = 'PROJECT_PARTNER'
