@@ -15,36 +15,36 @@ import java.util.Optional;
  */
 public interface OrganisationService {
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     OrganisationResource getOrganisationById(Long organisationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     OrganisationResource getOrganisationForUser(Long userId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     OrganisationResource getOrganisationByIdForAnonymousUserFlow(Long organisationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     OrganisationResource createOrMatch(OrganisationResource organisation);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     OrganisationResource createAndLinkByInvite(OrganisationResource organisation, String inviteHash);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     OrganisationResource updateNameAndRegistration(OrganisationResource organisation);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     OrganisationSearchResult getCompanyHouseOrganisation(String organisationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Long getOrganisationType(Long userId, Long applicationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Optional<OrganisationResource> getOrganisationForUser(Long userId, List<ProcessRoleResource> userApplicationRoles);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     boolean userIsPartnerInOrganisationForProject(Long projectId, Long organisationId, Long userId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Long getOrganisationIdFromUser(Long projectId, UserResource user) throws ForbiddenActionException;
 }

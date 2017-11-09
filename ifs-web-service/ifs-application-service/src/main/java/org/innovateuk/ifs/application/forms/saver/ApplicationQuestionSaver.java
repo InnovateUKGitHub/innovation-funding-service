@@ -55,7 +55,7 @@ public class ApplicationQuestionSaver extends AbstractApplicationSaver {
     @Autowired
     private ApplicationQuestionApplicationDetailsSaver detailsSaver;
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public ValidationMessages saveApplicationForm(Long applicationId,
                                                   ApplicationForm form,
                                                   Long questionId,

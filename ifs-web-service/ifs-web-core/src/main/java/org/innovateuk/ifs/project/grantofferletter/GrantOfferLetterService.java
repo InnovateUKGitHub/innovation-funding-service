@@ -14,58 +14,58 @@ import java.util.Optional;
  */
 public interface GrantOfferLetterService {
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Optional<FileEntryResource> getSignedGrantOfferLetterFileDetails(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Optional<ByteArrayResource> getGrantOfferFile(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Optional<FileEntryResource> getGrantOfferFileDetails(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<FileEntryResource> addSignedGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<FileEntryResource> addGrantOfferLetter(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> removeGrantOfferLetter(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> removeSignedGrantOfferLetter(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> submitGrantOfferLetter(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> sendGrantOfferLetter(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Optional<ByteArrayResource> getAdditionalContractFile(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<FileEntryResource> addAdditionalContractFile(Long projectId, String contentType, long fileSize, String originalFilename, byte[] bytes);
 
 }

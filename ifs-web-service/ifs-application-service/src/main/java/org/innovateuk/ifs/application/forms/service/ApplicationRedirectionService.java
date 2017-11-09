@@ -32,7 +32,7 @@ public class ApplicationRedirectionService {
     @Autowired
     private ApplicationService applicationService;
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public String redirectToSection(SectionType type, Long applicationId) {
         ApplicationResource application = applicationService.getById(applicationId);
         List<SectionResource> sections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), type);
@@ -42,7 +42,7 @@ public class ApplicationRedirectionService {
         return "redirect:/application/" + applicationId;
     }
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public String getRedirectUrl(HttpServletRequest request, Long applicationId, Optional<SectionType> sectionType) {
         if (request.getParameter("submit-section") == null
                 && (request.getParameter(ASSIGN_QUESTION_PARAM) != null ||

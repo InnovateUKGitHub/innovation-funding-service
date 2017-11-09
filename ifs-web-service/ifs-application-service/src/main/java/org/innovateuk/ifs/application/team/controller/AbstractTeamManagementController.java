@@ -38,7 +38,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
 
     protected abstract String getMappingFormatString(long applicationId, long organisationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     @GetMapping
     public String getUpdateOrganisation(Model model,
                                         @PathVariable("applicationId") long applicationId,
@@ -52,7 +52,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         });
     }
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     @PostMapping(params = {"addStagedInvite"})
     public String addStagedInvite(Model model,
                                   @PathVariable("applicationId") long applicationId,
@@ -65,7 +65,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         });
     }
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     @PostMapping(params = {"removeStagedInvite"})
     public String removeStagedInvite(Model model,
                                      @PathVariable("applicationId") long applicationId,
@@ -76,7 +76,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
             redirectToOrganisationTeamPage(applicationId, organisationId));
     }
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     @PostMapping(params = {"executeStagedInvite"})
     public String inviteApplicant(Model model,
                                   @PathVariable("applicationId") long applicationId,
@@ -97,7 +97,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         });
     }
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     @PostMapping(params = {"removeInvite"})
     public String removeApplicant(Model model,
                                   @PathVariable("applicationId") long applicationId,
@@ -119,7 +119,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         }) ;
     }
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     @GetMapping(params = {"deleteOrganisation"})
     public String confirmDeleteInviteOrganisation(Model model,
                                                   @PathVariable("applicationId") long applicationId,
@@ -132,7 +132,7 @@ public abstract class AbstractTeamManagementController<TeamManagementServiceType
         });
     }
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     @PostMapping(params = {"deleteOrganisation"})
     public String deleteOrganisation(Model model,
                                      @PathVariable("applicationId") long applicationId,

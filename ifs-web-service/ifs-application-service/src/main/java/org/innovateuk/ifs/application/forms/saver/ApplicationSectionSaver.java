@@ -60,7 +60,7 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
     @Autowired
     private ApplicationSectionFinanceSaver financeSaver;
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public ValidationMessages saveApplicationForm(ApplicationResource application,
                                                   Long competitionId,
                                                   ApplicationForm form,

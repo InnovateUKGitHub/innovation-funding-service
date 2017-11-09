@@ -13,45 +13,45 @@ import java.util.Optional;
  */
 public interface ProjectService {
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<ProjectUserResource> getProjectUsersForProject(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<OrganisationResource> getPartnerOrganisationsForProject(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ProjectResource getById(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ProjectResource getByApplicationId(Long applicationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<List<ProjectResource>> findByUser(Long userId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     OrganisationResource getLeadOrganisation(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     OrganisationResource getOrganisationByProjectAndUser(Long projectId, Long userId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     boolean isUserLeadPartner(Long projectId, Long userId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<ProjectUserResource> getLeadPartners(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<ProjectUserResource> getPartners(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<ProjectUserResource> getProjectUsersWithPartnerRole(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Optional<ProjectUserResource> getProjectManager(Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Boolean isProjectManager(Long userId, Long projectId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     PartnerOrganisationResource getPartnerOrganisation(Long projectId, Long organisationId);
 }

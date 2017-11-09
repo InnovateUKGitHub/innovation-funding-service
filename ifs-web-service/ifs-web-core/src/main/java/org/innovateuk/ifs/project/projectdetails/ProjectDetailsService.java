@@ -15,27 +15,27 @@ import java.util.List;
  */
 public interface ProjectDetailsService {
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> updateFinanceContact(ProjectOrganisationCompositeId composite, Long financeContactUserId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> updateProjectManager(Long projectId, Long projectManagerUserId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> updateProjectStartDate(Long projectId, LocalDate projectStartDate);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> updateAddress(Long leadOrganisationId, Long projectId, OrganisationAddressType addressType, AddressResource address);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> inviteFinanceContact (Long projectId, InviteProjectResource inviteProjectResource);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> inviteProjectManager (Long projectId, InviteProjectResource inviteProjectResource);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<List<InviteProjectResource>> getInvitesByProject(Long projectId);
 }

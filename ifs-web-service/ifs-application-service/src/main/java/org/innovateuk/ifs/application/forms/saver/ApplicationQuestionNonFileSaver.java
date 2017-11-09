@@ -30,7 +30,7 @@ public class ApplicationQuestionNonFileSaver extends AbstractApplicationSaver {
     @Autowired
     private FormInputRestService formInputRestService;
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public ValidationMessages saveNonFileUploadQuestions(List<QuestionResource> questions,
                                                          HttpServletRequest request,
                                                          Long userId,

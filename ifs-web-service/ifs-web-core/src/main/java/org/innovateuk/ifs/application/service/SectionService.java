@@ -14,54 +14,54 @@ import java.util.Set;
  * Interface for CRUD operations on {@link SectionResource} related data.
  */
 public interface SectionService {
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<ValidationMessages> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     void markAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     void markAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     SectionResource getById(Long sectionId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<Long> getCompleted(Long applicationId, Long organisationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<Long> getInCompleted(Long applicationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Map<Long, Set<Long>> getCompletedSectionsByOrganisation(Long applicationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Boolean allSectionsMarkedAsComplete(Long applicationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<SectionResource> filterParentSections(List<SectionResource> sections);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<SectionResource> getAllByCompetitionId(Long competitionId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     void removeSectionsQuestionsWithType(SectionResource section, FormInputType type);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     SectionResource getSectionByQuestionId(Long questionId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Set<Long> getQuestionsForSectionAndSubsections(Long sectionId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<SectionResource> getSectionsForCompetitionByType(Long competitionId, SectionType type);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     SectionResource getFinanceSection(Long competitionId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     SectionResource getOrganisationFinanceSection(Long competitionId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<SectionResource> findResourceByIdInList(List<Long> ids, List<SectionResource> list);
 }

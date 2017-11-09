@@ -14,30 +14,30 @@ import java.util.List;
  * consists of costs.
  */
 public interface FinanceService {
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ApplicationFinanceResource getApplicationFinanceByApplicationIdAndOrganisationId(Long applicationId, Long organisationId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ApplicationFinanceResource getApplicationFinanceDetails( Long userId, Long applicationId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId, Long organisationId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<ApplicationFinanceResource> getApplicationFinanceDetails(Long applicationId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ValidationMessages addCost(Long applicationFinanceId , Long questionId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     RestResult<Void> removeFinanceDocument(Long applicationFinanceId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     RestResult<FileEntryResource> getFinanceEntry(Long applicationFinanceFileEntryId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     RestResult<FileEntryResource> getFinanceEntryByApplicationFinanceId(Long applicationFinanceId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     RestResult<ByteArrayResource> getFinanceDocumentByApplicationFinance(Long applicationFinanceId);
 }

@@ -10,9 +10,9 @@ import java.util.Optional;
  */
 public interface StatusService {
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ProjectStatusResource getProjectStatus(Long projectId);
 }

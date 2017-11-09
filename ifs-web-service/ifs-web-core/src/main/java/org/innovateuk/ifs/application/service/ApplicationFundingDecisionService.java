@@ -13,12 +13,12 @@ import java.util.Optional;
  */
 public interface ApplicationFundingDecisionService {
 
-	@NotSecured("Not currently secured")
+	@NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
 	ServiceResult<Void> saveApplicationFundingDecisionData(Long competitionId, FundingDecision fundingDecision, List<Long> applicationIds);
 
-	@NotSecured("Not currently secured")
+	@NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
 	Optional<FundingDecision> getFundingDecisionForString(String fundingDecisionName);
 
-	@NotSecured("Not currently secured")
+	@NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
 	ServiceResult<Void> sendFundingNotifications(FundingNotificationResource fundingNotificationResource);
 }

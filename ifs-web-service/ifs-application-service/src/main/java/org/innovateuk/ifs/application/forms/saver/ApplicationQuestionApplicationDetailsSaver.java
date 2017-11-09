@@ -19,7 +19,7 @@ import static org.springframework.util.StringUtils.hasText;
 @Service
 public class ApplicationQuestionApplicationDetailsSaver extends AbstractApplicationSaver {
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public ValidationMessages handleApplicationDetailsValidationMessages(List<ValidationMessages> applicationMessages) {
         ValidationMessages toFieldErrors = new ValidationMessages();
 
@@ -38,7 +38,7 @@ public class ApplicationQuestionApplicationDetailsSaver extends AbstractApplicat
         return toFieldErrors;
     }
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public void setApplicationDetails(ApplicationResource application, ApplicationResource updatedApplication) {
         if (updatedApplication == null) {
             return;

@@ -9,6 +9,6 @@ import org.innovateuk.ifs.invite.resource.InviteUserResource;
  */
 public interface InviteUserService {
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> saveUserInvite(InviteUserResource inviteUserResource);
 }

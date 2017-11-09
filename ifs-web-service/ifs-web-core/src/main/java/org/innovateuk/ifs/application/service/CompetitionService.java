@@ -18,42 +18,42 @@ import java.util.List;
  */
 @Service
 public interface CompetitionService {
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     CompetitionResource getById(Long id);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<UserResource> findInnovationLeads(Long competitionId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     void addInnovationLead(Long competitionId, Long innovationLeadUserId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     void removeInnovationLead(Long competitionId, Long innovationLeadUserId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     CompetitionResource getPublishedById(Long id);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<CompetitionResource> getAllCompetitions();
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<CompetitionResource> getAllCompetitionsNotInSetup();
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<CompetitionTypeResource> getAllCompetitionTypes();
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<OrganisationTypeResource> getOrganisationTypes(long id);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<AssessorCountOptionResource> getAssessorOptionsForCompetitionType(Long competitionTypeId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     PublicContentItemResource getPublicContentOfCompetition(Long competitionId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ByteArrayResource downloadPublicContentAttachment(Long contentGroupId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     FileEntryResource getPublicContentFileDetails(Long contentGroupId);
 }

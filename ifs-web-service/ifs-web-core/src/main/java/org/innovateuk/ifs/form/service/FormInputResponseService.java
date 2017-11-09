@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public interface FormInputResponseService {
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Map<Long, FormInputResponseResource> mapFormInputResponsesToFormInput(List<FormInputResponseResource> responses);
 
 }

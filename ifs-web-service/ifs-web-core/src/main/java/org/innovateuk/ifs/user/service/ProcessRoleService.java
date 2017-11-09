@@ -10,21 +10,21 @@ import java.util.concurrent.Future;
  * Interface for CRUD operations on {@link ProcessRoleResource} related data.
  */
 public interface ProcessRoleService {
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ProcessRoleResource findProcessRole(Long userId, Long applicationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<ProcessRoleResource> findProcessRolesByApplicationId(Long applicationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Future<List<ProcessRoleResource>> findAssignableProcessRoles(Long applicationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Future<ProcessRoleResource> getById(Long id);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<ProcessRoleResource> getByApplicationId(Long applicationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     List<ProcessRoleResource> getByUserId(Long userId);
 }

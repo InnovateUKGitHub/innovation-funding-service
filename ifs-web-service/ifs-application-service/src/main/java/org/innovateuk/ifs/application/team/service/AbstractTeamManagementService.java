@@ -32,21 +32,21 @@ public abstract class AbstractTeamManagementService {
     @Autowired
     protected InviteOrganisationRestService inviteOrganisationRestService;
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public abstract boolean applicationAndOrganisationIdCombinationIsValid(Long applicationId, Long organisationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public abstract ApplicationTeamManagementViewModel createViewModel(long applicationId,
                                                                           long organisationId,
                                                                           UserResource loggedInUser);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public abstract ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId,
                                                                                 long organisationId,
                                                                                 ApplicationTeamUpdateForm form);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public abstract List<Long> getInviteIds(long applicationId, long organisationId);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     protected ApplicationInviteResource mapStagedInviteToInviteResource(ApplicationTeamUpdateForm applicationTeamUpdateForm,
                                                                         long applicationId,
                                                                         Long inviteOrganisationId) {
@@ -61,7 +61,7 @@ public abstract class AbstractTeamManagementService {
         return applicationInviteResource;
     }
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public ServiceResult<Void> removeInvite(long applicantInviteId) {
         return applicationService.removeCollaborator(applicantInviteId);
     }

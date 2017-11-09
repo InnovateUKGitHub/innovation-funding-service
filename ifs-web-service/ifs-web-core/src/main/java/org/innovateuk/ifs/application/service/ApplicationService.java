@@ -10,20 +10,20 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
  * Interface for CRUD operations on {@link ApplicationResource} related data.
  */
 public interface ApplicationService {
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ApplicationResource getById(Long applicationId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Boolean isApplicationReadyForSubmit(Long applicationId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ApplicationResource createApplication(Long competitionId, Long userId, String applicationName);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> save(ApplicationResource application);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     OrganisationResource getLeadOrganisation(Long applicationId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> removeCollaborator(Long applicationInviteId);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason);
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     Boolean showApplicationTeam(Long applicationId, Long userid);
 }

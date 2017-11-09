@@ -20,7 +20,7 @@ public class OrganisationCreationSelectTypePopulator {
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public OrganisationCreationSelectTypeViewModel populate() {
         List<OrganisationTypeResource> orgTypes = organisationTypeRestService.getAll().getSuccessObject()
                 .stream()

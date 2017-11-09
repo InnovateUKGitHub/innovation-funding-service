@@ -13,9 +13,9 @@ import java.util.Map;
  */
 public interface RegistrationService {
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     boolean isInviteForDifferentOrganisationThanUsersAndDifferentName(ApplicationInviteResource inviteResource, InviteOrganisationResource inviteOrganisation);
 
-    @NotSecured("Not currently secured")
+    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     boolean isInviteForDifferentOrganisationThanUsersButSameName(ApplicationInviteResource inviteResource, InviteOrganisationResource inviteOrganisation);
 }
