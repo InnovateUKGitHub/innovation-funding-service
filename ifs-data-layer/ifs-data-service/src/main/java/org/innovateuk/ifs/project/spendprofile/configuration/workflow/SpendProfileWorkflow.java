@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.project.spendprofile.resource.SpendProfileEvent
 import static org.innovateuk.ifs.project.spendprofile.resource.SpendProfileState.*;
 
 /**
- * Describes the workflow for the GOL section for Project Setup.
+ * Describes the workflow for the overall project Spend Profile section for Project Setup.
  */
 @Configuration
 @EnableStateMachine(name = "spendProfileStateMachine")
@@ -66,7 +66,7 @@ public class SpendProfileWorkflow extends StateMachineConfigurerAdapter<SpendPro
                 .and()
                 .withExternal()
                 .source(REJECTED)
-                .event(SPEND_PROFILE_REJECTED)
+                .event(SPEND_PROFILE_SUBMITTED)
                 .target(SUBMITTED);
     }
 }
