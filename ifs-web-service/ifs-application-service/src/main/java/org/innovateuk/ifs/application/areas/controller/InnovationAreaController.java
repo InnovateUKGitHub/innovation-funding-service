@@ -9,7 +9,6 @@ import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestServi
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.springframework.beans.factory.annotation.Autowired;
