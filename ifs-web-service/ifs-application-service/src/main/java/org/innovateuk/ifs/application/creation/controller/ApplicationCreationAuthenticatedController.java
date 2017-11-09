@@ -6,7 +6,6 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -48,7 +47,6 @@ public class ApplicationCreationAuthenticatedController {
     @Autowired
     protected UserService userService;
 
-    @NotSecured("Not currently secured")
     @GetMapping("/{competitionId}")
     public String view(Model model,
                        @PathVariable(COMPETITION_ID) Long competitionId,

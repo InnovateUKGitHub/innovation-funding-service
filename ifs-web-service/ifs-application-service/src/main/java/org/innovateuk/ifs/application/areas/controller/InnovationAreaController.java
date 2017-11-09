@@ -49,7 +49,6 @@ public class InnovationAreaController {
     @Autowired
     private ApplicationDetailsEditableValidator applicationDetailsEditableValidator;
 
-    @NotSecured("Not currently secured")
     @GetMapping
     public String getInnovationAreas(Model model, @PathVariable("applicationId") Long applicationId, @PathVariable("questionId") Long questionId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
@@ -64,7 +63,6 @@ public class InnovationAreaController {
         return "application/innovation-areas";
     }
 
-    @NotSecured("Not currently secured")
     @PostMapping
     public String submitInnovationAreaChoice(@Valid @ModelAttribute("form") InnovationAreaForm innovationAreaForm, BindingResult bindingResult, HttpServletResponse response,
                                              ValidationHandler validationHandler, Model model, @PathVariable Long applicationId, @PathVariable Long questionId) {

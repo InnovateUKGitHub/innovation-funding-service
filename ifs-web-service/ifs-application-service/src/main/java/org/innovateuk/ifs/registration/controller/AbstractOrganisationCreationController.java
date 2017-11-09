@@ -3,7 +3,6 @@ package org.innovateuk.ifs.registration.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
@@ -13,7 +12,6 @@ import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
@@ -60,10 +58,9 @@ public abstract class AbstractOrganisationCreationController {
 
     protected Validator validator;
 
-    @NotSecured("Not currently secured")
     @Autowired
     @Qualifier("mvcValidator")
-    public void setValidator(Validator validator) {
+    protected void setValidator(Validator validator) {
         this.validator = validator;
     }
 
