@@ -20,23 +20,23 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 function upgradeServices {
     # data-service
-    oc apply -f os-files-tmp/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/31-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     rolloutStatus "data-service"
 
     # services
-    oc apply -f os-files-tmp/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f os-files-tmp/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f os-files-tmp/41-assessment-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f os-files-tmp/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f os-files-tmp/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f os-files-tmp/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f os-files-tmp/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f os-files-tmp/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
-    oc apply -f os-files-tmp/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/4-application-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/5-front-door-service.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/41-assessment-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/42-competition-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/43-project-setup-mgt-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/44-project-setup-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/45-registration-svc.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
+    oc apply -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
 
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
-        oc apply -f os-files-tmp/sil-stub/80-sil-stub.yml ${SVC_ACCOUNT_CLAUSE}
+        oc apply -f $(getBuildLocation)/sil-stub/80-sil-stub.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
     watchStatus
