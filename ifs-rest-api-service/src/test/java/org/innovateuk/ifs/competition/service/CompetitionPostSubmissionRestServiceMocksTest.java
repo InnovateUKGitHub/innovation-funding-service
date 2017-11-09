@@ -5,6 +5,7 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
+import org.innovateuk.ifs.competition.resource.CompetitionPendingSpendProfilesResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.junit.Assert;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionOpenQueryListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionPendingSpendProfilesResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSearchResultItemListType;
 import static org.junit.Assert.*;
 
@@ -79,6 +81,30 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
         List<CompetitionOpenQueryResource> responses = service.getCompetitionOpenQueries(123L).getSuccessObject();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
+    }
+
+    @Test
+    public void getPendingSpendProfiles() {
+
+        List<CompetitionPendingSpendProfilesResource> returnedResponse = singletonList(new CompetitionPendingSpendProfilesResource());
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/pending-spend-profiles", competitionPendingSpendProfilesResourceListType(), returnedResponse);
+
+        List<CompetitionPendingSpendProfilesResource> response = service.getPendingSpendProfiles(123L).getSuccessObject();
+        assertNotNull(response);
+        Assert.assertEquals(returnedResponse, response);
+    }
+
+    @Test
+    public void countPendingSpendProfiles() {
+
+        Integer returnedResponse = 3;
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/count-pending-spend-profiles", Integer.class, returnedResponse);
+
+        Integer response = service.countPendingSpendProfiles(123L).getSuccessObject();
+        assertNotNull(response);
+        Assert.assertEquals(returnedResponse, response);
     }
 
     @Test

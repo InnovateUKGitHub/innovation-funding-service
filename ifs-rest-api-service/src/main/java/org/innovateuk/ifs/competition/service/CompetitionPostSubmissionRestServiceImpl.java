@@ -50,6 +50,16 @@ public class CompetitionPostSubmissionRestServiceImpl extends BaseRestService im
     }
 
     @Override
+    public RestResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/pending-spend-profiles", competitionPendingSpendProfilesResourceListType());
+    }
+
+    @Override
+    public RestResult<Integer> countPendingSpendProfiles(long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/count-pending-spend-profiles", Integer.class);
+    }
+
+    @Override
     public RestResult<Void> closeAssessment(long competitionId) {
         return putWithRestResult(String.format("%s/%s/close-assessment", competitionsRestURL, competitionId), Void.class);
     }
@@ -59,16 +69,5 @@ public class CompetitionPostSubmissionRestServiceImpl extends BaseRestService im
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         String uriWithParams = buildPaginationUri(competitionsRestURL +  "/" + competitionId + "/unsuccessful-applications", pageNumber, pageSize, sortField, params);
         return getWithRestResult(uriWithParams, ApplicationPageResource.class);
-    }
-
-
-    @Override
-    public RestResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(long competitionId) {
-        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/pending-spend-profiles", competitionPendingSpendProfilesResourceListType());
-    }
-
-    @Override
-    public RestResult<Integer> countPendingSpendProfiles(long competitionId) {
-        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/count-pending-spend-profiles", Integer.class);
     }
 }

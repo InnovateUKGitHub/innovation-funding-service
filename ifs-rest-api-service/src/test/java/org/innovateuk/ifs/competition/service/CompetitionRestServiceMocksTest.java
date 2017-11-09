@@ -180,28 +180,4 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         assertNotNull(responses);
         Assert.assertEquals(returnedResponse, responses);
     }
-
-    @Test
-    public void getPendingSpendProfiles() {
-
-        List<CompetitionPendingSpendProfilesResource> returnedResponse = singletonList(new CompetitionPendingSpendProfilesResource());
-
-        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/pending-spend-profiles", competitionPendingSpendProfilesResourceListType(), returnedResponse);
-
-        List<CompetitionPendingSpendProfilesResource> response = service.getPendingSpendProfiles(123L).getSuccessObject();
-        assertNotNull(response);
-        Assert.assertEquals(returnedResponse, response);
-    }
-
-    @Test
-    public void countPendingSpendProfiles() {
-
-        Integer returnedResponse = 3;
-
-        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/count-pending-spend-profiles", Integer.class, returnedResponse);
-
-        Integer response = service.countPendingSpendProfiles(123L).getSuccessObject();
-        assertNotNull(response);
-        Assert.assertEquals(returnedResponse, response);
-    }
 }
