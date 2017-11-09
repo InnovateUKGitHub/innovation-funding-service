@@ -27,7 +27,7 @@ Resource          ../../../resources/defaultResources.robot
 User cannot accept/reject an invite to an application that has been withdrawn
     [Documentation]    INFUND-4797
     [Tags]
-    When the user navigates to the page    ${server}/assessment/${WITHDRAWN_ASSESSMENT}/assignment
+    When the user navigates to the page              ${server}/assessment/${WITHDRAWN_ASSESSMENT}/assignment
     Then the user should see the text in the page    Invitation withdrawn
     [Teardown]    the user clicks the button/link    jQuery=#proposition-links a:contains(Dashboard)
 
@@ -35,8 +35,8 @@ Competition link should navigate to the applications
     [Documentation]    INFUND-3716
     [Tags]    HappyPath
     [Setup]
-    When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    Then The user should see the text in the page    Applications for assessment
+    When The user clicks the button/link   link=${IN_ASSESSMENT_COMPETITION_NAME}
+    Then the user should see the element   jQuery=h2:contains("Applications for assessment")
 
 Calculation of the applications for assessment should be correct
     Then the total calculation in dashboard should be correct    Applications for assessment    //div/form/div/ul/li
@@ -44,7 +44,7 @@ Calculation of the applications for assessment should be correct
 Details of the competition are visible
     [Documentation]    INFUND-3723
     [Tags]    HappyPath
-    Then the user should see the text in the page    Competition
+    Then the user should see the text in the page   Competition
     And the user should see the text in the page    Innovation Lead
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Accept applications deadline
@@ -60,13 +60,13 @@ Competition brief link can be seen
 User can view the competition brief
     [Documentation]    INFUND-5494
     [Tags]
-    When The user opens the link in new window   View competition brief
+    When The user opens the link in new window           View competition brief
     Then the user should get a competition brief window
     And the user should not see an error in the page
-    And the user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user should see the text in the page    Competition opens
-    And the user should see the text in the page    Competition closes
-    And the user should see the element    jQuery=.button:contains("Start new application")
+    And the user should see the text in the page         ${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user should see the element                  jQuery=.list li:contains("Competition opens")
+    And the user should see the element                  jQuery=.list li:contains("Competition closes")
+    And the user should see the element                  jQuery=.button:contains("Start new application")
     [Teardown]    the user closes the competition brief
 
 Applications should have correct status and order
@@ -85,13 +85,13 @@ Accept an application for assessment
     ...
     ...    INFUND-4128
     [Tags]    HappyPath
-    Then the user should see the element    jQuery=.in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
-    When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
-    And the user should see the text in the page    Accept application
-    And the user selects the radio button  assessmentAccept  true
-    And The user clicks the button/link    jQuery=button:contains("Confirm")
+    Then the user should see the element                      jQuery=.in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
+    When The user clicks the button/link                      jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
+    And the user should see the text in the page              Accept application
+    And the user selects the radio button                     assessmentAccept  true
+    And The user clicks the button/link                       jQuery=button:contains("Confirm")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And the user should see the element    jQuery=.in-progress li:nth-child(3):contains("Intelligent water system"):contains("Accepted")
+    And the user should see the element                       jQuery=.in-progress li:nth-child(3):contains("Intelligent water system"):contains("Accepted")
 
 Reject an application for assessment
     [Documentation]    INFUND-1180
@@ -100,17 +100,17 @@ Reject an application for assessment
     ...
     ...    INFUND-6358
     [Tags]
-    [Setup]    Log in as a different user    &{assessor_credentials}
-    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user should see the element    jQuery=.in-progress li:nth-child(1):contains("Park living"):contains("Pending")
-    When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
-    And the user should see the text in the page    Accept application
-    And the user should not see the element    id=rejectComment
-    And the user selects the radio button  assessmentAccept  false
-    And The user clicks the button/link    jQuery=button:contains("Confirm")
-    Then the user should see an error    Please enter a reason.
+    [Setup]    Log in as a different user                &{assessor_credentials}
+    Given The user clicks the button/link                link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user should see the element                  jQuery=.in-progress li:nth-child(1):contains("Park living"):contains("Pending")
+    When The user clicks the button/link                 jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
+    And the user should see the text in the page         Accept application
+    And the user should not see the element              id=rejectComment
+    And the user selects the radio button                assessmentAccept  false
+    And The user clicks the button/link                  jQuery=button:contains("Confirm")
+    Then the user should see an error                    Please enter a reason.
     And the assessor fills all fields with valid inputs
-    And the user clicks the button/link    jQuery=.button:contains("Confirm")
+    And the user clicks the button/link                  jQuery=.button:contains("Confirm")
     And the application for assessment should be removed
 
 Applications should not have a check-box when the status is Open
@@ -120,8 +120,8 @@ Applications should not have a check-box when the status is Open
 Check the comp admin see the assessor has rejected the application
     [Documentation]  IFS-396
     [Tags]
-    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
-    Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    [Setup]    Log in as a different user  &{Comp_admin1_credentials}
+    Given the user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=a:contains("Manage assessments")
     And the user clicks the button/link    jQuery=a:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("View progress")
@@ -140,11 +140,11 @@ Comp admin can see the application is rejected on manage assessment page
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
-    Select From List By Index                                   id=rejectReasonValid    2
-    The user should not see the text in the page                Please enter a reason
-    the user enters multiple strings into a text field          id=rejectComment  a${SPACE}  102
-    The user should see an error                                Maximum word count exceeded. Please reduce your word count to 100.
-    The user enters text to a text field                        id=rejectComment    Unable to assess the application as i'm on holiday.
+    Select From List By Index                             id=rejectReasonValid    2
+    The user should not see the text in the page          Please enter a reason
+    the user enters multiple strings into a text field    id=rejectComment  a${SPACE}  102
+    The user should see an error                          Maximum word count exceeded. Please reduce your word count to 100.
+    The user enters text to a text field                  id=rejectComment    Unable to assess the application as i'm on holiday.
 
 the application for assessment should be removed
     The user should not see the element    link=Park living

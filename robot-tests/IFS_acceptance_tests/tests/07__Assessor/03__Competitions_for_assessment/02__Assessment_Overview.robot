@@ -18,16 +18,16 @@ Assessment overview should show all the questions
     ...
     ...    INFUND-1188
     [Tags]
-    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    when the user clicks the button/link    link=Intelligent water system
-    Then The user should see the text in the page    Project details
+    Given The user clicks the button/link           link=${IN_ASSESSMENT_COMPETITION_NAME}
+    when the user clicks the button/link            link=Intelligent water system
+    Then The user should see the text in the page   Project details
     And The user should see the text in the page    Application questions
     And The user should see the text in the page    Finances
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
     [Tags]
-    Then The user should see the text in the page    days left to submit
+    Then The user should see the text in the page                 days left to submit
     And the days remaining should be correct (Top of the page)    2068-01-28
 
 Reject application (Unable to assess this application)
@@ -35,11 +35,11 @@ Reject application (Unable to assess this application)
     ...
     ...    INFUND-5379
     [Tags]
-    When the user clicks the button/link    jQuery=.summary:contains("Unable to assess this application")
+    When the user clicks the button/link                      jQuery=.summary:contains("Unable to assess this application")
     And the user fills in rejection details
-    And the user clicks the button/link    jquery=button:contains("Reject")
+    And the user clicks the button/link                       jquery=button:contains("Reject")
     Then The user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And The user should not see the element    link=Intelligent water system
+    And The user should not see the element                   link=Intelligent water system
 
 Assessor should not be able to access the rejected application
     [Documentation]    INFUND-5188
@@ -48,10 +48,10 @@ Assessor should not be able to access the rejected application
 
 *** Keywords ***
 the user fills in rejection details
-    And the user should see the element    id=rejectReason
+    And the user should see the element                    id=rejectReason
     the user selects the option from the drop-down menu    ${empty}    id=rejectReason    # Note that using this empty option will actually select the 'Select a reason' option at the top of the dropdown menu
-    the user clicks the button/link    jquery=button:contains("Reject")
-    The user should see an error    Please enter a reason.
-    Select From List By Index    id=rejectReason    1
+    the user clicks the button/link                        jquery=button:contains("Reject")
+    The user should see an error                           Please enter a reason.
+    Select From List By Index                              id=rejectReason    1
     the user should not see an error in the page
-    The user enters text to a text field    id=rejectComment    Have conflicts with the area of expertise.
+    The user enters text to a text field                   id=rejectComment    Have conflicts with the area of expertise.
