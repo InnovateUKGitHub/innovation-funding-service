@@ -34,8 +34,8 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
     }
 
     @Override
-    public List<CompetitionSearchResultItem> getProjectSetupCompetitions() {
-        return competitionRestService.findProjectSetupCompetitions().getSuccessObjectOrThrowException();
+    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getProjectSetupCompetitions() {
+        return mapToStatus(competitionRestService.findProjectSetupCompetitions().getSuccessObjectOrThrowException());
     }
 
     @Override
@@ -44,13 +44,13 @@ public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboa
     }
 
     @Override
-    public List<CompetitionSearchResultItem> getNonIfsCompetitions() {
-        return competitionRestService.findNonIfsCompetitions().getSuccessObjectOrThrowException();
+    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getNonIfsCompetitions() {
+        return mapToStatus(competitionRestService.findNonIfsCompetitions().getSuccessObjectOrThrowException());
     }
 
     @Override
-    public List<CompetitionSearchResultItem> getPreviousCompetitions() {
-        return competitionPostSubmissionRestService.findFeedbackReleasedCompetitions().getSuccessObjectOrThrowException();
+    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getPreviousCompetitions() {
+        return mapToStatus(competitionPostSubmissionRestService.findFeedbackReleasedCompetitions().getSuccessObjectOrThrowException());
     }
 
     @Override

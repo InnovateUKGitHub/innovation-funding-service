@@ -229,7 +229,7 @@ function tailorAppInstance() {
 
     sed -i.bak "s/<<MAIL-ADDRESS>>/mail-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/mail/*.yml
     sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/spring-admin/*.yml
-    sed -i.bak "s/<<FRACTAL-ADDRESS>>/fractal-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/fractal/*.yml
+
 
     if $(isNamedEnvironment ${TARGET}); then
 
@@ -289,6 +289,11 @@ function tailorAppInstance() {
         replacePersistentFileClaim
     fi
 }
+
+function tailorFractalInstance() {
+    sed -i.bak "s/<<FRACTAL-ADDRESS>>/fractal-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/fractal/*.yml
+}
+
 
 function useContainerRegistry() {
 

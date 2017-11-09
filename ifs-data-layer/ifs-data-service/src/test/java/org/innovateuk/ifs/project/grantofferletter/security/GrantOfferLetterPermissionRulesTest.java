@@ -212,28 +212,6 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testCompAdminsCanSendGrantOfferLetterDocuments() {
-
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-
-        setUpUserAsCompAdmin(project, user);
-
-        assertTrue(rules.contractsTeamSendGrantOfferLetter(project.getId(), user));
-    }
-
-    @Test
-    public void testNonCompAdminsCannotSendGrantOfferLetterDocuments() {
-
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-
-        setUpUserNotAsCompAdmin(project, user);
-
-        assertFalse(rules.contractsTeamSendGrantOfferLetter(project.getId(), user));
-    }
-
-    @Test
     public void testCompAdminsCanApproveSignedGrantOfferLetters() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
@@ -241,6 +219,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
         setUpUserAsCompAdmin(project, user);
 
         assertTrue(rules.internalUsersCanApproveSignedGrantOfferLetter(project.getId(), user));
+        assertTrue(rules.internalUsersCanApproveSignedGrantOfferLetter(project, user));
     }
 
     @Test
@@ -251,6 +230,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
         setUpUserNotAsCompAdmin(project, user);
 
         assertFalse(rules.internalUsersCanApproveSignedGrantOfferLetter(project.getId(), user));
+        assertFalse(rules.internalUsersCanApproveSignedGrantOfferLetter(project, user));
     }
 
     @Test
@@ -332,5 +312,61 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     @Override
     protected GrantOfferLetterPermissionRules supplyPermissionRulesUnderTest() {
         return new GrantOfferLetterPermissionRules();
+    }
+
+    @Test
+    public void testSupportUserCanViewSendGrantOfferLetterStatus() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(supportUser())) {
+                assertTrue(rules.supportUserCanViewSendGrantOfferLetterStatus(project, user));
+            } else {
+                assertFalse(rules.supportUserCanViewSendGrantOfferLetterStatus(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void testSupportUsersCanDownloadGrantOfferLetter() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(supportUser())) {
+                assertTrue(rules.supportUsersCanDownloadGrantOfferLetter(project, user));
+            } else {
+                assertFalse(rules.supportUsersCanDownloadGrantOfferLetter(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void testSupportUsersCanViewGrantOfferLetter() {
+
+        ProjectResource project = newProjectResource().build();
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(supportUser())) {
+                assertTrue(rules.supportUsersCanViewGrantOfferLetter(project, user));
+            } else {
+                assertFalse(rules.supportUsersCanViewGrantOfferLetter(project, user));
+            }
+        });
+    }
+
+    @Test
+    public void testPartnersOnProjectCanViewGrantOfferApprovedStatus(){
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserNotAsPartner(project, user);
+
+        assertFalse(rules.partnersOnProjectCanViewGrantOfferApprovedStatus(project, user));
+
+        setupUserAsPartner(project, user);
+
+        assertTrue(rules.partnersOnProjectCanViewGrantOfferApprovedStatus(project, user));
     }
 }
