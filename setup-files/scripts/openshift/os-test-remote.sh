@@ -9,6 +9,9 @@ ROUTE_DOMAIN=apps.${HOST}
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
+. $(dirname $0)/deploy-functions.sh
+. $(dirname $0)/local-deploy-functions.sh
+
 echo "Deploying tests to the current oc project ($PROJECT)"
 
 function tailorToAppInstance() {
