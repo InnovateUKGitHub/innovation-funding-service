@@ -15,7 +15,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.assertj.core.util.Lists.emptyList;
 
-public class ServiceSecurityAnnotationsTest extends AbstractServiceSecurityAnnotationsTest {
+public class DataServiceSecurityAnnotationsTest extends AbstractServiceSecurityAnnotationsTest {
 
     @Override
     protected List<Class<?>> excludedClasses() {

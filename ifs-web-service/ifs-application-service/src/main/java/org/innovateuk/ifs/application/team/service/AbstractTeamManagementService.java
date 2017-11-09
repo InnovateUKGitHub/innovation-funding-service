@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.team.form.ApplicationTeamUpdateForm;
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamManagementModelPopulator;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
@@ -32,25 +31,22 @@ public abstract class AbstractTeamManagementService {
     @Autowired
     protected InviteOrganisationRestService inviteOrganisationRestService;
 
-    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public abstract boolean applicationAndOrganisationIdCombinationIsValid(Long applicationId, Long organisationId);
 
-    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public abstract ApplicationTeamManagementViewModel createViewModel(long applicationId,
                                                                           long organisationId,
                                                                           UserResource loggedInUser);
-    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
+
     public abstract ServiceResult<InviteResultsResource> executeStagedInvite(long applicationId,
                                                                                 long organisationId,
                                                                                 ApplicationTeamUpdateForm form);
-    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
+
     public abstract List<Long> getInviteIds(long applicationId, long organisationId);
 
-    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
+
     protected ApplicationInviteResource mapStagedInviteToInviteResource(ApplicationTeamUpdateForm applicationTeamUpdateForm,
                                                                         long applicationId,
                                                                         Long inviteOrganisationId) {
-
         ApplicationInviteResource applicationInviteResource = new ApplicationInviteResource(
                 applicationTeamUpdateForm.getStagedInvite().getName(),
                 applicationTeamUpdateForm.getStagedInvite().getEmail(),
@@ -61,7 +57,6 @@ public abstract class AbstractTeamManagementService {
         return applicationInviteResource;
     }
 
-    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public ServiceResult<Void> removeInvite(long applicantInviteId) {
         return applicationService.removeCollaborator(applicantInviteId);
     }

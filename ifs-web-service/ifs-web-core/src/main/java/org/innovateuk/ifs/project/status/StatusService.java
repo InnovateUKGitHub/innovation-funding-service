@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.status;
 
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import java.util.Optional;
@@ -10,9 +9,7 @@ import java.util.Optional;
  */
 public interface StatusService {
 
-    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);
 
-    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     ProjectStatusResource getProjectStatus(Long projectId);
 }
