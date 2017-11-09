@@ -9,6 +9,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.Process;
 
+import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -16,6 +17,7 @@ import javax.persistence.ManyToOne;
 /**
  * The process of submitting and approving a complete Spend Profile for Projects
  */
+@Entity
 public class SpendProfileProcess extends Process<ProjectUser, Project, SpendProfileState> {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="participant_id", referencedColumnName = "id")
