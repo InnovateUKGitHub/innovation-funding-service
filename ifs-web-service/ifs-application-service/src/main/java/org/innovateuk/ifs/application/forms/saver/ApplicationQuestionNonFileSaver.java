@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.forms.saver;
 
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
@@ -30,7 +29,6 @@ public class ApplicationQuestionNonFileSaver extends AbstractApplicationSaver {
     @Autowired
     private FormInputRestService formInputRestService;
 
-    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public ValidationMessages saveNonFileUploadQuestions(List<QuestionResource> questions,
                                                          HttpServletRequest request,
                                                          Long userId,

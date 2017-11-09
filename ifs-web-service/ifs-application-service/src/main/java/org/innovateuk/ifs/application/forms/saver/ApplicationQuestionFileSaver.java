@@ -5,7 +5,6 @@ import org.apache.juli.logging.LogFactory;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.exception.UnableToReadUploadedFile;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -41,7 +40,6 @@ public class ApplicationQuestionFileSaver extends AbstractApplicationSaver {
     @Autowired
     private FormInputRestService formInputRestService;
 
-    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public ValidationMessages saveFileUploadQuestionsIfAny(List<QuestionResource> questions,
                                                            final Map<String, String[]> params,
                                                            HttpServletRequest request,

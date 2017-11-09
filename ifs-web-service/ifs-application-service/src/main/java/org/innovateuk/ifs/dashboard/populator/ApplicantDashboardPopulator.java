@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -54,7 +53,6 @@ public class ApplicantDashboardPopulator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public ApplicantDashboardViewModel populate(Long userId) {
         List<ProcessRoleResource> usersProcessRoles = getUserProcessRolesWithApplicationRole(userId);
         List<ApplicationResource> allApplications = getAllApplicationsAsApplicant(userId, usersProcessRoles);

@@ -10,7 +10,6 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -60,7 +59,6 @@ public class ApplicationSectionSaver extends AbstractApplicationSaver {
     @Autowired
     private ApplicationSectionFinanceSaver financeSaver;
 
-    @NotSecured(value = "Not currently secured", mustBeSecuredByOtherServices = false)
     public ValidationMessages saveApplicationForm(ApplicationResource application,
                                                   Long competitionId,
                                                   ApplicationForm form,
