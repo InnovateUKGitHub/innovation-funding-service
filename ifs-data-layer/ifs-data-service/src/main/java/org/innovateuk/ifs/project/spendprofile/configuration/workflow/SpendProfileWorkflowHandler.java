@@ -86,9 +86,9 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
 
     public ApprovalType getApproval(Project project) {
         SpendProfileProcess process = getCurrentProcess(project);
-        if (process != null && SPEND_PROFILE_APPROVED.equals(process.getActivityState())) {
+        if (process != null && SpendProfileState.APPROVED.equals(process.getActivityState())) {
             return ApprovalType.APPROVED;
-        } else if (process != null && SPEND_PROFILE_REJECTED.equals(process.getActivityState())) {
+        } else if (process != null && SpendProfileState.REJECTED.equals(process.getActivityState())) {
             return ApprovalType.REJECTED;
         } else {
             return ApprovalType.UNSET;
