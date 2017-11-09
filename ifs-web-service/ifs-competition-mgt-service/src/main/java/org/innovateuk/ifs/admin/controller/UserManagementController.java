@@ -3,6 +3,7 @@ package org.innovateuk.ifs.admin.controller;
 import org.innovateuk.ifs.admin.form.EditUserForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
@@ -54,6 +55,7 @@ public class UserManagementController {
     @Autowired
     private InternalUserService internalUserService;
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/users/active")
     public String viewActive(Model model,
@@ -63,6 +65,7 @@ public class UserManagementController {
         return view(model, "active", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/users/inactive")
     public String viewInactive(Model model,
@@ -72,6 +75,7 @@ public class UserManagementController {
         return view(model, "inactive", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/users/pending")
     public String viewPending(Model model,
@@ -178,6 +182,7 @@ public class UserManagementController {
                 userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('support')")
     @GetMapping(value = "/users/created")
     public String allExternalUsers(Model model) {
@@ -187,6 +192,7 @@ public class UserManagementController {
         }).getSuccessObjectOrThrowException();
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('support')")
     @GetMapping(value = "/invites")
     public String allExternalInvites(Model model) {

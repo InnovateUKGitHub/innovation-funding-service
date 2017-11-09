@@ -65,19 +65,14 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
         assertFalse(services.isEmpty());
 
         // Find all the methods that should have a security annotation on and check they do.
-        int methodsChecked = 0;
         for (Object service : services) {
             if (!testSecuredAtClassLevel(service)) {
-                methodsChecked = methodsChecked + testSecuredAtMethodLevel(service);
+                testSecuredAtMethodLevel(service);
             }
         }
-
-        // Make sure we are not failing silently
-        assertTrue("We should be checking at least one method for security annotations", methodsChecked > 0);
     }
 
-    private int testSecuredAtMethodLevel(Object service) throws Exception {
-        int methodsChecked = 0;
+    private void testSecuredAtMethodLevel(Object service) throws Exception {
         for (Method method : service.getClass().getMethods()) {
             // Only public methods and not those on base class Object get checked
             if (isPublic(method.getModifiers()) && !method.getDeclaringClass().isAssignableFrom(Object.class)) {
@@ -86,12 +81,9 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
                 }
                 if (needsSecuredBySpring(annotationValues(method, methodLevelSecurityAnnotations())) && !hasOneOf(method, asList(SecuredBySpring.class))) {
                     fail("Method: " + method.getName() + " on class " + method.getDeclaringClass() + " needs to have a SecuredBySpring annotation");
-                } else {
-                    methodsChecked++;
                 }
             }
         }
-        return methodsChecked;
     }
 
     /**
