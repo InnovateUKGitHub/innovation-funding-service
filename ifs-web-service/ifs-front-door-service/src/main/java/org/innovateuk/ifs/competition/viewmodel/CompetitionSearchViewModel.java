@@ -98,7 +98,6 @@ public class CompetitionSearchViewModel {
     public int getNextPageEnd() {
         int nextPageEnd = getNextPageStart() + PAGE_SIZE - 1;
         int nextPageStart = getNextPageStart();
-        totalResults = getTotalResults();
 
         if ((nextPageEnd > totalResults) && (nextPageStart != totalResults)){
             return totalResults.intValue();
