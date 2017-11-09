@@ -83,6 +83,7 @@ import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantO
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.mapper.ProjectUserMapper;
+import org.innovateuk.ifs.project.monitoringofficer.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.monitoringofficer.repository.MonitoringOfficerRepository;
 import org.innovateuk.ifs.project.monitoringofficer.transactional.MonitoringOfficerService;
 import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesService;
@@ -261,6 +262,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected MonitoringOfficerRepository monitoringOfficerRepositoryMock;
+
+    @Mock
+    protected MonitoringOfficerMapper monitoringOfficerMapper;
 
     @Mock
     protected ApplicationService applicationServiceMock;
