@@ -5,6 +5,7 @@ package org.innovateuk.ifs.competition.publiccontent.resource;
  */
 public enum FundingType {
     GRANT("Grant"),
+    LOAN("Loan"),
     PROCUREMENT("Procurement");
 
     private String displayName;

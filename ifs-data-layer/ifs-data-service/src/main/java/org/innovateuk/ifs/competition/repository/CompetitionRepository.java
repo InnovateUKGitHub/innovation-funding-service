@@ -56,11 +56,10 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "AND u.id = :leadTechnologistUserId " +
             "ORDER BY m.date";
 
-    /* Support users should not be able to access competitions in states: In preparation, Project setup */
+    /* Support users should not be able to access competitions in preparation */
     public static final String SEARCH_QUERY_SUPPORT_USER = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct " +
             "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "AND (c.setupComplete IS NOT NULL AND c.setupComplete != FALSE) " +
-            "AND NOT EXISTS (SELECT m.id FROM Milestone m WHERE m.competition.id = c.id AND m.type='FEEDBACK_RELEASED') " +
             "ORDER BY m.date";
 
     public static final String NON_IFS_QUERY = "SELECT c FROM Competition c WHERE nonIfs = TRUE";
@@ -75,6 +74,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
+    // TODO update when IFS-2072 is addressed (track Spend Profile states via workflow)
     public static final String COUNT_OPEN_QUERIES = "SELECT COUNT(DISTINCT t.classPk) " +
             "FROM Post post " +
             "JOIN post.thread t " +
@@ -90,8 +90,10 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "        SELECT p.thread.id, MAX(p.createdOn) " +
             "        FROM Post p " +
             "        WHERE p.thread.id = t.id " +
-            "        GROUP BY p.thread.id)";
+            "        GROUP BY p.thread.id) " +
+            "    AND (SELECT COUNT(id) FROM pr.spendProfiles sp) != (SELECT COUNT(id) FROM pr.partnerOrganisations po)";
 
+    // TODO update when IFS-2072 is addressed (track Spend Profile states via workflow)
     public static final String GET_OPEN_QUERIES = "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name) " +
             "FROM Post post " +
             "JOIN post.thread t " +
@@ -108,7 +110,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "        SELECT p.thread.id, MAX(p.createdOn) " +
             "        FROM Post p " +
             "        WHERE p.thread.id = t.id " +
-            "        GROUP BY p.thread.id) " +
+            "        GROUP BY p.thread.id) "  +
+            "    AND (SELECT COUNT(id) FROM pr.spendProfiles sp) != (SELECT COUNT(id) FROM pr.partnerOrganisations po) " +
             "GROUP BY pr.application.id, o.id, pr.id " +
             "ORDER BY pr.application.id, o.name";
 

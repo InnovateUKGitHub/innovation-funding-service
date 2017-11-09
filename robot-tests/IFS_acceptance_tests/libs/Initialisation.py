@@ -48,6 +48,14 @@ for comp in cursor.fetchall():
     else:
         competition_ids[competitionName] = str(competitionId)
 
+cursor.execute("SELECT `id`,`email` FROM user")
+
+user_ids = {}
+for user in cursor.fetchall():
+    userId = user[0]
+    userEmail = user[1]
+    user_ids[userEmail] = str(userId)
+
 # execute SQL query using execute() method, to fetch the Applications
 cursor.execute("SELECT `id`,`name` FROM application")
 

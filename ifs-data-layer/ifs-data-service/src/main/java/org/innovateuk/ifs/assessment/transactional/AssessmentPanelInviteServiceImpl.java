@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.mapper.AssessmentPanelParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
@@ -37,21 +38,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.time.ZonedDateTime.now;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
@@ -94,6 +95,9 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     private AssessmentPanelInviteMapper assessmentPanelInviteMapper;
     @Autowired
     private ParticipantStatusMapper participantStatusMapper;
+
+    @Autowired
+    private AssessmentPanelParticipantMapper assessmentPanelParticipantMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -167,7 +171,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                     assessmentPanelInviteRepository.getByCompetitionIdAndStatus(competition.getId(), CREATED),
                     invite -> {
                         assessmentPanelParticipantRepository.save(
-                                new AssessmentPanelParticipant(invite.send(loggedInUserSupplier.get(), ZonedDateTime.now()))
+                                new AssessmentPanelParticipant(invite.send(loggedInUserSupplier.get(), now()))
                         );
 
                         return sendInviteNotification(
@@ -193,7 +197,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                         assessorInviteSendResource.getSubject(),
                         customTextPlain,
                         customTextHtml,
-                        invite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()),
+                        invite.sendOrResend(loggedInUserSupplier.get(), now()),
                         Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL
                 )
         ));
@@ -344,6 +348,17 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
     }
 
+    @Override
+    public ServiceResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId) {
+        return serviceSuccess(
+                assessmentPanelParticipantRepository
+                .findByUserIdAndRole(userId, PANEL_ASSESSOR)
+                .stream()
+                .filter(participant -> now().isBefore(participant.getInvite().getTarget().getAssessmentPanelDate()))
+                .map(assessmentPanelParticipantMapper::mapToResource)
+                .collect(toList()));
+    }
+
     private ServiceResult<Competition> getCompetition(long competitionId) {
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId));
     }
@@ -475,10 +490,6 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         }
     }
 
-    private ServiceResult<RejectionReason> getRejectionReason(final RejectionReasonResource rejectionReason) {
-        return find(rejectionReasonRepository.findOne(rejectionReason.getId()), notFoundError(RejectionReason.class, rejectionReason.getId()));
-    }
-
     private String getInviteCompetitionName(AssessmentPanelParticipant participant) {
         return participant.getInvite().getTarget().getName();
     }
@@ -486,7 +497,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     private ServiceResult<AssessmentPanelInvite> getByHashIfOpen(String inviteHash) {
         return getByHash(inviteHash).andOnSuccess(invite -> {
 
-            if (!EnumSet.of(CLOSED, IN_ASSESSMENT, FUNDERS_PANEL).contains(invite.getTarget().getCompetitionStatus())) {
+            if (invite.getTarget().getAssessmentPanelDate() == null || now().isAfter(invite.getTarget().getAssessmentPanelDate())) {
                 return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_INVITE_EXPIRED, invite.getTarget().getName()));
             }
 
@@ -502,6 +513,25 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
             return serviceSuccess(invite);
         });
     }
+
+    @Override
+    public ServiceResult<Void> deleteInvite(String email, long competitionId) {
+        return getByEmailAndCompetition(email, competitionId).andOnSuccess(this::deleteInvite);
+    }
+
+    @Override
+    public ServiceResult<Void> deleteAllInvites(long competitionId) {
+        return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId))
+                .andOnSuccessReturnVoid(competition ->
+                        assessmentPanelInviteRepository.deleteByCompetitionIdAndStatus(competition.getId(), CREATED));
+    }
+
+    private ServiceResult<Void> deleteInvite(AssessmentPanelInvite invite) {
+        if (invite.getStatus() != CREATED) {
+            return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_INVITE_CANNOT_DELETE_ONCE_SENT, invite.getEmail()));
+        }
+
+        assessmentPanelInviteRepository.delete(invite);
+        return serviceSuccess();
+    }
 }
-
-

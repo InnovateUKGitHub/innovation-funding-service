@@ -150,6 +150,7 @@ the user fills in Overhead costs
     run keyword if  '${overheadsCost}'=='Calculate'  the user chooses Calculate overheads option  ${totalCosts}
     run keyword if  '${overheadsCost}'=='labour costs'  the user chooses 20% overheads option
 #    run keyword if  '${overheadsCost}'=='No overhead'  the user chooses No overhead costs
+# The above line is commented out because we do not use the 3rd option yet. Once we do we can enable it.
 
 the user chooses Calculate overheads option
     [Arguments]  ${totalCosts}
@@ -160,7 +161,7 @@ the user chooses Calculate overheads option
     wait for autosave
     the user enters text to a text field                    css=input[name^="overheads-total"][id^="cost-overheads"]   40
     wait for autosave
-    the total overhead costs should reflect rate entered    css=#total-cost  £ ${totalCosts}
+    the total overhead costs should reflect rate entered    css=#total-cost  £${totalCosts}
 
 the total overhead costs should reflect rate entered
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
@@ -190,7 +191,7 @@ the user fills in Capital usage
     the user enters text to a text field  css=.form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css=.form-finances-capital-usage-utilisation   100
     focus                                 css=.section-total-summary > [data-mirror^="#section-total"]
-    textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £ 4,975
+    textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £4,975
     the user clicks the button/link       jQuery=button:contains("Capital usage")
 
 the user fills in Subcontracting costs
@@ -227,7 +228,7 @@ the academic user fills in his finances
 the academic fills in the project costs
     [Arguments]  ${application}
     the user clicks the button/link       link=Your project costs
-    The user enters text to a text field  id=tsb-ref  ${application}
+    The user enters text to a text field  css=input[name$="tsb_reference"]  ${application}
     The user enters text to a text field  id=incurred-staff  999.999
     The user enters text to a text field  id=travel    999.999
     The user enters text to a text field  id=other    999.999

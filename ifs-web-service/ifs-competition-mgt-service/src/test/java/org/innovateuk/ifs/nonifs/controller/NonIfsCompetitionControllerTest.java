@@ -2,6 +2,7 @@ package org.innovateuk.ifs.nonifs.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.innovateuk.ifs.nonifs.formpopulator.NonIfsDetailsFormPopulator;
 import org.innovateuk.ifs.nonifs.modelpopulator.NonIfsDetailsViewModelPopulator;
@@ -12,6 +13,7 @@ import org.mockito.Mock;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
@@ -31,6 +33,8 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
     public NonIfsDetailsViewModelPopulator nonIfsDetailsViewModelPopulator;
     @Mock
     public NonIfsDetailsFormSaver nonIfsDetailsFormSaver;
+    @Mock
+    public CompetitionSetupRestService competitionSetupRestService;
 
     @Override
     protected NonIfsCompetitionController supplyControllerUnderTest() {
@@ -41,7 +45,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
     public void testCreate() throws Exception {
         Long competitionId = 10L;
 
-        when(competitionService.createNonIfs()).thenReturn(newCompetitionResource().withId(competitionId).build());
+        when(competitionSetupRestService.createNonIfs()).thenReturn(restSuccess(newCompetitionResource().withId(competitionId).build()));
         mockMvc.perform(get("/non-ifs-competition/create/"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/non-ifs-competition/setup/"+competitionId));

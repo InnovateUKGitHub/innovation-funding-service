@@ -66,6 +66,20 @@ include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/response-field
 ==== Curl Example
 include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/curl-request.adoc[]
 
+
+=== Get all panel invites for a particular user
+==== Request
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/curl-request.adoc[]
+
+
 === Get all invites to resend
 ==== Request
 include::{snippets}/assessmentpanelinvite/get-all-invites-to-resend/http-request.adoc[]
@@ -157,3 +171,25 @@ include::{snippets}/assessmentpanelinvite/get-non-accepted-assessor-invite-ids/r
 
 ==== Curl Example
 include::{snippets}/assessmentpanelinvite/get-non-accepted-assessor-invite-ids/curl-request.adoc[]
+
+=== Delete a user from the assessor invite list for an assessment panel
+==== Request
+include::{snippets}/assessmentpanelinvite/delete-invite/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/delete-invite/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/delete-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/delete-invite/curl-request.adoc[]
+
+=== Delete all users from the assessor invite list for an assessment panel
+==== Request
+include::{snippets}/assessmentpanelinvite/delete-all-invites/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/delete-all-invites/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/delete-all-invites/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/delete-all-invites/curl-request.adoc[]
