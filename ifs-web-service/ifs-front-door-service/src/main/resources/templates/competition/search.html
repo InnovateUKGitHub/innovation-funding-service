@@ -79,8 +79,7 @@
                     <li th:if="${model.hasNextPage()}" class="next">
                         <a th:href="'?' + ${model.nextPageLink}" rel="next" title="Navigate to next part">
                             <span class="pagination-label">Next</span>
-                            <span class="pagination-part-title" th:unless="${model.nextPageStart == model.totalResults}" ><th:block th:text="${model.nextPageStart}"/> to <th:block th:text="${model.nextPageEnd}"/></span>
-                            <span class="pagination-part-title" th:if="${model.nextPageStart == model.totalResults}" ><th:block th:text="${model.nextPageEnd}"/></span>
+                            <span class="pagination-part-title"><th:block th:text="${model.nextPageStart}"/> to <th:block th:text="${model.nextPageEnd}"/></span>
                         </a>
                     </li>
                 </ul>
