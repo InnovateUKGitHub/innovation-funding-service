@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
 import com.google.common.collect.Lists;
-import org.hamcrest.*;
+import org.hamcrest.CoreMatchers;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.FunderRowForm;
@@ -23,7 +25,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionFunderResourceBuilder.newCompetitionFunderResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
@@ -37,6 +38,9 @@ public class AdditionalInfoSectionSaverTest {
 	
 	@Mock
 	private CompetitionService competitionService;
+
+	@Mock
+	private CompetitionSetupRestService competitionSetupRestService;
 	
 	@Test
 	public void testSaveCompetitionSetupSection() {
@@ -51,7 +55,7 @@ public class AdditionalInfoSectionSaverTest {
 		assertEquals("BudgetCode", competition.getBudgetCode());
 		assertEquals("PAF", competition.getPafCode());
 
-		verify(competitionService).update(competition);
+		verify(competitionSetupRestService).update(competition);
 	}
 
 	@Test
@@ -61,7 +65,7 @@ public class AdditionalInfoSectionSaverTest {
 		int lastIndex = expectedFunders - 1;
 		String validBudget = "199122";
 		AdditionalInfoForm form = new AdditionalInfoForm();
-        when(competitionService.update(competition)).thenReturn(serviceSuccess());
+        when(competitionSetupRestService.update(competition)).thenReturn(RestResult.restSuccess());
 
 		//Test that auto save will fill in the blank funders.
 		ServiceResult<Void> result = service.autoSaveSectionField(competition, form,
@@ -83,7 +87,7 @@ public class AdditionalInfoSectionSaverTest {
 		)).build();
 		AdditionalInfoForm form = new AdditionalInfoForm();
 
-		when(competitionService.update(competition)).thenReturn(serviceSuccess());
+		when(competitionSetupRestService.update(competition)).thenReturn(RestResult.restSuccess());
 
 		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(3));
 
@@ -156,7 +160,7 @@ public class AdditionalInfoSectionSaverTest {
 		service.saveSection(competition, competitionSetupForm);
 
 		ArgumentCaptor<CompetitionResource> argumentCaptor = ArgumentCaptor.forClass(CompetitionResource.class);
-		verify(competitionService).update(argumentCaptor.capture());
+		verify(competitionSetupRestService).update(argumentCaptor.capture());
 
 		assertEquals(newPafNumber, 		argumentCaptor.getValue().getPafCode());
 		assertEquals(newActivityCode, 	argumentCaptor.getValue().getActivityCode());
@@ -170,7 +174,7 @@ public class AdditionalInfoSectionSaverTest {
 		assertEquals(funderResource2.getFunder(), createdFunderResource2.getFunder());
 		assertEquals(funderResource2.getFunderBudget(), createdFunderResource2.getFunderBudget());
 
-		verify(competitionService).update(competition);
+		verify(competitionSetupRestService).update(competition);
 	}
 
 	@Test
@@ -193,6 +197,6 @@ public class AdditionalInfoSectionSaverTest {
 
 		assertTrue(service.saveSection(competition, competitionSetupForm).isFailure());
 
-		verify(competitionService, never()).update(competition);
+		verify(competitionSetupRestService, never()).update(competition);
 	}
 }

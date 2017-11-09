@@ -20,33 +20,7 @@
         <th:block th:insert="finance/finance-summary :: financial_summary_table" />
         <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
 
-        <th:block th:if="${maySeeAcademicBreakdown}">
-            <h2 class="heading-medium">Academic partner breakdown</h2>
-            <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs please see the documents below.</p>
-            <th:block th:insert="finance/finance-summary :: academic_partner_breakdown" />
-        </th:block>
     </th:block>
-
-    <th:block th:if="${maySeeAcademicBreakdown}">
-        <th:block th:fragment="academic_partner_breakdown" th:if="${financeTotalPerType}">
-            <div th:each="organisation : ${academicOrganisations}" th:unless="${academicFileEntries == null}">
-                <h3 th:text="${organisation.name}" class="heading-medium">University</h3>
-                <div th:if="${academicFileEntries.containsKey(organisation.id)}" th:with="applicationFinanceResource = ${academicFileEntries.get(organisation.id).left}, fileEntry = ${academicFileEntries.get(organisation.id).right}">
-                    <div class="upload-section">
-                        <h3 class="heading-small no-margin">Download Je-S form:</h3>
-                        <div class="uploaded-file"><a th:href="'/application/'+ ${currentApplication.id} + '/form/' + ${applicationFinanceResource.id} + '/finance-download'" th:text="${fileEntry.name} + ' (opens in a new window)'"></a></div>
-                    </div>
-                </div>
-                <div th:unless="${academicFileEntries.containsKey(organisation.id)}">
-                    <div class="upload-section">
-                        <h3 class="heading-small no-margin">Download Je-S form:</h3>
-                        <div class="uploaded-file">No file currently uploaded</div>
-                    </div>
-                </div>
-            </div>
-        </th:block>
-    </th:block>
-
 
     <!-- ===========================Form: financial summary/breakdown table =========================== -->
     <th:block th:fragment="financial_summary_table" th:if="${financeTotalPerType}">

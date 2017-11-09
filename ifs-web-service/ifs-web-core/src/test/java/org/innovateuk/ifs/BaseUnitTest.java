@@ -21,7 +21,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
@@ -145,7 +145,7 @@ public class BaseUnitTest {
     @Mock
     public ApplicationService applicationService;
     @Mock
-    protected CompetitionsRestService competitionRestService;
+    protected CompetitionRestService competitionRestService;
     @Mock
     protected FormInputRestService formInputRestService;
     @Mock

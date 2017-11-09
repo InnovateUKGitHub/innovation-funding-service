@@ -66,11 +66,6 @@
               <h2 class="heading-medium">Funding breakdown</h2>
               <th:block th:insert="finance/finance-summary :: financial_summary_table" />
 
-              <th:block th:if="${maySeeAcademicBreakdown and academicOrganisations != null and academicOrganisations.size() > 0}">
-                  <h2 class="heading-medium">Academic partner breakdown</h2>
-                  <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs, please see the documents below.</p>
-                  <th:block th:insert="finance/finance-summary :: academic_partner_breakdown" />
-              </th:block>
           </div>
       </div>
   </section>

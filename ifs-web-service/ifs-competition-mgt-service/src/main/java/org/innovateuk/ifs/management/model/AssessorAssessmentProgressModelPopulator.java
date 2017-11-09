@@ -8,7 +8,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorCompetitionSummaryResource
 import org.innovateuk.ifs.assessment.service.AssessorCompetitionSummaryRestService;
 import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressAssignedRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressViewModel;
@@ -35,7 +35,7 @@ public class AssessorAssessmentProgressModelPopulator {
     private ApplicationCountSummaryRestService applicationCountSummaryRestService;
 
     @Autowired
-    private CompetitionsRestService competitionService;
+    private CompetitionRestService competitionService;
 
     public AssessorAssessmentProgressViewModel populateModel(long competitionId,
                                                              long assessorId,

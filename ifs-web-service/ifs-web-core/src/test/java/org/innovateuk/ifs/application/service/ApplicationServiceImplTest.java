@@ -8,7 +8,7 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
     private ApplicationRestService applicationRestService;
 
     @Mock
-    private CompetitionsRestService competitionsRestService;
+    private CompetitionRestService competitionRestService;
 
     @Mock
     private InviteRestService inviteRestService;
@@ -77,10 +77,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
                         closedCompetition.getId())
                 .build(6);
 
-        when(competitionsRestService.getCompetitionById(openCompetition.getId())).thenReturn(restSuccess(openCompetition));
-        when(competitionsRestService.getCompetitionById(inAssessmentCompetition.getId())).thenReturn(restSuccess(inAssessmentCompetition));
-        when(competitionsRestService.getCompetitionById(fundersPanelCompetition.getId())).thenReturn(restSuccess(fundersPanelCompetition));
-        when(competitionsRestService.getCompetitionById(closedCompetition.getId())).thenReturn(restSuccess(closedCompetition));
+        when(competitionRestService.getCompetitionById(openCompetition.getId())).thenReturn(restSuccess(openCompetition));
+        when(competitionRestService.getCompetitionById(inAssessmentCompetition.getId())).thenReturn(restSuccess(inAssessmentCompetition));
+        when(competitionRestService.getCompetitionById(fundersPanelCompetition.getId())).thenReturn(restSuccess(fundersPanelCompetition));
+        when(competitionRestService.getCompetitionById(closedCompetition.getId())).thenReturn(restSuccess(closedCompetition));
 
         when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(restSuccess(applications));
 

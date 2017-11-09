@@ -45,6 +45,7 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -275,13 +276,25 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void findPreviousCompetitions() throws Exception {
-        List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
+        Long competition2Id = 2L;
+        List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId, competition2Id).build(2));
         when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
         when(competitionRepositoryMock.findFeedbackReleased()).thenReturn(competitions);
 
+        MilestoneResource milestone = newMilestoneResource().withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.of(2017, 11, 3, 23, 0, 0, 0, ZoneId.systemDefault())).build();
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceSuccess(milestone));
+
+        milestone = newMilestoneResource().withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.of(2017, 11, 5, 23, 0, 0, 0, ZoneId.systemDefault())).build();
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition2Id)).thenReturn(serviceSuccess(milestone));
+
         List<CompetitionSearchResultItem> response = service.findFeedbackReleasedCompetitions().getSuccessObjectOrThrowException();
 
-        assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
+        //Ensure sorted by open date
+        assertEquals(competition2Id, response.get(0).getId());
+        assertEquals(ZonedDateTime.of(2017, 11, 5, 23, 0, 0, 0, ZoneId.systemDefault()), response.get(0).getOpenDate());
+
+        assertEquals(competitionId, response.get(1).getId());
+        assertEquals(ZonedDateTime.of(2017, 11, 3, 23, 0, 0, 0, ZoneId.systemDefault()), response.get(1).getOpenDate());
     }
 
     @Test

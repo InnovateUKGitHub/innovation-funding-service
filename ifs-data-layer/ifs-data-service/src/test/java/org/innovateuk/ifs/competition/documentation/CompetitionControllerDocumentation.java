@@ -1,21 +1,18 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.documentation.CompetitionCountResourceDocs;
-import org.innovateuk.ifs.documentation.CompetitionResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionSearchResultDocs;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.springframework.http.MediaType;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -23,24 +20,21 @@ import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItem
 import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CompetitionControllerDocumentation extends BaseControllerMockMVCTest<CompetitionController> {
     @Mock
-    CompetitionService competitionService;
+    private CompetitionService competitionService;
+
     @Mock
-    CompetitionSetupService competitionSetupService;
+    private CompetitionSetupService competitionSetupService;
 
     @Override
     protected CompetitionController supplyControllerUnderTest() {
@@ -96,51 +90,17 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void markAsComplete() throws Exception {
-        Long competitionId = 2L;
-        CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
-        when(competitionSetupService.markSectionComplete(competitionId, section)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(get("/competition/sectionStatus/complete/{competitionId}/{section}", competitionId, section))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on what the section should be marked as complete"),
-                                parameterWithName("section").description("the section to mark as complete")
-                        )
-                ));
-    }
-
-    @Test
-    public void markAsInComplete() throws Exception {
-        Long competitionId = 2L;
-        CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
-        when(competitionSetupService.markSectionInComplete(competitionId, section)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(get("/competition/sectionStatus/incomplete/{competitionId}/{section}", competitionId, section))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("id of the competition on what the section should be marked as incomplete"),
-                                parameterWithName("section").description("the section to mark as incomplete")
-                        )
-                ));
-    }
-
-    @Test
     public void live() throws Exception {
         when(competitionService.findLiveCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
 
         mockMvc.perform(get("/competition/live"))
-            .andExpect(status().isOk())
-            .andDo(document(
-                    "competition/{method-name}",
-                responseFields(
-                        fieldWithPath("[]").description("list of live competitions the authenticated user has access to")
-                )
-            ));
+                .andExpect(status().isOk())
+                .andDo(document(
+                        "competition/{method-name}",
+                        responseFields(
+                                fieldWithPath("[]").description("list of live competitions the authenticated user has access to")
+                        )
+                ));
     }
 
     @Test
@@ -186,31 +146,6 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void findUnsuccessfulApplications() throws Exception {
-        final Long competitionId = 1L;
-        int pageIndex = 0;
-        int pageSize = 20;
-        String sortField = "id";
-
-        ApplicationPageResource applicationPage = new ApplicationPageResource();
-
-        when(competitionService.findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField)).thenReturn(serviceSuccess(applicationPage));
-
-        mockMvc.perform(get("/competition/{id}/unsuccessful-applications?page={page}&size={pageSize}&sort={sortField}", competitionId, pageIndex, pageSize, sortField))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(applicationPage)))
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("The competition for which unsuccessful applications need to be found")
-                        )
-                ));
-
-        verify(competitionService, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
-
-    }
-
-    @Test
     public void count() throws Exception {
         CompetitionCountResource resource = new CompetitionCountResource();
         when(competitionService.countCompetitions()).thenReturn(serviceSuccess(resource));
@@ -245,72 +180,6 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
-    public void initialiseFormForCompetitionType() throws Exception {
-        Long competitionId = 2L;
-        Long competitionTypeId = 3L;
-        when(competitionSetupService.copyFromCompetitionTypeTemplate(competitionId, competitionTypeId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/competition/{competitionId}/initialise-form/{competitionTypeId}", competitionId, competitionTypeId))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("id of the competition in competition setup on which the application form should be initialised"),
-                                parameterWithName("competitionTypeId").description("id of the competitionType that is being chosen on setup")
-                        )
-                ));
-    }
-
-    @Test
-    public void closeAssessment() throws Exception {
-        Long competitionId = 2L;
-        when (competitionService.closeAssessment(competitionId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/competition/{id}/close-assessment", competitionId))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition to close the assessment of")
-                        )
-                ));
-    }
-
-    @Test
-    public void notifyAssessors() throws Exception {
-        final Long competitionId = 1L;
-
-        when(competitionService.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
-        when(assessorServiceMock.notifyAssessorsByCompetition(competitionId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/competition/{id}/notify-assessors", competitionId))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition for the notifications")
-                        ))
-                );
-    }
-
-    @Test
-    public void releaseFeedback() throws Exception {
-        final Long competitionId = 1L;
-
-        when(competitionService.releaseFeedback(competitionId)).thenReturn(serviceSuccess());
-        when(applicationServiceMock.notifyApplicantsByCompetition(competitionId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/competition/{id}/release-feedback", competitionId))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("id of the competition for the notifications")
-                        ))
-                );
-    }
-
-    @Test
     public void findInnovationLeads() throws Exception {
         final Long competitionId = 1L;
 
@@ -333,7 +202,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         final Long competitionId = 1L;
         final Long innovationLeadUserId = 2L;
 
-        when(competitionService.addInnovationLead(competitionId, innovationLeadUserId )).thenReturn(serviceSuccess());
+        when(competitionService.addInnovationLead(competitionId, innovationLeadUserId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/{id}/add-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId))
                 .andExpect(status().isOk())
@@ -354,7 +223,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         final Long competitionId = 1L;
         final Long innovationLeadUserId = 2L;
 
-        when(competitionService.removeInnovationLead(competitionId, innovationLeadUserId )).thenReturn(serviceSuccess());
+        when(competitionService.removeInnovationLead(competitionId, innovationLeadUserId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/competition/{id}/remove-innovation-lead/{innovationLeadUserId}", competitionId, innovationLeadUserId))
                 .andExpect(status().isOk())
@@ -369,123 +238,4 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         verify(competitionService, only()).removeInnovationLead(competitionId, innovationLeadUserId);
 
     }
-
-    @Test
-    public void updateCompetitionInitialDetails() throws Exception {
-        final Long competitionId = 1L;
-
-        CompetitionResource competitionResource = competitionResourceBuilder.build();
-
-        when(competitionService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(competitionResource));
-        when(competitionSetupService.updateCompetitionInitialDetails(any(), any(), any())).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/competition/{id}/update-competition-initial-details", competitionId)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(toJson(competitionResource)))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition whose initial details are being updated")
-                        ),
-                        requestFields(CompetitionResourceDocs.competitionResourceFields)
-                        )
-                );
-    }
-
-    @Test
-    public void feedbackReleased() throws Exception {
-        when(competitionService.findFeedbackReleasedCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
-
-        mockMvc.perform(get("/competition/feedback-released"))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        responseFields(
-                                fieldWithPath("[]").description("list of competitions, which have had feedback released, that the authenticated user has access to")
-                        )
-                ));
-    }
-
-    @Test
-    public void getOpenQueryCount() throws Exception {
-        when(competitionService.countAllOpenQueries(321L)).thenReturn(serviceSuccess(1L));
-
-        mockMvc.perform(get("/competition/{id}/queries/open/count", 321L))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition whose open queries are being counted")
-                        )
-                ));
-    }
-
-    @Test
-    public void getOpenQueries() throws Exception {
-        when(competitionService.findAllOpenQueries(321L)).thenReturn(serviceSuccess(Arrays.asList(
-                new CompetitionOpenQueryResource(1L, 2L, "a", 3L, "b"),
-                new CompetitionOpenQueryResource(1L, 2L, "a", 3L, "b"))));
-
-        mockMvc.perform(get("/competition/{id}/queries/open", 321L))
-                .andExpect(status().isOk())
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the competition whose open queries are being retrieved")
-                        ),
-                        responseFields(
-                                fieldWithPath("[]").description("list of open queries")
-                        )
-                ));
-    }
-
-    @Test
-    public void getPendingSpendProfiles() throws Exception {
-
-        final Long competitionId = 1L;
-
-        CompetitionPendingSpendProfilesResource resource1 = new CompetitionPendingSpendProfilesResource(11L, 1L, "Project Name 1");
-        CompetitionPendingSpendProfilesResource resource2 = new CompetitionPendingSpendProfilesResource(11L, 2L, "Project Name 2");
-        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles = Arrays.asList(resource1, resource2);
-        when(competitionService.getPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfiles));
-
-        mockMvc.perform(get("/competition/{competitionId}/pending-spend-profiles", competitionId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(pendingSpendProfiles)))
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition, whose Projects which are pending Spend Profile generation are being retrieved")
-                        )
-                        ,
-                        responseFields(
-                                fieldWithPath("[]").description("List of projects for which Spend Profile generation is pending, for a given competition")
-                        )
-                ));
-
-        verify(competitionService, only()).getPendingSpendProfiles(competitionId);
-    }
-
-    @Test
-    public void countPendingSpendProfiles() throws Exception {
-
-        final Long competitionId = 1L;
-        final Integer pendingSpendProfileCount = 3;
-
-        when(competitionService.countPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfileCount));
-
-        mockMvc.perform(get("/competition/{competitionId}/count-pending-spend-profiles", competitionId))
-                .andExpect(status().isOk())
-                .andExpect(content().json(toJson(pendingSpendProfileCount)))
-                .andDo(document(
-                        "competition/{method-name}",
-                        pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition whose count of Projects which are pending Spend Profile generation is being retrieved")
-                        )
-                ));
-
-        verify(competitionService, only()).countPendingSpendProfiles(competitionId);
-    }
-
 }

@@ -221,9 +221,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
-
         List<Competition> competitions = competitionRepository.findFeedbackReleased();
-        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
+        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition).stream().sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate())).collect(Collectors.toList()));
     }
 
     @Override

@@ -80,11 +80,11 @@ public abstract class ApplicationAssessorMapper {
     }
 
     private long countAssignedApplications(Long userId) {
-        return assessmentRepository.countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(of(REJECTED, WITHDRAWN)));
+        return assessmentRepository.countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(of(REJECTED, WITHDRAWN, SUBMITTED)));
     }
 
     private long countAssignedApplicationsByCompetition(CompetitionParticipant competitionParticipant) {
-        return countAssessmentsByCompetitionParticipantInStates(competitionParticipant, complementOf(of(REJECTED, WITHDRAWN)));
+        return countAssessmentsByCompetitionParticipantInStates(competitionParticipant, complementOf(of(REJECTED, WITHDRAWN, SUBMITTED)));
     }
 
     private long countSubmittedApplicationsByCompetition(CompetitionParticipant competitionParticipant) {

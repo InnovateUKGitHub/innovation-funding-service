@@ -149,7 +149,6 @@ public class ApplicationSectionController {
 
         Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, applicantSection.getSection(), params, user.getId(), applicationId);
         ValidationMessages saveApplicationErrors = applicationSaver.saveApplicationForm(applicantSection.getApplication(), applicantSection.getCompetition().getId(), form, sectionId, user.getId(), request, response, validFinanceTerms);
-        logSaveApplicationErrors(bindingResult);
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             questionService.assignQuestion(applicationId, user, request);
@@ -182,13 +181,6 @@ public class ApplicationSectionController {
     private void logSaveApplicationBindingErrors(ValidationHandler validationHandler) {
         if (LOG.isDebugEnabled())
             validationHandler.getAllErrors().forEach(e -> LOG.debug("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
-    }
-
-    private void logSaveApplicationErrors(BindingResult bindingResult) {
-        if (LOG.isDebugEnabled()) {
-            bindingResult.getFieldErrors().forEach(e -> LOG.debug("Remote validation field: " + e.getObjectName() + " v: " + e.getField() + " v: " + e.getDefaultMessage()));
-            bindingResult.getGlobalErrors().forEach(e -> LOG.debug("Remote validation global: " + e.getObjectName() + " v: " + e.getCode() + " v: " + e.getDefaultMessage()));
-        }
     }
 
     private Boolean validFinanceTermsForMarkAsComplete(ApplicationForm form, BindingResult bindingResult, SectionResource section, Map<String, String[]> params, Long userId, Long applicationId) {
