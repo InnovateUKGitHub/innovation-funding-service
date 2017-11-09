@@ -16,9 +16,10 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-37 Assessment panels - Accept/Reject Panel Invite
 ...
 ...               IFS-1563 Assessment panels - Invite assessors to panel - Accepted tab
-
 ...
 ...               IFS-1565 Assessment panels - Invite assessors to panel - Remove assessors from Invite list
+...
+...               IFS-2114 Assessment panels - Invitation expiry
 
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
@@ -27,8 +28,14 @@ Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 ${assessment_panel}  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
-${panel_assessor_ben}    benjamin.nixon@gmail.com
-${panel_assessor_joel}  joel.george@gmail.com
+${assessor_ben}              Benjamin Nixon
+${assessor_joel}             Joel George
+${assessor_madeleine}        Madeleine Martin
+${assessor_riley}            Riley Butler
+${panel_assessor_ben}        benjamin.nixon@gmail.com
+${panel_assessor_joel}       joel.george@gmail.com
+${panel_assessor_madeleine}  madeleine.martin@gmail.com
+${panel_assessor_riley}      riley.butler@gmail.com
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
@@ -57,34 +64,36 @@ CompAdmin can add an assessor to invite list
     [Documentation]  IFS-31
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link  link=Find
-    Given the user clicks the button/link    jQuery=tr:contains("Benjamin Nixon") label
-    And the user clicks the button/link      jQuery=tr:contains("Joel George") label
-    And the user clicks the button/link      jquery=tr:contains("Madeleine Martin") label
+    Given the user clicks the button/link    jQuery=tr:contains("${assessor_ben}") label
+    And the user clicks the button/link      jQuery=tr:contains("${assessor_joel}") label
+    And the user clicks the button/link      jquery=tr:contains("${assessor_madeleine}") label
+    And the user clicks the button/link      jquery=tr:contains("${assessor_riley}") label
     When the user clicks the button/link     jQuery=button:contains("Add selected to invite list")
-    Then the user should see the element     jQuery=td:contains("Benjamin Nixon") + td:contains(${panel_assessor_ben})
-    And the user should see the element      jQuery=td:contains("Joel George") + td:contains(${panel_assessor_joel})
-    And the user should see the element      jQuery=td:contains("Madeleine Martin") + td:contains("madeleine.martin@gmail.com")
+    Then the user should see the element     jQuery=td:contains("${assessor_ben}") + td:contains("${panel_assessor_ben}")
+    And the user should see the element      jQuery=td:contains("${assessor_joel}") + td:contains("${panel_assessor_joel}")
+    And the user should see the element      jQuery=td:contains("${assessor_madeleine}") + td:contains("${panel_assessor_madeleine}")
+    And the user should see the element      jQuery=td:contains("${assessor_riley}") + td:contains("${panel_assessor_riley}")
     When the user clicks the button/link      link=Find
-    Then the user should not see the element  jQuery=td:contains("Benjamin Nixon")
-    And the user should not see the element  jQuery=td:contains("Joel George")
-    And the user should not see the element  jquery=tr:contains("Madeleine Martin")
+    Then the user should not see the element  jQuery=td:contains("${assessor_ben}")
+    And the user should not see the element   jQuery=td:contains("${assessor_joel}")
+    And the user should not see the element   jquery=tr:contains("${assessor_madeleine}")
 
 CompAdmin can remove assessor from invite list
     [Documentation]  IFS-1565
-    [Tags]
+    [Tags]   HappyPath
     Given the user clicks the button/link    link=Invite
-    When the user clicks the button/link     jQuery=td:contains("Madeleine Martin") ~ td:contains("Remove")
+    When the user clicks the button/link     jQuery=td:contains("${assessor_madeleine}") ~ td:contains("Remove")
     And the user clicks the button/link      link=Find
-    Then the user should see the element     jQuery=tr:contains("Madeleine Martin")
+    Then the user should see the element     jQuery=tr:contains("${assessor_madeleine}")
 
 Cancel sending invite returns to the invite tab
     [Documentation]  IFS-1560
     [Tags]
     [Setup]  the user clicks the button/link  link=Invite
     Given the user clicks the button/link     link=Review and send invites
-    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("Benjamin Nixon")
+    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
     When the user clicks the button/link      link=Cancel
-    Then the user should see the element      jQuery=td:contains("Benjamin Nixon")
+    Then the user should see the element      jQuery=td:contains("${assessor_ben}")
 
 Assessor recieves the invite to panel
     [Documentation]  IFS-1560  IFS-1564
@@ -92,8 +101,8 @@ Assessor recieves the invite to panel
     [Setup]  the user clicks the button/link  link=Invite
     Given the user clicks the button/link     link=Review and send invites
     When the user clicks the button/link      jQuery=button:contains("Send invite")
-    Then the user should see the element      jQuery=.column-quarter:contains("2") small:contains("Invited")
-    And the user should see the element       jQuery=.column-quarter:contains("2") small:contains("Assessors on invite list")
+    Then the user should see the element      jQuery=.column-quarter:contains("3") small:contains("Invited")
+    And the user should see the element       jQuery=.column-quarter:contains("3") small:contains("Assessors on invite list")
     And the user reads his email              ${panel_assessor_ben}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
     And the user reads his email              ${panel_assessor_joel}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel
 
@@ -103,7 +112,7 @@ Bulk add assessor to invite list
     [Setup]  the user clicks the button/link  link=Find
     Given the user selects the checkbox       select-all-check
     And the user clicks the button/link       jQuery=button:contains("Add selected to invite list")
-    And the user should see the element       jQuery=td:contains("Madeleine Martin") + td:contains("madeleine.martin@gmail.com")
+    And the user should see the element       jQuery=td:contains("${assessor_madeleine}") + td:contains("${panel_assessor_madeleine}")
     When the user clicks the button/link      link=Find
     Then the user should see the element      jQuery=td:contains("No available assessors found")
 
@@ -111,13 +120,13 @@ CompAdmin resend invites to multiple assessors
     [Documentation]  IFS-1561
     [Tags]  HappyPath
     [Setup]  the user clicks the button/link    link=Pending and rejected
-    Given the user clicks the button/link     jQuery=tr:contains("Benjamin Nixon") label
-    And the user clicks the button/link       jQuery=tr:contains("Joel George") label
+    Given the user clicks the button/link     jQuery=tr:contains("${assessor_ben}") label
+    And the user clicks the button/link       jQuery=tr:contains("${assessor_joel}") label
     And the user clicks the button/link       jQuery=button:contains("Resend invites")
-    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("Benjamin Nixon")
+    And the user should see the element       jQuery=h2:contains("Recipients") ~ p:contains("${assessor_ben}")
     When the user clicks the button/link      jQuery=button:contains("Send invite")
-    Then the user should see the element      jQuery=td:contains("Benjamin Nixon") ~ td:contains("Invite sent: ${today}")
-    And the user should see the element       jQuery=td:contains("Joel George") ~ td:contains("Invite sent: ${today}")
+    Then the user should see the element      jQuery=td:contains("${assessor_ben}") ~ td:contains("Invite sent: ${today}")
+    And the user should see the element       jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite sent: ${today}")
 
 Assesor is able to accept the invitation from dashboard
     [Documentation]  IFS-37  IFS-1135
@@ -144,14 +153,22 @@ Comp Admin can see the rejected and accepted invitation
     [Tags]
     [Setup]  Log in as a different user        &{Comp_admin1_credentials}
     Given the user navigates to the page       ${SERVER}/management/assessment/panel/competition/${CLOSED_COMPETITION}/assessors/overview
-    And the user should see the element        jQuery=td:contains("Joel George") ~ td:contains("Invite declined")
+    And the user should see the element        jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite declined")
     And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Declined")
     When the user clicks the button/link       link=Accepted
-    Then the user should see the element       jQuery=td:contains("Benjamin Nixon") ~ td:contains("Materials, process and manufacturing design technologies")
+    Then the user should see the element       jQuery=td:contains("${assessor_ben}") ~ td:contains("Materials, process and manufacturing design technologies")
     And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Accepted")
-    And the user should see the element        jQuery=.column-quarter:contains(0) small:contains("Assessors on invite list")
+    And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Assessors on invite list")
     When the user clicks the button/link       link=Pending and rejected
-    Then the user should not see the element   jQuery=td:contains("Benjamin Nixon")
+    Then the user should not see the element   jQuery=td:contains("${assessor_ben}")
+
+Assessor tries to accept expired invitation
+    [Documentation]  IFS-2114
+    [Tags]
+    [Setup]   the assessment panel period changes in the db   2017-02-24 00:00:00
+    When the user reads his email and clicks the link   ${panel_assessor_riley}  Invitation to assessment panel for '${CLOSED_COMPETITION_NAME}'  We are inviting you to the assessment panel  1
+    Then the user should see the text in the page       This invitation is now closed
+    [Teardown]  the assessment panel period changes in the db   2018-02-24 00:00:00
 
 *** Keywords ***
 
@@ -159,6 +176,11 @@ Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${today} =  get today short month
     set suite variable  ${today}
+
+the assessment panel period changes in the db
+    [Arguments]  ${Date}
+    Connect to Database    @{database}
+    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='ASSESSMENT_PANEL' AND competition_id=${competition_ids["${CLOSED_COMPETITION_NAME}"]};
 
 enable assessment panel for the competition
     the user clicks the button/link    link=View and update competition setup
