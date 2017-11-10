@@ -301,30 +301,30 @@ function tailorFractalInstance() {
 
 
 function useContainerRegistry() {
-    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/*.yml
-    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/sil-stub/*.yml
-    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/fractal/*.yml
-    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/db-anonymised-data/*.yml
-    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/robot-tests/*.yml
-    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/mysql/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/sil-stub/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/fractal/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/robot-tests/*.yml
+    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" $(getBuildLocation)/mysql/*.yml
 
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/sil-stub/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/fractal/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/db-anonymised-data/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/shib/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/robot-tests/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/mysql/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/sil-stub/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/fractal/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/shib/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/robot-tests/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/mysql/*.yml
 
-    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/*.yml
-    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/sil-stub/*.yml
-    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/fractal/*.yml
-    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/db-anonymised-data/*.yml
-    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/shib/*.yml
-    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/robot-tests/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/sil-stub/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/fractal/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/shib/*.yml
+    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/robot-tests/*.yml
 }
 
 function pushApplicationImages() {
@@ -367,7 +367,7 @@ function pushApplicationImages() {
 }
 
 function pushIfsMysqlDatabase(){
-    docker tag ifs-mysql:5.6.29 \
+    docker tag innovateuk/ifs-mysql:5.6.29 \
         ${REGISTRY}/${PROJECT}/ifs-mysql:5.6.29
 
     docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
