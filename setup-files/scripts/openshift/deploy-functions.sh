@@ -1,5 +1,10 @@
 #!/bin/bash
 
+
+function getBuildLocation() {
+    echo "build/resources/main"
+}
+
 function isNamedEnvironment() {
 
     TARGET=$1
@@ -113,33 +118,33 @@ function injectDBVariables() {
 
     DB_PORT=${DB_PORT:-3306}
 
-    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" os-files-tmp/db-reset/*.yml
+    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" $(getBuildLocation)/db-reset/*.yml
 
-    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" os-files-tmp/db-anonymised-data/*.yml
-    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" os-files-tmp/db-anonymised-data/*.yml
-    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" os-files-tmp/db-anonymised-data/*.yml
-    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" os-files-tmp/db-anonymised-data/*.yml
-    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" os-files-tmp/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" $(getBuildLocation)/db-anonymised-data/*.yml
 }
 
 
 function injectFlywayVariables() {
     [ -z "$FLYWAY_LOCATIONS" ] && { echo "Set FLYWAY_LOCATIONS environment variable"; exit -1; }
-    sed -i.bak "s#<<FLYWAY-LOCATIONS>>#${FLYWAY_LOCATIONS}#g" os-files-tmp/db-reset/*.yml
+    sed -i.bak "s#<<FLYWAY-LOCATIONS>>#${FLYWAY_LOCATIONS}#g" $(getBuildLocation)/db-reset/*.yml
 }
 
 function injectLDAPVariables() {
     if [ -z "$LDAP_HOST" ]; then echo "Set LDAP_HOST environment variable"; exit -1; fi
     LDAP_PORT=${LDAP_PORT:-8389}
-    sed -i.bak "s#<<LDAP-HOST>>#$LDAP_HOST#g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s#<<LDAP-PORT>>#$LDAP_PORT#g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s#<<LDAP-PASS>>#$LDAP_PASS#g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s#<<LDAP-DOMAIN>>#$LDAP_DOMAIN#g" os-files-tmp/db-reset/*.yml
-    sed -i.bak "s#<<LDAP-SCHEME>>#$LDAP_SCHEME#g" os-files-tmp/db-reset/*.yml
+    sed -i.bak "s#<<LDAP-HOST>>#$LDAP_HOST#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<LDAP-PORT>>#$LDAP_PORT#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<LDAP-PASS>>#$LDAP_PASS#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<LDAP-DOMAIN>>#$LDAP_DOMAIN#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<LDAP-SCHEME>>#$LDAP_SCHEME#g" $(getBuildLocation)/db-reset/*.yml
 }
 
 function getEnvVariableValue() {
@@ -150,7 +155,7 @@ function getEnvVariableValue() {
 function substituteOptionalEnvVariable() {
     variableValue=$(getEnvVariableValue $1)
     replacementToken=$2
-    find os-files-tmp -name '*.yml' | xargs sed -i.bak "s#${replacementToken}#${variableValue}#g"
+    find $(getBuildLocation) -name '*.yml' | xargs sed -i.bak "s#${replacementToken}#${variableValue}#g"
 }
 
 function substituteMandatoryEnvVariable() {
@@ -164,7 +169,7 @@ function substituteMandatoryEnvVariable() {
 
     replacementToken=$2
 
-    find os-files-tmp -name '*.yml' | xargs sed -i.bak "s#${replacementToken}#${variableValue}#g"
+    find $(getBuildLocation) -name '*.yml' | xargs sed -i.bak "s#${replacementToken}#${variableValue}#g"
 }
 
 function tailorAppInstance() {
@@ -202,38 +207,38 @@ function tailorAppInstance() {
     fi
 
     if [ -z "$SSLCERTFILE" ]; then echo "Set SSLCERTFILE, SSLCACERTFILE, and SSLKEYFILE environment variables"; exit -1; fi
-    sed -i.bak -e $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
-    sed -i.bak -e $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
-    sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' os-files-tmp/shib/*.yml
+    sed -i.bak -e $"s#<<SSLCERT>>#$(convertFileToBlock $SSLCERTFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
+    sed -i.bak -e $"s#<<SSLCACERT>>#$(convertFileToBlock $SSLCACERTFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
+    sed -i.bak -e $"s#<<SSLKEY>>#$(convertFileToBlock $SSLKEYFILE)#g" -e 's/<<>>/\\n/g' $(getBuildLocation)/shib/*.yml
 
-    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/*.yml
-    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/sil-stub/*.yml
-    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" os-files-tmp/shib/56-*.yml
+    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" $(getBuildLocation)/*.yml
+    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" $(getBuildLocation)/sil-stub/*.yml
+    sed -i.bak -e "s/<<NEWRELIC-LICENCE-KEY>>/$NEWRELIC_LICENCE_KEY/g" -e "s/<<NEWRELIC-ENVIRONMENT>>/$TARGET/g" $(getBuildLocation)/shib/56-*.yml
 
     if [[ ${TARGET} == "production" ]]
     then
-      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
+      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
+      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth.$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
 
-      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
+      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
+      sed -i.bak "s/<<SHIB-ADDRESS>>/$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
 
     else
-      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
+      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
+      sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
 
-      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
+      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/*.yml
+      sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/shib/*.yml
     fi
 
 
-    sed -i.bak "s/<<MAIL-ADDRESS>>/mail-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/mail/*.yml
-    sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/spring-admin/*.yml
-    sed -i.bak "s/<<FRACTAL-ADDRESS>>/fractal-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/fractal/*.yml
+    sed -i.bak "s/<<MAIL-ADDRESS>>/mail-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/mail/*.yml
+    sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/spring-admin/*.yml
+
 
     if $(isNamedEnvironment ${TARGET}); then
 
-        sed -i.bak "s/claimName: file-upload-claim/claimName: ${TARGET}-file-upload-claim/g" os-files-tmp/*.yml
+        sed -i.bak "s/claimName: file-upload-claim/claimName: ${TARGET}-file-upload-claim/g" $(getBuildLocation)/*.yml
 
     fi
 
@@ -268,20 +273,20 @@ function tailorAppInstance() {
     ## we can do away with this more complex configuration block and that of the one above that this one mirrors
     if $(isNamedEnvironment ${TARGET}); then
 
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" os-files-tmp/45-registration-svc.yml
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=int,dc=g2g3digital,dc=net#g" os-files-tmp/45-registration-svc.yml
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=int,dc=g2g3digital,dc=net#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" $(getBuildLocation)/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=int,dc=g2g3digital,dc=net#g" $(getBuildLocation)/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=int,dc=g2g3digital,dc=net#g" $(getBuildLocation)/45-registration-svc.yml
 
     else
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" os-files-tmp/45-registration-svc.yml
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=nodomain#g" os-files-tmp/45-registration-svc.yml
-        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=nodomain#g" os-files-tmp/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_PORT>>#389#g" $(getBuildLocation)/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_BASE_DN>>#dc=nodomain#g" $(getBuildLocation)/45-registration-svc.yml
+        sed -i.bak "s#<<SHIBBOLETH_LDAP_USER>>#cn=admin,dc=nodomain#g" $(getBuildLocation)/45-registration-svc.yml
     fi
 
     if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf"  ]]
     then
-        sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/4*.yml
-        sed -i.bak "s/replicas: 1/replicas: 2/g" os-files-tmp/5-front-door-service.yml
+        sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/4*.yml
+        sed -i.bak "s/replicas: 1/replicas: 2/g" $(getBuildLocation)/5-front-door-service.yml
     fi
 
     if [[ ${TARGET} == "local" ]]
@@ -290,8 +295,12 @@ function tailorAppInstance() {
     fi
 }
 
-function useContainerRegistry() {
+function tailorFractalInstance() {
+    sed -i.bak "s/<<FRACTAL-ADDRESS>>/fractal-$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/fractal/*.yml
+}
 
+
+function useContainerRegistry() {
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/sil-stub/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/db-reset/*.yml
@@ -316,8 +325,6 @@ function useContainerRegistry() {
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/db-anonymised-data/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/shib/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" os-files-tmp/robot-tests/*.yml
-
-
 }
 
 function pushApplicationImages() {
@@ -417,14 +424,6 @@ function blockUntilServiceIsUp() {
     oc get routes ${SVC_ACCOUNT_CLAUSE}
 }
 
-function cloneConfig() {
-    cp -r os-files os-files-tmp
-}
-
-function cleanUp() {
-    rm -rf os-files-tmp
-    rm -rf shibboleth
-}
 
 function scaleDataService() {
     oc scale dc data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}

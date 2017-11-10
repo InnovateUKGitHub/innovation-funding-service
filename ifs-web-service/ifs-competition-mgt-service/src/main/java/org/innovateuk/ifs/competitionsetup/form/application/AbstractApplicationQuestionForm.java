@@ -22,4 +22,6 @@ public abstract class AbstractApplicationQuestionForm extends CompetitionSetupFo
     public void setQuestion(CompetitionSetupQuestionResource question) {
         this.question = question;
     }
+
+    public boolean isRemovable() { return false; }
 }

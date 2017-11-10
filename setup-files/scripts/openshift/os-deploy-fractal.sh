@@ -26,9 +26,9 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 echo "Deploying Fractal for the $PROJECT Openshift project"
 
 function deployFractal() {
-    until oc create -f os-files-tmp/fractal/9-fractal.yml ${SVC_ACCOUNT_CLAUSE}
+    until oc create -f $(getBuildLocation)/fractal/9-fractal.yml ${SVC_ACCOUNT_CLAUSE}
     do
-      oc delete -f os-files-tmp/fractal/9-fractal.yml ${SVC_ACCOUNT_CLAUSE}
+      oc delete -f $(getBuildLocation)/fractal/9-fractal.yml ${SVC_ACCOUNT_CLAUSE}
       sleep 10
     done
 
@@ -36,9 +36,7 @@ function deployFractal() {
 
 # Entry point
 
-    cleanUp
-    cloneConfig
-    tailorAppInstance
+    tailorFractalInstance
     useContainerRegistry
     pushFractalImages
     deployFractal
