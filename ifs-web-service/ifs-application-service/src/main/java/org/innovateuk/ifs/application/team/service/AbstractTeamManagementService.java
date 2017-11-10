@@ -43,7 +43,6 @@ public abstract class AbstractTeamManagementService {
 
     public abstract List<Long> getInviteIds(long applicationId, long organisationId);
 
-
     protected ApplicationInviteResource mapStagedInviteToInviteResource(ApplicationTeamUpdateForm applicationTeamUpdateForm,
                                                                         long applicationId,
                                                                         Long inviteOrganisationId) {

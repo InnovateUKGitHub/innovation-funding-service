@@ -33,7 +33,7 @@ public final class CollectionFunctions {
 
 
     /**
-     * Flatten the given 2-dimensional List into a 1-dimensional List
+     * Flatten the given 2-dimensional {@link Collection} into a 1-dimensional List
      *
      * @param toFlatten
      * @param <T>
