@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.documentation;
 
 import org.springframework.restdocs.payload.FieldDescriptor;
-import org.springframework.restdocs.payload.JsonFieldType;
 
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -31,7 +30,6 @@ public class SpendProfileDocs {
             fieldWithPath("spendProfileFigures").description("Spend Profile Figures for each month, for each category of the Spend Profile"),
             fieldWithPath("markedAsComplete").description("Whether spend profile has been marked as complete or not"),
             fieldWithPath("generatedBy").description("The user who generated this Spend Profile"),
-            fieldWithPath("generatedDate").description("The date and time at which this Spend Profile was generated"),
-            fieldWithPath("approval").description("If the spend profile is approved or rejected")
+            fieldWithPath("generatedDate").description("The date and time at which this Spend Profile was generated")
     };
 }

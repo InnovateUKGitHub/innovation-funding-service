@@ -127,7 +127,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         Calendar generatedDate = Calendar.getInstance();
 
         SpendProfile expectedOrganisation1Profile = new SpendProfile(organisation1, project, costCategoryType1,
-                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, generatedBy, generatedDate, false, ApprovalType.UNSET);
+                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, generatedBy, generatedDate, false);
 
         List<Cost> expectedOrganisation2EligibleCosts = singletonList(
                 new Cost("301").withCategory(type2Cat1));
@@ -138,7 +138,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
                 new Cost("100").withCategory(type2Cat1).withTimePeriod(2, MONTH, 1, MONTH));
 
         SpendProfile expectedOrganisation2Profile = new SpendProfile(organisation2, project, costCategoryType2,
-                expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures, generatedBy, generatedDate, false, ApprovalType.UNSET);
+                expectedOrganisation2EligibleCosts, expectedOrganisation2SpendProfileFigures, generatedBy, generatedDate, false);
 
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation2Profile))).thenReturn(null);
@@ -449,7 +449,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         Calendar generatedDate = Calendar.getInstance();
 
         SpendProfile expectedOrganisation1Profile = new SpendProfile(organisation1, project, costCategoryType1,
-                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, generatedBy, generatedDate, false, ApprovalType.UNSET);
+                expectedOrganisation1EligibleCosts, expectedOrganisation1SpendProfileFigures, generatedBy, generatedDate, false);
 
         when(spendProfileRepositoryMock.save(spendProfileExpectations(expectedOrganisation1Profile))).thenReturn(null);
 
@@ -575,7 +575,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
     @Test
     public void getSpendProfileStatusByProjectIdUnset() {
-        List<SpendProfile> spendProfileList = newSpendProfile().withApproval(ApprovalType.UNSET, ApprovalType.UNSET, ApprovalType.UNSET).build(3);
+        List<SpendProfile> spendProfileList = newSpendProfile().build(3);
         when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfileList);
 
         ServiceResult<ApprovalType> result = service.getSpendProfileStatusByProjectId(projectId);
@@ -602,11 +602,10 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
 
         assertTrue(result.isSuccess());
-        spendProfileList.forEach(spendProfile ->
-                assertEquals(ApprovalType.APPROVED, spendProfile.getApproval())
-        );
+;
         verify(spendProfileRepositoryMock).save(spendProfileList);
         verify(grantOfferLetterServiceMock).generateGrantOfferLetterIfReady(projectId);
+        verify(spendProfileWorkflowHandlerMock).spendProfileApproved(project, user);
     }
 
     @Test
@@ -630,12 +629,10 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ServiceResult<Void> resultNew = service.approveOrRejectSpendProfile(projectId, ApprovalType.REJECTED);
 
         assertTrue(resultNew.isSuccess());
-        spendProfileList.forEach(spendProfile ->
-                assertEquals(ApprovalType.REJECTED, spendProfile.getApproval())
-        );
         assertTrue(project.getSpendProfileSubmittedDate() == null);
 
         verify(spendProfileRepositoryMock).save(spendProfileList);
+        verify(spendProfileWorkflowHandlerMock).spendProfileRejected(project, user);
     }
 
     @Test
@@ -657,10 +654,9 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         assertFalse(result.isSuccess());
         assertEquals(SPEND_PROFILE_NOT_READY_TO_APPROVE.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
-        spendProfileList.forEach(spendProfile ->
-                assertEquals(ApprovalType.APPROVED, spendProfile.getApproval())
-        );
+
         verify(spendProfileRepositoryMock).save(spendProfileList);
+        verify(spendProfileWorkflowHandlerMock).spendProfileApproved(project,user);
     }
 
     @Test
@@ -752,7 +748,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         User generatedBy = newUser().build();
         Calendar generatedDate = Calendar.getInstance();
 
-        SpendProfile spendProfileInDB = new SpendProfile(null, newProject().build(), null, Collections.emptyList(), spendProfileFigures, generatedBy, generatedDate, false, ApprovalType.UNSET);
+        SpendProfile spendProfileInDB = new SpendProfile(null, newProject().build(), null, Collections.emptyList(), spendProfileFigures, generatedBy, generatedDate, false);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(Optional.of(spendProfileInDB));
         when(validationUtil.validateSpendProfileTableResource(eq(table))).thenReturn(Optional.empty());
@@ -960,7 +956,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         User generatedBy = newUser().build();
         Calendar generatedDate = Calendar.getInstance();
 
-        SpendProfile spendProfileInDB = new SpendProfile(null, projectInDB, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, true, ApprovalType.UNSET);
+        SpendProfile spendProfileInDB = new SpendProfile(null, projectInDB, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, true);
 
         return spendProfileInDB;
     }
@@ -1136,7 +1132,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
     }
 
     private List<SpendProfile> getSpendProfilesAndSetWhenSpendProfileRepositoryMock(Long projectId) {
-        List<SpendProfile> spendProfileList = newSpendProfile().withApproval(ApprovalType.UNSET, ApprovalType.REJECTED).build(2);
+        List<SpendProfile> spendProfileList = newSpendProfile().build(2);
         when(spendProfileRepositoryMock.findByProjectId(projectId)).thenReturn(spendProfileList);
 
         return spendProfileList;

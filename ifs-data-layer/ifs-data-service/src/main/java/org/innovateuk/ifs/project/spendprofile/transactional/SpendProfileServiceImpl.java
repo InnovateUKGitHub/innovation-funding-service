@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -231,7 +230,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
         List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
         CostCategoryType costCategoryType = costCategoryTypeRepository.findOne(spendProfileCostCategorySummaries.getCostCategoryType().getId());
-        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false, ApprovalType.UNSET);
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false);
         spendProfileRepository.save(spendProfile);
         return serviceSuccess();
     }
@@ -408,7 +407,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         return returnMap;
     }
 
-
     private Map<String, List<Map<Long, List<BigDecimal>>>> groupCategories(SpendProfileTableResource spendProfileTableResource) {
         Map<String, List<Map<Long, List<BigDecimal>>>> catGroupMap = new HashMap<>();
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().forEach((category, values) -> {
@@ -571,7 +569,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private void updateApprovalOfSpendProfile(Long projectId, ApprovalType approvalType) {
         List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
-        spendProfiles.forEach(spendProfile -> spendProfile.setApproval(approvalType));
         if (ApprovalType.REJECTED.equals(approvalType)) {
             rejectSpendProfileSubmission(projectId);
         }
@@ -621,10 +618,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<SpendProfile> getSpendProfileEntity(Long projectId, Long organisationId) {
         return EntityLookupCallbacks.find(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(SpendProfile.class, projectId, organisationId));
-    }
-
-    private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
-        return spendProfileRepository.findByProjectId(projectId);
     }
 
     private SpendProfileCSVResource generateSpendProfileCSVData(SpendProfileTableResource spendProfileTableResource,

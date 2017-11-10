@@ -39,3 +39,5 @@ INSERT INTO process (end_date, event, last_modified, start_date, process_type, t
         WHEN d.event = 'spend-profile-generated' THEN 'CREATED'
     END
   WHERE NOT EXISTS (SELECT 1 FROM process WHERE process.target_id = d.target_id AND process.process_type = 'SpendProfileProcess');
+
+ALTER TABLE spend_profile DROP COLUMN approval;
