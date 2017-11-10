@@ -24,6 +24,7 @@ import org.springframework.test.annotation.Rollback;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -55,7 +56,6 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     private Long org1Id;
     private Long org2Id;
     private List<Competition> existingSearchResults;
-    private long compId;
 
     @Before
     public void setup() {
@@ -65,9 +65,6 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         org = organisationRepository.findOneByName("Org2");
         assertNotNull(org);
         org2Id = org.getId();
-
-        // don't want to clash with integration test data loaded via SQL scripts
-        compId = repository.findAll().stream().max((c1, c2) -> c1.getId().compareTo(c2.getId())).get().getId();
 
         existingSearchResults = repository.findAll();
     }
@@ -136,46 +133,70 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Assert.assertEquals(0, repository.findProjectSetup().size());
     }
 
+    private List<Milestone> replaceOpenDateMilestoneDate(List<Milestone> milestones, ZonedDateTime time) {
+        Optional<Milestone> openDate = milestones.stream().filter(m -> m.getType().equals(MilestoneType.OPEN_DATE)).findFirst();
+        List<Milestone> nonOpenDateMilestones = milestones.stream().filter(m -> !m.getType().equals(MilestoneType.OPEN_DATE)).collect(Collectors.toList());
+        if(openDate.isPresent()) {
+            openDate.get().setDate(time);
+            nonOpenDateMilestones.add(openDate.get());
+        }
+        return nonOpenDateMilestones;
+    }
     @Test
     @Rollback
     public void testSearch() {
         User leadTechnologist = getUserByEmail("steve.smith@empire.com");
         User notLeadTechnologist = getUserByEmail("pete.tom@egg.com");
 
-        Competition openComp = newCompetition().withName("openComp").withLeadTechnologist(leadTechnologist).withSetupComplete(true).withId(++compId).build();
+        Competition openComp = new Competition(null, null, null,null,"openComp", null, null);
+        openComp.setLeadTechnologist(leadTechnologist);
+        openComp.setSetupComplete(true);
         openComp = repository.save(openComp);
-        Milestone openDateMilestone = newMilestone().withCompetition(openComp).withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now().minusHours(5L)).build();
-        milestoneRepository.save(openDateMilestone);
+        openComp.setMilestones(replaceOpenDateMilestoneDate(openComp.getMilestones(), ZonedDateTime.now().minusHours(5L)));
+        openComp = repository.save(openComp);
 
-        Competition earliestOpenComp = newCompetition().withName("earliestOpenComp").withLeadTechnologist(leadTechnologist).withSetupComplete(true).withId(++compId).build();
+        Competition earliestOpenComp = new Competition(null, null, null,null,"earliestOpenComp", null, null);
+        earliestOpenComp.setLeadTechnologist(leadTechnologist);
+        earliestOpenComp.setSetupComplete(true);
         earliestOpenComp = repository.save(earliestOpenComp);
-        Milestone earlierOpenDateMilestone = newMilestone().withCompetition(earliestOpenComp).withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now().minusDays(3L)).build();
-        milestoneRepository.save(earlierOpenDateMilestone);
+        earliestOpenComp.setMilestones(replaceOpenDateMilestoneDate(earliestOpenComp.getMilestones(), ZonedDateTime.now().minusDays(3L)));
+        earliestOpenComp = repository.save(earliestOpenComp);
 
-        Competition compWithNoInnovationLead = newCompetition().withName("compWithNoInnovationLead").withSetupComplete(true).withLeadTechnologist(notLeadTechnologist).withId(++compId).build();
+        Competition compWithNoInnovationLead = new Competition(null, null, null,null,"compWithNoInnovationLead", null, null);
+        compWithNoInnovationLead.setLeadTechnologist(notLeadTechnologist);
+        compWithNoInnovationLead.setSetupComplete(true);
         compWithNoInnovationLead = repository.save(compWithNoInnovationLead);
-        Milestone openDateMilestoneNoInnovationLead = newMilestone().withCompetition(compWithNoInnovationLead).withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now().minusHours(10L)).build();
-        milestoneRepository.save(openDateMilestoneNoInnovationLead);
+        compWithNoInnovationLead.setMilestones(replaceOpenDateMilestoneDate(compWithNoInnovationLead.getMilestones(), ZonedDateTime.now().minusHours(10L)));
+        compWithNoInnovationLead = repository.save(compWithNoInnovationLead);
 
-        Competition compInPreparation = newCompetition().withName("compInPreparation").withSetupComplete(false).withLeadTechnologist(leadTechnologist).withId(++compId).build();
+        Competition compInPreparation = new Competition(null, null, null,null,"compInPreparation", null, null);
+        compInPreparation.setLeadTechnologist(leadTechnologist);
+        compInPreparation.setSetupComplete(false);
         compInPreparation = repository.save(compInPreparation);
-        Milestone openDateMilestoneInPreparation = newMilestone().withCompetition(compInPreparation).withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now().minusHours(20L)).build();
-        milestoneRepository.save(openDateMilestoneInPreparation);
+        compInPreparation.setMilestones(replaceOpenDateMilestoneDate(compInPreparation.getMilestones(), ZonedDateTime.now().minusHours(20L)));
+        compInPreparation = repository.save(compInPreparation);
 
-        Competition compReadyToOpen = newCompetition().withName("compReadyToOpen").withSetupComplete(true).withLeadTechnologist(leadTechnologist).withId(++compId).build();
+        Competition compReadyToOpen = new Competition(null, null, null,null,"compReadyToOpen", null, null);
+        compReadyToOpen.setLeadTechnologist(leadTechnologist);
+        compReadyToOpen.setSetupComplete(true);
         compReadyToOpen = repository.save(compReadyToOpen);
-        Milestone openDateMilestoneReadyToOpen = newMilestone().withCompetition(compReadyToOpen).withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now().plusHours(12L)).build();
-        milestoneRepository.save(openDateMilestoneReadyToOpen);
+        compReadyToOpen.setMilestones(replaceOpenDateMilestoneDate(compReadyToOpen.getMilestones(), ZonedDateTime.now().plusHours(12L)));
+        compReadyToOpen = repository.save(compReadyToOpen);
 
-        Competition compInInform = newCompetition().withName("compInInform").withSetupComplete(true).withLeadTechnologist(leadTechnologist).withId(++compId).build();
+        Competition compInInform = new Competition(null, null, null,null,"compInInform", null, null);
+        compInInform.setLeadTechnologist(leadTechnologist);
+        compInInform.setSetupComplete(true);
         compInInform = repository.save(compInInform);
-        Milestone openDateMilestoneInInform = newMilestone().withCompetition(compInInform).withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now().minusDays(1L).minusHours(12L)).build();
-        milestoneRepository.save(openDateMilestoneInInform);
+        compInInform.setMilestones(replaceOpenDateMilestoneDate(compInInform.getMilestones(), ZonedDateTime.now().minusDays(1L).minusHours(12L)));
+        compInInform = repository.save(compInInform);
 
-        Competition compInProjectSetup = newCompetition().withName("compInProjectSetup").withSetupComplete(true).withLeadTechnologist(leadTechnologist).withId(++compId).build();
+        Competition compInProjectSetup = new Competition(null, null, null,null,"compInProjectSetup", null, null);
+        compInProjectSetup.setLeadTechnologist(leadTechnologist);
+        compInProjectSetup.setSetupComplete(true);
         compInProjectSetup = repository.save(compInProjectSetup);
-        Milestone openDateMilestoneInProjectSetup = newMilestone().withCompetition(compInProjectSetup).withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.now().minusDays(2L)).build();
-        milestoneRepository.save(openDateMilestoneInProjectSetup);
+        compInProjectSetup.setMilestones(replaceOpenDateMilestoneDate(compInProjectSetup.getMilestones(), ZonedDateTime.now().minusDays(2L)));
+        compInProjectSetup = repository.save(compInProjectSetup);
+
         Milestone feedbackReleasedMilestoneInProjectSetup = newMilestone().withCompetition(compInProjectSetup).withType(MilestoneType.FEEDBACK_RELEASED).withDate(ZonedDateTime.now().minusDays(1L)).build();
         milestoneRepository.save(feedbackReleasedMilestoneInProjectSetup);
 
