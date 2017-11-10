@@ -201,12 +201,13 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Page<Competition> supportUserSearchResults = repository.searchForSupportUser("%o%", pageable);
         List<Competition> filteredSupportUserSearchResults = supportUserSearchResults.getContent().stream().filter(r -> existingSearchResults.stream().filter(er -> er.getId().equals(r.getId())).count() == 0L).collect(Collectors.toList());
-        Assert.assertEquals(5, filteredSupportUserSearchResults.size());
+        Assert.assertEquals(6, filteredSupportUserSearchResults.size());
         Assert.assertEquals("earliestOpenComp", filteredSupportUserSearchResults.get(0).getName());
-        Assert.assertEquals("compInInform", filteredSupportUserSearchResults.get(1).getName());
-        Assert.assertEquals("compWithNoInnovationLead", filteredSupportUserSearchResults.get(2).getName());
-        Assert.assertEquals("openComp", filteredSupportUserSearchResults.get(3).getName());
-        Assert.assertEquals("compReadyToOpen", filteredSupportUserSearchResults.get(4).getName());
+        Assert.assertEquals("compInProjectSetup", filteredSupportUserSearchResults.get(1).getName());
+        Assert.assertEquals("compInInform", filteredSupportUserSearchResults.get(2).getName());
+        Assert.assertEquals("compWithNoInnovationLead", filteredSupportUserSearchResults.get(3).getName());
+        Assert.assertEquals("openComp", filteredSupportUserSearchResults.get(4).getName());
+        Assert.assertEquals("compReadyToOpen", filteredSupportUserSearchResults.get(5).getName());
     }
 
     @Test

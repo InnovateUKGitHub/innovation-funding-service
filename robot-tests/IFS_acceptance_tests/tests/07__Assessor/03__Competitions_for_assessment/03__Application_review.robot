@@ -115,6 +115,7 @@ Scope: Validations
     And the user clicks the button/link                 link=Scope
     When the user clicks the button/link                jQuery=button:contains("Save and return to assessment overview")
     Then the user should see a field and summary error  Please select a research category.
+    And the user should see a field and summary error   Please select the scope.
 
 Scope: Status in the overview is updated
     [Documentation]    INFUND-1483

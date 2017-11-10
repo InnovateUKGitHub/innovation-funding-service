@@ -48,14 +48,13 @@ public class CompetitionStatusController {
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
-    public String viewCompetitionStatus(Model model, UserResource loggedInUser,
-                                        @PathVariable Long competitionId) {
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support')")
+    public String viewCompetitionStatus(@PathVariable Long competitionId) {
         return format("redirect:/competition/%s/status/all", competitionId);
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support')")
     public String viewCompetitionStatusAll(Model model, UserResource loggedInUser,
                                            @PathVariable Long competitionId) {
         model.addAttribute("model",
