@@ -23,7 +23,7 @@ items:
           deploymentconfig: assessment-svc
       spec:
         containers:
-        - image: innovateuk/assessment-service:1.0-SNAPSHOT
+        - image: innovateuk/assessment-service:${assessmentServiceVersion}
           name: assessment-svc
           livenessProbe:
             httpGet:

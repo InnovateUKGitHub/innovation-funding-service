@@ -23,7 +23,7 @@ items:
           deploymentconfig: registration-svc
       spec:
         containers:
-        - image: innovateuk/registration-service:1.0-SNAPSHOT
+        - image: innovateuk/registration-service:${registrationServiceVersion}
           name: registration-svc
           livenessProbe:
             httpGet:

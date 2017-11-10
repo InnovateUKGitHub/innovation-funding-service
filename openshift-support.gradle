@@ -3,6 +3,7 @@ if(project.hasProperty('profile') && profile == 'automated') {
     ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 }
 
+
 processResources {
 
     from ('os-files') {
@@ -12,6 +13,7 @@ processResources {
         expand project.properties
     }
 }
+
 
 // Production tasks
 
@@ -242,4 +244,5 @@ task osTestResults(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-test-results.sh'
     args = []
 }
+
 

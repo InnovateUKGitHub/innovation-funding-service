@@ -83,8 +83,28 @@ subprojects {
             dependsOn ":docker:app-base-image:buildDocker"
             dependsOn prepareDockerInput
 
-            tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+            tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest "
             inputDir = project.file("$project.buildDir/docker")
+        }
+
+
+        task buildDockerForOS(type: DockerBuildImage) {
+            dependsOn ":docker:app-base-image:buildDocker"
+            dependsOn prepareDockerInput
+
+            tag = "ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
+            inputDir = project.file("$project.buildDir/docker")
+        }
+
+        task tagDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerTagImage) {
+
+            imageId=buildDocker.getTag()
+            println "**** ImageID == " + imageId;
+            tag ="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
+            println "**** TAG == " + tag
+            repository="http://localhost:5000"
+//            imageName="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
+//            tag = "ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
         }
 
 

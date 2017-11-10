@@ -23,7 +23,7 @@ items:
           deploymentconfig: front-door-svc
       spec:
         containers:
-        - image: innovateuk/front-door-service:1.0-SNAPSHOT
+        - image: innovateuk/front-door-service:${frontDoorDataServiceVersion}
           name: front-door-svc
           livenessProbe:
             httpGet:

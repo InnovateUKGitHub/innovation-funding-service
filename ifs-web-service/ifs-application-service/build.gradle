@@ -2,6 +2,8 @@ bootRun {
     addResources = false
 }
 
+version = applicationServiceVersion
+
 configurations {
     providedRuntime
 }

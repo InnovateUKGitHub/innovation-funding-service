@@ -1,3 +1,14 @@
+ext.dataServiceVersion=project.properties['data-service.version'] ?:project.version
+ext.frontDoorDataServiceVersion=project.properties['front-door-data-service.version'] ?:project.version
+
+ext.applicationServiceVersion=project.properties['application-service.version'] ?:project.version
+ext.frontDoorServiceVersion=project.properties['front-door-service.version'] ?:project.version
+ext.assessmentServiceVersion=project.properties['assessment-service.version'] ?:project.version
+ext.competitionMgtServiceVersion=project.properties['competition-mgt-service.version'] ?:project.version
+ext.projectSetupMgtServiceVersion=project.properties['project-setup-mgt-service.version'] ?:project.version
+ext.projectSetupServiceVersion=project.properties['project-setup-service.version'] ?:project.version
+ext.registrationServiceVersion=project.properties['registration-service.version'] ?:project.version
+
 allprojects {
     group 'innovateuk'
     version project.version
@@ -122,6 +133,12 @@ buildscript {
 
 }
 
+// use fully qualified class name
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+
+// import task classes
+import com.bmuschko.gradle.docker.tasks.image.*
+
 dependencyUpdates.resolutionStrategy = {
     componentSelection { rules ->
         rules.all { ComponentSelection selection ->
@@ -161,8 +178,6 @@ release {
     }
 }
 
-
-
 sonarqube {
     properties {
         property "sonar.projectName", "IFS_Project"
@@ -195,6 +210,8 @@ dockerCompose {
     removeVolumes = false
 
 }
+
+
 
 task dockerTidy(type: Exec) {
     executable = 'setup-files/scripts/docker/docker_tidy_up.sh'

@@ -23,7 +23,7 @@ items:
           deploymentconfig: competition-mgt-svc
       spec:
         containers:
-        - image: innovateuk/competition-management-service:1.0-SNAPSHOT
+        - image: innovateuk/competition-management-service:${competitionMgtServiceVersion}
           name: competition-mgt-svc
           livenessProbe:
             httpGet:

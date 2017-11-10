@@ -23,7 +23,7 @@ items:
           deploymentconfig: data-service
       spec:
         containers:
-        - image: innovateuk/data-service:1.0-SNAPSHOT
+        - image: innovateuk/data-service:${dataServiceVersion}
           name: data-service
           livenessProbe:
             httpGet:
