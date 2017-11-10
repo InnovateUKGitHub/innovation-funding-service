@@ -60,14 +60,14 @@ Mark application details as incomplete
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
     the user should see the element       jQuery=li:contains("Application details") > .action-required
 
-
 the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=img.complete[alt*="Application details"]
-    Run Keyword If  '${status}' == 'FAIL'  the applicant completes the application details
+    Run Keyword If  '${status}' == 'FAIL'  the applicant completes the application details  Application details
 
 the applicant completes the application details
     [Arguments]   ${Application_details}
     the user clicks the button/link       link=${Application_details}
+    the user moves Application details in Edit mode
     the user clicks the button/link       jQuery=button:contains("research category")
     the user clicks the button twice      jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
     the user clicks the button/link       jQuery=button:contains("Save")
@@ -76,19 +76,23 @@ the applicant completes the application details
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
     The user enters text to a text field  id=application_details-startdate_month  11
-    The user enters text to a text field  id=application_details-duration  20
+    The user enters text to a text field  css=[id="application.durationInMonths"]  20
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user should see the element       jQuery=button:contains("Edit")
     the user should not see the element   css=input
 
+the user moves Application details in Edit mode
+     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=.buttonlink[name="mark_as_incomplete"]
+     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=.buttonlink[name="mark_as_incomplete"]
+
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery=h1:contains("Application details")
-    the user enters text to a text field  css=#application_details-title  ${appTitle}
+    the user enters text to a text field  css=[id="application.name"]  ${appTitle}
     the user enters text to a text field  css=#application_details-startdate_day  ${tomorrowday}
     the user enters text to a text field  css=#application_details-startdate_month  ${month}
     the user enters text to a text field  css=#application_details-startdate_year  ${nextyear}
-    the user enters text to a text field  css=#application_details-duration  24
+    the user enters text to a text field  css=[id="application.durationInMonths"]  24
     the user clicks the button twice      css=label[for="application.resubmission-no"]
     the user selects Research category    ${res_category}
     the user should not see the element   link=Choose your innovation area
@@ -103,8 +107,8 @@ the user selects Research category
     the user clicks the button/link   jQuery=button:contains("Save")
 
 the user marks the finances as complete
-    [Arguments]  ${Application}
-    the user fills in the project costs     ${Application}
+    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
+    the user fills in the project costs  ${overheadsCost}  ${totalCosts}
     the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
@@ -112,16 +116,16 @@ the user marks the finances as complete
     the user should see the element  jQuery=li:contains("Your finances") > .task-status-complete
 
 the user fills in the project costs
-    [Arguments]     ${Application_name}
+    [Arguments]  ${overheadsCost}  ${totalCosts}
     the user clicks the button/link  link=Your project costs
     the user fills in Labour
-    the user fills in Overhead costs  ${Application_name}
+    the user fills in Overhead costs  ${overheadsCost}  ${totalCosts}
     the user fills in Material
     the user fills in Capital usage
     the user fills in Subcontracting costs
     the user fills in Travel and subsistence
     the user fills in Other costs
-    the user clicks the button/link  css=label[for="agree-state-aid-page"]
+    the user clicks the button/link  css=label[for="stateAidAgreed"]
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
     the user has read only view once section is marked complete
@@ -134,7 +138,7 @@ the user has read only view once section is marked complete
 the user fills in Labour
     the user clicks the button/link            jQuery=button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
-    the user enters text to a text field       css=input[id$="labourDaysYearly"]    230
+    the user enters text to a text field       css=input[name^="labour-labourDaysYearly"]    230
     the user should see the element            jQuery=input.form-control[name^=labour-role]:text[value=""]:first
     the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:first    anotherrole
     the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000
@@ -142,20 +146,22 @@ the user fills in Labour
     the user clicks the button/link            jQuery=button:contains("Labour")
 
 the user fills in Overhead costs
-    [Arguments]  ${Application_name}
-    ${STATUS}  ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  Should Be Equal As Strings  Evolution of the global phosphorus cycle  ${Application_name}
-    run keyword if  '${status}'=='PASS'  the user chooses Calculate overheads option
-    run keyword if  '${status}'=='FAIL'  the user chooses 20% overheads option
+    [Arguments]  ${overheadsCost}  ${totalCosts}
+    run keyword if  '${overheadsCost}'=='Calculate'  the user chooses Calculate overheads option  ${totalCosts}
+    run keyword if  '${overheadsCost}'=='labour costs'  the user chooses 20% overheads option
+#    run keyword if  '${overheadsCost}'=='No overhead'  the user chooses No overhead costs
+# The above line is commented out because we do not use the 3rd option yet. Once we do we can enable it.
 
 the user chooses Calculate overheads option
-    the user clicks the button/link                         jQuery=button:contains("Overhead costs")
+    [Arguments]  ${totalCosts}
+    the user expands the section  Overhead costs
     the user clicks the button/link                         jQuery=label:contains("Calculate overheads")
     the user should see the element                         jQuery=h3:contains("Calculate overheads")
     the user uploads the file                               css=#overheadfile   ${excel_file}
     wait for autosave
     the user enters text to a text field                    css=input[name^="overheads-total"][id^="cost-overheads"]   40
     wait for autosave
-    the total overhead costs should reflect rate entered    css=#total-cost  £ 185,997
+    the total overhead costs should reflect rate entered    css=#total-cost  £${totalCosts}
 
 the total overhead costs should reflect rate entered
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
@@ -185,7 +191,7 @@ the user fills in Capital usage
     the user enters text to a text field  css=.form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css=.form-finances-capital-usage-utilisation   100
     focus                                 css=.section-total-summary > [data-mirror^="#section-total"]
-    textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £ 4,975
+    textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £4,975
     the user clicks the button/link       jQuery=button:contains("Capital usage")
 
 the user fills in Subcontracting costs
@@ -222,7 +228,7 @@ the academic user fills in his finances
 the academic fills in the project costs
     [Arguments]  ${application}
     the user clicks the button/link       link=Your project costs
-    The user enters text to a text field  id=tsb-ref  ${application}
+    The user enters text to a text field  css=input[name$="tsb_reference"]  ${application}
     The user enters text to a text field  id=incurred-staff  999.999
     The user enters text to a text field  id=travel    999.999
     The user enters text to a text field  id=other    999.999
@@ -282,7 +288,7 @@ the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page   ${Application}
     the user clicks the button/link       link=Your funding
-    the user enters text to a text field  css=#cost-financegrantclaim  45
+    the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  45
     click element                         jQuery=label:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
@@ -335,7 +341,7 @@ Newly invited collaborator can create account and sign in
 
 the user completes the new account creation
     [Arguments]    ${email}
-    the user selects the radio button           organisationType    radio-4
+    the user selects the radio button           organisationType    radio-${PUBLIC_SECTOR_TYPE_ID}
     the user clicks the button/link             jQuery=button:contains("Continue")
     the user should see the element             jQuery=span:contains("Create your account")
     the user enters text to a text field        id=organisationSearchName    innovate

@@ -96,7 +96,7 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
     private Map<FinanceRowType, FinanceRowCostCategory> getSpendProfileCostCategories(ProjectFinanceResource finances) {
 
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = finances.getFinanceOrganisationDetails();
-        return simpleFilter(financeOrganisationDetails, (category, costs) -> category.isSpendCostCategory());
+        return simpleFilter(financeOrganisationDetails, (category, costs) -> category.isIncludedInSpendProfile());
     }
 
     private Map<CostCategory, BigDecimal> getIndustrialTotalsPerCostCategory(CostCategoryType costCategoryType, Map<FinanceRowType, FinanceRowCostCategory> spendRows) {
@@ -121,20 +121,20 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
             List<FinanceRowItem> costs = costCategoryDetails.getCosts();
 
             for (FinanceRowItem cost : costs) {
-
                 String costCategoryName = cost.getName();
-                CostCategory costCategory = findAcademicCostCategoryForName(costCategoryType, costCategoryName);
-                BigDecimal value = cost.getTotal();
-
-                BigDecimal currentValue = valuesPerCostCategory.get(costCategory);
-                valuesPerCostCategory.put(costCategory, currentValue.add(value));
+                AcademicCostCategoryGenerator academicCostCategoryMatch = AcademicCostCategoryGenerator.fromFinanceRowName(costCategoryName);
+                if(academicCostCategoryMatch != null) {
+                    CostCategory costCategory = findAcademicCostCategoryForName(costCategoryType, academicCostCategoryMatch);
+                    BigDecimal value = cost.getTotal();
+                    BigDecimal currentValue = valuesPerCostCategory.get(costCategory);
+                    valuesPerCostCategory.put(costCategory, currentValue.add(value));
+                }
             }
         }
         return valuesPerCostCategory;
     }
 
-    private CostCategory findAcademicCostCategoryForName(CostCategoryType costCategoryType, String costCategoryName) {
-        AcademicCostCategoryGenerator academicCostCategoryMatch = AcademicCostCategoryGenerator.fromFinanceRowName(costCategoryName);
+    private CostCategory findAcademicCostCategoryForName(CostCategoryType costCategoryType, AcademicCostCategoryGenerator academicCostCategoryMatch) {
         return simpleFindFirst(costCategoryType.getCostCategories(), cat ->
                         cat.getName().equals(academicCostCategoryMatch.getName()) &&
                         cat.getLabel().equals(academicCostCategoryMatch.getLabel()))

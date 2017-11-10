@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Non IFS Details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Non IFS Details',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
@@ -12,49 +12,63 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkClass='link-back',linkUrl=@{/dashboard}" />
 
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${form.*}')}">
-        <h2 class="heading-medium error-summary-heading">There was a problem on this page</h2>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
-        </ul>
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem on this page</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
     </div>
 
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Non-IFS competition details',size='heading-xlarge'" />
 
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST" th:object="${form}" novalidate="novalidate">
-            <div class="form-group" th:classappend="${#fields.hasErrors('title')} ? 'form-group-error'">
-                <label class="form-label" for="title">
-                    <span class="form-label-bold">Competition title</span>
-                    <th:block th:if="${#fields.hasErrors('title')}">
-                          <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
-                    </th:block>
-                </label>
-                <input id="title"
-                       class="form-control width-xlarge"
-                       th:errorclass="form-control-error"
-                       type="text"
-                       th:field="${form.title}"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.standard.title.required}" />
-            </div>
+      <div class="form-group" th:classappend="${#fields.hasErrors('title')} ? 'form-group-error'">
+          <label class="form-label" for="title">
+              <span class="form-label-bold">Competition title</span>
+              <th:block th:if="${#fields.hasErrors('title')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('title')}" th:text="${err}"></span>
+              </th:block>
+          </label>
+          <input id="title"
+                 class="form-control width-xlarge"
+                 th:errorclass="form-control-error"
+                 type="text"
+                 th:field="${form.title}"
+                 required="required"
+                 th:attr="data-required-errormessage=#{validation.standard.title.required}" />
+      </div>
+      <div class="form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'form-group-error'">
+          <label class="form-label" for="innovationSectorCategoryId">
+              <span class="form-label-bold">Innovation sector</span>
+              <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
+              </th:block>
+          </label>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('innovationSectorCategoryId')} ? 'form-group-error'">
-                <label class="form-label" for="innovationSector">
-                    <span class="form-label-bold">Innovation sector</span>
-                    <th:block th:if="${#fields.hasErrors('innovationSectorCategoryId')}">
-                          <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}"></span>
-                    </th:block>
-                </label>
+          <select class="form-control width-x-large"
+                  id="innovationSectorCategoryId"
+                  th:field="${form.innovationSectorCategoryId}"
+                  required="required"
+                  th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}" >
+              <option value="" disabled="disabled" th:selected="${form.innovationSectorCategoryId == null}">Please select &hellip;</option>
+              <option th:each="(innovationSector : ${model.innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${form.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
+          </select>
+      </div>
 
-                <select class="form-control width-x-large"
-                        id="innovationSector"
-                        th:field="${form.innovationSectorCategoryId}"
-                        required="required"
-                        th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}" >
-                    <option value="" disabled="disabled" th:selected="${form.innovationSectorCategoryId == null}">Please select &hellip;</option>
-                    <option th:each="(innovationSector : ${model.innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${form.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
-                </select>
-            </div>
+      <div class="form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryId')} ? 'form-group-error'">
+          <label class="form-label" for="innovationAreaCategoryId">
+              <span class="form-label-bold">Innovation area</span>
+              <th:block th:if="${#fields.hasErrors('innovationAreaCategoryId')}">
+                    <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}"></span>
+              </th:block>
+          </label>
+          <select class="form-control width-x-large"
+                  th:field="${form.innovationAreaCategoryId}"
+                  id="innovationAreaCategoryId"
+                  required="required"
+                  th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationareacategoryid.required}">
+              <option value="" disabled="disabled" th:selected="${form.innovationAreaCategoryId == null}">Please select &hellip;</option>
+              <option th:each="(innovationArea : ${model.innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${form.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
+          </select>
+      </div>
 
             <div class="form-group" th:classappend="${#fields.hasErrors('innovationAreaCategoryId')} ? 'form-group-error'">
                 <label class="form-label" for="innovationArea">

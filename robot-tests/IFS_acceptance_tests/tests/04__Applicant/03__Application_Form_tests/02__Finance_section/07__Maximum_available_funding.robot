@@ -23,7 +23,7 @@ Maximum funding level available for lead business
     And the user clicks the button/link                      link=Begin application
     And the applicant completes the application details      Application details  Experimental development
     And the user fills the organisation details with Project growth table     ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
-    When the user fills in the project costs                 ${Application_name_business}
+    When the user fills in the project costs                 labour costs  n/a
     And the user clicks the button/link                      link=Your funding
     Then the user should see the text in the page            Enter your funding level (maximum 45%).
     And the correct funding displayed for lead applicant     Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}  60%
@@ -37,7 +37,7 @@ Lead applicant invites a Charity member
     Given Invite a non-existing collaborator                                liamCharity@innovateuk.com  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}
     When the user clicks the button/link                                    link=${Application_name_business}
     And the user fills the organisation details with Project growth table   ${Application_name_business}  ${SMALL_ORGANISATION_SIZE}
-    And the user fills in the project costs                                 ${Application_name_business}
+    And the user fills in the project costs                                 labour costs  n/a
     Then the funding displayed is as expected
 
 Invite existing academic collaborator
@@ -48,8 +48,8 @@ Invite existing academic collaborator
     And the user clicks the button/link                          link=view and manage contributors and collaborators
     And the user clicks the button/link                          link=Add a collaborator organisation
     Then the user enters text to a text field                     css=#organisationName  eggs
-    And the user enters text to a text field                     css=input[id="applicants0.name"]  Pete
-    And the user enters text to a text field                     css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
+    And the user enters text to a text field                     css=input[id="applicants[0].name"]  Pete
+    And the user enters text to a text field                     css=input[id="applicants[0].email"]  ${collaborator2_credentials["email"]}
     And the user clicks the button/link                          jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
     And the user accepts the invite to collaborate            ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
@@ -64,7 +64,7 @@ Maximum funding level available for RTO lead
     And the user clicks the button/link                                     link=Begin application
     And the applicant completes the application details for RTO lead appln  Application details  Experimental development
     And the user fills in the organisation information                      ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
-    And the user fills in the project costs                                 ${Application_name_RTO}
+    And the user fills in the project costs                                 labour costs  n/a
     When the user clicks the button/link                                    link=Your funding
     Then the user should see the text in the page                           Enter your funding level (maximum 100%).
     And the correct funding displayed for lead applicant                    Feasibility studies  ${MEDIUM_ORGANISATION_SIZE}  100%
@@ -78,7 +78,7 @@ Lead RTO applicant invites a Charity member
     Given Invite a non-existing collaborator            liamRTO@innovateuk.com  ${openCompetitionRTO_name}
     When the user clicks the button/link                link=${Application_name_RTO}
     And the user fills in the organisation information  ${Application_name_RTO}  ${SMALL_ORGANISATION_SIZE}
-    And the user fills in the project costs             ${Application_name_RTO}
+    And the user fills in the project costs             labour costs  n/a
     Then the funding displayed is as expected
     And the user marks your funding section as complete
 
@@ -90,8 +90,8 @@ Invite existing academic collaborator for RTO lead
     And the user clicks the button/link                link=view and manage contributors and collaborators
     And the user clicks the button/link                link=Add a collaborator organisation
     Then the user enters text to a text field          css=#organisationName  eggs
-    And the user enters text to a text field           css=input[id="applicants0.name"]  Pete
-    And the user enters text to a text field           css=input[id="applicants0.email"]  ${collaborator2_credentials["email"]}
+    And the user enters text to a text field           css=input[id="applicants[0].name"]  Pete
+    And the user enters text to a text field           css=input[id="applicants[0].email"]  ${collaborator2_credentials["email"]}
     And the user clicks the button/link                jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
     When the user accepts the invite to collaborate    ${openCompetitionRTO_name}  ${collaborator2_credentials["email"]}  ${collaborator2_credentials["password"]}
@@ -106,8 +106,8 @@ Invite existing business user into RTO lead application
     And the user clicks the button/link                link=view and manage contributors and collaborators
     And the user clicks the button/link                link=Add a collaborator organisation
     And the user enters text to a text field           css=#organisationName  innovate bus
-    And the user enters text to a text field           css=input[id="applicants0.name"]  oscar
-    And the user enters text to a text field           css=input[id="applicants0.email"]  ${lead_business_email}
+    And the user enters text to a text field           css=input[id="applicants[0].name"]  oscar
+    And the user enters text to a text field           css=input[id="applicants[0].email"]  ${lead_business_email}
     And the user clicks the button/link                jQuery=button:contains("Add organisation and invite applicants")
     And logout as user
     Then the user accepts the invite to collaborate    ${openCompetitionRTO_name}  ${lead_business_email}  ${correct_password}
@@ -138,7 +138,7 @@ the user navigates to the competition overview
 the applicant completes the application details
     [Arguments]   ${Application_details}         ${Research_category}
     the user clicks the button/link              link=${Application_details}
-    the user enters text to a text field         id=application_details-title  ${Application_name_business}
+    the user enters text to a text field         css=[id="application.name"]  ${Application_name_business}
     the user clicks the button/link              jQuery=button:contains("Choose your innovation area")
     the user clicks the button twice             jQuery=label[for^="innovationAreaChoice-22"]:contains("Digital manufacturing")
     the user clicks the button/link              jQuery=button:contains(Save)
@@ -147,7 +147,7 @@ the applicant completes the application details
 the applicant completes the application details for RTO lead appln
     [Arguments]   ${Application_details}   ${Research_category}
     the user clicks the button/link             link=${Application_details}
-    the user enters text to a text field        id=application_details-title  ${Application_name_RTO}
+    the user enters text to a text field        css=[id="application.name"]  ${Application_name_RTO}
     the user fills the other application details questions   ${Research_category}
 
 the user fills the other application details questions
@@ -159,7 +159,7 @@ the user fills the other application details questions
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
     The user enters text to a text field  id=application_details-startdate_month  11
-    The user enters text to a text field  id=application_details-duration  20
+    The user enters text to a text field  css=[id="application.durationInMonths"]  20
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user clicks the button/link       link=Application overview
 
@@ -173,7 +173,7 @@ the business user fills in the project costs
     the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    131265
     the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
     the user clicks the button/link         jQuery=button:contains("Materials")
-    the user selects the checkbox           agree-state-aid-page
+    the user selects the checkbox           stateAidAgreed
     the user clicks the button/link         jQuery=button:contains("Mark as complete")
 
 the user edits the research category
@@ -218,7 +218,7 @@ the correct funding is displayed to academic user
 
 the academic user marks your project costs as complete
     the user clicks the button/link        link=Your project costs
-    the user enters text to a text field   tsb-ref  academic costs
+    the user enters text to a text field   css=input[name$="tsb_reference"]  academic costs
     the user uploads the file              css=.upload-section input  ${valid_pdf}
     wait for autosave
     the user clicks the button/link        jQuery=button:contains("Mark as complete")
@@ -230,10 +230,7 @@ the correct funding displayed for lead applicant
     the user should see the text in the page    Enter your funding level (maximum ${funding_amoount}).
 
 the user marks your funding section as complete
-    the user enters text to a text field  id=cost-financegrantclaim  30
+    the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  30
     the user clicks the button/link       jQuery=label[for$="otherPublicFunding-no"]:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
-
-
-

@@ -40,7 +40,7 @@ public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionInvi
     @Override
     public abstract CompetitionInvite mapToDomain(CompetitionInviteResource resource);
 
-    public Long mapCompetiionInviteToId(CompetitionInvite object) {
+    public Long mapCompetitionInviteToId(CompetitionInvite object) {
         if (object == null) {
             return null;
         }

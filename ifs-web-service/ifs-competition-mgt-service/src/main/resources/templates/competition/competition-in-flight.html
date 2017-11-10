@@ -13,7 +13,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionStatus.displayName},subTitle=|${model.competitionId}: ${model.competitionName}|,size='heading-xlarge'" />
     <div class="grid-row">
-        <form action="#" th:action="@{/competition}" method="post">
+        <form th:action="@{/competition}" method="post">
             <div class="column-two-thirds">
                 <div class="boxed">
                     <h2 class="heading-medium no-margin-top">Competition information</h2>
@@ -29,7 +29,7 @@
                         <dd th:text="${model.innovationArea}">Health care</dd>
 
                         <dt>Funding available</dt>
-                        <dd th:text="'£'+${#numbers.formatDecimal(model.funding, 0 , 'COMMA', 0, 'POINT')}">&pound;250,000</dd>
+                        <dd>&pound;<th:block th:text="${#numbers.formatInteger(model.funding, 0, 'DEFAULT')}">&pound;250,000</th:block></dd>
 
                         <dt>Innovation Lead</dt>
                         <dd th:text="${model.lead}">Mark Daily</dd>

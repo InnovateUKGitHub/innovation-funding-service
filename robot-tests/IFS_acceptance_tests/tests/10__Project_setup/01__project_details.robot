@@ -46,13 +46,14 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-7432 Terms and Conditions of grant offer takes you to the IFS ts and cs, not the grant ones
 ...
 ...               INFUND-9062 Validation missing when inviting self as finance contact or PM
+...
+...               IFS-1841 Basic view of all 'external' IFS users
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup  Applicant
 Resource          PS_Common.robot
 
 *** Variables ***
-${project_details_submitted_message}  The project details have been submitted to Innovate UK
 ${invitedFinanceContact}  ${test_mailbox_one}+invitedfinancecontact@gmail.com
 
 *** Test Cases ***
@@ -211,12 +212,6 @@ Lead partner can see the overview of the project details
     And the user should see the element    link=Project Manager
     And the user should see the text in the page    Finance contacts
 
-Submit button is disabled if the details are not fully filled out
-    [Documentation]    INFUND-3381
-    [Tags]
-    When the user should see the element    xpath=//span[contains(text(), 'No')]
-    Then the submit button should be disabled
-
 Lead partner can change the Start Date
     [Documentation]    INFUND-2614
     [Tags]    HappyPath
@@ -233,7 +228,7 @@ Lead partner can change the Start Date
     Then The user should see the text in the page   Project details
     And the user should see the text in the page    1 Jan ${nextyear}
     Then the matching status checkbox is updated    project-details    1    yes
-    [Teardown]    the user changes the start date back again
+    [Teardown]    the user changes the start date  ${nextyear}
 
 Option to invite a project manager
     [Documentation]    INFUND-3483
@@ -332,7 +327,7 @@ Lead partner can change the project address
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project address
     When the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see the text in the page    You need to select a project address before you can continue.
+    Then the user should see the text in the page    You need to select an address before you can continue.
     When the user selects the radio button    addressType    ADD_NEW
     And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
@@ -353,7 +348,6 @@ Project details can be submitted with PM, project address and start date
     Given the user should see the element    css=#start-date-status.yes
     And the user should see the element    css=#project-address-status.yes
     And the user should see the element    css=#project-manager-status.yes
-    Mark as complete button should be enabled
 
 Non lead partner invites finance contact
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
@@ -371,13 +365,21 @@ Non lead partner invites finance contact
     When the user clicks the button/link       jQuery=button:contains("Invite to project")
     Then the user should see the element       jQuery=label[for="financeContact3"]:contains("Pending")
     And the user clicks the button/link    jQuery=.button:contains("Save finance contact")
-    [Teardown]  Logout as user
+
+Support user can see finance contact in invited users list
+    [Documentation]    IFS-1841
+    [Tags]
+    Given log in as a different user  &{support_user_credentials}
+    When the user navigates to the page  ${server}/management/admin/users/created
+    And the user clicks the button/link  jQuery=a:contains("Invited users")
+    Then the user should see the element  jQuery=td:contains("${test_mailbox_one}+ludlowfincont@gmail.com") ~ td:contains("Sent")
+    [Teardown]    Logout as user
 
 Invited Fin Contact for non lead partner
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
     [Tags]  HappyPath
-    Then the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
-    Given log in as a different user     &{collaborator1_credentials}
+    Given the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
+    When log in as a different user     &{collaborator1_credentials}
     Then the user navigates to the page  ${project_in_setup_page}/details
     And the matching status checkbox is updated  project-details-finance  3  yes
     When the user navigates to the page    ${project_in_setup_page}
@@ -385,12 +387,21 @@ Invited Fin Contact for non lead partner
     When the user clicks the button/link    link=status of my partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
 
+Support user can see finance contact in users with account list
+    [Documentation]    IFS-1841
+    [Tags]
+    Given log in as a different user  &{support_user_credentials}
+    When the user navigates to the page  ${server}/management/admin/users/created
+    And the user clicks the button/link  jQuery=a:contains("Users with account")
+    Then the user should see the element  jQuery=td:contains("${test_mailbox_one}+ludlowfincont@gmail.com") ~ td:contains("Verified")
+
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
     # and not in Bank Details. Because for this scenario there are testing data for project 4.
 Non lead partner not eligible for funding
     [Documentation]    INFUND-7090, INFUND-7174
     [Tags]  HappyPath
-    Given the user navigates to the page    ${project_in_setup_page}
+    Given log in as a different user  &{collaborator1_credentials}
+    When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    css=ul li.complete:nth-child(2)
     Then the user should not see the element    css=ul li.require-action:nth-child(4)
     When The user navigates to the page and gets a custom error message     ${project_in_setup_page}/bank-details    ${403_error_message}
@@ -537,12 +548,8 @@ Project details submission flow
     [Setup]    log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_details_page}
     When all the fields are completed
-    And the applicant clicks the submit button and then clicks cancel in the submit modal
-    And the user should not see the text in the page    The project details have been submitted to Innovate UK
-    Then the applicant clicks the submit button in the modal
-    And the user should see the text in the page    The project details have been submitted to Innovate UK
-    Then the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    css=li.complete:nth-of-type(2)
+    And the user navigates to the page    ${project_in_setup_page}
+    Then the user should see the element    css=li.complete:nth-of-type(2)
 
 Lead partner can see the status update when all Project details are submitted
     [Documentation]    INFUND-5827
@@ -557,14 +564,14 @@ Lead partner can see the status update when all Project details are submitted
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
 
-Target start date is read only after submission
+Project details links are still enabled after submission
     [Documentation]    INFUND-3381
     [Tags]
     Given the user navigates to the page    ${project_in_setup_details_page}
-    Then all the fields are completed
-    And The user should not see the element    link=Target start date
-    And the user should see the element        link=Project address
-    And the user should see the element        link=Project Manager
+    When all the fields are completed
+    Then The user should see the element    link=Target start date
+    And the user should see the element     link=Project address
+    And the user should see the element     link=Project Manager
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
@@ -572,19 +579,17 @@ All partners can view submitted project details
     When log in as a different user       &{collaborator1_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
-    And all the fields are completed
-    And the user should see the text in the page    ${project_details_submitted_message}
-    Then the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=status of my partners
+    When all the fields are completed
+    And the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=status of my partners
     Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     When log in as a different user         &{lead_applicant_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
     Then the user should see the text in the page    ${FUNDERS_PANEL_APPLICATION_1_LEAD_ORGANISATION_NAME}
-    And all the fields are completed
-    And the user should see the text in the page    ${project_details_submitted_message}
-    When the user navigates to the page    ${project_in_setup_page}
-    Then the user clicks the button/link    link=status of my partners
-    And the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
+    When all the fields are completed
+    And the user navigates to the page    ${project_in_setup_page}
+    And the user clicks the button/link    link=status of my partners
+    Then the user should see the element    css=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
 
 Non-lead partner cannot change any project details
     [Documentation]    INFUND-2619
@@ -656,19 +661,6 @@ the user should see the valid data
 the user should see the dummy data
     the user should see the text in the page    Montrose House 1, Neston, CH64 3RU
 
-the submit button should be disabled
-    Element Should Be Disabled    jQuery=.button:contains("Mark as complete")
-
-the applicant clicks the submit button and then clicks cancel in the submit modal
-    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link    jquery=button:contains("Cancel")
-
-the applicant clicks the submit button in the modal
-    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link    jQuery=button:contains("Submit")
-
 all the fields are completed
     the matching status checkbox is updated  project-details  1  yes
     the matching status checkbox is updated  project-details  2  yes
@@ -676,15 +668,6 @@ all the fields are completed
     the matching status checkbox is updated  project-details-finance  1  yes
     the matching status checkbox is updated  project-details-finance  2  yes
     the matching status checkbox is updated  project-details-finance  3  yes
-
-the user changes the start date back again
-    the user clicks the button/link    link=Target start date
-    the user enters text to a text field    id=projectStartDate_year    ${nextyear}
-    the user clicks the button/link    jQuery=.button:contains("Save")
-
-Mark as complete button should be enabled
-
-    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //*[@class="multiple-choice"]

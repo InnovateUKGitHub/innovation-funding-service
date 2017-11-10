@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.invite.repository;
 
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.springframework.data.domain.Page;
@@ -16,16 +16,28 @@ import java.util.List;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface CompetitionParticipantRepository extends PagingAndSortingRepository<CompetitionParticipant, Long> {
+public interface CompetitionParticipantRepository extends PagingAndSortingRepository<CompetitionAssessmentParticipant, Long> {
+
+    String USERS_WITH_ASSESSMENT_PANEL_INVITE = "SELECT invite.user.id " +
+            "FROM AssessmentPanelInvite invite " +
+            "WHERE invite.competition.id = :competitionId " +
+            "AND invite.user IS NOT NULL";
+
+    String PARTICIPANTS_NOT_ON_PANEL = "SELECT competitionParticipant " +
+            "FROM CompetitionAssessmentParticipant competitionParticipant " +
+            "WHERE competitionParticipant.competition.id = :competitionId " +
+            "AND competitionParticipant.role = 'ASSESSOR' " +
+            "AND competitionParticipant.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED " +
+            "AND competitionParticipant.user.id NOT IN (" + USERS_WITH_ASSESSMENT_PANEL_INVITE + ")";
 
     String BY_COMP_AND_STATUS = "SELECT competitionParticipant " +
-            "FROM CompetitionParticipant competitionParticipant " +
+            "FROM CompetitionAssessmentParticipant competitionParticipant " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
             "AND competitionParticipant.status IN :status";
 
     String BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT = "SELECT competitionParticipant " +
-            "FROM CompetitionParticipant competitionParticipant " +
+            "FROM CompetitionAssessmentParticipant competitionParticipant " +
             "LEFT JOIN Profile profile ON profile.id = competitionParticipant.user.profileId " +
             "WHERE competitionParticipant.competition.id = :competitionId " +
             "AND competitionParticipant.role = 'ASSESSOR' " +
@@ -59,7 +71,7 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "   )" +
             "))";
 
-    String PARTICIPANTS_WITHOUT_ASSESSMENTS = "SELECT cp FROM CompetitionParticipant cp WHERE cp.competition.id = :compId " +
+    String PARTICIPANTS_WITHOUT_ASSESSMENTS = "SELECT cp FROM CompetitionAssessmentParticipant cp WHERE cp.competition.id = :compId " +
             "AND cp.role = :role " +
             "AND cp.status = :status " +
             "AND NOT EXISTS " +
@@ -71,56 +83,56 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
             "p.id = cp.user.profileId " +
             "AND ia.category.id = :innovationAreaId ))";
 
-    String PARTICIPANTS_WITH_ASSESSMENTS = "SELECT cp FROM CompetitionParticipant cp WHERE " +
+    String PARTICIPANTS_WITH_ASSESSMENTS = "SELECT cp FROM CompetitionAssessmentParticipant cp WHERE " +
             "cp.competition.id = :compId " +
             "AND cp.role = :role " +
             "AND cp.status = :status " +
             "AND EXISTS (SELECT 'found' FROM Assessment a WHERE a.participant.user = cp.user AND a.target.id = :appId)";
 
     @Override
-    List<CompetitionParticipant> findAll();
+    List<CompetitionAssessmentParticipant> findAll();
 
-    CompetitionParticipant getByInviteHash(String hash);
+    CompetitionAssessmentParticipant getByInviteHash(String hash);
 
-    List<CompetitionParticipant> getByUserIdAndRole(Long userId, CompetitionParticipantRole role);
+    List<CompetitionAssessmentParticipant> getByUserIdAndRole(Long userId, CompetitionParticipantRole role);
 
-    List<CompetitionParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
+    List<CompetitionAssessmentParticipant> getByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
 
-    CompetitionParticipant getByCompetitionIdAndUserIdAndRole(Long competitionId, Long userId, CompetitionParticipantRole role);
+    CompetitionAssessmentParticipant getByCompetitionIdAndUserIdAndRole(Long competitionId, Long userId, CompetitionParticipantRole role);
 
     @Query(BY_COMP_AND_STATUS)
-    Page<CompetitionParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+    Page<CompetitionAssessmentParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
                                                                     @Param("status") List<ParticipantStatus> status,
                                                                     Pageable pageable);
 
     @Query(BY_COMP_AND_STATUS)
-    List<CompetitionParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
+    List<CompetitionAssessmentParticipant> getAssessorsByCompetitionAndStatusContains(@Param("competitionId") long competitionId,
                                                                             @Param("status") List<ParticipantStatus> status);
 
     @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
-    Page<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
+    Page<CompetitionAssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
                                                                                                  @Param("innovationAreaId") Long innovationAreaId,
                                                                                                  @Param("status") List<ParticipantStatus> status,
                                                                                                  @Param("isCompliant") Boolean isCompliant,
                                                                                                  Pageable pageable);
     @Query(BY_COMP_INNOVATION_AREA_STATUS_AND_COMPLIANT)
-    List<CompetitionParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
+    List<CompetitionAssessmentParticipant> getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(@Param("competitionId") long competitionId,
                                                                                                          @Param("innovationAreaId") Long innovationAreaId,
                                                                                                          @Param("status") List<ParticipantStatus> status,
                                                                                                          @Param("isCompliant") Boolean isCompliant);
 
-    List<CompetitionParticipant> getByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
+    List<CompetitionAssessmentParticipant> getByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
-    List<CompetitionParticipant> getByInviteEmail(String email);
+    List<CompetitionAssessmentParticipant> getByInviteEmail(String email);
 
-    CompetitionParticipant getByInviteId(long id);
+    CompetitionAssessmentParticipant getByInviteId(long id);
 
     int countByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
 
     int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 
     @Query(PARTICIPANTS_WITHOUT_ASSESSMENTS)
-    Page<CompetitionParticipant> findParticipantsWithoutAssessments(@Param("compId") long competitionId,
+    Page<CompetitionAssessmentParticipant> findParticipantsWithoutAssessments(@Param("compId") long competitionId,
                                                                     @Param("role") CompetitionParticipantRole role,
                                                                     @Param("status") ParticipantStatus status,
                                                                     @Param("appId") long applicationId,
@@ -128,9 +140,15 @@ public interface CompetitionParticipantRepository extends PagingAndSortingReposi
                                                                     Pageable pageable);
 
     @Query(PARTICIPANTS_WITH_ASSESSMENTS)
-    List<CompetitionParticipant> findParticipantsWithAssessments(
-            @Param("compId") Long competitionId,
+    List<CompetitionAssessmentParticipant> findParticipantsWithAssessments(
+            @Param("compId") long competitionId,
             @Param("role") CompetitionParticipantRole role,
             @Param("status") ParticipantStatus status,
-            @Param("appId") Long applicationId);
+            @Param("appId") long applicationId);
+
+    @Query(PARTICIPANTS_NOT_ON_PANEL)
+    Page<CompetitionAssessmentParticipant> findParticipantsNotOnPanel(@Param("competitionId") long competitionId, Pageable pageable);
+
+    @Query(PARTICIPANTS_NOT_ON_PANEL)
+    List<CompetitionAssessmentParticipant> findParticipantsNotOnPanel(@Param("competitionId") long competitionId);
 }

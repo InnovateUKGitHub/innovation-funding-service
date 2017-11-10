@@ -90,7 +90,6 @@ Academic partner can view the file on the finances overview
     [Documentation]    INFUND-917
     [Tags]
     When the user navigates to the finance overview of the academic
-    And the user opens the link in new window  ${valid_pdf}
     Then the user should not see an error in the page
     [Teardown]    the user goes back to the previous page
 
@@ -128,8 +127,8 @@ Mark all as complete
     And the user navigates to the academic application finances
     And the user clicks the button/link            link=Your project costs
     And the user should see the element            link=testing.pdf (opens in a new window)
-    When the user enters text to a text field      id=tsb-ref    123123
-    Then textfield value should be                 id=tsb-ref    123123
+    When the user enters text to a text field      css=input[name$="tsb_reference"]  123123
+    Then textfield value should be                 css=input[name$="tsb_reference"]  123123
     When the user clicks the button/link           jQuery=button:contains("Mark as complete")
     Then the user should see the text in the page  Your finances
     And the user navigates to the finance overview of the academic
@@ -156,7 +155,6 @@ Academic finance overview
     [Tags]
     Given the user navigates to the finance overview of the academic
     Then the finance table should be correct
-    When the user clicks the button/link  link=testing.pdf (opens in a new window)
     Then the user should not see an error in the page
     [Teardown]    The user marks the academic application finances as incomplete
 
@@ -176,14 +174,14 @@ the academic partner fills the finances
     The user enters text to a text field  id=indirect    999.999
     The user enters text to a text field  id=exceptions-staff    999.999
     The user enters text to a text field  id=exceptions-other-direct    999.999
-    The user enters text to a text field  id=tsb-ref    123123
+    The user enters text to a text field  css=input[name$="tsb_reference"]  123123
     Mouse Out                             css=input
     wait for autosave
 
 the calculations should be correct and the totals rounded to the second decimal
-    Textfield Value Should Be  id=subtotal-directly-allocated    £ 3,000
-    Textfield Value Should Be  id=subtotal-exceptions    £ 2,000
-    Textfield Value Should Be  id=total    £ 9,000
+    Textfield Value Should Be  id=subtotal-directly-allocated    £3,000
+    Textfield Value Should Be  id=subtotal-exceptions    £2,000
+    Textfield Value Should Be  id=total    £9,000
 
 the academic partner uploads a file
     [Arguments]    ${file_name}
@@ -192,19 +190,19 @@ the academic partner uploads a file
 
 the finance table should be correct
     Wait Until Element Contains Without Screenshots  css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £9,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)    £3,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)    £1,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(4)    £1,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    £0
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(7)    £1,000
-    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    £3,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(2)    3,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(3)    1,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(4)    1,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(6)    0
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(7)    1,000
+    Element Should Contain                           css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(8)    3,000
 
 Lead applicant marks the finances as complete
     Log in as a different user                       &{lead_applicant_credentials}
     the user clicks the button/link                  link=Academic robot test application
     the applicant completes the application details  Application details
     the user navigates to the academic application finances
-    the user marks the finances as complete          Academic robot test application
+    the user marks the finances as complete          Academic robot test application  labour costs  n/a
 
 
 Lead applicant marks the finances as incomplete
@@ -229,7 +227,7 @@ the applicant enters invalid inputs
     The user enters text to a text field  id=indirect    999.999
     The user enters text to a text field  id=exceptions-staff    999.999
     The user enters text to a text field  id=exceptions-other-direct    999.999
-    The user enters text to a text field  id=tsb-ref    ${EMPTY}
+    The user enters text to a text field  css=input[name$="tsb_reference"]   ${EMPTY}
 
 the field should not contain the currency symbol
     Textfield Value Should Be  id=incurred-staff    100

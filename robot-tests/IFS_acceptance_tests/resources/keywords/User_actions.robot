@@ -138,11 +138,11 @@ The user fills the empty question fields
 The user fills the empty assessment fields
     The user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
     the user moves focus and waits for autosave
-    The user enters text to a text field    id=guidanceRow-0-scorefrom    30
+    The user enters text to a text field    id=guidanceRows[0].scoreFrom    30
     the user moves focus and waits for autosave
-    The user enters text to a text field    id=guidanceRow-0-scoreto    35
+    The user enters text to a text field    id=guidanceRows[0].scoreTo    35
     the user moves focus and waits for autosave
-    The user enters text to a text field    id=guidanceRow-0-justification    This is a justification
+    The user enters text to a text field    id=guidanceRows[0].justification    This is a justification
     the user moves focus and waits for autosave
 
 The user checks the question fields
@@ -188,3 +188,9 @@ the user collapses the section
     [Arguments]  ${section}
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=button:contains("${section}")[aria-expanded="true"]
     run keyword if  '${status}'=='PASS'  the user clicks the button/link  jQuery=button:contains("${section}")[aria-expanded="true"]
+
+the internal sends the descision notification email to all applicants
+    [Arguments]  ${email}
+    the user enters text to a text field  css=.editor  ${email}
+    the user clicks the button/link       css=.button[data-js-modal="send-to-all-applicants-modal"]
+    the user clicks the button/link       css=button[name="send-emails"]

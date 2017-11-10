@@ -128,7 +128,7 @@ Collaborators should not be able to edit application details
     Given the user navigates to the page      ${DASHBOARD_URL}
     And the user clicks the button/link       link= Assign test
     And the user clicks the button/link       link=Application details
-    Then the user should not see the element  css=input#application_details-title
+    Then the user should not see the element  css=[id="application.name"]
     And the user should not see the element   css=input#application_details-startdate_day
     And the user should not see the element   jQuery=button:contains("Mark as complete")
 
@@ -193,7 +193,7 @@ Lead marks finances as complete
     Then the user should see the element                 link=Your project costs
     And the user should see the element                  link=Your organisation
     And the user should see the element                  jQuery=h3:contains("Your funding")
-    When the user fills in the project costs             Assign test
+    When the user fills in the project costs             labour costs  n/a
     And the user navigates to Your-finances page         Assign test
     Then the user fills in the organisation information  Assign test  ${SMALL_ORGANISATION_SIZE}
     And the user fills in the funding information        Assign test
@@ -252,7 +252,7 @@ the collaborator edits the 'public description' question
     the user reloads the page
 
 the collaborator is able to edit the finances
-    the user fills in the project costs             Assign test
+    the user fills in the project costs             labour costs  n/a
     the user navigates to Your-finances page        Assign test
     the user fills in the organisation information  Assign test  ${SMALL_ORGANISATION_SIZE}
     the user fills in the funding information       Assign test
@@ -260,7 +260,7 @@ the collaborator is able to edit the finances
 the applicant changes the name of the application
     Given the user clicks the button/link     link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user clicks the button/link       link=Application details
-    And the user enters text to a text field  id=application_details-title  Assign test
+    And the user enters text to a text field  css=[id="application.name"]  Assign test
     And The user clicks the button/link       jQuery=button:contains("Save and return")
 
 Steve smith assigns a question to the collaborator

@@ -17,7 +17,7 @@
 
     <div th:fragment="textinput(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group " th:classappend="${#fields.hasErrors(validationId)} ? adminclass : userclass">
 
-        <label class="form-label form-label-bold" th:for="${formInput.getId()}">
+        <label class="form-label form-label-bold" th:for="${formInput.id}">
           <span th:if="${question.name}" th:text="question.name" />
           <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
           <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
@@ -29,7 +29,7 @@
 
     <!-- =========================== Form: Textarea =========================== -->
     <!-- === (defaults to the wrapped textarea with wordcount and statusses)=== -->
-    <div th:fragment="textarea(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
+    <div th:fragment="textarea(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? form-group-error">
 
         <th:block th:if="${!model.assignButtonsViewModel.currentUserIsLead}">
             <th:block th:unless="${model.complete or model.closed}">
@@ -53,15 +53,15 @@
 
         </div>
 
-        <label class="form-label form-label-bold" th:for="'form-textarea-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
+        <label class="form-label form-label-bold" th:for="formInput[__${formInput.id}__]" th:id="'form-label-'+${formInput.id}">
             <th:block th:if="${model.closed}">
                 <span class="heading-medium" th:if="${question.name}" th:text="${question.name}" />
             </th:block>
             <th:block th:unless="${model.closed}">
               <span class="heading-medium" th:if="${question.name}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
-              <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
+              <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
             </th:block>
-            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
+            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         </label>
 
         <th:block th:unless="${model.closed}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
@@ -71,13 +71,13 @@
     <!-- ===========================Form: Date input =========================== -->
 
     <div th:fragment="date(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group">
-        <label class="form-label form-label-bold" th:for="${formInput.getId()}">
+        <label class="form-label form-label-bold" th:for="${formInput.id}">
           <span th:if="${question.getName()}" th:text="${question.name}" />
-          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
-          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
+          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
+          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         </label>
         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-        <th:block th:insert="question-type/form-elements :: form-dateinput (id=${formInput.getId()}, day='', month='', year='')" />
+        <th:block th:insert="question-type/form-elements :: form-dateinput (id=${formInput.id}, day='', month='', year='')" />
     </div>
 
     <!-- ===========================Form: Fileupload =========================== -->
@@ -94,7 +94,7 @@
          removeName='remove_uploaded_file',
          saveName='upload_file'">
 
-        <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
+        <h3 class="heading-small no-margin" th:text="${formInput.description}">Project management appendix</h3>
         <th:block th:if="${viewmode=='edit'}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
         <th:block th:insert="question-type/types :: fileupload-fragment(${viewmode},${downloadUrl},${filename}, ${inputField}, ${validationField}, ${mayRemove}, ${removeName}, ${saveName})" />
     </div>
@@ -151,13 +151,13 @@
     <!-- ===========================Form: Percentage =========================== -->
 
     <div th:fragment="percentage(model)" th:with="formInput=${model.formInput}, question=${model.question}" class="form-group">
-        <label class="form-label" th:for="${formInput.getId()}">
+        <label class="form-label" th:for="${formInput.id}">
           <span th:if="${question.getName()}" th:text="${question.name}" />
-          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
-          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
+          <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
+          <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
         </label>
         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-        <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${formInput.getId()}, field=${field})" />
+        <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${formInput.id}, field=${field})" />
         <span>%</span>
     </div>
 
@@ -166,24 +166,24 @@
     <th:block th:fragment="application_details(model)" th:with="formInput=${model.formInput}, question=${model.question}, competition=${model.competition}">
         <th:block th:unless="${model.readonly}">
         <!--/* start of edit template */-->
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'error'">
-                <label for="application_details-title">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'form-group-error'">
+                <label for="application.name">
                     <span class="form-label form-label-bold">Application title</span>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint='Enter the full title of your proposed project.')" />
+                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.name')" />
                 </label>
-                <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.name')" />
                 <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
                 <input class="form-control width-full"
                      type="text"
-                     id="application_details-title"
+                     id="application.name"
                      th:field="*{__application.name__}"
                      th:attr="data-required-errormessage=#{validation.project.name.must.not.be.empty}"
                      required="required"
                      th:errorclass="field-error" />
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'error'">
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.startDate__}')} ? 'form-group-error'">
                 <fieldset>
-                    <legend>
+                    <legend id="application.startDate">
                         <span class="heading-medium">Estimated timescales</span>
                         <span class="form-hint">When do you wish to start your project?</span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')"  />
@@ -192,13 +192,15 @@
                     <th:block th:insert="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" />
                 </fieldset>
             </div>
-            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.durationInMonths__}')} ? 'error'">
-                <th:block th:insert="question-type/form-elements :: form-label (name='Duration in months',id=${id},bold=false)" />
-                <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')"  />
+            <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.durationInMonths__}')} ? 'form-group-error'">
+                <label for="application.durationInMonths" class="form-label">
+                    <span>Duration in months</span>
+                    <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.durationInMonths')"  />
+                </label>
                 <input class="form-control width-extra-small"
-                       id="application_details-duration"
+                       id="application.durationInMonths"
                        th:field="*{__application.durationInMonths__}"
-                       th:errorclass="field-error"
+                       th:errorclass="form-control-error"
                        type="text"
                        pattern="^([1-9]|0[1-9]|[1-2][0-9]|3[0-6])$"
                        required="required"
@@ -208,7 +210,7 @@
             </div>
 
             <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.researchCategory__}')} ? 'form-group-error'">
-                <label for="researchCategory">
+                <label for="application.researchCategory">
                     <span class="heading-medium">Research category</span>
                     <th:block th:insert="question-type/form-elements :: form-hint (hint='The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.')" />
                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategory')" />
@@ -219,7 +221,7 @@
                     <!--/* Input is used here to easily check if a Research Category has been selected for mark as complete validation */-->
                     <input type="hidden" th:field="*{__application.researchCategory.name__}" value="Research category has been selected"/>
                 </div>
-                <button id="researchCategory" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}" type="submit">
+                <button id="application.researchCategory" class="buttonlink" name="submit-section-redirect" th:value="${'/form/question/' + question.id + '/research-category'}" type="submit">
                     <span th:text="${model.researchCategoryText}">Choose your research category</span>
                 </button>
             </div>
@@ -249,7 +251,7 @@
 
             <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'form-group-error'">
                 <fieldset>
-                    <legend>
+                    <legend id="application.resubmission">
                         <span class="form-label form-label-bold">Is this application a resubmission?</span>
                         <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this application has been previously submitted to Innovate UK.')" />
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
@@ -283,26 +285,26 @@
             <div id="resubmission-details">
                 <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'form-group-error'">
                     <h2 class="heading-medium no-margin-top">Please provide the details of this previous application</h2>
-                    <label for="application_details-previousapplicationnumber">
+                    <label for="application.previousApplicationNumber">
                         <span class="form-label form-label-bold">Previous application number</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')"  />
                     </label>
                     <input class="form-control width-full"
                                type="text"
-                               id="application_details-previousapplicationnumber"
+                               id="application.previousApplicationNumber"
                                th:field="*{__application.previousApplicationNumber__}"
                                required="required"
                                th:errorclass="form-control-error"
                                th:attr="data-required-errormessage=#{validation.application.previous.application.number.required}" />
                 </div>
-                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'error'">
-                    <label for="application_details-previousapplicationtitle">
+                <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'form-group-error'">
+                    <label for="application.previousApplicationTitle">
                         <span class="form-label form-label-bold">Previous application title</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationTitle')" />
                     </label>
                     <input class="form-control width-full"
                            type="text"
-                           id="application_details-previousapplicationtitle"
+                           id="application.previousApplicationTitle"
                            th:field="*{__application.previousApplicationTitle__}"
                            required="required"
                            th:errorclass="form-control-error"
@@ -346,7 +348,7 @@
                             <ul class="list list-bullet">
                                 <li>
                                     <a th:href="@{/competition/{competitionId}/application/{applicationId}/team(competitionId=${competition.id},applicationId=${model.application.id})}+${queryParams}">
-                                        view application team details
+                                        view contributors and collaborators
                                     </a>
                                 </li>
                             </ul>
@@ -360,7 +362,7 @@
 
                     <!-- ===========================Form: empty / no question =========================== -->
     <th:block th:fragment="empty(model)" th:with="formInput=${model.formInput}, question=${model.question}">
-        <th:block ifs:utext="${question.getDescription()}" />
+        <th:block ifs:utext="${question.description}" />
         <th:block th:unless="${model.readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
     </th:block>
 

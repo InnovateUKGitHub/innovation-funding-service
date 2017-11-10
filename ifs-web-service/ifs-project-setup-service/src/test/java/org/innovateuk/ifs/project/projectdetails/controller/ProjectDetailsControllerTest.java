@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.projectdetails.form.ProjectDetailsStartDateFor
 import org.innovateuk.ifs.project.projectdetails.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -23,6 +24,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
@@ -31,12 +33,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDate;
 import java.util.*;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static java.lang.String.format;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
@@ -73,6 +72,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     private static final String SAVE_PM = "save_pm";
     private static final String INVITE_PM = "invite_pm";
 
+    @Mock
+    SetupStatusViewModelPopulator setupStatusViewModelPopulatorMock;
+
 	@Before
 	public void setUp() {
 		super.setUp();
@@ -102,7 +104,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 build(1);
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
-                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).withSpendProfileStatus(ProjectActivityStates.PENDING).build()).
+                withProjectLeadStatus(newProjectPartnerStatusResource().withIsLeadPartner(true).withSpendProfileStatus(ProjectActivityStates.PENDING).withGrantOfferStatus(ProjectActivityStates.NOT_REQUIRED).build()).
                 build();
 
         when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
@@ -113,7 +115,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
-        when(projectDetailsService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(true));
+        when(setupStatusViewModelPopulatorMock.checkLeadPartnerProjectDetailsProcessCompleted(teamStatus)).thenReturn(true);
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
@@ -129,14 +131,11 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project, model.getProject());
         assertEquals(singletonList(leadOrganisation), model.getPartnerOrganisations());
         assertEquals(null, model.getProjectManager());
-        assertFalse(model.isProjectDetailsSubmitted());
-        assertTrue(model.isSubmissionAllowed());
+        assertTrue(model.isProjectDetailsCompleteAndAllFinanceContactsAssigned());
         assertTrue(model.isUserLeadPartner());
-        assertTrue(model.isSubmitProjectDetailsAllowed());
-        assertFalse(model.isAnySectionIncomplete());
+        assertTrue(model.isSpendProfileGenerated());
         assertFalse(model.isReadOnly());
-        assertTrue(model.isProjectManagerEditable());
-        assertTrue(model.isAddressEditable());
+        assertFalse(model.isGrantOfferLetterGenerated());
     }
 
     @Test
@@ -167,7 +166,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
-        when(projectDetailsService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(false));
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
@@ -184,12 +182,10 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project, model.getProject());
         assertEquals(singletonList(leadOrganisation), model.getPartnerOrganisations());
         assertEquals(null, model.getProjectManager());
-        assertTrue(model.isProjectDetailsSubmitted());
-        assertFalse(model.isSubmissionAllowed());
         assertTrue(model.isUserLeadPartner());
-        assertFalse(model.isSubmitProjectDetailsAllowed());
-        assertFalse(model.isAnySectionIncomplete());
+        assertFalse(model.isSpendProfileGenerated());
         assertTrue(model.isReadOnly());
+        assertTrue(model.isGrantOfferLetterGenerated());
     }
 
     @Test
@@ -299,7 +295,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
-        when(projectDetailsService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(true));
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
@@ -310,8 +305,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .andReturn();
 
         ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
-        assertFalse(model.isProjectManagerEditable());
-        assertFalse(model.isAddressEditable());
+        assertTrue(model.isGrantOfferLetterGenerated());
     }
 
     @Test
@@ -723,15 +717,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testSubmitProjectDetails() throws Exception {
-        when(projectDetailsService.setApplicationDetailsSubmitted(1L)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/project/{id}/details/submit", 1L))
-        .andExpect(model().attributeDoesNotExist("readOnlyView"))
-        .andExpect(redirectedUrl("/project/1/details"));
-    }
-
-    @Test
     public void testFinanceContactInviteNotYetAccepted() throws Exception {
 
         long applicationId = 16L;
@@ -863,7 +848,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(statusService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
-        when(projectDetailsService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(true));
 
         when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
 
@@ -877,59 +861,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(competitionResource, model.getCompetition());
         assertEquals(project, model.getProject());
         assertEquals(projectManagerProjectUsers.get(0), model.getProjectManager());
-        assertTrue(model.isProjectDetailsSubmitted());
-        assertFalse(model.isSubmissionAllowed());
-        assertFalse(model.isSubmitProjectDetailsAllowed());
-        assertFalse(model.isAnySectionIncomplete());
+        assertFalse(model.isSpendProfileGenerated());
         assertTrue(model.isReadOnly());
-    }
-
-    @Test
-    public void testConfirmProjectDetails() throws Exception {
-        Long projectId = 20L;
-        Long applicationId = 1L;
-        String projectName = "current project";
-        Boolean isSubmissionAllowed = TRUE;
-
-        ProjectResource project = newProjectResource()
-                .withId(projectId)
-                .withApplication(applicationId)
-                .withName(projectName)
-                .build();
-
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectDetailsService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(isSubmissionAllowed));
-
-        MvcResult result = mockMvc.perform(get("/project/{id}/confirm-project-details", projectId))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/confirm-project-details"))
-                .andReturn();
-
-        Map<String, Object> modelMap =  result.getModelAndView().getModel();
-        assertEquals(projectId, modelMap.get("projectId"));
-        assertEquals(projectName, modelMap.get("projectName"));
-        assertEquals(applicationId, modelMap.get("applicationId"));
-    }
-
-    @Test
-    public void testConfirmProjectDetails_submissionNotAllowed() throws Exception {
-        Long projectId = 20L;
-        Long applicationId = 1L;
-        String projectName = "current project";
-        Boolean isSubmissionAllowed = FALSE;
-
-        ProjectResource project = newProjectResource()
-                .withId(projectId)
-                .withApplication(applicationId)
-                .withName(projectName)
-                .build();
-
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(projectDetailsService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(isSubmissionAllowed));
-
-        mockMvc.perform(get("/project/{id}/confirm-project-details", projectId))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/project/%s/details", projectId)));
+        assertTrue(model.isGrantOfferLetterGenerated());
     }
 }
 

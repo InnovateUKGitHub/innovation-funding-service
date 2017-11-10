@@ -23,10 +23,10 @@ Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 *** Variables ***
 ${compWithoutGrowth}         FromCompToNewAppl without GrowthTable
 ${applicationWithoutGrowth}  NewApplFromNewComp without GrowthTable
-${compWithGrowth}            All-Innov-Areas With GrowthTable
+${compWithGrowth}            All-Innov-Areas With GrowthTable    #of Sector Competition type
 ${applicationWithGrowth}     All-Innov-Areas Application With GrowthTable
 ${newUsersEmail}             liam@innovate.com
-${ineligibleMessage}         Your organisation type is not eligible to start an application in this competition.
+${ineligibleMessage}         The application must be started by the lead applicant. Your organisation is not eligible to be the lead applicant in this competition.
 
 *** Test Cases ***
 Comp Admin starts a new Competition
@@ -55,7 +55,7 @@ Comp admin completes ths competition setup
     [Documentation]    INFUND-6393
     [Tags]  HappyPath
     Given the user should see the element  jQuery=h1:contains("Competition setup")
-    Then the user marks the Application as done  no
+    Then the user marks the Application as done  no  Programme
     And the user fills in the CS Assessors
     When the user clicks the button/link  link=Public content
     Then the user fills in the Public content and publishes  NoGrowthTable
@@ -112,7 +112,7 @@ Once the project growth table is selected
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}
     And the user fills in the CS Milestones              ${month}  ${nextMonth}  ${nextyear}
-    Then the user marks the Application as done          yes
+    Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
     When the user clicks the button/link                 link=Public content
     Then the user fills in the Public content and publishes  GrowthTable
@@ -334,14 +334,14 @@ RTOs are not allowed to apply on Competition where only Businesses are allowed t
     [Documentation]  IFS-1015
     [Tags]
     Given the logged in user should not be able to apply in a competition he has not right to  antonio.jenkins@jabbertype.example.com  ${compWithoutGrowth}
-    When the user should see the element           jQuery=h1:contains("You are not eligible to apply")
+    When the user should see the element           jQuery=h1:contains("You are not eligible to start an application")
     Then the user should see the text in the page  ${ineligibleMessage}
 
 Business organisation is not allowed to apply on Comp where only RTOs are allowed to lead
     [Documentation]  IFS-1015
     [Tags]
     Given the logged in user should not be able to apply in a competition he has not right to  theo.simpson@katz.example.com  ${openCompetitionRTO_name}
-    When the user should see the element           jQuery=h1:contains("You are not eligible to apply")
+    When the user should see the element           jQuery=h1:contains("You are not eligible to start an application")
     Then the user should see the text in the page  ${ineligibleMessage}
 
 *** Keywords ***

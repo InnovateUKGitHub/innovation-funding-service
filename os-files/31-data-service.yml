@@ -48,7 +48,7 @@ items:
           - name: IFS_WEB_BASEURL
             value: 'https://<<SHIB-ADDRESS>>'
           - name: IDP_REST_BASEURL
-            value: 'https://<<SHIB-IDP-ADDRESS>>/regapi'
+            value: 'http://registration-svc:8080'
           - name: JAVA_OPTS
             value: -Xms1500m -Xmx1500m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME

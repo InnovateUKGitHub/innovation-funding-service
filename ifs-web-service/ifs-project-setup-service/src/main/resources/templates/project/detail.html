@@ -16,13 +16,12 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project details',subTitle=${model.project.name},size='heading-xlarge'" />
 
-    <p th:if="${!model.projectDetailsSubmitted}">Please supply the following details for your project and the team. We need these to set up your project.</p>
-    <div th:unless="${!model.projectDetailsSubmitted}" class="success-alert extra-margin-bottom">
-    		<p><strong>The project details have been submitted to Innovate UK</strong></p>
-  	</div>
+    <p th:if="${model.userLeadPartner and !model.projectDetailsCompleteAndAllFinanceContactsAssigned}">Please supply the following details for your project and the team. We need these to set up your project.</p>
+    <p th:if="${!model.userLeadPartner}">Please provide a finance contact. The lead applicant will provide your project information.</p>
 
-<h2 class="heading-medium">Project details</h2>
-<p>You are providing these details as the lead on behalf of the overall project.</p>
+<h2 class="heading-medium">Project information</h2>
+<p th:if="${model.userLeadPartner}">You are providing these details as the lead on behalf of the overall project.</p>
+<p th:unless="${model.userLeadPartner}">The lead has provided these details on behalf of the overall project.</p>
 
     <table id="project-details">
         <thead>
@@ -35,8 +34,8 @@
         <tbody>
             <tr>
                 <td>
-                    <a th:if="${model.userLeadPartner and !model.projectDetailsSubmitted}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Target start date</a>
-                    <th:block th:unless="${model.userLeadPartner and !model.projectDetailsSubmitted}">Target start date</th:block>
+                    <a th:if="${model.userLeadPartner and !model.spendProfileGenerated}" th:href="@{/project/{id}/details/start-date(id=${model.project.getId()})}">Target start date</a>
+                    <th:block th:unless="${model.userLeadPartner and !model.spendProfileGenerated}">Target start date</th:block>
                 </td>
                 <td id="start-date">
                     <th:block th:if="${model.project.targetStartDate == null}">-</th:block>
@@ -49,8 +48,8 @@
             </tr>
             <tr>
                 <td>
-                    <a th:if="${model.userLeadPartner and model.addressEditable}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}">Project address</a>
-                    <th:block th:unless="${model.userLeadPartner and model.addressEditable}">Project address</th:block>
+                    <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-address(id=${model.project.getId()})}">Project address</a>
+                    <th:block th:unless="${model.userLeadPartner and !model.grantOfferLetterGenerated}">Project address</th:block>
                 </td>
                 <td id="project-address">
                     <th:block th:if="${model.project.address.id == null}">-</th:block>
@@ -63,8 +62,8 @@
             </tr>
             <tr>
                 <td>
-                    <a th:if="${model.userLeadPartner and model.projectManagerEditable}" th:href="@{/project/{id}/details/project-manager(id=${model.project.getId()})}">Project Manager</a>
-                    <th:block th:unless="${model.userLeadPartner and model.projectManagerEditable}">Project Manager</th:block>
+                    <a th:if="${model.userLeadPartner and !model.grantOfferLetterGenerated}" th:href="@{/project/{id}/details/project-manager(id=${model.project.getId()})}">Project Manager</a>
+                    <th:block th:unless="${model.userLeadPartner and !model.grantOfferLetterGenerated}">Project Manager</th:block>
                 </td>
                 <td id="project-manager" th:if="${model.projectManager != null}" th:text="${model.projectManager?.userName}">John Smith</td>
                 <td id="no-project-manager" th:if="${model.projectManager == null}">-</td>
@@ -76,12 +75,6 @@
 
         </tbody>
     </table>
-
-    <a th:if="${model.submitProjectDetailsAllowed}" th:href="@{/project/{id}/confirm-project-details(id=${model.project.getId()})}" class="button extra-margin" data-js-modal="modal-project-details">Mark as complete</a>
-    <div class="extra-margin" th:if="${model.anySectionIncomplete}">
-        <p>You are not able to submit until all sections above are marked as complete.</p>
-        <button disabled="disabled" class="button">Mark as complete</button>
-    </div>
 
     <h2 class="heading-medium">Finance contacts</h2>
     <p>Each partner must provide a finance contact. We will contact them with any finance queries.</p>
@@ -97,14 +90,11 @@
         <tbody>
             <tr th:each="organisation: ${model.partnerOrganisations}">
                 <td>
-                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}">
+                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
                         <a th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
-                        <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block></th:block>
-                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and model.isReadOnly()}">
-                        <th:block th:text="${organisation.name}">organisation name</th:block>
                         <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
                     </th:block>
-                    <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id)}">
+                    <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly() and !model.grantOfferLetterGenerated}">
                         <th:block th:text="${organisation.name}">organisation name</th:block>
                         <th:block th:if="${organisation.name.equals(model.leadOrganisation.name)}"> (Lead)</th:block>
                     </th:block>

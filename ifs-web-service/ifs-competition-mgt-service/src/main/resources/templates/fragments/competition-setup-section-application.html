@@ -10,77 +10,123 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application process',size='heading-xlarge'" />
 
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${competitionSetupForm}" novalidate="novalidate">
-        <h2 class="heading-medium extra-margin" th:text="${competition.competitionTypeName+' competition questions'}" />
+        <h2 class="heading-medium extra-margin" th:text="${model.general.competition.competitionTypeName+' competition questions'}" />
 
         <p>You can review and amend the application and assessment questions and guidance for this competition. You can also edit the finances section to update funding rules. Any changes you make will be applied to this competition, but will not affect the default template for this competition type.</p>
-
-        <!--/* TODO IFS-743 This line of content needs removing */-->
-        <p>Once you are happy with the questions, funding rules and guidance, mark this section as done and continue.</p>
 
         <h3 class="heading-small">Application details</h3>
         <ul class="task-list">
             <li>
-                <div class="task">
-                    <h4 class="heading-small">
-                        <a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${competition.id})}">Application details</a>
-                    </h4>
-                </div>
-                <!--/* TODO IFS-743 This markup will be required for showing the status of this task in ifs-743 */-->
-                <!--/*<div class="task-status-complete"><span>Complete</span></div>*/-->
+                <th:block th:if="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).APPLICATION_DETAILS)}">
+                    <div class="task">
+                        <h4 class="heading-small">
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/detail(competitionId=${model.general.competition.id})}">Application details</a>
+                        </h4>
+                    </div>
+                    <div class="task-status-complete"><span>Complete</span></div>
+                </th:block>
+                <th:block th:unless="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).APPLICATION_DETAILS)}">
+                    <div class="task">
+                        <h4 class="heading-small">
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/detail/edit(competitionId=${model.general.competition.id})}">Application details</a>
+                        </h4>
+                    </div>
+                </th:block>
             </li>
-            <li th:each="question : ${projectDetails}">
-                <div class="task">
-                    <h4 class="heading-small">
-                        <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}" th:text="${question.shortName}">Question Title</a>
-                    </h4>
-                </div>
-                <!--/* TODO IFS-743 This markup will be required for showing the status of this task */-->
-                <!--/*<div class="task-status-complete"><span>Complete</span></div>*/-->
+            <li th:each="question : ${model.projectDetails}">
+                 <th:block th:if="${model.questionStatuses.get(question.id)}">
+                    <div class="task">
+                        <h4 class="heading-small">
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}"
+                               th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}">Question Title</a>
+                        </h4>
+                    </div>
+                    <div class="task-status-complete"><span>Complete</span></div>
+                </th:block>
+                <th:block th:unless="${model.questionStatuses.get(question.id)}">
+                    <div class="task">
+                        <h4 class="heading-small">
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id}, questionId=${question.id})}"
+                               th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}">Question Title</a>
+                        </h4>
+                    </div>
+                </th:block>
             </li>
         </ul>
 
         <h3 class="heading-small">Assessed questions</h3>
-        <ul class="task-list">
-            <li th:each="question : ${questions}">
-                <div class="task">
-                    <h4 class="heading-small">
-                        <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${competition.id}, questionId=${question.id})}"
-                           th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}">Question Title</a>
-                    </h4>
-                </div>
-                <!--/* TODO IFS-743 This markup will be required for showing the status of this task in ifs-743 */-->
-                <!--/*<div class="task-status-complete"><span>Complete</span></div>*/-->
+        <ul class="task-list no-margin-bottom">
+            <li th:each="question : ${model.questions}">
+                <th:block th:if="${model.questionStatuses.get(question.id)}">
+                    <div class="task">
+                        <h4 class="heading-small">
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}(competitionId=${model.general.competition.id}, questionId=${question.id})}">
+                                <th:block th:text="${question.questionNumber} + '. '"></th:block>
+                                <th:block th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
+                            </a>
+                        </h4>
+                    </div>
+                    <div class="task-status-complete"><span>Complete</span></div>
+                </th:block>
+                <th:block th:unless="${model.questionStatuses.get(question.id)}">
+                    <div class="task">
+                        <h4 class="heading-small">
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/{questionId}/edit(competitionId=${model.general.competition.id}, questionId=${question.id})}">
+                                <th:block th:text="${question.questionNumber} + '. '"></th:block>
+                                <th:block th:text="${#strings.isEmpty(question.shortName)} ? #{ifs.application.question.no_heading} : ${question.shortName}"></th:block>
+                            </a>
+                        </h4>
+                    </div>
+                    <div th:if="${model.multipleAssessedQuestionsLeft()}" class="task-status">
+                        <th:form>
+                            <button type="submit" th:value="${question.id}" name="deleteQuestion" class="buttonlink no-margin">Remove</button>
+                        </th:form>
+                    </div>
+                </th:block>
             </li>
         </ul>
+        <th:form>
+            <p>
+                <button type="submit" name="createQuestion" class="buttonlink">Add question</button>
+            </p>
+        </th:form>
 
-        <h3 class="heading-small no-margin">Finances</h3>
+        <h3 class="heading-small">Finances</h3>
         <ul class="task-list">
             <li>
-                <div class="task">
-                    <h4 class="heading-small">
-                        <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance(competitionId=${competition.id})}">Finances</a>
-                    </h4>
-                </div>
-                <!--/* TODO IFS-743 This markup will be required for showing the status of this task in ifs-743 */-->
-                <!--/*<div class="task-status-complete"><span>Complete</span></div>*/-->
+                <th:block th:if="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).FINANCES)}">
+                    <div class="task">
+                        <h4 class="heading-small">
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance(competitionId=${model.general.competition.id})}">Finances</a>
+                        </h4>
+                    </div>
+                    <div class="task-status-complete"><span>Complete</span></div>
+                </th:block>
+                <th:block th:unless="${model.subsectionStatuses.get(T(org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection).FINANCES)}">
+                    <div class="task">
+                        <h4 class="heading-small">
+                            <a th:href="@{/competition/setup/{competitionId}/section/application/question/finance/edit(competitionId=${model.general.competition.id})}">Finances</a>
+                        </h4>
+                    </div>
+                </th:block>
             </li>
         </ul>
 
         <div class="grid-row">
             <div class="column-full extra-margin">
-                <button th:if="${editable}" class="button">Done</button>
+                <button th:if="${model.general.editable}" th:disabled="${!model.allComplete}" class="button">Done</button>
             </div>
         </div>
 
         <ul class="pagination">
             <li class="prev">
-                <a rel="prev" title="Navigate to prev part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='milestones')}">
+                <a rel="prev" title="Navigate to prev part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='milestones')}">
                     <span class="pagination-label">Previous</span>
                     <span class="pagination-part-title">Milestones</span>
                 </a>
             </li>
             <li class="next">
-                <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath='assessors')}">
+                <a rel="next" title="Navigate to next part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.general.competition.id},sectionPath='assessors')}">
                     <span class="pagination-label">Next</span>
                     <span class="pagination-part-title">Assessors</span>
                 </a>

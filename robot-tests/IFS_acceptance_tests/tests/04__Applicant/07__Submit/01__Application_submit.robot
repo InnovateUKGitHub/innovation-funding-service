@@ -53,7 +53,7 @@ Applicant has read only view on review and submit page
     When the applicant completes the application details  Application details
     And the user clicks the button/link                   link=Return to application overview
     And the user clicks the button/link                   link=Your finances
-    And the user marks the finances as complete           ${application_bus_name}
+    And the user marks the finances as complete           ${application_bus_name}  labour costs  n/a
     And the user clicks the button/link                   link=Review and submit
     Then the user should not see the element              css=input
 
@@ -170,7 +170,7 @@ the submit button should be disabled
 
 the applicant accepts the terms and conditions
     the user selects the checkbox    agree-terms-page
-    the user selects the checkbox    agree-state-aid-page
+    the user selects the checkbox    stateAidAgreed
 
 the applicant marks the first section as complete
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -185,7 +185,7 @@ the applicant clicks the submit and then clicks the "close button" in the modal
 the user puts zero project costs
     [Documentation]  To be refactored with existing keyword
     the user clicks the button/link  link=Your project costs
-    the user clicks the button/link  css=label[for="agree-state-aid-page"]
+    the user clicks the button/link  css=label[for="stateAidAgreed"]
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
     the user has read only view once section is marked complete

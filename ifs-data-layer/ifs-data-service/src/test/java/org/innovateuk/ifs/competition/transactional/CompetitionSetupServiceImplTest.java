@@ -1,28 +1,27 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
-import org.innovateuk.ifs.application.resource.SectionType;
-import org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
-import org.innovateuk.ifs.competition.domain.AssessorCountOption;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.setup.resource.SetupStatusResource;
+import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
@@ -32,25 +31,23 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.application.builder.GuidanceRowBuilder.newFormInputGuidanceRow;
-import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
-import static org.innovateuk.ifs.application.builder.SectionBuilder.newSection;
-import static org.innovateuk.ifs.competition.builder.AssessorCountOptionBuilder.newAssessorCountOption;
+import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
-import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
-import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.INITIAL_DETAILS;
+import static org.innovateuk.ifs.setup.builder.SetupStatusResourceBuilder.newSetupStatusResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupServiceImplTest {
@@ -79,6 +76,10 @@ public class CompetitionSetupServiceImplTest {
 	private CompetitionFunderService competitionFunderService;
 	@Mock
 	private CompetitionParticipantRepository competitionParticipantRepository;
+	@Mock
+	private CompetitionSetupTemplateService competitionSetupTemplateService;
+	@Mock
+    private SetupStatusService setupStatusService;
 
     @Before
 	public void setup() {
@@ -88,77 +89,37 @@ public class CompetitionSetupServiceImplTest {
     }
 
     @Test
+	public void testGetSectionStatuses() {
+        final Long competitionId = 6939L;
+
+        when(setupStatusService.findByTargetClassNameAndTargetId(Competition.class.getName(), competitionId))
+                .thenReturn(ServiceResult.serviceSuccess(newSetupStatusResource().withId(23L)
+                        .withTargetClassName(Competition.class.getName())
+                        .withTargetId(competitionId)
+                        .withClassPk(INITIAL_DETAILS.getId())
+                        .withClassName(INITIAL_DETAILS.getClass().getName())
+                        .withCompleted(Boolean.TRUE)
+                        .build(1)));
+
+        Map<CompetitionSetupSection, Optional<Boolean>> resultMap = service.getSectionStatuses(competitionId).getSuccessObjectOrThrowException();
+
+        assertTrue(resultMap.containsKey(CompetitionSetupSection.HOME));
+        assertEquals(Boolean.TRUE, resultMap.get(INITIAL_DETAILS).orElse(Boolean.FALSE));
+        assertEquals(Boolean.FALSE, resultMap.get(APPLICATION_FORM).orElse(Boolean.FALSE));
+    }
+
+    @Test
     public void copyFromCompetitionTypeTemplate() {
 		long typeId = 4L;
 		long competitionId = 2L;
-    	CompetitionType competitionType = newCompetitionType().withId(typeId).build();
-    	Competition competition = newCompetition().build();
-    	Competition competitionTemplate = newCompetition()
-    			.withCompetitionType(competitionType)
-    			.withSections(newSection()
-						.withSectionType(SectionType.GENERAL)
-						.withQuestions(newQuestion()
-								.withFormInputs(newFormInput()
-										.withGuidanceRows(newFormInputGuidanceRow().build(2)
-										).build(2)
-							).build(2)
-					).build(2)
-			).build();
-
-		competitionType.setTemplate(competitionTemplate);
-
-    	when(competitionRepository.findById(competitionId)).thenReturn(competition);
-		when(competitionTypeRepository.findOne(typeId)).thenReturn(competitionType);
-		when(competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(typeId)).thenReturn(Optional.empty());
+    	Competition competitionTemplate = newCompetition().build();
+		when(competitionSetupTemplateService.initializeCompetitionByCompetitionTemplate(competitionId, typeId)).thenReturn(ServiceResult.serviceSuccess(competitionTemplate));
 
 		ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(competitionId, typeId);
-
     	assertTrue(result.isSuccess());
-		assertEquals(competitionType, competition.getCompetitionType());
-		assertEquals(competitionTemplate.getSections(), competition.getSections());
+
+    	verify(competitionSetupTemplateService, times(1)).initializeCompetitionByCompetitionTemplate(competitionId, typeId);
     }
-
-	@Test
-	public void copyFromSectorCompetitionTypeTemplate() {
-		long typeId = 5L;
-		long competitionId = 2L;
-		CompetitionType competitionType = newCompetitionType()
-				.withId(typeId)
-				.withName("Sector")
-				.build();
-		Competition competition = newCompetition().build();
-		Competition competitionTemplate = newCompetition()
-				.withCompetitionType(competitionType)
-				.withAcademicGrantPercentage(222)
-				.withSections(newSection()
-						.withSectionType(SectionType.GENERAL)
-						.withQuestions(newQuestion()
-								.withShortName("Scope")
-								.withFormInputs(newFormInput()
-										.withType(ASSESSOR_APPLICATION_IN_SCOPE)
-										.withGuidanceRows(newFormInputGuidanceRow().build(2)
-										).build(2)
-								).build(1)
-						).build(1)
-				)
-				.build();
-
-		competitionType.setTemplate(competitionTemplate);
-
-		when(competitionRepository.findById(competitionId)).thenReturn(competition);
-		when(competitionTypeRepository.findOne(typeId)).thenReturn(competitionType);
-		when(competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(typeId)).thenReturn(Optional.empty());
-
-		ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(competitionId, typeId);
-
-		assertTrue(result.isSuccess());
-		assertEquals(competitionType, competition.getCompetitionType());
-		assertEquals(competitionTemplate.getSections(), competition.getSections());
-		assertEquals(competitionTemplate.getAcademicGrantPercentage(), competition.getAcademicGrantPercentage());
-		Section section = competition.getSections().get(0);
-		Question question = section.getQuestions().get(0);
-		assertFalse(question.getFormInputs().get(0).getActive());
-	}
 
 	@Test
 	public void updateCompetitionInitialDetailsWhenExistingLeadTechnologistDoesNotExist() {
@@ -184,11 +145,11 @@ public class CompetitionSetupServiceImplTest {
 
 		assertTrue(result.isSuccess());
 		verify(competitionParticipantRepository, never()).getByCompetitionIdAndUserIdAndRole(competitionId, existingLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD);
-		verify(competitionParticipantRepository, never()).delete(Mockito.any(CompetitionParticipant.class));
+		verify(competitionParticipantRepository, never()).delete(Mockito.any(CompetitionAssessmentParticipant.class));
 		verify(competitionFunderService).reinsertFunders(competitionResource);
 		verify(competitionRepository).save(competition);
 
-		CompetitionParticipant savedCompetitionParticipant = new CompetitionParticipant();
+		CompetitionAssessmentParticipant savedCompetitionParticipant = new CompetitionAssessmentParticipant();
 		savedCompetitionParticipant.setProcess(competition);
 		savedCompetitionParticipant.setUser(leadTechnologist);
 		savedCompetitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
@@ -206,7 +167,7 @@ public class CompetitionSetupServiceImplTest {
 		Long newLeadTechnologistId = 7L;
 		User leadTechnologist = UserBuilder.newUser().withId(newLeadTechnologistId).build();
 
-		CompetitionParticipant competitionParticipant = CompetitionParticipantBuilder.newCompetitionParticipant().build();
+		CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().build();
 		CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
 				.withId(competitionId)
 				.withLeadTechnologist(newLeadTechnologistId)
@@ -230,7 +191,7 @@ public class CompetitionSetupServiceImplTest {
 		verify(competitionFunderService).reinsertFunders(competitionResource);
 		verify(competitionRepository).save(competition);
 
-		CompetitionParticipant savedCompetitionParticipant = new CompetitionParticipant();
+		CompetitionAssessmentParticipant savedCompetitionParticipant = new CompetitionAssessmentParticipant();
 		savedCompetitionParticipant.setProcess(competition);
 		savedCompetitionParticipant.setUser(leadTechnologist);
 		savedCompetitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
@@ -247,7 +208,7 @@ public class CompetitionSetupServiceImplTest {
 		Long existingLeadTechnologistId = 5L;
 		Long newLeadTechnologistId = 7L;
 
-		CompetitionParticipant competitionParticipant = CompetitionParticipantBuilder.newCompetitionParticipant().build();
+		CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().build();
 		CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
 				.withId(competitionId)
 				.withLeadTechnologist(newLeadTechnologistId)
@@ -256,7 +217,7 @@ public class CompetitionSetupServiceImplTest {
 				.withId(competitionId)
 				.withLeadTechnologist(UserBuilder.newUser().withId(newLeadTechnologistId).build())
 				.build();
-		CompetitionParticipant newLeadTechCompetitionParticipant = CompetitionParticipantBuilder.newCompetitionParticipant().withId(11L).build();
+		CompetitionAssessmentParticipant newLeadTechCompetitionParticipant = newCompetitionAssessmentParticipant().withId(11L).build();
 		when(competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
 				existingLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipant);
 		when(competitionMapperMock.mapToDomain(competitionResource)).thenReturn(competition);
@@ -272,58 +233,8 @@ public class CompetitionSetupServiceImplTest {
 		verify(competitionFunderService).reinsertFunders(competitionResource);
 		verify(competitionRepository).save(competition);
 		verify(competitionParticipantRepository).getByCompetitionIdAndUserIdAndRole(1L, newLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD);
-		verify(competitionParticipantRepository, never()).save(Mockito.any(CompetitionParticipant.class));
+		verify(competitionParticipantRepository, never()).save(Mockito.any(CompetitionAssessmentParticipant.class));
 	}
-
-    @Test
-    public void testInitialiseFormWithSectionHierarchy() {
-		Long typeId = 4L;
-    	Section parent = newSection()
-				.withName("parent")
-				.build();
-
-    	Section child1 = newSection()
-				.withName("child1")
-				.withParentSection(parent)
-				.build();
-		Section child2 = newSection()
-				.withName("child2")
-				.withParentSection(parent)
-				.build();
-    	parent.setChildSections(new ArrayList<>(asList(child1, child2)));
-
-		CompetitionType competitionType = newCompetitionType().withId(typeId).build();
-		Competition competition = newCompetition().build();
-    	Competition competitionTemplate = newCompetition()
-    			.withSections(asList(
-    					parent, child1, child2
-				))
-    			.build();
-
-		competitionType.setTemplate(competitionTemplate);
-    	when(competitionRepository.findById(123L)).thenReturn(competition);
-    	when(competitionTypeRepository.findOne(typeId)).thenReturn(competitionType);
-		when(competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(typeId)).thenReturn(Optional.empty());
-
-		ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(123L, 4L);
-
-    	assertTrue(result.isSuccess());
-    	assertEquals(3, competition.getSections().size());
-    	Section parentSection = competition.getSections().get(0);
-    	Section child1Section = competition.getSections().get(1);
-    	Section child2Section = competition.getSections().get(2);
-    	assertEquals("parent", parentSection.getName());
-    	assertEquals("child1", child1Section.getName());
-    	assertEquals("child2", child2Section.getName());
-    	assertNull(parentSection.getParentSection());
-    	assertEquals(2, parentSection.getChildSections().size());
-    	assertTrue(parentSection.getChildSections().contains(child1Section));
-    	assertTrue(parentSection.getChildSections().contains(child2Section));
-    	assertEquals(parentSection, child1Section.getParentSection());
-    	assertNull(child1Section.getChildSections());
-    	assertEquals(parentSection, child2Section.getParentSection());
-    	assertNull(child2Section.getChildSections());
-    }
 
 	@Test
 	public void testMarkAsSetup() {
@@ -347,66 +258,161 @@ public class CompetitionSetupServiceImplTest {
 		assertFalse(comp.getSetupComplete());
 	}
 
+    @Test
+    public void testMarkSectionCompleteFindOne() {
+        final Long competitionId = 32L;
+        final CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
+        final SetupStatusResource foundStatusResource = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withClassPk(competitionId)
+                .withParentId(12L)
+                .withCompleted(Boolean.FALSE).build();
+        final SetupStatusResource savingStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withClassPk(competitionId)
+                .withParentId(12L)
+                .withCompleted(Boolean.TRUE).build();
+        final SetupStatusResource savedStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withParentId(12L)
+                .withTargetClassName(Competition.class.getName())
+                .withClassPk(competitionId)
+                .withCompleted(Boolean.TRUE).build();
+
+        when(setupStatusService.findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceSuccess(foundStatusResource));
+        when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
+
+        service.markSectionComplete(competitionId, section);
+
+        verify(setupStatusService, times(1)).findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId);
+        verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
+    }
 
 	@Test
-	public void copyFromCompetitionTypeTemplateAssessorCountAndPay() {
-		long typeId = 4L;
-		long competitionId = 2L;
-		CompetitionType competitionType = newCompetitionType().withId(typeId).build();
-		Competition competition = newCompetition().build();
-		Competition competitionTemplate = newCompetition()
-				.withCompetitionType(competitionType)
-				.withSections(newSection()
-						.withSectionType(SectionType.GENERAL)
-						.withQuestions(newQuestion()
-								.withFormInputs(newFormInput()
-										.build(2)
-								).build(2)
-						).build(2)
-				).build();
+	public void testMarkSectionIncompleteCreateOne() {
+        final Long competitionId = 32L;
+        final CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
+        final SetupStatusResource savingStatus = newSetupStatusResource()
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE).build();
+        savingStatus.setId(null);
+        final SetupStatusResource savedStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE).build();
 
-		competitionType.setTemplate(competitionTemplate);
+        when(setupStatusService.findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
+        when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
 
-		AssessorCountOption assessorOption = newAssessorCountOption().withId(1L)
-				.withAssessorOptionName("1").withAssessorOptionValue(1).withDefaultOption(Boolean.TRUE).build();
+        service.markSectionIncomplete(competitionId, section);
 
-		when(competitionRepository.findById(competitionId)).thenReturn(competition);
-		when(competitionTypeRepository.findOne(typeId)).thenReturn(competitionType);
-		when(competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(typeId)).thenReturn(Optional.of(assessorOption));
-		ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(competitionId, typeId);
-
-		assertTrue(result.isSuccess());
-		assertEquals(competition.getCompetitionType(), competitionType);
-		assertEquals(Integer.valueOf(1), competition.getAssessorCount());
-		assertEquals(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY, competition.getAssessorPay());
+        verify(setupStatusService, times(1)).findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId);
+        verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
 	}
 
 	@Test
-	public void copyFromCompetitionTypeTemplateAssessorCountAndPayWithNoDefault() {
-		long typeId = 4L;
-		long competitionId = 2L;
-		CompetitionType competitionType = newCompetitionType().withId(typeId).build();
-		Competition competition = newCompetition().build();
-		Competition competitionTemplate = newCompetition()
-				.withCompetitionType(competitionType)
-				.withSections(newSection()
-						.withSectionType(SectionType.GENERAL)
-						.withQuestions(newQuestion()
-								.withFormInputs(newFormInput()
-										.build(2)
-								).build(2)
-						).build(2)
-				).build();
+	public void testMarkSubsectionCompleteFindOne() {
+        final CompetitionSetupSubsection section = CompetitionSetupSubsection.APPLICATION_DETAILS;
+        final Long competitionId = 32L;
+        final CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
+        final SetupStatusResource foundStatusResource = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withClassPk(competitionId)
+                .withParentId(12L)
+                .withCompleted(Boolean.FALSE).build();
+        final SetupStatusResource savingStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withTargetClassName(Competition.class.getName())
+                .withClassPk(competitionId)
+                .withParentId(12L)
+                .withCompleted(Boolean.TRUE).build();
+        final SetupStatusResource savedStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withParentId(12L)
+                .withTargetClassName(Competition.class.getName())
+                .withClassPk(competitionId)
+                .withCompleted(Boolean.TRUE).build();
+        final SetupStatusResource parentSectionStatus = newSetupStatusResource()
+                .withId(12L)
+                .withClassName(parentSection.getClass().getName())
+                .withClassPk(parentSection.getId())
+                .withParentId()
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE).build();
 
-		competitionType.setTemplate(competitionTemplate);
+        when(setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceSuccess(parentSectionStatus));
+        when(setupStatusService.findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceSuccess(foundStatusResource));
+        when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
 
-		when(competitionRepository.findById(competitionId)).thenReturn(competition);
-		when(competitionTypeRepository.findOne(typeId)).thenReturn(competitionType);
-		when(competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(typeId)).thenReturn(Optional.empty());
-		ServiceResult<Void> result = service.copyFromCompetitionTypeTemplate(competitionId, typeId);
+        service.markSubsectionComplete(competitionId, parentSection, section);
 
-		assertTrue(result.isSuccess());
-		assertNull(competition.getAssessorCount());
-		assertEquals(CompetitionSetupServiceImpl.DEFAULT_ASSESSOR_PAY, competition.getAssessorPay());
+        verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
+	}
+
+	@Test
+	public void testMarkSubsectionIncompleteCreateOne() {
+        final CompetitionSetupSubsection section = CompetitionSetupSubsection.APPLICATION_DETAILS;
+        final Long competitionId = 32L;
+        final CompetitionSetupSection parentSection = CompetitionSetupSection.APPLICATION_FORM;
+        final SetupStatusResource savingStatus = newSetupStatusResource()
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withParentId(12L)
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE).build();
+        savingStatus.setId(null);
+        final SetupStatusResource savedStatus = newSetupStatusResource()
+                .withId(13L)
+                .withClassName(section.getClass().getName())
+                .withClassPk(section.getId())
+                .withParentId(12L)
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE).build();
+        final SetupStatusResource parentSectionStatus = newSetupStatusResource()
+                .withId(12L)
+                .withClassName(parentSection.getClass().getName())
+                .withClassPk(parentSection.getId())
+                .withParentId()
+                .withTargetClassName(Competition.class.getName())
+                .withTargetId(competitionId)
+                .withCompleted(Boolean.FALSE).build();
+
+        when(setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceSuccess(parentSectionStatus));
+        when(setupStatusService.findSetupStatusAndTarget(section.getClass().getName(), section.getId(), Competition.class.getName(), competitionId))
+                .thenReturn(serviceFailure(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST)));
+        when(setupStatusService.saveSetupStatus(savingStatus)).thenReturn(serviceSuccess(savedStatus));
+
+        service.markSubsectionIncomplete(competitionId, parentSection, section);
+
+        verify(setupStatusService, times(1)).saveSetupStatus(savingStatus);
 	}
 }

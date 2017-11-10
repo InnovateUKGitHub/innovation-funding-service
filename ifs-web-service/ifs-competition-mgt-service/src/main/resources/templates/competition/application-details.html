@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application details',hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
@@ -10,30 +10,28 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application/landing-page(compId = ${competitionId})}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application/landing-page(compId = ${model.general.competition.id})}" />
 
-    <div class="error-summary" th:attr="aria-hidden=${!#fields.hasErrors('${competitionSetupForm.*}')}">
-        <h2 class="heading-medium error-summary-heading">Unable to save section</h2>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.errors('${competitionSetupForm.*}')}" th:text="${err}"></li>
-        </ul>
+    <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${editable} ? 'Edit \'Application details\'' : 'Application details',subTitle=${competitionName},size='heading-xlarge'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application details',subTitle=${model.general.competition.name},size='heading-xlarge'" />
     <p>These are the default questions included in the application details section.</p>
 
-    <form th:if="${editable}"
-          data-autosave="compSetup"
+    <form th:if="${model.editable}"
+          th:attrappend="data-autosave=${!model.general.state.setupComplete}?compSetup"
           th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}"
           th:object="${competitionSetupForm}" method="post"
-          data-th-attr="data-competition=${competitionId}"
-          data-section="application" data-subsection="detail">
+          data-th-attr="data-competition=${model.general.competition.id}"
+          data-section="application" data-subsection="detail" novalidate="novalidate">
 
         <h2 class="heading-medium extra-margin extra-margin-bottom">To be included:</h2>
 
         <div class="form-group" th:classappend="${#fields.hasErrors('useResubmissionQuestion')} ? 'form-group-error'">
             <fieldset class="inline">
-                <legend>
+                <legend id="useResubmissionQuestion">
                     <span class="form-label-bold">Resubmission question</span>
                     <th:block th:if="${#fields.hasErrors('useResubmissionQuestion')}">
                         <span class="error-message"  th:each="err : ${#fields.errors('useResubmissionQuestion')}" th:text="${err}"></span>
@@ -54,14 +52,14 @@
             </fieldset>
         </div>
 
-        <button type="submit" class="button">Save and close</button>
+        <button type="submit" class="button">Done</button>
     </form>
 
-    <th:block th:unless="${editable}">
+    <th:block th:unless="${model.editable}">
 
         <h2 class="heading-medium extra-margin extra-margin-bottom">To be included:</h2>
 
-        <th:block th:unless="${editable}">
+        <th:block th:unless="${model.editable}">
             <dl class="application-question-list grid-row">
                 <dt class="column-third">Resubmission question</dt>
                 <dd class="column-two-thirds" th:text="${competitionSetupForm.useResubmissionQuestion ? 'Yes' : 'No'}" />
@@ -69,10 +67,10 @@
         </th:block>
 
         <div class="extra-margin">
-            <a class="button" th:unless="${preventEdit}" th:href="@{/competition/setup/{competitionId}/section/application/detail/edit(competitionId=${competition.id})}">Edit this question</a>
+            <a class="button" th:unless="${model.general.state.preventEdit}" th:href="@{/competition/setup/{competitionId}/section/application/detail/edit(competitionId=${model.general.competition.id})}">Edit this question</a>
         </div>
         <div class="extra-margin">
-            <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/section/application(competitionId=${competition.id})}">Return to application questions</a>
+            <a class="button-secondary" th:href="@{/competition/setup/{competitionId}/section/application(competitionId=${model.general.competition.id})}">Return to application questions</a>
         </div>
     </th:block>
 

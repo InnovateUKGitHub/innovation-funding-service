@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend profile',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body class="spend-profile">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -11,18 +11,16 @@
 <main tabindex="-1" id="content" class="no-grid" th:with="project=${model.project}">
     <div class="grid-container">
         <th:block th:insert="fragments/layout :: main-content-start" />
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${project.name},size='heading-xlarge'" />
 
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to send spend profiles.</h2>
+            Please review
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+        </div>
+
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Spend profile',subTitle=${project.name},size='heading-xlarge'" />
         <form th:object="${form}" th:action="@{/project/{id}/spend-profile/total(id=${projectId})}" method="POST" >
-            <div class="error-summary" th:if="${#fields.hasErrors('*')}">
-                <h2 class="heading-medium error-summary-heading">
-                    Unable to send spend profiles.
-                </h2>
-                Please review
-                <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
-                </ul>
-            </div>
+
             <th:block th:insert="fragments/modals :: modal-overlay" />
             <th:block th:insert="fragments/modals :: modal-confirm-spend-profile-totals (projectId=${model.project.id})" />
         </form>
@@ -57,7 +55,7 @@
                         <th scope="col" th:text="${#temporals.format(month.localDate, 'MMM yyyy')}" th:id="${'month'+stats.index}" />
                     </th:block>
                     <th scope="col" class="fix-right">Total</th>
-                    <th scope="col" class="fix-right" >Eligible project cost</th>
+                    <th scope="col" class="fix-right">Eligible project cost</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -66,24 +64,24 @@
                         <span th:text="${organisationName}" />
                         <span th:if="${organisationName.equals(model.table.leadOrganisation.name)}"> (Lead)</span>
                     </th>
-                    <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'COMMA')}"/>
-                    <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.table.organisationToActualTotal.get(row.key),1,'COMMA')}" />
-                    <td class="fix-right" th:text="${'&pound; '+#numbers.formatInteger(model.table.eligibleCostPerOrganisationMap.get(row.key),1,'COMMA')}" />
+                    <td th:each="cost : ${row.value}" th:text="${#numbers.formatInteger(cost,1,'DEFAULT')}"/>
+                    <td class="fix-right" th:text="${'&pound;'+#numbers.formatInteger(model.table.organisationToActualTotal.get(row.key),1,'DEFAULT')}" />
+                    <td class="fix-right" th:text="${'&pound;'+#numbers.formatInteger(model.table.eligibleCostPerOrganisationMap.get(row.key),1,'DEFAULT')}" />
                 </tr>
                 </tbody>
                 <tfoot>
                 <tr class="form-group-row">
                     <th scope="row" class="fix-left">Total</th>
                     <th:block th:each="monthTotal,status : ${model.table.totalForEachMonth}">
-                        <td th:text="${'&pound; '+#numbers.formatInteger(monthTotal,1,'COMMA')}" />
+                        <td th:text="${'&pound;'+#numbers.formatInteger(monthTotal,1,'DEFAULT')}" />
                     </th:block>
                     <td class="fix-right">
-                        <input th:value="${'&pound; '+#numbers.formatInteger(model.table.totalOfAllActualTotals,1,'COMMA')}"
+                        <input th:value="${'&pound;'+#numbers.formatInteger(model.table.totalOfAllActualTotals,1,'DEFAULT')}"
                                readonly="readonly"
                                id="spend-profile-total-total" />
                     </td>
                     <td class="fix-right">
-                        <input readonly="readonly" th:value="${'&pound; '+#numbers.formatInteger(model.table.totalOfAllEligibleTotals,1,'COMMA')}" />
+                        <input readonly="readonly" th:value="${'&pound;'+#numbers.formatInteger(model.table.totalOfAllEligibleTotals,1,'DEFAULT')}" />
                     </td>
                 </tr>
                 </tfoot>
@@ -104,8 +102,7 @@
             <tbody>
             <tr th:each="item : ${model.summary.years}">
                 <td th:text="${item.year + ' - ' + (item.year + 1)}"></td>
-                <td th:text="${'£ '+#numbers.formatInteger(item.amount,1,'COMMA')}"
-                    th:attr="data-calculation-fields=${'.apr-'+item.year+',
+                <td th:attr="data-calculation-fields=${'.apr-'+item.year+',
                                                           .may-'+item.year+',
                                                           .jun-'+item.year+',
                                                           .jul-'+item.year+',
@@ -116,7 +113,9 @@
                                                           .dec-'+item.year+',
                                                           .jan-'+(item.year+1)+',
                                                           .feb-'+(item.year+1)+',
-                                                          .mar-'+(item.year+1)}"></td>
+                                                          .mar-'+(item.year+1)}">
+                    &pound;<th:block th:text="${#numbers.formatInteger(item.amount,1,'DEFAULT')}" />
+                </td>
             </tr>
             </tbody>
         </table>

@@ -1,0 +1,195 @@
+=== Get all available assessors by competition
+==== Request
+include::{snippets}/assessmentpanelinvite/get-available-assessors/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-available-assessors/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-available-assessors/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-available-assessors/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-available-assessors/curl-request.adoc[]
+
+=== Get all available assessor ids by competition
+==== Request
+include::{snippets}/assessmentpanelinvite/get-available-assessor-ids/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-available-assessor-ids/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-available-assessor-ids/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-available-assessor-ids/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-available-assessor-ids/curl-request.adoc[]
+
+=== Get the assessment panel invite list for a competition
+==== Request
+include::{snippets}/assessmentpanelinvite/get-created-invites/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-created-invites/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-created-invites/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-created-invites/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-created-invites/curl-request.adoc[]
+
+=== Add existing users to the assessor invite list for a competition's assessment panel
+==== Request
+include::{snippets}/assessmentpanelinvite/invite-users/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/invite-users/request-fields.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/invite-users/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/invite-users/curl-request.adoc[]
+
+=== Send invites to chosen assessors for a panel
+==== Request
+include::{snippets}/assessmentpanelinvite/send-all-invites/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/send-all-invites/path-parameters.adoc[]
+include::{snippets}/assessmentpanelinvite/send-all-invites/request-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/send-all-invites/curl-request.adoc[]
+
+=== Get all invites to send
+==== Request
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-send/curl-request.adoc[]
+
+
+=== Get all panel invites for a particular user
+==== Request
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-all-invites-by-user/curl-request.adoc[]
+
+
+=== Get all invites to resend
+==== Request
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-resend/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-resend/path-parameters.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-resend/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-resend/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-resend/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-all-invites-to-resend/curl-request.adoc[]
+
+=== Resend invites
+==== Request
+include::{snippets}/assessmentpanelinvite/resend-invites/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/resend-invites/request-parameters.adoc[]
+include::{snippets}/assessmentpanelinvite/resend-invites/request-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/resend-invites/curl-request.adoc[]
+
+=== Open invite by hash
+==== Request
+include::{snippets}/assessmentpanelinvite/open-invite/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/open-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/open-invite/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/open-invite/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/open-invite/curl-request.adoc[]
+
+=== Accept invite by hash
+==== Request
+include::{snippets}/assessmentpanelinvite/accept-invite/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/accept-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/accept-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/accept-invite/curl-request.adoc[]
+
+=== Reject invite by hash
+==== Request
+include::{snippets}/assessmentpanelinvite/reject-invite/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/reject-invite/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/reject-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/reject-invite/curl-request.adoc[]
+
+=== Check if existing user by hash
+==== Request
+include::{snippets}/assessmentpanelinvite/check-existing-user/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/check-existing-user/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/check-existing-user/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/check-existing-user/curl-request.adoc[]
+
+=== Get the overview of panel invitations by competition and status
+==== Request
+include::{snippets}/assessmentpanelinvite/get-invitation-overview/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-invitation-overview/path-parameters.adoc[]
+include::{snippets}/assessmentpanelinvite/get-invitation-overview/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-invitation-overview/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-invitation-overview/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-invitation-overview/curl-request.adoc[]
+
+=== Get non accepted assessor invite ids
+==== Request
+include::{snippets}/assessmentpanelinvite/get-non-accepted-assessor-invite-ids/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/get-non-accepted-assessor-invite-ids/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/get-non-accepted-assessor-invite-ids/http-response.adoc[]
+include::{snippets}/assessmentpanelinvite/get-non-accepted-assessor-invite-ids/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/get-non-accepted-assessor-invite-ids/curl-request.adoc[]
+
+=== Delete a user from the assessor invite list for an assessment panel
+==== Request
+include::{snippets}/assessmentpanelinvite/delete-invite/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/delete-invite/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/delete-invite/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/delete-invite/curl-request.adoc[]
+
+=== Delete all users from the assessor invite list for an assessment panel
+==== Request
+include::{snippets}/assessmentpanelinvite/delete-all-invites/http-request.adoc[]
+include::{snippets}/assessmentpanelinvite/delete-all-invites/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanelinvite/delete-all-invites/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanelinvite/delete-all-invites/curl-request.adoc[]

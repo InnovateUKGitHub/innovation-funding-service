@@ -3,13 +3,12 @@ package org.innovateuk.ifs.competition.transactional;
 import com.google.common.collect.Lists;
 import org.assertj.core.util.Sets;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.builder.ApplicationBuilder;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder;
 import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -17,6 +16,7 @@ import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -39,7 +39,9 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -47,8 +49,9 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -64,18 +67,12 @@ import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SUPPORT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionServiceImpl> {
 
@@ -120,7 +117,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         User user = UserBuilder.newUser().build();
         UserResource userResource = UserResourceBuilder.newUserResource().build();
-        List<CompetitionParticipant> competitionParticipants = CompetitionParticipantBuilder.newCompetitionParticipant()
+        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant()
                 .withUser(user)
                 .build(4);
 
@@ -152,7 +149,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         ServiceResult<Void> result = service.addInnovationLead(competitionId, innovationLeadUserId);
         assertTrue(result.isSuccess());
 
-        CompetitionParticipant savedCompetitionParticipant = new CompetitionParticipant();
+        CompetitionAssessmentParticipant savedCompetitionParticipant = new CompetitionAssessmentParticipant();
         savedCompetitionParticipant.setProcess(competition);
         savedCompetitionParticipant.setUser(innovationLead);
         savedCompetitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
@@ -177,7 +174,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void removeInnovationLead() throws Exception {
         Long innovationLeadUserId = 2L;
 
-        CompetitionParticipant competitionParticipant = CompetitionParticipantBuilder.newCompetitionParticipant().build();
+        CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().build();
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndUserIdAndRole(competitionId, innovationLeadUserId, CompetitionParticipantRole.INNOVATION_LEAD))
                 .thenReturn(competitionParticipant);
 
@@ -269,13 +266,25 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void findPreviousCompetitions() throws Exception {
-        List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
+        Long competition2Id = 2L;
+        List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId, competition2Id).build(2));
         when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
         when(competitionRepositoryMock.findFeedbackReleased()).thenReturn(competitions);
 
+        MilestoneResource milestone = newMilestoneResource().withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.of(2017, 11, 3, 23, 0, 0, 0, ZoneId.systemDefault())).build();
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceSuccess(milestone));
+
+        milestone = newMilestoneResource().withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.of(2017, 11, 5, 23, 0, 0, 0, ZoneId.systemDefault())).build();
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition2Id)).thenReturn(serviceSuccess(milestone));
+
         List<CompetitionSearchResultItem> response = service.findFeedbackReleasedCompetitions().getSuccessObjectOrThrowException();
 
-        assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
+        //Ensure sorted by open date
+        assertEquals(competition2Id, response.get(0).getId());
+        assertEquals(ZonedDateTime.of(2017, 11, 5, 23, 0, 0, 0, ZoneId.systemDefault()), response.get(0).getOpenDate());
+
+        assertEquals(competitionId, response.get(1).getId());
+        assertEquals(ZonedDateTime.of(2017, 11, 3, 23, 0, 0, 0, ZoneId.systemDefault()), response.get(1).getOpenDate());
     }
 
     @Test
@@ -397,7 +406,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Page<Competition> queryResponse = mock(Page.class);
         long totalElements = 2L;
         int totalPages = 1;
-        Competition competition = newCompetition().withId(competitionId).withCompetitionType(newCompetitionType().withName(competitionType).build()).build();
+        ZonedDateTime openDate = ZonedDateTime.now();
+        Milestone openDateMilestone = newMilestone().withType(MilestoneType.OPEN_DATE).withDate(openDate).build();
+        Competition competition = newCompetition().withId(competitionId).withCompetitionType(newCompetitionType().withName(competitionType).build()).withMilestones(asList(openDateMilestone)).build();
         when(queryResponse.getTotalElements()).thenReturn(totalElements);
         when(queryResponse.getTotalPages()).thenReturn(totalPages);
         when(queryResponse.getNumber()).thenReturn(page);
@@ -413,9 +424,115 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(size, response.getSize());
 
         CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
-                competition.getName(), Collections.EMPTY_SET, 0, "", CompetitionStatus.COMPETITION_SETUP, competitionType, 0, null, null, null);
+                competition.getName(),
+                Collections.EMPTY_SET,
+                0,
+                openDate.format(DateTimeFormatter.ofPattern("dd/MM/YYYY")),
+                CompetitionStatus.COMPETITION_SETUP,
+                competitionType,
+                0,
+                null,
+                null,
+                openDate);
         // check actual open date is as expected then copy into expected structure (avoids time dependency in tests)
-        assertTrue((response.getContent().get(0)).getOpenDate().isBefore(ZonedDateTime.now()));
+        ZonedDateTime now = ZonedDateTime.now();
+        assertTrue((response.getContent().get(0)).getOpenDate().isBefore(now) || (response.getContent().get(0)).getOpenDate().isEqual(now));
+        response.getContent().get(0).setOpenDate(expectedSearchResult.getOpenDate());
+        assertEquals(singletonList(expectedSearchResult), response.getContent());
+    }
+
+    @Test
+    public void searchCompetitionsAsLeadTechnologist() throws Exception {
+        String searchQuery = "SearchQuery";
+        String searchLike = "%" + searchQuery + "%";
+        String competitionType = "Comp type";
+        int page = 1;
+        int size = 20;
+        PageRequest pageRequest = new PageRequest(page, size);
+        Page<Competition> queryResponse = mock(Page.class);
+        long totalElements = 2L;
+        int totalPages = 1;
+        UserResource userResource = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(INNOVATION_LEAD).build())).build();
+        User user = newUser().withId(userResource.getId()).withRoles(Sets.newLinkedHashSet(newRole().withType(INNOVATION_LEAD).build())).build();
+        setLoggedInUser(userResource);
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        Competition competition = newCompetition().withId(competitionId).withCompetitionType(newCompetitionType().withName(competitionType).build()).build();
+        when(queryResponse.getTotalElements()).thenReturn(totalElements);
+        when(queryResponse.getTotalPages()).thenReturn(totalPages);
+        when(queryResponse.getNumber()).thenReturn(page);
+        when(queryResponse.getNumberOfElements()).thenReturn(size);
+        when(queryResponse.getContent()).thenReturn(singletonList(competition));
+        when(competitionRepositoryMock.searchForLeadTechnologist(searchLike, user.getId(), pageRequest)).thenReturn(queryResponse);
+        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
+        CompetitionSearchResult response = service.searchCompetitions(searchQuery, page, size).getSuccessObjectOrThrowException();
+
+        assertEquals(totalElements, response.getTotalElements());
+        assertEquals(totalPages, response.getTotalPages());
+        assertEquals(page, response.getNumber());
+        assertEquals(size, response.getSize());
+
+        CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
+                competition.getName(),
+                Collections.EMPTY_SET,
+                0,
+                "",
+                CompetitionStatus.COMPETITION_SETUP,
+                competitionType,
+                0,
+                null,
+                null,
+                ZonedDateTime.now());
+        // check actual open date is as expected then copy into expected structure (avoids time dependency in tests)
+        ZonedDateTime now = ZonedDateTime.now();
+        assertTrue((response.getContent().get(0)).getOpenDate().isBefore(now) || (response.getContent().get(0)).getOpenDate().isEqual(now));
+        response.getContent().get(0).setOpenDate(expectedSearchResult.getOpenDate());
+        assertEquals(singletonList(expectedSearchResult), response.getContent());
+    }
+
+    @Test
+    public void searchCompetitionsAsSupportUser() throws Exception {
+        String searchQuery = "SearchQuery";
+        String searchLike = "%" + searchQuery + "%";
+        String competitionType = "Comp type";
+        int page = 1;
+        int size = 20;
+        PageRequest pageRequest = new PageRequest(page, size);
+        Page<Competition> queryResponse = mock(Page.class);
+        long totalElements = 2L;
+        int totalPages = 1;
+        UserResource userResource = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(SUPPORT).build())).build();
+        User user = newUser().withId(userResource.getId()).withRoles(Sets.newLinkedHashSet(newRole().withType(SUPPORT).build())).build();
+        setLoggedInUser(userResource);
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+        Competition competition = newCompetition().withId(competitionId).withCompetitionType(newCompetitionType().withName(competitionType).build()).build();
+        when(queryResponse.getTotalElements()).thenReturn(totalElements);
+        when(queryResponse.getTotalPages()).thenReturn(totalPages);
+        when(queryResponse.getNumber()).thenReturn(page);
+        when(queryResponse.getNumberOfElements()).thenReturn(size);
+        when(queryResponse.getContent()).thenReturn(singletonList(competition));
+        when(competitionRepositoryMock.searchForSupportUser(searchLike, pageRequest)).thenReturn(queryResponse);
+        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
+        CompetitionSearchResult response = service.searchCompetitions(searchQuery, page, size).getSuccessObjectOrThrowException();
+
+        assertEquals(totalElements, response.getTotalElements());
+        assertEquals(totalPages, response.getTotalPages());
+        assertEquals(page, response.getNumber());
+        assertEquals(size, response.getSize());
+
+        CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
+                competition.getName(),
+                Collections.EMPTY_SET,
+                0,
+                "",
+                CompetitionStatus.COMPETITION_SETUP,
+                competitionType,
+                0,
+                null,
+                null,
+                ZonedDateTime.now());
+        // check actual open date is as expected then copy into expected structure (avoids time dependency in tests)
+        ZonedDateTime now = ZonedDateTime.now();
+        assertTrue((response.getContent().get(0)).getOpenDate().isBefore(now) || (response.getContent().get(0)).getOpenDate().isEqual(now));
         response.getContent().get(0).setOpenDate(expectedSearchResult.getOpenDate());
         assertEquals(singletonList(expectedSearchResult), response.getContent());
     }
@@ -653,6 +770,26 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         setLoggedInUser(userResource);
         response = service.findLiveCompetitions().getSuccessObjectOrThrowException();
         assertTopLevelFlagForSupportUser(competitions, response);
+    }
+
+    @Test
+    public void getCompetitionOpenQueries() throws Exception {
+        List<CompetitionOpenQueryResource> openQueries = singletonList(new CompetitionOpenQueryResource(1L, 1L, "org", 1L, "proj"));
+        when(competitionRepositoryMock.getOpenQueryByCompetition(competitionId)).thenReturn(openQueries);
+
+        List<CompetitionOpenQueryResource> response = service.findAllOpenQueries(competitionId).getSuccessObjectOrThrowException();
+
+        assertEquals(1, response.size());
+    }
+
+    @Test
+    public void countCompetitionOpenQueries() throws Exception {
+        Long countOpenQueries = 4l;
+        when(competitionRepositoryMock.countOpenQueries(competitionId)).thenReturn(countOpenQueries);
+
+        Long response = service.countAllOpenQueries(competitionId).getSuccessObjectOrThrowException();
+
+        assertEquals(countOpenQueries, response);
     }
 
     private void assertTopLevelFlagForNonSupportUser(List<Competition> competitions, List<CompetitionSearchResultItem> searchResults) {

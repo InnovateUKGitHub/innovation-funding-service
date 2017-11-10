@@ -9,10 +9,7 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 import org.junit.Test;
@@ -33,6 +30,7 @@ import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -505,6 +503,17 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         UserPageResource resultObject = result.getSuccessObject();
         assertEquals(userResource2, resultObject.getContent().get(0));
         assertEquals(userResource1, resultObject.getContent().get(1));
+    }
+
+    @Test
+    public void testFindAllByProcessRoles(){
+        List<User> users = newUser().build(2);
+        when(userRepositoryMock.findByRolesNameInOrderByEmailAsc(externalApplicantRoles().stream().map(UserRoleType::getName).collect(Collectors.toSet()))).thenReturn(users);
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findAllByProcessRoles(externalApplicantRoles());
+
+        assertTrue(result.isSuccess());
+        assertEquals(2, result.getSuccessObject().size());
     }
 
     @Override

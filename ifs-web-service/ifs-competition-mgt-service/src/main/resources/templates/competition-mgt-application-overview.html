@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
 <body th:with="context='comp-management'" class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
@@ -13,16 +13,14 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{(${backUrl.contains(T(org.innovateuk.ifs.management.service.CompetitionManagementApplicationService).PROJECT_SETUP_MANAGEMENT_SERVICE)} ? ${'~'+backUrl} : ${backUrl})})" />
 
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to mark this application as ineligible</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+    </div>
+
     <th:block th:with="applicationName=${#strings.isEmpty(currentApplication.name)} ? #{ifs.application.no_title} : ${currentApplication.name}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Application overview',subTitle=${applicationName},size='heading-xlarge'" />
     </th:block>
-
-    <div class="error-summary" th:if="${#fields.hasErrors('${form.*}')}">
-        <h2 class="heading-medium error-summary-heading">Unable to mark this application as ineligible</h2>
-        <ul class="error-summary-list">
-            <li th:each="err : ${#fields.errors('${form.*}')}" th:text="${err}"></li>
-        </ul>
-    </div>
 
     <th:block th:if="${ineligibility.ineligible}">
         <h2 class="heading-small">Removed by</h2>
@@ -30,7 +28,7 @@
 
         <h2 class="heading-small">Reason for removal</h2>
         <p th:text="${ineligibility.reasonForRemoval}"></p>
-        <th:block th:if="${canReinstate}">
+        <th:block th:if="${canReinstate}" th:unless="${ineligibility.readOnly}">
             <div class="extra-margin">
                 <a th:href="@{/competition/{competitionId}/application/{applicationId}/reinstateIneligibleApplication/confirm(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})}"
                    class="button button-secondary" data-js-modal="modal-reinstate" role="button" tabindex="0">Reinstate application</a>
@@ -88,12 +86,14 @@
 
     <div th:if="${currentApplication.applicationState == T(org.innovateuk.ifs.application.resource.ApplicationState).SUBMITTED && !readOnly}"
          class="extra-margin collapsible collapsible-eligibility collapsible-stateless"
-         th:classappend="${#fields.hasErrors('${form.*}')} ? 'collapsible-expanded'">
+         th:classappend="${#fields.hasErrors('${form.*}')} ? 'collapsible-expanded'"
+         th:unless="${ineligibility.readOnly}">
         <h2>Mark application as ineligible</h2>
         <div>
             <form th:action="@{~__${#httpServletRequest.requestURI} + '?' + ${#httpServletRequest.queryString}__}"
                   th:object="${form}"
-                  method="POST">
+                  method="POST"
+                  novalidate="novalidate">
 
                 <div class="form-group word-count" th:classappend="${#fields.hasErrors('ineligibleReason')} ? 'form-group-error'">
                     <label class="form-label" th:for="ineligibleReason">

@@ -9,6 +9,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.*;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
@@ -51,11 +52,14 @@ public class CompetitionSetupController {
     public static final String COMPETITION_SETUP_FORM_KEY = "competitionSetupForm";
     private static final String SECTION_PATH_KEY = "sectionPath";
     private static final String SUBSECTION_PATH_KEY = "subsectionPath";
-    public static final String COMPETITION_NAME_KEY = "competitionName";
     public static final String PUBLIC_CONTENT_LANDING_REDIRECT = "redirect:/competition/setup/public-content/";
+    private static final String MODEL = "model";
 
     @Autowired
     private CompetitionService competitionService;
+
+    @Autowired
+    private CompetitionSetupRestService competitionSetupRestService;
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
@@ -83,7 +87,7 @@ public class CompetitionSetupController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
         CompetitionSetupSection section = CompetitionSetupSection.fromPath("home");
-        competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
+        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
         model.addAttribute(SETUP_READY_KEY, competitionSetupService.isCompetitionReadyToOpen(competition));
         model.addAttribute(READY_TO_OPEN_KEY, competition.getCompetitionStatus().equals(CompetitionStatus.READY_TO_OPEN));
         return "competition/setup";
@@ -104,11 +108,11 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
         }
 
-        if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section).getSuccessObjectOrThrowException();
+        competitionSetupRestService.markSectionIncomplete(competitionId, section).getSuccessObjectOrThrowException();
         if (!competition.isSetupAndLive()) {
             competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
         }
@@ -123,7 +127,7 @@ public class CompetitionSetupController {
         CompetitionResource competition = competitionService.getById(competitionId);
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
 
-        if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -140,8 +144,8 @@ public class CompetitionSetupController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
-        model.addAttribute("competitionSetupForm", competitionSetupService.getSectionFormData(competition, section));
+        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupService.getSectionFormData(competition, section));
 
         checkRestrictionOfInitialDetails(section, competition, model);
 
@@ -207,8 +211,7 @@ public class CompetitionSetupController {
             @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
             ValidationHandler validationHandler,
             @PathVariable(COMPETITION_ID_KEY) long competitionId,
-            Model model
-    ) {
+            Model model) {
         return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, model);
     }
 
@@ -242,7 +245,8 @@ public class CompetitionSetupController {
 
         if (request.getParameterMap().containsKey("generate-code")) {
             if (competition.getStartDate() != null) {
-                String competitionCode = competitionService.generateCompetitionCode(competitionId, competition.getStartDate());
+                String competitionCode = competitionSetupRestService.generateCompetitionCode(competitionId, competition.getStartDate())
+                        .getSuccessObjectOrThrowException();
                 competitionSetupForm.setCompetitionCode(competitionCode);
                 competitionSetupForm.setMarkAsCompleteAction(false);
             }
@@ -332,11 +336,11 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competition.isInitialDetailsComplete()){
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
-        manageInnovationLeadsModelPopulator.populateModel(model, competition);
+        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
 
         return "competition/manage-innovation-leads-find";
     }
@@ -349,11 +353,11 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competition.isInitialDetailsComplete()){
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
-        manageInnovationLeadsModelPopulator.populateModel(model, competition);
+        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
 
         return "competition/manage-innovation-leads-overview";
     }
@@ -367,12 +371,12 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competition.isInitialDetailsComplete()){
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
         competitionService.addInnovationLead(competitionId, innovationLeadUserId);
-        manageInnovationLeadsModelPopulator.populateModel(model, competition);
+        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
 
         return "competition/manage-innovation-leads-find";
     }
@@ -386,12 +390,12 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competition.isInitialDetailsComplete()){
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
         competitionService.removeInnovationLead(competitionId, innovationLeadUserId);
-        manageInnovationLeadsModelPopulator.populateModel(model, competition);
+        model.addAttribute(MODEL, manageInnovationLeadsModelPopulator.populateModel(competition));
 
         return "competition/manage-innovation-leads-overview";
     }
@@ -404,7 +408,8 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
         if (competition.getStartDate() != null) {
-            return this.createJsonObjectNode(true, competitionService.generateCompetitionCode(competitionId, competition.getStartDate()));
+            return this.createJsonObjectNode(true, competitionSetupRestService.generateCompetitionCode(competitionId, competition.getStartDate())
+                    .getSuccessObjectOrThrowException());
         } else {
             return this.createJsonObjectNode(false, "Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section");
         }
@@ -419,13 +424,13 @@ public class CompetitionSetupController {
             return "redirect:/non-ifs-competition/setup/" + competition.getId();
         }
 
-        if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
         Supplier<String> successView = () -> "redirect:/competition/setup/" + competition.getId() + "/section/" + section.getPath();
         Supplier<String> failureView = () -> {
-            competitionSetupService.populateCompetitionSectionModelAttributes(model, competition, section);
+            model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competition, section));
             return "competition/setup";
         };
 
@@ -457,7 +462,7 @@ public class CompetitionSetupController {
                                                   CompetitionResource competitionResource,
                                                   Model model) {
         if (section == CompetitionSetupSection.INITIAL_DETAILS &&
-                competitionResource.isInitialDetailsComplete()) {
+                competitionSetupService.isInitialDetailsCompleteOrTouched(competitionResource.getId())) {
             model.addAttribute(RESTRICT_INITIAL_DETAILS_EDIT, Boolean.TRUE);
         }
     }

@@ -37,7 +37,10 @@ import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.competition.transactional.template.QuestionNumberOrderService;
+import org.innovateuk.ifs.competition.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
@@ -179,6 +182,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentPanelInviteRepository assessmentPanelInviteRepositoryMock;
 
     @Mock
+    protected AssessmentPanelInviteService assessmentPanelInviteServiceMock;
+
+    @Mock
+    protected AssessmentPanelParticipantRepository assessmentPanelParticipantRepositoryMock;
+
+    @Mock
     protected AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
 
     @Mock
@@ -225,6 +234,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionSetupService competitionSetupServiceMock;
+
+    @Mock
+    protected CompetitionSetupQuestionService competitionSetupQuestionServiceMock;
 
     @Mock
     protected CompetitionKeyStatisticsService competitionKeyStatisticsServiceMock;
@@ -317,19 +329,25 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CompetitionInviteMapper competitionInviteMapperMock;
 
     @Mock
+    protected AssessmentPanelInviteMapper assessmentPanelInviteMapperMock;
+
+    @Mock
     protected CompetitionMapper competitionMapperMock;
 
     @Mock
     protected CompetitionInviteService competitionInviteServiceMock;
 
     @Mock
-    protected CompetitionParticipantMapper competitionParticipantMapperMock;
+    protected CompetitionAssessmentParticipantMapper competitionAssessmentParticipantMapperMock;
 
     @Mock
     protected CompetitionParticipantRoleMapper competitionParticipantRoleMapperMock;
 
     @Mock
     protected ParticipantStatusMapper participantStatusMapperMock;
+
+    @Mock
+    protected AssessmentPanelParticipantMapper assessmentPanelParticipantMapperMock;
 
     @Mock
     protected InviteProjectRepository inviteProjectRepositoryMock;
@@ -690,6 +708,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected OrganisationInitialCreationService organisationInitialCreationServiceMock;
+
+    @Mock
+    protected QuestionPriorityOrderService questionPriorityOrderServiceMock;
+
+    @Mock
+    protected QuestionNumberOrderService questionNumberOrderServiceMock;
 
     @Before
     public void setupMockInjection() {

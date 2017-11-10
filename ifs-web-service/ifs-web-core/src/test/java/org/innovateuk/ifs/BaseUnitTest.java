@@ -13,10 +13,7 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.*;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.assessment.service.AssessmentRestService;
-import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
-import org.innovateuk.ifs.assessment.service.AssessorRestService;
-import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.assessment.service.*;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
@@ -24,7 +21,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
@@ -148,7 +145,7 @@ public class BaseUnitTest {
     @Mock
     public ApplicationService applicationService;
     @Mock
-    protected CompetitionsRestService competitionRestService;
+    protected CompetitionRestService competitionRestService;
     @Mock
     protected FormInputRestService formInputRestService;
     @Mock
@@ -241,6 +238,8 @@ public class BaseUnitTest {
     protected InviteUserRestService inviteUserRestServiceMock;
     @Mock
     protected AssessmentRestService assessmentRestService;
+    @Mock
+    protected AssessmentPanelInviteRestService assessmentPanelInviteRestService;
     @Mock
     protected AssessorRestService assessorRestService;
     @Mock

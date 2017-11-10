@@ -4,17 +4,21 @@ package org.innovateuk.ifs.competitionsetup.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionSetupQuestionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
 import org.innovateuk.ifs.competitionsetup.form.LandingPageForm;
-import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsForm;
-import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
-import org.innovateuk.ifs.competitionsetup.form.application.ApplicationProjectForm;
-import org.innovateuk.ifs.competitionsetup.form.application.ApplicationQuestionForm;
+import org.innovateuk.ifs.competitionsetup.form.application.*;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
+import org.innovateuk.ifs.competitionsetup.service.populator.CompetitionSetupPopulator;
+import org.innovateuk.ifs.competitionsetup.viewmodel.CompetitionSetupSubsectionViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.QuestionSetupViewModel;
+import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -28,12 +32,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.*;
-import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.*;
+import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
+import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_SETUP_FORM_KEY;
 
 /**
  * Controller to manage the Application Questions and it's sub-sections in the
@@ -47,6 +53,7 @@ public class CompetitionSetupApplicationController {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupApplicationController.class);
     public static final String APPLICATION_LANDING_REDIRECT = "redirect:/competition/setup/%d/section/application/landing-page";
     private static final String questionView = "competition/setup/question";
+    private static final String MODEL = "model";
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
@@ -55,11 +62,44 @@ public class CompetitionSetupApplicationController {
     private CompetitionService competitionService;
 
     @Autowired
+    private CompetitionSetupRestService competitionSetupRestService;
+
+    @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;
+
+    @Autowired
+    private QuestionSetupRestService questionSetupRestService;
+
+    @Autowired
+    private CompetitionSetupPopulator competitionSetupPopulator;
+
+    @Autowired
+    private CompetitionSetupQuestionRestService competitionSetupQuestionRestService;
 
     @Autowired
     @Qualifier("mvcValidator")
     private Validator validator;
+
+    @PostMapping(value = "/landing-page", params = "createQuestion")
+    public String createQuestion(@PathVariable(COMPETITION_ID_KEY) long competitionId) {
+        ServiceResult<CompetitionSetupQuestionResource> restResult = competitionSetupQuestionService.createDefaultQuestion(competitionId);
+
+        Function<CompetitionSetupQuestionResource, String> successViewFunction =
+                (question) -> String.format("redirect:/competition/setup/%d/section/application/question/%d/edit", competitionId, question.getQuestionId());
+        Supplier<String> successView = () -> successViewFunction.apply(restResult.getSuccessObjectOrThrowException());
+
+        return successView.get();
+    }
+
+    @PostMapping(value = "/landing-page", params = "deleteQuestion")
+    public String deleteQuestion(@ModelAttribute("deleteQuestion") DeleteQuestionForm deleteQuestionForm,
+                                 @PathVariable(COMPETITION_ID_KEY) long competitionId) {
+        competitionSetupQuestionService.deleteQuestion(deleteQuestionForm.getDeleteQuestion());
+
+        Supplier<String> view = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+
+        return view.get();
+    }
 
     @GetMapping("/landing-page")
     public String applicationProcessLandingPage(Model model, @PathVariable(COMPETITION_ID_KEY) long competitionId) {
@@ -69,11 +109,11 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
-        competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionResource, APPLICATION_FORM);
+        model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, APPLICATION_FORM));
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, new LandingPageForm());
         return "competition/setup";
     }
@@ -86,12 +126,12 @@ public class CompetitionSetupApplicationController {
                                                   ValidationHandler validationHandler) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
-        if (!competitionResource.isInitialDetailsComplete()) {
-            return "redirect:/competition/setup/" + competitionResource.getId();
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
+            return "redirect:/competition/setup/" + competitionId;
         }
 
         Supplier<String> failureView = () -> {
-            competitionSetupService.populateCompetitionSectionModelAttributes(model, competitionResource, APPLICATION_FORM);
+            model.addAttribute(MODEL, competitionSetupService.populateCompetitionSectionModelAttributes(competitionResource, APPLICATION_FORM));
             model.addAttribute(COMPETITION_SETUP_FORM_KEY, form);
             return "competition/setup";
         };
@@ -110,7 +150,7 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -127,11 +167,13 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
-        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource, () -> getFinancePage(model, competitionResource, true, null));
+        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource,
+                () -> getFinancePage(model, competitionResource, true, null),
+                Optional.of(FINANCES), Optional.empty());
     }
 
     @PostMapping("/question/finance/edit")
@@ -143,7 +185,7 @@ public class CompetitionSetupApplicationController {
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -165,7 +207,7 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -180,7 +222,10 @@ public class CompetitionSetupApplicationController {
         if(competitionResource.isNonIfs()) {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
-        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource, () -> getQuestionPage(model, competitionResource, questionId, true, null));
+        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource,
+                () -> getQuestionPage(model, competitionResource, questionId, true, null),
+                Optional.empty(),
+                Optional.ofNullable(questionId));
     }
 
     @PostMapping(value = "/question/{questionId}/edit", params = "question.type=ASSESSED_QUESTION")
@@ -193,7 +238,7 @@ public class CompetitionSetupApplicationController {
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -209,7 +254,7 @@ public class CompetitionSetupApplicationController {
                                                BindingResult bindingResult,
                                                ValidationHandler validationHandler,
                                                @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                            Model model) {
+                                               Model model) {
         validateScopeGuidanceRows(competitionSetupForm, bindingResult);
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
@@ -218,7 +263,7 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -238,7 +283,7 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -254,11 +299,14 @@ public class CompetitionSetupApplicationController {
             return "redirect:/non-ifs-competition/setup/" + competitionId;
         }
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
-        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource, () ->  getDetailsPage(model, competitionResource, true, null));
+        return ifUserCanAccessEditPageMarkSectionAsIncomplete(competitionResource,
+                () ->  getDetailsPage(model, competitionResource, true, null),
+                Optional.of(APPLICATION_DETAILS),
+                Optional.empty());
 
     }
 
@@ -270,7 +318,7 @@ public class CompetitionSetupApplicationController {
                                            Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
-        if (!competitionResource.isInitialDetailsComplete()) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competitionResource.getId();
         }
 
@@ -295,12 +343,14 @@ public class CompetitionSetupApplicationController {
     }
 
     private String getFinancePage(Model model, CompetitionResource competitionResource, boolean isEditable, CompetitionSetupForm form) {
-        setupQuestionToModel(competitionResource, Optional.empty(), model, FINANCES, isEditable, form);
+        model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.empty(), FINANCES, isEditable));
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, setupQuestionForm(competitionResource, Optional.empty(), FINANCES, form));
         return "competition/finances";
     }
 
     private String getDetailsPage(Model model, CompetitionResource competitionResource, boolean isEditable, CompetitionSetupForm form) {
-        setupQuestionToModel(competitionResource, Optional.empty(), model, APPLICATION_DETAILS, isEditable, form);
+        model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.empty(), APPLICATION_DETAILS, isEditable));
+        model.addAttribute(COMPETITION_SETUP_FORM_KEY, setupQuestionForm(competitionResource, Optional.empty(), APPLICATION_DETAILS, form));
         return "competition/application-details";
     }
 
@@ -316,7 +366,8 @@ public class CompetitionSetupApplicationController {
                         setupSubsection = CompetitionSetupSubsection.PROJECT_DETAILS;
                     }
 
-                    setupQuestionToModel(competitionResource, Optional.of(questionId), model, setupSubsection, isEditable, form);
+                    model.addAttribute(MODEL, setupQuestionViewModel(competitionResource, Optional.of(questionId), setupSubsection, isEditable));
+                    model.addAttribute(COMPETITION_SETUP_FORM_KEY, setupQuestionForm(competitionResource, Optional.of(questionId), setupSubsection, form));
 
                     return questionView;
                 }).andOnFailure(() -> serviceSuccess("redirect:/non-ifs-competition/setup/" + questionId));
@@ -324,14 +375,20 @@ public class CompetitionSetupApplicationController {
         return view.getSuccessObjectOrThrowException();
     }
 
-    private void setupQuestionToModel(final CompetitionResource competition, final Optional<Long> questionId, Model model, CompetitionSetupSubsection subsection, boolean isEditable, CompetitionSetupForm form) {
+    private QuestionSetupViewModel setupQuestionViewModel(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, boolean isEditable) {
         CompetitionSetupSection section = APPLICATION_FORM;
 
-        competitionSetupService.populateCompetitionSubsectionModelAttributes(model, competition, section,
+        CompetitionSetupSubsectionViewModel subsectionViewModel = competitionSetupService.populateCompetitionSubsectionModelAttributes(competition, section,
                 subsection, questionId);
+        GeneralSetupViewModel generalViewModel = competitionSetupPopulator.populateGeneralModelAttributes(competition, section);
 
-        CompetitionSetupForm competitionSetupForm = form;
-        if (form == null) {
+        return new QuestionSetupViewModel(generalViewModel, subsectionViewModel, competition.getName(), isEditable);
+    }
+
+    private CompetitionSetupForm setupQuestionForm(final CompetitionResource competition, final Optional<Long> questionId, CompetitionSetupSubsection subsection, CompetitionSetupForm competitionSetupForm) {
+        CompetitionSetupSection section = APPLICATION_FORM;
+
+        if (competitionSetupForm == null) {
             competitionSetupForm = competitionSetupService.getSubsectionFormData(
                     competition,
                     section,
@@ -339,17 +396,19 @@ public class CompetitionSetupApplicationController {
                     questionId);
         }
 
-        model.addAttribute(COMPETITION_NAME_KEY, competition.getName());
-        model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
-        model.addAttribute("editable", isEditable);
+        return competitionSetupForm;
     }
 
-    private String ifUserCanAccessEditPageMarkSectionAsIncomplete(CompetitionResource competition, Supplier<String> successAction) {
+    private String ifUserCanAccessEditPageMarkSectionAsIncomplete(CompetitionResource competition, Supplier<String> successAction,
+                                                                  Optional<CompetitionSetupSubsection> subsectionOpt,
+                                                                  Optional<Long> questionIdOpt) {
         if(CompetitionSetupSection.APPLICATION_FORM.preventEdit(competition)) {
             LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competition.getId(), CompetitionSetupSection.APPLICATION_FORM));
             return "redirect:/dashboard";
         } else {
-            competitionService.setSetupSectionMarkedAsIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
+            questionIdOpt.ifPresent(questionId -> questionSetupRestService.markQuestionSetupIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM, questionId));
+            subsectionOpt.ifPresent(competitionSetupSubsection -> competitionSetupRestService.markSubSectionIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM, competitionSetupSubsection));
+            competitionSetupRestService.markSectionIncomplete(competition.getId(), CompetitionSetupSection.APPLICATION_FORM);
             return successAction.get();
         }
     }

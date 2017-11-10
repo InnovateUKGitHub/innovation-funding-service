@@ -24,10 +24,10 @@ function startupMysqlDumpPod() {
 
     echo "Starting up a new db-anonymised-data pod."
 
-    until oc create -f os-files-tmp/db-anonymised-data/67-db-anonymised-data.yml ${SVC_ACCOUNT_CLAUSE} &> /dev/null;
+    until oc create -f $(getBuildLocation)/db-anonymised-data/67-db-anonymised-data.yml ${SVC_ACCOUNT_CLAUSE} &> /dev/null;
     do
       echo "Shutting down any pre-existing db-anonymous-data pods before starting a new one."
-      oc delete -f os-files-tmp/db-anonymised-data/67-db-anonymised-data.yml ${SVC_ACCOUNT_CLAUSE} &> /dev/null;
+      oc delete -f $(getBuildLocation)/db-anonymised-data/67-db-anonymised-data.yml ${SVC_ACCOUNT_CLAUSE} &> /dev/null;
       sleep 10
     done
 }
@@ -54,7 +54,7 @@ function shutdownMysqlDumpPodAfterUse() {
 
     echo "Shutting down db-anonymised-data pod.  Waiting for it to stop..."
 
-    oc delete -f os-files-tmp/db-anonymised-data/67-db-anonymised-data.yml ${SVC_ACCOUNT_CLAUSE} &> /dev/null;
+    oc delete -f $(getBuildLocation)/db-anonymised-data/67-db-anonymised-data.yml ${SVC_ACCOUNT_CLAUSE} &> /dev/null;
     max_termination_timeout_seconds=$((120))
     time_waited_so_far=$((0))
 
@@ -71,9 +71,6 @@ function shutdownMysqlDumpPodAfterUse() {
 }
 
 # Entry point
-cleanUp
-cloneConfig
-tailorAppInstance
 
 if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export DB_NAME=ifs
@@ -83,13 +80,20 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export DB_PORT=3306
 fi
 
+echo "injectDBVariables"
 injectDBVariables
+echo "useContainerRegistry"
 useContainerRegistry
 
+echo "pushAnonymisedDatabaseDumpImages"
 pushAnonymisedDatabaseDumpImages
+echo "startupMysqlDumpPod"
 startupMysqlDumpPod
+echo "waitForMysqlDumpPodToStart"
 waitForMysqlDumpPodToStart
+echo "takeMysqlDump"
 takeMysqlDump
+echo "shutdownMysqlDumpPodAfterUse"
 shutdownMysqlDumpPodAfterUse
 
 echo "Job complete!  Dump now available at /tmp/anonymised-dump.sql.gpg"

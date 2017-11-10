@@ -31,10 +31,10 @@ Project Finance can see Bank details requiring action
     [Setup]  log in as a different user   &{internal_finance_credentials}
     Given the user navigates to the page  ${server}/management/dashboard/project-setup
     When the user clicks the button/link  link=${PS_EF_Competition_Name}
-    Then the user should see the element  css=#table-project-status tr:nth-child(1) td:nth-child(2).status.ok
-    And the user should see the element   css=#table-project-status tr:nth-child(1) td:nth-child(3).status.action
-    And the user should see the element   css=#table-project-status tr:nth-child(1) td:nth-child(4).status.action
-    Then the user clicks the button/link  css=#table-project-status tr:nth-child(1) td:nth-child(4).status.action a
+    Then the user should see the element  css=#table-project-status tr:nth-child(3) td:nth-child(2).status.ok
+    And the user should see the element   css=#table-project-status tr:nth-child(3) td:nth-child(3).status.action
+    And the user should see the element   css=#table-project-status tr:nth-child(3) td:nth-child(4).status.action
+    Then the user clicks the button/link  css=#table-project-status tr:nth-child(3) td:nth-child(4).status.action a
     And the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/review-all-bank-details
 
 Project Finance can see the company name with score
@@ -79,31 +79,31 @@ Project Finance can change address and companies house details
     Given the user navigates to the page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     Then the user clicks the button/link  link=Change bank account details
     And the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details/change
-    And the text box should be editable          id=company-name
-    When the user enters text to a text field    id=street  ${Ntag_Street}
-    And the user enters text to a text field     id=company-name  ${Ntag_Name}
-    And the user enters text to a text field     id=companies-house-number  ${Ntag_No}
+    And the text box should be editable          id=organisationName
+    When the user enters text to a text field    css=[id="addressForm.selectedPostcode.addressLine1"]  ${Ntag_Street}
+    And the user enters text to a text field     id=organisationName  ${Ntag_Name}
+    And the user enters text to a text field     id=registrationNumber  ${Ntag_No}
 
 Bank account number and sort code validations client side
     [Documentation]    INFUND-4054
     [Tags]
-    When the user enters text to a text field    id=bank-acc-number    1234567
-    And the user enters text to a text field    id=bank-sort-code    12345
+    When the user enters text to a text field    id=accountNumber    1234567
+    And the user enters text to a text field    id=sortCode    12345
     And the user moves focus to the element    link=Cancel bank account changes
     Then the user should see the text in the page    Please enter a valid account number
     And the user should see the text in the page    Please enter a valid sort code
-    When the user enters text to a text field    id=bank-acc-number    123456789
-    And the user enters text to a text field    id=bank-sort-code    1234567
+    When the user enters text to a text field    id=accountNumber    123456789
+    And the user enters text to a text field    id=sortCode    1234567
     And the user moves focus to the element    link=Cancel bank account changes
-    Then the user sees the text in the element    id=bank-acc-number    ${empty}    # Account numbers more than 8 numbers not allowed, so the input is not accepted
-    And the user sees the text in the element    id=bank-sort-code    ${empty}    # Sort codes more than 6 numbers not allowed, so the input is not accepted
+    Then the user sees the text in the element    id=accountNumber    ${empty}    # Account numbers more than 8 numbers not allowed, so the input is not accepted
+    And the user sees the text in the element    id=sortCode    ${empty}    # Sort codes more than 6 numbers not allowed, so the input is not accepted
     And the user should not see an error in the page
 
 Bank account number and sort code validations server side
     [Documentation]    INFUND-4054
     [Tags]
-     When the user enters text to a text field    id=bank-acc-number    abcdefgh
-     And the user enters text to a text field    id=bank-sort-code    abcdef
+     When the user enters text to a text field    id=accountNumber    abcdefgh
+     And the user enters text to a text field    id=sortCode    abcdef
      And the user clicks the button/link           jQuery=.column-half.alignright .button:contains("Update bank account details")
      And the user clicks the button/link           jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
      Then the user should see the text in the page    Please enter a valid account number
@@ -115,12 +115,12 @@ Project Finance cancels bank details changes
     When the user clicks the button/link          link=Cancel bank account changes
     Then the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
     When the user clicks the button/link          link=Change bank account details
-    Then the text box should be editable          id=company-name
-    And the user moves focus to the element       id=street
-    Then the user sees the text in the text field    id=street  ${Ntag_Street}
+    Then the text box should be editable          id=organisationName
+    And the user moves focus to the element       css=[id="addressForm.selectedPostcode.addressLine1"]
+    Then the user sees the text in the text field    css=[id="addressForm.selectedPostcode.addressLine1"]  ${Ntag_Street}
     When the user clicks the button/link    jQuery=.column-half.alignright .button:contains("Update bank account details")
     And the user clicks the button/link     jQuery=.buttonlink:contains("Cancel")
-    Then the text box should be editable    id=company-name
+    Then the text box should be editable    id=organisationName
     When the user clicks the button/link    link=Review bank details
     Then the user should see the text in the page    These details are now undergoing an internal review.
     [Teardown]    the user goes back to the previous page
@@ -128,12 +128,12 @@ Project Finance cancels bank details changes
 Project Finance updates bank account details
     [Documentation]    INFUND-4054
     [Tags]    HappyPath
-    When the user enters text to a text field      id=street    Montrose House 2
+    When the user enters text to a text field      css=[id="addressForm.selectedPostcode.addressLine1"]    Montrose House 2
     And the user clicks the button/link            jQuery=.column-half.alignright .button:contains("Update bank account details")
     And the user clicks the button/link            jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
     Then the user should see the text in the page  ${Ntag_Name} - Account details
     When the user clicks the button/link           link=Change bank account details
-    Then the user sees the text in the text field  id=street    Montrose House 2
+    Then the user sees the text in the text field  css=[id="addressForm.selectedPostcode.addressLine1"]    Montrose House 2
     When the user clicks the button/link           jQuery=.column-half.alignright button:contains("Update bank account details")
     Then the user clicks the button/link           jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
 
@@ -152,7 +152,7 @@ Project Finance approves the bank details
     And the user should not see the text in the page  We are unable to save your bank account details
     When the user goes back to the previous page
     And the user goes back to the previous page
-    When the user enters text to a text field      id=street    Montrose House 3
+    When the user enters text to a text field      css=[id="addressForm.selectedPostcode.addressLine1"]    Montrose House 3
     And the user clicks the button/link            jQuery=.column-half.alignright .button:contains("Update bank account details")
     And the user clicks the button/link            jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
     Then the user should see the text in the page  Bank details have already been approved and cannot be changed

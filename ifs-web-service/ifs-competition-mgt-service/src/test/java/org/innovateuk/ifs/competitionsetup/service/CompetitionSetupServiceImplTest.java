@@ -1,32 +1,39 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
+import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
+import org.innovateuk.ifs.competitionsetup.service.modelpopulator.InitialDetailsModelPopulator;
+import org.innovateuk.ifs.competitionsetup.service.populator.CompetitionSetupPopulator;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
+import org.innovateuk.ifs.competitionsetup.viewmodel.*;
+import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.ui.ExtendedModelMap;
-import org.springframework.ui.Model;
 
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.INITIAL_DETAILS;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -34,15 +41,29 @@ import static org.mockito.Mockito.*;
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionSetupServiceImplTest {
 
+    private static final Long COMPETITION_ID = 3422L;
+
     @InjectMocks
     private CompetitionSetupServiceImpl service;
 
     @Mock
     private CompetitionService competitionService;
 
+    @Mock
+    private CompetitionSetupRestService competitionSetupRestService;
+
+    @Mock
+    private CompetitionSetupPopulator competitionSetupPopulator;
+
+    @Before
+    public void setup() {
+        Map<CompetitionSetupSection, Optional<Boolean>> sectionStatuses = asMap(INITIAL_DETAILS, Optional.of(Boolean.TRUE));
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
+                 .thenReturn(RestResult.restSuccess(sectionStatuses));
+    }
+
     @Test
     public void testPopulateCompetitionSectionModelAttributesNoMatchingFormPopulator() {
-        Model model = new ExtendedModelMap();
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withCompetitionCode("code")
@@ -50,20 +71,23 @@ public class CompetitionSetupServiceImplTest {
                 .withSetupComplete(false)
                 .build();
 
-        service.setCompetitionSetupSectionModelPopulators(asList());
+        CompetitionSetupSectionModelPopulator matchingPopulator = mock(InitialDetailsModelPopulator.class);
+        when(matchingPopulator.sectionToPopulateModel()).thenReturn(INITIAL_DETAILS);
+        when(matchingPopulator.populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class)))
+                .thenReturn(new InitialDetailsViewModel(getBasicGeneralSetupView(INITIAL_DETAILS, competition),
+                        emptyList(), emptyList(), emptyList(), emptyList(), emptyList()));
+        service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
-        CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
+        CompetitionSetupSection section = INITIAL_DETAILS;
 
-        List<CompetitionSetupSection> completedSections = new ArrayList<>();
-        service.populateCompetitionSectionModelAttributes(model, competition, section);
+        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, section);
 
-        verifyCommonModelAttributes(model, competition, section, completedSections);
-        assertEquals("section-initial", model.asMap().get("currentSectionFragment"));
+        verifyCommonModelAttributes(viewModel, competition, section);
+        assertEquals("section-initial", viewModel.getGeneral().getCurrentSectionFragment());
     }
 
     @Test
     public void testPopulateCompetitionSectionModelAttributesEligibility() {
-        Model model = new ExtendedModelMap();
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("code")
                 .withSetupComplete(false)
@@ -72,6 +96,9 @@ public class CompetitionSetupServiceImplTest {
 
         CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
         when(matchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.ELIGIBILITY);
+        when(matchingPopulator.populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class)))
+                .thenReturn(new EligibilityViewModel(getBasicGeneralSetupView(CompetitionSetupSection.ELIGIBILITY, competition), new ResearchParticipationAmount[]{},
+                        new CollaborationLevel[]{}, emptyList(), "", emptyList(), ""));
         CompetitionSetupSectionModelPopulator notMatchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
         when(notMatchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.MILESTONES);
 
@@ -79,28 +106,25 @@ public class CompetitionSetupServiceImplTest {
 
         CompetitionSetupSection section = CompetitionSetupSection.ELIGIBILITY;
 
-        List<CompetitionSetupSection> completedSections = new ArrayList<>();
+        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, section);
 
-        service.populateCompetitionSectionModelAttributes(model, competition, section);
+        verifyCommonModelAttributes(viewModel, competition, section);
+        assertEquals("section-eligibility", viewModel.getGeneral().getCurrentSectionFragment());
 
-        verifyCommonModelAttributes(model, competition, section, completedSections);
-        assertEquals("section-eligibility", model.asMap().get("currentSectionFragment"));
-
-        verify(matchingPopulator).populateModel(model, competition);
-        verify(notMatchingPopulator, never()).populateModel(model, competition);
+        verify(matchingPopulator).populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class));
+        verify(notMatchingPopulator, never()).populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class));
     }
 
-    private void verifyCommonModelAttributes(Model model, CompetitionResource competition,
-                                             CompetitionSetupSection section, List<CompetitionSetupSection> completedSections) {
-        assertEquals(9, model.asMap().size());
-        assertEquals(Boolean.FALSE, model.asMap().get("isInitialComplete"));
-        assertEquals(Boolean.TRUE, model.asMap().get("editable"));
-        assertEquals(competition, model.asMap().get("competition"));
-        assertEquals(section, model.asMap().get("currentSection"));
-        assertArrayEquals(CompetitionSetupSection.values(), (Object[]) model.asMap().get("allSections"));
-        assertEquals(Boolean.FALSE, model.asMap().get("preventEdit"));
-        assertEquals(Boolean.FALSE, model.asMap().get("isSetupAndLive"));
-        assertEquals(Boolean.FALSE, model.asMap().get("setupComplete"));
+    private void verifyCommonModelAttributes(CompetitionSetupViewModel viewModel, CompetitionResource competition,
+                                             CompetitionSetupSection section) {
+        assertEquals(Boolean.FALSE, viewModel.getGeneral().isInitialComplete());
+        assertEquals(Boolean.TRUE, viewModel.getGeneral().isEditable());
+        assertEquals(competition, viewModel.getGeneral().getCompetition());
+        assertEquals(section, viewModel.getGeneral().getCurrentSection());
+        assertArrayEquals(CompetitionSetupSection.values(), viewModel.getGeneral().getAllSections());
+        assertEquals(Boolean.FALSE, viewModel.getGeneral().getState().isPreventEdit());
+        assertEquals(Boolean.FALSE, viewModel.getGeneral().getState().isSetupAndLive());
+        assertEquals(Boolean.FALSE, viewModel.getGeneral().getState().isSetupComplete());
     }
 
     @Test
@@ -130,11 +154,12 @@ public class CompetitionSetupServiceImplTest {
     public void testSaveSection() {
         CompetitionSetupForm competitionSetupForm = new AdditionalInfoForm();
         CompetitionResource competitionResource = newCompetitionResource()
-                .withSectionSetupStatus(asMap(
-                        CompetitionSetupSection.INITIAL_DETAILS, true,
-                        CompetitionSetupSection.ADDITIONAL_INFO, false
-                ))
+                .withId(COMPETITION_ID)
                 .build();
+
+        when(competitionSetupRestService.getSectionStatuses(competitionResource.getId())).thenReturn(RestResult.restSuccess(asMap(
+                INITIAL_DETAILS, Optional.of(true),
+                CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(false))));
 
         CompetitionSetupSectionSaver matchingSaver = mock(CompetitionSetupSectionSaver.class);
         when(matchingSaver.sectionToSave()).thenReturn(CompetitionSetupSection.ADDITIONAL_INFO);
@@ -146,6 +171,9 @@ public class CompetitionSetupServiceImplTest {
 
         when(matchingSaver.saveSection(competitionResource, competitionSetupForm)).thenReturn(serviceSuccess());
 
+        when(competitionSetupRestService.markSectionComplete(competitionResource.getId(), CompetitionSetupSection.ADDITIONAL_INFO))
+                .thenReturn(RestResult.restSuccess());
+
         service.setCompetitionSetupSectionSavers(asList(matchingSaver, otherSaver));
 
         service.saveCompetitionSetupSection(competitionSetupForm, competitionResource, CompetitionSetupSection.ADDITIONAL_INFO);
@@ -156,23 +184,29 @@ public class CompetitionSetupServiceImplTest {
 
     @Test(expected = IllegalStateException.class)
     public void autoSaveCompetitionSetupSection_initialDetailsMustBeComplete() throws Exception {
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
         CompetitionSetupSection section = CompetitionSetupSection.ADDITIONAL_INFO;
         String fieldName = "testField";
         String value = "testValue";
         Optional<Long> objectId = Optional.of(1L);
+
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
+                .thenReturn(RestResult.restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
 
         service.autoSaveCompetitionSetupSection(competition, section, fieldName, value, objectId);
     }
 
     @Test(expected = IllegalStateException.class)
     public void autoSaveCompetitionSetupSubsection_initialDetailsMustBeComplete() throws Exception {
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
         CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
         CompetitionSetupSubsection subsection = CompetitionSetupSubsection.APPLICATION_DETAILS;
         String fieldName = "testField";
         String value = "testValue";
         Optional<Long> objectId = Optional.of(1L);
+
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
+                .thenReturn(RestResult.restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
 
         service.autoSaveCompetitionSetupSubsection(competition, section, subsection, fieldName, value, objectId);
     }
@@ -180,8 +214,11 @@ public class CompetitionSetupServiceImplTest {
     @Test(expected = IllegalStateException.class)
     public void saveCompetitionSetupSection_initialDetailsMustBeComplete() throws Exception {
         CompetitionSetupForm competitionSetupForm = new AdditionalInfoForm();
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
         CompetitionSetupSection section = CompetitionSetupSection.ADDITIONAL_INFO;
+
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
+                .thenReturn(RestResult.restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
 
         service.saveCompetitionSetupSection(competitionSetupForm, competition, section);
     }
@@ -190,45 +227,53 @@ public class CompetitionSetupServiceImplTest {
     @Test(expected = IllegalStateException.class)
     public void saveCompetitionSetupSubsection_initialDetailsMustBeComplete() throws Exception {
         CompetitionSetupForm competitionSetupForm = new ApplicationDetailsForm();
-        CompetitionResource competition = newCompetitionResource().build();
+        CompetitionResource competition = newCompetitionResource().withId(COMPETITION_ID).build();
         CompetitionSetupSection section = CompetitionSetupSection.APPLICATION_FORM;
         CompetitionSetupSubsection subsection = CompetitionSetupSubsection.APPLICATION_DETAILS;
+
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID))
+                .thenReturn(RestResult.restSuccess(asMap(CompetitionSetupSection.INITIAL_DETAILS, Optional.empty())));
 
         service.saveCompetitionSetupSubsection(competitionSetupForm, competition, section, subsection);
     }
 
     @Test
     public void testIsCompetitionReadyToOpen() {
-        Map<CompetitionSetupSection, Boolean> testSectionStatus = new HashMap<>();
-        testSectionStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Boolean.FALSE);
-        testSectionStatus.put(CompetitionSetupSection.CONTENT, Boolean.TRUE);
-
         CompetitionResource competitionResource = newCompetitionResource()
+                .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withStartDate(ZonedDateTime.now().plusDays(1)).build();
-        competitionResource.setSectionSetupStatus(testSectionStatus);
+
+        Map<CompetitionSetupSection, Optional<Boolean>> testSectionStatus = asMap(
+                INITIAL_DETAILS, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.ELIGIBILITY, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE),
+                CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE),
+                CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE)
+        );
+
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(RestResult.restSuccess(testSectionStatus));
 
         assertTrue(service.isCompetitionReadyToOpen(competitionResource));
     }
 
     @Test
     public void testIsCompetitionReadyToOpenFailure() {
-        Map<CompetitionSetupSection, Boolean> testSectionStatus = new HashMap<>();
-        testSectionStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Boolean.FALSE);
-        testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
+        Map<CompetitionSetupSection, Optional<Boolean>> testSectionStatus = new HashMap<>();
+        testSectionStatus.put(INITIAL_DETAILS, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(Boolean.FALSE));
+        testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE));
 
         CompetitionResource competitionResource = newCompetitionResource()
+                .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .withStartDate(ZonedDateTime.now().plusDays(1)).build();
-        competitionResource.setSectionSetupStatus(testSectionStatus);
+
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(RestResult.restSuccess(testSectionStatus));
 
         assertFalse(service.isCompetitionReadyToOpen(competitionResource));
     }
@@ -244,58 +289,55 @@ public class CompetitionSetupServiceImplTest {
 
     @Test
     public void testSetCompetitionAsReadyToOpenSuccess() {
-        long id = 2L;
-        Map<CompetitionSetupSection, Boolean> testSectionStatus = new HashMap<>();
-        testSectionStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Boolean.FALSE);
-        testSectionStatus.put(CompetitionSetupSection.CONTENT, Boolean.TRUE);
+        Map<CompetitionSetupSection, Optional<Boolean>> testSectionStatus = new HashMap<>();
+        testSectionStatus.put(INITIAL_DETAILS, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.ASSESSORS, Optional.of(Boolean.FALSE));
+        testSectionStatus.put(CompetitionSetupSection.CONTENT, Optional.of(Boolean.TRUE));
         CompetitionResource competitionResource = newCompetitionResource()
+                .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
-        competitionResource.setSectionSetupStatus(testSectionStatus);
 
-        when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
-        service.setCompetitionAsReadyToOpen(id);
-        verify(competitionService).markAsSetup(id);
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(RestResult.restSuccess(testSectionStatus));
+        when(competitionSetupRestService.markAsSetup(COMPETITION_ID)).thenReturn(RestResult.restSuccess());
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+        service.setCompetitionAsReadyToOpen(COMPETITION_ID);
+        verify(competitionSetupRestService).markAsSetup(COMPETITION_ID);
 
     }
 
 
     @Test(expected = IllegalArgumentException.class)
     public void testSetCompetitionAsReadyToOpenFail() {
-        Map<CompetitionSetupSection, Boolean> testSectionStatus = new HashMap<>();
-        testSectionStatus.put(CompetitionSetupSection.INITIAL_DETAILS, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Boolean.FALSE);
-        testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.MILESTONES, Boolean.TRUE);
-        testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM, Boolean.TRUE);
+        Map<CompetitionSetupSection, Optional<Boolean>> testSectionStatus = new HashMap<>();
+        testSectionStatus.put(INITIAL_DETAILS, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.ADDITIONAL_INFO, Optional.empty());
+        testSectionStatus.put(CompetitionSetupSection.ELIGIBILITY, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.MILESTONES, Optional.of(Boolean.TRUE));
+        testSectionStatus.put(CompetitionSetupSection.APPLICATION_FORM,Optional.of( Boolean.TRUE));
         CompetitionResource competitionResource = newCompetitionResource()
+                .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
-        competitionResource.setSectionSetupStatus(testSectionStatus);
 
-        when(competitionService.getById(any(Long.class))).thenReturn(competitionResource);
-        service.setCompetitionAsReadyToOpen(2L);
-        verify(competitionService.getById(any(Long.class)));
+        when(competitionSetupRestService.getSectionStatuses(COMPETITION_ID)).thenReturn(RestResult.restSuccess(testSectionStatus));
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competitionResource);
+        service.setCompetitionAsReadyToOpen(COMPETITION_ID);
+        verify(competitionService.getById(COMPETITION_ID));
         verifyNoMoreInteractions(competitionResource);
     }
 
     @Test
     public void testPopulateModel() {
-        Model model = new ExtendedModelMap();
-
         ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
 
         CompetitionSetupSection competitionSetupSection = CompetitionSetupSection.ADDITIONAL_INFO;
-
-        CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
-        when(matchingPopulator.sectionToPopulateModel()).thenReturn(competitionSetupSection);
-
-        service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
         CompetitionResource competition = newCompetitionResource()
                 .withSetupComplete(true)
@@ -303,26 +345,26 @@ public class CompetitionSetupServiceImplTest {
                 .withFundersPanelDate(yesterday)
                 .build();
 
-        service.populateCompetitionSectionModelAttributes(model, competition, competitionSetupSection);
+        CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
+        when(matchingPopulator.sectionToPopulateModel()).thenReturn(competitionSetupSection);
+        when(matchingPopulator.populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class)))
+                .thenReturn(new AdditionalModelViewModel(getBasicGeneralSetupView(competitionSetupSection, competition)));
 
-        assertEquals(true, model.asMap().get("preventEdit"));
-        assertEquals(true, model.asMap().get("isSetupAndLive"));
-        assertEquals(true, model.asMap().get("setupComplete"));
+        service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
+
+        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, competitionSetupSection);
+
+        assertEquals(false, viewModel.getGeneral().getState().isPreventEdit());
+        assertEquals(false, viewModel.getGeneral().getState().isSetupAndLive());
+        assertEquals(false, viewModel.getGeneral().getState().isSetupComplete());
     }
 
     @Test
     public void testPopulateModel_competitionNotSetupAndLive() {
-        Model model = new ExtendedModelMap();
-
         ZonedDateTime yesterday = ZonedDateTime.now().minusDays(1);
         ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
 
         CompetitionSetupSection competitionSetupSection = CompetitionSetupSection.ADDITIONAL_INFO;
-
-        CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
-        when(matchingPopulator.sectionToPopulateModel()).thenReturn(competitionSetupSection);
-
-        service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
         CompetitionResource competition = newCompetitionResource()
                 .withSetupComplete(false)
@@ -330,20 +372,29 @@ public class CompetitionSetupServiceImplTest {
                 .withStartDate(yesterday)
                 .build();
 
-        service.populateCompetitionSectionModelAttributes(model, competition, competitionSetupSection);
+        CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
+        when(matchingPopulator.sectionToPopulateModel()).thenReturn(competitionSetupSection);
+        when(matchingPopulator.populateModel(any(GeneralSetupViewModel.class), any(CompetitionResource.class)))
+                .thenReturn(new AdditionalModelViewModel(getBasicGeneralSetupView(competitionSetupSection, competition)));
 
-        assertEquals(false, model.asMap().get("preventEdit"));
-        assertEquals(false, model.asMap().get("isSetupAndLive"));
-        assertEquals(false, model.asMap().get("setupComplete"));
+        service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
+
+        CompetitionSetupViewModel viewModel = service.populateCompetitionSectionModelAttributes(competition, competitionSetupSection);
+
+        assertEquals(false, viewModel.getGeneral().getState().isPreventEdit());
+        assertEquals(false, viewModel.getGeneral().getState().isSetupAndLive());
+        assertEquals(false, viewModel.getGeneral().getState().isSetupComplete());
     }
 
     @Test
     public void autoSaveCompetitionSetupSection_restrictedField() throws Exception {
-        CompetitionResource competition = newCompetitionResource()
-                .withSectionSetupStatus(asMap(
-                        CompetitionSetupSection.INITIAL_DETAILS, true,
-                        CompetitionSetupSection.ADDITIONAL_INFO, false)).build();
-        CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
+        CompetitionResource competition = newCompetitionResource().withId(23L).build();
+        when(competitionSetupRestService.getSectionStatuses(competition.getId())).thenReturn(RestResult.restSuccess(asMap(
+                CompetitionSetupSection.INITIAL_DETAILS, Optional.of(true),
+                CompetitionSetupSection.ADDITIONAL_INFO, Optional.of(false))));
+
+
+        CompetitionSetupSection section = INITIAL_DETAILS;
         String[] restrictedFieldNames = new String[]{"competitionTypeId", "openingDate"};
         String[] unrestrictedFieldNames = new String[]{"title", "innovationSectorCategoryId",
                 "autosaveInnovationAreaIds", "innovationLeadUserId", "executiveUserId"};
@@ -354,8 +405,8 @@ public class CompetitionSetupServiceImplTest {
         CompetitionSetupSectionSaver saver = mock(CompetitionSetupSectionSaver.class);
         CompetitionSetupFormPopulator populator = mock(CompetitionSetupFormPopulator.class);
 
-        when(saver.sectionToSave()).thenReturn(CompetitionSetupSection.INITIAL_DETAILS);
-        when(populator.sectionToFill()).thenReturn(CompetitionSetupSection.INITIAL_DETAILS);
+        when(saver.sectionToSave()).thenReturn(INITIAL_DETAILS);
+        when(populator.sectionToFill()).thenReturn(INITIAL_DETAILS);
         when(populator.populateForm(competition)).thenReturn(form);
 
         service.setCompetitionSetupSectionSavers(singletonList(saver));
@@ -374,5 +425,13 @@ public class CompetitionSetupServiceImplTest {
             service.autoSaveCompetitionSetupSection(competition, section, fieldName, value, objectId);
             verify(saver).autoSaveSectionField(competition, form, fieldName, value, objectId);
         }
+    }
+
+    private GeneralSetupViewModel getBasicGeneralSetupView(CompetitionSetupSection section, CompetitionResource competition) {
+        GeneralSetupViewModel generalSetupView = new GeneralSetupViewModel(Boolean.TRUE, competition, section, CompetitionSetupSection.values(), Boolean.FALSE);
+        generalSetupView.setCurrentSectionFragment("section-" + section.getPath());
+        generalSetupView.setState(new CompetitionStateSetupViewModel(Boolean.FALSE, Boolean.FALSE, Boolean.FALSE));
+
+        return generalSetupView;
     }
 }

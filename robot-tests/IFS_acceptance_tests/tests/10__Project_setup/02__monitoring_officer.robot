@@ -89,6 +89,7 @@ MO server-side validation
     [Tags]    HappyPath
     Given the user navigates to the page    ${Successful_Monitoring_Officer_Page}
     When the user clicks the button/link    jQuery=.button:contains("Assign Monitoring Officer")
+    and the user clicks the button/link    jQuery=[role="dialog"] .button:contains("Assign Monitoring Officer")
     Then the user should see an error    Please enter a first name.
     And the user should see an error    Please enter a last name.
     And the user should see an error    Please enter an email address.
@@ -268,8 +269,6 @@ the lead partner fills in project details
     the user clicks the button/link    link=Project Manager
     the user selects the radio button    projectManager  projectManager2
     the user clicks the button/link    jQuery=.button:contains("Save")
-    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-    the user clicks the button/link    jQuery=.button:contains("Submit")
     the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     the user selects the radio button    financeContact  financeContact2
     the user clicks the button/link    jQuery=.button:contains("Save")
@@ -278,7 +277,6 @@ internal user can see that MO can be assigned
     log in as a different user   &{internal_finance_credentials}
     the user navigates to the page   ${Successful_Monitoring_Officer_Page}
     the user should not see an error in the page
-
 
 the academic partner fills in their finance contact
     log in as a different user    &{collaborator2_credentials}

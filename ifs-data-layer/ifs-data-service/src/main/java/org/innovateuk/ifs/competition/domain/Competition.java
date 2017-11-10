@@ -6,8 +6,8 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.category.domain.*;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
@@ -100,13 +100,6 @@ public class Competition implements ProcessActivity {
             joinColumns = @JoinColumn(name = "competition_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "organisation_type_id", referencedColumnName = "id"))
     private List<OrganisationType> leadApplicantTypes;
-
-    @ElementCollection
-    @JoinTable(name = "competition_setup_status", joinColumns = @JoinColumn(name = "competition_id"))
-    @MapKeyEnumerated(EnumType.STRING)
-    @MapKeyColumn(name = "section")
-    @Column(name = "status")
-    private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
     private boolean fullApplicationFinance = true;
     private Boolean setupComplete;
@@ -279,6 +272,14 @@ public class Competition implements ProcessActivity {
 
     public void setReleaseFeedbackDate(ZonedDateTime releaseFeedbackDate) {
         setMilestoneDate(MilestoneType.RELEASE_FEEDBACK, releaseFeedbackDate);
+    }
+
+    public ZonedDateTime getAssessmentPanelDate() {
+        return getMilestoneDate(MilestoneType.ASSESSMENT_PANEL).orElse(null);
+    }
+
+    public void setAssessmentPanelDate(ZonedDateTime assessmentPanelDate) {
+        setMilestoneDate(MilestoneType.ASSESSMENT_PANEL, assessmentPanelDate);
     }
 
     public ZonedDateTime getFundersPanelDate() {
@@ -531,10 +532,6 @@ public class Competition implements ProcessActivity {
 
     public void setLeadApplicantTypes(List<OrganisationType> leadApplicantTypes) {
         this.leadApplicantTypes = leadApplicantTypes;
-    }
-
-    public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
-        return sectionSetupStatus;
     }
 
     public String getActivityCode() {

@@ -43,6 +43,14 @@ items:
             failureThreshold: 1
           imagePullPolicy: Always
           env:
+          - name: JAVA_OPTS
+            value: -Xms384M -Xmx768M -javaagent:/newrelic.jar
+          - name: NEW_RELIC_APP_NAME
+            value: "ifs-idp-service (<<NEWRELIC-ENVIRONMENT>>)"
+          - name: NEW_RELIC_LICENSE_KEY
+            value: "<<NEWRELIC-LICENCE-KEY>>"
+          - name: NEW_RELIC_LOG
+            value: "STDOUT"
           - name: IDP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"
           - name: IDP_PROXY_CACERTIFICATE
@@ -51,28 +59,48 @@ items:
             value: "<<SSLKEY>>"
           - name: SP_PROXY_CERTIFICATE
             value: "<<SSLCERT>>"
-          - name: SPHOST
+          - name: SP_DOMAIN
             value: <<SHIB-ADDRESS>>
-          - name: IDPHOST
+          - name: IDP_DOMAIN
             value: <<SHIB-IDP-ADDRESS>>
-          - name: HTTPSPORT
+          - name: HTTPS_PORT
             value: "9443"
-          - name: HTTPPORT
+          - name: HTTP_PORT
             value: "9080"
-          - name: LDAPURL
-            value: "ldaps://ldap:389"
-          - name: LDAPRURL
-            value: "ldaps://ldap:389"
-          - name: LDAPPORT
+          - name: MEMCACHE_ENDPOINT
+            value: "<<SHIBBOLETH-MEMCACHE-ENDPOINT>>"
+          - name: LDAP_URL
+            value: "<<LDAP-URL>>"
+          - name: LDAP_PORT
             value: "389"
+          - name: LDAP_USESTARTTLS
+            value: "false"
+          - name: LDAP_USESSL
+            value: "<<LDAP_USESSL>>"
+          - name: LDAP_BASEDN
+            value: "<<LDAP_BASEDN>>"
+          - name: LDAP_BINDDN
+            value: "<<LDAP_BINDDN>>"
+          - name: LDAP_BINDDNCREDENTIAL
+            value: "<<LDAP-PASSWORD>>"
+          - name: LDAP_USERFILTER
+            value: "(&(mail={user})(!(employeeType=inactive)))"
+          - name: LDAP_ATTRIBUTE_SEARCHFILTER
+            value: "(mail=$resolutionContext.principal)"
+          - name: LDAP_RETURNATTRIBUTES
+            value: "mail,uid"
+          - name: LDAP_AUTHENTICATOR
+            value: "<<LDAP_AUTHENTICATOR>>"
+          - name: GOOGLEANALYTICS_TRACKINGID
+            value: "<<GA-TRACKING-ID>>"
           ports:
           - containerPort: 9443
           - containerPort: 9080
           resources:
             requests:
-              memory: 500M
+              memory: "<<SHIBBOLETH_IDP_MEMORY_REQUEST>>"
             limits:
-              memory: 2048M
+              memory: "<<SHIBBOLETH_IDP_MEMORY_LIMIT>>"
           test: false
   triggers:
   - type: ConfigChange
@@ -94,6 +122,8 @@ items:
   kind: Route
   metadata:
     name: idp
+    annotations:
+      haproxy.router.openshift.io/balance: roundrobin
   spec:
     host: <<SHIB-IDP-ADDRESS>>
     port:

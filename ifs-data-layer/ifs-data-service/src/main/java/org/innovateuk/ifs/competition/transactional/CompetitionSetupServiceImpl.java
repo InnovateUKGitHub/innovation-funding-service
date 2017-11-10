@@ -2,32 +2,24 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.domain.GuidanceRow;
-import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.application.domain.Section;
-import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
-import org.innovateuk.ifs.application.repository.QuestionRepository;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.AssessorCountOption;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionTypeMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
-import org.innovateuk.ifs.form.domain.FormInput;
-import org.innovateuk.ifs.form.domain.FormValidator;
-import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
+import org.innovateuk.ifs.setup.resource.SetupStatusResource;
+import org.innovateuk.ifs.setup.transactional.SetupStatusService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,17 +32,13 @@ import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT_EDITABLE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -70,22 +58,18 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private CompetitionFunderService competitionFunderService;
     @Autowired
-    private AssessorCountOptionRepository competitionTypeAssessorOptionRepository;
-    @Autowired
-    private QuestionRepository questionRepository;
-    @Autowired
-    private GuidanceRowRepository guidanceRowRepository;
-    @Autowired
-    private FormInputRepository formInputRepository;
+    private AssessorCountOptionRepository assessorCountOptionRepository;
     @Autowired
     private PublicContentService publicContentService;
+    @Autowired
+    private CompetitionSetupTemplateService competitionSetupTemplateService;
+    @Autowired
+    private SetupStatusService setupStatusService;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
-
-    private static final String FEEDBACK = "Feedback";
 
     @Override
     @Transactional
@@ -94,31 +78,30 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         Competition competition = competitionRepository.findById(id);
         String datePart = formatter.format(dateTime);
         List<Competition> openingSameMonth = competitionRepository.findByCodeLike("%" + datePart + "%");
+
+        String unusedCode = "";
         if (StringUtils.hasText(competition.getCode())) {
             return serviceSuccess(competition.getCode());
         } else if (openingSameMonth.isEmpty()) {
-            String unusedCode = datePart + "-1";
-            competition.setCode(unusedCode);
-            competitionRepository.save(competition);
-            return serviceSuccess(unusedCode);
+            unusedCode = datePart + "-1";
         } else {
             List<String> codes = openingSameMonth.stream().map(c -> c.getCode()).sorted().peek(c -> LOG.info("Codes : " + c)).collect(Collectors.toList());
-            String unusedCode = "";
             for (int i = 1; i < 10000; i++) {
                 unusedCode = datePart + "-" + i;
                 if (!codes.contains(unusedCode)) {
                     break;
                 }
             }
-            competition.setCode(unusedCode);
-            competitionRepository.save(competition);
-            return serviceSuccess(unusedCode);
         }
+
+        competition.setCode(unusedCode);
+        competitionRepository.save(competition);
+        return serviceSuccess(unusedCode);
     }
 
     @Override
     @Transactional
-    public ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource) {
+    public ServiceResult<CompetitionResource> save(Long id, CompetitionResource competitionResource) {
         Competition competition = competitionMapper.mapToDomain(competitionResource);
 
         saveFunders(competitionResource);
@@ -135,7 +118,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingLeadTechnologistId) {
 
         return deleteExistingLeadTechnologist(competitionId, existingLeadTechnologistId)
-                .andOnSuccess(() -> update(competitionId, competitionResource))
+                .andOnSuccess(() -> save(competitionId, competitionResource))
                 .andOnSuccess(updatedCompetitionResource -> saveLeadTechnologist(updatedCompetitionResource));
     }
 
@@ -143,7 +126,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
         if (existingLeadTechnologistId != null) {
 
-            CompetitionParticipant competitionParticipant =
+            CompetitionAssessmentParticipant competitionParticipant =
                     competitionParticipantRepository.getByCompetitionIdAndUserIdAndRole(competitionId,
                             existingLeadTechnologistId, CompetitionParticipantRole.INNOVATION_LEAD);
 
@@ -163,7 +146,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             if (!doesLeadTechnologistAlreadyExist(competition)) {
                 User leadTechnologist = competition.getLeadTechnologist();
 
-                CompetitionParticipant competitionParticipant = new CompetitionParticipant();
+                CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant();
                 competitionParticipant.setProcess(competition);
                 competitionParticipant.setUser(leadTechnologist);
                 competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
@@ -174,7 +157,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         }
 
         return serviceSuccess();
-
     }
 
     private boolean doesLeadTechnologistAlreadyExist(Competition competition) {
@@ -203,19 +185,91 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     @Override
-    @Transactional
-    public ServiceResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
-        Competition competition = competitionRepository.findById(competitionId);
-        competition.getSectionSetupStatus().put(section, Boolean.TRUE);
-        return serviceSuccess();
+    public ServiceResult<Map<CompetitionSetupSection, Optional<Boolean>>> getSectionStatuses(Long competitionId) {
+        List<SetupStatusResource> setupStatuses = setupStatusService
+                .findByTargetClassNameAndTargetId(Competition.class.getName(), competitionId).getSuccessObjectOrThrowException();
+
+        return serviceSuccess(Arrays.stream(CompetitionSetupSection.values())
+                .collect(Collectors.toMap(section -> section, section -> findStatus(setupStatuses, section.getClass().getName(), section.getId()))));
+    }
+
+    @Override
+    public ServiceResult<Map<CompetitionSetupSubsection, Optional<Boolean>>> getSubsectionStatuses(Long competitionId) {
+        List<SetupStatusResource> setupStatuses = setupStatusService
+                .findByTargetClassNameAndTargetId(Competition.class.getName(), competitionId).getSuccessObjectOrThrowException();
+
+        return serviceSuccess(Arrays.stream(CompetitionSetupSubsection.values())
+                .collect(Collectors.toMap(subsection -> subsection, subsection -> findStatus(setupStatuses, subsection.getClass().getName(), subsection.getId()))));
+    }
+
+    private Optional<Boolean> findStatus(List<SetupStatusResource> setupStatuses, String className, Long classPk) {
+        return setupStatuses.stream()
+                .filter(setupStatusResource ->
+                        setupStatusResource.getClassName().equals(className) &&
+                        setupStatusResource.getClassPk().equals(classPk))
+                .map(setupStatusResource -> setupStatusResource.getCompleted())
+                .findAny();
     }
 
     @Override
     @Transactional
-    public ServiceResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
-        Competition competition = competitionRepository.findById(competitionId);
-        competition.getSectionSetupStatus().put(section, Boolean.FALSE);
-        return serviceSuccess();
+    public ServiceResult<SetupStatusResource> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
+        SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, section.getClass().getName(), section.getId(), Optional.empty());
+        setupStatus.setCompleted(Boolean.TRUE);
+
+        return setupStatusService.saveSetupStatus(setupStatus);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<SetupStatusResource> markSectionIncomplete(Long competitionId, CompetitionSetupSection section) {
+        SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, section.getClass().getName(), section.getId(), Optional.empty());
+        setupStatus.setCompleted(Boolean.FALSE);
+
+        return setupStatusService.saveSetupStatus(setupStatus);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<SetupStatusResource> markSubsectionComplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
+        SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, subsection.getClass().getName(), subsection.getId(), Optional.of(parentSection));
+        setupStatus.setCompleted(Boolean.TRUE);
+
+        return setupStatusService.saveSetupStatus(setupStatus);
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<SetupStatusResource> markSubsectionIncomplete(Long competitionId, CompetitionSetupSection parentSection, CompetitionSetupSubsection subsection) {
+        SetupStatusResource setupStatus = findOrCreateSetupStatusResource(competitionId, subsection.getClass().getName(), subsection.getId(), Optional.of(parentSection));
+        setupStatus.setCompleted(Boolean.FALSE);
+
+        return setupStatusService.saveSetupStatus(setupStatus);
+    }
+
+    private SetupStatusResource findOrCreateSetupStatusResource(Long competitionId, String sectionClassName, Long sectionId, Optional<CompetitionSetupSection> parentSection) {
+        Optional<SetupStatusResource> setupStatusOpt = setupStatusService.findSetupStatusAndTarget(sectionClassName, sectionId,Competition.class.getName(), competitionId)
+                .getOptionalSuccessObject();
+
+        return setupStatusOpt.orElseGet(() -> createNewSetupStatus(competitionId, sectionClassName, sectionId, parentSection));
+    }
+
+    private SetupStatusResource createNewSetupStatus(Long competitionId, String sectionClassName, Long sectionId, Optional<CompetitionSetupSection> parentSectionOpt) {
+        SetupStatusResource newSetupStatusResource = new SetupStatusResource(sectionClassName, sectionId, Competition.class.getName(), competitionId);
+
+        parentSectionOpt.ifPresent(parentSection -> {
+            Optional<SetupStatusResource> parentSetupStatusOpt =
+                    setupStatusService.findSetupStatusAndTarget(parentSection.getClass().getName(), parentSection.getId(),Competition.class.getName(), competitionId)
+                    .getOptionalSuccessObject();
+
+            newSetupStatusResource.setParentId(
+                    parentSetupStatusOpt
+                        .orElseGet(() -> markSectionIncomplete(competitionId, parentSection).getSuccessObjectOrThrowException())
+                        .getId()
+            );
+        });
+
+        return newSetupStatusResource;
     }
 
     @Override
@@ -241,171 +295,9 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Override
     @Transactional
-    public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
-
-        CompetitionType competitionType = competitionTypeRepository.findOne(competitionTypeId);
-        Competition template = competitionType.getTemplate();
-
-        Competition competition = competitionRepository.findById(competitionId);
-        competition.setCompetitionType(competitionType);
-        competition = setDefaultAssessorPayAndCount(competition);
-        return copyFromCompetitionTemplate(competition, template);
-    }
-
-    @Override
-    @Transactional
-    public ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId) {
-        Competition template = competitionRepository.findById(templateId);
-        Competition competition = competitionRepository.findById(competitionId);
-        return copyFromCompetitionTemplate(competition, template);
-    }
-
-    private ServiceResult<Void> copyFromCompetitionTemplate(Competition competition, Competition template) {
-        cleanUpCompetitionSections(competition);
-
-        if (competition == null || !competition.getCompetitionStatus().equals(CompetitionStatus.COMPETITION_SETUP)) {
-            return serviceFailure(new Error(COMPETITION_NOT_EDITABLE));
-        }
-
-        if (template == null) {
-            return serviceFailure(new Error(COMPETITION_NO_TEMPLATE));
-        }
-
-        List<Section> sectionsWithoutParentSections = template.getSections().stream()
-                .filter(s -> s.getParentSection() == null)
-                .collect(Collectors.toList());
-
-
-        attachSections(competition, sectionsWithoutParentSections, null);
-
-        competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
-
-        competitionRepository.save(competition);
-
-        return serviceSuccess();
-    }
-
-    private void cleanUpCompetitionSections(Competition competition) {
-        List<GuidanceRow> scoreRows = guidanceRowRepository.findByFormInputQuestionCompetitionId(competition.getId());
-        guidanceRowRepository.delete(scoreRows);
-
-        List<FormInput> formInputs = formInputRepository.findByCompetitionId(competition.getId());
-        formInputRepository.delete(formInputs);
-
-        List<Question> questions = questionRepository.findByCompetitionId(competition.getId());
-        questionRepository.delete(questions);
-
-        List<Section> sections = sectionRepository.findByCompetitionIdOrderByParentSectionIdAscPriorityAsc(competition.getId());
-        competition.setSections(new ArrayList());
-        sectionRepository.delete(sections);
-    }
-
-
-    private void attachSections(Competition competition, List<Section> sectionTemplates, Section parentSection) {
-        if (sectionTemplates == null) {
-            return;
-        }
-        new ArrayList<>(sectionTemplates).forEach(attachSection(competition, parentSection));
-    }
-
-    private Consumer<Section> attachSection(Competition competition, Section parentSection) {
-        return (Section section) -> {
-            entityManager.detach(section);
-            section.setCompetition(competition);
-            section.setId(null);
-            sectionRepository.save(section);
-            if (!competition.getSections().contains(section)) {
-                competition.getSections().add(section);
-            }
-
-            section.setQuestions(createQuestions(competition, section, section.getQuestions()));
-
-            attachSections(competition, section.getChildSections(), section);
-
-            section.setParentSection(parentSection);
-            if (parentSection != null) {
-                if (parentSection.getChildSections() == null) {
-                    parentSection.setChildSections(new ArrayList<>());
-                }
-                if (!parentSection.getChildSections().contains(section)) {
-                    parentSection.getChildSections().add(section);
-                }
-            }
-        };
-    }
-
-    private List<Question> createQuestions(Competition competition, Section section, List<Question> questions) {
-        return simpleMap(questions, createQuestion(competition, section));
-    }
-
-    private Function<Question, Question> createQuestion(Competition competition, Section section) {
-        return (Question question) -> {
-            entityManager.detach(question);
-            question.setCompetition(competition);
-            question.setSection(section);
-            question.setId(null);
-            questionRepository.save(question);
-
-            question.setFormInputs(createFormInputs(competition, question, question.getFormInputs()));
-            return question;
-        };
-    }
-
-
-    private List<FormInput> createFormInputs(Competition competition, Question question, List<FormInput> formInputTemplates) {
-        return simpleMap(formInputTemplates, createFormInput(competition, question));
-    }
-
-    private Function<FormInput, FormInput> createFormInput(Competition competition, Question question) {
-        return (FormInput formInput) -> {
-            // Extract the validators into a new Set as the hibernate Set contains persistence information which alters
-            // the original FormValidator
-            Set<FormValidator> copy = new HashSet<>(formInput.getFormValidators());
-            entityManager.detach(formInput);
-            formInput.setCompetition(competition);
-            formInput.setQuestion(question);
-            formInput.setId(null);
-            formInput.setFormValidators(copy);
-            formInput.setActive(isSectorCompetitionWithScopeQuestion(competition, question, formInput) ? false : formInput.getActive());
-            formInputRepository.save(formInput);
-            formInput.setGuidanceRows(createFormInputGuidanceRows(formInput, formInput.getGuidanceRows()));
-            return formInput;
-        };
-    }
-
-    private boolean isSectorCompetitionWithScopeQuestion(Competition competition, Question question, FormInput formInput) {
-        if (competition.getCompetitionType().isSector() && question.isScope()) {
-            if (formInput.getType() == ASSESSOR_APPLICATION_IN_SCOPE || formInput.getDescription().equals(FEEDBACK)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private Competition setDefaultAssessorPayAndCount(Competition competition) {
-        if (competition.getAssessorCount() == null) {
-            Optional<AssessorCountOption> defaultAssessorOption = competitionTypeAssessorOptionRepository.findByCompetitionTypeIdAndDefaultOptionTrue(competition.getCompetitionType().getId());
-            defaultAssessorOption.ifPresent(assessorCountOption -> competition.setAssessorCount(assessorCountOption.getOptionValue()));
-        }
-
-        if (competition.getAssessorPay() == null) {
-            competition.setAssessorPay(DEFAULT_ASSESSOR_PAY);
-        }
-        return competition;
-    }
-
-    private List<GuidanceRow> createFormInputGuidanceRows(FormInput formInput, List<GuidanceRow> guidanceRows) {
-        return simpleMap(guidanceRows, createFormInputGuidanceRow(formInput));
-    }
-
-    private Function<GuidanceRow, GuidanceRow> createFormInputGuidanceRow(FormInput formInput) {
-        return (GuidanceRow row) -> {
-            entityManager.detach(row);
-            row.setFormInput(formInput);
-            row.setId(null);
-            guidanceRowRepository.save(row);
-            return row;
-        };
+        public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
+        return competitionSetupTemplateService.initializeCompetitionByCompetitionTemplate(competitionId, competitionTypeId)
+                .andOnSuccess(() -> serviceSuccess());
     }
 
     private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {

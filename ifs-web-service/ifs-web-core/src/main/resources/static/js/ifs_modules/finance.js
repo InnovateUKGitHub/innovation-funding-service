@@ -16,7 +16,6 @@ IFS.core.finance = (function () {
     },
     init: function () {
       IFS.core.finance.bindCalculationActionToFields() // Bind calculations
-      // jQuery('body').trigger('recalculateAllFinances');
     },
     bindCalculationActionToFields: function () {
       // this is not binding as it is doing a one off calculation on pageload
@@ -30,8 +29,8 @@ IFS.core.finance = (function () {
       // we watch for changes in inputs as a calculation always starts with an input
       jQuery('body').on('change', 'input', function () {
         // if the calculation field is not binded we bind this field to the selector that is defined in the field
-        if (jQuery('[data-calculation-fields]:not([data-calculation-binded])').length) {
-          jQuery('[data-calculation-fields]:not([data-calculation-binded])').each(function () {
+        if (jQuery('[data-calculation-fields]:not([data-calculation-binded],[data-inactive-overhead-total])').length) {
+          jQuery('[data-calculation-fields]:not([data-calculation-binded],[data-inactive-overhead-total])').each(function () {
             var element = jQuery(this)
             var fields = element.attr('data-calculation-fields')
 
@@ -45,8 +44,8 @@ IFS.core.finance = (function () {
       })
       // force recalculate, only used for removal of finances
       jQuery('body').on('recalculateAllFinances', function () {
-        if (jQuery('[data-calculation-fields]').length) {
-          jQuery('[data-calculation-fields]').each(function () {
+        if (jQuery('[data-calculation-fields]:not([data-inactive-overhead-total])').length) {
+          jQuery('[data-calculation-fields]:not([data-inactive-overhead-total])').each(function () {
             var element = jQuery(this)
             var fields = element.attr('data-calculation-fields')
             IFS.core.finance.doMath(element, fields.split(','))
@@ -63,7 +62,7 @@ IFS.core.finance = (function () {
       } else {
         if ((typeof (jQuery(element).val()) !== 'undefined') && (jQuery(element).val().length)) {
           var displayValue = jQuery(element).val().replace(',', '')
-          var parsed = displayValue.indexOf('£ ') === 0 ? displayValue.substring(2) : displayValue
+          var parsed = displayValue.indexOf('£') === 0 ? displayValue.substring(1) : displayValue
           return parseFloat(parsed)
         }
       }
@@ -86,28 +85,25 @@ IFS.core.finance = (function () {
           values.push(IFS.core.finance.getElementValue(field))
         }
       })
-
       var calculatedValue
       if (values.length === 1) {
         calculatedValue = values[0]
       } else {
         calculatedValue = IFS.core.finance.MathOperation[operation[0]](values[0], values[1])
       }
+
       // one operation and more values, all get the same operation
       if ((operation.length === 1) && (values.length > 2)) {
         for (var i = 2; i < values.length; i++) {
-          // console.log('round:',i,typeof(operation[0]),operation[0],typeof(calculatedValue),calculatedValue,typeof(values[i]),values[i],values)
           calculatedValue = IFS.core.finance.MathOperation[operation[0]](calculatedValue, values[i])
         }
       }
       // multiple operations and multiple values
       if ((operation.length > 1) && (values.length > 2)) {
         for (var j = 1; j < operation.length; j++) {
-          // console.log('round:',i,operation[i],calculatedValue,values[i+1])
           calculatedValue = IFS.core.finance.MathOperation[operation[j]](calculatedValue, values[j + 1])
         }
       }
-
       element.attr('data-calculation-rawvalue', calculatedValue)
 
       var format = element.is('[data-calculation-format]') ? element.attr('data-calculation-format') : 'currency'
@@ -129,7 +125,7 @@ IFS.core.finance = (function () {
     formatCurrency: function (total) {
       total = total.toFixed()
       total = total.replace(/(\d)(?=(\d{3})+\b)/g, '$1,')
-      return '£ ' + total
+      return '£' + total
     },
     formatPercentage: function (total) {
       total = total.toFixed()

@@ -13,7 +13,6 @@ IFS.core.financeSpecifics = (function () {
     },
     init: function () {
       s = this.settings
-      // console.log(s.allTotals)
       IFS.core.financeSpecifics.initOverheadActiveTotalChanges()
       IFS.core.financeSpecifics.initOtherFunding()
     },
@@ -41,8 +40,8 @@ IFS.core.financeSpecifics = (function () {
       if (currentTotal) {
         currentTotal = jQuery(currentTotal)
         allOtherTotals = jQuery(allOtherTotals)
-        allOtherTotals.removeAttr('data-current-overhead-total').val('£ 0').attr('data-calculation-rawvalue', 0)
-        currentTotal.attr('data-current-overhead-total', '')
+        allOtherTotals.removeAttr('data-current-overhead-total').val('£0').attr({ 'data-calculation-rawvalue': 0, 'data-inactive-overhead-total': '' })
+        currentTotal.removeAttr('data-inactive-overhead-total').attr('data-current-overhead-total', '')
         // make sure the finance calculation gets recalculated
         if (currentTotal.is('[data-calculation-fields]')) {
           var fields = currentTotal.attr('data-calculation-fields')

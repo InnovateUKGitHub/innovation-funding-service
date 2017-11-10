@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -28,7 +29,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
+import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
@@ -83,7 +84,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         User innovationLeadOnApp1 = newUser().build();
         innovationLeadOnApplication1 = newUserResource().withRolesGlobal(singletonList(innovationLeadRole)).build();
         innovationLeadOnApplication1.setId(innovationLeadOnApp1.getId());
-        CompetitionParticipant competitionParticipant = newCompetitionParticipant().withUser(innovationLeadOnApp1).build();
+        CompetitionAssessmentParticipant competitionParticipant = newCompetitionAssessmentParticipant().withUser(innovationLeadOnApp1).build();
         leadOnApplication1 = newUserResource().build();
         user2 = newUserResource().build();
         user3 = newUserResource().build();
@@ -491,6 +492,22 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     assertTrue(rules.userCanCreateNewApplication(competition, user));
                 } else {
                     assertFalse(rules.userCanCreateNewApplication(competition, user));
+                }
+            });
+        });
+    }
+
+    @Test
+    public void testMarkAsInelgibileAllowedBeforeAssesment() {
+        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
+            allGlobalRoleUsers.forEach(user -> {
+                Competition competition = newCompetition().withCompetitionStatus(competitionStatus).build();
+                ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
+                when(competitionRepositoryMock.findOne(application.getCompetition())).thenReturn(competition);
+                if(!EnumSet.of(FUNDERS_PANEL, ASSESSOR_FEEDBACK, PROJECT_SETUP).contains(competitionStatus) && user.hasAnyRoles(PROJECT_FINANCE, COMP_ADMIN, INNOVATION_LEAD)){
+                    assertTrue(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
+                } else {
+                    assertFalse(rules.markAsInelgibileAllowedBeforeAssesment(application, user));
                 }
             });
         });

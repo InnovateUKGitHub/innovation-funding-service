@@ -37,12 +37,26 @@ public class OverheadFileController {
         return overheadFileService.getFileEntryDetails(overheadId).toGetResponse();
     }
 
+    @GetMapping(value = "/projectOverheadCalculationDocumentDetails", produces = "application/json")
+    public RestResult<FileEntryResource> getProjectFileDetails(
+            @RequestParam(value = "overheadId") long overheadId) {
+
+        return overheadFileService.getProjectFileEntryDetails(overheadId).toGetResponse();
+    }
+
     @GetMapping("/overheadCalculationDocument")
     public @ResponseBody
     ResponseEntity<Object> getFileContents(
             @RequestParam("overheadId") long overheadId) throws IOException {
 
         return handleFileDownload(() -> overheadFileService.getFileEntryContents(overheadId));
+    }
+
+    @GetMapping("/projectOverheadCalculationDocument")
+    public @ResponseBody
+    ResponseEntity<Object> getProjectFileContents(
+            @RequestParam("overheadId") long overheadId) throws IOException {
+        return handleFileDownload(() -> overheadFileService.getProjectFileEntryContents(overheadId));
     }
 
     @PostMapping(value = "/overheadCalculationDocument", produces = "application/json")

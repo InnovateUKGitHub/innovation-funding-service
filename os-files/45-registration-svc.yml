@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    name: registration-svc
+  spec:
+    replicas: 1
+    selector:
+      deploymentconfig: registration-svc
+    strategy:
+      type: Rolling
+      rollingParams:
+        timeoutSeconds: 600
+        maxSurge: 2
+        maxUnavailable: 0
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          deploymentconfig: registration-svc
+      spec:
+        containers:
+        - image: innovateuk/registration-service:1.0-SNAPSHOT
+          name: registration-svc
+          livenessProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 31
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /monitoring/health
+              port: 8080
+            initialDelaySeconds: 60
+            periodSeconds: 5
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 1
+          imagePullPolicy: Always
+          env:
+          - name: JAVA_OPTS
+            value: -Xms256m -Xmx650m -javaagent:/newrelic.jar
+          - name: NEW_RELIC_APP_NAME
+            value: "ifs-registration-service (<<NEWRELIC-ENVIRONMENT>>)"
+          - name: NEW_RELIC_LICENSE_KEY
+            value: "<<NEWRELIC-LICENCE-KEY>>"
+          - name: NEW_RELIC_LOG
+            value: "STDOUT"
+          - name: LDAP_URL
+            value: "<<LDAP-URL>>"
+          - name: SHIBBOLETH_LDAP_PORT
+            value: "<<SHIBBOLETH_LDAP_PORT>>"
+          - name: SHIBBOLETH_LDAP_BASE_DN
+            value: "<<SHIBBOLETH_LDAP_BASE_DN>>"
+          - name: SHIBBOLETH_LDAP_USER
+            value: "<<SHIBBOLETH_LDAP_USER>>"
+          - name: LDAP_PASSWORD
+            value: "<<LDAP-PASSWORD>>"
+          - name: SHIBBOLETH_API_KEYS
+            value: "1234567890"
+          ports:
+          - containerPort: 8080
+          resources:
+            requests:
+              memory: 512M
+            limits:
+              memory: 768M
+    test: false
+    triggers:
+    - type: ConfigChange
+    status: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    name: registration-svc
+  spec:
+    ports:
+    - name: 8080-tcp
+      port: 8080
+      targetPort: 8080
+    selector:
+      deploymentconfig: registration-svc
+  status:
+    loadBalancer: {}

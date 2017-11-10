@@ -14,11 +14,9 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.resource.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -83,6 +81,9 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Autowired
     private EthnicityMapper ethnicityMapper;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
@@ -218,6 +219,12 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesNameIn(UserStatus.INACTIVE, roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable);
         List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(userResources), pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    @Override
+    public ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes) {
+        List<User> users = userRepository.findByRolesNameInOrderByEmailAsc(roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()));
+        return serviceSuccess(simpleMap(users, user -> new UserOrganisationResource(userMapper.mapToResource(user))));
     }
 
     private List<UserResource> sortByName(List<UserResource> userResources) {
