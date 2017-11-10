@@ -102,8 +102,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(true);
-        when(spendProfileWorkflowHandlerMock.sendProfileGenerated(eq(project), any())).thenReturn(true);
+        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(serviceSuccess());
+        when(spendProfileWorkflowHandlerMock.spendProfileGenerated(eq(project), any())).thenReturn(true);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
                 organisation1.getId())).thenReturn(Optional.empty());
@@ -238,7 +238,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(false);
+        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED));
 
         SpendProfile spendProfileForOrganisation1 = new SpendProfile();
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
@@ -270,8 +270,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(true);
-        when(spendProfileWorkflowHandlerMock.sendProfileGenerated(eq(project), any())).thenReturn(true);
+        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(serviceSuccess());
+        when(spendProfileWorkflowHandlerMock.spendProfileGenerated(eq(project), any())).thenReturn(true);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
                 organisation1.getId())).thenReturn(Optional.empty());
@@ -325,8 +325,8 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(true);
-        when(spendProfileWorkflowHandlerMock.sendProfileGenerated(eq(project), any())).thenReturn(true);
+        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(serviceSuccess());
+        when(spendProfileWorkflowHandlerMock.spendProfileGenerated(eq(project), any())).thenReturn(true);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
                 organisation1.getId())).thenReturn(Optional.empty());
@@ -361,11 +361,11 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(false);
+        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(serviceFailure(CommonFailureKeys.SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED));
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
-        assertTrue(generateResult.getFailure().is(CommonFailureKeys.SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED));
+        assertTrue(generateResult.getFailure().is(CommonFailureKeys.SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED));
     }
 
     private void setupGenerateSpendProfilesExpectations(GenerateSpendProfileData generateSpendProfileData, Project project, Organisation organisation1, Organisation organisation2) {
@@ -653,7 +653,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
 
         assertFalse(result.isSuccess());
-        assertEquals(SPEND_PROFILE_NOT_READY_TO_APPROVE.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
+        assertEquals(SPEND_PROFILE_CANNOT_BE_APPROVED.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
         verify(spendProfileRepositoryMock).save(spendProfileList);
         verify(spendProfileWorkflowHandlerMock).spendProfileApproved(project,user);
@@ -696,6 +696,29 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
 
         assertFalse(result.isSuccess());
         assertEquals(SPEND_PROFILE_NOT_READY_TO_APPROVE.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void rejectSpendProfileFails() {
+        Long projectId = 4234L;
+        Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).withSpendProfileSubmittedDate(ZonedDateTime.now()).build();
+
+        when(spendProfileWorkflowHandlerMock.isReadyToApprove(project)).thenReturn(true);
+
+        when(grantOfferLetterServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceSuccess());
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+
+        Long userId = 1234L;
+        UserResource loggedInUser = newUserResource().withId(userId).build();
+        User user = newUser().withId(loggedInUser.getId()).build();
+        setLoggedInUser(loggedInUser);
+        when(userRepositoryMock.findOne(userId)).thenReturn(user);
+        when(spendProfileWorkflowHandlerMock.spendProfileRejected(project, user)).thenReturn(false);
+
+        ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.REJECTED);
+
+        assertFalse(result.isSuccess());
+        assertEquals(SPEND_PROFILE_CANNOT_BE_REJECTED.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
     }
 
     @Test

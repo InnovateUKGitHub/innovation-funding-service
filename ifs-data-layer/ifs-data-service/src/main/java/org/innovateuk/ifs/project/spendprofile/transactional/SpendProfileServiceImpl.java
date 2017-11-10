@@ -121,10 +121,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ProjectUsersHelper projectUsersHelper;
     @Autowired
     private EmailService projectEmailService;
-    @Autowired
-    private ViabilityWorkflowHandler viabilityWorkflowHandler;
-    @Autowired
-    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
     @Autowired
@@ -146,7 +142,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                                 }))
                                 .andOnSuccess(() -> {
                                     getCurrentlyLoggedInUser().andOnSuccess(user -> {
-                                        if (spendProfileWorkflowHandler.sendProfileGenerated(project, user)) {
+                                        if (spendProfileWorkflowHandler.spendProfileGenerated(project, user)) {
                                             return serviceSuccess();
                                         } else {
                                             LOG.error(String.format(SPEND_PROFILE_STATE_ERROR, project.getId()));
@@ -158,45 +154,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
-        return (isViabilityApprovedOrNotApplicable(project))
-                .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
-                .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project));
-    }
-
-    private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
-
-        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
-
-        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                ViabilityState.REVIEW == viabilityWorkflowHandler.getState(partnerOrganisation));
-
-        if (!existingReviewablePartnerOrganisation.isPresent()) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
-        }
-    }
-
-    private ServiceResult<Void> isEligibilityApprovedOrNotApplicable(Project project) {
-
-        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
-
-        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                EligibilityState.REVIEW == eligibilityWorkflowHandler.getState(partnerOrganisation));
-
-        if (!existingReviewablePartnerOrganisation.isPresent()) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED);
-        }
-    }
-
-    private ServiceResult<Void> isSpendProfileAlreadyGenerated(Project project) {
-        if (spendProfileWorkflowHandler.isReadyToGenerate(project)) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED);
-        }
+        return spendProfileWorkflowHandler.isReadyToGenerate(project);
     }
 
     private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
@@ -300,7 +258,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
         Project project = projectRepository.findOne(projectId);
-        if (null != project && spendProfileWorkflowHandler.isReadyToApprove(project) && Arrays.asList(ApprovalType.APPROVED, ApprovalType.REJECTED).stream().anyMatch(e ->  e.equals(approvalType))) {
+        if (null != project && spendProfileWorkflowHandler.isReadyToApprove(project) && Arrays.asList(ApprovalType.APPROVED, ApprovalType.REJECTED).stream().anyMatch(e -> e.equals(approvalType))) {
             updateApprovalOfSpendProfile(projectId, approvalType);
             return approveSpendProfile(approvalType, project);
         } else {
@@ -314,13 +272,13 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                 if (spendProfileWorkflowHandler.spendProfileApproved(project, user))
                     return grantOfferLetterService.generateGrantOfferLetterIfReady(project.getId());
                 else
-                    return serviceFailure(SPEND_PROFILE_NOT_READY_TO_APPROVE);
+                    return serviceFailure(SPEND_PROFILE_CANNOT_BE_APPROVED);
             }
             if (approvalType.equals(ApprovalType.REJECTED)) {
                 if (spendProfileWorkflowHandler.spendProfileRejected(project, user))
                     return serviceSuccess();
                 else
-                    return serviceFailure(SPEND_PROFILE_NOT_READY_TO_APPROVE);
+                    return serviceFailure(SPEND_PROFILE_CANNOT_BE_REJECTED);
             }
             return serviceFailure(SPEND_PROFILE_NOT_READY_TO_APPROVE);
         });
