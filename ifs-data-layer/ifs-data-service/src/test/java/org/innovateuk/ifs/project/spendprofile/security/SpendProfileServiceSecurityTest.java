@@ -112,6 +112,7 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
                     verify(spendProfilePermissionRules).internalAdminUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).supportUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
                     verify(spendProfilePermissionRules).leadPartnerCanViewAnySpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).innovationLeadUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(spendProfilePermissionRules);
                 });
     }
