@@ -171,19 +171,20 @@ Invite non-registered assessors server side validations
 Invite non-registered users
     [Documentation]    INFUND-6411 INFUND-6448
     [Tags]
-    When The user enters text to a text field                css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input  Olivier Giroud
-    And The user should not see the text in the page         Please enter a name.    #check for the client side validation
-    And The user enters text to a text field                 css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input  ${test_mailbox_one}+OlivierGiroud@gmail.com
-    And The user should not see the text in the page         Please enter a name.    #check for the client side validation
+    When the user moves focus to the element                jQuery=.button:contains("Add assessors to list")
+    And the user enters text to a text field                css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input   Olivier Giroud
+    And the user should not see the text in the page         Please enter a name.    #check for the client side validation
+    And the user enters text to a text field                 css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input   ${test_mailbox_one}+OlivierGiroud@gmail.com
+    And the user should not see the text in the page         Please enter a name.    #check for the client side validation
     And the user selects the option from the drop-down menu  Emerging and enabling    css=.js-progressive-group-select
     And the user selects the option from the drop-down menu  Emerging technology    id=grouped-innovation-area
-    And The user should not see the text in the page         Please enter an innovation sector and area.    #check for the client side validation
+    And the user should not see the text in the page         Please enter an innovation sector and area.    #check for the client side validation
     And the user clicks the button/link                      jQuery=.button:contains("Add assessors to list")
     Then the user should see the element                     css=.no
-    And The user should see the element                      jQuery=td:contains("Olivier Giroud")
-    And The user should see the element                      jQuery=td:contains("Olivier Giroud") ~ td:contains(${test_mailbox_one}+OlivierGiroud@gmail.com)
-    And The user should see the element                      jQuery=td:contains("Olivier Giroud") ~ td:contains("Emerging technology")
-    And The user should see the element                      jQuery=td:contains("Olivier Giroud") ~ td .buttonlink:contains("Remove")
+    And the user should see the element                      jQuery=td:contains("Olivier Giroud")
+    And the user should see the element                      jQuery=td:contains("Olivier Giroud") ~ td:contains(${test_mailbox_one}+OlivierGiroud@gmail.com)
+    And the user should see the element                      jQuery=td:contains("Olivier Giroud") ~ td:contains("Emerging technology")
+    And the user should see the element                      jQuery=td:contains("Olivier Giroud") ~ td .buttonlink:contains("Remove")
 
 Assessor overview information
     [Documentation]    INFUND-6450 INFUND-6449
