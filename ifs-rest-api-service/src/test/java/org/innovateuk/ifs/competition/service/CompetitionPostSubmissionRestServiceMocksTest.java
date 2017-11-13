@@ -98,11 +98,11 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
     @Test
     public void countPendingSpendProfiles() {
 
-        Integer returnedResponse = 3;
+        Long returnedResponse = 3L;
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/count-pending-spend-profiles", Integer.class, returnedResponse);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/count-pending-spend-profiles", Long.class, returnedResponse);
 
-        Integer response = service.countPendingSpendProfiles(123L).getSuccessObject();
+        Long response = service.countPendingSpendProfiles(123L).getSuccessObject();
         assertNotNull(response);
         Assert.assertEquals(returnedResponse, response);
     }
