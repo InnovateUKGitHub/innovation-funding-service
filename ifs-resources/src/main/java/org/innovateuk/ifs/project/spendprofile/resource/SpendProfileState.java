@@ -13,7 +13,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 public enum SpendProfileState implements ProcessState {
     PENDING(State.PENDING),
-    CREATED(State.CREATED),
+    GENERATED(State.CREATED),
     SUBMITTED(State.SUBMITTED),
     APPROVED(State.ACCEPTED),
     REJECTED(State.REJECTED);
