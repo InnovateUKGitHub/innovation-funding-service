@@ -370,7 +370,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
-        public ServiceResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(Long competitionId) {
+        public ServiceResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(Long competitionId) {
             return null;
         }
 

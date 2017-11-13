@@ -4,9 +4,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Represents projects for which Spend Profile generation is pending, for a given competition
+ * Resource to hold Spend Profile Status fields.
  */
-public class CompetitionPendingSpendProfilesResource {
+public class SpendProfileStatusResource {
 
     private Long applicationId;
 
@@ -14,10 +14,12 @@ public class CompetitionPendingSpendProfilesResource {
 
     private String projectName;
 
-    public CompetitionPendingSpendProfilesResource() {
+    // In future, more fields related to Spend Profile Status will be added here
+
+    public SpendProfileStatusResource() {
     }
 
-    public CompetitionPendingSpendProfilesResource(Long applicationId, Long projectId, String projectName) {
+    public SpendProfileStatusResource(Long applicationId, Long projectId, String projectName) {
         this.applicationId = applicationId;
         this.projectId = projectId;
         this.projectName = projectName;
@@ -53,7 +55,7 @@ public class CompetitionPendingSpendProfilesResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        CompetitionPendingSpendProfilesResource that = (CompetitionPendingSpendProfilesResource) o;
+        SpendProfileStatusResource that = (SpendProfileStatusResource) o;
 
         return new EqualsBuilder()
                 .append(applicationId, that.applicationId)

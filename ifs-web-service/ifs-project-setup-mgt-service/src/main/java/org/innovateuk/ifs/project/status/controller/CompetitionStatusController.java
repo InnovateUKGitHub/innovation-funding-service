@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.apache.commons.io.IOUtils;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.resource.CompetitionPendingSpendProfilesResource;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
@@ -91,7 +91,7 @@ public class CompetitionStatusController {
                                            @PathVariable Long competitionId) {
 
         long openQueryCount = competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException();
-        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles = competitionPostSubmissionRestService.getPendingSpendProfiles(competitionId).getSuccessObjectOrThrowException();
+        List<SpendProfileStatusResource> pendingSpendProfiles = competitionPostSubmissionRestService.getPendingSpendProfiles(competitionId).getSuccessObjectOrThrowException();
 
         model.addAttribute("model",
                 new CompetitionPendingSpendProfilesViewModel(competitionRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException(),

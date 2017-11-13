@@ -20,11 +20,6 @@ import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.project.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.finance.resource.EligibilityState;
-import org.innovateuk.ifs.project.finance.resource.ViabilityState;
-import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.user.builder.OrganisationBuilder;
@@ -35,7 +30,6 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CollectionFunctions;
@@ -50,7 +44,6 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
@@ -68,9 +61,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newC
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
-import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
-import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
-import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeBuilder.newOrganisationType;
 import static org.innovateuk.ifs.user.builder.OrganisationTypeResourceBuilder.newOrganisationTypeResource;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
@@ -821,11 +811,11 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void getPendingSpendProfiles() throws Exception {
 
-        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles = singletonList(new CompetitionPendingSpendProfilesResource(11L, 1L, "Project 1"));
+        List<SpendProfileStatusResource> pendingSpendProfiles = singletonList(new SpendProfileStatusResource(11L, 1L, "Project 1"));
 
         when(competitionRepositoryMock.getPendingSpendProfiles(competitionId)).thenReturn(pendingSpendProfiles);
 
-        ServiceResult<List<CompetitionPendingSpendProfilesResource>> result = service.getPendingSpendProfiles(competitionId);
+        ServiceResult<List<SpendProfileStatusResource>> result = service.getPendingSpendProfiles(competitionId);
 
         assertTrue(result.isSuccess());
         assertEquals(pendingSpendProfiles, result.getSuccessObject());
@@ -840,6 +830,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         ServiceResult<Long> result = service.countPendingSpendProfiles(competitionId);
 
         assertTrue(result.isSuccess());
-        assertTrue(pendingSpendProfileCount == result.getSuccessObject());
+        assertEquals(pendingSpendProfileCount, result.getSuccessObject());
     }
 }

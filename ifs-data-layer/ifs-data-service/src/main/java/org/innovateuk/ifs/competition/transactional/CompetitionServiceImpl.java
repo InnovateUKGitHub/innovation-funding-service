@@ -20,7 +20,6 @@ import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
-import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -372,7 +371,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(Long competitionId) {
+    public ServiceResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(Long competitionId) {
 
         return serviceSuccess(competitionRepository.getPendingSpendProfiles(competitionId));
     }

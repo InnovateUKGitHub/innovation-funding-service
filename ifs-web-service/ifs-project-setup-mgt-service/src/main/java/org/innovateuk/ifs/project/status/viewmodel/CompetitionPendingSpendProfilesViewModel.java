@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.status.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.competition.resource.CompetitionPendingSpendProfilesResource;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public class CompetitionPendingSpendProfilesViewModel {
 
     private String competitionName;
 
-    private List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles;
+    private List<SpendProfileStatusResource> pendingSpendProfiles;
 
     private long openQueryCount;
 
@@ -27,7 +27,7 @@ public class CompetitionPendingSpendProfilesViewModel {
     public CompetitionPendingSpendProfilesViewModel() {
     }
 
-    public CompetitionPendingSpendProfilesViewModel(CompetitionResource competition, List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles,
+    public CompetitionPendingSpendProfilesViewModel(CompetitionResource competition, List<SpendProfileStatusResource> pendingSpendProfiles,
                                                     long openQueryCount, int pendingSpendProfilesCount, boolean showTabs) {
         this.competitionId = competition.getId();
         this.competitionName = competition.getName();
@@ -45,7 +45,7 @@ public class CompetitionPendingSpendProfilesViewModel {
         return competitionName;
     }
 
-    public List<CompetitionPendingSpendProfilesResource> getPendingSpendProfiles() {
+    public List<SpendProfileStatusResource> getPendingSpendProfiles() {
         return pendingSpendProfiles;
     }
 

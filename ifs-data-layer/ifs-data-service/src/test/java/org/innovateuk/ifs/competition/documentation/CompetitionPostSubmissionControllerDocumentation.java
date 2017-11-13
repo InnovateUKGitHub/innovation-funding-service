@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.competition.controller.CompetitionPostSubmissionController;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionPendingSpendProfilesResource;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -123,9 +123,9 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
 
         final Long competitionId = 1L;
 
-        CompetitionPendingSpendProfilesResource resource1 = new CompetitionPendingSpendProfilesResource(11L, 1L, "Project Name 1");
-        CompetitionPendingSpendProfilesResource resource2 = new CompetitionPendingSpendProfilesResource(11L, 2L, "Project Name 2");
-        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles = Arrays.asList(resource1, resource2);
+        SpendProfileStatusResource resource1 = new SpendProfileStatusResource(11L, 1L, "Project Name 1");
+        SpendProfileStatusResource resource2 = new SpendProfileStatusResource(11L, 2L, "Project Name 2");
+        List<SpendProfileStatusResource> pendingSpendProfiles = Arrays.asList(resource1, resource2);
         when(competitionService.getPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfiles));
 
         mockMvc.perform(get("/competition/postSubmission/{competitionId}/pending-spend-profiles", competitionId))

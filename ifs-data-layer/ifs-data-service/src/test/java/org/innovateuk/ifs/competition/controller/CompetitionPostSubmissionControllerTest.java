@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.competition.resource.CompetitionPendingSpendProfilesResource;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -86,7 +86,7 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
     public void getPendingSpendProfiles() throws Exception {
         final Long competitionId = 1L;
 
-        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles = new ArrayList<>();
+        List<SpendProfileStatusResource> pendingSpendProfiles = new ArrayList<>();
         when(competitionServiceMock.getPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfiles));
 
         mockMvc.perform(get("/competition/postSubmission/{competitionId}/pending-spend-profiles", competitionId))

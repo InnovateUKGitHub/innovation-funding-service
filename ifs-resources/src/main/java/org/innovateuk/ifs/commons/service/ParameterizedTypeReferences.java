@@ -264,8 +264,8 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
     }
 
-    public static ParameterizedTypeReference<List<CompetitionPendingSpendProfilesResource>> competitionPendingSpendProfilesResourceListType() {
-        return new ParameterizedTypeReference<List<CompetitionPendingSpendProfilesResource>>() {};
+    public static ParameterizedTypeReference<List<SpendProfileStatusResource>> spendProfileStatusResourceListType() {
+        return new ParameterizedTypeReference<List<SpendProfileStatusResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryListType() {

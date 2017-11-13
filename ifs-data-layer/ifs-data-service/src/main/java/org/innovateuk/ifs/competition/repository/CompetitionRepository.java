@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.repository;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionPendingSpendProfilesResource;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -116,26 +116,23 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "GROUP BY pr.application.id, o.id, pr.id " +
             "ORDER BY pr.application.id, o.name";
 
-    public static final String GET_PENDING_SPEND_PROFILES = "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionPendingSpendProfilesResource(" +
-            "p.application.id, p.id, p.name) " +
-            " FROM Project p " +
-            " JOIN p.application.competition c " +
-            " WHERE c.id = :competitionId " +
-            " AND NOT EXISTS (SELECT v.id FROM ViabilityProcess v WHERE v.target.id IN (SELECT po.id FROM PartnerOrganisation po WHERE po.project.id = p.id) AND " +
-                "   v.event = 'project-created' )" +
-            " AND NOT EXISTS (SELECT e.id FROM EligibilityProcess e WHERE e.target.id IN (SELECT po.id FROM PartnerOrganisation po WHERE po.project.id = p.id) AND " +
-                "   e.event = 'project-created' )" +
-            " AND NOT EXISTS (SELECT sp.id FROM SpendProfile sp WHERE sp.project.id = p.id) ";
-
-    public static final String COUNT_PENDING_SPEND_PROFILES = "SELECT COUNT(DISTINCT p.id)" +
-            " FROM Project p " +
-            " JOIN p.application.competition c " +
-            " WHERE c.id = :competitionId " +
+    public static final String PENDING_SPEND_PROFILES_WHERE_CLAUSE = " WHERE c.id = :competitionId " +
             " AND NOT EXISTS (SELECT v.id FROM ViabilityProcess v WHERE v.target.id IN (SELECT po.id FROM PartnerOrganisation po WHERE po.project.id = p.id) AND " +
             "   v.event = 'project-created' )" +
             " AND NOT EXISTS (SELECT e.id FROM EligibilityProcess e WHERE e.target.id IN (SELECT po.id FROM PartnerOrganisation po WHERE po.project.id = p.id) AND " +
             "   e.event = 'project-created' )" +
             " AND NOT EXISTS (SELECT sp.id FROM SpendProfile sp WHERE sp.project.id = p.id) ";
+
+    public static final String GET_PENDING_SPEND_PROFILES = "SELECT NEW org.innovateuk.ifs.competition.resource.SpendProfileStatusResource(" +
+            "p.application.id, p.id, p.name) " +
+            " FROM Project p " +
+            " JOIN p.application.competition c " +
+            PENDING_SPEND_PROFILES_WHERE_CLAUSE;
+
+    public static final String COUNT_PENDING_SPEND_PROFILES = "SELECT COUNT(DISTINCT p.id)" +
+            " FROM Project p " +
+            " JOIN p.application.competition c " +
+            PENDING_SPEND_PROFILES_WHERE_CLAUSE;
 
 
     @Query(LIVE_QUERY)
@@ -199,7 +196,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     List<CompetitionOpenQueryResource> getOpenQueryByCompetition(@Param("competitionId") long competitionId);
 
     @Query(GET_PENDING_SPEND_PROFILES)
-    List<CompetitionPendingSpendProfilesResource> getPendingSpendProfiles(@Param("competitionId") long competitionId);
+    List<SpendProfileStatusResource> getPendingSpendProfiles(@Param("competitionId") long competitionId);
 
     @Query(COUNT_PENDING_SPEND_PROFILES)
     Long countPendingSpendProfiles(@Param("competitionId") Long competitionId);

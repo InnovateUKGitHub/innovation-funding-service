@@ -5,7 +5,7 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionPendingSpendProfilesResource;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.junit.Assert;
@@ -17,7 +17,7 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionOpenQueryListType;
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionPendingSpendProfilesResourceListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.spendProfileStatusResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSearchResultItemListType;
 import static org.junit.Assert.*;
 
@@ -86,11 +86,11 @@ public class CompetitionPostSubmissionRestServiceMocksTest extends BaseRestServi
     @Test
     public void getPendingSpendProfiles() {
 
-        List<CompetitionPendingSpendProfilesResource> returnedResponse = singletonList(new CompetitionPendingSpendProfilesResource());
+        List<SpendProfileStatusResource> returnedResponse = singletonList(new SpendProfileStatusResource());
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/pending-spend-profiles", competitionPendingSpendProfilesResourceListType(), returnedResponse);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/123" + "/pending-spend-profiles", spendProfileStatusResourceListType(), returnedResponse);
 
-        List<CompetitionPendingSpendProfilesResource> response = service.getPendingSpendProfiles(123L).getSuccessObject();
+        List<SpendProfileStatusResource> response = service.getPendingSpendProfiles(123L).getSuccessObject();
         assertNotNull(response);
         Assert.assertEquals(returnedResponse, response);
     }

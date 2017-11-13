@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
-import org.innovateuk.ifs.competition.resource.CompetitionPendingSpendProfilesResource;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResource;
@@ -133,9 +133,9 @@ public class CompetitionStatusControllerTest extends BaseControllerMockMVCTest<C
 
         setLoggedInUser(newUserResource().withRolesGlobal(Arrays.asList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build());
 
-        CompetitionPendingSpendProfilesResource pendingSpendProfile1 = new CompetitionPendingSpendProfilesResource(11L, 1L, "Project Name 1");
-        CompetitionPendingSpendProfilesResource pendingSpendProfile2 = new CompetitionPendingSpendProfilesResource(11L, 2L, "Project Name 2");
-        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles = Arrays.asList(pendingSpendProfile1, pendingSpendProfile2);
+        SpendProfileStatusResource pendingSpendProfile1 = new SpendProfileStatusResource(11L, 1L, "Project Name 1");
+        SpendProfileStatusResource pendingSpendProfile2 = new SpendProfileStatusResource(11L, 2L, "Project Name 2");
+        List<SpendProfileStatusResource> pendingSpendProfiles = Arrays.asList(pendingSpendProfile1, pendingSpendProfile2);
 
         CompetitionResource competition = newCompetitionResource().withName("comp1").withId(123L).build();
 
