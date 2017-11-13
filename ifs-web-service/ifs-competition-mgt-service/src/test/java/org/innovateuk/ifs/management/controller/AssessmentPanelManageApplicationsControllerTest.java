@@ -10,12 +10,13 @@ import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
+
 import java.util.List;
 import java.util.Optional;
+
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -62,7 +63,7 @@ public class AssessmentPanelManageApplicationsControllerTest extends BaseControl
                 .andExpect(model().attributeExists("model"))
                 .andReturn().getModelAndView().getModel().get("model");
 
-        assertEquals(competitionResource.getId(), model.getCompetitionId());
+        assertEquals((long) competitionResource.getId(), model.getCompetitionId());
         assertEquals(competitionResource.getName(), model.getCompetitionName());
         assertEquals(competitionResource.getCompetitionStatus().getDisplayName(), model.getCompetitionStatus());
         assertEquals(2, model.getApplications().size());
