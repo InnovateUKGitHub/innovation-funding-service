@@ -118,6 +118,8 @@ public class CompetitionManagementPanelInviteAssessorsOverviewControllerTest ext
 
     private List<AssessorInviteOverviewResource> setUpAssessorInviteOverviewResources() {
         return newAssessorInviteOverviewResource()
+                .withId(1L, 2L)
+                .withInviteId(3L, 4L)
                 .withName("Dave Smith", "John Barnes")
                 .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")

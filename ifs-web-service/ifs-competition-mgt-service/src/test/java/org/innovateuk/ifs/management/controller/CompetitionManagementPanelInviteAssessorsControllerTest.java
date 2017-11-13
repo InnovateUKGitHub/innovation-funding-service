@@ -471,6 +471,7 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
 
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {
         return newAvailableAssessorResource()
+                .withId(1L, 2L)
                 .withName("Dave Smith", "John Barnes")
                 .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
@@ -483,6 +484,8 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
 
     private List<AssessorCreatedInviteResource> setUpAssessorCreatedInviteResources() {
         return newAssessorCreatedInviteResource()
+                .withId(1L, 2L)
+                .withInviteId(3L, 4L)
                 .withName("Dave Smith", "John Barnes")
                 .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
@@ -494,6 +497,8 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
 
     private List<AssessorInviteOverviewResource> setUpAssessorInviteOverviewResources() {
         return newAssessorInviteOverviewResource()
+                .withId(1L, 2L)
+                .withInviteId(3L, 4L)
                 .withName("Dave Smith", "John Barnes")
                 .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
