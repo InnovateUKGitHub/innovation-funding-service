@@ -13,7 +13,7 @@ public class CompetitionAvailableAssessorRowViewModel extends InviteAssessorsRow
     private String email;
     private BusinessType businessType;
 
-    public CompetitionAvailableAssessorRowViewModel(Long id,
+    public CompetitionAvailableAssessorRowViewModel(long id,
                                                     String name,
                                                     List<InnovationAreaResource> innovationAreas,
                                                     boolean compliant,
