@@ -16,6 +16,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("name").description("name of the competition"),
             fieldWithPath("startDate").description("date the competition opens for submissions"),
             fieldWithPath("endDate").description("date the submissions phase of the competition closes"),
+            fieldWithPath("registrationDate").description("date on which the registration closes"),
             fieldWithPath("assessorAcceptsDate").description("date by which assessors should accept or reject invitations to assess applications"),
             fieldWithPath("assessorDeadlineDate").description("date by which assessors should submit their application feedback"),
             fieldWithPath("assessorBriefingDate").description("date on which assessors will be briefed on the competition"),
@@ -63,6 +64,7 @@ public class CompetitionResourceDocs {
             .withName("competition name")
             .withStartDate(ZonedDateTime.now())
             .withEndDate(ZonedDateTime.now().plusDays(30))
+            .withRegistrationCloseDate(ZonedDateTime.now().plusDays(2))
             .withAssessorAcceptsDate(ZonedDateTime.now().plusDays(35))
             .withAssessorDeadlineDate(ZonedDateTime.now().plusDays(40))
             .withFundersPanelDate(ZonedDateTime.now().plusDays(42))

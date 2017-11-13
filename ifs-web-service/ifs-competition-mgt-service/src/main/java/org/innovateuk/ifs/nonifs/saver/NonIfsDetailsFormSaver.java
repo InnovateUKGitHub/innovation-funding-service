@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 @Service
 public class NonIfsDetailsFormSaver {
 
-    private static List<MilestoneType> PUBLIC_MILESTONE_TYPES = asList(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.NOTIFICATIONS);
+    private static List<MilestoneType> PUBLIC_MILESTONE_TYPES = asList(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.NOTIFICATIONS);
 
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
@@ -75,6 +75,7 @@ public class NonIfsDetailsFormSaver {
         Map<String, MilestoneRowForm> milestones = new HashMap<>();
         milestones.put(MilestoneType.OPEN_DATE.name(), form.getOpenDate());
         milestones.put(MilestoneType.SUBMISSION_DATE.name(), form.getCloseDate());
+        milestones.put(MilestoneType.REGISTRATION_DATE.name(), form.getRegistrationCloseDate());
         milestones.put(MilestoneType.NOTIFICATIONS.name(), form.getApplicantNotifiedDate());
         return milestones;
     }

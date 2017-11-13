@@ -19,6 +19,7 @@ public class NonIfsDetailsFormPopulator {
         form.setInnovationAreaCategoryId(competitionResource.getInnovationAreas().stream().findAny().orElse(null));
         form.setUrl(competitionResource.getNonIfsUrl());
         form.setApplicantNotifiedDate(new MilestoneRowForm(MilestoneType.NOTIFICATIONS, competitionResource.getFundersPanelEndDate()));
+        form.setRegistrationCloseDate(new MilestoneRowForm(MilestoneType.REGISTRATION_DATE, competitionResource.getRegistrationDate()));
         form.setOpenDate(new MilestoneRowForm(MilestoneType.OPEN_DATE, competitionResource.getStartDate()));
         form.setCloseDate(new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, competitionResource.getEndDate()));
         return form;

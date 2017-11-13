@@ -52,6 +52,10 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
                 if (temp != null) {
                     milestoneResource.setDate(temp);
                     updatedMilestones.add(milestoneResource);
+                } else {
+                    milestoneRestService
+                            .resetMilestone(milestoneResource)
+                            .getSuccessObjectOrThrowException();
                 }
             }
         });

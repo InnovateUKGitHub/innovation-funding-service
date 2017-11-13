@@ -15,18 +15,27 @@ public class NonIfsDetailsForm {
 
     @NotEmpty(message = "{validation.standard.title.required}")
     private String title;
+
     @NotNull
     private Long innovationSectorCategoryId;
+
     @NotNull
     private Long innovationAreaCategoryId;
+
     @Valid
     @NotNull(message = "{validation.nonifs.detailsform.opendate.required}")
     private MilestoneRowForm openDate;
+
     @Valid
     @NotNull(message = "{validation.nonifs.detailsform.closedate.required}")
     private MilestoneRowForm closeDate;
-    //@Valid
+
+    @Valid
+    @NotNull(message = "{validation.nonifs.detailsform.registrationclosedate.required}")
+    private MilestoneRowForm registrationCloseDate;
+
     private MilestoneRowForm applicantNotifiedDate;
+
     @NotEmpty(message= "{validation.nonifs.detailsform.url.required}")
     private String url;
 
@@ -78,6 +87,14 @@ public class NonIfsDetailsForm {
         this.applicantNotifiedDate = applicantNotifiedDate;
     }
 
+    public MilestoneRowForm getRegistrationCloseDate() {
+        return registrationCloseDate;
+    }
+
+    public void setRegistrationCloseDate(MilestoneRowForm registrationCloseDate) {
+        this.registrationCloseDate = registrationCloseDate;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -100,6 +117,7 @@ public class NonIfsDetailsForm {
                 .append(innovationAreaCategoryId, that.innovationAreaCategoryId)
                 .append(openDate, that.openDate)
                 .append(closeDate, that.closeDate)
+                .append(registrationCloseDate, that.registrationCloseDate)
                 .append(applicantNotifiedDate, that.applicantNotifiedDate)
                 .append(url, that.url)
                 .isEquals();
@@ -113,6 +131,7 @@ public class NonIfsDetailsForm {
                 .append(innovationAreaCategoryId)
                 .append(openDate)
                 .append(closeDate)
+                .append(registrationCloseDate)
                 .append(applicantNotifiedDate)
                 .append(url)
                 .toHashCode();

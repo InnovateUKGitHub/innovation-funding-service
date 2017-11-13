@@ -18,11 +18,11 @@
         <ul class="list">
             <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE d MMMM yyyy')}"></span></li>
 
-            <li th:unless="${model.nonIfs}" th:with="date=${#temporals.format(model.competitionCloseDate, 'EEEE d MMMM yyyy')},
+            <li th:unless="${model.onlyNonIfs}" th:with="date=${#temporals.format(model.competitionCloseDate, 'EEEE d MMMM yyyy')},
                          time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
                 <strong>Competition closes:</strong> <th:block th:text="${date + ' ' + time}"/></li>
 
-            <li th:if="${model.nonIfs}" th:with="date=${#temporals.format(model.registrationCloseDate, 'EEEE d MMMM yyyy')},
+            <li th:if="${model.onlyNonIfs}" th:with="date=${#temporals.format(model.registrationCloseDate, 'EEEE d MMMM yyyy')},
                                                  time=${#strings.toLowerCase(#temporals.format(model.registrationCloseDate, ' h:mma'))}">
                 <strong>Registration closes:</strong> <th:block th:text="${date + ' ' + time}"/></li>
 

@@ -74,6 +74,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("releaseFeedbackDate", releaseFeedbackDates);
     }
 
+    public CompetitionResourceBuilder withRegistrationCloseDate(ZonedDateTime... registrationCloseDates) {
+        return withArraySetFieldByReflection("registrationDate", registrationCloseDates);
+    }
+
     public CompetitionResourceBuilder withFundersPanelDate(ZonedDateTime... fundersPanelDates) {
         return withArraySetFieldByReflection("fundersPanelDate", fundersPanelDates);
     }
