@@ -314,6 +314,13 @@ tr {
       padding: 0 10px 0 0;
     }
   }
+
+  &.form-group-error {
+    .editor {
+      @include box-shadow(none);
+      border: 4px solid $error-colour;
+    }
+  }
 }
 
 td {
