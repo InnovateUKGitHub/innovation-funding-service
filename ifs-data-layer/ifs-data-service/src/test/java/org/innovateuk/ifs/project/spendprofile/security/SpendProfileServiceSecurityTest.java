@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.security;
+package org.innovateuk.ifs.project.spendprofile.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -16,6 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -24,19 +25,17 @@ import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.fail;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-import static org.innovateuk.ifs.user.resource.UserRoleType.SUPPORT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<SpendProfileService> {
 
-    private ProjectFinancePermissionRules projectFinancePermissionRules;
+    private SpendProfilePermissionRules spendProfilePermissionRules;
 
     @Before
     public void lookupPermissionRules() {
-        projectFinancePermissionRules = getMockPermissionRulesBean(ProjectFinancePermissionRules.class);
+        spendProfilePermissionRules = getMockPermissionRulesBean(SpendProfilePermissionRules.class);
     }
 
     @Test
@@ -92,10 +91,10 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
         assertAccessDenied(() -> classUnderTest.getSpendProfileTable(projectOrganisationCompositeId),
                 () -> {
 
-                    verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
-                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                    verify(spendProfilePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(spendProfilePermissionRules);
                 });
     }
 
@@ -109,11 +108,11 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
 
         assertAccessDenied(() -> classUnderTest.getSpendProfileCSV(projectOrganisationCompositeId),
                 () -> {
-                    verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).internalAdminUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).supportUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).leadPartnerCanViewAnySpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
-                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                    verify(spendProfilePermissionRules).partnersCanViewTheirOwnSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).internalAdminUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).supportUsersCanSeeSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).leadPartnerCanViewAnySpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(spendProfilePermissionRules);
                 });
     }
 
@@ -128,10 +127,10 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
         assertAccessDenied(() -> classUnderTest.getSpendProfile(projectOrganisationCompositeId),
                 () -> {
 
-                    verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
-                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                    verify(spendProfilePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(spendProfilePermissionRules).leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(spendProfilePermissionRules);
                 });
     }
 
@@ -148,8 +147,8 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
         assertAccessDenied(() -> classUnderTest.saveSpendProfile(projectOrganisationCompositeId, table),
                 () -> {
 
-                    verify(projectFinancePermissionRules).partnersCanEditTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
-                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                    verify(spendProfilePermissionRules).partnersCanEditTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(spendProfilePermissionRules);
                 });
     }
 
@@ -196,8 +195,8 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
         assertAccessDenied(() -> classUnderTest.markSpendProfileComplete(projectOrganisationCompositeId),
                 () -> {
 
-                    verify(projectFinancePermissionRules).partnersCanMarkSpendProfileAsComplete(projectOrganisationCompositeId, getLoggedInUser());
-                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                    verify(spendProfilePermissionRules).partnersCanMarkSpendProfileAsComplete(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(spendProfilePermissionRules);
                 });
     }
 
@@ -207,8 +206,8 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
 
         assertAccessDenied(() -> classUnderTest.completeSpendProfilesReview(projectId),
                 () -> {
-                    verify(projectFinancePermissionRules).projectManagerCanCompleteSpendProfile(projectId, getLoggedInUser());
-                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                    verify(spendProfilePermissionRules).projectManagerCanCompleteSpendProfile(projectId, getLoggedInUser());
+                    verifyNoMoreInteractions(spendProfilePermissionRules);
                 });
     }
 
@@ -281,12 +280,12 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
     }
 
     private List<UserRoleType> getNonInternalAdminOrSupportUserRoles() {
-        return asList(UserRoleType.values()).stream().filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN && type != SUPPORT)
+        return Arrays.stream(UserRoleType.values()).filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN && type != SUPPORT)
                 .collect(toList());
     }
 
     private List<UserRoleType> getNonProjectFinanceUserRoles() {
-        return asList(UserRoleType.values()).stream().filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN)
+        return Arrays.stream(UserRoleType.values()).filter(type -> type != PROJECT_FINANCE && type != COMP_ADMIN)
                 .collect(toList());
     }
 }
