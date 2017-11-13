@@ -68,7 +68,7 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
         SpendProfileProcess process = getCurrentProcess(project);
         if (process == null)
             return false;
-        return SpendProfileState.PENDING.equals(process.getActivityState());
+        return !SpendProfileState.PENDING.equals(process.getActivityState());
 
     }
 

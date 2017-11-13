@@ -92,7 +92,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> spendProfileWorkflowHandler.spendProfileGenerated(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                SpendProfileState.PENDING, SpendProfileState.GENERATED, SpendProfileEvent.SPEND_PROFILE_GENERATED);
+                SpendProfileState.PENDING, SpendProfileState.CREATED, SpendProfileEvent.SPEND_PROFILE_GENERATED);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredWithProjectUser(((project, projectUser) -> spendProfileWorkflowHandler.spendProfileSubmitted(project, projectUser)),
 
                 // current State, destination State and expected Event to be fired
-                SpendProfileState.GENERATED, SpendProfileState.SUBMITTED, SpendProfileEvent.SPEND_PROFILE_SUBMITTED);
+                SpendProfileState.CREATED, SpendProfileState.SUBMITTED, SpendProfileEvent.SPEND_PROFILE_SUBMITTED);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> spendProfileWorkflowHandler.submit(project)),
 
                 // current State, destination State and expected Event to be fired
-                SpendProfileState.GENERATED, SpendProfileState.SUBMITTED, SpendProfileEvent.SPEND_PROFILE_SUBMITTED);
+                SpendProfileState.CREATED, SpendProfileState.SUBMITTED, SpendProfileEvent.SPEND_PROFILE_SUBMITTED);
     }
 
     @Test
@@ -160,7 +160,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
 
         Project project = generateSpendProfileData.getProject();
 
-        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_SPEND_PROFILE, SpendProfileState.GENERATED.getBackingState());
+        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_SPEND_PROFILE, SpendProfileState.CREATED.getBackingState());
 
         SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, currentActivityState);
         when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
