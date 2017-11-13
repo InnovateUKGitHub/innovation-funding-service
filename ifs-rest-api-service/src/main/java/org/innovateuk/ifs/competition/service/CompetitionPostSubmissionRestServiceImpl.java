@@ -55,8 +55,8 @@ public class CompetitionPostSubmissionRestServiceImpl extends BaseRestService im
     }
 
     @Override
-    public RestResult<Integer> countPendingSpendProfiles(long competitionId) {
-        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/count-pending-spend-profiles", Integer.class);
+    public RestResult<Long> countPendingSpendProfiles(long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/count-pending-spend-profiles", Long.class);
     }
 
     @Override

@@ -25,7 +25,7 @@ public interface CompetitionPostSubmissionRestService {
 
     RestResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(long competitionId);
 
-    RestResult<Integer> countPendingSpendProfiles(long competitionId);
+    RestResult<Long> countPendingSpendProfiles(long competitionId);
 
     RestResult<Void> closeAssessment(long competitionId);
 
