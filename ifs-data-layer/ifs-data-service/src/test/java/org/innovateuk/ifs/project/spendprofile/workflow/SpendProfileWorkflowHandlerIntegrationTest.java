@@ -151,7 +151,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, currentActivityState);
         when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
 
-        assertTrue(spendProfileWorkflowHandler.isAlreadyGenerated(project));
+        assertFalse(spendProfileWorkflowHandler.isAlreadyGenerated(project));
     }
 
     @Test
@@ -165,7 +165,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, currentActivityState);
         when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
 
-        assertFalse(spendProfileWorkflowHandler.isAlreadyGenerated(project));
+        assertTrue(spendProfileWorkflowHandler.isAlreadyGenerated(project));
     }
 
     private void callWorkflowAndCheckTransitionAndEventFiredInternalUser(BiFunction<Project, User, Boolean> workflowMethodToCall, SpendProfileState currentSpendProfileState, SpendProfileState destinationSpendProfileState, SpendProfileEvent expectedEventToBeFired) {
