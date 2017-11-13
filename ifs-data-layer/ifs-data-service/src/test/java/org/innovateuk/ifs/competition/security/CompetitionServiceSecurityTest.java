@@ -375,7 +375,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
-        public ServiceResult<Integer> countPendingSpendProfiles(Long competitionId) {
+        public ServiceResult<Long> countPendingSpendProfiles(Long competitionId) {
             return null;
         }
     }

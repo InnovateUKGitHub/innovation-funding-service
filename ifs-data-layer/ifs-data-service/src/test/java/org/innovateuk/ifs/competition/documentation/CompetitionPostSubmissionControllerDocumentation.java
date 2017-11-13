@@ -134,7 +134,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
                 .andDo(document(
                         "competition/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition, whose Projects which are pending Spend Profile generation are being retrieved")
+                                parameterWithName("competitionId").description("Id of the competition, whose Projects, which are pending Spend Profile generation, are being retrieved")
                         )
                         ,
                         responseFields(
@@ -149,7 +149,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
     public void countPendingSpendProfiles() throws Exception {
 
         final Long competitionId = 1L;
-        final Integer pendingSpendProfileCount = 3;
+        final Long pendingSpendProfileCount = 3L;
 
         when(competitionService.countPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfileCount));
 
@@ -159,7 +159,7 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
                 .andDo(document(
                         "competition/{method-name}",
                         pathParameters(
-                                parameterWithName("competitionId").description("Id of the competition whose count of Projects which are pending Spend Profile generation is being retrieved")
+                                parameterWithName("competitionId").description("Id of the competition, whose count of Projects, which are pending Spend Profile generation, is being retrieved")
                         )
                 ));
 

@@ -100,7 +100,7 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
     @Test
     public void countPendingSpendProfiles() throws Exception {
         final Long competitionId = 1L;
-        final Integer pendingSpendProfileCount = 3;
+        final Long pendingSpendProfileCount = 3L;
 
         when(competitionServiceMock.countPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfileCount));
 

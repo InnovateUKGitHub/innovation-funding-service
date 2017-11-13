@@ -819,250 +819,27 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
-    public void getPendingSpendProfilesWhenNoProjectsForCompetition() throws Exception {
+    public void getPendingSpendProfiles() throws Exception {
 
-        when(projectRepositoryMock.findByApplicationCompetitionId(competitionId)).thenReturn(null);
+        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles = singletonList(new CompetitionPendingSpendProfilesResource(11L, 1L, "Project 1"));
 
-        ServiceResult<List<CompetitionPendingSpendProfilesResource>> result = service.getPendingSpendProfiles(competitionId);
-
-        assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject().isEmpty());
-
-    }
-
-    @Test
-    public void getPendingSpendProfilesWhenAllViabilityNotYetApproved() throws Exception {
-
-        Long projectId = 1L;
-
-        Organisation organisation1 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        Organisation organisation2 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-
-        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().withOrganisation(organisation1).build();
-        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().withOrganisation(organisation2).build();
-
-        Project project1 = newProject().
-                withId(projectId).
-                withDuration(3L).
-                withPartnerOrganisations(asList(partnerOrganisation1, partnerOrganisation2)).
-                build();
-
-        when(projectRepositoryMock.findByApplicationCompetitionId(competitionId)).thenReturn(singletonList(project1));
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.REVIEW);
+        when(competitionRepositoryMock.getPendingSpendProfiles(competitionId)).thenReturn(pendingSpendProfiles);
 
         ServiceResult<List<CompetitionPendingSpendProfilesResource>> result = service.getPendingSpendProfiles(competitionId);
 
         assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject().isEmpty());
-
+        assertEquals(pendingSpendProfiles, result.getSuccessObject());
     }
 
     @Test
-    public void getPendingSpendProfilesWhenAllEligibilityNotYetApproved() throws Exception {
+    public void countPendingSpendProfiles() throws Exception {
 
-        Long projectId = 1L;
+        final Long pendingSpendProfileCount = 3L;
+        when(competitionRepositoryMock.countPendingSpendProfiles(competitionId)).thenReturn(pendingSpendProfileCount);
 
-        Organisation organisation1 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        Organisation organisation2 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-
-        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().withOrganisation(organisation1).build();
-        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().withOrganisation(organisation2).build();
-
-        Project project1 = newProject().
-                withId(projectId).
-                withDuration(3L).
-                withPartnerOrganisations(asList(partnerOrganisation1, partnerOrganisation2)).
-                build();
-
-        when(projectRepositoryMock.findByApplicationCompetitionId(competitionId)).thenReturn(singletonList(project1));
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.REVIEW);
-
-        ServiceResult<List<CompetitionPendingSpendProfilesResource>> result = service.getPendingSpendProfiles(competitionId);
+        ServiceResult<Long> result = service.countPendingSpendProfiles(competitionId);
 
         assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject().isEmpty());
-
-    }
-
-    @Test
-    public void getPendingSpendProfilesWhenSpendProfileAlreadyGenerated() throws Exception {
-
-        Long projectId = 1L;
-
-        Organisation organisation1 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        Organisation organisation2 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-
-        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().withOrganisation(organisation1).build();
-        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().withOrganisation(organisation2).build();
-
-        Project project1 = newProject().
-                withId(projectId).
-                withDuration(3L).
-                withPartnerOrganisations(asList(partnerOrganisation1, partnerOrganisation2)).
-                build();
-
-        when(projectRepositoryMock.findByApplicationCompetitionId(competitionId)).thenReturn(singletonList(project1));
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-
-        SpendProfile spendProfileForOrganisation1 = new SpendProfile();
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project1.getId(),
-                organisation1.getId())).thenReturn(Optional.of(spendProfileForOrganisation1));
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project1.getId(),
-                organisation2.getId())).thenReturn(Optional.empty());
-
-        ServiceResult<List<CompetitionPendingSpendProfilesResource>> result = service.getPendingSpendProfiles(competitionId);
-
-        assertTrue(result.isSuccess());
-        assertTrue(result.getSuccessObject().isEmpty());
-
-    }
-
-    @Test
-    public void getPendingSpendProfilesSuccess() throws Exception {
-
-        Long projectId = 1L;
-
-        Organisation organisation1 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        Organisation organisation2 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-
-        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().withOrganisation(organisation1).build();
-        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().withOrganisation(organisation2).build();
-
-        Application application1 = newApplication().withId(11L).build();
-
-        Project project1 = newProject()
-                .withId(projectId)
-                .withName("Project Name")
-                .withApplication(application1)
-                .withDuration(3L)
-                .withPartnerOrganisations(asList(partnerOrganisation1, partnerOrganisation2))
-                .build();
-
-        when(projectRepositoryMock.findByApplicationCompetitionId(competitionId)).thenReturn(singletonList(project1));
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project1.getId(),
-                organisation1.getId())).thenReturn(Optional.empty());
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project1.getId(),
-                organisation2.getId())).thenReturn(Optional.empty());
-
-        ServiceResult<List<CompetitionPendingSpendProfilesResource>> result = service.getPendingSpendProfiles(competitionId);
-        assertTrue(result.isSuccess());
-
-        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles = result.getSuccessObject();
-        assertTrue(1 == pendingSpendProfiles.size());
-
-        CompetitionPendingSpendProfilesResource pendingSpendProfilesResource = pendingSpendProfiles.get(0);
-        assertEquals(new Long(11L), pendingSpendProfilesResource.getApplicationId());
-        assertEquals(new Long(1L), pendingSpendProfilesResource.getProjectId());
-        assertEquals("Project Name", pendingSpendProfilesResource.getProjectName());
-    }
-
-    @Test
-    public void getPendingSpendProfilesMultipleProjectsSuccess() throws Exception {
-
-        Long projectId1 = 1L;
-        Long projectId2 = 2L;
-
-        Organisation organisation1 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        Organisation organisation2 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        Organisation organisation3 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        Organisation organisation4 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-
-        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().withOrganisation(organisation1).build();
-        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().withOrganisation(organisation2).build();
-        PartnerOrganisation partnerOrganisation3 = newPartnerOrganisation().withOrganisation(organisation3).build();
-        PartnerOrganisation partnerOrganisation4 = newPartnerOrganisation().withOrganisation(organisation4).build();
-
-        Application application1 = newApplication().withId(11L).build();
-
-        Project project1 = newProject()
-                .withId(projectId1)
-                .withName("Project Name 1")
-                .withApplication(application1)
-                .withDuration(3L)
-                .withPartnerOrganisations(asList(partnerOrganisation1, partnerOrganisation2))
-                .build();
-
-        Project project2 = newProject()
-                .withId(projectId2)
-                .withName("Project Name 2")
-                .withApplication(application1)
-                .withDuration(3L)
-                .withPartnerOrganisations(asList(partnerOrganisation3, partnerOrganisation4))
-                .build();
-
-        when(projectRepositoryMock.findByApplicationCompetitionId(competitionId)).thenReturn(asList(project1, project2));
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation3)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation4)).thenReturn(ViabilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation3)).thenReturn(EligibilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation4)).thenReturn(EligibilityState.APPROVED);
-
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project1.getId(),
-                organisation1.getId())).thenReturn(Optional.empty());
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project1.getId(),
-                organisation2.getId())).thenReturn(Optional.empty());
-
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project2.getId(),
-                organisation3.getId())).thenReturn(Optional.empty());
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project2.getId(),
-                organisation4.getId())).thenReturn(Optional.empty());
-
-        ServiceResult<List<CompetitionPendingSpendProfilesResource>> result = service.getPendingSpendProfiles(competitionId);
-        assertTrue(result.isSuccess());
-
-        List<CompetitionPendingSpendProfilesResource> pendingSpendProfiles = result.getSuccessObject();
-        assertTrue(2 == pendingSpendProfiles.size());
-
-    }
-
-    @Test
-    public void countPendingSpendProfilesSuccess() throws Exception {
-
-        Long projectId = 1L;
-
-        Organisation organisation1 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        Organisation organisation2 = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-
-        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().withOrganisation(organisation1).build();
-        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().withOrganisation(organisation2).build();
-
-        Project project1 = newProject()
-                .withId(projectId)
-                .withName("Project Name")
-                .withDuration(3L)
-                .withPartnerOrganisations(asList(partnerOrganisation1, partnerOrganisation2))
-                .build();
-
-        when(projectRepositoryMock.findByApplicationCompetitionId(competitionId)).thenReturn(singletonList(project1));
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project1.getId(),
-                organisation1.getId())).thenReturn(Optional.empty());
-        when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project1.getId(),
-                organisation2.getId())).thenReturn(Optional.empty());
-
-        ServiceResult<Integer> result = service.countPendingSpendProfiles(competitionId);
-        assertTrue(result.isSuccess());
-
-        assertTrue(1 == result.getSuccessObject());
+        assertTrue(pendingSpendProfileCount == result.getSuccessObject());
     }
 }
