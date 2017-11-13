@@ -15,33 +15,35 @@
 
 
     <form method="GET">
-        <div class="search-filters extra-margin">
-          <fieldset>
-              <legend class="heading-medium">Search users</legend>
-              <div class="grid-row">
-                  <div class="column-half">
-                    <div class="form-group">
-                      <label class="form-label" for="filterSearch">Search by</label>
-                      <input class="form-control extra-margin-bottom" id="filterSearch" name="searchTerm" minlength="3" required="required" value="" type="text">
-                    </div>
+      <div class="search-filters extra-margin">
+        <fieldset>
+            <legend class="heading-medium">Search users</legend>
+            <div class="grid-row">
+                <div class="column-half">
+                  <div class="form-group">
+                    <label class="form-label" for="filterSearch">Search by</label>
+                    <input class="form-control extra-margin-bottom" id="filterSearch" name="searchTerm" minlength="3" required="required" value="" type="text">
                     <a href="?">Clear search</a>
                   </div>
-                  <div class="column-half">
-                    <div class="form-group">
-                      <label class="form-label" for="filterCategory">Category</label>
-                      <select class="form-control" id="filterCategory" name="filterCategory">
-                        <option value="name">Name</option>
-                        <option value="organisation">Organisation name</option>
-                        <option value="email" selected>Email</option>
-                      </select>
-                      <div class="alignright">
-                        <button class="button">Search</button>
-                      </div>
-                    </div>
+                </div>
+                <div class="column-half">
+                  <div class="form-group">
+                    <label class="form-label" for="filterCategory">Category</label>
+                    <select class="form-control" id="filterCategory" name="filterCategory">
+                      <option value="name">Name</option>
+                      <option value="organisation">Organisation name</option>
+                      <option value="email" selected="">Email</option>
+                    </select>
                   </div>
+                </div>
+            </div>
+            <div class="grid-row">
+              <div class="column-full">
+                <button class="button no-margin">Search</button>
               </div>
-          </fieldset>
-        </div>
+            </div>
+        </fieldset>
+      </div>
     </form>
     <div>
       <ul class="inline-nav cf">
