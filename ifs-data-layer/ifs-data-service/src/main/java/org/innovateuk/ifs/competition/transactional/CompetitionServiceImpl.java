@@ -52,6 +52,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -312,8 +313,37 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<CompetitionCountResource> countCompetitions() {
         //TODO INFUND-3833 populate complete count
-        return serviceSuccess(new CompetitionCountResource(competitionRepository.countLive(), competitionRepository.countProjectSetup(),
-                competitionRepository.countUpcoming(), competitionRepository.countFeedbackReleased(), competitionRepository.countNonIfs()));
+        return serviceSuccess(
+                new CompetitionCountResource(
+                        getLiveCount(),
+                        getPSCount(),
+                        competitionRepository.countUpcoming(),
+                        competitionRepository.countFeedbackReleased(),
+                        competitionRepository.countNonIfs()));
+    }
+
+    private Long getLiveCount(){
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
+            Long count;
+            if(isInnovationLead(user)) {
+                count = competitionRepository.countLiveForInnovationLead(user.getId());
+            } else {
+                count = competitionRepository.countLive();
+            }
+            return count;
+        }).getSuccessObject();
+    }
+
+    private Long getPSCount(){
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
+            Long count;
+            if(isInnovationLead(user)) {
+                count = competitionRepository.countProjectSetupForInnovationLead(user.getId());
+            } else {
+                count = competitionRepository.countProjectSetup();
+            }
+            return count;
+        }).getSuccessObject();
     }
 
     @Override

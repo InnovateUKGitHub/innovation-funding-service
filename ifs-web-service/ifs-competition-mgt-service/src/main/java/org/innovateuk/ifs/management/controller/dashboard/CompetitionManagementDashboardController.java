@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.management.controller.dashboard;
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -43,28 +42,16 @@ public class CompetitionManagementDashboardController {
     @GetMapping("/dashboard/live")
     public String live(Model model, UserResource user){
         Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions = competitionDashboardSearchService.getLiveCompetitions();
-        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(liveCompetitions, getCompetitionCountResource(liveCompetitions), new DashboardTabsViewModel(user)));
+        model.addAttribute(MODEL_ATTR, new LiveDashboardViewModel(liveCompetitions, competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
         return TEMPLATE_PATH + "live";
     }
 
-    // IFS-191 filtered view can now have different count according to assigned competitions
-    private CompetitionCountResource getCompetitionCountResource(Map<CompetitionStatus, List<CompetitionSearchResultItem>> liveCompetitions){
-        CompetitionCountResource competitionCountResource = competitionDashboardSearchService.getCompetitionCounts();
-        Long competitionCount = 0L;
-        if(liveCompetitions != null){
-            competitionCount = liveCompetitions.keySet().stream().mapToLong(status -> liveCompetitions.get(status).size()).sum();
-        }
-        competitionCountResource.setLiveCount(competitionCount);
-        return competitionCountResource;
-    }
-
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model, UserResource user) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
         model.addAttribute(MODEL_ATTR,
-                new ProjectSetupDashboardViewModel(projectSetupCompetitions,
-                        competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
+                new ProjectSetupDashboardViewModel(projectSetupCompetitions, competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
 
         return TEMPLATE_PATH + "projectSetup";
     }

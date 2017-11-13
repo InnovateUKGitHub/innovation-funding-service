@@ -27,10 +27,28 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
+    public static final String INNOVATION_LEAD_LIVE_COUNT_QUERY = "SELECT count(distinct cp.competition.id) " +
+            "FROM CompetitionAssessmentParticipant cp " +
+            "WHERE cp.user.id = :userId " +
+            "AND cp.role = 'INNOVATION_LEAD' " +
+            "AND CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = cp.competition.id) " +
+            "AND NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = cp.competition.id) " +
+            "AND cp.competition.setupComplete = TRUE " +
+            "AND cp.competition.template = FALSE " +
+            "AND cp.competition.nonIfs = FALSE";
+
     // Assume competition cannot be in project setup until at least one application is funded and informed
     public static final String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c WHERE ( " +
             "EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = c.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
             ") AND c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
+
+    public static final String INNOVATION_LEAD_PROJECT_SETUP_COUNT_QUERY = "SELECT count(distinct cp.competition.id) " +
+            "FROM CompetitionAssessmentParticipant cp " +
+            "WHERE cp.user.id = :userId " +
+            "AND cp.role = 'INNOVATION_LEAD' " +
+            "AND EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = cp.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
+            ") AND cp.competition.setupComplete = TRUE AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE";
+
 
     public static final String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE ( " +
             "EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = c.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
@@ -118,6 +136,9 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(LIVE_QUERY)
     List<Competition> findLive();
 
+    @Query(INNOVATION_LEAD_LIVE_COUNT_QUERY)
+    Long countLiveForInnovationLead(@Param("userId") Long userId);
+
     @Query(LIVE_COUNT_QUERY)
     Long countLive();
 
@@ -126,6 +147,9 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     @Query(PROJECT_SETUP_COUNT_QUERY)
     Long countProjectSetup();
+
+    @Query(INNOVATION_LEAD_PROJECT_SETUP_COUNT_QUERY)
+    Long countProjectSetupForInnovationLead(@Param("userId") Long userId);
 
     @Query(UPCOMING_QUERY)
     List<Competition> findUpcoming();

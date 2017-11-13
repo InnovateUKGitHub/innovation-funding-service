@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/project")
-@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
 public class ProjectDetailsController {
 
     @Autowired
