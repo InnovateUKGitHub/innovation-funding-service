@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.analytics.GoogleTagManagerDataLayer;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -54,8 +55,11 @@ public class ApplicationController {
     public String applicationDetails(ApplicationForm form,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
-                                     UserResource user) {
+                                     UserResource user,
+                                     @ModelAttribute("dataLayer") GoogleTagManagerDataLayer dataLayer) {
         ApplicationResource application = applicationService.getById(applicationId);
+
+//        dataLayer.setCompName(application.getCompetitionName());
 
         if (application.getCompetitionStatus() != CompetitionStatus.OPEN) {
             return format("redirect:/application/%s/summary", application.getId());

@@ -1,7 +1,11 @@
 package org.innovateuk.ifs.analytics;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
- * Created by tom on 02/11/2017.
+ * The Google Analytics Tag Manager Data Layer. Contains our properties for Google Analytics.
+ * See https://support.google.com/analytics/answer/6164391?hl=en
  */
 public class GoogleTagManagerDataLayer {
 
@@ -13,5 +17,25 @@ public class GoogleTagManagerDataLayer {
 
     public void setCompName(String compName) {
         this.compName = compName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GoogleTagManagerDataLayer that = (GoogleTagManagerDataLayer) o;
+
+        return new EqualsBuilder()
+                .append(compName, that.compName)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(compName)
+                .toHashCode();
     }
 }

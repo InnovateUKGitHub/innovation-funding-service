@@ -5,8 +5,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+/**
+ * Configuration for the {@link GoogleAnalyticsDataLayerInterceptor}.
+ */
 @Configuration
-public class GoogleAnalyticsConfig extends WebMvcConfigurerAdapter {
+public class GoogleAnalyticsDataLayerConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public GoogleAnalyticsDataLayerInterceptor googleAnalyticsDataLayerInterceptor() {

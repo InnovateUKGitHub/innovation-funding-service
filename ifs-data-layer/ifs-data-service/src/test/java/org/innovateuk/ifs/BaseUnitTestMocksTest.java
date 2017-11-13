@@ -9,6 +9,7 @@ import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.alert.mapper.AlertMapper;
 import org.innovateuk.ifs.alert.repository.AlertRepository;
 import org.innovateuk.ifs.alert.transactional.AlertService;
+import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerService;
 import org.innovateuk.ifs.application.mapper.*;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
@@ -714,6 +715,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected QuestionNumberOrderService questionNumberOrderServiceMock;
+
+    @Mock
+    protected GoogleAnalyticsDataLayerService googleAnalyticsDataLayerServiceMock;
 
     @Before
     public void setupMockInjection() {
