@@ -24,6 +24,6 @@ WHERE subject = '7,8'
 AND form_input_id in (@template_q5_form_input_id, @comp17_q5_form_input_id);
 
 UPDATE guidance_row
-SET justification = 'Target customers are identified along withthe value proposition  to them. The routes to market and how profit, productivity and growth will increaseis identified and evidenced. The exploitation and/or dissemination of the main project outputs is outlined.'
+SET justification = 'Target customers are identified along with the value proposition to them. The routes to market and how profit, productivity and growth will increase is identified and evidenced. The exploitation and/or dissemination of the main project outputs is outlined.'
 WHERE subject = '9,10'
 AND form_input_id in (@template_q5_form_input_id, @comp17_q5_form_input_id);
