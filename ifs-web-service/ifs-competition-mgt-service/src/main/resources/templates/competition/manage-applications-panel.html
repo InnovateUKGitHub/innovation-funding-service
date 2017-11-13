@@ -16,13 +16,14 @@
         <div class="search-filters extra-margin">
             <fieldset>
                 <div class="grid-row">
+                    <legend class="visuallyhidden">Filter applications</legend>
                     <div class="column-two-thirds">
                         <label class="form-label" for="filterSearch">Application number</label>
                         <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
                         <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
                     </div>
                     <div class="column-third">
-                        <button class="button no-margin" type="submit">Filter</button>
+                        <button class="button" type="submit">Filter</button>
                     </div>
                 </div>
             </fieldset>
@@ -56,6 +57,7 @@
                 <th class="width-small" scope="col"><span class="visuallyhidden">Action</span></th>
             </tr>
             </thead>
+
             <tbody>
             <tr th:each="app : ${model.applications}">
                 <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
@@ -67,7 +69,6 @@
                        th:text='Assign'></a>
                 </td>
             </tr>
-
             </tbody>
         </table>
     </div>

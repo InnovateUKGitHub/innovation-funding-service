@@ -7,7 +7,7 @@ import java.util.List;
  * Holder of model attributes for the Manage applications page
  */
 public class ManagePanelApplicationsViewModel {
-    private Long competitionId;
+    private long competitionId;
     private String competitionName;
     private String competitionStatus;
     private List<ManagePanelApplicationsRowViewModel> applications;
@@ -31,7 +31,7 @@ public class ManagePanelApplicationsViewModel {
         this.pagination = pagination;
     }
 
-    public Long getCompetitionId() {
+    public long getCompetitionId() {
         return competitionId;
     }
 
