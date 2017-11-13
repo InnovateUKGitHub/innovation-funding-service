@@ -905,7 +905,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
             assertEquals(inviteOverviewResource.getBusinessType(), overviewAssessorRowViewModel.getBusinessType());
             assertEquals(inviteOverviewResource.getStatus(), overviewAssessorRowViewModel.getStatus());
             assertEquals(inviteOverviewResource.getDetails(), overviewAssessorRowViewModel.getDetails());
-            assertEquals(inviteOverviewResource.getInviteId(), overviewAssessorRowViewModel.getInviteId());
+            assertEquals((long) inviteOverviewResource.getInviteId(), overviewAssessorRowViewModel.getInviteId());
         });
     }
 
@@ -923,7 +923,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
             assertEquals(inviteOverviewResource.getBusinessType(), overviewAssessorRowViewModel.getBusinessType());
             assertEquals(inviteOverviewResource.getStatus(), overviewAssessorRowViewModel.getStatus());
             assertEquals(inviteOverviewResource.getDetails(), overviewAssessorRowViewModel.getDetails());
-            assertEquals(inviteOverviewResource.getInviteId(), overviewAssessorRowViewModel.getInviteId());
+            assertEquals((long) inviteOverviewResource.getInviteId(), overviewAssessorRowViewModel.getInviteId());
         });
     }
 
@@ -960,5 +960,4 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
             return Optional.empty();
         }
     }
-
 }
