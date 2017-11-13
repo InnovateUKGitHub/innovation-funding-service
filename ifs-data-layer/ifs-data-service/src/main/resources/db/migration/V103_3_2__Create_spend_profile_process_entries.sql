@@ -1,13 +1,6 @@
-INSERT INTO activity_state (activity_type, state) VALUES
-('PROJECT_SETUP_SPEND_PROFILE', 'PENDING'),
-('PROJECT_SETUP_SPEND_PROFILE', 'CREATED'),
-('PROJECT_SETUP_SPEND_PROFILE', 'SUBMITTED'),
-('PROJECT_SETUP_SPEND_PROFILE', 'ACCEPTED'),
-('PROJECT_SETUP_SPEND_PROFILE', 'REJECTED');
-
 -- if all spend profiles for a project APPROVED or REJECTED set process state accordingly,
 -- if if all spend profiles marked as complete and project spend profile submitted date is set then set state to SUBMITTED
--- if spend profile present for all partners set state to CREATED
+-- if spend profile present for all partners set state to GENERATED
 -- all others to PENDING
 INSERT INTO process (end_date, event, last_modified, start_date, process_type, target_id, participant_id, activity_state_id)
   SELECT null, d.event, NOW(), NOW(), 'SpendProfileProcess', d.target_id, d.participant_id, a.id
@@ -36,8 +29,6 @@ INSERT INTO process (end_date, event, last_modified, start_date, process_type, t
         WHEN d.event = 'spend-profile-approved' THEN 'ACCEPTED'
         WHEN d.event = 'spend-profile-rejected' THEN 'REJECTED'
         WHEN d.event = 'spend-profile-submitted' THEN 'SUBMITTED'
-        WHEN d.event = 'spend-profile-generated' THEN 'CREATED'
+        WHEN d.event = 'spend-profile-generated' THEN 'GENERATED'
     END
   WHERE NOT EXISTS (SELECT 1 FROM process WHERE process.target_id = d.target_id AND process.process_type = 'SpendProfileProcess');
-
-ALTER TABLE spend_profile DROP COLUMN approval;
