@@ -32,7 +32,7 @@ public class SpendProfileWorkflow extends StateMachineConfigurerAdapter<SpendPro
     public void configure(StateMachineStateConfigurer<SpendProfileState, SpendProfileEvent> states) throws Exception {
         states.withStates()
                 .initial(PENDING)
-                .states(EnumSet.of(PENDING, CREATED, SUBMITTED, APPROVED, REJECTED))
+                .states(EnumSet.of(PENDING, GENERATED, SUBMITTED, APPROVED, REJECTED))
                 .end(APPROVED);
     }
 
@@ -47,10 +47,10 @@ public class SpendProfileWorkflow extends StateMachineConfigurerAdapter<SpendPro
                 .withExternal()
                 .source(PENDING)
                 .event(SPEND_PROFILE_GENERATED)
-                .target(CREATED)
+                .target(GENERATED)
                 .and()
                 .withExternal()
-                .source(CREATED)
+                .source(GENERATED)
                 .event(SPEND_PROFILE_SUBMITTED)
                 .target(SUBMITTED)
                 .and()
