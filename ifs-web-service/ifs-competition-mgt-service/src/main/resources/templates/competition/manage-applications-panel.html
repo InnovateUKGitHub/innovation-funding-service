@@ -18,9 +18,9 @@
                 <div class="grid-row">
                     <legend class="visuallyhidden">Filter applications</legend>
                     <div class="column-two-thirds">
-                        <label class="form-label" for="filterSearch">Application number</label>
+                        <label class="form-label" for="filterSearch">Search by application number</label>
                         <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
-                        <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
+                        <a href="?" th:href="'?sort=' + ${model.sorting}">Clear</a>
                     </div>
                     <div class="column-third">
                         <button class="button" type="submit">Filter</button>
