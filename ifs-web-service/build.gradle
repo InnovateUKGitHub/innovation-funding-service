@@ -96,16 +96,34 @@ subprojects {
             inputDir = project.file("$project.buildDir/docker")
         }
 
-        task tagDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerTagImage) {
-
-            imageId=buildDocker.getTag()
-            println "**** ImageID == " + imageId;
-            tag ="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
-            println "**** TAG == " + tag
-            repository="http://localhost:5000"
-//            imageName="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
-//            tag = "ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
+        docker {
+            registryCredentials {
+                url = "docker-registry-default.apps.prod.ifs-test-clusters.com"
+                username = "adambirseipl@gmail.com"
+                password = ""
+                email = 'abirse@worth.systems'
+            }
         }
+
+
+        task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+            imageName="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")
+            tag="banana"
+
+
+
+        }
+
+//        task tagDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerTagImage) {
+//
+//            imageId=buildDocker.getTag()
+//            println "**** ImageID == " + imageId;
+//            tag ="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
+//            println "**** TAG == " + tag
+//            repository="http://localhost:5000"
+////            imageName="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
+////            tag = "ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
+//        }
 
 
         // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
