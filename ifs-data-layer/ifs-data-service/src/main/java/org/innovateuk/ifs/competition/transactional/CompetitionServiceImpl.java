@@ -374,12 +374,18 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(Long competitionId) {
 
+        return serviceSuccess(competitionRepository.getPendingSpendProfiles(competitionId));
+    }
+
+/*    @Override
+    public ServiceResult<List<CompetitionPendingSpendProfilesResource>> getPendingSpendProfiles(Long competitionId) {
+
         List<Project> projectsAwaitingSpendProfileGeneration = getProjectsAwaitingSpendProfileGeneration(competitionId);
 
         return serviceSuccess(simpleMap(projectsAwaitingSpendProfileGeneration, this::convert));
-    }
+    }*/
 
-    private List<Project> getProjectsAwaitingSpendProfileGeneration(Long competitionId){
+/*    private List<Project> getProjectsAwaitingSpendProfileGeneration(Long competitionId){
 
         List<Project> projects = projectRepository.findByApplicationCompetitionId(competitionId);
 
@@ -387,19 +393,25 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
             ServiceResult<Void> result = canSpendProfileCanBeGenerated(project);
             return result.isSuccess();
         });
-    }
+    }*/
 
-    private CompetitionPendingSpendProfilesResource convert(Project project) {
+/*    private CompetitionPendingSpendProfilesResource convert(Project project) {
 
         return new CompetitionPendingSpendProfilesResource(project.getApplication().getId(),
                 project.getId(), project.getName());
-    }
+    }*/
 
-    @Override
+/*    @Override
     public ServiceResult<Integer> countPendingSpendProfiles(Long competitionId) {
 
         List<Project> projectsAwaitingSpendProfileGeneration = getProjectsAwaitingSpendProfileGeneration(competitionId);
 
         return serviceSuccess(projectsAwaitingSpendProfileGeneration.size());
+    }*/
+
+    @Override
+    public ServiceResult<Long> countPendingSpendProfiles(Long competitionId) {
+
+        return serviceSuccess(competitionRepository.countPendingSpendProfiles(competitionId));
     }
 }

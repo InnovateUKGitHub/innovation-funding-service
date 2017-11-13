@@ -84,7 +84,7 @@ public class CompetitionPostSubmissionController {
     }
 
     @GetMapping("/{competitionId}/count-pending-spend-profiles")
-    public RestResult<Integer> countPendingSpendProfiles(@PathVariable(value = "competitionId") Long competitionId) {
+    public RestResult<Long> countPendingSpendProfiles(@PathVariable(value = "competitionId") Long competitionId) {
         return competitionService.countPendingSpendProfiles(competitionId).toGetResponse();
     }
 }
