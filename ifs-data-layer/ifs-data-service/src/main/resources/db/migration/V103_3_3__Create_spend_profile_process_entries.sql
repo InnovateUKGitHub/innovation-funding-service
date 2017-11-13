@@ -3,7 +3,7 @@
 -- if spend profile present for all partners set state to CREATED
 -- all others to PENDING
 INSERT INTO process (end_date, event, last_modified, start_date, process_type, target_id, participant_id, activity_state_id)
-  SELECT null, d.event, NOW(), NOW(), 'SpendProfileProcess', d.target_id, d.participant_id, a.id
+  SELECT null, d.event, NOW(), CURRENT_DATE(), 'SpendProfileProcess', d.target_id, d.participant_id, a.id
   FROM (
     SELECT po.project_id AS target_id, pu.id AS participant_id,
         CASE
