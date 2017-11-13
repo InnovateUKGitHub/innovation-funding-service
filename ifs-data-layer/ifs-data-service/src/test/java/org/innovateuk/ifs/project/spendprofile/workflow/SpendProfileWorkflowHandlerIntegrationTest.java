@@ -1,23 +1,20 @@
 package org.innovateuk.ifs.project.spendprofile.workflow;
 
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.finance.resource.EligibilityState;
-import org.innovateuk.ifs.project.finance.resource.ViabilityState;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategory;
-import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
-import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
-import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
+import org.innovateuk.ifs.project.financechecks.repository.ViabilityProcessRepository;
+import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileProcess;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileProcessRepository;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileEvent;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileState;
-import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileServiceImplTest;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
@@ -35,12 +32,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.ACADEMIC;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.LABOUR;
-import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.MATERIALS;
-import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
-import static org.innovateuk.ifs.project.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
-import static org.innovateuk.ifs.project.builder.CostCategoryTypeBuilder.newCostCategoryType;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
@@ -48,6 +39,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_SPEND_PROFILE;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -61,9 +53,13 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
     private SpendProfileProcessRepository spendProfileProcessRepository;
 
     @Mock
-    private EligibilityWorkflowHandler eligibilityWorkflowHandlerMock;
+    protected UserRepository userRepositoryMock;
     @Mock
-    private ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
+    protected ProjectRepository projectRepositoryMock;
+    @Mock
+    protected OrganisationRepository organisationRepositoryMock;
+
+    private Long projectId = 123L;
 
     @Test
     public void testProjectCreated() throws Exception {
@@ -96,7 +92,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> spendProfileWorkflowHandler.spendProfileGenerated(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                SpendProfileState.PENDING, SpendProfileState.CREATED, SpendProfileEvent.SPEND_PROFILE_GENERATED);
+                SpendProfileState.PENDING, SpendProfileState.GENERATED, SpendProfileEvent.SPEND_PROFILE_GENERATED);
     }
 
     @Test
@@ -105,7 +101,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredWithProjectUser(((project, projectUser) -> spendProfileWorkflowHandler.spendProfileSubmitted(project, projectUser)),
 
                 // current State, destination State and expected Event to be fired
-                SpendProfileState.CREATED, SpendProfileState.SUBMITTED, SpendProfileEvent.SPEND_PROFILE_SUBMITTED);
+                SpendProfileState.GENERATED, SpendProfileState.SUBMITTED, SpendProfileEvent.SPEND_PROFILE_SUBMITTED);
     }
 
     @Test
@@ -141,7 +137,7 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> spendProfileWorkflowHandler.submit(project)),
 
                 // current State, destination State and expected Event to be fired
-                SpendProfileState.CREATED, SpendProfileState.SUBMITTED, SpendProfileEvent.SPEND_PROFILE_SUBMITTED);
+                SpendProfileState.GENERATED, SpendProfileState.SUBMITTED, SpendProfileEvent.SPEND_PROFILE_SUBMITTED);
     }
 
     @Test
@@ -155,15 +151,21 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, currentActivityState);
         when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
 
-        PartnerOrganisation partnerOrganisation1 = project.getPartnerOrganisations().get(0);
-        PartnerOrganisation partnerOrganisation2 = project.getPartnerOrganisations().get(1);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
-        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
+        assertTrue(spendProfileWorkflowHandler.isAlreadyGenerated(project));
+    }
 
-        ServiceResult<Void> result = spendProfileWorkflowHandler.isReadyToGenerate(project);
-        assertTrue(result.isSuccess());
+    @Test
+    public void testIsAlreadyGenerated() throws Exception {
+        SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData generateSpendProfileData = new SpendProfileWorkflowHandlerIntegrationTest.GenerateSpendProfileData().build();
+
+        Project project = generateSpendProfileData.getProject();
+
+        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_SPEND_PROFILE, SpendProfileState.GENERATED.getBackingState());
+
+        SpendProfileProcess currentSpendProfileProcess = new SpendProfileProcess((ProjectUser) null, project, currentActivityState);
+        when(spendProfileProcessRepository.findOneByTargetId(project.getId())).thenReturn(currentSpendProfileProcess);
+
+        assertFalse(spendProfileWorkflowHandler.isAlreadyGenerated(project));
     }
 
     private void callWorkflowAndCheckTransitionAndEventFiredInternalUser(BiFunction<Project, User, Boolean> workflowMethodToCall, SpendProfileState currentSpendProfileState, SpendProfileState destinationSpendProfileState, SpendProfileEvent expectedEventToBeFired) {
@@ -260,31 +262,10 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         private Project project;
         private Organisation organisation1;
         private Organisation organisation2;
-        private CostCategoryType costCategoryType1;
-        private CostCategoryType costCategoryType2;
-        private CostCategory type1Cat1;
-        private CostCategory type1Cat2;
-        private CostCategory type2Cat1;
         private User user;
 
         public Project getProject() {
             return project;
-        }
-
-        public Organisation getOrganisation1() {
-            return organisation1;
-        }
-
-        public Organisation getOrganisation2() {
-            return organisation2;
-        }
-
-        public CostCategoryType getCostCategoryType1() {
-            return costCategoryType1;
-        }
-
-        public CostCategoryType getCostCategoryType2() {
-            return costCategoryType2;
         }
 
         public User getUser() {
@@ -310,40 +291,10 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
                     withPartnerOrganisations(asList(partnerOrganisation1, partnerOrganisation2)).
                     build();
 
-            // First cost category type and everything that goes with it.
-            type1Cat1 = newCostCategory().withName(LABOUR.getName()).build();
-            type1Cat2 = newCostCategory().withName(MATERIALS.getName()).build();
-
-            costCategoryType1 = newCostCategoryType()
-                    .withName("Type 1")
-                    .withCostCategoryGroup(
-                            newCostCategoryGroup()
-                                    .withDescription("Group 1")
-                                    .withCostCategories(asList(type1Cat1, type1Cat2))
-                                    .build())
-                    .build();
-
-            // Second cost category type and everything that goes with it.
-            type2Cat1 = newCostCategory().withName(ACADEMIC.getName()).build();
-
-            costCategoryType2 = newCostCategoryType()
-                    .withName("Type 2")
-                    .withCostCategoryGroup(
-                            newCostCategoryGroup()
-                                    .withDescription("Group 2")
-                                    .withCostCategories(asList(type2Cat1))
-                                    .build())
-                    .build();
-
             // set basic repository lookup expectations
             when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
             when(organisationRepositoryMock.findOne(organisation1.getId())).thenReturn(organisation1);
             when(organisationRepositoryMock.findOne(organisation2.getId())).thenReturn(organisation2);
-            when(costCategoryRepositoryMock.findOne(type1Cat1.getId())).thenReturn(type1Cat1);
-            when(costCategoryRepositoryMock.findOne(type1Cat2.getId())).thenReturn(type1Cat2);
-            when(costCategoryRepositoryMock.findOne(type2Cat1.getId())).thenReturn(type2Cat1);
-            when(costCategoryTypeRepositoryMock.findOne(costCategoryType1.getId())).thenReturn(costCategoryType1);
-            when(costCategoryTypeRepositoryMock.findOne(costCategoryType2.getId())).thenReturn(costCategoryType2);
             return this;
         }
     }
@@ -359,10 +310,12 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         return TestableTransitionWorkflowAction.class;
     }
 
+
     @Override
     protected Class<SpendProfileWorkflowHandler> getWorkflowHandlerType() {
         return SpendProfileWorkflowHandler.class;
     }
+
 
     @Override
     protected Class<SpendProfileProcessRepository> getProcessRepositoryType() {
@@ -374,6 +327,8 @@ public class SpendProfileWorkflowHandlerIntegrationTest extends
         List<Class<? extends Repository>> repositories = new ArrayList<>(super.getRepositoriesToMock());
         repositories.add(SpendProfileProcessRepository.class);
         repositories.add(ActivityStateRepository.class);
+        repositories.add(EligibilityProcessRepository.class);
+        repositories.add(ViabilityProcessRepository.class);
         return repositories;
     }
 }

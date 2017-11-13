@@ -102,7 +102,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(serviceSuccess());
+        when(spendProfileWorkflowHandlerMock.isAlreadyGenerated(project)).thenReturn(false);
         when(spendProfileWorkflowHandlerMock.spendProfileGenerated(eq(project), any())).thenReturn(true);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
@@ -238,7 +238,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED));
+        when(spendProfileWorkflowHandlerMock.isAlreadyGenerated(project)).thenReturn(true);
 
         SpendProfile spendProfileForOrganisation1 = new SpendProfile();
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
@@ -270,7 +270,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(serviceSuccess());
+        when(spendProfileWorkflowHandlerMock.isAlreadyGenerated(project)).thenReturn(false);
         when(spendProfileWorkflowHandlerMock.spendProfileGenerated(eq(project), any())).thenReturn(true);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
@@ -325,7 +325,7 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(serviceSuccess());
+        when(spendProfileWorkflowHandlerMock.isAlreadyGenerated(project)).thenReturn(false);
         when(spendProfileWorkflowHandlerMock.spendProfileGenerated(eq(project), any())).thenReturn(true);
 
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(project.getId(),
@@ -361,11 +361,11 @@ public class SpendProfileServiceImplTest extends BaseServiceUnitTest<SpendProfil
         when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(ViabilityState.NOT_APPLICABLE);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(EligibilityState.APPROVED);
         when(eligibilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(EligibilityState.APPROVED);
-        when(spendProfileWorkflowHandlerMock.isReadyToGenerate(project)).thenReturn(serviceFailure(CommonFailureKeys.SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED));
+        when(spendProfileWorkflowHandlerMock.isAlreadyGenerated(project)).thenReturn(true);
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
-        assertTrue(generateResult.getFailure().is(CommonFailureKeys.SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED));
+        assertTrue(generateResult.getFailure().is(CommonFailureKeys.SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED));
     }
 
     private void setupGenerateSpendProfilesExpectations(GenerateSpendProfileData generateSpendProfileData, Project project, Organisation organisation1, Organisation organisation2) {

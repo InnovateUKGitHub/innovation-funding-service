@@ -1,13 +1,7 @@
 package org.innovateuk.ifs.project.spendprofile.configuration.workflow;
 
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.finance.resource.EligibilityState;
-import org.innovateuk.ifs.project.finance.resource.ViabilityState;
-import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.EligibilityWorkflowHandler;
-import org.innovateuk.ifs.project.financechecks.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -27,15 +21,9 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.function.BiFunction;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.spendprofile.resource.SpendProfileEvent.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 @Component
 public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendProfileProcess, SpendProfileState, SpendProfileEvent, Project, ProjectUser> {
@@ -51,12 +39,6 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
-
-    @Autowired
-    private ViabilityWorkflowHandler viabilityWorkflowHandler;
-
-    @Autowired
-    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
 
     public boolean projectCreated(Project project, ProjectUser originalLeadApplicantProjectUser) {
         return fireEvent(projectCreatedEvent(project, originalLeadApplicantProjectUser), SpendProfileState.PENDING);
@@ -82,43 +64,12 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
         return getIfProjectAndUserValid(project, this::spendProfileSubmitted);
     }
 
-    public ServiceResult<Void> isReadyToGenerate(Project project) {
-        return(isViabilityApprovedOrNotApplicable(project))
-                .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
-                .andOnSuccess(() -> {
-                                        SpendProfileProcess process = getCurrentProcess(project);
-                                        if(project != null && SpendProfileState.PENDING.equals(process.getActivityState()))
-                                            return serviceSuccess();
-                                        else
-                                            return serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED);
-        });
-    }
-    private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
+    public boolean isAlreadyGenerated(Project project) {
+        SpendProfileProcess process = getCurrentProcess(project);
+        if (process == null)
+            return false;
+        return SpendProfileState.PENDING.equals(process.getActivityState());
 
-        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
-
-        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                ViabilityState.REVIEW == viabilityWorkflowHandler.getState(partnerOrganisation));
-
-        if (!existingReviewablePartnerOrganisation.isPresent()) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
-        }
-    }
-
-    private ServiceResult<Void> isEligibilityApprovedOrNotApplicable(Project project) {
-
-        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
-
-        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                EligibilityState.REVIEW == eligibilityWorkflowHandler.getState(partnerOrganisation));
-
-        if (!existingReviewablePartnerOrganisation.isPresent()) {
-            return serviceSuccess();
-        } else {
-            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED);
-        }
     }
 
     public boolean isReadyToApprove(Project project) {

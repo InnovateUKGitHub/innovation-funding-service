@@ -121,6 +121,10 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private ProjectUsersHelper projectUsersHelper;
     @Autowired
     private EmailService projectEmailService;
+    @Autowired
+    private ViabilityWorkflowHandler viabilityWorkflowHandler;
+    @Autowired
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
     @Autowired
@@ -154,7 +158,45 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<Void> canSpendProfileCanBeGenerated(Project project) {
-        return spendProfileWorkflowHandler.isReadyToGenerate(project);
+        return (isViabilityApprovedOrNotApplicable(project))
+                .andOnSuccess(() -> isEligibilityApprovedOrNotApplicable(project))
+                .andOnSuccess(() -> isSpendProfileAlreadyGenerated(project));
+    }
+
+    private ServiceResult<Void> isViabilityApprovedOrNotApplicable(Project project) {
+
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+
+        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
+                ViabilityState.REVIEW == viabilityWorkflowHandler.getState(partnerOrganisation));
+
+        if (!existingReviewablePartnerOrganisation.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
+        }
+    }
+
+    private ServiceResult<Void> isEligibilityApprovedOrNotApplicable(Project project) {
+
+        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
+
+        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
+                EligibilityState.REVIEW == eligibilityWorkflowHandler.getState(partnerOrganisation));
+
+        if (!existingReviewablePartnerOrganisation.isPresent()) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_ELIGIBILITY_APPROVED);
+        }
+    }
+
+    private ServiceResult<Void> isSpendProfileAlreadyGenerated(Project project) {
+        if (!spendProfileWorkflowHandler.isAlreadyGenerated(project)) {
+            return serviceSuccess();
+        } else {
+            return serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED);
+        }
     }
 
     private ServiceResult<Void> generateSpendProfileForPartnerOrganisations(Project project, List<Long> organisationIds) {
