@@ -1,11 +1,12 @@
 package org.innovateuk.ifs.management.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+
 /**
  * Holder of model attributes for the applications shown in the 'Manage applications' page
  */
 public class ManagePanelApplicationsRowViewModel {
-    private Long id;
+    private long id;
     private String title;
     private String leadOrganisation;
     private long assessors;
@@ -20,11 +21,11 @@ public class ManagePanelApplicationsRowViewModel {
         this.innovationArea = applicationSummaryResource.getInnovationArea();
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
