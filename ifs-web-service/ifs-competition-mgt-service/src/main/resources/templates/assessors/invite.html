@@ -125,7 +125,7 @@
                                 </thead>
                                 <tbody>
                                 <tr th:each="row, iterStat : *{invites}">
-                                    <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')} ? error">
+                                    <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].name')} ? 'form-group-error'">
                                         <label>
                                              <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].name')}">
                                                  <span class="error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].name')}" th:text="${err}"></span>
@@ -135,15 +135,18 @@
                                                aria-labelledby="invite-label-assessor-name"
                                                class="form-control width-full"
                                                required="required"
+                                               minlength="2"
+                                               maxlength="70"
+                                               pattern="\D{2,}"
                                                th:errorclass="form-control-error"
                                                th:attr="data-required-errormessage=#{validation.standard.name.required},
                                                         data-minlength-errormessage=#{validation.standard.name.length.min(null,null,2)},
-                                                        data-maxlength-errormessage=#{validation.standard.name.length.max},
-                                                        data-invalid-errormessage=#{validation.standard.name.invalid}"
+                                                        data-maxlength-errormessage=#{validation.standard.name.length.max(null,null,70)},
+                                                        data-pattern-errormessage=#{validation.standard.name.invalid}"
                                                th:field="*{invites[__${iterStat.index}__].name}"
                                         />
                                     </td>
-                                    <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].email')} ? error">
+                                    <td class="width-40-percent form-group" th:classappend="${#fields.hasErrors('invites[__${iterStat.index}__].email')} ? 'form-group-error'">
                                         <label>
                                              <th:block th:if="${#fields.hasErrors('invites[__${iterStat.index}__].email')}">
                                                  <span class="error-message" th:each="err : ${#fields.errors('invites[__${iterStat.index}__].email')}" th:text="${err}"></span>
