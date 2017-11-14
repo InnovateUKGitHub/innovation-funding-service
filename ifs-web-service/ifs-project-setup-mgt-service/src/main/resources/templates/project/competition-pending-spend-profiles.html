@@ -31,8 +31,8 @@
                 </thead>
                 <tbody>
                 <tr th:each="pendingSpendProfile : ${model.pendingSpendProfiles}">
-                    <td th:text="${pendingSpendProfile.applicationId}" />
-                    <td><a th:text="${pendingSpendProfile.projectName}" th:href="@{/project/{projectId}/finance-check/(projectId=${pendingSpendProfile.projectId})}" /></td>
+                    <td th:text="${pendingSpendProfile.applicationId}"></td>
+                    <td><a th:text="${pendingSpendProfile.projectName}" th:href="@{/project/{projectId}/finance-check/(projectId=${pendingSpendProfile.projectId})}"></a></td>
                 </tr>
                 </tbody>
             </table>
