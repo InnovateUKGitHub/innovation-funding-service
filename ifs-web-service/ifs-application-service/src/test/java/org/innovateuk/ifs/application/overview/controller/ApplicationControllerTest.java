@@ -59,6 +59,8 @@ import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.n
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -364,6 +366,22 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(view().name("error"))
                 .andExpect(model().attribute("url", "http://localhost/application/1234"))
                 .andExpect(model().attributeExists("stacktrace"));
+    }
+
+    @Test
+    public void testApplicationStateBeingUpdatedToStarted() throws Exception {
+        ApplicationResource app = applications.get(0);
+        app.setApplicationState(ApplicationState.CREATED);
+        app.setCompetitionStatus(CompetitionStatus.OPEN);
+
+        when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
+
+        mockMvc.perform(get("/application/" + app.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-details"))
+                .andReturn().getModelAndView().getModel();
+
+        verify(applicationRestService, times(1)).updateApplicationState(app.getId(), ApplicationState.OPEN);
     }
 
     @Test
