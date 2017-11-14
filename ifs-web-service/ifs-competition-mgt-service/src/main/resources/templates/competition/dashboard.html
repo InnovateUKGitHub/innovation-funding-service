@@ -45,10 +45,10 @@
     <div class="column-third">
         <h3 class="heading-small">
             <a th:href="@{'/non-ifs-competition/setup/'+${competition.id}}"
-               th:if="${onlyNonIfs}">
+               th:if="${nonIfs}">
                 <th:block th:insert="competition/dashboard :: competition-name" />
             </a>
-            <th:block th:unless="${onlyNonIfs}">
+            <th:block th:unless="${nonIfs}">
                 <th:block th:if="${customLink}">
                     <a th:href="@{${customLink}}">
                         <th:block th:insert="competition/dashboard :: competition-name" />

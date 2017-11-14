@@ -15,6 +15,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
@@ -250,7 +251,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
         }
         milestones.sort(Comparator.comparing(MilestoneResource::getType));
 
-		LinkedMap<String, MilestoneRowForm> milestoneEntryMap = new LinkedMap<>();
+		LinkedMap<String, GenericMilestoneRowForm> milestoneEntryMap = new LinkedMap<>();
 		milestoneEntryMap.put(MilestoneType.OPEN_DATE.name(), milestoneEntry);
 
         ServiceResult<Void> result = competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntryMap, competitionId);

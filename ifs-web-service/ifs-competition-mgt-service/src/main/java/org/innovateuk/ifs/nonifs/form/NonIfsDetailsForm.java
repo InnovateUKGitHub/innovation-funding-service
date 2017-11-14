@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.form.MilestoneOrEmptyRowForm;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -34,7 +35,8 @@ public class NonIfsDetailsForm {
     @NotNull(message = "{validation.nonifs.detailsform.registrationclosedate.required}")
     private MilestoneRowForm registrationCloseDate;
 
-    private MilestoneRowForm applicantNotifiedDate;
+    @Valid
+    private MilestoneOrEmptyRowForm applicantNotifiedDate;
 
     @NotEmpty(message= "{validation.nonifs.detailsform.url.required}")
     private String url;
@@ -79,11 +81,11 @@ public class NonIfsDetailsForm {
         this.closeDate = closeDate;
     }
 
-    public MilestoneRowForm getApplicantNotifiedDate() {
+    public MilestoneOrEmptyRowForm getApplicantNotifiedDate() {
         return applicantNotifiedDate;
     }
 
-    public void setApplicantNotifiedDate(MilestoneRowForm applicantNotifiedDate) {
+    public void setApplicantNotifiedDate(MilestoneOrEmptyRowForm applicantNotifiedDate) {
         this.applicantNotifiedDate = applicantNotifiedDate;
     }
 

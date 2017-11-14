@@ -12,8 +12,8 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" th:object="${form}" method="post">
         <!-- Link back -->
-        <th:block th:unless="${model.competition.onlyNonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
-        <th:block th:if="${model.competition.onlyNonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to Non-IFS competition details',linkClass='link-back',linkUrl=@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
+        <th:block th:unless="${model.competition.nonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
+        <th:block th:if="${model.competition.nonIfs}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to Non-IFS competition details',linkClass='link-back',linkUrl=@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}"  />
 
         <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
             <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem publishing the public content.</h2>
@@ -48,8 +48,8 @@
                 <small th:text="${'Last published ' + publishDay + ' ' + publishTime}"></small></p>
             <div class="grid-row">
                 <div class="column-half">
-                    <a th:unless="${model.competition.onlyNonIfs}" th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to setup overview</a>
-                    <a th:if="${model.competition.onlyNonIfs}" th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to non-IFS competition details</a>
+                    <a th:unless="${model.competition.nonIfs}" th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to setup overview</a>
+                    <a th:if="${model.competition.nonIfs}" th:href="@{/non-ifs-competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to non-IFS competition details</a>
                 </div>
                 <div class="column-half alignright">
                     <button th:unless="${model.hasBeenPublished()}" class="button-secondary no-margin" th:disabled="${model.disablePublishButton()}" name="publish">Publish content</button>
@@ -58,7 +58,7 @@
         </div>
     </form>
 
-    <ul class="pagination" th:unless="${model.competition.onlyNonIfs}">
+    <ul class="pagination" th:unless="${model.competition.nonIfs}">
         <li class="prev">
             <a rel="prev" title="Navigate to prev part" th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${model.competition.id},sectionPath='assessors')}">
                 <span class="pagination-label">Previous</span>

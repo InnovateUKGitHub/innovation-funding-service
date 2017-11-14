@@ -21,7 +21,7 @@
         <ul class="list-overview">
             <li class="grid-row" th:each="competition : ${model.getAllCompetitions()}">
                 <th:block
-                    th:insert="competition/dashboard :: dashboard-row(onlyNonIfs=${true})"
+                    th:insert="competition/dashboard :: dashboard-row(nonIfs=${true})"
                     th:with="competition=${competition},
                         innovationAreas=competition.innovationAreaNames,
                         cell4=${competition.publishDate == null ? '' : 'Last published ' + #temporals.format(competition.publishDate, 'd MMMM yyyy')}"/>
