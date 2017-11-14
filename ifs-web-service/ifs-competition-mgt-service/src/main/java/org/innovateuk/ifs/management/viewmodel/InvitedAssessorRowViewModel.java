@@ -10,9 +10,14 @@ import java.util.List;
 public class InvitedAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
     private String email;
-    private long inviteId;
+    private Long inviteId;
 
-    public InvitedAssessorRowViewModel(long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant, String email, long inviteId) {
+    public InvitedAssessorRowViewModel(Long id,
+                                       String name,
+                                       List<InnovationAreaResource> innovationAreas,
+                                       boolean compliant,
+                                       String email,
+                                       Long inviteId) {
         super(id, name, innovationAreas, compliant);
         this.email = email;
         this.inviteId = inviteId;
@@ -22,7 +27,7 @@ public class InvitedAssessorRowViewModel extends InviteAssessorsRowViewModel {
         return email;
     }
 
-    public long getInviteId() {
+    public Long getInviteId() {
         return inviteId;
     }
 }

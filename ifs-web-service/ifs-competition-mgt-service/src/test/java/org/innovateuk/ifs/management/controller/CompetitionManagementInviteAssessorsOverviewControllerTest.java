@@ -227,7 +227,7 @@ public class CompetitionManagementInviteAssessorsOverviewControllerTest extends 
             assertEquals(inviteOverviewResource.getBusinessType(), overviewAssessorRowViewModel.getBusinessType());
             assertEquals(inviteOverviewResource.getStatus(), overviewAssessorRowViewModel.getStatus());
             assertEquals(inviteOverviewResource.getDetails(), overviewAssessorRowViewModel.getDetails());
-            assertEquals((long) inviteOverviewResource.getInviteId(), overviewAssessorRowViewModel.getInviteId());
+            assertEquals(inviteOverviewResource.getInviteId(), overviewAssessorRowViewModel.getInviteId());
         });
     }
 

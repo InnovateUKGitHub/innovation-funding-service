@@ -14,16 +14,16 @@ public class OverviewAssessorRowViewModel extends InviteAssessorsRowViewModel {
     private final BusinessType businessType;
     private final ParticipantStatusResource status;
     private final String details;
-    private final long inviteId;
+    private final Long inviteId;
 
-    public OverviewAssessorRowViewModel(long id,
+    public OverviewAssessorRowViewModel(Long id,
                                         String name,
                                         List<InnovationAreaResource> innovationAreas,
                                         boolean compliant,
                                         BusinessType businessType,
                                         ParticipantStatusResource status,
                                         String details,
-                                        long inviteId) {
+                                        Long inviteId) {
         super(id, name, innovationAreas, compliant);
         this.businessType = businessType;
         this.status = status;
@@ -43,7 +43,7 @@ public class OverviewAssessorRowViewModel extends InviteAssessorsRowViewModel {
         return details;
     }
 
-    public long getInviteId() {
+    public Long getInviteId() {
         return inviteId;
     }
 }
