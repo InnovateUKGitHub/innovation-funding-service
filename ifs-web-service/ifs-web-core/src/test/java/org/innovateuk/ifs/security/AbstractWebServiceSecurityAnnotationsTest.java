@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.security;
 
-import org.apache.commons.collections4.ListUtils;
 import org.innovateuk.ifs.commons.AbstractServiceSecurityAnnotationsTest;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.exception.IfsErrorController;
@@ -11,10 +10,10 @@ import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.stereotype.Controller;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.apache.commons.collections4.ListUtils.union;
 
 /**
  * Base class in the web core to ensure that all controllers are secured as appropriate.
@@ -48,7 +47,10 @@ public abstract class AbstractWebServiceSecurityAnnotationsTest extends Abstract
 
     @Override
     protected final List<Class<?>> excludedClasses() {
-        return union(asList(IfsErrorController.class), additionalExcludedClasses());
+        List<Class<?>> union = new ArrayList<>();
+        union.addAll(asList(IfsErrorController.class));
+        union.addAll(additionalExcludedClasses());
+        return union;
     }
 
     /**
