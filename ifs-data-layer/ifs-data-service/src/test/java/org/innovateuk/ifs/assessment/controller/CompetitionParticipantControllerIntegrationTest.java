@@ -109,7 +109,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
         Competition competition1 = competitionRepository.findById(1L);
         competition1.setStartDate(now().minusDays(10L));
         competition1.setEndDate(now().minusDays(5L));
-        competition1.notifyAssessors(now());
+        competition1.notifyAssessors(now().minusSeconds(1L));
 
         Competition competition2 = buildInAssessmentCompetition();
 
