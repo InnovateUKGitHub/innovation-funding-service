@@ -35,10 +35,11 @@
                            required="required"
                            minlength="2"
                            maxlength="70"
+                           pattern="\D{2,}"
                            th:attr="data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)},
                                     data-maxlength-errormessage=#{validation.standard.firstname.length.max},
                                     data-required-errormessage=#{validation.standard.firstname.required},
-                                    data-invalid-errormessage=#{validation.standard.firstname.invalid}" />
+                                    data-pattern-errormessage=#{validation.standard.firstname.invalid}" />
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('lastName')} ? 'form-group-error'">
@@ -56,10 +57,11 @@
                            required="required"
                            minlength="2"
                            maxlength="70"
+                           pattern="\D{2,}"
                            th:attr="data-minlength-errormessage=#{validation.standard.lastname.length.min(null,null,2)},
                                     data-maxlength-errormessage=#{validation.standard.lastname.length.max},
                                     data-required-errormessage=#{validation.standard.lastname.required},
-                                    data-invalid-errormessage=#{validation.standard.lastname.invalid}" />
+                                    data-pattern-errormessage=#{validation.standard.lastname.invalid}" />
                 </div>
 
 
