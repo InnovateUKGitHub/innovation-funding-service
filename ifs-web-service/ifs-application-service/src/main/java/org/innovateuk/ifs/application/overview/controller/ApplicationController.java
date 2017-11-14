@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.application.overview.controller;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewModelPopulator;
 import org.innovateuk.ifs.application.forms.populator.AssessorQuestionFeedbackPopulator;
+import org.innovateuk.ifs.application.overview.populator.ApplicationOverviewModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.resource.ApplicationState;
+import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
-import org.innovateuk.ifs.analytics.GoogleTagManagerDataLayer;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -16,12 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 
 /**
  * This controller will handle all requests that are related to the application overview.
@@ -43,7 +47,7 @@ public class ApplicationController {
     private ProcessRoleService processRoleService;
 
     @Autowired
-    private ApplicationService applicationService;
+    private ApplicationRestService applicationRestService;
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
@@ -55,11 +59,9 @@ public class ApplicationController {
     public String applicationDetails(ApplicationForm form,
                                      Model model,
                                      @PathVariable("applicationId") long applicationId,
-                                     UserResource user,
-                                     @ModelAttribute("dataLayer") GoogleTagManagerDataLayer dataLayer) {
-        ApplicationResource application = applicationService.getById(applicationId);
-
-//        dataLayer.setCompName(application.getCompetitionName());
+                                     UserResource user) {
+        ApplicationResource application = applicationRestService.getApplicationById(applicationId)
+                .getSuccessObjectOrThrowException();
 
         if (application.getCompetitionStatus() != CompetitionStatus.OPEN) {
             return format("redirect:/application/%s/summary", application.getId());
@@ -70,11 +72,18 @@ public class ApplicationController {
         }
 
         form.setApplication(application);
+        changeApplicationStatusToOpen(application);
 
         Long userId = user.getId();
         model.addAttribute("form", form);
         model.addAttribute("model", applicationOverviewModelPopulator.populateModel(application, userId));
         return "application-details";
+    }
+
+    private void changeApplicationStatusToOpen(ApplicationResource applicationResource) {
+        if (ApplicationState.CREATED.equals(applicationResource.getApplicationState())) {
+            applicationRestService.updateApplicationState(applicationResource.getId(), OPEN).getSuccessObjectOrThrowException();
+        }
     }
 
     @PostMapping(value = "/{applicationId}")
@@ -91,7 +100,8 @@ public class ApplicationController {
     @GetMapping(value = "/{applicationId}/question/{questionId}/feedback")
     public String applicationAssessorQuestionFeedback(Model model, @PathVariable("applicationId") long applicationId,
                                                       @PathVariable("questionId") long questionId) {
-        ApplicationResource applicationResource = applicationService.getById(applicationId);
+        ApplicationResource applicationResource = applicationRestService.getApplicationById(applicationId)
+                .getSuccessObjectOrThrowException();
         if (!applicationResource.getCompetitionStatus().isFeedbackReleased()) {
             return "redirect:/application/" + applicationId + "/summary";
         }
