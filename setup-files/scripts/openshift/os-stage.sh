@@ -18,9 +18,14 @@ REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 # Entry point
 createProjectIfNecessaryForNonNamedEnvs
-pushApplicationImages
 
-# The SIL stub is required in all environments, in one form or another, except for production
+# Need a mysql database for non-named environments. Named environments have their own.
+pushApplicationImages
+if ! $(isNamedEnvironment ${TARGET}); then
+    pushIfsMysqlDatabase
+fi
+
+# The SIL stub is required in all environments, in one form or another, except for production.
 if ! $(isProductionEnvironment ${TARGET}); then
     pushSilStubImages
 fi
