@@ -105,7 +105,7 @@
                             <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}"
                                       th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
                                                            organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
-                                                           organisationFinanceSize=(${model.finance.organisationFinanceSize}), internalView=(${summaryModel.isExternalView()})">
+                                                           organisationFinanceSize=(${model.finance.organisationFinanceSize}), internalView=(${!summaryModel.isExternalView()})">
                                 <!--/*
                                     viewmode=readonly, generates the inputs as text,
                                     viewmode=edit, generates the editable inputs + repeating row elements)
