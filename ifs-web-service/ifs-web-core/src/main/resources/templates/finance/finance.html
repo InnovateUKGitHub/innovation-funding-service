@@ -658,7 +658,7 @@
                     <h3 class="heading-small no-margin">Upload your completed spreadsheet</h3>
                     <div class="form-group">
                         <input type="hidden" name="fileoverheadid" th:value="${overheadCosts?.id}"/>
-                        <th:block th:with="uploadViewmode=${internalView != null} ? (${internalView} ? 'edit' : 'readonly') : 'readonly',
+                        <th:block th:with="uploadViewmode=${internalView != null} ? (${internalView} ? 'edit' : 'readonly') : 'edit',
                                            downloadUrl=@{${'/application/download/overheadfile/'+overheadCosts?.id}},
                                            filename=${overheadCosts?.calculationFile?.get()?.name},
                                            inputField='overheadfile',
