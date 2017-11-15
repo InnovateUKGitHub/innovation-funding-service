@@ -19,7 +19,7 @@ public class AssessorScopeValidator extends BaseValidator {
 
         if (ASSESSOR_APPLICATION_IN_SCOPE == response.getFormInput().getType()) {
             String value = response.getValue();
-            if (!"true".equals(value) && !"false".equals(value)) {
+            if (!"true".equalsIgnoreCase(value) && !"false".equalsIgnoreCase(value)) {
                 rejectValue(errors, "value", "validation.assessor.scope.invalidScope", response.getFormInput().getId());
             }
         }
