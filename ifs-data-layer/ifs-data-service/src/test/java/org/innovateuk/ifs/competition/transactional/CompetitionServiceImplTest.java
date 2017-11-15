@@ -32,6 +32,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,6 +69,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -381,7 +383,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Long countLive = 1L;
         Long countProjectSetup = 2L;
         Long countUpcoming = 3L;
-        Long countFeedbackReleased = 4l;
+        Long countFeedbackReleased = 4L;
         when(competitionRepositoryMock.countLive()).thenReturn(countLive);
         when(competitionRepositoryMock.countProjectSetup()).thenReturn(countProjectSetup);
         when(competitionRepositoryMock.countUpcoming()).thenReturn(countUpcoming);
@@ -389,6 +391,21 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         CompetitionCountResource response = service.countCompetitions().getSuccessObjectOrThrowException();
 
+        assertEquals(countLive, response.getLiveCount());
+        assertEquals(countProjectSetup, response.getProjectSetupCount());
+        assertEquals(countUpcoming, response.getUpcomingCount());
+        assertEquals(countFeedbackReleased, response.getFeedbackReleasedCount());
+
+        // Test for innovation lead user where only competitions they are assigned to should be counted
+        // actual query tested in repository integration test, this is only testing correct repostiory method is called.
+        UserResource innovationLeadUser = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build(1)).build();
+        setLoggedInUser(innovationLeadUser);
+
+        when(competitionRepositoryMock.countLiveForInnovationLead(innovationLeadUser.getId())).thenReturn(countLive);
+        when(competitionRepositoryMock.countProjectSetupForInnovationLead(innovationLeadUser.getId())).thenReturn(countProjectSetup);
+        when(userRepositoryMock.findOne(innovationLeadUser.getId())).thenReturn(newUser().withId(innovationLeadUser.getId()).withRoles(asLinkedSet(newRole().withType(INNOVATION_LEAD).build())).build());
+
+        response = service.countCompetitions().getSuccessObjectOrThrowException();
         assertEquals(countLive, response.getLiveCount());
         assertEquals(countProjectSetup, response.getProjectSetupCount());
         assertEquals(countUpcoming, response.getUpcomingCount());

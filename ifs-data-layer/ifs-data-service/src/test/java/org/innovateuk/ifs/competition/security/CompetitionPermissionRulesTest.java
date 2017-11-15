@@ -119,4 +119,22 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThem(competitionSearchResultItem, innovationLeadNotAssignedToCompetition));
         assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThem(competitionSearchResultItemFeedbackReleased, innovationLeadNotAssignedToCompetition));
     }
+
+    @Test
+    public void  testOnlyInnovationLeadUsersAssignedToCompWithoutFeedbackReleasedCanAccessComp(){
+        List<RoleResource> innovationLeadRoles = singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build());
+        UserResource innovationLeadAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
+        UserResource innovationLeadNotAssignedToCompetition = newUserResource().withRolesGlobal(innovationLeadRoles).build();
+        List<CompetitionAssessmentParticipant> competitionParticipants = newCompetitionAssessmentParticipant().withUser(newUser().withId(innovationLeadAssignedToCompetition.getId()).build()).build(1);
+        CompetitionResource openCompetition= newCompetitionResource().withCompetitionStatus(CompetitionStatus.OPEN).withId(1L).build();
+        CompetitionResource feedbackReleasedCompetition = newCompetitionResource().withId(2L).withCompetitionStatus(CompetitionStatus.PROJECT_SETUP).withId(2L).build();
+
+        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(1L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
+        when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(2L, CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(competitionParticipants);
+
+        assertTrue(rules.innovationLeadCanViewCompetitionAssignedToThem(openCompetition, innovationLeadAssignedToCompetition));
+        assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThem(openCompetition, innovationLeadNotAssignedToCompetition));
+        assertTrue(rules.innovationLeadCanViewCompetitionAssignedToThem(feedbackReleasedCompetition, innovationLeadAssignedToCompetition));
+        assertFalse(rules.innovationLeadCanViewCompetitionAssignedToThem(feedbackReleasedCompetition, innovationLeadNotAssignedToCompetition));
+    }
 }

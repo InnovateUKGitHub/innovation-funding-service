@@ -4,6 +4,8 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileResource;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileTableResource;
@@ -23,19 +25,22 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static junit.framework.TestCase.fail;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.*;
 
 public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<SpendProfileService> {
 
     private SpendProfilePermissionRules spendProfilePermissionRules;
 
+    private ProjectLookupStrategy projectLookupStrategy;
+
     @Before
     public void lookupPermissionRules() {
         spendProfilePermissionRules = getMockPermissionRulesBean(SpendProfilePermissionRules.class);
+        projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
     }
 
     @Test
@@ -182,6 +187,19 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
             } catch (AccessDeniedException e) {
                 // expected behaviour
             }
+        });
+    }
+
+    @Test
+    public void verifyGetSpendProfileStatusByProjectIdRules() {
+        final Long projectId = 1L;
+        ProjectResource projectResource = newProjectResource().withId(projectId).build();
+        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(projectResource);
+        assertAccessDenied(() -> classUnderTest.getSpendProfileStatusByProjectId(projectId), () -> {
+            verify(spendProfilePermissionRules).internalAdminTeamCanViewCompetitionStatus(projectResource, getLoggedInUser());
+            verify(spendProfilePermissionRules).supportCanViewCompetitionStatus(projectResource, getLoggedInUser());
+            verify(spendProfilePermissionRules).assignedInnovationLeadCanViewSPStatus(projectResource, getLoggedInUser());
+            verifyNoMoreInteractions(spendProfilePermissionRules);
         });
     }
 

@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,6 +47,9 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Autowired
     private OrganisationRepository organisationRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     @Override
@@ -324,5 +328,18 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         assertEquals(0L, repository.countOpenQueries(comps.get(0).getId()).longValue());
         List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
         assertEquals(0L, results.size());
+    }
+
+    @Test
+    public void testCountLiveForInnovationLead(){
+        // TODO: Improve once IFS-2222 is done.
+        long innovationLead1Id = 51L;
+        long innovationLead2Id = 52L;
+
+        Long count = repository.countLiveForInnovationLead(innovationLead2Id);
+        assertEquals(new Long(1L), count);
+
+        count = repository.countLiveForInnovationLead(innovationLead1Id);
+        assertEquals(new Long(0L), count);
     }
 }

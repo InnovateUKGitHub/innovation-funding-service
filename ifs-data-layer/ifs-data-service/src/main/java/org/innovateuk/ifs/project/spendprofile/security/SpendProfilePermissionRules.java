@@ -30,7 +30,7 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "VIEW_SPEND_PROFILE_STATUS", description = "Innovation lead users can get the approved status of a Spend Profile for any Project")
-    public boolean assignedInnovationLeadCanViewProjectStatus(ProjectResource project, UserResource user){
+    public boolean assignedInnovationLeadCanViewSPStatus(ProjectResource project, UserResource user){
         Application application = applicationRepository.findOne(project.getApplication());
         return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
     }

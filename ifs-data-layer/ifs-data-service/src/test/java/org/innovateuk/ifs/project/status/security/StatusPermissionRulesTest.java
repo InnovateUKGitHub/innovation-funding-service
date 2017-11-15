@@ -7,10 +7,13 @@ import org.junit.Test;
 
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternal;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPermissionRules> {
+    private ProjectResource project = newProjectResource().build();
+    private UserResource user = newUserResource().build();
 
     @Override
     protected StatusPermissionRules supplyPermissionRulesUnderTest() {
@@ -19,24 +22,72 @@ public class StatusPermissionRulesTest extends BasePermissionRulesTest<StatusPer
 
     @Test
     public void testPartnersCanViewTeamStatus() {
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
         setupUserAsPartner(project, user);
         assertTrue(rules.partnersCanViewTeamStatus(project, user));
     }
 
     @Test
     public void testNonPartnersCannotViewTeamStatus() {
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
         setupUserNotAsPartner(project, user);
         assertFalse(rules.partnersCanViewTeamStatus(project, user));
     }
 
     @Test
     public void testInternalUsersCanViewTeamStatus() {
-        ProjectResource project = newProjectResource().build();
         assertTrue(rules.internalUsersCanViewTeamStatus(project, compAdminUser()));
         assertTrue(rules.internalUsersCanViewTeamStatus(project, projectFinanceUser()));
+    }
+
+    @Test
+    public void testPartnersCanViewStatus(){
+        setupUserAsPartner(project, user);
+        assertTrue(rules.partnersCanViewStatus(project, user));
+    }
+
+    @Test
+    public void testNonPartnersCannotViewStatus(){
+        setupUserNotAsPartner(project, user);
+        assertFalse(rules.partnersCanViewStatus(project, user));
+    }
+
+    @Test
+    public void testInternalUsersCanViewStatus(){
+        allGlobalRoleUsers.forEach(user -> {
+            if (isInternal(user)) {
+                assertTrue(rules.internalUsersCanViewStatus(newProjectResource().build(), user));
+            } else {
+                assertFalse(rules.internalUsersCanViewStatus(newProjectResource().build(), user));
+            }
+        });
+    }
+
+    @Test
+    public void testInternalAdminTeamCanViewCompetitionStatus(){
+
+    }
+
+    @Test
+    public void testSupportCanViewCompetitionStatus(){
+
+    }
+
+    @Test
+    public void testAssignedInnovationLeadCanViewCompetitionStatus(){
+
+    }
+
+    @Test
+    public void testInternalAdminTeamCanViewProjectStatus(){
+
+    }
+
+    @Test
+    public void testSupportCanViewProjectStatus(){
+
+    }
+
+    @Test
+    public void testAssignedInnovationLeadCanViewProjectStatus(){
+
     }
 }
