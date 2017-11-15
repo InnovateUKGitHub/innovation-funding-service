@@ -75,11 +75,11 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     private boolean filterNonIfsOutOnIFSComp(MilestoneType milestoneType, boolean isNonIfs) {
-        if(!isNonIfs) {
+        if(isNonIfs) {
+            return !milestoneType.equals(MilestoneType.NOTIFICATIONS);
+        } else {
             return !milestoneType.isOnlyNonIfs();
         }
-
-        return true;
     }
 
     @Override

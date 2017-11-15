@@ -42,33 +42,35 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
         List<MilestoneResource> milestones = milestoneRestService.getAllPublicMilestonesByCompetitionId(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        List<DateViewModel> milestonesMapped = mapMilestoneToDateViewModel(milestones, nonIFS);
+        List<DateViewModel> milestonesMapped = mapMilestoneToDateViewModel(milestones);
         return milestonesMapped;
     }
 
-    private List<DateViewModel> mapMilestoneToDateViewModel(List<MilestoneResource> milestonesNeeded, Boolean nonIfs) {
+    private List<DateViewModel> mapMilestoneToDateViewModel(List<MilestoneResource> milestonesNeeded) {
         List<DateViewModel> publicContentDates = new ArrayList<>();
 
-        milestonesNeeded.forEach(milestoneResource -> {
-            DateViewModel publicContentDate = new DateViewModel();
+        milestonesNeeded.stream()
+                .filter(milestoneResource -> milestoneResource.getDate() != null)
+                .forEach(milestoneResource -> {
+                    DateViewModel publicContentDate = new DateViewModel();
 
-            publicContentDate.setDateTime(milestoneResource.getDate());
-            publicContentDate.setMustBeStrong(Boolean.FALSE);
-            switch (milestoneResource.getType()) {
-                case OPEN_DATE:
-                    publicContentDate.setContent("Competition opens");
-                    publicContentDate.setMustBeStrong(Boolean.TRUE);
-                    break;
-                case REGISTRATION_DATE:
-                    publicContentDate.setContent("Registration closes");
-                    break;
-                case SUBMISSION_DATE:
-                    publicContentDate.setContent("Competition closes");
-                    break;
-                case NOTIFICATIONS:
-                    publicContentDate.setContent("Applicants notified");
-                    break;
-            }
+                    publicContentDate.setDateTime(milestoneResource.getDate());
+                    publicContentDate.setMustBeStrong(Boolean.FALSE);
+                    switch (milestoneResource.getType()) {
+                        case OPEN_DATE:
+                            publicContentDate.setContent("Competition opens");
+                            publicContentDate.setMustBeStrong(Boolean.TRUE);
+                            break;
+                        case REGISTRATION_DATE:
+                            publicContentDate.setContent("Registration closes");
+                            break;
+                        case SUBMISSION_DATE:
+                            publicContentDate.setContent("Competition closes");
+                            break;
+                        case NOTIFICATIONS:
+                            publicContentDate.setContent("Applicants notified");
+                            break;
+                }
             publicContentDates.add(publicContentDate);
         });
 

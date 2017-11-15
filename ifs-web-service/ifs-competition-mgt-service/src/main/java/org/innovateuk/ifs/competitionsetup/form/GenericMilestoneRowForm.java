@@ -14,7 +14,7 @@ import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
  * Milestone Form Entry for the Milestones form.
  */
 public class GenericMilestoneRowForm {
-	protected static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE);
+	protected static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
     protected static final Set<MilestoneType> WITH_MIDDAY_TIME = asSet(MilestoneType.ASSESSOR_ACCEPTS, MilestoneType.ASSESSOR_DEADLINE);
 
     @Range(min=2000, max = 9999, message = "{validation.standard.date.format}")
