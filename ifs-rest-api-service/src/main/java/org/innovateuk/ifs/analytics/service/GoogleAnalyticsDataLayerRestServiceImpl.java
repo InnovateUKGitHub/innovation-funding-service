@@ -18,7 +18,7 @@ public class GoogleAnalyticsDataLayerRestServiceImpl extends BaseRestService imp
 
     @Override
     public RestResult<String> getCompetitionName(long competitionId) {
-        return getWithRestResult(format("%s/competition/%d/competition-name", ANALYTICS_BASE_URL, competitionId), String.class);
+        return getWithRestResultAnonymous(format("%s/competition/%d/competition-name", ANALYTICS_BASE_URL, competitionId), String.class);
     }
 
     @Override
