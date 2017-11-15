@@ -30,31 +30,31 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
             final Map pathVariables = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
             final Map<String, Object> model = modelAndView.getModel();
             if (!model.containsKey(ANALYTICS_DATA_LAYER_NAME)) {
-                model.put(ANALYTICS_DATA_LAYER_NAME, new GoogleTagManagerDataLayer());
+                model.put(ANALYTICS_DATA_LAYER_NAME, new GoogleAnalyticsDataLayer());
             }
-            final GoogleTagManagerDataLayer dl = (GoogleTagManagerDataLayer) model.get(ANALYTICS_DATA_LAYER_NAME);
+            final GoogleAnalyticsDataLayer dl = (GoogleAnalyticsDataLayer) model.get(ANALYTICS_DATA_LAYER_NAME);
 
             if (pathVariables.containsKey("competitionId")) {
                 final long competitionId = parseLong((String) pathVariables.get("competitionId"));
-                dl.setCompName(fromJson(googleAnalyticsDataLayerRestService.getCompetitionName(competitionId).getSuccessObjectOrThrowException(), String.class));
+                dl.setCompetitionName(fromJson(googleAnalyticsDataLayerRestService.getCompetitionName(competitionId).getSuccessObjectOrThrowException(), String.class));
             }
             else if (pathVariables.containsKey("projectId")) {
                 final long projectId = parseLong((String) pathVariables.get("projectId"));
-                dl.setCompName(fromJson(googleAnalyticsDataLayerRestService.getCompetitionNameForProject(projectId).getSuccessObjectOrThrowException(), String.class));
+                dl.setCompetitionName(fromJson(googleAnalyticsDataLayerRestService.getCompetitionNameForProject(projectId).getSuccessObjectOrThrowException(), String.class));
             }
             else if (pathVariables.containsKey("applicationId")) {
                 final long applicationId = parseLong((String) pathVariables.get("applicationId"));
-                dl.setCompName(fromJson(googleAnalyticsDataLayerRestService.getCompetitionNameForApplication(applicationId).getSuccessObjectOrThrowException(), String.class));
+                dl.setCompetitionName(fromJson(googleAnalyticsDataLayerRestService.getCompetitionNameForApplication(applicationId).getSuccessObjectOrThrowException(), String.class));
             }
             else if (pathVariables.containsKey("assessmentId")) {
                 final long assessmentId = parseLong((String) pathVariables.get("assessmentId"));
-                dl.setCompName(fromJson(googleAnalyticsDataLayerRestService.getCompetitionNameForAssessment(assessmentId).getSuccessObjectOrThrowException(), String.class));
+                dl.setCompetitionName(fromJson(googleAnalyticsDataLayerRestService.getCompetitionNameForAssessment(assessmentId).getSuccessObjectOrThrowException(), String.class));
             }
         }
     }
 
-    private static void foo(GoogleTagManagerDataLayer dl, Function<Long, RestResult<String>> f, final Map pathVariables, String pathVariable) {
+    private static void foo(GoogleAnalyticsDataLayer dl, Function<Long, RestResult<String>> f, final Map pathVariables, String pathVariable) {
         final long id = parseLong((String) pathVariables.get(pathVariable));
-        dl.setCompName(fromJson(f.apply(id).getSuccessObjectOrThrowException(), String.class));
+        dl.setCompetitionName(fromJson(f.apply(id).getSuccessObjectOrThrowException(), String.class));
     }
 }

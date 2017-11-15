@@ -53,8 +53,8 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
 
         googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
 
-        GoogleTagManagerDataLayer expectedDataLayer = new GoogleTagManagerDataLayer();
-        expectedDataLayer.setCompName(expectedCompName);
+        GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
+        expectedDataLayer.setCompetitionName(expectedCompName);
 
         assertEquals(expectedDataLayer, mav.getModel().get("dataLayer"));
 
@@ -72,8 +72,8 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
 
         googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
 
-        GoogleTagManagerDataLayer expectedDataLayer = new GoogleTagManagerDataLayer();
-        expectedDataLayer.setCompName(expectedCompName);
+        GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
+        expectedDataLayer.setCompetitionName(expectedCompName);
 
         assertEquals(expectedDataLayer, mav.getModel().get("dataLayer"));
 
@@ -91,8 +91,8 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
 
         googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
 
-        GoogleTagManagerDataLayer expectedDataLayer = new GoogleTagManagerDataLayer();
-        expectedDataLayer.setCompName(expectedCompName);
+        GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
+        expectedDataLayer.setCompetitionName(expectedCompName);
 
         assertEquals(expectedDataLayer, mav.getModel().get("dataLayer"));
 
@@ -110,8 +110,8 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
 
         googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
 
-        GoogleTagManagerDataLayer expectedDataLayer = new GoogleTagManagerDataLayer();
-        expectedDataLayer.setCompName(expectedCompName);
+        GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
+        expectedDataLayer.setCompetitionName(expectedCompName);
 
         assertEquals(expectedDataLayer, mav.getModel().get("dataLayer"));
 
@@ -124,7 +124,7 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
 
         googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
 
-        GoogleTagManagerDataLayer expectedDataLayer = new GoogleTagManagerDataLayer();
+        GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
 
         assertEquals(expectedDataLayer, mav.getModel().get("dataLayer"));
 
