@@ -5,8 +5,6 @@ cd "$(dirname "$0")"
 baselineversion="${1?please specify the new baseline version (e.g. V100_11_)}"
 
 echo "creating baseline for version ${baselineversion}"
-mysql -h ifs-database ifs -uroot -ppassword -e 'delete from comp_admin_emails where id <= 10;'
-mysql -h ifs-database ifs -uroot -ppassword -e 'delete from project_finance_emails where id <= 11;'
 mysql -h ifs-database ifs -uroot -ppassword -e 'delete from user_role where exists (select 1 from user u where u.id = user_id and u.system_user = 1);'
 mysql -h ifs-database ifs -uroot -ppassword -e 'SET foreign_key_checks = 0; delete from user where system_user = 1; SET foreign_key_checks = 1;'
 
