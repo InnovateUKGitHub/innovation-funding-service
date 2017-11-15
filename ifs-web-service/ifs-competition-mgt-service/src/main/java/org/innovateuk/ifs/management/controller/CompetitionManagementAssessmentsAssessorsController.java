@@ -28,7 +28,6 @@ public class CompetitionManagementAssessmentsAssessorsController extends BaseCom
     @Autowired
     private ManageAssessorsModelPopulator manageApplicationsPopulator;
 
-
     @GetMapping("/assessors")
     public String manageAssessors(Model model,
                                      @ModelAttribute(FILTER_FORM_ATTR_NAME) AssessmentAssessorsFilterForm filterForm,

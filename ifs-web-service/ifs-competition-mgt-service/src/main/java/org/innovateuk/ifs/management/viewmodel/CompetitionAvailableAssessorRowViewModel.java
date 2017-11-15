@@ -8,17 +8,17 @@ import java.util.List;
 /**
  * Holder of model attributes for the available assessors shown in the 'Find' tab of the Invite Assessors view.
  */
-public class AvailableAssessorRowViewModel extends InviteAssessorsRowViewModel {
+public class CompetitionAvailableAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
     private String email;
     private BusinessType businessType;
 
-    public AvailableAssessorRowViewModel(Long id,
-                                         String name,
-                                         List<InnovationAreaResource> innovationAreas,
-                                         boolean compliant,
-                                         String email,
-                                         BusinessType businessType) {
+    public CompetitionAvailableAssessorRowViewModel(long id,
+                                                    String name,
+                                                    List<InnovationAreaResource> innovationAreas,
+                                                    boolean compliant,
+                                                    String email,
+                                                    BusinessType businessType) {
         super(id, name, innovationAreas, compliant);
         this.email = email;
         this.businessType = businessType;
