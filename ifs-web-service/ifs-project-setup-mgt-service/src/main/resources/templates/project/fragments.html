@@ -74,7 +74,7 @@
 
         <th:block th:if="${showAllTabs}">
             <li id="section-3" th:class="${selectedTab == 'spend-profile' ? 'selected' : ''}">
-                <a th:href="@{/competition/{competitionId}/status/pending-spend-profiles(competitionId=${competitionId})}" th:text="'Generated spend profile (' + ${pendingSpendProfilesCount} + ')'"></a>
+                <a th:href="@{/competition/{competitionId}/status/pending-spend-profiles(competitionId=${competitionId})}" th:text="'Generate spend profile (' + ${pendingSpendProfilesCount} + ')'"></a>
             </li>
         </th:block>
     </ul>
