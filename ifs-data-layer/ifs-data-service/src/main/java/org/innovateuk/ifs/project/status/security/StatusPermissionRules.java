@@ -56,7 +56,7 @@ public class StatusPermissionRules extends BasePermissionRules {
         return isSupport(user);
     }
 
-    @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Innovation lead users should be able to access current status of competitions that are assigned to them")
+    @PermissionRule(value = "VIEW_PROJECT_SETUP_COMPETITION_STATUS", description = "Innovation lead users should be able to access current status of competition that are assigned to them")
     public boolean assignedInnovationLeadCanViewCompetitionStatus(CompetitionResource competition, UserResource user){
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
