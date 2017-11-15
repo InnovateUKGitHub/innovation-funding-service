@@ -5,7 +5,6 @@ Documentation     IFS-25 Assessment panels - Applications list
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Resource          ../../resources/defaultResources.robot
-Force Tags
 
 *** Variables ***
 ${Neural_network}   ${application_ids["Neural networks to optimise freight train routing"]}
@@ -44,4 +43,4 @@ the user move the closed competition to in panel
 
 activate manage assessment panel link in the db
     Connect to Database    @{database}
-    Execute sql string    UPDATE `${database_name}`.`competition` SET `has_assessment_panel`='1' WHERE name="${CLOSED_COMPETITION_NAME}";
+    Execute sql string    UPDATE `${database_name}`.`competition` SET has_assessment_panel=1 WHERE name='${CLOSED_COMPETITION_NAME}';
