@@ -214,7 +214,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                         .build());
 
         List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE).withDate(ZonedDateTime.now()).build(4);
-        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.NOTIFICATIONS)))
+        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.SUBMISSION_DATE)))
                 .thenReturn(milestones);
 
         ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);

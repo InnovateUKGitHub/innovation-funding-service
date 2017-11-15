@@ -148,49 +148,49 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         User leadTechnologist = getUserByEmail("steve.smith@empire.com");
         User notLeadTechnologist = getUserByEmail("pete.tom@egg.com");
 
-        Competition openComp = new Competition(null, null, null,null,"openComp", null, null);
+        Competition openComp = new Competition(null, null, null,null,"openComp", null, null, null);
         openComp.setLeadTechnologist(leadTechnologist);
         openComp.setSetupComplete(true);
         openComp = repository.save(openComp);
         openComp.setMilestones(replaceOpenDateMilestoneDate(openComp.getMilestones(), ZonedDateTime.now().minusHours(5L)));
         openComp = repository.save(openComp);
 
-        Competition earliestOpenComp = new Competition(null, null, null,null,"earliestOpenComp", null, null);
+        Competition earliestOpenComp = new Competition(null, null, null,null,"earliestOpenComp", null, null, null);
         earliestOpenComp.setLeadTechnologist(leadTechnologist);
         earliestOpenComp.setSetupComplete(true);
         earliestOpenComp = repository.save(earliestOpenComp);
         earliestOpenComp.setMilestones(replaceOpenDateMilestoneDate(earliestOpenComp.getMilestones(), ZonedDateTime.now().minusDays(3L)));
         earliestOpenComp = repository.save(earliestOpenComp);
 
-        Competition compWithNoInnovationLead = new Competition(null, null, null,null,"compWithNoInnovationLead", null, null);
+        Competition compWithNoInnovationLead = new Competition(null, null, null,null,"compWithNoInnovationLead", null, null, null);
         compWithNoInnovationLead.setLeadTechnologist(notLeadTechnologist);
         compWithNoInnovationLead.setSetupComplete(true);
         compWithNoInnovationLead = repository.save(compWithNoInnovationLead);
         compWithNoInnovationLead.setMilestones(replaceOpenDateMilestoneDate(compWithNoInnovationLead.getMilestones(), ZonedDateTime.now().minusHours(10L)));
         compWithNoInnovationLead = repository.save(compWithNoInnovationLead);
 
-        Competition compInPreparation = new Competition(null, null, null,null,"compInPreparation", null, null);
+        Competition compInPreparation = new Competition(null, null, null,null,"compInPreparation", null, null, null);
         compInPreparation.setLeadTechnologist(leadTechnologist);
         compInPreparation.setSetupComplete(false);
         compInPreparation = repository.save(compInPreparation);
         compInPreparation.setMilestones(replaceOpenDateMilestoneDate(compInPreparation.getMilestones(), ZonedDateTime.now().minusHours(20L)));
         compInPreparation = repository.save(compInPreparation);
 
-        Competition compReadyToOpen = new Competition(null, null, null,null,"compReadyToOpen", null, null);
+        Competition compReadyToOpen = new Competition(null, null, null,null,"compReadyToOpen", null, null, null);
         compReadyToOpen.setLeadTechnologist(leadTechnologist);
         compReadyToOpen.setSetupComplete(true);
         compReadyToOpen = repository.save(compReadyToOpen);
         compReadyToOpen.setMilestones(replaceOpenDateMilestoneDate(compReadyToOpen.getMilestones(), ZonedDateTime.now().plusHours(12L)));
         compReadyToOpen = repository.save(compReadyToOpen);
 
-        Competition compInInform = new Competition(null, null, null,null,"compInInform", null, null);
+        Competition compInInform = new Competition(null, null, null,null,"compInInform", null, null, null);
         compInInform.setLeadTechnologist(leadTechnologist);
         compInInform.setSetupComplete(true);
         compInInform = repository.save(compInInform);
         compInInform.setMilestones(replaceOpenDateMilestoneDate(compInInform.getMilestones(), ZonedDateTime.now().minusDays(1L).minusHours(12L)));
         compInInform = repository.save(compInInform);
 
-        Competition compInProjectSetup = new Competition(null, null, null,null,"compInProjectSetup", null, null);
+        Competition compInProjectSetup = new Competition(null, null, null,null,"compInProjectSetup", null, null, null);
         compInProjectSetup.setLeadTechnologist(leadTechnologist);
         compInProjectSetup.setSetupComplete(true);
         compInProjectSetup = repository.save(compInProjectSetup);
