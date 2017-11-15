@@ -90,7 +90,16 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="date-group form-group-row"
+                    <tr th:if="${#fields.hasErrors('openDate*')}">
+                        <td colspan="6">
+                            <span class="error-message"
+                                  th:each="err : ${#fields.errors('openDate*')}"
+                                  th:text="${err}">
+                            </span> 
+                        </td>
+                    </tr>
+                    <tr id="openDate"
+                        class="date-group form-group-row"
                         th:attr="data-date-invalid-errormessage=${'Competition opens: Please enter a valid date'},
                         data-date-future-errormessage=${'Opening date: Please enter a future date.'}">
                         <input type="hidden"
@@ -138,7 +147,8 @@
                                    th:field="${form.openDate.year}" />
                         </td>
                     </tr>
-                    <tr class="date-group form-group-row"
+                    <tr id="registrationCloseDate"
+                        class="date-group form-group-row"
                         th:attr="data-date-invalid-errormessage=${'Registration closes: Please enter a valid date.'},
                         data-date-future-errormessage=${'Registration closes: Please enter a future date that is after the previous milestone.'}">
                         <input type="hidden"
@@ -195,7 +205,8 @@
                                    th:field="${form.registrationCloseDate.year}" />
                         </td>
                     </tr>
-                    <tr class="date-group form-group-row"
+                    <tr id="closeDate"
+                        class="date-group form-group-row"
                         th:attr="data-date-invalid-errormessage=${'Competition closes: Please enter a valid date.'},
                         data-date-future-errormessage=${'Competition closes: Please enter a future date that is after the previous milestone.'}">
                         <input type="hidden"
@@ -252,7 +263,8 @@
                                    th:field="${form.closeDate.year}" />
                         </td>
                     </tr>
-                    <tr class="date-group form-group-row"
+                    <tr id="applicantNotifiedDate"
+                        class="date-group form-group-row"
                         th:attr="data-date-invalid-errormessage=${'Applicants notified: Please enter a valid date.'},
                         data-date-future-errormessage=${'Applicants notified: Please enter a future date that is after the previous milestone.'}">
                         <input type="hidden"
