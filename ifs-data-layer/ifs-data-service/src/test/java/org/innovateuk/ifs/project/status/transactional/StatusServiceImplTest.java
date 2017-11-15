@@ -797,7 +797,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
      * Tests MO requirement for IFS-1307
      */
     @Test
-    public void testGetProjectStatusShowMOStatusForSupportAsNotStarted() {
+    public void testGetProjectStatusShowMOStatusForSupportAndInnoLeadAsNotStarted() {
         Long projectId = 2345L;
         Long organisationId = 123L;
 
@@ -824,6 +824,13 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         // Status shown to support user when MO is not set is NOT_STARTED and not ACTION_REQUIRED
         when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(null);
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(SUPPORT).build())).build());
+        result = service.getProjectStatusByProjectId(projectId);
+        returnedProjectStatusResource = result.getSuccessObject();
+        assertTrue(result.isSuccess());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
+
+        // Status shown to innovation lead user when MO is not set is NOT_STARTED and not ACTION_REQUIRED
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(INNOVATION_LEAD).build())).build());
         result = service.getProjectStatusByProjectId(projectId);
         returnedProjectStatusResource = result.getSuccessObject();
         assertTrue(result.isSuccess());
