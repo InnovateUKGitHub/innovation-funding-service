@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.application.team.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.application.team.controller.ApplicationTeamController;
+import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamApplicantRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamOrganisationRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamViewModel;
@@ -24,7 +23,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -324,48 +322,6 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
         inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void beginApplication_leadApplicantCanBeginACreatedApplication() throws Exception {
-        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
-        ApplicationResource applicationResource = setupApplicationResource(organisationsMap, CREATED);
-        Map<String, UserResource> usersMap = setupUserResources();
-        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
-
-        when(applicationRestService.getApplicationById(applicationResource.getId())).thenReturn(restSuccess(applicationResource));
-        when(applicationRestService.updateApplicationState(applicationResource.getId(), OPEN)).thenReturn(restSuccess());
-
-        setLoggedInUser(leadApplicant);
-        mockMvc.perform(get("/application/{applicationId}/begin", applicationResource.getId()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/application/%s", applicationResource.getId())));
-
-        InOrder inOrder = inOrder(applicationRestService, inviteRestService);
-        inOrder.verify(applicationRestService).getApplicationById(applicationResource.getId());
-        inOrder.verify(applicationRestService).updateApplicationState(applicationResource.getId(), OPEN);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void beginApplication_leadApplicantCannotBeginAnOpenApplication() throws Exception {
-        Map<String, OrganisationResource> organisationsMap = setupOrganisationResources();
-        ApplicationResource applicationResource = setupApplicationResource(organisationsMap);
-        Map<String, UserResource> usersMap = setupUserResources();
-        UserResource leadApplicant = setupLeadApplicant(applicationResource, usersMap);
-
-        // Assert the request is redirected to the application page without attempting to change the status
-
-        when(applicationRestService.getApplicationById(applicationResource.getId())).thenReturn(restSuccess(applicationResource));
-
-        setLoggedInUser(leadApplicant);
-        mockMvc.perform(get("/application/{applicationId}/begin", applicationResource.getId()))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/application/%s", applicationResource.getId())));
-
-        InOrder inOrder = inOrder(applicationRestService, inviteRestService);
-        inOrder.verify(applicationRestService).getApplicationById(applicationResource.getId());
         inOrder.verifyNoMoreInteractions();
     }
 

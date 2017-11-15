@@ -56,7 +56,7 @@ public class GrantOfferLetterController {
     private static final String FORM_ATTR = "form";
 
     @InitBinder
-    public void initBinder(WebDataBinder binder) {
+    protected void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(ApprovalType.class, new CaseInsensitiveConverter<>(ApprovalType.class));
     }
 

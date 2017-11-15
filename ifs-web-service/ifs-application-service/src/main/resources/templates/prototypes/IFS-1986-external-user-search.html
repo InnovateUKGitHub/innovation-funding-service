@@ -11,13 +11,12 @@
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Manage users',linkClass='link-back',linkUrl=@{/}"  />
-    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Find external users',size='heading-large'" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Search external users',size='heading-large'" />
 
 
     <form method="GET">
       <div class="search-filters extra-margin">
         <fieldset>
-            <legend class="heading-medium">Search users</legend>
             <div class="grid-row">
                 <div class="column-half">
                   <div class="form-group">
@@ -28,7 +27,7 @@
                 </div>
                 <div class="column-half">
                   <div class="form-group">
-                    <label class="form-label" for="filterCategory">In</label>
+                    <label class="form-label" for="filterCategory">in</label>
                     <select class="form-control" id="filterCategory" name="filterCategory">
                       <option value="name">Name</option>
                       <option value="organisation">Organisation name</option>

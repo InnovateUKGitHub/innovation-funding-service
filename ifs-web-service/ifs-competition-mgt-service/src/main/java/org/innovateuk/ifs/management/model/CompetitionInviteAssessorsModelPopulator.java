@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
  * Build the model for the Invite assessors view.
  */
 @Component
-abstract class InviteAssessorsModelPopulator<ViewModelType extends InviteAssessorsViewModel> {
+abstract class CompetitionInviteAssessorsModelPopulator<ViewModelType extends InviteAssessorsViewModel> {
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
@@ -32,18 +32,16 @@ abstract class InviteAssessorsModelPopulator<ViewModelType extends InviteAssesso
         return model;
     }
 
-    private ViewModelType populateStatistics(ViewModelType model, CompetitionResource competitionResource) {
+    private void populateStatistics(ViewModelType model, CompetitionResource competitionResource) {
         CompetitionInviteStatisticsResource competitionInviteStatisticsResource = competitionInviteRestService.getInviteStatistics(competitionResource.getId()).getSuccessObject();
         model.setAssessorsInvited(competitionInviteStatisticsResource.getInvited());
         model.setAssessorsAccepted(competitionInviteStatisticsResource.getAccepted());
         model.setAssessorsDeclined(competitionInviteStatisticsResource.getDeclined());
         model.setAssessorsStaged(competitionInviteStatisticsResource.getInviteList());
-        return model;
     }
 
-    private ViewModelType populateCompetitionInnovationSectorAndArea(ViewModelType model, CompetitionResource competition) {
+    private void populateCompetitionInnovationSectorAndArea(ViewModelType model, CompetitionResource competition) {
         model.setInnovationSector(competition.getInnovationSectorName());
         model.setInnovationArea(StringUtils.join(competition.getInnovationAreaNames(),", "));
-        return model;
     }
 }
