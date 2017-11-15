@@ -36,7 +36,7 @@ public class GoogleAnalyticsDataLayerRestServiceImplTest extends BaseRestService
         long competitionId = 7L;
         String expected = "competition name";
 
-        setupGetWithRestResultExpectations(
+        setupGetWithRestResultAnonymousExpectations(
                 format("%s/%s/%d/competition-name", restUrl, "competition", competitionId),
                 String.class,
                 expected
