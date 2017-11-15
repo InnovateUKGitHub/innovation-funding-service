@@ -768,6 +768,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 .withSubmissionDate(line.submissionDate)
                 .withFundersPanelEndDate(line.fundersPanelEndDate)
                 .withReleaseFeedbackDate(line.releaseFeedback)
+                .withRegistrationDate(line.registrationDate)
                 .withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
                         line.competitionDescription, line.fundingType, line.projectSize, line.keywords, line.inviteOnly);
     }

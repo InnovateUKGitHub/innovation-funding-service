@@ -412,6 +412,7 @@ class CsvUtils {
         Boolean multiStream;
         ZonedDateTime openDate;
         ZonedDateTime briefingDate;
+        ZonedDateTime registrationDate;
         ZonedDateTime submissionDate;
         ZonedDateTime allocateAssessorDate;
         ZonedDateTime assessorBriefingDate;
@@ -465,6 +466,7 @@ class CsvUtils {
             multiStream = nullableBoolean(line.get(i++));
             openDate = nullableDateTime(line.get(i++));
             briefingDate = nullableDateTime(line.get(i++));
+            registrationDate = nullableDateTime(line.get(i++));
             submissionDate = nullableDateTime(line.get(i++));
             allocateAssessorDate = nullableDateTime(line.get(i++));
             assessorBriefingDate = nullableDateTime(line.get(i++));

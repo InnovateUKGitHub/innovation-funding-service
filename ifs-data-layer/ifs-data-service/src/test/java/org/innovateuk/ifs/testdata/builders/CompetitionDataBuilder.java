@@ -264,6 +264,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return withMilestoneUpdate(date, BRIEFING_EVENT);
     }
 
+    public CompetitionDataBuilder withRegistrationDate(ZonedDateTime date) {
+        return withMilestoneUpdate(date, REGISTRATION_DATE);
+    }
+
     public CompetitionDataBuilder withSubmissionDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, SUBMISSION_DATE);
     }
