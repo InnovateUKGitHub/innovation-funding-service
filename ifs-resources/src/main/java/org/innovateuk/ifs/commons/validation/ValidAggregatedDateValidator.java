@@ -29,7 +29,7 @@ public class ValidAggregatedDateValidator implements ConstraintValidator<ValidAg
         Integer yearValue = 0;
         Integer monthValue = 0;
         Integer dayValue = 0;
-        boolean emptyAllowed = validAggregatedDate.emptyAllowed();
+        boolean required = validAggregatedDate.required();
 
         try {
             yearValue = (Integer) PropertyUtils.getProperty(object, validAggregatedDate.yearField());
@@ -41,7 +41,7 @@ public class ValidAggregatedDateValidator implements ConstraintValidator<ValidAg
             return false;
         }
 
-        if(!emptyAllowed || !dateValuesAllEmpty(yearValue, monthValue, dayValue)) {
+        if(!required || !dateValuesAllEmpty(yearValue, monthValue, dayValue)) {
             ZonedDateTime localDate;
             try {
                 localDate = TimeZoneUtil.fromUkTimeZone(yearValue, monthValue, dayValue);
