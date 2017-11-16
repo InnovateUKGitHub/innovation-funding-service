@@ -195,14 +195,14 @@ public class UserManagementController {
     // NEW METHOD - New URL - Set a debug point here and ensure the request hits here
     @PreAuthorize("hasAuthority('support')")
     @GetMapping(value = "/external/users")
-    public String findExternalUsers(@RequestParam(value = "searchString") String searchString,
-                                    @RequestParam(value = "searchCategory") final String searchCategory, //Make this an enum later on
+    public String findExternalUsers(@RequestParam(value = "searchString", required = false) String searchString,
+                                    @RequestParam(value = "searchCategory", required = false) final String searchCategory, //Make this an enum later on
                                     Model model) {
 
         // Currently just return all the users - logic here to use the searchString and searchCategory and then filter out results - just see that all users get displayed correctly for now.
         return userRestService.findAllExternal().andOnSuccessReturn(users -> {
             model.addAttribute("users", users);
-            return "admin/external-users";
+            return "admin/search-external-users";
         }).getSuccessObjectOrThrowException();
     }
 
@@ -219,14 +219,14 @@ public class UserManagementController {
     //NEW METHOD - New URL - Set a debug point here and ensure the request hits here
     @PreAuthorize("hasAuthority('support')")
     @GetMapping(value = "/external/invites")
-    public String findExternalInvites(@RequestParam(value = "searchString") String searchString,
-                                      @RequestParam(value = "searchCategory") final String searchCategory, //Make this an enum later on
+    public String findExternalInvites(@RequestParam(value = "searchString", required = false) String searchString,
+                                      @RequestParam(value = "searchCategory", required = false) final String searchCategory, //Make this an enum later on
                                       Model model) {
 
         // Currently just return all the users - logic here to use the searchString and searchCategory and then filter out results
         return inviteUserRestService.getAllExternalInvites().andOnSuccessReturn(invites -> {
             model.addAttribute("invites", invites);
-            return "admin/invited-users";
+            return "admin/search-invited-users";
         }).getSuccessObjectOrThrowException();
     }
 }
