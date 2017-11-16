@@ -6,12 +6,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
+
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.validator.ValidatorTestUtil.getBindingResult;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class AssessorScopeValidatorTest {
 
@@ -40,8 +39,22 @@ public class AssessorScopeValidatorTest {
     }
 
     @Test
+    public void validate_true_uppercase() {
+        formInputResponse.setValue("TRUE");
+        validator.validate(formInputResponse, bindingResult);
+        assertFalse(bindingResult.hasErrors());
+    }
+
+    @Test
     public void validate_false() {
         formInputResponse.setValue("false");
+        validator.validate(formInputResponse, bindingResult);
+        assertFalse(bindingResult.hasErrors());
+    }
+
+    @Test
+    public void validate_false_uppercase() {
+        formInputResponse.setValue("FALSE");
         validator.validate(formInputResponse, bindingResult);
         assertFalse(bindingResult.hasErrors());
     }
