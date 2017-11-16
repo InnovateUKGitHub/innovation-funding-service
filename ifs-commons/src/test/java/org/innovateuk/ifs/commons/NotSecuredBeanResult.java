@@ -1,23 +1,16 @@
 package org.innovateuk.ifs.commons;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.security.NotSecured;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.commons.ProxyUtils.classLevel;
 import static org.innovateuk.ifs.commons.ProxyUtils.methodLevel;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Class to represent the {@link NotSecured} {@link Annotation}s on a given Spring beans methods.

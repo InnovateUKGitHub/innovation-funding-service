@@ -17,7 +17,15 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilterNot;
  */
 public class SecuredBySpringBeanResult {
 
+    /**
+     * The {@link Class} inspected, with the class level {@link SecuredBySpring} if present
+     */
     Pair<Class<?>, Optional<SecuredBySpring>> classLevel;
+
+    /**
+     * All of the {@link Method}s on the inspected {@link Class}, which are not defined on {@link Object}, with the
+     * associated method level {@link SecuredBySpring} if present
+     */
     Map<Method, Optional<SecuredBySpring>> methodLevel;
 
     private SecuredBySpringBeanResult(Pair<Class<?>, Optional<SecuredBySpring>> classLevel, Map<Method, Optional<SecuredBySpring>> methodLevel) {

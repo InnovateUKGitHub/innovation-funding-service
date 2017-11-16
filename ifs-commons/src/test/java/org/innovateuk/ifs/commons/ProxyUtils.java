@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
- * Utility class to help with Spring wrapped proxies.
+ * Utility class to help with Spring wrapped proxies and other reflection methods
  */
 public class ProxyUtils {
 
@@ -65,7 +65,8 @@ public class ProxyUtils {
     }
 
     /**
-     * TODO
+     * A {@link Pair} of the {@link Class} of the bean passed in and the {@link Annotation} of the type provided on that
+     * class, if present.
      * @param bean
      * @param annotationType
      * @param <T>
@@ -78,7 +79,8 @@ public class ProxyUtils {
     }
 
     /**
-     * TODO
+     * A {@link Map} with the {@link Method}s on the {@link Class} of the bean provided as the keys and the
+     * {@link Annotation} of the type provided on the associated method as the values, if present.
      * @param bean
      * @param annotationType
      * @param <T>

@@ -12,7 +12,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * TODO
+ * Generate output that can be easily rendered into a CSV from a {@link List} of {@link PermissionRulesClassResult}
  */
 public class PermissionRulesClassResultFormatter {
 

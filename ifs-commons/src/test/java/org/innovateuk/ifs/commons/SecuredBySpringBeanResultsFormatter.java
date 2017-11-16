@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.commons;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +15,9 @@ import static org.innovateuk.ifs.commons.ProxyUtils.getMethodCallDescription;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
+
 /**
- * TODO
+ * Generate output that can be easily rendered into a CSV from a {@link List} of {@link SecuredBySpringBeanResult}
  */
 public class SecuredBySpringBeanResultsFormatter {
 
