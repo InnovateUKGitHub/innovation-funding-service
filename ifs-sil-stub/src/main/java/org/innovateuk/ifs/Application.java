@@ -12,23 +12,23 @@ import javax.servlet.ServletException;
 
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
-    private static final Log LOGGER = LogFactory.getLog(Application.class);
+    private static final Log LOG = LogFactory.getLog(Application.class);
 
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        LOGGER.info("Spring Application builder configure method");
-        LOGGER.info("======== org.innovateuk.ifs.Application.configure()");
+        LOG.info("Spring Application builder configure method");
+        LOG.info("======== org.innovateuk.ifs.Application.configure()");
         return application.sources(Application.class);
     }
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
-        LOGGER.info("======== org.innovateuk.ifs.Application.onStartup()");
+        LOG.info("======== org.innovateuk.ifs.Application.onStartup()");
     }
 
     public static void main(String[] args) {
-        LOGGER.info("======== org.innovateuk.ifs.Application.main()");
+        LOG.info("======== org.innovateuk.ifs.Application.main()");
         SpringApplication.run(Application.class, args);
     }
 }
