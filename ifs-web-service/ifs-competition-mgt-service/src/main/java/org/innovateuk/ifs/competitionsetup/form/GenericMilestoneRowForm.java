@@ -11,7 +11,7 @@ import java.util.Set;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 /**
- * Milestone Form Entry for the Milestones form.
+ * Default Milestone Form Entry without any validations for the Milestones form.
  */
 public class GenericMilestoneRowForm {
 	protected static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);

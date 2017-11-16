@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import java.time.ZonedDateTime;
 
 /**
- * Milestone Form Entry for the Milestones form which is allowed to be empty.
+ * Extending the default @{@link GenericMilestoneRowForm} for adding validation which allows an empty date
  */
 @ValidAggregatedDate(yearField="year", monthField="month", dayField="day", message="{validation.standard.date.format}", emptyAllowed = true)
 public class MilestoneOrEmptyRowForm extends GenericMilestoneRowForm {
