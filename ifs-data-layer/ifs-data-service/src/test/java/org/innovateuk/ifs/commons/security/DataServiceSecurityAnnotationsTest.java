@@ -17,6 +17,7 @@ import static org.assertj.core.util.Lists.emptyList;
 
 public class DataServiceSecurityAnnotationsTest extends AbstractServiceSecurityAnnotationsTest {
 
+    // TODO push down to a sub class?
     @Override
     protected List<Class<?>> excludedClasses() {
         return asList(

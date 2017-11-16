@@ -267,6 +267,10 @@ public final class CollectionFunctions {
         return  simpleFilter(map, (k,v) -> filterFn.test(k));
     }
 
+    public static <T, R> Map<T, R> simpleFilterNot(Map<T, R> map, Predicate<T> filterFn) {
+        return  simpleFilter(map, filterFn.negate());
+    }
+
     public static <T, R, S> Map<S, Map<T,R>> simpleGroupBy(Map<T, R> map, Function<T, S> filterFn) {
         Map<S, List<Entry<T, R>>> intermediate = map.entrySet().stream().collect(groupingBy(e -> filterFn.apply(e.getKey())));
         Map<S, Map<T, R>> result = simpleMapKeyAndValue(intermediate, identity(), value -> simpleToMap(value, Entry::getKey, Entry::getValue));
@@ -835,5 +839,12 @@ public final class CollectionFunctions {
      */
     public static <T> List<T> nOf(int n, T t) {
         return range(0, n).mapToObj(x -> t).collect(Collectors.toList());
+    }
+
+    public static <T> List<T> union(List<? extends T> one, List<? extends T> two){
+        List<T> union = new ArrayList<>();
+        union.addAll(one);
+        union.addAll(two);
+        return union;
     }
 }

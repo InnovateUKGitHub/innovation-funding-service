@@ -17,7 +17,7 @@ import java.lang.annotation.Target;
  * in the same documentation that covers the @PermissionRule mechanism
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
+@Target({ElementType.METHOD, ElementType.TYPE})
 public @interface SecuredBySpring {
 
     /**

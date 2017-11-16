@@ -13,6 +13,7 @@ import java.util.List;
 
 import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.ProxyUtils.allUnwrappedComponentsWithClassAnnotations;
 import static org.innovateuk.ifs.commons.ProxyUtils.unwrapProxies;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
@@ -138,10 +139,8 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
     }
 
     private Collection<Object> servicesToTest() {
-        List<Object> wrappedServices = flattenLists(annotationsOnClassesToSecure(), a -> context.getBeansWithAnnotation(a).values());
-        List<Object> unwrappedServices = unwrapProxies(wrappedServices);
-        List<Object> unwrappedServicesExclusionsRemoved = simpleFilter(unwrappedServices, service -> isAssignableFromOneOf(service, excludedClasses()));
-        return unwrappedServicesExclusionsRemoved;
+        List<Object> unwrappedServices = allUnwrappedComponentsWithClassAnnotations(context, annotationsOnClassesToSecure());
+        return simpleFilter(unwrappedServices, service -> isAssignableFromOneOf(service, excludedClasses()));
     }
 
     private boolean isAssignableFromOneOf(Object service, List<Class<?>> from){

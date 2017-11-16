@@ -2,27 +2,26 @@ package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.commons.AbstractDocumentingServiceSecurityAnnotationsTest;
 import org.innovateuk.ifs.commons.security.evaluator.RootCustomPermissionEvaluator;
+import org.innovateuk.ifs.exception.IfsErrorController;
 import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
-import org.innovateuk.ifs.util.CollectionFunctions;
+import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.util.CollectionFunctions.union;
 
 /**
- * Base class to document security permissions and rules in the data layer
+ * Base class to document security permissions and rules in the web layer
  */
-public abstract class AbstractDocumentingDataServiceSecurityAnnotationsTest extends AbstractDocumentingServiceSecurityAnnotationsTest {
+public abstract class AbstractDocumentingWebServiceSecurityAnnotationsTest extends AbstractDocumentingServiceSecurityAnnotationsTest {
 
     @Override
     protected List<Class<? extends Annotation>> annotationsOnClassesToSecure() {
-        return singletonList(Service.class);
+        return singletonList(Controller.class);
     }
 
 
@@ -34,7 +33,10 @@ public abstract class AbstractDocumentingDataServiceSecurityAnnotationsTest exte
 
     @Override
     protected final List<Class<?>> excludedClasses() {
-        return union(asList(UidAuthenticationService.class, StatelessAuthenticationFilter.class), additionalExcludedClasses());
+        List<Class<?>> union = new ArrayList<>();
+        union.addAll(asList(IfsErrorController.class));
+        union.addAll(additionalExcludedClasses());
+        return union;
     }
 
     /**
