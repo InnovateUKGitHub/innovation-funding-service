@@ -17,9 +17,11 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.junit.Assert.*;
@@ -42,8 +44,12 @@ public class CompetitionSetupMilestoneServiceImplTest {
 		List<MilestoneResource> result = service.createMilestonesForIFSCompetition(123L).getSuccessObject();
 
         result.forEach(milestoneResource -> assertEquals(MilestoneType.OPEN_DATE, milestoneResource.getType()));
-		assertEquals(MilestoneType.presetValues().length, result.size());
-		verify(milestoneRestService, times(MilestoneType.presetValues().length)).create(any(MilestoneType.class), anyLong());
+
+        int numberOfMilestonesExpected = Arrays.stream(MilestoneType.presetValues())
+                .filter(milestoneType -> !milestoneType.isOnlyNonIfs()).collect(toList()).size();
+
+		assertEquals(numberOfMilestonesExpected, result.size());
+		verify(milestoneRestService, times(numberOfMilestonesExpected)).create(any(MilestoneType.class), anyLong());
 	}
 
 	@Test
