@@ -33,12 +33,12 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
     @Override
     protected void populateSection(DatesViewModel model, PublicContentResource publicContentResource, PublicContentSectionResource section, Boolean nonIFS) {
         List<DateViewModel> publicContentDates = mapContentEventsToDatesViewModel(publicContentResource.getContentEvents());
-        publicContentDates.addAll(getMilestonesAsDatesViewModel(nonIFS, publicContentResource.getCompetitionId()));
+        publicContentDates.addAll(getMilestonesAsDatesViewModel(publicContentResource.getCompetitionId()));
 
         model.setPublicContentDates(publicContentDates);
     }
 
-    private List<DateViewModel> getMilestonesAsDatesViewModel(Boolean nonIFS, Long competitionId) {
+    private List<DateViewModel> getMilestonesAsDatesViewModel(Long competitionId) {
         List<MilestoneResource> milestones = milestoneRestService.getAllPublicMilestonesByCompetitionId(competitionId)
                 .getSuccessObjectOrThrowException();
 
@@ -80,14 +80,16 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
     private List<DateViewModel> mapContentEventsToDatesViewModel(List<ContentEventResource> contentEvents) {
         List<DateViewModel> publicContentDates = new ArrayList<>();
 
-        contentEvents.forEach(contentEventResource -> {
-            DateViewModel publicContentDate = new DateViewModel();
-            publicContentDate.setDateTime(contentEventResource.getDate());
-            publicContentDate.setContent(contentEventResource.getContent());
-            publicContentDate.setMustBeStrong(Boolean.FALSE);
+        contentEvents.stream()
+                .filter(contentEventResource -> contentEventResource.getDate() != null)
+                .forEach(contentEventResource -> {
+                    DateViewModel publicContentDate = new DateViewModel();
+                    publicContentDate.setDateTime(contentEventResource.getDate());
+                    publicContentDate.setContent(contentEventResource.getContent());
+                    publicContentDate.setMustBeStrong(Boolean.FALSE);
 
-            publicContentDates.add(publicContentDate);
-        });
+                    publicContentDates.add(publicContentDate);
+                });
 
         return publicContentDates;
     }

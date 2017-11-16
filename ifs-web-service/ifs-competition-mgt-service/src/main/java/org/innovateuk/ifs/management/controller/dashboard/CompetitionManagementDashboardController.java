@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.controller.dashboard;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
@@ -33,12 +34,14 @@ public class CompetitionManagementDashboardController {
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/dashboard")
     public String dashboard() {
         return "redirect:/dashboard/live";
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/dashboard/live")
     public String live(Model model, UserResource user){
@@ -58,6 +61,7 @@ public class CompetitionManagementDashboardController {
         return competitionCountResource;
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model, UserResource user) {
@@ -69,6 +73,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "projectSetup";
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @GetMapping("/dashboard/upcoming")
     public String upcoming(Model model, UserResource user) {
@@ -81,6 +86,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "upcoming";
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @GetMapping("/dashboard/previous")
     public String previous(Model model, UserResource user) {
@@ -90,6 +96,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "previous";
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support')")
     @GetMapping("/dashboard/non-ifs")
     public String nonIfs(Model model, UserResource user) {
@@ -97,6 +104,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "non-ifs";
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/dashboard/search")
     public String search(@RequestParam(name = "searchQuery", defaultValue = "") String searchQuery,
@@ -109,6 +117,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "search";
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @GetMapping("/competition/create")
     public String create(){
