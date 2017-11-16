@@ -138,7 +138,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         List<CompetitionAssessmentParticipant> retrievedParticipant = repository.findAll();
 
-        assertEquals(10, retrievedParticipant.size()); // includes 8 pre-existing Innovation Leads added via patches
+        assertEquals(2, retrievedParticipant.size());
         assertEqualParticipants(savedParticipants, retrievedParticipant);
     }
 
@@ -500,8 +500,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     }
 
     private void assertEqualParticipants(List<CompetitionAssessmentParticipant> expected, List<CompetitionAssessmentParticipant> actual) {
-        List<CompetitionAssessmentParticipant> subList = actual.subList(actual.size() - expected.size(), actual.size()); // Exclude pre-existing participants added via patch
-        zip(expected, subList, this::assertEqualParticipants);
+        zip(expected, actual, this::assertEqualParticipants);
     }
 
     private void assertEqualParticipants(CompetitionAssessmentParticipant expected, CompetitionAssessmentParticipant actual) {
@@ -561,7 +560,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         repository.save(competitionParticipants);
         flushAndClearSession();
 
-        assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
+        assertEquals(4, repository.count());
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
@@ -660,7 +659,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         repository.save(competitionParticipants);
         flushAndClearSession();
 
-        assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
+        assertEquals(4, repository.count());
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
@@ -698,7 +697,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         saveNewCompetitionParticipants(newAssessorInvites);
         flushAndClearSession();
 
-        assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
+        assertEquals(4, repository.count());
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
@@ -751,7 +750,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         repository.save(competitionParticipants);
         flushAndClearSession();
 
-        assertEquals(12, repository.count());  // includes 8 pre-existing Innovation Leads added via patches
+        assertEquals(4, repository.count());
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
@@ -828,7 +827,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         saveNewCompetitionParticipants(newAssessorInvites);
         flushAndClearSession();
 
-        assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
+        assertEquals(4, repository.count());
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
@@ -905,7 +904,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         saveNewCompetitionParticipants(newAssessorInvites);
         flushAndClearSession();
 
-        assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
+        assertEquals(4, repository.count());
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
@@ -947,7 +946,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         flushAndClearSession();
 
-        assertEquals(12, repository.count());  // includes 8 pre-existing Innovation Leads added via patches
+        assertEquals(4, repository.count());
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
