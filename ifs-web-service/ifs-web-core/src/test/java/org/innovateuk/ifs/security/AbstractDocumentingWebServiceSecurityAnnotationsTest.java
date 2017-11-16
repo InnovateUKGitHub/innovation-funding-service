@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.AbstractDocumentingServiceSecurityAnnotationsT
 import org.innovateuk.ifs.commons.security.evaluator.RootCustomPermissionEvaluator;
 import org.innovateuk.ifs.exception.IfsErrorController;
 import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.CollectionFunctions.union;
 
 /**
  * Base class to document security permissions and rules in the web layer
@@ -33,10 +35,7 @@ public abstract class AbstractDocumentingWebServiceSecurityAnnotationsTest exten
 
     @Override
     protected final List<Class<?>> excludedClasses() {
-        List<Class<?>> union = new ArrayList<>();
-        union.addAll(asList(IfsErrorController.class));
-        union.addAll(additionalExcludedClasses());
-        return union;
+        return union(asList(IfsErrorController.class), additionalExcludedClasses());
     }
 
     /**
