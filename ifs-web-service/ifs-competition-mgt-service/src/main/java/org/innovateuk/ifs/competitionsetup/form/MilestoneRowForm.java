@@ -11,25 +11,14 @@ import java.time.ZonedDateTime;
 @ValidAggregatedDate(yearField="year", monthField="month", dayField="day", message="{validation.standard.date.format}")
 public class MilestoneRowForm extends GenericMilestoneRowForm {
     public MilestoneRowForm() {
+
     }
 
     public MilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime) {
-        this(milestoneType, dateTime, true);
+        super(milestoneType, dateTime);
     }
 
     public MilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime, boolean editable) {
-        this.setMilestoneType(milestoneType);
-        this.editable = editable;
-        if(dateTime != null) {
-            this.setDay(dateTime.getDayOfMonth());
-            this.setMonth(dateTime.getMonth().getValue());
-            this.setYear(dateTime.getYear());
-            this.setDate(dateTime);
-            if (isTimeOption()) {
-                this.setTime(MilestoneTime.fromZonedDateTime(dateTime));
-            }
-        } else if (isTimeOption() || isMiddayTime()) {
-            this.setTime(MilestoneTime.TWELVE_PM);
-        }
+        super(milestoneType, dateTime, editable);
     }
 }

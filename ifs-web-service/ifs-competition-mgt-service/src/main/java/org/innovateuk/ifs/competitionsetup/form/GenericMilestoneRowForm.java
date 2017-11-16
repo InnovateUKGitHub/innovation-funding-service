@@ -29,6 +29,29 @@ public class GenericMilestoneRowForm {
     protected ZonedDateTime date;
     protected boolean editable;
 
+    public GenericMilestoneRowForm() {
+    }
+
+    public GenericMilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime) {
+        this(milestoneType, dateTime, true);
+    }
+
+    public GenericMilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime, boolean editable) {
+        this.setMilestoneType(milestoneType);
+        this.editable = editable;
+        if(dateTime != null) {
+            this.setDay(dateTime.getDayOfMonth());
+            this.setMonth(dateTime.getMonth().getValue());
+            this.setYear(dateTime.getYear());
+            this.setDate(dateTime);
+            if (isTimeOption()) {
+                this.setTime(MilestoneTime.fromZonedDateTime(dateTime));
+            }
+        } else if (isTimeOption() || isMiddayTime()) {
+            this.setTime(MilestoneTime.TWELVE_PM);
+        }
+    }
+
     public Integer getDay() {
         return day;
     }
