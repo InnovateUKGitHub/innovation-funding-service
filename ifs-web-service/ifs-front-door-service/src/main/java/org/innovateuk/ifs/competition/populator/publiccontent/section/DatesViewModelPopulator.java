@@ -80,14 +80,16 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
     private List<DateViewModel> mapContentEventsToDatesViewModel(List<ContentEventResource> contentEvents) {
         List<DateViewModel> publicContentDates = new ArrayList<>();
 
-        contentEvents.forEach(contentEventResource -> {
-            DateViewModel publicContentDate = new DateViewModel();
-            publicContentDate.setDateTime(contentEventResource.getDate());
-            publicContentDate.setContent(contentEventResource.getContent());
-            publicContentDate.setMustBeStrong(Boolean.FALSE);
+        contentEvents.stream()
+                .filter(contentEventResource -> contentEventResource.getDate() != null)
+                .forEach(contentEventResource -> {
+                    DateViewModel publicContentDate = new DateViewModel();
+                    publicContentDate.setDateTime(contentEventResource.getDate());
+                    publicContentDate.setContent(contentEventResource.getContent());
+                    publicContentDate.setMustBeStrong(Boolean.FALSE);
 
-            publicContentDates.add(publicContentDate);
-        });
+                    publicContentDates.add(publicContentDate);
+                });
 
         return publicContentDates;
     }

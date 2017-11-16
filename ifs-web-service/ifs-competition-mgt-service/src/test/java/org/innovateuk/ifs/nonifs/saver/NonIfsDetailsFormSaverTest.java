@@ -48,7 +48,8 @@ public class NonIfsDetailsFormSaverTest {
     private static final String COMPETITION_URL = "COMPETITION_URL";
     private static final ZonedDateTime NOTIFIED = ZonedDateTime.now().plusDays(1);
     private static final ZonedDateTime OPEN = ZonedDateTime.now().plusDays(2);
-    private static final ZonedDateTime CLOSE = ZonedDateTime.now().plusDays(3);
+    private static final ZonedDateTime REGISTRATION = ZonedDateTime.now().plusDays(3);
+    private static final ZonedDateTime CLOSE = ZonedDateTime.now().plusDays(4);
 
     @InjectMocks
     private NonIfsDetailsFormSaver target;
@@ -92,6 +93,7 @@ public class NonIfsDetailsFormSaverTest {
 
         assertThat(milestones.get(NOTIFICATIONS.name()).getDate(), equalTo(NOTIFIED));
         assertThat(milestones.get(OPEN_DATE.name()).getDate(), equalTo(OPEN));
+        assertThat(milestones.get(REGISTRATION_DATE.name()).getDate(), equalTo(REGISTRATION));
         assertThat(milestones.get(SUBMISSION_DATE.name()).getDate(), equalTo(CLOSE));
     }
 
@@ -113,6 +115,7 @@ public class NonIfsDetailsFormSaverTest {
         form.setInnovationSectorCategoryId(INNOVATION_SECTOR);
         form.setInnovationAreaCategoryId(INNOVATION_AREA);
         form.setOpenDate(new MilestoneRowForm(MilestoneType.OPEN_DATE, OPEN));
+        form.setRegistrationCloseDate(new MilestoneRowForm(MilestoneType.REGISTRATION_DATE, REGISTRATION));
         form.setCloseDate(new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, CLOSE));
         form.setApplicantNotifiedDate(new MilestoneOrEmptyRowForm(MilestoneType.RELEASE_FEEDBACK, NOTIFIED));
         return form;

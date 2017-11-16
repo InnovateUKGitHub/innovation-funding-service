@@ -104,13 +104,28 @@ public class DatesViewModelPopulatorTest {
     public void populateSectionWithPublicContentDatesAndMilestones() {
         when(milestoneRestService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()))
                 .thenReturn(restSuccess(newMilestoneResource()
-                        .withType(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE)
-                        .build(3)));
+                        .withDate(ZonedDateTime.now(), ZonedDateTime.now().plusDays(3))
+                        .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
+                        .build(2)));
         publicContentResource.setContentEvents(newContentEventResource().build(2));
 
         populator.populateSection(viewModel, publicContentResource, publicContentSectionResource, Boolean.FALSE);
 
         assertEquals(2, viewModel.getPublicContentDates().size());
+    }
+
+    @Test
+    public void populateSectionWithPublicContentDatesAndMilestonesNonIFS() {
+        when(milestoneRestService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()))
+                .thenReturn(restSuccess(newMilestoneResource()
+                        .withDate(ZonedDateTime.now().plusDays(1),ZonedDateTime.now().plusDays(2),ZonedDateTime.now().plusDays(3),ZonedDateTime.now().plusDays(4))
+                        .withType(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE)
+                        .build(4)));
+        publicContentResource.setContentEvents(newContentEventResource().build(2));
+
+        populator.populateSection(viewModel, publicContentResource, publicContentSectionResource, Boolean.TRUE);
+
+        assertEquals(4, viewModel.getPublicContentDates().size());
     }
 
     @Test
