@@ -147,8 +147,12 @@ moving competition to Closed
 making the application a successful project
     the user navigates to the page   ${compPublicPage}
     the user clicks the button/link  css=button[type="submit"][formaction$="notify-assessors"]
-    the user clicks the button/link  css=button[type="submit"][formaction$="close-assessment"]
-    the user navigates to the page   ${compPublicPage}/funding
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=button[type="submit"][formaction$="close-assessment"]
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=button[type="submit"][formaction$="close-assessment"]
+    Run Keyword If  '${status}' == 'FAIL'  Run keywords    the user clicks the button/link    css=button[type="submit"][formaction$="notify-assessors"]
+    ...    AND  the user clicks the button/link    css=button[type="submit"][formaction$="close-assessment"]
+    run keyword and ignore error     the user clicks the button/link    css=button[type="submit"][formaction$="close-assessment"]
+    the user clicks the button/link  link=Input and review funding decision
     the user clicks the button/link  jQuery=tr:contains("${publicLeadApp}") label
     the user clicks the button/link  css=[type="submit"][value="FUNDED"]
     the user navigates to the page   ${compPublicPage}/manage-funding-applications
