@@ -360,11 +360,7 @@ public class Application implements ProcessActivity {
     }
 
     public boolean applicationFundingDecisionIsChangeable() {
-        if(this.manageFundingEmailDate != null &&
-                (fundingDecision != null && fundingDecision.equals(FundingDecision.FUNDED))) {
-            return false;
-        }
-
-        return true;
+        return !(this.manageFundingEmailDate != null &&
+                (fundingDecision != null && fundingDecision.equals(FundingDecisionStatus.FUNDED)));
     }
 }
