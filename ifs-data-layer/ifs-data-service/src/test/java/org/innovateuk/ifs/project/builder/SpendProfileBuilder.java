@@ -6,7 +6,6 @@ import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -52,10 +51,6 @@ public class SpendProfileBuilder extends BaseBuilder<SpendProfile, SpendProfileB
 
     public SpendProfileBuilder withGeneratedDate(Calendar... dates) {
         return withArray((date, spendProfile) -> setField("generatedDate", date, spendProfile), dates);
-    }
-
-    public SpendProfileBuilder withApproval(ApprovalType... approvalTypes) {
-        return withArray((approvalType, spendProfile) -> setField("approval", approvalType, spendProfile), approvalTypes);
     }
 
     public SpendProfileBuilder withMarkedComplete(Boolean... completed) {
