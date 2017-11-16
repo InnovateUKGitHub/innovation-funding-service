@@ -11,7 +11,7 @@ import java.util.Set;
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 
 /**
- * Milestone Form Entry for the Milestones form.
+ * Default Milestone Form Entry without any validations for the Milestones form.
  */
 public class GenericMilestoneRowForm {
 	protected static final Set<MilestoneType> WITH_TIME_TYPES = asSet(MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE);
@@ -28,6 +28,29 @@ public class GenericMilestoneRowForm {
     protected String dayOfWeek;
     protected ZonedDateTime date;
     protected boolean editable;
+
+    public GenericMilestoneRowForm() {
+    }
+
+    public GenericMilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime) {
+        this(milestoneType, dateTime, true);
+    }
+
+    public GenericMilestoneRowForm(MilestoneType milestoneType, ZonedDateTime dateTime, boolean editable) {
+        this.setMilestoneType(milestoneType);
+        this.editable = editable;
+        if(dateTime != null) {
+            this.setDay(dateTime.getDayOfMonth());
+            this.setMonth(dateTime.getMonth().getValue());
+            this.setYear(dateTime.getYear());
+            this.setDate(dateTime);
+            if (isTimeOption()) {
+                this.setTime(MilestoneTime.fromZonedDateTime(dateTime));
+            }
+        } else if (isTimeOption() || isMiddayTime()) {
+            this.setTime(MilestoneTime.TWELVE_PM);
+        }
+    }
 
     public Integer getDay() {
         return day;

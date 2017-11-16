@@ -29,6 +29,7 @@ public class ValidAggregatedDateValidator implements ConstraintValidator<ValidAg
         Integer yearValue = 0;
         Integer monthValue = 0;
         Integer dayValue = 0;
+        boolean required = validAggregatedDate.required();
 
         try {
             yearValue = (Integer) PropertyUtils.getProperty(object, validAggregatedDate.yearField());
@@ -40,16 +41,25 @@ public class ValidAggregatedDateValidator implements ConstraintValidator<ValidAg
             return false;
         }
 
-        ZonedDateTime localDate;
-
-        try {
-            localDate = TimeZoneUtil.fromUkTimeZone(yearValue, monthValue, dayValue);
-        }
-        catch(Exception e) {
-            LOG.info("Cannot create ZonedDateTime from aggregated date properties", e);
-            return false;
+        if(!required || !dateValuesAllEmpty(yearValue, monthValue, dayValue)) {
+            ZonedDateTime localDate;
+            try {
+                localDate = TimeZoneUtil.fromUkTimeZone(yearValue, monthValue, dayValue);
+            }
+            catch(Exception e) {
+                LOG.info("Cannot create ZonedDateTime from aggregated date properties", e);
+                return false;
+            }
         }
 
         return true;
+    }
+
+    private boolean dateValuesAllEmpty(Integer yearValue, Integer monthValue, Integer dayValue) {
+        return valueIsEmpty(yearValue) && valueIsEmpty(monthValue) && valueIsEmpty(dayValue);
+    }
+
+    private boolean valueIsEmpty(Integer yearValue) {
+        return yearValue == null || yearValue.equals(0);
     }
 }

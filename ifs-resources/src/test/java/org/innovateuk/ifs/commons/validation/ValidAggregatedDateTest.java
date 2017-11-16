@@ -137,8 +137,79 @@ public class ValidAggregatedDateTest {
                 .andExpect(model().hasNoErrors());
     }
 
+    @Test
+    public void impossibleMonthDateYieldsEmptyAllowedInvalidResult() throws Exception  {
+        mockMvc.perform(post("/empty")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("year", "2017")
+                .param("month", "13")
+                .param("day", "28"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors());
+    }
+
+    @Test
+    public void impossibleMissingMonthDateYieldsEmptyAllowedInvalidResult() throws Exception  {
+        mockMvc.perform(post("/empty")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("year", "2017")
+                .param("day", "32"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasErrors());
+    }
+
+    @Test
+    public void possibleDateEmptyValidResult() throws Exception  {
+        mockMvc.perform(post("/empty")
+                .contentType(APPLICATION_FORM_URLENCODED)
+                .param("year", "2017")
+                .param("month", "2")
+                .param("day", "28"))
+                .andExpect(status().isOk())
+                .andExpect(model().hasNoErrors());
+    }
+
+    @Test
+    public void emptyDateEmptyValidResult() throws Exception  {
+        mockMvc.perform(post("/empty")
+                .contentType(APPLICATION_FORM_URLENCODED))
+                .andExpect(status().isOk())
+                .andExpect(model().hasNoErrors());
+    }
+
     @ValidAggregatedDate(dayField = "day", monthField = "month", yearField = "year", message = "{stuff.is.not.valid}")
     public static class TestForm {
+        private Integer year;
+        private Integer month;
+        private Integer day;
+
+        public Integer getYear() {
+            return year;
+        }
+
+        public void setYear(Integer year) {
+            this.year = year;
+        }
+
+        public Integer getMonth() {
+            return month;
+        }
+
+        public void setMonth(Integer month) {
+            this.month = month;
+        }
+
+        public Integer getDay() {
+            return day;
+        }
+
+        public void setDay(Integer day) {
+            this.day = day;
+        }
+    }
+
+    @ValidAggregatedDate(dayField = "day", monthField = "month", yearField = "year", message = "{stuff.is.not.valid}", required = true)
+    public static class TestEmptyForm {
         private Integer year;
         private Integer month;
         private Integer day;
@@ -174,6 +245,14 @@ public class ValidAggregatedDateTest {
 
         @PostMapping
         public ModelAndView test(@Valid @ModelAttribute("form") ValidAggregatedDateTest.TestForm form, BindingResult bindingResult) {
+            if (bindingResult.hasErrors()) {
+                return new ModelAndView("failure");
+            }
+            return new ModelAndView("success");
+        }
+
+        @PostMapping("/empty")
+        public ModelAndView testEmptyAllowed(@Valid @ModelAttribute("form") ValidAggregatedDateTest.TestEmptyForm form, BindingResult bindingResult) {
             if (bindingResult.hasErrors()) {
                 return new ModelAndView("failure");
             }

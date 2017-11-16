@@ -31,4 +31,6 @@ public @interface ValidAggregatedDate {
     String monthField();
 
     String dayField();
+
+    boolean required() default false;
 }
