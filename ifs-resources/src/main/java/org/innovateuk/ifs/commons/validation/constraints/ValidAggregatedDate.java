@@ -32,5 +32,5 @@ public @interface ValidAggregatedDate {
 
     String dayField();
 
-    boolean required() default false;
+    boolean required() default true;
 }

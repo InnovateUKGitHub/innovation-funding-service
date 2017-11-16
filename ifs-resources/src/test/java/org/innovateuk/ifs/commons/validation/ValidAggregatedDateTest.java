@@ -208,7 +208,7 @@ public class ValidAggregatedDateTest {
         }
     }
 
-    @ValidAggregatedDate(dayField = "day", monthField = "month", yearField = "year", message = "{stuff.is.not.valid}", required = true)
+    @ValidAggregatedDate(dayField = "day", monthField = "month", yearField = "year", message = "{stuff.is.not.valid}", required = false)
     public static class TestEmptyForm {
         private Integer year;
         private Integer month;

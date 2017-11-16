@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 /**
  * Extending the default @{@link GenericMilestoneRowForm} for adding validation which allows an empty date
  */
-@ValidAggregatedDate(yearField="year", monthField="month", dayField="day", message="{validation.standard.date.format}", required = true)
+@ValidAggregatedDate(yearField="year", monthField="month", dayField="day", message="{validation.standard.date.format}", required = false)
 public class MilestoneOrEmptyRowForm extends GenericMilestoneRowForm {
     public MilestoneOrEmptyRowForm() {
     }
