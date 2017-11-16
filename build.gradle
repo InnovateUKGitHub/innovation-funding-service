@@ -111,7 +111,7 @@ buildscript {
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
         classpath 'org.flywaydb:flyway-gradle-plugin:4.0'
         classpath 'org.flywaydb:flyway-core:4.0'
-        classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.1'
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6'
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath 'org.owasp:dependency-check-gradle:1.4.5'
         classpath "com.avast.gradle:docker-compose-gradle-plugin:0.4.5"
@@ -167,9 +167,9 @@ sonarqube {
     properties {
         property "sonar.projectName", "IFS_Project"
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
-        property "sonar.projectKey", "org.innovateuk:ifs"
-        property "sonar.branch", "ifs"
-        // property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
+//        property "sonar.projectKey", "org.innovateuk:ifs"
+        property "sonar.branch", "development"
+         property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
         property "sonar.exclusions", "**/*MapperImpl.java"
     }
 }
