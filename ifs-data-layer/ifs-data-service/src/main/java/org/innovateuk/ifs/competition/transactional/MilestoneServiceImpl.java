@@ -67,11 +67,14 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     private Boolean hasRequiredMilestones(List<Milestone> milestones, List<MilestoneType> milestonesRequired) {
-        return milestonesRequired.stream().allMatch(requiredMilestoneType ->
-                milestones.stream()
-                        .map(milestone -> milestone.getType()).collect(toList())
-                        .contains(requiredMilestoneType))
-            && milestones.stream().noneMatch(milestone -> milestone.getDate() == null);
+        List<MilestoneType> milestoneTypes = milestones
+                .stream()
+                .map(milestone -> milestone.getType()).collect(toList());
+
+        return milestoneTypes.containsAll(milestonesRequired)
+            && milestones
+                .stream()
+                .noneMatch(milestone -> milestone.getDate() == null);
     }
 
     private boolean filterNonIfsOutOnIFSComp(MilestoneType milestoneType, boolean isNonIfs) {

@@ -41,7 +41,7 @@ public class ValidAggregatedDateValidator implements ConstraintValidator<ValidAg
             return false;
         }
 
-        if(!required || !dateValuesAllEmpty(yearValue, monthValue, dayValue)) {
+        if(required || !dateValuesAllEmpty(yearValue, monthValue, dayValue)) {
             ZonedDateTime localDate;
             try {
                 localDate = TimeZoneUtil.fromUkTimeZone(yearValue, monthValue, dayValue);

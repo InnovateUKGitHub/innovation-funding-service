@@ -247,7 +247,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccessObjectOrThrowException();
         if(milestones.isEmpty()) {
-            milestones = competitionSetupMilestoneService.createMilestonesForCompetition(competitionId).getSuccessObjectOrThrowException();
+            milestones = competitionSetupMilestoneService.createMilestonesForIFSCompetition(competitionId).getSuccessObjectOrThrowException();
         }
         milestones.sort(Comparator.comparing(MilestoneResource::getType));
 
