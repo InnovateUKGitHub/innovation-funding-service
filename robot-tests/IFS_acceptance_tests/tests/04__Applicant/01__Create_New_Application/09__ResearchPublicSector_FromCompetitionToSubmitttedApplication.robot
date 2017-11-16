@@ -146,8 +146,8 @@ moving competition to Closed
 
 making the application a successful project
     the user navigates to the page   ${compPublicPage}
-    the user clicks the button/link  jQuery=.button-large:contains("Notify assessors")
-    the user clicks the button/link  jQuery=.button-large:contains("Close assessment")
+    the user clicks the button/link  css=button[type="submit"][formaction$="notify-assessors"]
+    the user clicks the button/link  css=button[type="submit"][formaction$="close-assessment"]
     the user navigates to the page   ${compPublicPage}/funding
     the user clicks the button/link  jQuery=tr:contains("${publicLeadApp}") label
     the user clicks the button/link  css=[type="submit"][value="FUNDED"]
@@ -158,7 +158,7 @@ making the application a successful project
 
 moving competition to Project Setup
     the user navigates to the page   ${compPublicPage}
-    the user clicks the button/link  jQuery=.button-large:contains("Release feedback")
+    the user clicks the button/link  css=button[type="submit"][formaction$="release-feedback"]
 
 the project finance is able to download the Overheads file
     ${projectId} =  get project id by name  ${publicLeadApp}

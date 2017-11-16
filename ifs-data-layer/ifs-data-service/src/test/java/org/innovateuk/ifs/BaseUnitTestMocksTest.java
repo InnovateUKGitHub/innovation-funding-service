@@ -23,7 +23,6 @@ import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
-import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
@@ -34,7 +33,6 @@ import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
@@ -97,6 +95,7 @@ import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServi
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
@@ -104,7 +103,6 @@ import org.innovateuk.ifs.project.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.util.FinanceUtil;
-import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
@@ -247,9 +245,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
-
-    @Mock
-    protected ApplicationCountSummaryMapper applicationCountSummaryMapperMock;
 
     @Mock
     protected ApplicationCountSummaryPageMapper applicationCountSummaryPageMapperMock;
@@ -492,9 +487,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CategoryService categoryServiceMock;
 
     @Mock
-    protected CategoryRepository categoryRepositoryMock;
-
-    @Mock
     protected InnovationAreaRepository innovationAreaRepositoryMock;
 
     @Mock
@@ -520,9 +512,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected BankDetailsService bankDetailsServiceMock;
-
-    @Mock
-    protected CompetitionFunderRepository competitionFunderRepositoryMock;
 
     @Mock
     protected SilExperianEndpoint silExperianEndpointMock;
@@ -636,9 +625,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationTypeMapper organisationTypeMapperMock;
 
     @Mock
-    protected SpendProfileTableCalculator spendProfileTableCalculatorMock;
-
-    @Mock
     protected NotificationSender notificationSenderMock;
 
     @Mock
@@ -693,9 +679,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationWorkflowHandler applicationWorkflowHandlerMock;
 
     @Mock
-    protected UserSurveyService userSurveyServiceMock;
-
-    @Mock
     protected IneligibleOutcomeMapper ineligibleOutcomeMapperMock;
 
     @Mock
@@ -715,6 +698,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected QuestionNumberOrderService questionNumberOrderServiceMock;
+
+    @Mock
+    protected SpendProfileWorkflowHandler spendProfileWorkflowHandlerMock;
 
     @Mock
     protected GoogleAnalyticsDataLayerService googleAnalyticsDataLayerServiceMock;
