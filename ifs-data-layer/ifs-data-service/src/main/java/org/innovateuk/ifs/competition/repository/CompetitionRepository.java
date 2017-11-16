@@ -43,12 +43,14 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
 
-    String INNOVATION_LEAD_PROJECT_SETUP_COUNT_QUERY = "SELECT count(distinct cp.competition.id) " +
-            "FROM CompetitionAssessmentParticipant cp " +
-            "WHERE cp.user.id = :userId " +
+    String INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE = "WHERE cp.user.id = :userId " +
             "AND cp.role = 'INNOVATION_LEAD' " +
             "AND EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = cp.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
             ") AND cp.competition.setupComplete = TRUE AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE";
+
+    String INNOVATION_LEAD_PROJECT_SETUP_QUERY = "SELECT cp.competition FROM CompetitionAssessmentParticipant cp " + INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE;
+
+    String INNOVATION_LEAD_PROJECT_SETUP_COUNT_QUERY = "SELECT count(distinct cp.competition.id) FROM CompetitionAssessmentParticipant cp " + INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE;
 
     String UPCOMING_CRITERIA = "FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND c.setupComplete = TRUE) OR " +
@@ -62,11 +64,10 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "ORDER BY m.date";
 
-    /* Innovation leads should not access competitions in states: In preparation, Ready to open, Project setup */
+    /* Innovation leads should not access competitions in states: In preparation and Ready to open */
     String SEARCH_QUERY_LEAD_TECHNOLOGIST = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct LEFT JOIN c.leadTechnologist u " +
             "WHERE (m.type = 'OPEN_DATE' AND m.date < NOW()) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "AND (c.setupComplete IS NOT NULL AND c.setupComplete != FALSE) " +
-            "AND NOT EXISTS (SELECT m.id FROM Milestone m WHERE m.competition.id = c.id AND m.type='FEEDBACK_RELEASED') " +
             "AND u.id = :leadTechnologistUserId " +
             "ORDER BY m.date";
 
@@ -131,6 +132,9 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     @Query(PROJECT_SETUP_QUERY)
     List<Competition> findProjectSetup();
+
+    @Query(INNOVATION_LEAD_PROJECT_SETUP_QUERY)
+    List<Competition> findProjectSetupForInnovationLead(@Param("userId") Long userId);
 
     @Query(PROJECT_SETUP_COUNT_QUERY)
     Long countProjectSetup();

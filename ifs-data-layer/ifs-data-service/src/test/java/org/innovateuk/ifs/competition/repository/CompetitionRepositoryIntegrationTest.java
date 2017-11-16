@@ -219,10 +219,11 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Page<Competition> leadTechnologistSearchResults = repository.searchForLeadTechnologist("%o%", leadTechnologist.getId(), pageable);
         List<Competition> filteredLeadTechnologistSearchResults = leadTechnologistSearchResults.getContent().stream().filter(r -> existingSearchResults.stream().filter(er -> er.getId().equals(r.getId())).count() == 0L).collect(Collectors.toList());
-        Assert.assertEquals(3, filteredLeadTechnologistSearchResults.size());
+        Assert.assertEquals(4, filteredLeadTechnologistSearchResults.size());
         Assert.assertEquals("earliestOpenComp", filteredLeadTechnologistSearchResults.get(0).getName());
-        Assert.assertEquals("compInInform", filteredLeadTechnologistSearchResults.get(1).getName());
-        Assert.assertEquals("openComp", filteredLeadTechnologistSearchResults.get(2).getName());
+        Assert.assertEquals("compInProjectSetup", filteredLeadTechnologistSearchResults.get(1).getName());
+        Assert.assertEquals("compInInform", filteredLeadTechnologistSearchResults.get(2).getName());
+        Assert.assertEquals("openComp", filteredLeadTechnologistSearchResults.get(3).getName());
 
         Page<Competition> supportUserSearchResults = repository.searchForSupportUser("%o%", pageable);
         List<Competition> filteredSupportUserSearchResults = supportUserSearchResults.getContent().stream().filter(r -> existingSearchResults.stream().filter(er -> er.getId().equals(r.getId())).count() == 0L).collect(Collectors.toList());
