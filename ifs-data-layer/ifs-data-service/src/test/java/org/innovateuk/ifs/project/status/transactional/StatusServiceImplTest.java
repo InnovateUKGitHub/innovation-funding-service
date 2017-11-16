@@ -176,7 +176,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
                 build(1);
 
         bankDetails = newBankDetails().withOrganisation(o).withApproval(TRUE).build();
-        spendProfile = newSpendProfile().withOrganisation(o).withGeneratedDate(Calendar.getInstance()).withMarkedComplete(TRUE).withApproval(ApprovalType.EMPTY).build();
+        spendProfile = newSpendProfile().withOrganisation(o).withGeneratedDate(Calendar.getInstance()).withMarkedComplete(TRUE).build();
 
         Mockito.when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         Mockito.when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
@@ -1061,7 +1061,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(TRUE).build();
-        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(TRUE).withApproval(ApprovalType.APPROVED).build();
+        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(TRUE).build();
 
         Mockito.when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         Mockito.when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
@@ -1091,7 +1091,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(TRUE).build();
-        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(TRUE).withApproval(ApprovalType.APPROVED).build();
+        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(TRUE).build();
 
         Mockito.when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         Mockito.when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
@@ -1139,7 +1139,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(nonLeadOrg.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
 
         BankDetails bankDetails = newBankDetails().withOrganisation(o).withApproval(TRUE).build();
-        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(TRUE).withApproval(ApprovalType.APPROVED).build();
+        SpendProfile spendProfile = newSpendProfile().withOrganisation(o).withMarkedComplete(TRUE).build();
 
         Mockito.when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         Mockito.when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
@@ -1176,8 +1176,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         List<PartnerOrganisation> po = newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(TRUE).build(1);
         Project p = newProject().withProjectUsers(pu).withApplication(application).withPartnerOrganisations(po).withDateSubmitted(ZonedDateTime.now()).withOtherDocumentsApproved(ApprovalType.APPROVED).withGrantOfferLetter(golFile).withSignedGrantOfferLetter(golFile).withOfferSubmittedDate(ZonedDateTime.now()).build();
         List<ProjectUserResource> puResource = newProjectUserResource().withProject(p.getId()).withOrganisation(o.getId()).withRole(partnerRole.getId()).withRoleName(PROJECT_PARTNER.getName()).build(1);
-
-        spendProfile.setApproval(ApprovalType.APPROVED);
 
         Mockito.when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
         Mockito.when(projectUserRepositoryMock.findByProjectId(p.getId())).thenReturn(pu);
@@ -1317,7 +1315,6 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
     @Test
     public void testSpendProfileCompleteRejected() {
-        spendProfile.setApproval(ApprovalType.REJECTED);
         p.setSpendProfileSubmittedDate(null);
 
         Mockito.when(projectRepositoryMock.findOne(p.getId())).thenReturn(p);
