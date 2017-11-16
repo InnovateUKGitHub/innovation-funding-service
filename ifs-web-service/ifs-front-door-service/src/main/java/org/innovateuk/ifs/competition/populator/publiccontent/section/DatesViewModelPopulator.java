@@ -33,12 +33,12 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
     @Override
     protected void populateSection(DatesViewModel model, PublicContentResource publicContentResource, PublicContentSectionResource section, Boolean nonIFS) {
         List<DateViewModel> publicContentDates = mapContentEventsToDatesViewModel(publicContentResource.getContentEvents());
-        publicContentDates.addAll(getMilestonesAsDatesViewModel(nonIFS, publicContentResource.getCompetitionId()));
+        publicContentDates.addAll(getMilestonesAsDatesViewModel(publicContentResource.getCompetitionId()));
 
         model.setPublicContentDates(publicContentDates);
     }
 
-    private List<DateViewModel> getMilestonesAsDatesViewModel(Boolean nonIFS, Long competitionId) {
+    private List<DateViewModel> getMilestonesAsDatesViewModel(Long competitionId) {
         List<MilestoneResource> milestones = milestoneRestService.getAllPublicMilestonesByCompetitionId(competitionId)
                 .getSuccessObjectOrThrowException();
 

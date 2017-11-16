@@ -8,6 +8,8 @@ import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
+import org.innovateuk.ifs.competitionsetup.form.GenericMilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.form.MilestoneOrEmptyRowForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
@@ -64,7 +66,7 @@ public class NonIfsDetailsFormSaverTest {
     private MilestoneRestService milestoneRestService;
 
     @Captor
-    private ArgumentCaptor<Map<String, MilestoneRowForm>> captor;
+    private ArgumentCaptor<Map<String, GenericMilestoneRowForm>> captor;
 
     @Test
     public void testSaveSuccess() {
@@ -86,7 +88,7 @@ public class NonIfsDetailsFormSaverTest {
 
         verify(competitionSetupMilestoneService).updateMilestonesForCompetition(eq(allMilestones), captor.capture(), eq(competition.getId()));
 
-        Map<String, MilestoneRowForm> milestones = captor.getValue();
+        Map<String, GenericMilestoneRowForm> milestones = captor.getValue();
 
         assertThat(milestones.get(NOTIFICATIONS.name()).getDate(), equalTo(NOTIFIED));
         assertThat(milestones.get(OPEN_DATE.name()).getDate(), equalTo(OPEN));
@@ -112,7 +114,7 @@ public class NonIfsDetailsFormSaverTest {
         form.setInnovationAreaCategoryId(INNOVATION_AREA);
         form.setOpenDate(new MilestoneRowForm(MilestoneType.OPEN_DATE, OPEN));
         form.setCloseDate(new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, CLOSE));
-        form.setApplicantNotifiedDate(new MilestoneRowForm(MilestoneType.RELEASE_FEEDBACK, NOTIFIED));
+        form.setApplicantNotifiedDate(new MilestoneOrEmptyRowForm(MilestoneType.RELEASE_FEEDBACK, NOTIFIED));
         return form;
     }
 

@@ -14,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.time.ZonedDateTime;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -66,6 +68,7 @@ public class DatesViewModelPopulatorTest {
     public void populateSectionWithMilestonesFound() {
         when(milestoneRestService.getAllPublicMilestonesByCompetitionId(publicContentResource.getCompetitionId()))
                 .thenReturn(restSuccess(newMilestoneResource()
+                        .withDate(ZonedDateTime.now(), ZonedDateTime.now(), ZonedDateTime.now())
                         .withType(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE)
                         .build(3)));
         publicContentResource.setContentEvents(emptyList());
@@ -107,7 +110,7 @@ public class DatesViewModelPopulatorTest {
 
         populator.populateSection(viewModel, publicContentResource, publicContentSectionResource, Boolean.FALSE);
 
-        assertEquals(5, viewModel.getPublicContentDates().size());
+        assertEquals(2, viewModel.getPublicContentDates().size());
     }
 
     @Test
