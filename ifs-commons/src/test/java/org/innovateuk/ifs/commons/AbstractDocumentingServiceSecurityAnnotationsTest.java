@@ -1,129 +1,86 @@
-package org.innovateuk.ifs.commons.security;
+package org.innovateuk.ifs.commons;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.innovateuk.ifs.commons.security.NotSecured;
+import org.innovateuk.ifs.commons.security.PermissionRule;
+import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.security.evaluator.ListOfOwnerAndMethod;
 import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
-import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
-import org.innovateuk.ifs.security.UidAuthenticationService;
-import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
+import org.innovateuk.ifs.commons.security.evaluator.RootCustomPermissionEvaluator;
 import org.junit.Test;
-import org.springframework.aop.framework.Advised;
-import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.access.prepost.PreFilter;
 import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.ProxyUtils.unwrapProxies;
 import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.getRulesMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.junit.Assert.*;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
- * Tests around the Spring Security annotations on the Services and the Permission Rule framework as used by the {@link CustomPermissionEvaluator}
+ * Base class to document security permissions and rules.
  */
-public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
+public abstract class AbstractDocumentingServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
-    public static final String[] SIMPLE_CSV_HEADERS = {"Entity", "Action", "Rule description", "Particular business state where rule is enforced"};
-    public static final String[] FULL_CSV_HEADERS = {"Entity", "Action", "Rule description", "Particular business state where rule is enforced", "Rule method", "Additional rule comments"};
-    List<Class<?>> excludedClasses
-            = asList(
-            UidAuthenticationService.class,
-            StatelessAuthenticationFilter.class
-    );
-    List<Class<? extends Annotation>> securityAnnotations
-            = asList(
-            PreAuthorize.class,
-            PreFilter.class,
-            PostAuthorize.class,
-            PostFilter.class,
-            NotSecured.class
-    );
+    protected abstract List<Class<?>> excludedClasses();
+    protected abstract RootCustomPermissionEvaluator evaluator();
+
+    protected String[] simpleCsvHeaders(){
+        return new String[]{"Entity", "Action", "Rule description", "Particular business state where rule is enforced"};
+    };
+
+    protected String[] fullCsvHeaders(){
+        return new String[]{"Entity", "Action", "Rule description", "Particular business state where rule is enforced", "Rule method", "Additional rule comments"};
+    };
+
+    protected String permissionRulesSummaryLocation(){
+        return "build/permission-rules-summary.csv";
+    }
+
+    protected String permissionRulesFullLocation() {
+        return "build/permission-rules-full.csv";
+    }
+
     @Autowired
-    private ApplicationContext context;
-
-    @Test
-    public void testServiceMethodsHaveSecurityAnnotations() throws Exception {
-        Collection<Object> services = getApplicableServices();
-
-        // Assert that we actually have some services.
-        assertNotNull(services);
-        assertFalse(services.isEmpty());
-        
-        // Find all the methods that should have a security annotation on and check they do.
-        int totalMethodsChecked = 0;
-        for (Object service : services) {
-            for (Method method : service.getClass().getMethods()) {
-                // Only public methods and not those on base class Object
-                if (Modifier.isPublic(method.getModifiers()) && !method.getDeclaringClass().isAssignableFrom(Object.class)) {
-                    if (!hasOneOf(method, securityAnnotations)) {
-                        fail("Method: " + method.getName() + " on class " + method.getDeclaringClass() + " does not have security annotations");
-                    }
-                    if (needsSecuredBySpring(annotationValues(method, securityAnnotations)) && !hasOneOf(method, asList(SecuredBySpring.class))) {
-                        fail("Method: " + method.getName() + " on class " + method.getDeclaringClass() + " needs to have a SecuredBySpring annotation");
-                    } else {
-                        List<String> annotationValues = annotationValues(method, securityAnnotations);
-                        totalMethodsChecked++;
-                    }
-                }
-            }
-        }
-
-        // Make sure we are not failing silently
-        assertTrue("We should be checking at least one method for security annotations", totalMethodsChecked > 0);
-    }
-
-    private boolean needsSecuredBySpring(List<String> values) {
-        boolean needsSecuredBySpring = !simpleFilter(values, value ->
-                value.contains("Authority") ||
-                        value.contains("Role") ||
-                        value.contains("Authenticated") ||
-                        value.contains("Anonymous")).isEmpty();
-        return needsSecuredBySpring;
-    }
-
-    private List<String> annotationValues(Method method, List<Class<? extends Annotation>> annotations) throws Exception {
-        List<String> values = new ArrayList<>();
-        for (Class<? extends Annotation> clazz : annotations) {
-            // Note that if the annotation does not have a value method this will throw.
-            // This should mean that we will not get any silent failures in the event that the signatures change.
-            Method valueMethodOnAnnotation = clazz.getDeclaredMethod("value");
-            Annotation annotationOnServiceMethod = findAnnotation(method, clazz);
-            if (annotationOnServiceMethod != null) {
-                String value = (String) valueMethodOnAnnotation.invoke(annotationOnServiceMethod);
-                values.add(value);
-            }
-        }
-        return values;
-    }
+    protected ApplicationContext context;
 
     /**
-     * This test will generate a CSV of Permission Rules ordered by the Entities that they apply to.
-     * <p>
-     * This is of the format "Entity", "Action", "Rule description"
+     * There are several ways that security is documented and enforced in the code.
+     * This test generates the aggregated documentation for these:
+     * <ol>
+     *     <li>Goes through all of the classes annotated with {@link PermissionRules} and ascertains from the
+     *     contained {@link PermissionRule} annotated methods the rules which can be applied to each entity.</li>
+     *     <li>Service methods which are secured with standard Spring rules, and are annotated with
+     *     {@link SecuredBySpring} which describes the permission.</li>
+     *     <li>Service methods that have the {@link NotSecured} annotation which has a description field of why this is
+     *     the case.</li>
+     * </ol>
+     *
+     * This documentation generated is a CSV.
+     *
+     * Where the permissions are dictated by the custom {@link PermissionRules} class then the format of the CSV is:
+     * "Entity", "Action", "Rule description"
+     *
+     * Note that this documentation does not include the mapping of the secured service methods to the actual
+     * customised permission rule methods. There is no good way of generating these on mass and they must be
+     * documented by more focused security tests.
      *
      * @throws Exception
      */
     @Test
     public void generateLowLevelPermissionsDocumentation() throws Exception {
 
-        CustomPermissionEvaluator evaluator = (CustomPermissionEvaluator) context.getBean("customPermissionEvaluator");
-
-        List<String[]> permissionRuleSecuredRows = getPermissionRulesBasedSecurity(evaluator);
+        List<String[]> permissionRuleSecuredRows = getPermissionRulesBasedSecurity(evaluator());
         List<String[]> simpleSpringSecuritySecuredRows = getSimpleSpringSecurityBasedSecurity();
         List<String[]> notSecuredRows = getNotSecuredMethods();
         List<String[]> allSecuredRows = combineLists(permissionRuleSecuredRows, simpleSpringSecuritySecuredRows, notSecuredRows);
@@ -139,10 +96,10 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
         // output a simple csv of rule information
         List<String[]> simpleRows = simpleMap(allSecuredRows, row -> new String[]{row[0], row[1], row[2], row[3]});
-        writeCsv("build/permission-rules-summary.csv", SIMPLE_CSV_HEADERS, simpleRows);
+        writeCsv(permissionRulesSummaryLocation(), simpleCsvHeaders(), simpleRows);
 
         // output a more complex csv of rule information
-        writeCsv("build/permission-rules-full.csv", FULL_CSV_HEADERS, allSecuredRows);
+        writeCsv(permissionRulesFullLocation(), fullCsvHeaders(), allSecuredRows);
     }
 
     private List<String[]> getSimpleSpringSecurityBasedSecurity() {
@@ -194,12 +151,11 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
         return flattenLists(nonSecuredMethodRowsByService);
     }
 
-    //TODO: weird coupling here
     private List<Object> getApplicableServices() {
         return unwrapProxies(servicesToTest());
     }
 
-    private List<String[]> getPermissionRulesBasedSecurity(CustomPermissionEvaluator evaluator) {
+    private List<String[]> getPermissionRulesBasedSecurity(RootCustomPermissionEvaluator evaluator) {
         List<String[]> permissionRuleRows = new ArrayList<>();
 
         PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = getRulesMap(evaluator);
@@ -279,7 +235,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
         Collection<Object> services = context.getBeansWithAnnotation(Service.class).values();
         for (Iterator<Object> i = services.iterator(); i.hasNext(); ) {
             Object service = i.next();
-            excludedClasses.stream().filter(exclusion -> unwrapProxy(service).getClass().isAssignableFrom(exclusion)).forEach(exclusion -> {
+            excludedClasses().stream().filter(exclusion -> unwrapProxy(service).getClass().isAssignableFrom(exclusion)).forEach(exclusion -> {
                 i.remove();
             });
         }
@@ -293,22 +249,4 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
             throw new RuntimeException(e);
         }
     }
-
-    private List<Object> unwrapProxies(Collection<Object> services) {
-        List<Object> unwrappedProxies = new ArrayList<>();
-        for (Object service : services) {
-            if (AopUtils.isAopProxy(service)) {
-                try {
-                    unwrappedProxies.add(((Advised) service).getTargetSource().getTarget());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            } else {
-                unwrappedProxies.add(service);
-            }
-        }
-        return unwrappedProxies;
-    }
-
-
 }

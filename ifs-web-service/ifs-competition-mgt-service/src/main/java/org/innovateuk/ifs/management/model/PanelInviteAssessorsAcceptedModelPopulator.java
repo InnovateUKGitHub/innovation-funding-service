@@ -5,9 +5,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
+import org.innovateuk.ifs.management.viewmodel.InviteAssessorsAcceptedViewModel;
+import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
-import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsAcceptedViewModel;
-import org.innovateuk.ifs.management.viewmodel.PanelOverviewAssessorRowViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors 'Accepted' view.
  */
 @Component
-public class PanelInviteAssessorsAcceptedModelPopulator extends PanelInviteAssessorsModelPopulator<PanelInviteAssessorsAcceptedViewModel> {
+public class PanelInviteAssessorsAcceptedModelPopulator extends PanelInviteAssessorsModelPopulator<InviteAssessorsAcceptedViewModel> {
 
     @Autowired
     private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
@@ -29,14 +29,14 @@ public class PanelInviteAssessorsAcceptedModelPopulator extends PanelInviteAsses
     @Autowired
     private CompetitionRestService competitionsRestService;
 
-    public PanelInviteAssessorsAcceptedViewModel populateModel(long competitionId,
+    public InviteAssessorsAcceptedViewModel populateModel(long competitionId,
                                                                int page,
                                                                String originQuery) {
         CompetitionResource competition = competitionsRestService
                 .getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        PanelInviteAssessorsAcceptedViewModel model = super.populateModel(competition);
+        InviteAssessorsAcceptedViewModel model = super.populateModel(competition);
 
         AssessorInviteOverviewPageResource pageResource = assessmentPanelInviteRestService.getInvitationOverview(
                 competition.getId(),
@@ -44,7 +44,7 @@ public class PanelInviteAssessorsAcceptedModelPopulator extends PanelInviteAsses
                 singletonList(ACCEPTED))
                 .getSuccessObjectOrThrowException();
 
-        List<PanelOverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
+        List<OverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
@@ -53,8 +53,8 @@ public class PanelInviteAssessorsAcceptedModelPopulator extends PanelInviteAsses
         return model;
     }
 
-    private PanelOverviewAssessorRowViewModel getRowViewModel(AssessorInviteOverviewResource assessorInviteOverviewResource) {
-        return new PanelOverviewAssessorRowViewModel(
+    private OverviewAssessorRowViewModel getRowViewModel(AssessorInviteOverviewResource assessorInviteOverviewResource) {
+        return new OverviewAssessorRowViewModel(
                 assessorInviteOverviewResource.getId(),
                 assessorInviteOverviewResource.getName(),
                 assessorInviteOverviewResource.getInnovationAreas(),
@@ -66,5 +66,5 @@ public class PanelInviteAssessorsAcceptedModelPopulator extends PanelInviteAsses
     }
 
     @Override
-    protected PanelInviteAssessorsAcceptedViewModel createModel() { return new PanelInviteAssessorsAcceptedViewModel(); }
+    protected InviteAssessorsAcceptedViewModel createModel() { return new InviteAssessorsAcceptedViewModel(); }
 }
