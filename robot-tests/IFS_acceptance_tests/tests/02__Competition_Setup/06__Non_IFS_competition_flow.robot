@@ -33,7 +33,9 @@ Validation errors on non-IFS competition details
     When the user clicks the button/link     jQuery=button:contains("Save and continue")
     Then the user should see a field and summary error  Please enter a title.
     And the user should see a field and summary error   Please enter a competition URL.
-    And the user should see a field and summary error   Please enter a valid date.
+#    TODO commented due to IFS-2244
+#    And the user should see a field and summary error   Please enter a valid date.
+    And the user should see a summary error             Please enter a valid date
     When the user fills out the competition title and url
     Then the user should not see the element  jQuery=.error-message:contains("Please enter a competition URL.")
     And the user should not see the element   jQuery=.error-message:contains("Please enter a title.")
@@ -82,8 +84,12 @@ Guest user can apply to a Non-IFS competition at the FrontDoor
 Guest can see the Dates tab
     [Documentation]    INFUND-8554
     [Tags]    MySQL
-    Then the user clicks the button/link    link=Dates
-    And The user should see the text in the page    Registration closes
+    When the user clicks the button/link      link=Dates
+    Then the user should not see the element  css=input
+    And the user should see the element       jQuery=#dates dd:contains("Competition opens")
+    And the user should see the element       jQuery=#dates dd:contains("Registration closes")
+    And the user should see the element       jQuery=#dates dd:contains("Competition closes")
+    And the user should see the element       jQuery=#dates dd:contains("Applicants notified")
 
 *** Keywords ***
 the user fills out the competition title and url
@@ -94,12 +100,17 @@ the user fills out the non-IFS details
     And the user selects the option from the drop-down menu  Materials and manufacturing  id=innovationSectorCategoryId
     And the user selects the option from the drop-down menu  Assembly / disassembly / joining  id=innovationAreaCategoryId
     When the user enters text to a text field   id=openDate-day    1
-    And the user enters text to a text field   id=openDate-month    1
-    And the user enters text to a text field   id=openDate-year    2020
+    And the user enters text to a text field   id=openDate-month    10
+    And the user enters text to a text field   id=openDate-year    2017
+    the user enters text to a text field       id=registrationCloseDate-day  15
+    the user enters text to a text field       id=registrationCloseDate-month  2
+    the user enters text to a text field       id=registrationCloseDate-year  2020
+    the user selects the option from the drop-down menu    6:00 pm  id=registrationCloseDate-time
     And the user enters text to a text field   id=closeDate-day    1
     And the user enters text to a text field   id=closeDate-month    3
     And the user enters text to a text field   id=closeDate-year    2020
     And the user selects the option from the drop-down menu  4:00 pm  id=closeDate-time
+    And the user should see the text in the element   css=#applicantNotifiedDate  Applicants notified (optional)
     And the user enters text to a text field   id=applicantNotifiedDate-day    1
     And the user enters text to a text field   id=applicantNotifiedDate-month    5
     And the user enters text to a text field   id=applicantNotifiedDate-year    2020
