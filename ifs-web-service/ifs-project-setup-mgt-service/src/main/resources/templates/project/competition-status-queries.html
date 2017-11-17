@@ -3,21 +3,16 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Setup Dashboard: Query Responses'" />
 </head>
-<body class="project-management">
+<body class="competition-management project-management">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content" class="full-width">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div class="grid-container">
-        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
 
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionName},subTitle=|${model.competitionId}: Innovate UK|,size='heading-xlarge'" />
-            </div>
-        </div>
-    </div>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.competitionName},subTitle=|${model.competitionId}: Innovate UK|,size='heading-xlarge'" />
+
     <th:block th:insert="project/fragments :: project-dashboard-navigation (selectedTab=${'queries'}, competitionId=${model.competitionId}, openQueryCount=${model.openQueryCount}, pendingSpendProfilesCount=${model.pendingSpendProfilesCount}, showAllTabs=${model.showTabs})" />
 
     <th:block th:if="${model.openQueries.size() > 0}">
@@ -41,7 +36,7 @@
         </div>
     </th:block>
     <th:block th:unless="${model.openQueries.size() > 0}">
-        There are no outstanding queries.
+        <p>There are no outstanding queries.</p>
     </th:block>
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
