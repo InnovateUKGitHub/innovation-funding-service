@@ -24,6 +24,7 @@ public class ApplicationTeamController {
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @GetMapping("/team")
+    @PreAuthorize("hasPermission(#applicationId, 'VIEW_APPLICATION_TEAM_PAGE')")
     public String getApplicationTeam(Model model, @PathVariable("applicationId") long applicationId,
                                      UserResource loggedInUser) {
         model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId()));
