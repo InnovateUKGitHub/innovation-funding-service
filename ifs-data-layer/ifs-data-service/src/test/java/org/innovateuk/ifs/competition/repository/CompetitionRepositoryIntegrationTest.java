@@ -1,13 +1,17 @@
 package org.innovateuk.ifs.competition.repository;
 
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -31,7 +35,6 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
-
 import static org.junit.Assert.*;
 
 public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionRepository> {
@@ -47,6 +50,9 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Autowired
     private OrganisationRepository organisationRepository;
+
+    @Autowired
+    private CompetitionParticipantRepository competitionParticipantRepository;
 
     @Autowired
     private UserMapper userMapper;
@@ -158,6 +164,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         openComp = repository.save(openComp);
         openComp.setMilestones(replaceOpenDateMilestoneDate(openComp.getMilestones(), ZonedDateTime.now().minusHours(5L)));
         openComp = repository.save(openComp);
+        CompetitionAssessmentParticipant competitionParticipant = buildCompetitionParticipant(openComp, leadTechnologist);
+        competitionParticipantRepository.save(competitionParticipant);
 
         Competition earliestOpenComp = new Competition(null, null, null,null,"earliestOpenComp", null, null);
         earliestOpenComp.setLeadTechnologist(leadTechnologist);
@@ -165,6 +173,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         earliestOpenComp = repository.save(earliestOpenComp);
         earliestOpenComp.setMilestones(replaceOpenDateMilestoneDate(earliestOpenComp.getMilestones(), ZonedDateTime.now().minusDays(3L)));
         earliestOpenComp = repository.save(earliestOpenComp);
+        competitionParticipant = buildCompetitionParticipant(earliestOpenComp, leadTechnologist);
+        competitionParticipantRepository.save(competitionParticipant);
 
         Competition compWithNoInnovationLead = new Competition(null, null, null,null,"compWithNoInnovationLead", null, null);
         compWithNoInnovationLead.setLeadTechnologist(notLeadTechnologist);
@@ -172,6 +182,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         compWithNoInnovationLead = repository.save(compWithNoInnovationLead);
         compWithNoInnovationLead.setMilestones(replaceOpenDateMilestoneDate(compWithNoInnovationLead.getMilestones(), ZonedDateTime.now().minusHours(10L)));
         compWithNoInnovationLead = repository.save(compWithNoInnovationLead);
+        competitionParticipant = buildCompetitionParticipant(compWithNoInnovationLead, notLeadTechnologist);
+        competitionParticipantRepository.save(competitionParticipant);
 
         Competition compInPreparation = new Competition(null, null, null,null,"compInPreparation", null, null);
         compInPreparation.setLeadTechnologist(leadTechnologist);
@@ -179,6 +191,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         compInPreparation = repository.save(compInPreparation);
         compInPreparation.setMilestones(replaceOpenDateMilestoneDate(compInPreparation.getMilestones(), ZonedDateTime.now().minusHours(20L)));
         compInPreparation = repository.save(compInPreparation);
+        competitionParticipant = buildCompetitionParticipant(compInPreparation, leadTechnologist);
+        competitionParticipantRepository.save(competitionParticipant);
 
         Competition compReadyToOpen = new Competition(null, null, null,null,"compReadyToOpen", null, null);
         compReadyToOpen.setLeadTechnologist(leadTechnologist);
@@ -186,6 +200,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         compReadyToOpen = repository.save(compReadyToOpen);
         compReadyToOpen.setMilestones(replaceOpenDateMilestoneDate(compReadyToOpen.getMilestones(), ZonedDateTime.now().plusHours(12L)));
         compReadyToOpen = repository.save(compReadyToOpen);
+        competitionParticipant = buildCompetitionParticipant(compReadyToOpen, leadTechnologist);
+        competitionParticipantRepository.save(competitionParticipant);
 
         Competition compInInform = new Competition(null, null, null,null,"compInInform", null, null);
         compInInform.setLeadTechnologist(leadTechnologist);
@@ -193,6 +209,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         compInInform = repository.save(compInInform);
         compInInform.setMilestones(replaceOpenDateMilestoneDate(compInInform.getMilestones(), ZonedDateTime.now().minusDays(1L).minusHours(12L)));
         compInInform = repository.save(compInInform);
+        competitionParticipant = buildCompetitionParticipant(compInInform, leadTechnologist);
+        competitionParticipantRepository.save(competitionParticipant);
 
         Competition compInProjectSetup = new Competition(null, null, null,null,"compInProjectSetup", null, null);
         compInProjectSetup.setLeadTechnologist(leadTechnologist);
@@ -200,6 +218,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         compInProjectSetup = repository.save(compInProjectSetup);
         compInProjectSetup.setMilestones(replaceOpenDateMilestoneDate(compInProjectSetup.getMilestones(), ZonedDateTime.now().minusDays(2L)));
         compInProjectSetup = repository.save(compInProjectSetup);
+        competitionParticipant = buildCompetitionParticipant(compInProjectSetup, leadTechnologist);
+        competitionParticipantRepository.save(competitionParticipant);
 
         Milestone feedbackReleasedMilestoneInProjectSetup = newMilestone().withCompetition(compInProjectSetup).withType(MilestoneType.FEEDBACK_RELEASED).withDate(ZonedDateTime.now().minusDays(1L)).build();
         milestoneRepository.save(feedbackReleasedMilestoneInProjectSetup);
@@ -234,6 +254,15 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Assert.assertEquals("compWithNoInnovationLead", filteredSupportUserSearchResults.get(3).getName());
         Assert.assertEquals("openComp", filteredSupportUserSearchResults.get(4).getName());
         Assert.assertEquals("compReadyToOpen", filteredSupportUserSearchResults.get(5).getName());
+    }
+
+    private CompetitionAssessmentParticipant buildCompetitionParticipant(Competition competition, User user){
+        CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant();
+        competitionParticipant.setUser(user);
+        competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
+        competitionParticipant.setStatus(ParticipantStatus.ACCEPTED);
+        competitionParticipant.setProcess(competition);
+        return competitionParticipant;
     }
 
     @Test
