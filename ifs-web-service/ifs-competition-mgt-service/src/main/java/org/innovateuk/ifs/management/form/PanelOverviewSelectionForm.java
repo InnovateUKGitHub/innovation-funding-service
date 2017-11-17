@@ -10,12 +10,12 @@ import java.util.List;
 /**
  * Form for the selection of assessors on the Assessment Panel Overview assessors tab
  */
-public class AssessorPanelOverviewSelectionForm extends BaseBindingResultTarget {
+public class PanelOverviewSelectionForm extends BaseBindingResultTarget {
 
     private boolean allSelected;
     private List<Long> selectedInviteIds;
 
-    public AssessorPanelOverviewSelectionForm() {
+    public PanelOverviewSelectionForm() {
         this.selectedInviteIds = new ArrayList<>();
     }
 
@@ -45,7 +45,7 @@ public class AssessorPanelOverviewSelectionForm extends BaseBindingResultTarget 
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessorPanelOverviewSelectionForm that = (AssessorPanelOverviewSelectionForm) o;
+        PanelOverviewSelectionForm that = (PanelOverviewSelectionForm) o;
 
         return new EqualsBuilder()
                 .append(allSelected, that.allSelected)

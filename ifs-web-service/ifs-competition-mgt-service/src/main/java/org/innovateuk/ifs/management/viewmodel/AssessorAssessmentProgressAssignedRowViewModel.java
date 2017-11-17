@@ -5,7 +5,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentState;
 
 import java.util.Set;
 
-public class AssessorAssessmentProgressAssignedRowViewModel {
+public class AssessorAssessmentProgressAssignedRowViewModel extends AssessorAssessmentProgressRowViewModel {
 
     private static final Set<AssessmentState> NOTIFIED_STATES = Sets.immutableEnumSet(
             AssessmentState.PENDING,
@@ -31,9 +31,6 @@ public class AssessorAssessmentProgressAssignedRowViewModel {
             AssessmentState.SUBMITTED
     );
 
-    private long applicationId;
-    private String applicationName;
-    private String leadOrganisation;
     private int totalAssessors;
     private AssessmentState state;
     private long assessmentId;
@@ -44,24 +41,10 @@ public class AssessorAssessmentProgressAssignedRowViewModel {
                                                           int totalAssessors,
                                                           AssessmentState state,
                                                           long assessmentId) {
-        this.applicationId = applicationId;
-        this.applicationName = applicationName;
-        this.leadOrganisation = leadOrganisation;
+        super(applicationId, applicationName, leadOrganisation);
         this.totalAssessors = totalAssessors;
         this.state = state;
         this.assessmentId = assessmentId;
-    }
-
-    public long getApplicationId() {
-        return applicationId;
-    }
-
-    public String getApplicationName() {
-        return applicationName;
-    }
-
-    public String getLeadOrganisation() {
-        return leadOrganisation;
     }
 
     public int getTotalAssessors() {

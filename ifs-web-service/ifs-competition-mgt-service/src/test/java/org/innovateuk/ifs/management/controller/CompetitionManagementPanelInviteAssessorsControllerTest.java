@@ -9,9 +9,9 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.management.form.AssessorPanelSelectionForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
+import org.innovateuk.ifs.management.form.PanelSelectionForm;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
 import org.innovateuk.ifs.management.model.PanelInviteAssessorsAcceptedModelPopulator;
 import org.innovateuk.ifs.management.model.PanelInviteAssessorsFindModelPopulator;
@@ -150,7 +150,7 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
                 .andExpect(view().name("assessors/panel-find"))
                 .andReturn();
 
-        AssessorPanelSelectionForm selectionForm = (AssessorPanelSelectionForm) result.getModelAndView().getModel().get("assessorPanelSelectionForm");
+        PanelSelectionForm selectionForm = (PanelSelectionForm) result.getModelAndView().getModel().get("assessorPanelSelectionForm");
         assertTrue(selectionForm.getSelectedAssessorIds().isEmpty());
 
         assertCompetitionDetails(competition, result);
@@ -181,7 +181,7 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
                 .andExpect(view().name("assessors/panel-find"))
                 .andReturn();
 
-        AssessorPanelSelectionForm selectionForm = (AssessorPanelSelectionForm) result.getModelAndView().getModel().get("assessorPanelSelectionForm");
+        PanelSelectionForm selectionForm = (PanelSelectionForm) result.getModelAndView().getModel().get("assessorPanelSelectionForm");
         assertTrue(selectionForm.getSelectedAssessorIds().isEmpty());
 
         assertCompetitionDetails(competition, result);
@@ -200,7 +200,7 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
         int page = 0;
         long expectedAssessorId = 1L;
 
-        AssessorPanelSelectionForm expectedSelectionForm = new AssessorPanelSelectionForm();
+        PanelSelectionForm expectedSelectionForm = new PanelSelectionForm();
         expectedSelectionForm.getSelectedAssessorIds().add(expectedAssessorId);
         Cookie selectionFormCookie = createFormCookie(expectedSelectionForm);
 
@@ -219,10 +219,10 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
                 .andExpect(view().name("assessors/panel-find"))
                 .andReturn();
 
-        AssessorPanelSelectionForm selectionForm = (AssessorPanelSelectionForm) result.getModelAndView().getModel().get("assessorPanelSelectionForm");
+        PanelSelectionForm selectionForm = (PanelSelectionForm) result.getModelAndView().getModel().get("assessorPanelSelectionForm");
         assertEquals(expectedSelectionForm, selectionForm);
 
-        Optional<AssessorPanelSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorPanelSelectionForm_comp_%s", competition.getId()));
+        Optional<PanelSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorPanelSelectionForm_comp_%s", competition.getId()));
         assertTrue(resultForm.get().getSelectedAssessorIds().contains(expectedAssessorId));
 
         assertCompetitionDetails(competition, result);
@@ -239,7 +239,7 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
     @Test
     public void addAssessorSelectionFromFindView() throws Exception {
         long assessorId = 1L;
-        Cookie formCookie = createFormCookie(new AssessorPanelSelectionForm());
+        Cookie formCookie = createFormCookie(new PanelSelectionForm());
 
         when(assessmentPanelInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
@@ -254,14 +254,14 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<AssessorPanelSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorPanelSelectionForm_comp_%s", competition.getId()));
+        Optional<PanelSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorPanelSelectionForm_comp_%s", competition.getId()));
         assertTrue(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
     @Test
     public void addAssessorSelectionFromFindView_defaultParams() throws Exception {
         long assessorId = 1L;
-        Cookie formCookie = createFormCookie(new AssessorPanelSelectionForm());
+        Cookie formCookie = createFormCookie(new PanelSelectionForm());
 
         when(assessmentPanelInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
@@ -275,13 +275,13 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<AssessorPanelSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorPanelSelectionForm_comp_%s", competition.getId()));
+        Optional<PanelSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorPanelSelectionForm_comp_%s", competition.getId()));
         assertTrue(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
     @Test
     public void addAllAssessorsFromFindView_defaultParams() throws Exception {
-        Cookie formCookie = createFormCookie(new AssessorPanelSelectionForm());
+        Cookie formCookie = createFormCookie(new PanelSelectionForm());
 
         when(assessmentPanelInviteRestService.getAvailableAssessorIds(competition.getId())).thenReturn(restSuccess(asList(1L, 2L)));
 
@@ -294,14 +294,14 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<AssessorPanelSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorPanelSelectionForm_comp_%s", competition.getId()));
+        Optional<PanelSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorPanelSelectionForm_comp_%s", competition.getId()));
         assertEquals(2, resultForm.get().getSelectedAssessorIds().size());
     }
 
     @Test
     public void removeAssessorSelectionFromFindView() throws Exception {
         long assessorId = 1L;
-        AssessorPanelSelectionForm form = new AssessorPanelSelectionForm();
+        PanelSelectionForm form = new PanelSelectionForm();
         form.getSelectedAssessorIds().add(assessorId);
         Cookie formCookie = createFormCookie(form);
 
@@ -318,7 +318,7 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<AssessorPanelSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorPanelSelectionForm_comp_%s", competition.getId()));
+        Optional<PanelSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorPanelSelectionForm_comp_%s", competition.getId()));
         assertFalse(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
@@ -326,7 +326,7 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
     public void removeAssessorSelectionFromFindView_defaultParams() throws Exception {
         long assessorId = 1L;
         Cookie formCookie;
-        AssessorPanelSelectionForm form = new AssessorPanelSelectionForm();
+        PanelSelectionForm form = new PanelSelectionForm();
         form.getSelectedAssessorIds().add(assessorId);
         formCookie = createFormCookie(form);
 
@@ -342,7 +342,7 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
                 .andExpect(jsonPath("limitExceeded", is(false)))
                 .andReturn();
 
-        Optional<AssessorPanelSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorPanelSelectionForm_comp_%s", competition.getId()));
+        Optional<PanelSelectionForm> resultForm = getAssessorPanelSelectionFormFromCookie(result.getResponse(), format("assessorPanelSelectionForm_comp_%s", competition.getId()));
         assertFalse(resultForm.get().getSelectedAssessorIds().contains(assessorId));
     }
 
@@ -408,13 +408,13 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
     }
 
     private void assertInviteAccepted(List<AssessorInviteOverviewResource> expectedInviteAccepted, MvcResult result) {
-        assertTrue(result.getModelAndView().getModel().get("model") instanceof PanelInviteAssessorsAcceptedViewModel);
-        PanelInviteAssessorsAcceptedViewModel model = (PanelInviteAssessorsAcceptedViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof InviteAssessorsAcceptedViewModel);
+        InviteAssessorsAcceptedViewModel model = (InviteAssessorsAcceptedViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedInviteAccepted.size(), model.getAssessors().size());
 
         forEachWithIndex(expectedInviteAccepted, (i, inviteOverviewResource) -> {
-            PanelOverviewAssessorRowViewModel overviewAssessorRowViewModel = model.getAssessors().get(i);
+            OverviewAssessorRowViewModel overviewAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(inviteOverviewResource.getName(), overviewAssessorRowViewModel.getName());
             assertEquals(formatInnovationAreas(inviteOverviewResource.getInnovationAreas()), overviewAssessorRowViewModel.getInnovationAreas());
             assertEquals(inviteOverviewResource.isCompliant(), overviewAssessorRowViewModel.isCompliant());
@@ -471,6 +471,7 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
 
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {
         return newAvailableAssessorResource()
+                .withId(1L, 2L)
                 .withName("Dave Smith", "John Barnes")
                 .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
@@ -483,6 +484,8 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
 
     private List<AssessorCreatedInviteResource> setUpAssessorCreatedInviteResources() {
         return newAssessorCreatedInviteResource()
+                .withId(1L, 2L)
+                .withInviteId(3L, 4L)
                 .withName("Dave Smith", "John Barnes")
                 .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
@@ -494,6 +497,8 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
 
     private List<AssessorInviteOverviewResource> setUpAssessorInviteOverviewResources() {
         return newAssessorInviteOverviewResource()
+                .withId(1L, 2L)
+                .withInviteId(3L, 4L)
                 .withName("Dave Smith", "John Barnes")
                 .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
@@ -506,20 +511,20 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
     }
 
     private void assertCompetitionDetails(CompetitionResource expectedCompetition, MvcResult result) {
-        PanelInviteAssessorsViewModel model = (PanelInviteAssessorsViewModel) result.getModelAndView().getModel().get("model");
+        InviteAssessorsViewModel model = (InviteAssessorsViewModel) result.getModelAndView().getModel().get("model");
 
-        assertEquals((long) expectedCompetition.getId(), model.getCompetitionId());
+        assertEquals( expectedCompetition.getId(), model.getCompetitionId());
         assertEquals(expectedCompetition.getName(), model.getCompetitionName());
         assertInnovationSectorAndArea(expectedCompetition, model);
         assertStatistics(model);
     }
 
-    private void assertInnovationSectorAndArea(CompetitionResource expectedCompetition, PanelInviteAssessorsViewModel model) {
+    private void assertInnovationSectorAndArea(CompetitionResource expectedCompetition, InviteAssessorsViewModel model) {
         assertEquals(expectedCompetition.getInnovationSectorName(), model.getInnovationSector());
         assertEquals(StringUtils.join(expectedCompetition.getInnovationAreaNames(), ", "), model.getInnovationArea());
     }
 
-    private void assertStatistics(PanelInviteAssessorsViewModel model) {
+    private void assertStatistics(InviteAssessorsViewModel model) {
         assertEquals(inviteStatistics.getInvited(), model.getAssessorsInvited());
         assertEquals(inviteStatistics.getAccepted(), model.getAssessorsAccepted());
         assertEquals(inviteStatistics.getDeclined(), model.getAssessorsDeclined());
@@ -554,7 +559,7 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
         assertEquals(expectedCreatedInvites.size(), model.getAssessors().size());
 
         forEachWithIndex(expectedCreatedInvites, (i, createdInviteResource) -> {
-            PanelInvitedAssessorRowViewModel invitedAssessorRowViewModel = model.getAssessors().get(i);
+            InvitedAssessorRowViewModel invitedAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(createdInviteResource.getName(), invitedAssessorRowViewModel.getName());
             assertEquals(formatInnovationAreas(createdInviteResource.getInnovationAreas()), invitedAssessorRowViewModel.getInnovationAreas());
             assertEquals(createdInviteResource.isCompliant(), invitedAssessorRowViewModel.isCompliant());
@@ -580,17 +585,17 @@ public class CompetitionManagementPanelInviteAssessorsControllerTest extends Bas
         when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(innovationSectors));
     }
 
-    private Cookie createFormCookie(AssessorPanelSelectionForm form) throws Exception {
+    private Cookie createFormCookie(PanelSelectionForm form) throws Exception {
         String cookieContent = JsonUtil.getSerializedObject(form);
         return new Cookie(format("assessorPanelSelectionForm_comp_%s", competition.getId()), getCompressedString(cookieContent));
     }
 
-    private Optional<AssessorPanelSelectionForm> getAssessorPanelSelectionFormFromCookie(MockHttpServletResponse response, String cookieName) throws Exception {
+    private Optional<PanelSelectionForm> getAssessorPanelSelectionFormFromCookie(MockHttpServletResponse response, String cookieName) throws Exception {
         String value = getDecompressedString(response.getCookie(cookieName).getValue());
         String decodedFormJson  = URLDecoder.decode(value, CharEncoding.UTF_8);
 
         if (isNotBlank(decodedFormJson)) {
-            return Optional.ofNullable(getObjectFromJson(decodedFormJson, AssessorPanelSelectionForm.class));
+            return Optional.ofNullable(getObjectFromJson(decodedFormJson, PanelSelectionForm.class));
         } else {
             return Optional.empty();
         }
