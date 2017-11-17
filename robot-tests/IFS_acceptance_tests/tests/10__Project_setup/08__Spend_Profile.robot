@@ -114,8 +114,8 @@ Project Finance user can see the project in the Generate Spend Profile tab
     [Tags]
     Given the user navigates to the page    ${server}/management/dashboard/project-setup
     When the user clicks the button/link    link=${PS_SP_Competition_Name}
-    And the user clicks the button/link    link=Generated spend profile (1)
-    Then the user should see the element    link=${PS_SP_APPLICATION_TITLE}
+    And the user clicks the button/link    jQuery=a:contains("Generated spend profile")
+    And the user should see the element    link=${PS_SP_APPLICATION_TITLE}
 
 # Below 2 Query/SP tests are added in this file as they depend on approving all pre-requisites and generating SP
 Project finance sends a query to lead organisation
@@ -140,14 +140,16 @@ Project Finance generates the Spend Profile and should not see query responses f
     [Documentation]    INFUND-5194, INFUND-5987, IFS-2062
     [Tags]    HappyPath
     [Setup]  log in as a different user     &{internal_finance_credentials}
-    Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check
+    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_APPLICATION_PROJECT}/status/all
+    And the user clicks the button/link     jQuery=a:contains("Generated spend profile")
+    And the user clicks the button/link     link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link    css=.generate-spend-profile-main-button
     And the user clicks the button/link     css=#generate-spend-profile-modal-button
-    Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
+    Then the user should see the text in the page    The finance checks have been approved and profiles generated.
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element    css=#table-project-status tr:nth-of-type(5) td:nth-of-type(4).ok
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/queries
-    Then the user should not see the element  link=${Katz_Name}
+    Then the user should not see the element    link=${Katz_Name}
     And the user reads his email            ${PS_SP_APPLICATION_PM_EMAIL}  Your spend profile is available  The finance checks for all partners in the project have now been completed
 
 Project Finance should no longer see the project in the Generated Spend Profile tab
