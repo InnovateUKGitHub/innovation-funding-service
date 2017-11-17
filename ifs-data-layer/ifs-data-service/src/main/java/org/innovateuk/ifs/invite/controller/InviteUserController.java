@@ -6,6 +6,7 @@ import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.transactional.InviteUserService;
+import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -49,9 +50,15 @@ public class InviteUserController {
         return inviteUserService.findPendingInternalUserInvites(new PageRequest(pageIndex, pageSize)).toGetResponse();
     }
 
-    @GetMapping("/external/all")
+/*    @GetMapping("/external/all")
     public RestResult<List<ExternalInviteResource>> getExternalInvites(){
         return inviteUserService.getExternalInvites().toGetResponse();
+    }*/
+
+    @GetMapping("/findExternalInvites")
+    public RestResult<List<ExternalInviteResource>> findExternalInvites(@RequestParam(value = "searchString") final String searchString,
+                                                                        @RequestParam(value = "searchCategory") final SearchCategory searchCategory) {
+        return inviteUserService.findExternalInvites(searchString, searchCategory).toGetResponse();
     }
 }
 

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
+import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.data.domain.Pageable;
@@ -34,5 +35,5 @@ public interface InviteUserService {
 
     @PreAuthorize("hasAuthority('support')")
     @SecuredBySpring(value = "READ_ALL_EXTERNAL_USER_INVITES", description = "Only the support user can access all external user invites")
-    ServiceResult<List<ExternalInviteResource>> getExternalInvites();
+    ServiceResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory);
 }
