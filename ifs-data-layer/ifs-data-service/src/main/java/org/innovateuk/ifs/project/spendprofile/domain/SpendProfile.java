@@ -4,17 +4,14 @@ import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.financechecks.domain.Cost;
 import org.innovateuk.ifs.project.financechecks.domain.CostCategoryType;
 import org.innovateuk.ifs.project.financechecks.domain.CostGroup;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 import java.util.Calendar;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.EnumType.STRING;
 
 /**
  * Entity representing the Spend Profile of a Partner Organisation on a Project
@@ -53,15 +50,11 @@ public class SpendProfile {
 
     private boolean markedAsComplete;
 
-    @NotNull
-    @Enumerated(STRING)
-    private ApprovalType approval;
-
     public SpendProfile() {
         // for ORM use
     }
 
-    public SpendProfile(Organisation organisation, Project project, CostCategoryType costCategoryType, List<Cost> eligibleCosts, List<Cost> spendProfileFigures, User generatedBy, Calendar generatedDate, boolean markedAsComplete, ApprovalType approval) {
+    public SpendProfile(Organisation organisation, Project project, CostCategoryType costCategoryType, List<Cost> eligibleCosts, List<Cost> spendProfileFigures, User generatedBy, Calendar generatedDate, boolean markedAsComplete) {
         this.organisation = organisation;
         this.project = project;
         this.costCategoryType = costCategoryType;
@@ -69,8 +62,7 @@ public class SpendProfile {
         this.spendProfileFigures = new CostGroup(SPEND_PROFILE_DESCRIPTION, spendProfileFigures);
         this.generatedBy = generatedBy;
         this.generatedDate = generatedDate;
-        this.markedAsComplete = markedAsComplete;
-        this.approval = approval;
+        this.markedAsComplete = markedAsComplete;;
     }
 
     public Long getId() {
@@ -113,11 +105,4 @@ public class SpendProfile {
         return generatedDate;
     }
 
-    public ApprovalType getApproval() {
-        return approval;
-    }
-
-    public void setApproval(ApprovalType approval) {
-        this.approval = approval;
-    }
 }

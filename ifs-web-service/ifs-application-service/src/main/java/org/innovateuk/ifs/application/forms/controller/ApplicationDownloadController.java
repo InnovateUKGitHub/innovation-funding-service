@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.forms.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -29,8 +28,6 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
 @PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance')")
 public class ApplicationDownloadController {
-
-    private static final Log LOG = LogFactory.getLog(ApplicationDownloadController.class);
 
     @Autowired
     private FinanceService financeService;
