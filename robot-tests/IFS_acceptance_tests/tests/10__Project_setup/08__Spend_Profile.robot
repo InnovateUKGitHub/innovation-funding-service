@@ -112,11 +112,13 @@ Project Finance cancels the generation of the Spend Profile
 Project Finance user can see the project in the Generate Spend Profile tab
     [Documentation]    IFS-2016
     [Tags]
-    Given log in as a different user    &{internal_finance_credentials}
-    When the user navigates to the page    ${server}/management/dashboard/project-setup
-    And the user clicks the button/link    jQuery=h3:contains("Rolling stock future developments")
-    And the user clicks the button/link    jQuery=a:contains("Generated spend profile")
-    Then the user should see the element    jQuery=a:contains("Point control and automated monitoring")
+    Given the user navigates to the page    ${server}/management/dashboard/project-setup
+    #And the user clicks the button/link    jQuery=h3:contains("Rolling stock future developments")
+    And the user clicks the button/link    link=${PS_SP_Competition_Name}
+    #And the user clicks the button/link    jQuery=a:contains("Generated spend profile")
+    And the user clicks the button/link    link=Generated spend profile (1)
+    #Then the user should see the element    jQuery=a:contains("Point control and automated monitoring")
+    Then the user should see the element    link=${PS_SP_APPLICATION_TITLE}
 
 # Below 2 Query/SP tests are added in this file as they depend on approving all pre-requisites and generating SP
 Project finance sends a query to lead organisation
@@ -155,7 +157,7 @@ Project Finance should no longer see the project in the Generated Spend Profile 
     [Documentation]    IFS-2016
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_APPLICATION_PROJECT}/status/pending-spend-profiles
-    Then the user should not see the element    jQuery=a:contains("Point control and automated monitoring")
+    Then the user should not see the element    link=${PS_SP_APPLICATION_TITLE}
 
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899, INFUND-7685
