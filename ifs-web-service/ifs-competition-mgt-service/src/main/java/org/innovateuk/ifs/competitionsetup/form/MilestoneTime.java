@@ -18,7 +18,9 @@ public enum MilestoneTime {
     THREE_PM("3:00 pm", 15),
     FOUR_PM("4:00 pm", 16),
     FIVE_PM("5:00 pm", 17),
-    SIX_PM("6:00 pm", 18);
+    SIX_PM("6:00 pm", 18),
+    SEVEN_PM("7:00 pm", 19),
+    EIGHT_PM("8:00 pm", 20);
 
     private String display;
     private int hour;
