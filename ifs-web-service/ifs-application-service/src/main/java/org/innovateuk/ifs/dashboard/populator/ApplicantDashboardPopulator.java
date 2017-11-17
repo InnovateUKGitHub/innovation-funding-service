@@ -53,7 +53,6 @@ public class ApplicantDashboardPopulator {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-
     public ApplicantDashboardViewModel populate(Long userId) {
         List<ProcessRoleResource> usersProcessRoles = getUserProcessRolesWithApplicationRole(userId);
         List<ApplicationResource> allApplications = getAllApplicationsAsApplicant(userId, usersProcessRoles);

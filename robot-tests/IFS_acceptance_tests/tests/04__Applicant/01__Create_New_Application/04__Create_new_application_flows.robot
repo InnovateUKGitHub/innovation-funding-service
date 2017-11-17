@@ -109,6 +109,17 @@ the user directed to correct dashboard
     [Arguments]    ${Application_name}
     the user should see the text in the page  Dashboard
     the user clicks the button/link           link=${Application_name}
-    the user clicks the button/link           jQuery=a:contains("Begin application")
-    the user should see the text in the page  Application overview
+    the user should see the element           jQuery=a:contains("Begin application")
+    the user clicks the button/link           link=Application overview
+    the user is redirected to overview page if he has been there already
+
+the user is redirected to overview page if he has been there already
+    log in as a different user           ${test_mailbox_one}+business@gmail.com    ${correct_password}
+    the user clicks the button/link      link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
+    the user should see the element      jQuery=h1:contains("Application overview")
+    the user clicks the button/link      link=view and manage contributors and collaborators
+    the user should not see the element  jQuery=a:contains("Begin application")
     logout as user
+
+
+
