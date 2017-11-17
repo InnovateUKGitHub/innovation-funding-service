@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.admin.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.admin.form.EditUserForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
@@ -10,6 +11,8 @@ import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
+import org.innovateuk.ifs.user.resource.SearchCategory;
+import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -27,6 +30,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -192,18 +197,22 @@ public class UserManagementController {
         }).getSuccessObjectOrThrowException();
     }
 
-    // NEW METHOD - New URL - Set a debug point here and ensure the request hits here
     @PreAuthorize("hasAuthority('support')")
     @GetMapping(value = "/external/users")
     public String findExternalUsers(@RequestParam(value = "searchString", required = false) String searchString,
-                                    @RequestParam(value = "searchCategory", required = false) final String searchCategory, //Make this an enum later on
+                                    @RequestParam(value = "searchCategory", required = false) final SearchCategory searchCategory,
                                     Model model) {
 
-        // Currently just return all the users - logic here to use the searchString and searchCategory and then filter out results - just see that all users get displayed correctly for now.
-        return userRestService.findAllExternal().andOnSuccessReturn(users -> {
-            model.addAttribute("users", users);
-            return "admin/search-external-users";
-        }).getSuccessObjectOrThrowException();
+        List<UserOrganisationResource> users;
+        if (StringUtils.isNotEmpty(searchString) && searchCategory != null) {
+            searchString = "%" + StringUtils.trim(searchString) + "%";
+            users = userRestService.findExternalUsers(searchString, searchCategory).getSuccessObjectOrThrowException();
+        } else {
+            users = Collections.emptyList();
+        }
+
+        model.addAttribute("users", users);
+        return "admin/search-external-users";
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
