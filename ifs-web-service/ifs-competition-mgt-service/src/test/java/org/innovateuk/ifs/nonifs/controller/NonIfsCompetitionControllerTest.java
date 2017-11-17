@@ -177,7 +177,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         assertEquals("Please enter a title.",bindingResult.getFieldError("title").getDefaultMessage());
         assertEquals("Please enter an open date.", bindingResult.getFieldError("openDate").getDefaultMessage());
         assertEquals("Please enter a registration close date.", bindingResult.getFieldError("registrationCloseDate").getDefaultMessage());
-        assertEquals("Please enter a close date.", bindingResult.getFieldError("closeDate").getDefaultMessage());
+        assertEquals("Please enter a competition close date.", bindingResult.getFieldError("closeDate").getDefaultMessage());
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("innovationSectorCategoryId").getDefaultMessage());
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("innovationAreaCategoryId").getDefaultMessage());
 
