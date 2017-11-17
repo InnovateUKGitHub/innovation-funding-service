@@ -113,11 +113,8 @@ Project Finance user can see the project in the Generate Spend Profile tab
     [Documentation]    IFS-2016
     [Tags]
     Given the user navigates to the page    ${server}/management/dashboard/project-setup
-    #And the user clicks the button/link    jQuery=h3:contains("Rolling stock future developments")
-    And the user clicks the button/link    link=${PS_SP_Competition_Name}
-    #And the user clicks the button/link    jQuery=a:contains("Generated spend profile")
+    When the user clicks the button/link    link=${PS_SP_Competition_Name}
     And the user clicks the button/link    link=Generated spend profile (1)
-    #Then the user should see the element    jQuery=a:contains("Point control and automated monitoring")
     Then the user should see the element    link=${PS_SP_APPLICATION_TITLE}
 
 # Below 2 Query/SP tests are added in this file as they depend on approving all pre-requisites and generating SP
