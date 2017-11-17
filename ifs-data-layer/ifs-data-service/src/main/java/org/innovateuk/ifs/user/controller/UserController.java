@@ -9,6 +9,7 @@ import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -120,6 +121,12 @@ public class UserController {
     @GetMapping("/findAllExternal")
     public RestResult<List<UserOrganisationResource>> findAllExternal() {
         return userService.findAllByProcessRoles(externalApplicantRoles()).toGetResponse();
+    }
+
+    @GetMapping("/findExternalUsers")
+    public RestResult<List<UserOrganisationResource>> findExternalUsers(@RequestParam(value = "searchString") final String searchString,
+                                                                        @RequestParam(value = "searchCategory") final SearchCategory searchCategory) {
+        return userService.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory).toGetResponse();
     }
 
     @GetMapping("/findByEmail/{email}/")
