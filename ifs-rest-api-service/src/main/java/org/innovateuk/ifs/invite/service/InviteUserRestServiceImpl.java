@@ -6,6 +6,7 @@ import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
+import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -47,9 +48,14 @@ public class InviteUserRestServiceImpl extends BaseRestService implements Invite
         return getWithRestResult(uriWithParams, RoleInvitePageResource.class);
     }
 
-    @Override
-    public RestResult<List<ExternalInviteResource>> getAllExternalInvites() {
-        String uri = inviteRestUrl + "/external/all";
+/*    @Override
+    public RestResult<List<ExternalInviteResource>> findExternalInvitesOLD(String searchString, SearchCategory searchCategory) {
+        String uri = inviteRestUrl + "/external/invites";
         return getWithRestResult(uri, externalInviteResourceListType());
+    }*/
+
+    @Override
+    public RestResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory) {
+        return getWithRestResult(inviteRestUrl + "/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType());
     }
 }
