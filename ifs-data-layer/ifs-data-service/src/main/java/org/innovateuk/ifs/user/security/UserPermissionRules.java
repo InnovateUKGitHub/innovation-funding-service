@@ -75,9 +75,9 @@ public class UserPermissionRules {
         return isInternal(user);
     }
 
-    @PermissionRule(value = "READ_USER_ORGANISATION", description = "Internal support users can view all users and associated organisations")
+    @PermissionRule(value = "READ_USER_ORGANISATION", description = "Internal support users or IFS Admin can view all users and associated organisations")
     public boolean internalUsersCanViewUserOrganisation(UserOrganisationResource userToView, UserResource user) {
-        return isInternal(user);
+        return isInternal(user) || isIFSAdmin(user);
     }
 
     @PermissionRule(value = "READ", description = "Internal users can view everyone")
