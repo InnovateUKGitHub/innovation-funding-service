@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -16,12 +18,14 @@ import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
 import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
 import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -229,6 +233,39 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     @Override
     public ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes) {
         return serviceSuccess(simpleMap(userOrganisationRepository.findByUserRolesNameInOrderByIdUserEmailAsc(simpleMapSet(roleTypes, UserRoleType::getName)), userOrganisationMapper::mapToResource));
+    }
+
+    @Override
+    public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<UserRoleType> roleTypes, String searchString, SearchCategory searchCategory) {
+
+        return validateSearchString(searchString).andOnSuccess(() -> {
+            List<UserOrganisation> userOrganisations;
+            switch (searchCategory) {
+                case NAME:
+                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, searchString, simpleMapSet(roleTypes, UserRoleType::getName));
+                    break;
+
+                case ORGANISATION_NAME:
+                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, simpleMapSet(roleTypes, UserRoleType::getName));
+                    break;
+
+                case EMAIL:
+                default:
+                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, simpleMapSet(roleTypes, UserRoleType::getName));
+            }
+            return serviceSuccess(simpleMap(userOrganisations, userOrganisationMapper::mapToResource));
+        });
+    }
+
+    private ServiceResult<Void> validateSearchString(String searchString) {
+
+        searchString = StringUtils.trim(searchString);
+
+        if (StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 5) {
+            return serviceFailure(CommonFailureKeys.GENERAL_INVALID_ARGUMENT);
+        } else {
+            return serviceSuccess();
+        }
     }
 
     private List<UserResource> sortByName(List<UserResource> userResources) {
