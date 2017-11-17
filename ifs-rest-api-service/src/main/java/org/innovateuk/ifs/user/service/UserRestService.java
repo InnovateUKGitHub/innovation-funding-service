@@ -20,6 +20,8 @@ public interface UserRestService {
 
     RestResult<List<UserOrganisationResource>> findAllExternal();
 
+    RestResult<List<UserOrganisationResource>> findExternalUsers(String searchString, SearchCategory searchCategory);
+
     RestResult<List<UserResource>> findByUserRoleType(UserRoleType userRoleType);
 
     RestResult<UserPageResource> getActiveInternalUsers(int pageNumber, int pageSize);
