@@ -30,7 +30,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 
 /**
- * Repository Integration tests for Costs.
+ * Repository Integration tests for Spend Profiles.
  */
 public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<SpendProfileRepository> {
 
@@ -79,7 +79,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         Calendar generatedDate = Calendar.getInstance();
         generatedDate.set(Calendar.MILLISECOND, 0);
 
-        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, false, ApprovalType.UNSET));
+        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, false));
 
         // clear the Hibernate cache
         flushAndClearSession();
@@ -132,7 +132,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         Calendar generatedDate = Calendar.getInstance();
         generatedDate.set(Calendar.MILLISECOND, 0);
 
-        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, false, ApprovalType.UNSET));
+        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, false));
 
         // clear the Hibernate cache
         flushAndClearSession();
@@ -203,7 +203,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         User generatedBy = newUser().build();
         Calendar generatedDate = Calendar.getInstance();
 
-        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, false, ApprovalType.UNSET));
+        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, false));
 
         // clear the Hibernate cache
         flushAndClearSession();
@@ -274,7 +274,7 @@ public class SpendProfileRepositoryIntegrationTest extends BaseRepositoryIntegra
         User generatedBy = getFinanceTeamUser();
         Calendar generatedDate = Calendar.getInstance();
 
-        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, false, ApprovalType.UNSET));
+        SpendProfile saved = repository.save(new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileFigures, generatedBy, generatedDate, false));
 
         // clear the Hibernate cache
         flushAndClearSession();
