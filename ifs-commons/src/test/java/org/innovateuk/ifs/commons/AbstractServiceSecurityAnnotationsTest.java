@@ -1,22 +1,25 @@
 package org.innovateuk.ifs.commons;
 
+
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static java.lang.String.join;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.commons.ProxyUtils.allUnwrappedComponentsWithClassAnnotations;
-import static org.innovateuk.ifs.commons.ProxyUtils.unwrapProxies;
+import static org.innovateuk.ifs.commons.ProxyUtils.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
@@ -50,6 +53,7 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
      * {@link AbstractServiceSecurityAnnotationsTest#annotationsOnClassesToSecure()} method, but should be excluded.
      * One reason for this is that the class in question comes from another package and so there is no control over
      * its use of {@link Annotation}s.
+     *
      * @return
      */
     protected abstract List<Class<?>> excludedClasses();
@@ -57,6 +61,11 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
     @Autowired
     protected ApplicationContext context;
 
+    /**
+     * TODO
+     *
+     * @throws Exception
+     */
     @Test
     public void testServiceMethodsHaveSecurityAnnotations() throws Exception {
         Collection<Object> services = servicesToTest();
@@ -67,7 +76,9 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
 
         // Find all the methods that should have a security annotation on and check they do.
         for (Object service : services) {
-            if (!testSecuredAtClassLevel(service)) {
+            // If we are secured at the class level it is not necessary to be secured at the method level.
+            if (!isSecuredAtClassLevel(service)) {
+                // We are not secured at the class level check at method level.
                 testSecuredAtMethodLevel(service);
             }
         }
@@ -75,26 +86,82 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
 
     private void testSecuredAtMethodLevel(Object service) throws Exception {
         for (Method method : service.getClass().getMethods()) {
-            // Only public methods and not those on base class Object get checked
-            if (isPublic(method.getModifiers()) && !method.getDeclaringClass().isAssignableFrom(Object.class)) {
+            if (methodNeedsSecuring(method)) {
                 if (!hasOneOf(method, methodLevelSecurityAnnotations())) {
                     fail("Method: " + method.getName() + " on class " + method.getDeclaringClass() + " does not have security annotations");
-                }
-                if (needsSecuredBySpring(annotationValues(method, methodLevelSecurityAnnotations())) && !hasOneOf(method, asList(SecuredBySpring.class))) {
-                    fail("Method: " + method.getName() + " on class " + method.getDeclaringClass() + " needs to have a SecuredBySpring annotation");
                 }
             }
         }
     }
 
     /**
+     * TODO
      *
-     * All we do is check if there is a class level security permission present.
-     * In future we may want to enforce other behaviour like the use of {@link SecuredBySpring} {@link Annotation}s
+     * @throws Exception
+     */
+    @Test
+    public void testServiceMethodsHaveSecurityDocumentationAnnotations() throws Exception {
+        Collection<Object> services = servicesToTest();
+
+        // Assert that we actually have some services.
+        assertNotNull(services);
+        assertFalse(services.isEmpty());
+
+        //
+        List<Class<?>> classLevelFailures = new ArrayList<>();
+        List<Method> methodLevelFailures = new ArrayList<>();
+
+
+        for (Object service : services) {
+            // First check at class level
+            if (isSecuredAtClassLevel(service)) {
+                Class<?> serviceClass = service.getClass();
+                if (requiresSecuredBySpringAnnotation(serviceClass) && !hasOneOf(serviceClass, asList(SecuredBySpring.class))) {
+                    classLevelFailures.add(serviceClass);
+
+                }
+            }
+            // Now for all of the methods
+            for (Method method : service.getClass().getMethods()) {
+                if (methodNeedsSecuring(method)) {
+                    if (requiresSecuredBySpringAnnotation(method) && !hasOneOf(method, asList(SecuredBySpring.class))) {
+                        methodLevelFailures.add(method);
+                    }
+                }
+            }
+        }
+
+        if (!classLevelFailures.isEmpty() || !methodLevelFailures.isEmpty()){
+            fail(classFailureMessage(classLevelFailures) + "\n" + methodFailureMessage(methodLevelFailures));
+        }
+    }
+
+    private String classFailureMessage(List<Class<?>> failures){
+        return "The following classes need to have a SecuredBySpring annotation: \n" + //
+                join(",\n", simpleMap(failures, Class::getName));
+    }
+
+    private String methodFailureMessage(List<Method> failures){
+        return "The following methods need to have a SecuredBySpring annotation: \n" + //
+                join(",\n", simpleMap(failures, m -> m.getName() + " on class " + m.getDeclaringClass()));
+    }
+
+
+    /**
+     * Only public methods and not those on base class {@link Object} get checked
+     *
+     * @param method
+     * @return
+     */
+    private boolean methodNeedsSecuring(Method method) {
+        return isPublic(method.getModifiers()) && !isAMethodOnObject(method);
+    }
+
+    /**
      * @param service
      * @return
      */
-    private boolean testSecuredAtClassLevel(Object service) {
+    private boolean isSecuredAtClassLevel(Object service) {
         return hasOneOf(service.getClass(), classLevelSecurityAnnotations());
     }
 
@@ -103,39 +170,63 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
      * provided by a {@link SecuredBySpring} {@link Annotation} as we are not able to glean the information any other
      * way.
      *
+     * @param method
+     * @return
+     * @throws Exception
+     */
+    private boolean requiresSecuredBySpringAnnotation(Method method) throws Exception {
+        List<String> values = annotationValues(method, methodLevelSecurityAnnotations());
+        return requiresSecuredBySpringAnnotation(values);
+    }
+
+
+    private boolean requiresSecuredBySpringAnnotation(Class<?> clazz) throws Exception {
+        List<String> values = annotationValues(clazz, methodLevelSecurityAnnotations());
+        return requiresSecuredBySpringAnnotation(values);
+    }
+
+    /**
+     * TODO
+     *
      * @param values
      * @return
      */
-    private boolean needsSecuredBySpring(List<String> values) {
-        boolean needsSecuredBySpring = !simpleFilter(values, value ->
+    private boolean requiresSecuredBySpringAnnotation(List<String> values) {
+        return !simpleFilter(values, value ->
                 value.contains("Authority") ||
                         value.contains("Role") ||
                         value.contains("Authenticated") ||
                         value.contains("Anonymous")).isEmpty();
-        return needsSecuredBySpring;
     }
 
     /**
      * A {@link List} of the value attributes of the annotations specified on the method provided.
      *
      * @param method
-     * @param annotations
+     * @param annotationTypes
      * @return
      * @throws Exception
      */
-    private List<String> annotationValues(Method method, List<Class<? extends Annotation>> annotations) throws Exception {
-        List<String> values = new ArrayList<>();
-        for (Class<? extends Annotation> clazz : annotations) {
-            // Note that if the annotation does not have a value method this will throw.
-            // This should mean that we will not get any silent failures in the event that the signatures change.
-            Method valueMethodOnAnnotation = clazz.getDeclaredMethod("value");
-            Annotation annotationOnServiceMethod = findAnnotation(method, clazz);
-            if (annotationOnServiceMethod != null) {
-                String value = (String) valueMethodOnAnnotation.invoke(annotationOnServiceMethod);
-                values.add(value);
-            }
+    private List<String> annotationValues(Method method, List<Class<? extends Annotation>> annotationTypes) throws Exception {
+        return simpleMap(annotations(method, annotationTypes), a -> valueOf(a));
+    }
+
+    private List<String> annotationValues(Class<?> clazz, List<Class<? extends Annotation>> annotationTypes) throws Exception {
+        return simpleMap(annotations(clazz, annotationTypes), a -> valueOf(a));
+    }
+
+    /**
+     * TODO
+     *
+     * @param a
+     * @return
+     */
+    private String valueOf(Annotation a) {
+        try {
+            return (String) a.getClass().getMethod("value").invoke(a);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
-        return values;
     }
 
     private Collection<Object> servicesToTest() {
@@ -143,25 +234,7 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
         return simpleFilter(unwrappedServices, service -> isAssignableFromOneOf(service, excludedClasses()));
     }
 
-    private boolean isAssignableFromOneOf(Object service, List<Class<?>> from){
-        return simpleFilter(from, clazz ->  service.getClass().isAssignableFrom(clazz)).isEmpty();
-    }
-
-    private boolean hasOneOf(Method method, List<Class<? extends Annotation>> annotations) {
-        for (Class<? extends Annotation> clazz : annotations) {
-            if (findAnnotation(method, clazz) != null) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean hasOneOf(Class<?> clazz, List<Class<? extends Annotation>> annotations){
-        for (Class<? extends Annotation> annotationType : annotations) {
-            if (findAnnotation(clazz, annotationType) != null){
-                return true;
-            }
-        }
-        return false;
+    private boolean isAssignableFromOneOf(Object service, List<Class<?>> from) {
+        return simpleFilter(from, clazz -> service.getClass().isAssignableFrom(clazz)).isEmpty();
     }
 }

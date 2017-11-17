@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.overheads;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/application/download/overheadfile")
+@SecuredBySpring(value="TODO", description = "TODO")
 @PreAuthorize("hasAuthority('applicant')")
 public class OverheadFileDownloadController {
     @Autowired

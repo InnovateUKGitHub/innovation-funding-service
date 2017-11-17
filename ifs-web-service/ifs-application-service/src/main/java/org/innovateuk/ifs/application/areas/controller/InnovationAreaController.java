@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.service.ApplicationInnovationAreaRestServi
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL+"{applicationId}/form/question/{questionId}/innovation-area")
+@SecuredBySpring(value="TODO", description = "TODO")
 @PreAuthorize("hasAuthority('applicant')")
 public class InnovationAreaController {
     private static String APPLICATION_SAVED_MESSAGE = "applicationSaved";

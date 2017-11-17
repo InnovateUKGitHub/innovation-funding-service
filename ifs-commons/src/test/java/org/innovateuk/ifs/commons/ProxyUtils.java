@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.commons;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
@@ -11,16 +9,13 @@ import org.springframework.context.ApplicationContext;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
@@ -73,9 +68,44 @@ public class ProxyUtils {
      * @return
      */
     public static <T extends Annotation> Pair<Class<?>, Optional<T>> classLevel(Object bean, Class<T> annotationType){
-        Class<?> beanClass = bean.getClass();
-        Optional<T> annotation = ofNullable(findAnnotation(bean.getClass(), annotationType));
-        return Pair.of(beanClass, annotation);
+        return classLevel(bean.getClass(), annotationType);
+
+    }
+
+    /**
+     * TODO
+     * @param clazz
+     * @param annotationType
+     * @param <T>
+     * @return
+     */
+    private static <T extends Annotation> Pair<Class<?>, Optional<T>> classLevel(Class<?> clazz, Class<T> annotationType){
+        Optional<T> annotation = ofNullable(findAnnotation(clazz, annotationType));
+        return Pair.of(clazz, annotation);
+    }
+
+    /**
+     * TODO
+     * @param clazz
+     * @param annotationTypes
+     * @return
+     */
+    public static Pair<Class<?>, List<? extends Annotation>> classLevel(Class<?> clazz, Collection<Class<? extends Annotation>> annotationTypes){
+        return Pair.of(clazz, flattenOptional(simpleMap(annotationTypes, a -> classLevel(clazz, a).getValue())));
+    }
+
+    /**
+     * TODO
+     * @param clazz
+     * @param annotationTypes
+     * @return
+     */
+    public static boolean hasOneOf(Class<?> clazz, Collection<Class<? extends Annotation>> annotationTypes){
+        return !classLevel(clazz, annotationTypes).getValue().isEmpty();
+    }
+
+    public static boolean hasOneOf(Method method, Collection<Class<? extends Annotation>> annotationTypes){
+        return !annotations(method, annotationTypes).isEmpty();
     }
 
     /**
@@ -86,8 +116,24 @@ public class ProxyUtils {
      * @param <T>
      * @return
      */
-    public static final <T extends Annotation> Map<Method, Optional<T>> methodLevel(Object bean, Class<T> annotationType){
-        return getMethods(bean).stream().collect(toMap(identity(), method -> ofNullable(findAnnotation(method, annotationType))));
+    public static <T extends Annotation> Map<Method, Optional<T>> methodLevel(Object bean, Class<T> annotationType){
+        return getMethods(bean).stream().collect(toMap(identity(), method -> annotation(method, annotationType)));
+    }
+
+    public static <T extends Annotation> Optional<T> annotation(Method method, Class<T> annotationType){
+        return ofNullable(findAnnotation(method, annotationType));
+    }
+
+    public static <T extends Annotation> Optional<T> annotation(Class clazz, Class<T> annotationType){
+        return ofNullable(findAnnotation(clazz, annotationType));
+    }
+
+    public static List<? extends Annotation> annotations(Method method, Collection<Class<? extends Annotation>> annotationTypes){
+        return flattenOptional(simpleMap(annotationTypes, a -> annotation(method, a)));
+    }
+
+    public static List<? extends Annotation> annotations(Class<?> clazz, Collection<Class<? extends Annotation>> annotationTypes){
+        return flattenOptional(simpleMap(annotationTypes, a -> annotation(clazz, a)));
     }
 
     /**
@@ -102,11 +148,16 @@ public class ProxyUtils {
         return owningClass.getSimpleName() + "." + method.getName();
     }
 
+    /**
+     * Is the {@link Method} in question is defined on {@link Object}
+     * @param method
+     * @return
+     */
     public static boolean isAMethodOnObject(Method method){
         return method.getDeclaringClass().isAssignableFrom(Object.class);
     }
 
-    public static List<Method> getMethods(Object bean){
+    private static List<Method> getMethods(Object bean){
         return stream(bean.getClass().getMethods()).collect(toList());
     }
 }

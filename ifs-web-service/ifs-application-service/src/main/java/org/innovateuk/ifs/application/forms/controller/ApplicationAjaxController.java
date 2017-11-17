@@ -14,6 +14,7 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.exception.AutoSaveElementException;
 import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
@@ -54,6 +55,7 @@ import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessage
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
+@SecuredBySpring(value="TODO", description = "TODO")
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationAjaxController {
 
@@ -273,7 +275,7 @@ public class ApplicationAjaxController {
         }
     }
 
-    @PreAuthorize("hasAuthority('applicant')")
+
     @GetMapping(value = "/add_cost/{" + QUESTION_ID + "}")
     public String addCostRow(@ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form,
                              BindingResult bindingResult,
@@ -295,7 +297,7 @@ public class ApplicationAjaxController {
         return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
     }
 
-    @PreAuthorize("hasAuthority('applicant')")
+
     @GetMapping("/remove_cost/{costId}")
     public @ResponseBody
     String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {

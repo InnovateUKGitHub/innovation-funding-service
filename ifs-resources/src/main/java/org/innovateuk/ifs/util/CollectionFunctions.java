@@ -847,4 +847,8 @@ public final class CollectionFunctions {
         union.addAll(two);
         return union;
     }
+
+    public static <T> List<T> flattenOptional(Collection<Optional<T>> toFlatten){
+        return  simpleMap(simpleFilter(toFlatten, Optional::isPresent), Optional::get);
+    }
 }

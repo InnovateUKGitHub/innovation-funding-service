@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.team.form.ApplicationTeamAddOrganisationFo
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamAddOrganisationModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
@@ -35,6 +36,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
  */
 @Controller
 @RequestMapping("/application/{applicationId}/team")
+@SecuredBySpring(value="TODO", description = "TODO")
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationTeamAddOrganisationController {
 
