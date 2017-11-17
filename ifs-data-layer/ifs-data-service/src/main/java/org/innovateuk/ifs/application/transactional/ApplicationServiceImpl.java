@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.domain.Question;
@@ -78,8 +76,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         APPLICATION_FUNDED_ASSESSOR_FEEDBACK_PUBLISHED,
         APPLICATION_INELIGIBLE
     }
-
-    private static final Log LOG = LogFactory.getLog(ApplicationServiceImpl.class);
 
     @Autowired
     private FileService fileService;

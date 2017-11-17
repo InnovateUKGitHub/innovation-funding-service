@@ -3,7 +3,6 @@ package org.innovateuk.ifs.affiliation.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
