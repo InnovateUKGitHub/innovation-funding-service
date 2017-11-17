@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
+import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
@@ -215,7 +216,7 @@ public class UserManagementController {
         return "admin/search-external-users";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+/*    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('support')")
     @GetMapping(value = "/invites")
     public String allExternalInvites(Model model) {
@@ -223,19 +224,23 @@ public class UserManagementController {
             model.addAttribute("invites", invites);
             return "admin/invited-users";
         }).getSuccessObjectOrThrowException();
-    }
+    }*/
 
-    //NEW METHOD - New URL - Set a debug point here and ensure the request hits here
     @PreAuthorize("hasAuthority('support')")
     @GetMapping(value = "/external/invites")
     public String findExternalInvites(@RequestParam(value = "searchString", required = false) String searchString,
-                                      @RequestParam(value = "searchCategory", required = false) final String searchCategory, //Make this an enum later on
+                                      @RequestParam(value = "searchCategory", required = false) final SearchCategory searchCategory,
                                       Model model) {
 
-        // Currently just return all the users - logic here to use the searchString and searchCategory and then filter out results
-        return inviteUserRestService.getAllExternalInvites().andOnSuccessReturn(invites -> {
-            model.addAttribute("invites", invites);
-            return "admin/search-invited-users";
-        }).getSuccessObjectOrThrowException();
+        List<ExternalInviteResource> invites;
+        if (StringUtils.isNotEmpty(searchString) && searchCategory != null) {
+            searchString = StringUtils.trim(searchString);
+            invites = inviteUserRestService.findExternalInvites(searchString, searchCategory).getSuccessObjectOrThrowException();
+        } else {
+            invites = Collections.emptyList();
+        }
+
+        model.addAttribute("invites", invites);
+        return "admin/search-invited-users";
     }
 }
