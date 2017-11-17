@@ -23,6 +23,10 @@ public class PermissionRulesClassResult {
     Class<?> securedClass;
     List<Pair<Method, PermissionRule>> rules;
 
+    public List<Method> ruleMethods(){
+        return simpleMap(rules, Pair::getKey);
+    }
+
     private PermissionRulesClassResult(Class<?> securedClass, List<Pair<Method, PermissionRule>> rules){
         this.securedClass = securedClass;
         this.rules = rules;

@@ -30,7 +30,6 @@ public abstract class AbstractDocumentingWebServiceSecurityAnnotationsTest exten
     @Override
     protected final RootCustomPermissionEvaluator evaluator() {
         return (CustomPermissionEvaluator) context.getBean("customPermissionEvaluator");
-
     }
 
     @Override

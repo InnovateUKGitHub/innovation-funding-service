@@ -2,7 +2,9 @@ package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.commons.AbstractServiceSecurityAnnotationsTest;
 import org.innovateuk.ifs.commons.security.NotSecured;
+import org.innovateuk.ifs.commons.security.evaluator.RootCustomPermissionEvaluator;
 import org.innovateuk.ifs.exception.IfsErrorController;
+import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -47,6 +49,11 @@ public abstract class AbstractWebServiceSecurityAnnotationsTest extends Abstract
                 PostFilter.class,
                 NotSecured.class
         );
+    }
+
+    @Override
+    protected final RootCustomPermissionEvaluator evaluator() {
+        return (CustomPermissionEvaluator) context.getBean("customPermissionEvaluator");
     }
 
     @Override

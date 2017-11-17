@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.commons;
 
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.commons.security.evaluator.RootCustomPermissionEvaluator;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +19,10 @@ import java.util.List;
 import static java.lang.String.join;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.PermissionRulesClassResult.fromClassAndPermissionMethods;
 import static org.innovateuk.ifs.commons.ProxyUtils.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.getRulesMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.*;
 
 /**
@@ -45,6 +49,9 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
      * @return
      */
     protected abstract List<Class<? extends Annotation>> annotationsOnClassesToSecure();
+
+
+    protected abstract RootCustomPermissionEvaluator evaluator();
 
     /**
      * Classes that a marker {@link Annotation} provide by the
@@ -146,6 +153,45 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
             fail(classFailureMessage("The following classes need to have a SecuredBySpring annotation:", classLevelFailures) + "\n" +
                     methodFailureMessage("The following methods need to have a SecuredBySpring annotation:", methodLevelFailures));
         }
+    }
+
+    /**
+     * It is possible to accidentally secure on a primitive when trying to secure on a resource id.
+     * This will appear to work but the problem is that it will open up unexpected permissions.
+     * For example say you:
+     * Write a permission rule that takes an application id which is a {@link Long}
+     * It has a {@link PermissionRule} {@link Annotation} which specifies the permission "READ"
+     * Now you have secured {@link Long} NOT application.
+     * The next person does the same, but for project.
+     * Now the application will allow a user to call the application method which you secured if the project permission
+     * rule evaluates to true
+     *
+     * This test should prevent primitive being secured.
+     */
+    @Test
+    public void testThatResourcesSecuredAreReallyResources(){
+        PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = getRulesMap(evaluator());
+        List<PermissionRulesClassResult> results = simpleMap(rulesMap.entrySet(), e -> fromClassAndPermissionMethods(e.getKey(), e.getValue()));
+        List<Method> allRulesMethods = flattenLists(simpleMap(results, PermissionRulesClassResult::ruleMethods));
+        List<Pair<Method, Class<?>>> allRulesMethodsWithSecuredType = simpleMap(allRulesMethods, m -> Pair.of(m, m.getParameterTypes()[0]));
+        List<Pair<Method, Class<?>>> failed = simpleFilter(allRulesMethodsWithSecuredType, p -> !acceptableResourceType(p.getValue()));
+        if (!failed.isEmpty()){
+            fail("The following methods are protecting primitives not resources:\n" +
+                    join(",\n", simpleMap(failed, p -> p.getKey().getName() + " on class " + p.getKey().getDeclaringClass() +
+                            " is protecting the primitive: " + p.getValue().getSimpleName())) +
+                    "\n If its an id, then instead use a wrapper class for the id, and specify a PermissionEntityLookupStrategies");
+        }
+    }
+
+    /**
+     *
+     * @param resource
+     * @return
+     */
+    private boolean acceptableResourceType(Class<?> resource){
+        return !(resource.isAssignableFrom(Integer.class) ||
+                resource.isAssignableFrom(Long.class) ||
+                resource.isAssignableFrom(String.class));
     }
 
     private String classFailureMessage(String message, List<Class<?>> failures){
