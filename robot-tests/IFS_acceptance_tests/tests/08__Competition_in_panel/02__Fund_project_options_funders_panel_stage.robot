@@ -153,6 +153,13 @@ Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${today}  get today
     set suite variable  ${today}
+    Moving the notification date of the competition to a future date
+    # TODO remove the above MySql query when the web test data are amended to a future date.
+
+Moving the notification date of the competition to a future date
+    ${tomorrow} =  get tomorrow
+    Connect to Database  @{database}
+    Execute sql string  UPDATE `${database_name}`.`milestone` SET `DATE`='${tomorrow}' WHERE `type`='NOTIFICATIONS' AND `competition_id`='${FUNDERS_PANEL_COMPETITION_NUMBER}';
 
 the user should see the options to make funding decisions disabled
     the user should see the element  jQuery=button:contains("Successful")[disabled]

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
@@ -41,6 +42,7 @@ public class FinanceOverviewController {
     @Autowired
     private ProjectFinanceService financeService;
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping()
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     public String view(@PathVariable("projectId") Long projectId,
