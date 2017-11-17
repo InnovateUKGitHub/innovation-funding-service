@@ -252,6 +252,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
                 case EMAIL:
                 default:
                     userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, simpleMapSet(roleTypes, UserRoleType::getName));
+                    break;
             }
             return serviceSuccess(simpleMap(userOrganisations, userOrganisationMapper::mapToResource));
         });
