@@ -109,14 +109,6 @@ Project Finance cancels the generation of the Spend Profile
     Then the user should see the text in the page    This will generate a flat spend profile for all project partners.
     When the user clicks the button/link    jQuery=button:contains("Cancel")
 
-Project Finance user can see the project in the Generate Spend Profile tab
-    [Documentation]    IFS-2016
-    [Tags]
-    Given the user navigates to the page    ${server}/management/dashboard/project-setup
-    When the user clicks the button/link    link=${PS_SP_Competition_Name}
-    And the user clicks the button/link    jQuery=a:contains("Generated spend profile")
-    And the user should see the element    link=${PS_SP_APPLICATION_TITLE}
-
 # Below 2 Query/SP tests are added in this file as they depend on approving all pre-requisites and generating SP
 Project finance sends a query to lead organisation
     [Documentation]    IFS-2062
@@ -136,8 +128,8 @@ Lead partner responds to query
     When the user enters text to a text field  css=.editor  Responding to finance query
     Then the user clicks the button/link       jQuery=.button:contains("Post response")
 
-Project Finance generates the Spend Profile and should not see query responses flagged
-    [Documentation]    INFUND-5194, INFUND-5987, IFS-2062
+Project Finance goes through the Generate Spend Profile tab to generate the Spend Profile and should not see query responses flagged
+    [Documentation]    INFUND-5194, INFUND-5987, IFS-2062, IFS-2016
     [Tags]    HappyPath
     [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_APPLICATION_PROJECT}/status/all
@@ -156,7 +148,7 @@ Project Finance should no longer see the project in the Generated Spend Profile 
     [Documentation]    IFS-2016
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_APPLICATION_PROJECT}/status/pending-spend-profiles
-    Then the user should not see the element    link=${PS_SP_APPLICATION_TITLE}
+    When the user should not see the element    link=${PS_SP_APPLICATION_TITLE}
 
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899, INFUND-7685
