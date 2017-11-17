@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
@@ -159,7 +160,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
         List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccessObjectOrThrowException();
         List<Long> competitionIdsForUser = userApplications.stream()
-                .map(applicationResource -> applicationResource.getCompetition())
+                .map(ApplicationResource::getCompetition)
                 .distinct()
                 .collect(Collectors.toList());
 
@@ -190,21 +191,28 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return competition.getApplications()
                 .stream()
                 .filter(application -> application.getManageFundingEmailDate() != null)
-                .max(Comparator.comparing(application -> application.getManageFundingEmailDate()))
+                .max(Comparator.comparing(Application::getManageFundingEmailDate))
                 .get().getManageFundingEmailDate();
     }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
-        List<Competition> competitions = competitionRepository.findProjectSetup();
-        // Only competitions with at least one funded and informed application can be considered as in project setup
-        return serviceSuccess(simpleMap(
-                CollectionFunctions.reverse(competitions.stream()
-                    .map(competition -> Pair.of(findMostRecentFundingInformDate(competition), competition))
-                    .sorted(Comparator.comparing(pair -> pair.getKey()))
-                    .map(pair -> pair.getValue())
-                    .collect(Collectors.toList())),
-                this::searchResultFromCompetition));
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+            List<Competition> competitions;
+            if (user.hasRole(UserRoleType.INNOVATION_LEAD)) {
+                competitions = competitionRepository.findProjectSetupForInnovationLead(user.getId());
+            } else {
+                competitions = competitionRepository.findProjectSetup();
+            }
+            // Only competitions with at least one funded and informed application can be considered as in project setup
+            return serviceSuccess(simpleMap(
+                    CollectionFunctions.reverse(competitions.stream()
+                            .map(competition -> Pair.of(findMostRecentFundingInformDate(competition), competition))
+                            .sorted(Comparator.comparing(Pair::getKey))
+                            .map(Pair::getValue)
+                            .collect(Collectors.toList())),
+                    this::searchResultFromCompetition));
+        });
     }
 
     @Override
@@ -234,13 +242,13 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
                 INELIGIBLE,
                 INELIGIBLE_INFORMED,
-                REJECTED), applicationState -> applicationState.getBackingState());
+                REJECTED), ApplicationState::getBackingState);
 
         Sort sort = getApplicationSortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
         Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, unsuccessfulStates, pageable);
-        List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), application -> convertToApplicationResource(application));
+        List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
 
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
     }
