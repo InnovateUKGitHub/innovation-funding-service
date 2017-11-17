@@ -138,7 +138,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         List<CompetitionAssessmentParticipant> retrievedParticipant = repository.findAll();
 
-        assertEquals(2, retrievedParticipant.size());
+        assertEquals(10, retrievedParticipant.size()); // includes 8 pre-existing Innovation Leads added via patches
         assertEqualParticipants(savedParticipants, retrievedParticipant);
     }
 
@@ -500,7 +500,8 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     }
 
     private void assertEqualParticipants(List<CompetitionAssessmentParticipant> expected, List<CompetitionAssessmentParticipant> actual) {
-        zip(expected, actual, this::assertEqualParticipants);
+        List<CompetitionAssessmentParticipant> subList = actual.subList(actual.size() - expected.size(), actual.size()); // Exclude pre-existing participants added via patch
+        zip(expected, subList, this::assertEqualParticipants);
     }
 
     private void assertEqualParticipants(CompetitionAssessmentParticipant expected, CompetitionAssessmentParticipant actual) {
@@ -560,7 +561,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         repository.save(competitionParticipants);
         flushAndClearSession();
 
-        assertEquals(4, repository.count());
+        assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
@@ -659,7 +660,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         repository.save(competitionParticipants);
         flushAndClearSession();
 
-        assertEquals(4, repository.count());
+        assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
@@ -697,7 +698,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         saveNewCompetitionParticipants(newAssessorInvites);
         flushAndClearSession();
 
-        assertEquals(4, repository.count());
+        assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
@@ -750,7 +751,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         repository.save(competitionParticipants);
         flushAndClearSession();
 
-        assertEquals(4, repository.count());
+        assertEquals(12, repository.count());  // includes 8 pre-existing Innovation Leads added via patches
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
@@ -827,7 +828,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         saveNewCompetitionParticipants(newAssessorInvites);
         flushAndClearSession();
 
-        assertEquals(4, repository.count());
+        assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
@@ -904,7 +905,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         saveNewCompetitionParticipants(newAssessorInvites);
         flushAndClearSession();
 
-        assertEquals(4, repository.count());
+        assertEquals(12, repository.count()); // includes 8 pre-existing Innovation Leads added via patches
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
@@ -946,14 +947,14 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         flushAndClearSession();
 
-        assertEquals(4, repository.count());
+        assertEquals(12, repository.count());  // includes 8 pre-existing Innovation Leads added via patches
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
         Page<CompetitionAssessmentParticipant> pagedResult = repository.getAssessorsByCompetitionAndInnovationAreaAndStatusContainsAndCompliant(
                 competition.getId(),
                 null,
-                 asList(PENDING, REJECTED),
+                asList(PENDING, REJECTED),
                 null,
                 pageable
         );

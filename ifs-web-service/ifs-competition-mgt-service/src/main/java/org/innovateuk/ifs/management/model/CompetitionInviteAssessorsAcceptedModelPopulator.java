@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors 'Accepted' view.
  */
 @Component
-public class InviteAssessorsAcceptedModelPopulator extends InviteAssessorsModelPopulator<InviteAssessorsAcceptedViewModel> {
+public class CompetitionInviteAssessorsAcceptedModelPopulator extends CompetitionInviteAssessorsModelPopulator<InviteAssessorsAcceptedViewModel> {
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;

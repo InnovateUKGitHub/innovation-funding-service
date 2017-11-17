@@ -1,14 +1,9 @@
 package org.innovateuk.ifs.management.viewmodel;
 
-import org.innovateuk.ifs.category.resource.InnovationSectorResource;
-
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Holder of model attributes for the Invite assessors for Assessment Panel 'Find' view.
  */
-public class PanelInviteAssessorsFindViewModel extends PanelInviteAssessorsViewModel<PanelAvailableAssessorRowViewModel> {
+public class PanelInviteAssessorsFindViewModel extends InviteAssessorsViewModel<PanelAvailableAssessorRowViewModel> {
 
     private boolean selectAllDisabled;
 
