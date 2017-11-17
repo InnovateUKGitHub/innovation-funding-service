@@ -7,6 +7,7 @@ import org.springframework.aop.support.AopUtils;
 import org.springframework.context.ApplicationContext;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -73,19 +74,21 @@ public class ProxyUtils {
     }
 
     /**
-     * TODO
+     * A {@link Pair} of the {@link Class} passed in and the {@link Annotation} of the type provided on that class, if
+     * present.
      * @param clazz
      * @param annotationType
      * @param <T>
      * @return
      */
-    private static <T extends Annotation> Pair<Class<?>, Optional<T>> classLevel(Class<?> clazz, Class<T> annotationType){
+    public static <T extends Annotation> Pair<Class<?>, Optional<T>> classLevel(Class<?> clazz, Class<T> annotationType){
         Optional<T> annotation = ofNullable(findAnnotation(clazz, annotationType));
         return Pair.of(clazz, annotation);
     }
 
     /**
-     * TODO
+     * A {@link Pair} of the {@link Class} passed in and a {@link List} of the {@link Annotation}s of the annotation
+     * types provided, on that class, where they are present.
      * @param clazz
      * @param annotationTypes
      * @return
@@ -95,7 +98,8 @@ public class ProxyUtils {
     }
 
     /**
-     * TODO
+     * True if the passed in {@link Class} has at least one class level {@link Annotation} of the annotation types
+     * provided.
      * @param clazz
      * @param annotationTypes
      * @return
@@ -104,6 +108,12 @@ public class ProxyUtils {
         return !classLevel(clazz, annotationTypes).getValue().isEmpty();
     }
 
+    /**
+     * True if the passed in {@link Method} has at least one {@link Annotation} of the annotation types provided.
+     * @param method
+     * @param annotationTypes
+     * @return
+     */
     public static boolean hasOneOf(Method method, Collection<Class<? extends Annotation>> annotationTypes){
         return !annotations(method, annotationTypes).isEmpty();
     }
@@ -120,18 +130,48 @@ public class ProxyUtils {
         return getMethods(bean).stream().collect(toMap(identity(), method -> annotation(method, annotationType)));
     }
 
+    /**
+     * {@link Optional} containing the {@link Annotation} of the annotation type provided if it exists on the
+     * {@link Method} provided.
+     * @param method
+     * @param annotationType
+     * @param <T>
+     * @return
+     */
     public static <T extends Annotation> Optional<T> annotation(Method method, Class<T> annotationType){
         return ofNullable(findAnnotation(method, annotationType));
     }
 
+    /**
+     * {@link Optional} containing the {@link Annotation} of the annotation type provided if it exists at class level on
+     * the {@link Class} provided.
+     * @param clazz
+     * @param annotationType
+     * @param <T>
+     * @return
+     */
     public static <T extends Annotation> Optional<T> annotation(Class clazz, Class<T> annotationType){
         return ofNullable(findAnnotation(clazz, annotationType));
     }
 
+    /**
+     * {@link List} containing the {@link Annotation}s of the annotation types provided if they exists on the
+     * {@link Method} given.
+     * @param method
+     * @param annotationTypes
+     * @return
+     */
     public static List<? extends Annotation> annotations(Method method, Collection<Class<? extends Annotation>> annotationTypes){
         return flattenOptional(simpleMap(annotationTypes, a -> annotation(method, a)));
     }
 
+    /**
+     * {@link List} containing the {@link Annotation}s of the annotation types provided if they exists at class levle on
+     * the {@link Method} given.
+     * @param clazz
+     * @param annotationTypes
+     * @return
+     */
     public static List<? extends Annotation> annotations(Class<?> clazz, Collection<Class<? extends Annotation>> annotationTypes){
         return flattenOptional(simpleMap(annotationTypes, a -> annotation(clazz, a)));
     }
@@ -157,6 +197,12 @@ public class ProxyUtils {
         return method.getDeclaringClass().isAssignableFrom(Object.class);
     }
 
+    /**
+     * Conveience function to get a {@link List} of {@link Method}s from bean as opposed to an {@link Array}
+     *
+     * @param bean
+     * @return
+     */
     private static List<Method> getMethods(Object bean){
         return stream(bean.getClass().getMethods()).collect(toList());
     }

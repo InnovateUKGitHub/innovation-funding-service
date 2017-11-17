@@ -2,12 +2,12 @@ package org.innovateuk.ifs.commons;
 
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.commons.security.evaluator.RootCustomPermissionEvaluator;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Executable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,11 +17,9 @@ import static java.lang.String.join;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.ProxyUtils.*;
-import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
-import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 
 /**
  * Base class to ensure that all service methods are secured as appropriate.
@@ -62,8 +60,7 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
     protected ApplicationContext context;
 
     /**
-     * TODO
-     *
+     * Test that all classes and methods that should have security annotations have them.
      * @throws Exception
      */
     @Test
@@ -74,28 +71,44 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
         assertNotNull(services);
         assertFalse(services.isEmpty());
 
-        // Find all the methods that should have a security annotation on and check they do.
+        List<Method> notSecured = new ArrayList<>();
         for (Object service : services) {
             // If we are secured at the class level it is not necessary to be secured at the method level.
             if (!isSecuredAtClassLevel(service)) {
                 // We are not secured at the class level check at method level.
-                testSecuredAtMethodLevel(service);
+                notSecured.addAll(notSecuredAtMethodLevel(service));
             }
         }
-    }
+        if (!notSecured.isEmpty()){
+            fail(methodFailureMessage("The following methods need to have a security annotation, or one needs to be added at class level", notSecured));
+        }
 
-    private void testSecuredAtMethodLevel(Object service) throws Exception {
-        for (Method method : service.getClass().getMethods()) {
-            if (methodNeedsSecuring(method)) {
-                if (!hasOneOf(method, methodLevelSecurityAnnotations())) {
-                    fail("Method: " + method.getName() + " on class " + method.getDeclaringClass() + " does not have security annotations");
-                }
-            }
-        }
     }
 
     /**
-     * TODO
+     * Find the {@link Method}s on the bean passed in, check whether they need to be secured, and return any that aren't
+     * @param service
+     * @throws Exception
+     */
+    private List<Method> notSecuredAtMethodLevel(Object service) throws Exception {
+        List<Method> notSecured = new ArrayList<>();
+        for (Method method : service.getClass().getMethods()) {
+            if (methodNeedsSecuring(method)) {
+                if (!hasOneOf(method, methodLevelSecurityAnnotations())) {
+                    notSecured.add(method);
+                }
+            }
+        }
+        return notSecured;
+    }
+
+    /**
+     * Test that all methods and classes that need descriptive {@link SecuredBySpring} {@link Annotation}s have them.
+     * This is considered to be the case if they have a Spring security {@link Annotation} with simple rules that will
+     * not invoke any of the {@link RootCustomPermissionEvaluator} functionality, see
+     * {@link AbstractServiceSecurityAnnotationsTest#requiresSecuredBySpringAnnotation}
+     *
+     * See also {@link AbstractDocumentingServiceSecurityAnnotationsTest}
      *
      * @throws Exception
      */
@@ -107,10 +120,8 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
         assertNotNull(services);
         assertFalse(services.isEmpty());
 
-        //
         List<Class<?>> classLevelFailures = new ArrayList<>();
         List<Method> methodLevelFailures = new ArrayList<>();
-
 
         for (Object service : services) {
             // First check at class level
@@ -118,7 +129,6 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
                 Class<?> serviceClass = service.getClass();
                 if (requiresSecuredBySpringAnnotation(serviceClass) && !hasOneOf(serviceClass, asList(SecuredBySpring.class))) {
                     classLevelFailures.add(serviceClass);
-
                 }
             }
             // Now for all of the methods
@@ -132,20 +142,20 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
         }
 
         if (!classLevelFailures.isEmpty() || !methodLevelFailures.isEmpty()){
-            fail(classFailureMessage(classLevelFailures) + "\n" + methodFailureMessage(methodLevelFailures));
+            // Output all of the errors
+            fail(classFailureMessage("The following classes need to have a SecuredBySpring annotation:", classLevelFailures) + "\n" +
+                    methodFailureMessage("The following methods need to have a SecuredBySpring annotation:", methodLevelFailures));
         }
     }
 
-    private String classFailureMessage(List<Class<?>> failures){
-        return "The following classes need to have a SecuredBySpring annotation: \n" + //
+    private String classFailureMessage(String message, List<Class<?>> failures){
+        return  message + "\n" + //
                 join(",\n", simpleMap(failures, Class::getName));
     }
 
-    private String methodFailureMessage(List<Method> failures){
-        return "The following methods need to have a SecuredBySpring annotation: \n" + //
-                join(",\n", simpleMap(failures, m -> m.getName() + " on class " + m.getDeclaringClass()));
+    private String methodFailureMessage(String message, List<Method> failures){
+        return message +  "\n" + join(",\n", simpleMap(failures, m -> m.getName() + " on class " + m.getDeclaringClass()));
     }
-
 
     /**
      * Only public methods and not those on base class {@link Object} get checked
@@ -158,6 +168,7 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
     }
 
     /**
+     * Does the bean passed in have a class level security annotation.
      * @param service
      * @return
      */
@@ -179,15 +190,22 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
         return requiresSecuredBySpringAnnotation(values);
     }
 
-
+    /**
+     * If a security {@link Annotation} uses the default Spring security EL syntax then we need to have a description
+     * provided by a {@link SecuredBySpring} {@link Annotation} as we are not able to glean the information any other
+     * way.
+     * @param clazz
+     * @return
+     * @throws Exception
+     */
     private boolean requiresSecuredBySpringAnnotation(Class<?> clazz) throws Exception {
         List<String> values = annotationValues(clazz, methodLevelSecurityAnnotations());
         return requiresSecuredBySpringAnnotation(values);
     }
 
     /**
-     * TODO
-     *
+     * We determine whether a Spring security {@link Annotation} will invoke our custom code in the
+     * {@link RootCustomPermissionEvaluator} by inspecting its "value" method and checking for standard Spring EL syntax
      * @param values
      * @return
      */
@@ -200,8 +218,7 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
     }
 
     /**
-     * A {@link List} of the value attributes of the annotations specified on the method provided.
-     *
+     * A {@link List} of the "value" attributes of the annotations specified on the method provided.
      * @param method
      * @param annotationTypes
      * @return
@@ -211,12 +228,19 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
         return simpleMap(annotations(method, annotationTypes), a -> valueOf(a));
     }
 
+    /**
+     * A {@link List} of the "value" attributes of the annotations specified on the method provided.
+     * @param clazz
+     * @param annotationTypes
+     * @return
+     * @throws Exception
+     */
     private List<String> annotationValues(Class<?> clazz, List<Class<? extends Annotation>> annotationTypes) throws Exception {
         return simpleMap(annotations(clazz, annotationTypes), a -> valueOf(a));
     }
 
     /**
-     * TODO
+     * Grab the "value" from an {@link Annotation}. Will throw if this property does not exist.
      *
      * @param a
      * @return
@@ -229,6 +253,10 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
         }
     }
 
+    /**
+     * Get the Spring beans that should be secured.
+     * @return
+     */
     private Collection<Object> servicesToTest() {
         List<Object> unwrappedServices = allUnwrappedComponentsWithClassAnnotations(context, annotationsOnClassesToSecure());
         return simpleFilter(unwrappedServices, service -> isAssignableFromOneOf(service, excludedClasses()));
