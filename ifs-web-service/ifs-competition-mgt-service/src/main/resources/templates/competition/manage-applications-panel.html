@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Allocate applications'" />
+</head>
+
+<body th:with="context='comp-management'" class="competition-management">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Manage assessment panel',linkClass='link-back',linkUrl=@{/assessment/panel/competition/{id}(id=${model.competitionId})})" />
+    <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assign applications to panel',subTitle=|${model.competitionId}: ${model.competitionName}, ${model.competitionStatus}| ,size='heading-xlarge'" />
+
+    <form method="GET">
+        <div class="search-filters extra-margin">
+            <fieldset>
+                <div class="grid-row">
+                    <legend class="visuallyhidden">Filter applications</legend>
+                    <div class="column-two-thirds">
+                        <label class="form-label" for="filterSearch">Search by application number</label>
+                        <input type="text" class="form-control extra-margin-bottom" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
+                        <a href="?" th:href="'?sort=' + ${model.sorting}">Clear</a>
+                    </div>
+                    <div class="column-third">
+                        <button class="button" type="submit">Filter</button>
+                    </div>
+                </div>
+            </fieldset>
+            </div>
+            <div class="grid-row sorting">
+                <div class="column-two-thirds">
+                    <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">22</span>
+                        <span class="heading-small">applications</span>
+                    </p>
+                </div>
+                <div class="column-third alignright">
+                    <label for="sort-by">Sort by</label>
+                    <select id="sort-by" name="sort" class="js-auto-submit form-control">
+                        <option value="id" th:selected="${(model.sorting == 'id')}">Application number</option>
+                        <option value="title" th:selected="${(model.sorting == 'title')}">Title</option>
+                        <option value="innovationArea" th:selected="${(model.sorting == 'innovationArea')}">Innovation area</option>
+                        <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead organisation</option>
+                    </select>
+                    <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
+                </div>
+            </div>
+    </form>
+    <div class="table-overflow">
+        <table>
+            <thead>
+            <tr>
+                <th class="width-small" scope="col">Application number</th>
+                <th scope="col">Title</th>
+                <th class="width-medium" scope="col">Innovation area</th>
+                <th class="width-medium" scope="col">Lead organisation</th>
+                <th class="width-small" scope="col"><span class="visuallyhidden">Action</span></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="app : ${model.applications}">
+                <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
+                <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                <td th:text="${app.innovationArea}">Information and communications technology (ICT)</td>
+                <td th:text="${app.leadOrganisation}">Wessex University</td>
+                <td>
+                    <a class="button-secondary no-margin"
+                       th:text='Assign'></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

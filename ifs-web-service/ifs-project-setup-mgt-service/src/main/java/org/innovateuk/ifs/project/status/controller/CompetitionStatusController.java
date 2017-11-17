@@ -50,12 +50,14 @@ public class CompetitionStatusController {
     @Autowired
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support')")
     public String viewCompetitionStatus(@PathVariable Long competitionId) {
         return format("redirect:/competition/%s/status/all", competitionId);
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping("/all")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support')")
     public String viewCompetitionStatusAll(Model model, UserResource loggedInUser,
@@ -72,6 +74,7 @@ public class CompetitionStatusController {
         return "project/competition-status-all";
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping("/queries")
     @PreAuthorize("hasAnyAuthority('project_finance')")
     public String viewCompetitionStatusQueries(Model model, UserResource loggedInUser,

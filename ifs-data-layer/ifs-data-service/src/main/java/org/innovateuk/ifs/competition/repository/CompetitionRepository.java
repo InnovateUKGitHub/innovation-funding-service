@@ -75,7 +75,17 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
-    // TODO update when IFS-2072 is addressed (track Spend Profile states via workflow)
+    public static final String OPEN_QUERIES_WHERE_CLAUSE = "WHERE t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
+            "AND TYPE(t) = Query " +
+            "AND 0 = (SELECT COUNT(id) FROM u.roles r WHERE r.name = 'project_finance') " +
+            "AND a.competition.id = :competitionId " +
+            "AND (post.thread.id, post.createdOn) IN ( " +
+            "    SELECT p.thread.id, MAX(p.createdOn) " +
+            "    FROM Post p " +
+            "    WHERE p.thread.id = t.id " +
+            "    GROUP BY p.thread.id) "  +
+            "AND NOT EXISTS (SELECT id FROM SpendProfileProcess sp WHERE sp.target.id = pr.id AND sp.event != 'project-created') ";
+
     public static final String COUNT_OPEN_QUERIES = "SELECT COUNT(DISTINCT t.classPk) " +
             "FROM Post post " +
             "JOIN post.thread t " +
@@ -83,18 +93,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "JOIN ProjectFinance pf ON pf.id = t.classPk " +
             "JOIN pf.project pr " +
             "JOIN pr.application a " +
-            "WHERE t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
-            "    AND TYPE(t) = Query " +
-            "    AND 0 = (SELECT COUNT(id) FROM u.roles r WHERE r.name = 'project_finance') " +
-            "    AND a.competition.id = :competitionId " +
-            "    AND (post.thread.id, post.createdOn) IN ( " +
-            "        SELECT p.thread.id, MAX(p.createdOn) " +
-            "        FROM Post p " +
-            "        WHERE p.thread.id = t.id " +
-            "        GROUP BY p.thread.id) " +
-            "    AND (SELECT COUNT(id) FROM pr.spendProfiles sp) != (SELECT COUNT(id) FROM pr.partnerOrganisations po)";
+            OPEN_QUERIES_WHERE_CLAUSE;
 
-    // TODO update when IFS-2072 is addressed (track Spend Profile states via workflow)
     public static final String GET_OPEN_QUERIES = "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name) " +
             "FROM Post post " +
             "JOIN post.thread t " +
@@ -103,16 +103,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "JOIN pf.project pr " +
             "JOIN pr.application a " +
             "JOIN pf.organisation o " +
-            "WHERE t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
-            "    AND TYPE(t) = Query " +
-            "    AND 0 = (SELECT COUNT(id) FROM u.roles r WHERE r.name = 'project_finance') " +
-            "    AND a.competition.id = :competitionId " +
-            "    AND (post.thread.id, post.createdOn) IN ( " +
-            "        SELECT p.thread.id, MAX(p.createdOn) " +
-            "        FROM Post p " +
-            "        WHERE p.thread.id = t.id " +
-            "        GROUP BY p.thread.id) "  +
-            "    AND (SELECT COUNT(id) FROM pr.spendProfiles sp) != (SELECT COUNT(id) FROM pr.partnerOrganisations po) " +
+            OPEN_QUERIES_WHERE_CLAUSE +
             "GROUP BY pr.application.id, o.id, pr.id " +
             "ORDER BY pr.application.id, o.name";
 

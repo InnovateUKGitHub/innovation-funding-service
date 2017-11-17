@@ -264,14 +264,14 @@
             </thead>
             <tbody>
             <tr th:each="app : ${model.applicationsView.applications}">
-                <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
-                <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.applicationId})} + ${originQuery}" th:text="${app.applicationId}"/></td>
+                <td th:text="${app.applicationName}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                 <td th:text="${app.leadOrganisation}">Wessex University</td>
                 <td class="numeric" th:text="${app.assessors}">4</td>
                 <td class="numeric" th:text="${app.accepted}" th:if="${model.applicationsView.inAssessment}">2</td>
                 <td class="numeric" th:text="${app.submitted}" th:if="${model.applicationsView.inAssessment}">1</td>
                 <td><form method="post"
-                       th:action="@{/assessment/competition/{competitionid}/assessors/{assessorid}/application/{applicationid}/assign(competitionid=${model.competitionId}, assessorid=${model.assessorId}, applicationid=${app.id})}" >
+                       th:action="@{/assessment/competition/{competitionid}/assessors/{assessorid}/application/{applicationid}/assign(competitionid=${model.competitionId}, assessorid=${model.assessorId}, applicationid=${app.applicationId})}" >
                     <button type="submit" class="button-secondary no-margin">Assign</button>
                 </form>
                 </td>

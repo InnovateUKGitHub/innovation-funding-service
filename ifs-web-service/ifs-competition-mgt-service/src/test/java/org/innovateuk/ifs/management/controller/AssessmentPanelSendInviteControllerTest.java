@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.innovateuk.ifs.management.form.AssessorPanelOverviewSelectionForm;
+import org.innovateuk.ifs.management.form.PanelOverviewSelectionForm;
 import org.innovateuk.ifs.management.form.ResendInviteForm;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.viewmodel.SendInvitesViewModel;
@@ -99,7 +99,7 @@ public class AssessmentPanelSendInviteControllerTest extends BaseControllerMockM
                 .withContent("Readonly content")
                 .build();
 
-        AssessorPanelOverviewSelectionForm expectedSelectionForm = new AssessorPanelOverviewSelectionForm();
+        PanelOverviewSelectionForm expectedSelectionForm = new PanelOverviewSelectionForm();
         expectedSelectionForm.setSelectedInviteIds(inviteIds);
         Cookie selectionFormCookie = createFormCookie(expectedSelectionForm);
 
@@ -171,7 +171,7 @@ public class AssessmentPanelSendInviteControllerTest extends BaseControllerMockM
         inOrder.verifyNoMoreInteractions();
     }
 
-    private Cookie createFormCookie(AssessorPanelOverviewSelectionForm form) throws Exception {
+    private Cookie createFormCookie(PanelOverviewSelectionForm form) throws Exception {
         String cookieContent = JsonUtil.getSerializedObject(form);
         return new Cookie(format("assessorPanelOverviewSelectionForm_comp_%s", competition.getId()), getCompressedString(cookieContent));
     }
