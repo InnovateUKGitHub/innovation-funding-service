@@ -40,7 +40,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
     public void unAssignApplicationsFromPanel() throws Exception {
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
 
-        ServiceResult<Void> result = service.unAssignApplicationFromPanel(applicationId);
+        ServiceResult<Void> result = service.unassignApplicationFromPanel(applicationId);
         assertTrue(result.isSuccess());
         assertFalse(application.isInAssessmentPanel());
     }
