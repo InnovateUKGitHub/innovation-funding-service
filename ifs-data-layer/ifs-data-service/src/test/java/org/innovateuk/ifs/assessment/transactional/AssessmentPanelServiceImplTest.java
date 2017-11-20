@@ -10,6 +10,8 @@ import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<AssessmentPanelServiceImpl> {
@@ -34,6 +36,9 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         ServiceResult<Void> result = service.assignApplicationToPanel(applicationId);
         assertTrue(result.isSuccess());
         assertTrue(application.isInAssessmentPanel());
+
+        verify(applicationRepositoryMock).findOne(applicationId);
+        verifyNoMoreInteractions(applicationRepositoryMock);
     }
 
     @Test
@@ -43,5 +48,8 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         ServiceResult<Void> result = service.unassignApplicationFromPanel(applicationId);
         assertTrue(result.isSuccess());
         assertFalse(application.isInAssessmentPanel());
+
+        verify(applicationRepositoryMock).findOne(applicationId);
+        verifyNoMoreInteractions(applicationRepositoryMock);
     }
 }
