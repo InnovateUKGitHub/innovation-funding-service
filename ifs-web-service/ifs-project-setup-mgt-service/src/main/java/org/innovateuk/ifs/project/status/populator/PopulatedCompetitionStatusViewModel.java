@@ -21,11 +21,11 @@ public class PopulatedCompetitionStatusViewModel {
     private final CompetitionProjectsStatusResource competitionProjectsStatus;
     private final CompetitionStatusViewModel viewModel;
 
-    public PopulatedCompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatus, UserResource user, long openQueryCount, boolean showTabs) {
+    public PopulatedCompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatus, UserResource user, long openQueryCount, long pendingSpendProfilesCount, boolean showTabs) {
         this.user = user;
         this.competitionProjectsStatus = competitionProjectsStatus;
         final boolean canExportBankDetails = user.hasRole(PROJECT_FINANCE);
-        this.viewModel = new CompetitionStatusViewModel(competitionProjectsStatus, canExportBankDetails, projectStatusPermissions(), openQueryCount, showTabs);
+        this.viewModel = new CompetitionStatusViewModel(competitionProjectsStatus, canExportBankDetails, projectStatusPermissions(), openQueryCount, pendingSpendProfilesCount, showTabs);
     }
 
     public CompetitionStatusViewModel get() {

@@ -4,11 +4,13 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.competition.controller.CompetitionPostSubmissionController;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
@@ -114,6 +116,54 @@ public class CompetitionPostSubmissionControllerDocumentation extends BaseContro
                                 fieldWithPath("[]").description("list of open queries")
                         )
                 ));
+    }
+
+    @Test
+    public void getPendingSpendProfiles() throws Exception {
+
+        final Long competitionId = 1L;
+
+        SpendProfileStatusResource resource1 = new SpendProfileStatusResource(11L, 1L, "Project Name 1");
+        SpendProfileStatusResource resource2 = new SpendProfileStatusResource(11L, 2L, "Project Name 2");
+        List<SpendProfileStatusResource> pendingSpendProfiles = Arrays.asList(resource1, resource2);
+        when(competitionService.getPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfiles));
+
+        mockMvc.perform(get("/competition/postSubmission/{competitionId}/pending-spend-profiles", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(pendingSpendProfiles)))
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition, whose Projects, which are pending Spend Profile generation, are being retrieved")
+                        )
+                        ,
+                        responseFields(
+                                fieldWithPath("[]").description("List of projects for which Spend Profile generation is pending, for a given competition")
+                        )
+                ));
+
+        verify(competitionService, only()).getPendingSpendProfiles(competitionId);
+    }
+
+    @Test
+    public void countPendingSpendProfiles() throws Exception {
+
+        final Long competitionId = 1L;
+        final Long pendingSpendProfileCount = 3L;
+
+        when(competitionService.countPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfileCount));
+
+        mockMvc.perform(get("/competition/postSubmission/{competitionId}/count-pending-spend-profiles", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(pendingSpendProfileCount)))
+                .andDo(document(
+                        "competition/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition, whose count of Projects, which are pending Spend Profile generation, is being retrieved")
+                        )
+                ));
+
+        verify(competitionService, only()).countPendingSpendProfiles(competitionId);
     }
 
     @Test
