@@ -86,12 +86,11 @@ Guest user can apply to a Non-IFS competition at the FrontDoor
 Guest can see the Dates tab
     [Documentation]  INFUND-8554  IFS-1117
     [Tags]    MySQL
-    When the user clicks the button/link      link=Dates
-    Then the user should not see the element  css=input
-    And the user should see the element       jQuery=#dates dd:contains("Competition opens")
-    And the user should see the element       jQuery=#dates dd:contains("Registration closes")
-    And the user should see the element       jQuery=#dates dd:contains("Competition closes")
-    And the user should see the element       jQuery=#dates dd:contains("Applicants notified")
+    When the user clicks the button/link  link=Dates
+    Then the user should see the element  jQuery=#dates dd:contains("Competition opens")
+    And the user should see the element   jQuery=#dates dd:contains("Registration closes")
+    And the user should see the element   jQuery=#dates dd:contains("Competition closes")
+    And the user should see the element   jQuery=#dates dd:contains("Applicants notified")
 
 *** Keywords ***
 the user fills out the competition title and url
