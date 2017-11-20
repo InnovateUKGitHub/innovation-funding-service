@@ -1,3 +1,4 @@
+import com.bmuschko.gradle.docker.DockerRegistryCredentials
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 
 def targetBuild = hasProperty('profile') ? profile : 'docker';
@@ -96,19 +97,14 @@ subprojects {
             inputDir = project.file("$project.buildDir/docker")
         }
 
-        def dockerRegistryCredentials = new com.bmuschko.gradle.docker.DockerRegistryCredentials()
-////        dockerRegistryCredentials.url ="docker-registry-default.apps.prod.ifs-test-clusters.com" //Incorrect username or password
-//        dockerRegistryCredentials.url ="https://docker-registry-default.apps.prod.ifs-test-clusters.com" // too many failed login attempts for username or IP address
-//        dockerRegistryCredentials.username="unused"
-//        dockerRegistryCredentials.password="QRLaSj146cdKk722f3wFD8LJmN2EOr37DcJJFjfq3TY"
-
-
-                dockerRegistryCredentials.url ="docker-registry-default.apps.dev-nige-1.ifs-test-clusters.com" //Incorrect username or password
-//        dockerRegistryCredentials.url ="https://docker-registry-default.apps.dev-nige-1.dev.ifs-test-clusters.com" // too many failed login attempts for username or IP address
+        def dockerRegistryCredentials = new DockerRegistryCredentials()
+        dockerRegistryCredentials.url ="docker-registry-default.apps.prod.ifs-test-clusters.com"
         dockerRegistryCredentials.username="unused"
-        dockerRegistryCredentials.password="dR6b6yQvu4_JfhQY8IifIbHlz31mxTW5NkSJOmizf5s"
+        dockerRegistryCredentials.password="oc whoami -t".execute().text.trim()
+        dockerRegistryCredentials.email="unused"
 
-        
+      //  docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
+
         task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
             registryCredentials = dockerRegistryCredentials
             imageName="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")
