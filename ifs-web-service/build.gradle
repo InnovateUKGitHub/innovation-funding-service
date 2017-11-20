@@ -96,34 +96,24 @@ subprojects {
             inputDir = project.file("$project.buildDir/docker")
         }
 
-        docker {
-            registryCredentials {
-                url = "docker-registry-default.apps.prod.ifs-test-clusters.com"
-                username = "adambirseipl@gmail.com"
-                password = ""
-                email = 'abirse@worth.systems'
-            }
-        }
+        def dockerRegistryCredentials = new com.bmuschko.gradle.docker.DockerRegistryCredentials()
+////        dockerRegistryCredentials.url ="docker-registry-default.apps.prod.ifs-test-clusters.com" //Incorrect username or password
+//        dockerRegistryCredentials.url ="https://docker-registry-default.apps.prod.ifs-test-clusters.com" // too many failed login attempts for username or IP address
+//        dockerRegistryCredentials.username="unused"
+//        dockerRegistryCredentials.password="QRLaSj146cdKk722f3wFD8LJmN2EOr37DcJJFjfq3TY"
 
 
+                dockerRegistryCredentials.url ="docker-registry-default.apps.dev-nige-1.ifs-test-clusters.com" //Incorrect username or password
+//        dockerRegistryCredentials.url ="https://docker-registry-default.apps.dev-nige-1.dev.ifs-test-clusters.com" // too many failed login attempts for username or IP address
+        dockerRegistryCredentials.username="unused"
+        dockerRegistryCredentials.password="dR6b6yQvu4_JfhQY8IifIbHlz31mxTW5NkSJOmizf5s"
+
+        
         task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+            registryCredentials = dockerRegistryCredentials
             imageName="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")
             tag="banana"
-
-
-
         }
-
-//        task tagDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerTagImage) {
-//
-//            imageId=buildDocker.getTag()
-//            println "**** ImageID == " + imageId;
-//            tag ="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
-//            println "**** TAG == " + tag
-//            repository="http://localhost:5000"
-////            imageName="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
-////            tag = "ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
-//        }
 
 
         // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
