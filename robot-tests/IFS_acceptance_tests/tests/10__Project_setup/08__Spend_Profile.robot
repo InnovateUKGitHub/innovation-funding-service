@@ -137,18 +137,18 @@ Project Finance goes through the Generate Spend Profile tab to generate the Spen
     And the user clicks the button/link     link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link    css=.generate-spend-profile-main-button
     And the user clicks the button/link     css=#generate-spend-profile-modal-button
-    Then the user should see the text in the page    The finance checks have been approved and profiles generated.
+    Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element    css=#table-project-status tr:nth-of-type(5) td:nth-of-type(4).ok
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/queries
-    Then the user should not see the element    link=${Katz_Name}
+    Then the user should not see the element  link=${Katz_Name}
     And the user reads his email            ${PS_SP_APPLICATION_PM_EMAIL}  Your spend profile is available  The finance checks for all partners in the project have now been completed
 
 Project Finance should no longer see the project in the Generate Spend Profile tab
     [Documentation]    IFS-2016
     [Tags]
-    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_APPLICATION_PROJECT}/status/pending-spend-profiles
-    Then the user should not see the element    link=${PS_SP_APPLICATION_TITLE}
+    Given the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_APPLICATION_PROJECT}/status/pending-spend-profiles
+    Then the user should not see the element  link=${PS_SP_APPLICATION_TITLE}
 
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899, INFUND-7685
