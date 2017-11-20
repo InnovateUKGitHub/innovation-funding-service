@@ -6,6 +6,8 @@ Documentation     INFUND-7963: Create Non-IFS tab in 'Competition dashboard' for
 ...               INFUND-7965: Update 'Public content' for adding non-IFS competitions to front door
 ...
 ...               INFUND-8554 As a member of the Competition team I want to be able to publish a "Registration Closes" date in non-IFS public content...
+...
+...               IFS-1117 As a comp exec I am able to set Application milestones in Non-IFS competition details (Initial view)
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -82,7 +84,7 @@ Guest user can apply to a Non-IFS competition at the FrontDoor
     Then The user should see the element    link=Register and apply online
 
 Guest can see the Dates tab
-    [Documentation]    INFUND-8554
+    [Documentation]  INFUND-8554  IFS-1117
     [Tags]    MySQL
     When the user clicks the button/link      link=Dates
     Then the user should not see the element  css=input
