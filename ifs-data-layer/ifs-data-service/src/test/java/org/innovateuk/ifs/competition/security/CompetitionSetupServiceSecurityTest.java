@@ -123,7 +123,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<CompetitionResource> update(Long id, CompetitionResource competitionResource) {
+        public ServiceResult<CompetitionResource> save(Long id, CompetitionResource competitionResource) {
             return null;
         }
 
@@ -144,11 +144,6 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
         @Override
         public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId) {
             return null;
         }
 

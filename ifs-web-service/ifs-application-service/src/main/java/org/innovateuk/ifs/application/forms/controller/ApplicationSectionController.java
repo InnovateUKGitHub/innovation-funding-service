@@ -20,6 +20,7 @@ import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.viewmodel.section.AbstractSectionViewModel;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -92,6 +93,7 @@ public class ApplicationSectionController {
         sectionPopulators = populators.stream().collect(toMap(AbstractSectionPopulator::getSectionType, Function.identity()));
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping("/{sectionType}")
     public String redirectToSection(@PathVariable("sectionType") SectionType type,
@@ -99,6 +101,7 @@ public class ApplicationSectionController {
         return applicationRedirectionService.redirectToSection(type, applicationId);
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('applicant')")
     @GetMapping(SECTION_URL + "{sectionId}")
     public String applicationFormWithOpenSection(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,
@@ -111,6 +114,7 @@ public class ApplicationSectionController {
         return APPLICATION_FORM;
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('support', 'innovation_lead')")
     @GetMapping(SECTION_URL + "{sectionId}/{applicantOrganisationId}")
     public String applicationFormWithOpenSectionForApplicant(@Valid @ModelAttribute(name = MODEL_ATTRIBUTE_FORM, binding = false) ApplicationForm form, BindingResult bindingResult, Model model,
@@ -128,6 +132,7 @@ public class ApplicationSectionController {
         return APPLICATION_FORM;
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('applicant')")
     @PostMapping(SECTION_URL + "{sectionId}")
     public String applicationFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
@@ -149,7 +154,6 @@ public class ApplicationSectionController {
 
         Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, applicantSection.getSection(), params, user.getId(), applicationId);
         ValidationMessages saveApplicationErrors = applicationSaver.saveApplicationForm(applicantSection.getApplication(), applicantSection.getCompetition().getId(), form, sectionId, user.getId(), request, response, validFinanceTerms);
-        logSaveApplicationErrors(bindingResult);
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
             questionService.assignQuestion(applicationId, user, request);
@@ -182,13 +186,6 @@ public class ApplicationSectionController {
     private void logSaveApplicationBindingErrors(ValidationHandler validationHandler) {
         if (LOG.isDebugEnabled())
             validationHandler.getAllErrors().forEach(e -> LOG.debug("Validations on application : " + e.getObjectName() + " v: " + e.getDefaultMessage()));
-    }
-
-    private void logSaveApplicationErrors(BindingResult bindingResult) {
-        if (LOG.isDebugEnabled()) {
-            bindingResult.getFieldErrors().forEach(e -> LOG.debug("Remote validation field: " + e.getObjectName() + " v: " + e.getField() + " v: " + e.getDefaultMessage()));
-            bindingResult.getGlobalErrors().forEach(e -> LOG.debug("Remote validation global: " + e.getObjectName() + " v: " + e.getCode() + " v: " + e.getDefaultMessage()));
-        }
     }
 
     private Boolean validFinanceTermsForMarkAsComplete(ApplicationForm form, BindingResult bindingResult, SectionResource section, Map<String, String[]> params, Long userId, Long applicationId) {

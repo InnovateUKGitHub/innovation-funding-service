@@ -32,6 +32,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +40,7 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -67,6 +69,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -265,13 +268,25 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void findPreviousCompetitions() throws Exception {
-        List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId).build());
+        Long competition2Id = 2L;
+        List<Competition> competitions = Lists.newArrayList(newCompetition().withId(competitionId, competition2Id).build(2));
         when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
         when(competitionRepositoryMock.findFeedbackReleased()).thenReturn(competitions);
 
+        MilestoneResource milestone = newMilestoneResource().withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.of(2017, 11, 3, 23, 0, 0, 0, ZoneId.systemDefault())).build();
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competitionId)).thenReturn(serviceSuccess(milestone));
+
+        milestone = newMilestoneResource().withType(MilestoneType.OPEN_DATE).withDate(ZonedDateTime.of(2017, 11, 5, 23, 0, 0, 0, ZoneId.systemDefault())).build();
+        when(milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, competition2Id)).thenReturn(serviceSuccess(milestone));
+
         List<CompetitionSearchResultItem> response = service.findFeedbackReleasedCompetitions().getSuccessObjectOrThrowException();
 
-        assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
+        //Ensure sorted by open date
+        assertEquals(competition2Id, response.get(0).getId());
+        assertEquals(ZonedDateTime.of(2017, 11, 5, 23, 0, 0, 0, ZoneId.systemDefault()), response.get(0).getOpenDate());
+
+        assertEquals(competitionId, response.get(1).getId());
+        assertEquals(ZonedDateTime.of(2017, 11, 3, 23, 0, 0, 0, ZoneId.systemDefault()), response.get(1).getOpenDate());
     }
 
     @Test
@@ -368,7 +383,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Long countLive = 1L;
         Long countProjectSetup = 2L;
         Long countUpcoming = 3L;
-        Long countFeedbackReleased = 4l;
+        Long countFeedbackReleased = 4L;
         when(competitionRepositoryMock.countLive()).thenReturn(countLive);
         when(competitionRepositoryMock.countProjectSetup()).thenReturn(countProjectSetup);
         when(competitionRepositoryMock.countUpcoming()).thenReturn(countUpcoming);
@@ -376,6 +391,21 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         CompetitionCountResource response = service.countCompetitions().getSuccessObjectOrThrowException();
 
+        assertEquals(countLive, response.getLiveCount());
+        assertEquals(countProjectSetup, response.getProjectSetupCount());
+        assertEquals(countUpcoming, response.getUpcomingCount());
+        assertEquals(countFeedbackReleased, response.getFeedbackReleasedCount());
+
+        // Test for innovation lead user where only competitions they are assigned to should be counted
+        // actual query tested in repository integration test, this is only testing correct repostiory method is called.
+        UserResource innovationLeadUser = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build(1)).build();
+        setLoggedInUser(innovationLeadUser);
+
+        when(competitionRepositoryMock.countLiveForInnovationLead(innovationLeadUser.getId())).thenReturn(countLive);
+        when(competitionRepositoryMock.countProjectSetupForInnovationLead(innovationLeadUser.getId())).thenReturn(countProjectSetup);
+        when(userRepositoryMock.findOne(innovationLeadUser.getId())).thenReturn(newUser().withId(innovationLeadUser.getId()).withRoles(asLinkedSet(newRole().withType(INNOVATION_LEAD).build())).build());
+
+        response = service.countCompetitions().getSuccessObjectOrThrowException();
         assertEquals(countLive, response.getLiveCount());
         assertEquals(countProjectSetup, response.getProjectSetupCount());
         assertEquals(countUpcoming, response.getUpcomingCount());

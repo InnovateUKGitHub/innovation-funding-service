@@ -46,7 +46,6 @@ public abstract class AbstractTeamManagementService {
     protected ApplicationInviteResource mapStagedInviteToInviteResource(ApplicationTeamUpdateForm applicationTeamUpdateForm,
                                                                         long applicationId,
                                                                         Long inviteOrganisationId) {
-
         ApplicationInviteResource applicationInviteResource = new ApplicationInviteResource(
                 applicationTeamUpdateForm.getStagedInvite().getName(),
                 applicationTeamUpdateForm.getStagedInvite().getEmail(),

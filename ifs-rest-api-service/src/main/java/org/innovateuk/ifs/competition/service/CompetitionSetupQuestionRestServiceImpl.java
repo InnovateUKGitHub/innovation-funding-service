@@ -21,14 +21,22 @@ public class CompetitionSetupQuestionRestServiceImpl extends BaseRestService imp
 
     @Override
     public RestResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
-        return getWithRestResult(competitionsSetupRestURL + "/" + questionId, CompetitionSetupQuestionResource.class);
+        return getWithRestResult(competitionsSetupRestURL + "/getById/" + questionId, CompetitionSetupQuestionResource.class);
     }
 
     @Override
     public RestResult<Void> save(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
-        return putWithRestResult(competitionsSetupRestURL + "/" + competitionSetupQuestionResource.getQuestionId(),
-                competitionSetupQuestionResource,
-                Void.class);
+        return putWithRestResult(competitionsSetupRestURL + "/save", competitionSetupQuestionResource, Void.class);
+    }
+
+    @Override
+    public RestResult<CompetitionSetupQuestionResource> addDefaultToCompetition(Long competitionId) {
+        return postWithRestResult(competitionsSetupRestURL + "/addDefaultToCompetition/" + competitionId, CompetitionSetupQuestionResource.class);
+    }
+
+    @Override
+    public RestResult<Void> deleteById(Long questionId) {
+        return deleteWithRestResult(competitionsSetupRestURL + "/deleteById/" + questionId, Void.class);
     }
 
 

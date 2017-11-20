@@ -29,7 +29,7 @@ public class CompetitionSetupController {
     @PutMapping("/{id}")
     public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource,
                                                            @PathVariable("id") final Long id) {
-        return competitionSetupService.update(id, competitionResource).toGetResponse();
+        return competitionSetupService.save(id, competitionResource).toGetResponse();
     }
 
     @PutMapping("/{id}/update-competition-initial-details")

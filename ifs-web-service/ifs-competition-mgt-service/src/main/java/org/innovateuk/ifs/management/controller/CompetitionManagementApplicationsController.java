@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.form.IneligibleApplicationsForm;
 import org.innovateuk.ifs.management.model.*;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin;
@@ -51,6 +52,7 @@ public class CompetitionManagementApplicationsController {
     @Autowired
     private NavigateApplicationsModelPopulator navigateApplicationsModelPopulator;
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping
     public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId, UserResource user) {
@@ -58,6 +60,7 @@ public class CompetitionManagementApplicationsController {
         return "competition/applications-menu";
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/all")
     public String allApplications(Model model,
@@ -74,6 +77,7 @@ public class CompetitionManagementApplicationsController {
         return "competition/all-applications";
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/submitted")
     public String submittedApplications(Model model,
@@ -89,6 +93,7 @@ public class CompetitionManagementApplicationsController {
         return "competition/submitted-applications";
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/ineligible")
     public String ineligibleApplications(Model model,
@@ -105,7 +110,8 @@ public class CompetitionManagementApplicationsController {
         return "competition/ineligible-applications";
     }
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'ifs_admin')")
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_admin')")
     @GetMapping("/unsuccessful")
     public String unsuccessfulApplications(Model model,
                                            HttpServletRequest request,
@@ -123,11 +129,11 @@ public class CompetitionManagementApplicationsController {
         return "competition/unsuccessful-applications";
     }
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead', 'ifs_admin')")
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_admin')")
     @GetMapping("/manage")
     public String manageApplications(Model model,
-                                     @PathVariable("competitionId") long competitionId,
-                                     UserResource loggedInUser) {
+                                     @PathVariable("competitionId") long competitionId) {
 
         model.addAttribute("model", navigateApplicationsModelPopulator.populateModel(competitionId));
         return "competition/navigate-applications";

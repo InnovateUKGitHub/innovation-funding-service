@@ -5,9 +5,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
+import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsOverviewViewModel;
-import org.innovateuk.ifs.management.viewmodel.PanelOverviewAssessorRowViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,7 +46,7 @@ public class PanelInviteAssessorsOverviewModelPopulator extends PanelInviteAsses
                 asList(REJECTED, PENDING)
         ).getSuccessObjectOrThrowException();
 
-        List<PanelOverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
+        List<OverviewAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
         model.setAssessors(assessors);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
@@ -56,8 +56,8 @@ public class PanelInviteAssessorsOverviewModelPopulator extends PanelInviteAsses
         return model;
     }
 
-    private PanelOverviewAssessorRowViewModel getRowViewModel(AssessorInviteOverviewResource assessorInviteOverviewResource) {
-        return new PanelOverviewAssessorRowViewModel(
+    private OverviewAssessorRowViewModel getRowViewModel(AssessorInviteOverviewResource assessorInviteOverviewResource) {
+        return new OverviewAssessorRowViewModel(
                 assessorInviteOverviewResource.getId(),
                 assessorInviteOverviewResource.getName(),
                 assessorInviteOverviewResource.getInnovationAreas(),

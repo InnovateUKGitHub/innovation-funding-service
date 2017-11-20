@@ -520,6 +520,21 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<List<Long>> result = applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED));
 
         assertTrue(result.isSuccess());
+        assertEquals(0, result.getSuccessObject().size());
+    }
+
+    @Test
+    public void findWithFundingDecisionIsNotChangeableApplicationIdsByCompetitionId() throws Exception {
+
+        List<Application> applications = newApplication()
+                .withFundingDecision(ON_HOLD)
+                .build(2);
+
+        when(applicationRepositoryMock.findByCompetitionIdAndFundingDecisionIsNotNull(eq(COMP_ID), eq("filter"), eq(false), eq(FUNDED))).thenReturn(applications);
+
+        ServiceResult<List<Long>> result = applicationSummaryService.getWithFundingDecisionIsChangeableApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(false), of(FUNDED));
+
+        assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccessObject().size());
         assertEquals(applications.get(0).getId(), result.getSuccessObject().get(0));
         assertEquals(applications.get(1).getId(), result.getSuccessObject().get(1));

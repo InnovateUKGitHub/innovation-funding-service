@@ -13,10 +13,12 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.viewmodel.NavigationViewModel;
 import org.innovateuk.ifs.assessment.resource.AssessmentFeedbackAggregateResource;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -30,7 +32,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.mockito.internal.matchers.InstanceOf;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.TestPropertySource;
@@ -50,6 +51,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.ASSIGN_QU
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFeedbackAggregateResourceBuilder.newAssessmentFeedbackAggregateResource;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
@@ -57,6 +59,8 @@ import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.n
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -108,6 +112,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         this.setupInvites();
         ApplicantResource applicant = newApplicantResource().withProcessRole(processRoles.get(0)).withOrganisation(organisations.get(0)).build();
         when(applicantRestService.getQuestion(anyLong(), anyLong(), anyLong())).thenReturn(newApplicantQuestionResource().withApplication(applications.get(0)).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withQuestion(questionResources.values().iterator().next()).withCurrentUser(loggedInUser).build());
+
+        when(applicationRestService.updateApplicationState(applications.get(0).getId(), ApplicationState.OPEN)).thenReturn(restSuccess());
+
         ApplicantSectionResourceBuilder sectionBuilder = newApplicantSectionResource().withApplication(applications.get(0)).withCompetition(competitionResource).withCurrentApplicant(applicant).withApplicants(asList(applicant)).withSection(newSectionResource().withType(SectionType.FINANCE).build()).withCurrentUser(loggedInUser);
         sectionResources.forEach(sectionResource -> {
             when(applicantRestService.getSection(anyLong(), anyLong(), eq(sectionResource.getId()))).thenReturn(sectionBuilder.withSection(sectionResource).build());
@@ -127,7 +134,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         Map<Long, Set<Long>> mappedSections = new HashMap<>();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
-        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         LOG.debug("Show dashboard for application: " + app.getId());
@@ -149,7 +156,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     public void testApplicationDetailsAssign() throws Exception {
         ApplicationResource app = applications.get(0);
 
-        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         LOG.debug("Show dashboard for application: " + app.getId());
@@ -167,7 +174,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         Map<Long, Set<Long>> mappedSections = new HashMap<>();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
-        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
@@ -211,7 +218,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         Map<Long, Set<Long>> mappedSections = new HashMap<>();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
-        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
@@ -252,7 +259,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         Map<Long, Set<Long>> mappedSections = new HashMap<>();
         mappedSections.put(organisations.get(0).getId(), sections);
         when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
-        when(applicationService.getById(app.getId())).thenReturn(app);
+        when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
         ApplicationInviteResource inv1 = inviteResource("kirk", "teamA", InviteStatus.CREATED);
@@ -319,7 +326,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(questionService.getPreviousQuestion(questionId)).thenReturn(Optional.ofNullable(previousQuestion));
         when(questionService.getById(questionId)).thenReturn(questionResource);
         when(questionService.getNextQuestion(questionId)).thenReturn(Optional.ofNullable(nextQuestion));
-        when(applicationService.getById(applicationId)).thenReturn(applicationResource);
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
         when(formInputResponseRestService.getByApplicationIdAndQuestionId(applicationId, questionId)).thenReturn(restSuccess(responseResources));
         when(assessorFormInputResponseRestService.getAssessmentAggregateFeedback(applicationId, questionId))
                 .thenReturn(restSuccess(aggregateResource));
@@ -337,7 +344,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         ApplicationResource applicationResource = newApplicationResource().withId(applicationId).withCompetitionStatus(ASSESSOR_FEEDBACK).build();
 
-        when(applicationService.getById(applicationId)).thenReturn(applicationResource);
+        when(applicationRestService.getApplicationById(applicationId)).thenReturn(restSuccess(applicationResource));
 
         mockMvc.perform(get("/application/{applicationId}/question/{questionId}/feedback", applicationId, questionId))
                 .andExpect(status().is3xxRedirection())
@@ -350,16 +357,31 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         when(env.acceptsProfiles("debug")).thenReturn(true);
         when(messageSource.getMessage(ObjectNotFoundException.class.getName(), null, Locale.ENGLISH)).thenReturn("Not found");
-        when(applicationService.getById(app.getId())).thenReturn(app);
-        when(applicationService.getById(1234L)).thenThrow(new ObjectNotFoundException("1234 not found", Collections.singletonList(1234L)));
+        when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
+        when(applicationRestService.getApplicationById(1234L))
+                .thenReturn(restFailure(new Error("Object not found", HttpStatus.NOT_FOUND)));
 
         LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/1234"))
-                .andExpect(view().name("404"))
+                .andExpect(view().name("error"))
                 .andExpect(model().attribute("url", "http://localhost/application/1234"))
-                .andExpect(model().attribute("exception", new InstanceOf(ObjectNotFoundException.class)))
-                .andExpect(model().attribute("message", "1234 not found"))
                 .andExpect(model().attributeExists("stacktrace"));
+    }
+
+    @Test
+    public void testApplicationStateBeingUpdatedToStarted() throws Exception {
+        ApplicationResource app = applications.get(0);
+        app.setApplicationState(ApplicationState.CREATED);
+        app.setCompetitionStatus(CompetitionStatus.OPEN);
+
+        when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
+
+        mockMvc.perform(get("/application/" + app.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-details"))
+                .andReturn().getModelAndView().getModel();
+
+        verify(applicationRestService, times(1)).updateApplicationState(app.getId(), ApplicationState.OPEN);
     }
 
     @Test
