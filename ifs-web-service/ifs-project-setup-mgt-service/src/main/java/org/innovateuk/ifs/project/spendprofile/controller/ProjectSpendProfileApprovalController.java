@@ -54,7 +54,7 @@ public class ProjectSpendProfileApprovalController {
     private SpendProfileService spendProfileService;
 
     @InitBinder
-    public void initBinder(WebDataBinder binder) {
+    protected void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(ApprovalType.class, new CaseInsensitiveConverter<>(ApprovalType.class));
     }
 
