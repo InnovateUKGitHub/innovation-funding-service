@@ -9,6 +9,6 @@ public interface AssessmentPanelService {
 
     ServiceResult<Void> assignApplicationToPanel(long applicationId);
 
-    ServiceResult<Void> unAssignApplicationFromPanel(long applicationId);
+    ServiceResult<Void> unassignApplicationFromPanel(long applicationId);
 
 }

@@ -20,8 +20,8 @@ public class AssessmentPanelController {
         return assessmentPanelService.assignApplicationToPanel(applicationId).toPostResponse();
     }
 
-    @PostMapping("/unAssignApplication/{applicationId}")
+    @PostMapping("/unassignApplication/{applicationId}")
     public RestResult<Void> unAssignApplication(@PathVariable long applicationId) {
-        return assessmentPanelService.unAssignApplicationFromPanel(applicationId).toPostResponse();
+        return assessmentPanelService.unassignApplicationFromPanel(applicationId).toPostResponse();
     }
 }

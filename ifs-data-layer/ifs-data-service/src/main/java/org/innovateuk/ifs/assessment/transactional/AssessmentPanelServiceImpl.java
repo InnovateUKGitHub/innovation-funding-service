@@ -25,9 +25,9 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     }
 
     @Override
-    public ServiceResult<Void> unAssignApplicationFromPanel(long applicationId) {
+    public ServiceResult<Void> unassignApplicationFromPanel(long applicationId) {
         return getApplication(applicationId)
-                .andOnSuccessReturnVoid(application -> application.setInAssessmentPanel(true));
+                .andOnSuccessReturnVoid(application -> application.setInAssessmentPanel(false));
     }
 
     private ServiceResult<Application> getApplication(long applicationId) {
