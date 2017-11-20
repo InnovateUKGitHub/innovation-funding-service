@@ -38,7 +38,7 @@ IFS.core.autoSave = (function () {
     },
     fieldChanged: function (element) {
       var field = jQuery(element)
-      console.log(field)
+
       // per field we handle the request on a promise base, this means that ajax calls should be per field sequental
       // this menas we can still have async as two fields can still be processed at the same time
       // http://www.jefferydurand.com/jquery/sequential/javascript/ajax/2015/04/13/jquery-sequential-ajax-promise-deferred.html
@@ -69,9 +69,6 @@ IFS.core.autoSave = (function () {
           if (dateField) {
             fieldInfo = field.closest('.date-group').find('input[type="hidden"]:not(.day)')
             dateValue = fieldInfo.attr('data-date-month-year') !== 'undefined' ? field.attr('data-date').substring(2) : field.attr('data-date')
-            console.log(field)
-            console.log('Is it Day: ' + fieldInfo.hasClass('day'))
-            console.log(dateValue)
             jsonObj = {
               applicationId: applicationId,
               value: dateValue,
@@ -185,7 +182,7 @@ IFS.core.autoSave = (function () {
           formGroup.find('.textarea-footer').append('<span class="autosave-info" />')
           autoSaveInfo = formGroup.find('.autosave-info')
         }
-        console.log(url)
+
         jQuery.ajaxProtected({
           type: 'POST',
           url: url,
@@ -197,8 +194,6 @@ IFS.core.autoSave = (function () {
           timeout: s.ajaxTimeOut
         })
         .done(function (data) {
-          console.log('done')
-          console.log(data)
           var doneAjaxTime = new Date().getTime()
           var remainingWaitingTime = (IFS.core.autoSave.settings.minimumUpdateTime - (doneAjaxTime - startAjaxTime))
 
