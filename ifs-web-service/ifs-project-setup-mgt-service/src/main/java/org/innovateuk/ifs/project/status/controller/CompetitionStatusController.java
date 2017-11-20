@@ -88,6 +88,7 @@ public class CompetitionStatusController {
         return "project/competition-status-queries";
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping("/pending-spend-profiles")
     @PreAuthorize("hasAnyAuthority('project_finance')")
     public String viewPendingSpendProfiles(Model model, UserResource loggedInUser,
