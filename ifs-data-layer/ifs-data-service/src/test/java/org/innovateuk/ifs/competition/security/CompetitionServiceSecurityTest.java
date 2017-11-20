@@ -235,6 +235,16 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findAllOpenQueries(1L), PROJECT_FINANCE);
     }
 
+    @Test
+    public void getPendingSpendProfiles() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getPendingSpendProfiles(1L), PROJECT_FINANCE);
+    }
+
+    @Test
+    public void countPendingSpendProfiles() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countPendingSpendProfiles(1L), PROJECT_FINANCE);
+    }
+
     private void runAsRole(UserRoleType roleType, Runnable serviceCall) {
         setLoggedInUser(
                 newUserResource()
@@ -357,6 +367,16 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         @Override
         public ServiceResult<Long>countAllOpenQueries(Long competitionId) {
             return serviceSuccess(0L);
+        }
+
+        @Override
+        public ServiceResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(Long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Long> countPendingSpendProfiles(Long competitionId) {
+            return null;
         }
     }
 }
