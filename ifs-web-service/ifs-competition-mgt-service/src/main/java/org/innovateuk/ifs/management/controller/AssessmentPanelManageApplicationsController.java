@@ -80,14 +80,13 @@ public class AssessmentPanelManageApplicationsController {
 
     private ApplicationSummaryPageResource getSummaries(long competitionId, int page, String filter, String sortBy){
         return applicationSummaryRestService
-                .getSubmittedApplications(competitionId, sortBy, page, PAGE_SIZE, Optional.of(filter), Optional.empty())
+                .getSubmittedApplicationsWithPanelStatus(competitionId, sortBy, page, PAGE_SIZE, Optional.of(filter), Optional.empty(), Optional.of(false))
                 .getSuccessObjectOrThrowException();
     }
 
-    // need to improve this to filer on assigned
     private List<ApplicationSummaryResource> getAssignedSummaries(long competitionId) {
-        return simpleFilter(applicationSummaryRestService
-                .getSubmittedApplications(competitionId, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())
-                .getSuccessObjectOrThrowException().getContent(), applicationSummaryResource -> applicationSummaryResource.isInAssessmentPanel());
+        return applicationSummaryRestService
+                .getSubmittedApplicationsWithPanelStatus(competitionId, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty(), Optional.of(true))
+                .getSuccessObjectOrThrowException().getContent();
     }
 }

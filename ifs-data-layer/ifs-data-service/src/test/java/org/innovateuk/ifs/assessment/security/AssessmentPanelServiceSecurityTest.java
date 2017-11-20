@@ -26,7 +26,7 @@ public class AssessmentPanelServiceSecurityTest extends BaseServiceSecurityTest<
     @Test
     public void unAssignApplicationFromPanel() throws Exception {
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.unAssignApplicationFromPanel(applicationId), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.unassignApplicationFromPanel(applicationId), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     public static class TestAssessmentPanelService implements AssessmentPanelService {
@@ -37,7 +37,7 @@ public class AssessmentPanelServiceSecurityTest extends BaseServiceSecurityTest<
         }
 
         @Override
-        public ServiceResult<Void> unAssignApplicationFromPanel(long applicationId) {
+        public ServiceResult<Void> unassignApplicationFromPanel(long applicationId) {
             return null;
         }
     }

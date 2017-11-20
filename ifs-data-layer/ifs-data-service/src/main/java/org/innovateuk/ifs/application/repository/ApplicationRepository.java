@@ -32,7 +32,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 			"AND (str(a.id) LIKE CONCAT('%', :filter, '%')) " +
 			"AND (:funding IS NULL " +
 			"	OR (str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL)" +
-			"	OR (a.fundingDecision = :funding))";
+			"	OR (a.fundingDecision = :funding)) " +
+			"AND (:inAssessmentPanel IS NULL OR a.inAssessmentPanel = :inAssessmentPanel)";
 
 	String COMP_FUNDING_FILTER = "SELECT a FROM Application a WHERE " +
 			"a.competition.id = :compId " +
@@ -55,13 +56,15 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 																							@Param("states") Collection<State> applicationStates,
 																							@Param("filter") String filter,
 																							@Param("funding") FundingDecisionStatus funding,
+																							@Param("inAssessmentPanel") Boolean inAssessmentPanel,
 																							Pageable pageable);
 
 	@Query(COMP_STATUS_FILTER)
 	List<Application> findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(@Param("compId") long competitionId,
 																							@Param("states") Collection<State> applicationStates,
 																							@Param("filter") String filter,
-																							@Param("funding") FundingDecisionStatus funding);
+																							@Param("funding") FundingDecisionStatus funding,
+																							@Param("inAssessmentPanel") Boolean inAssessmentPanel);
 
 	@Query(COMP_NOT_STATUS_FILTER)
 	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(@Param("compId") long competitionId,

@@ -57,11 +57,24 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
                                                                                int pageSize,
                                                                                Optional<String> filter,
                                                                                Optional<FundingDecision> fundingFilter) {
+		return getSubmittedApplicationsWithPanelStatus(competitionId, sortField, pageNumber, pageSize, filter, fundingFilter, Optional.empty());
+
+	}
+
+	@Override
+	public RestResult<ApplicationSummaryPageResource> getSubmittedApplicationsWithPanelStatus(long competitionId,
+																							  String sortField,
+																							  int pageNumber,
+																							  int pageSize,
+																							  Optional<String> filter,
+																							  Optional<FundingDecision> fundingFilter,
+																							  Optional<Boolean> inAssessmentPanel) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/submitted";
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
 		filter.ifPresent(f -> params.set("filter", f));
 		fundingFilter.ifPresent(f -> params.set("fundingFilter", f.toString()));
+		inAssessmentPanel.ifPresent(f -> params.set("inAssessmentPanel", f.toString()));
 
 		String uriWithParams = buildPaginationUri(baseUrl, pageNumber, pageSize, sortField, params);
 		return getWithRestResult(uriWithParams, ApplicationSummaryPageResource.class);

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.domain.Application;
@@ -120,15 +121,16 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             int pageIndex,
             int pageSize,
             Optional<String> filter,
-            Optional<FundingDecisionStatus> fundingFilter) {
+            Optional<FundingDecisionStatus> fundingFilter,
+            Optional<Boolean> inAssessmentPanel) {
 
         String filterString = trimFilterString(filter);
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), pageable),
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentPanel.orElse(null), pageable),
                 () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null)));
+                        competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), inAssessmentPanel.orElse(null)));
     }
 
     @Override
@@ -138,7 +140,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
             Optional<FundingDecisionStatus> fundingFilter) {
         String filterString = trimFilterString(filter);
         return find(applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null)), notFoundError(ApplicationSummaryResource.class))
+                competitionId, SUBMITTED_STATES, filterString, fundingFilter.orElse(null), null), notFoundError(ApplicationSummaryResource.class))
                 .andOnSuccessReturn(result -> result.stream()
                         .filter(applicationFundingDecisionIsSubmittable())
                         .map(Application::getId).collect(toList()));
@@ -153,9 +155,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                        competitionId, NOT_SUBMITTED_STATES, "", null, pageable),
+                        competitionId, NOT_SUBMITTED_STATES, "", null, null, pageable),
                 () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                        competitionId, NOT_SUBMITTED_STATES, "", null));
+                        competitionId, NOT_SUBMITTED_STATES, "", null, null));
     }
 
     @Override
@@ -212,9 +214,9 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         Set<State> states = informFilter.map(i -> i ? singleton(INELIGIBLE_INFORMED.getBackingState()) : singleton(INELIGIBLE.getBackingState())).orElse(INELIGIBLE_STATES);
         return applicationSummaries(sortBy, pageIndex, pageSize,
                 pageable -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                        competitionId, states, filterStr, null, pageable),
+                        competitionId, states, filterStr, null, null, pageable),
                 () -> applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                        competitionId, states, filterStr, null));
+                        competitionId, states, filterStr, null, null));
     }
 
     @Override
