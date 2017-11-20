@@ -20,7 +20,7 @@
         <table id="application-list">
             <thead>
             <tr>
-                <th scope="col" class="width-samll">Application number</th>
+                <th scope="col" class="width-small">Application number</th>
                 <th scope="col">Title</th>
                 <th scope="col">Innovation area</th>
                 <th scope="col" class="width-medium">Lead organisation</th>
@@ -28,13 +28,13 @@
             </thead>
             <tbody>
             <tr th:each="app : ${model.assignedApplications}">
-                <td><a th:href="@{/competition/{cid}/application/{aid}/assign-to-panel(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/>10001</td>
+                <td><a th:href="@{/competition/{cid}/application/{aid}/assign-to-panel(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}">10001</a></td>
                 <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                 <td th:text="${app.innovationArea}">Information and communications technology (ICT)</td>
                 <td th:text="${app.leadOrganisation}">Wessex University</td>
                 <td>
                     <a class="button-secondary no-margin"
-                       th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}"
+                       th:href="@{/assessment/panel/competition/{cid}/unassign/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}"
                        th:text='Remove' />
                 </td>
             </tr>
@@ -96,7 +96,7 @@
                 <td th:text="${app.leadOrganisation}">Wessex University</td>
                 <td>
                     <a class="button-secondary no-margin"
-                       th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}"
+                       th:href="@{/assessment/panel/competition/{cid}/assign/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}"
                        th:text='Assign' />
                 </td>
             </tr>

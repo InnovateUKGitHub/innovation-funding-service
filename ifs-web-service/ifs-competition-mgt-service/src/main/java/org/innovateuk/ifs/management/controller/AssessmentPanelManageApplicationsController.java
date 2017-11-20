@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.management.controller;
 
 
-import org.innovateuk.ifs.Application;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.model.ManagePanelApplicationsModelPopulator;
@@ -30,7 +30,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
  * Controller for the 'Manage Applications' assessment panel page.
  */
 @Controller
-@RequestMapping("/assessment/panel/competition/{competitionId}/manage-applications")
+@RequestMapping("/assessment/panel/competition/{competitionId}")
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class AssessmentPanelManageApplicationsController {
     private static final int PAGE_SIZE  = 20;
@@ -44,7 +44,10 @@ public class AssessmentPanelManageApplicationsController {
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    @GetMapping
+    @Autowired
+    private AssessmentPanelRestService assessmentPanelRestService;
+
+    @GetMapping("/manage-applications")
     public String manageApplications(Model model,
                                      @PathVariable("competitionId") long competitionId,
                                      @RequestParam MultiValueMap<String, String> queryParams,
@@ -64,8 +67,15 @@ public class AssessmentPanelManageApplicationsController {
     }
 
     @GetMapping("/assign/{applicationId}")
-    public String assignApplication(@PathVariable("competitionId") long competitionId, @PathVariable("applicationId") long applicationId, Model model) {
-        return format("redirect:/assessment/panel/competition/{%d}/manage-applications", competitionId);
+    public String assignApplication(@PathVariable("competitionId") long competitionId, @PathVariable("applicationId") long applicationId) {
+        assessmentPanelRestService.assignToPanel(applicationId);
+        return format("redirect:/assessment/panel/competition/%d/manage-applications", competitionId);
+    }
+
+    @GetMapping("/unassign/{applicationId}")
+    public String unassignApplication(@PathVariable("competitionId") long competitionId, @PathVariable("applicationId") long applicationId) {
+        assessmentPanelRestService.unassignFromPanel(applicationId);
+        return format("redirect:/assessment/panel/competition/%d/manage-applications", competitionId);
     }
 
     private ApplicationSummaryPageResource getSummaries(long competitionId, int page, String filter, String sortBy){
@@ -79,6 +89,5 @@ public class AssessmentPanelManageApplicationsController {
         return simpleFilter(applicationSummaryRestService
                 .getSubmittedApplications(competitionId, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())
                 .getSuccessObjectOrThrowException().getContent(), applicationSummaryResource -> applicationSummaryResource.isInAssessmentPanel());
-
     }
 }

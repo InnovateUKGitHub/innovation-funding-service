@@ -19,6 +19,5 @@ public interface AssessmentPanelService {
     @SecuredBySpring(
             value = "UNASSIGN_APPLICATIONS_FROM_PANEL",
             description = "Comp admins and execs can unassign applications from an assessment panel")
-    ServiceResult<Void> unAssignApplicationFromPanel(long applicationId);
-
+    ServiceResult<Void> unassignApplicationFromPanel(long applicationId);
 }
