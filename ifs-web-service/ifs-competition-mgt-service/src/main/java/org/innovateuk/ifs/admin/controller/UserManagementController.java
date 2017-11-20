@@ -234,7 +234,7 @@ public class UserManagementController {
 
         List<ExternalInviteResource> invites;
         if (StringUtils.isNotEmpty(searchString) && searchCategory != null) {
-            searchString = StringUtils.trim(searchString);
+            searchString = "%" + StringUtils.trim(searchString) + "%";
             invites = inviteUserRestService.findExternalInvites(searchString, searchCategory).getSuccessObjectOrThrowException();
         } else {
             invites = Collections.emptyList();
