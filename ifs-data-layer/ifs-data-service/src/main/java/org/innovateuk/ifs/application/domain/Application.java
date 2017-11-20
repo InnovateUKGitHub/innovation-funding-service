@@ -85,6 +85,8 @@ public class Application implements ProcessActivity {
 
     private Boolean stateAidAgreed;
 
+    private boolean inAssessmentPanel;
+
     public Application() {
     }
 
@@ -362,5 +364,13 @@ public class Application implements ProcessActivity {
     public boolean applicationFundingDecisionIsChangeable() {
         return !(this.manageFundingEmailDate != null &&
                 (fundingDecision != null && fundingDecision.equals(FundingDecisionStatus.FUNDED)));
+    }
+
+    public boolean isInAssessmentPanel() {
+        return inAssessmentPanel;
+    }
+
+    public void setInAssessmentPanel(boolean inAssessmentPanel) {
+        this.inAssessmentPanel = inAssessmentPanel;
     }
 }

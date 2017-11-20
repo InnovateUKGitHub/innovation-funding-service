@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.management.controller;
 
 
+import org.innovateuk.ifs.Application;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -17,9 +19,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * Controller for the 'Manage Applications' assessment panel page.
@@ -51,15 +56,29 @@ public class AssessmentPanelManageApplicationsController {
                 .getSuccessObjectOrThrowException();
         String originQuery = buildOriginQueryString(CompetitionManagementApplicationServiceImpl.ApplicationOverviewOrigin.MANAGE_APPLICATIONS_PANEL, queryParams);
         ApplicationSummaryPageResource applications = getSummaries(competitionResource.getId(), page, filter, sortBy);
-        model.addAttribute("model", managePanelApplicationsModelPopulator.populateModel(competitionResource, applications, filter, sortBy, originQuery));
+        List<ApplicationSummaryResource> assignedApplications = getAssignedSummaries(competitionId);
+        model.addAttribute("model", managePanelApplicationsModelPopulator.populateModel(competitionResource, applications, assignedApplications, filter, sortBy, originQuery));
         model.addAttribute("originQuery", originQuery);
 
         return "competition/manage-applications-panel";
+    }
+
+    @GetMapping("/assign/{applicationId}")
+    public String assignApplication(@PathVariable("competitionId") long competitionId, @PathVariable("applicationId") long applicationId, Model model) {
+        return format("redirect:/assessment/panel/competition/{%d}/manage-applications", competitionId);
     }
 
     private ApplicationSummaryPageResource getSummaries(long competitionId, int page, String filter, String sortBy){
         return applicationSummaryRestService
                 .getSubmittedApplications(competitionId, sortBy, page, PAGE_SIZE, Optional.of(filter), Optional.empty())
                 .getSuccessObjectOrThrowException();
+    }
+
+    // need to improve this to filer on assigned
+    private List<ApplicationSummaryResource> getAssignedSummaries(long competitionId) {
+        return simpleFilter(applicationSummaryRestService
+                .getSubmittedApplications(competitionId, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())
+                .getSuccessObjectOrThrowException().getContent(), applicationSummaryResource -> applicationSummaryResource.isInAssessmentPanel());
+
     }
 }

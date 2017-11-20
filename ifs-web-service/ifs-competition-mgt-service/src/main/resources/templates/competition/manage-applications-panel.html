@@ -12,6 +12,36 @@
     <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Manage assessment panel',linkClass='link-back',linkUrl=@{/assessment/panel/competition/{id}(id=${model.competitionId})})" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assign applications to panel',subTitle=|${model.competitionId}: ${model.competitionName}, ${model.competitionStatus}| ,size='heading-xlarge'" />
 
+
+
+    <h2 class="heading-medium">Assigned applications (<span id="application-count">0</span>)</h2>
+
+    <div class="table-overflow" th:id="application-assigned">
+        <table id="application-list">
+            <thead>
+            <tr>
+                <th scope="col" class="width-samll">Application number</th>
+                <th scope="col">Title</th>
+                <th scope="col">Innovation area</th>
+                <th scope="col" class="width-medium">Lead organisation</th>
+                <th class="width-small" scope="col"><span class="visuallyhidden">Action</span></th></tr>
+            </thead>
+            <tbody>
+            <tr th:each="app : ${model.assignedApplications}">
+                <td><a th:href="@{/competition/{cid}/application/{aid}/assign-to-panel(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/>10001</td>
+                <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                <td th:text="${app.innovationArea}">Information and communications technology (ICT)</td>
+                <td th:text="${app.leadOrganisation}">Wessex University</td>
+                <td>
+                    <a class="button-secondary no-margin"
+                       th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}"
+                       th:text='Remove' />
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
     <form method="GET">
         <div class="search-filters extra-margin">
             <fieldset>
@@ -60,13 +90,14 @@
 
             <tbody>
             <tr th:each="app : ${model.applications}">
-                <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
+                <td><a th:href="@{/competition/{cid}/application/{aid}/assign-to-panel(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
                 <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                 <td th:text="${app.innovationArea}">Information and communications technology (ICT)</td>
                 <td th:text="${app.leadOrganisation}">Wessex University</td>
                 <td>
                     <a class="button-secondary no-margin"
-                       th:text='Assign'></a>
+                       th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}"
+                       th:text='Assign' />
                 </td>
             </tr>
             </tbody>

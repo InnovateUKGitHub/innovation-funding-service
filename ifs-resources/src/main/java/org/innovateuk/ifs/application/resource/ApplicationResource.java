@@ -81,6 +81,8 @@ public class ApplicationResource {
 
     private String leadOrganisationName;
 
+    private boolean inAssessmentPanel;
+
     public Long getId() {
         return id;
     }
@@ -288,5 +290,13 @@ public class ApplicationResource {
 
     public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
         this.noInnovationAreaApplicable = noInnovationAreaApplicable;
+    }
+
+    public boolean isInAssessmentPanel() {
+        return inAssessmentPanel;
+    }
+
+    public void setInAssessmentPanel(boolean inAssessmentPanel) {
+        this.inAssessmentPanel = inAssessmentPanel;
     }
 }
