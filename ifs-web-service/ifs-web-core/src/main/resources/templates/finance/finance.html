@@ -192,7 +192,7 @@
                   backing form.  So Spring sees this field being posted (by the name attribute), sees the variable backing this is a LocalDate,
                   and then attempts to convert this value to a LocalDate.  At this point the LocalDatePropertyEditor throws this value away and
                   explicitly looks for the <fieldName.dayOfMonth>, <fieldName.month> and <fieldName.year> parameters instead to construct the date */-->
-                <input type="hidden" data-date-month-year th:name="'formInput['+${formInput.id}+']'" th:id="${formInput.id}" th:value="*{formInput[__${formInput.id}__]}" />
+                <input type="hidden" data-date-month-year th:name="${formInput}" th:id="${formInput.id}" th:value="${formInput}" />
             </div>
         </fieldset>
     </div>
