@@ -17,60 +17,75 @@ import java.util.List;
  */
 public interface CompetitionRepository extends PagingAndSortingRepository<Competition, Long> {
 
-    public static final String LIVE_QUERY = "SELECT c FROM Competition c WHERE CURRENT_TIMESTAMP >= " +
+    String LIVE_QUERY_WHERE_CLAUSE = "WHERE CURRENT_TIMESTAMP >= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
             "NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
-    public static final String LIVE_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE CURRENT_TIMESTAMP >= " +
-            "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
-            "NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = c.id) AND " +
-            "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
+    String LIVE_QUERY = "SELECT c FROM Competition c " + LIVE_QUERY_WHERE_CLAUSE;
+
+    String LIVE_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + LIVE_QUERY_WHERE_CLAUSE;
+
+    String INNOVATION_LEAD_LIVE_COUNT_QUERY = "SELECT count(distinct cp.competition.id) " +
+            "FROM CompetitionAssessmentParticipant cp " +
+            "WHERE cp.user.id = :userId " +
+            "AND cp.role = 'INNOVATION_LEAD' " +
+            "AND CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = cp.competition.id) " +
+            "AND NOT EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' AND m.competition.id = cp.competition.id) " +
+            "AND cp.competition.setupComplete = TRUE AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE";
 
     // Assume competition cannot be in project setup until at least one application is funded and informed
-    public static final String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c WHERE ( " +
+    String PROJECT_SETUP_WHERE_CLAUSE = "WHERE ( " +
             "EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = c.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
             ") AND c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
-    public static final String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE ( " +
-            "EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = c.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
-            ") AND c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
+    String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
 
-    public static final String UPCOMING_QUERY = "SELECT c FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
-            "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND c.setupComplete = TRUE) OR " +
-            "c.setupComplete = FALSE AND c.template = FALSE AND c.nonIfs = FALSE";
+    String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c " + PROJECT_SETUP_WHERE_CLAUSE;
 
-    public static final String UPCOMING_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
-            "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND c.setupComplete = TRUE) OR " +
-            "c.setupComplete = FALSE AND c.template = FALSE AND c.nonIfs = FALSE";
+    String INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE = "WHERE cp.user.id = :userId " +
+            "AND cp.role = 'INNOVATION_LEAD' " +
+            "AND EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = cp.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
+            "AND cp.competition.setupComplete = TRUE AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE";
 
-    public static final String SEARCH_QUERY = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct " +
-            "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
+    String INNOVATION_LEAD_PROJECT_SETUP_QUERY = "SELECT cp.competition FROM CompetitionAssessmentParticipant cp " + INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE;
+
+    String INNOVATION_LEAD_PROJECT_SETUP_COUNT_QUERY = "SELECT count(distinct cp.competition.id) FROM CompetitionAssessmentParticipant cp " + INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE;
+
+    /* Innovation leads should not access competitions in states: In preparation and Ready to open */
+    String SEARCH_QUERY_LEAD_TECHNOLOGIST = "SELECT cp.competition FROM CompetitionAssessmentParticipant cp LEFT JOIN cp.competition.milestones m LEFT JOIN cp.competition.competitionType ct " +
+            "WHERE (m.type = 'OPEN_DATE' AND m.date < NOW()) AND (cp.competition.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE " +
+            "AND (cp.competition.setupComplete IS NOT NULL AND cp.competition.setupComplete != FALSE) " +
+            "AND cp.user.id = :userId " +
             "ORDER BY m.date";
 
-    /* Innovation leads should not access competitions in states: In preparation, Ready to open, Project setup */
-    public static final String SEARCH_QUERY_LEAD_TECHNOLOGIST = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct LEFT JOIN c.leadTechnologist u " +
-            "WHERE (m.type = 'OPEN_DATE' AND m.date < NOW()) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
-            "AND (c.setupComplete IS NOT NULL AND c.setupComplete != FALSE) " +
-            "AND NOT EXISTS (SELECT m.id FROM Milestone m WHERE m.competition.id = c.id AND m.type='FEEDBACK_RELEASED') " +
-            "AND u.id = :leadTechnologistUserId " +
+    String UPCOMING_CRITERIA = "FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
+            "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND c.setupComplete = TRUE) OR " +
+            "c.setupComplete = FALSE AND c.template = FALSE AND c.nonIfs = FALSE";
+
+    String UPCOMING_QUERY = "SELECT c " + UPCOMING_CRITERIA;
+
+    String UPCOMING_COUNT_QUERY = "SELECT count(c) " + UPCOMING_CRITERIA;
+
+    String SEARCH_QUERY = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct " +
+            "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "ORDER BY m.date";
 
     /* Support users should not be able to access competitions in preparation */
-    public static final String SEARCH_QUERY_SUPPORT_USER = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct " +
+    String SEARCH_QUERY_SUPPORT_USER = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct " +
             "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "AND (c.setupComplete IS NOT NULL AND c.setupComplete != FALSE) " +
             "ORDER BY m.date";
 
-    public static final String NON_IFS_QUERY = "SELECT c FROM Competition c WHERE nonIfs = TRUE";
+    String NON_IFS_QUERY = "SELECT c FROM Competition c WHERE nonIfs = TRUE";
 
-    public static final String NON_IFS_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE nonIfs = TRUE";
+    String NON_IFS_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE nonIfs = TRUE";
 
-    public static final String FEEDBACK_RELEASED_QUERY = "SELECT c FROM Competition c WHERE " +
+    String FEEDBACK_RELEASED_QUERY = "SELECT c FROM Competition c WHERE " +
             "EXISTS (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
-    public static final String FEEDBACK_RELEASED_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE " +
+    String FEEDBACK_RELEASED_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE " +
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
@@ -109,14 +124,23 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(LIVE_QUERY)
     List<Competition> findLive();
 
+    @Query(INNOVATION_LEAD_LIVE_COUNT_QUERY)
+    Long countLiveForInnovationLead(@Param("userId") Long userId);
+
     @Query(LIVE_COUNT_QUERY)
     Long countLive();
 
     @Query(PROJECT_SETUP_QUERY)
     List<Competition> findProjectSetup();
 
+    @Query(INNOVATION_LEAD_PROJECT_SETUP_QUERY)
+    List<Competition> findProjectSetupForInnovationLead(@Param("userId") Long userId);
+
     @Query(PROJECT_SETUP_COUNT_QUERY)
     Long countProjectSetup();
+
+    @Query(INNOVATION_LEAD_PROJECT_SETUP_COUNT_QUERY)
+    Long countProjectSetupForInnovationLead(@Param("userId") Long userId);
 
     @Query(UPCOMING_QUERY)
     List<Competition> findUpcoming();
@@ -134,7 +158,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     Page<Competition> search(@Param("searchQuery") String searchQuery, Pageable pageable);
 
     @Query(SEARCH_QUERY_LEAD_TECHNOLOGIST)
-    Page<Competition> searchForLeadTechnologist(@Param("searchQuery") String searchQuery, @Param("leadTechnologistUserId") Long leadTechnologistUserId, Pageable pageable);
+    Page<Competition> searchForLeadTechnologist(@Param("searchQuery") String searchQuery, @Param("userId") Long userId, Pageable pageable);
 
     @Query(SEARCH_QUERY_SUPPORT_USER)
     Page<Competition> searchForSupportUser(@Param("searchQuery") String searchQuery, Pageable pageable);
@@ -149,8 +173,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     List<Competition> findAll();
 
     List<Competition> findByCodeLike(String code);
-
-    Competition findByTemplateForTypeId(Long id);
 
     List<Competition> findByInnovationSectorCategoryId(Long id);
 
