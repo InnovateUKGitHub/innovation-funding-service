@@ -33,7 +33,7 @@ public interface InviteUserService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<RoleInvitePageResource> findPendingInternalUserInvites(Pageable pageable);
 
-    @PreAuthorize("hasAnyAuthority('support', 'ifs_admin')")
+    @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     @SecuredBySpring(value = "READ_ALL_EXTERNAL_USER_INVITES", description = "Only the support user or IFS Admin can access all external user invites")
     ServiceResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory);
 }

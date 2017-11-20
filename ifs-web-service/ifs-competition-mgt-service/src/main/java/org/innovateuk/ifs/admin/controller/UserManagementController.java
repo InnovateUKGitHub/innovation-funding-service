@@ -198,7 +198,7 @@ public class UserManagementController {
         }).getSuccessObjectOrThrowException();
     }
 
-    @PreAuthorize("hasAnyAuthority('support', 'ifs_admin')")
+    @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     @GetMapping(value = "/external/users")
     public String findExternalUsers(@RequestParam(value = "searchString", required = false) String searchString,
                                     @RequestParam(value = "searchCategory", required = false) final SearchCategory searchCategory,
@@ -226,7 +226,7 @@ public class UserManagementController {
         }).getSuccessObjectOrThrowException();
     }*/
 
-    @PreAuthorize("hasAnyAuthority('support', 'ifs_admin')")
+    @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     @GetMapping(value = "/external/invites")
     public String findExternalInvites(@RequestParam(value = "searchString", required = false) String searchString,
                                       @RequestParam(value = "searchCategory", required = false) final SearchCategory searchCategory,
