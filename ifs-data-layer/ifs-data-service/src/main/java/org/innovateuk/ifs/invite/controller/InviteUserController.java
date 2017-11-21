@@ -50,11 +50,6 @@ public class InviteUserController {
         return inviteUserService.findPendingInternalUserInvites(new PageRequest(pageIndex, pageSize)).toGetResponse();
     }
 
-/*    @GetMapping("/external/all")
-    public RestResult<List<ExternalInviteResource>> getExternalInvites(){
-        return inviteUserService.getExternalInvites().toGetResponse();
-    }*/
-
     @GetMapping("/findExternalInvites")
     public RestResult<List<ExternalInviteResource>> findExternalInvites(@RequestParam(value = "searchString") final String searchString,
                                                                         @RequestParam(value = "searchCategory") final SearchCategory searchCategory) {
