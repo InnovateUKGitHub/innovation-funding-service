@@ -187,6 +187,10 @@
                            min="0"
                            type="number" />
                 </div>
+                <!--/* The hidden field below is used as a dummy value that is essentially ignored by the LocalDatePropertyEditor in order to allow
+                  us to get the LocalDatePropertyEditor to kick in when Spring attempts to bind the current field to the LocalDate value in the
+                  backing form. */-->
+                <input type="hidden" data-date-month-year th:name="${formInput}" th:id="${formInput.id}" th:value="${formInput}" />
             </div>
         </fieldset>
     </div>
