@@ -37,6 +37,10 @@ public class PublicContentItemResourceBuilder extends BaseBuilder<PublicContentI
         return with(publicContentItem -> setField("competitionCloseDate", competitionCloseDate, publicContentItem));
     }
 
+    public PublicContentItemResourceBuilder withRegistrationCloseDate(ZonedDateTime registrationCloseDate) {
+        return with(publicContentItem -> setField("registrationCloseDate", registrationCloseDate, publicContentItem));
+    }
+
     public PublicContentItemResourceBuilder withNonIfsUrl(String nonIfsUrl) {
         return with(publicContentItem -> setField("nonIfsUrl", nonIfsUrl, publicContentItem));
     }

@@ -8,6 +8,7 @@ public class PublicContentItemResource {
     private String competitionTitle;
     private ZonedDateTime competitionOpenDate;
     private ZonedDateTime competitionCloseDate;
+    private ZonedDateTime registrationCloseDate;
     private String nonIfsUrl;
     private Boolean isNonIfs;
     private Boolean setupComplete;
@@ -15,11 +16,12 @@ public class PublicContentItemResource {
     public PublicContentItemResource() {
     }
 
-    public PublicContentItemResource(PublicContentResource publicContentResource, String competitionTitle, ZonedDateTime competitionOpenDate, ZonedDateTime competitionCloseDate) {
+    public PublicContentItemResource(PublicContentResource publicContentResource, String competitionTitle, ZonedDateTime competitionOpenDate, ZonedDateTime competitionCloseDate, ZonedDateTime registrationCloseDate) {
         this.publicContentResource = publicContentResource;
         this.competitionTitle = competitionTitle;
         this.competitionOpenDate = competitionOpenDate;
         this.competitionCloseDate = competitionCloseDate;
+        this.registrationCloseDate = registrationCloseDate;
     }
 
     public PublicContentResource getPublicContentResource() {
@@ -52,6 +54,14 @@ public class PublicContentItemResource {
 
     public void setCompetitionCloseDate(ZonedDateTime competitionCloseDate) {
         this.competitionCloseDate = competitionCloseDate;
+    }
+
+    public ZonedDateTime getRegistrationCloseDate() {
+        return registrationCloseDate;
+    }
+
+    public void setRegistrationCloseDate(ZonedDateTime registrationCloseDate) {
+        this.registrationCloseDate = registrationCloseDate;
     }
 
     public String getNonIfsUrl() {

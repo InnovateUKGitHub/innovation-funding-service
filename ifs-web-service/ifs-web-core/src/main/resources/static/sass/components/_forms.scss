@@ -226,7 +226,7 @@ tr {
           color:#000;
           white-space: nowrap;
           border-left: 5px solid $red;
-          border-bottom: 1px solid $border-colour;
+          border-bottom: 1px solid $border-colour !important;
         }
       }
 

@@ -399,14 +399,24 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    @Transactional
     public ServiceResult<List<CompetitionOpenQueryResource>> findAllOpenQueries(Long competitionId) {
         return serviceSuccess(competitionRepository.getOpenQueryByCompetition(competitionId));
     }
 
     @Override
-    @Transactional
     public ServiceResult<Long> countAllOpenQueries(Long competitionId) {
         return serviceSuccess(competitionRepository.countOpenQueries(competitionId));
+    }
+
+    @Override
+    public ServiceResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(Long competitionId) {
+
+        return serviceSuccess(competitionRepository.getPendingSpendProfiles(competitionId));
+    }
+
+    @Override
+    public ServiceResult<Long> countPendingSpendProfiles(Long competitionId) {
+
+        return serviceSuccess(competitionRepository.countPendingSpendProfiles(competitionId));
     }
 }
