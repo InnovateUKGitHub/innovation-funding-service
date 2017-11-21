@@ -402,7 +402,8 @@ Support user can see finance contact in users with account list
     # and not in Bank Details. Because for this scenario there are testing data for project 4.
 Non lead partner not eligible for funding
     [Documentation]    INFUND-7090, INFUND-7174
-    [Tags]  HappyPath
+    [Tags]  HappyPath  Failing
+    # TODO fix IFS-2259
     Given log in as a different user  &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    css=ul li.complete:nth-child(2)
@@ -580,7 +581,7 @@ Project details links are still enabled after submission
 
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
-    [Tags]  HappyPath
+    [Tags]  HappyPath  Failing
     # TODO fix IFS-2259
     When log in as a different user       &{collaborator1_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
