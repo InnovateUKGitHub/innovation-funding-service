@@ -34,7 +34,8 @@ public class ApplicationDocs {
             fieldWithPath("innovationArea").description("applicable Innovation Area"),
             fieldWithPath("noInnovationAreaApplicable").description("Flag indicating no Innovation Area is applicable"),
             fieldWithPath("ineligibleOutcome").description("Outcome describing why the application has been marked as ineligible"),
-            fieldWithPath("leadOrganisationName").description("the name of the lead organisation")
+            fieldWithPath("leadOrganisationName").description("the name of the lead organisation"),
+            fieldWithPath("inAssessmentPanel").description("Whether the requested application has been chosen for assessment panel")
     };
 
     public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
