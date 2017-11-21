@@ -2,12 +2,14 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.apache.commons.io.IOUtils;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionStatusViewModel;
 import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
+import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingSpendProfilesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 import static java.lang.String.format;
 
@@ -42,28 +45,32 @@ public class CompetitionStatusController {
     private BankDetailsRestService bankDetailsRestService;
 
     @Autowired
-    private CompetitionRestService CompetitionRestService;
+    private CompetitionRestService competitionRestService;
 
     @Autowired
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     public String viewCompetitionStatus(@PathVariable Long competitionId) {
         return format("redirect:/competition/%s/status/all", competitionId);
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping("/all")
-    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support')")
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     public String viewCompetitionStatusAll(Model model, UserResource loggedInUser,
                                            @PathVariable Long competitionId) {
+
+        boolean isUserRoleProjectFinance = loggedInUser.hasRole(UserRoleType.PROJECT_FINANCE);
+
         model.addAttribute("model",
                 new PopulatedCompetitionStatusViewModel(statusRestService.getCompetitionStatus(competitionId).getSuccessObjectOrThrowException(),
                         loggedInUser,
-                        loggedInUser.hasRole(UserRoleType.PROJECT_FINANCE) ? competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException() : 0L,
-                        loggedInUser.hasRole(UserRoleType.PROJECT_FINANCE)).get());
+                        isUserRoleProjectFinance ? competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException() : 0L,
+                        isUserRoleProjectFinance ? competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccessObjectOrThrowException() : 0,
+                        isUserRoleProjectFinance).get());
         return "project/competition-status-all";
     }
 
@@ -73,11 +80,30 @@ public class CompetitionStatusController {
     public String viewCompetitionStatusQueries(Model model, UserResource loggedInUser,
                                               @PathVariable Long competitionId) {
         model.addAttribute("model",
-                new CompetitionOpenQueriesViewModel(CompetitionRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException(),
+                new CompetitionOpenQueriesViewModel(competitionRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException(),
                         competitionPostSubmissionRestService.getCompetitionOpenQueries(competitionId).getSuccessObjectOrThrowException(),
                         competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException(),
+                        competitionPostSubmissionRestService.countPendingSpendProfiles(competitionId).getSuccessObjectOrThrowException(),
                         true));
         return "project/competition-status-queries";
+    }
+
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @GetMapping("/pending-spend-profiles")
+    @PreAuthorize("hasAnyAuthority('project_finance')")
+    public String viewPendingSpendProfiles(Model model, UserResource loggedInUser,
+                                           @PathVariable Long competitionId) {
+
+        long openQueryCount = competitionPostSubmissionRestService.getCompetitionOpenQueriesCount(competitionId).getSuccessObjectOrThrowException();
+        List<SpendProfileStatusResource> pendingSpendProfiles = competitionPostSubmissionRestService.getPendingSpendProfiles(competitionId).getSuccessObjectOrThrowException();
+
+        model.addAttribute("model",
+                new CompetitionPendingSpendProfilesViewModel(competitionRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException(),
+                        pendingSpendProfiles,
+                        openQueryCount,
+                        pendingSpendProfiles.size(),
+                        true));
+        return "project/competition-pending-spend-profiles";
     }
 
     @PreAuthorize("hasAuthority('project_finance')")

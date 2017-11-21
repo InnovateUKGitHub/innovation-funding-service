@@ -172,6 +172,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
         publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
         publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
+        publicContentItemResource.setRegistrationCloseDate(competition.getRegistrationDate());
         publicContentItemResource.setCompetitionTitle(competition.getName());
         publicContentItemResource.setNonIfs(competition.isNonIfs());
         publicContentItemResource.setNonIfsUrl(competition.getNonIfsUrl());
