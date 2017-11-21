@@ -198,6 +198,7 @@ public class UserManagementController {
         }).getSuccessObjectOrThrowException();
     }
 
+    @SecuredBySpring(value = "FIND_EXTERNAL_USERS", description = "Only the support user or IFS Admin can access external user information")
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     @GetMapping(value = "/external/users")
     public String findExternalUsers(@RequestParam(value = "searchString", required = false) String searchString,
@@ -226,6 +227,7 @@ public class UserManagementController {
         }).getSuccessObjectOrThrowException();
     }*/
 
+    @SecuredBySpring(value = "FIND_EXTERNAL_INVITES", description = "Only the support user or IFS Admin can access external user invites")
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     @GetMapping(value = "/external/invites")
     public String findExternalInvites(@RequestParam(value = "searchString", required = false) String searchString,
