@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -14,9 +16,11 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
+import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
+import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -35,6 +39,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -83,7 +88,10 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     private EthnicityMapper ethnicityMapper;
 
     @Autowired
-    private OrganisationRepository organisationRepository;
+    private UserOrganisationRepository userOrganisationRepository;
+
+    @Autowired
+    private UserOrganisationMapper userOrganisationMapper;
 
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
@@ -222,9 +230,37 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     }
 
     @Override
-    public ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes) {
-        List<User> users = userRepository.findByRolesNameInOrderByEmailAsc(roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()));
-        return serviceSuccess(simpleMap(users, user -> new UserOrganisationResource(userMapper.mapToResource(user))));
+    public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<UserRoleType> roleTypes, String searchString, SearchCategory searchCategory) {
+
+        return validateSearchString(searchString).andOnSuccess(() -> {
+            List<UserOrganisation> userOrganisations;
+            switch (searchCategory) {
+                case NAME:
+                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, searchString, simpleMapSet(roleTypes, UserRoleType::getName));
+                    break;
+
+                case ORGANISATION_NAME:
+                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, simpleMapSet(roleTypes, UserRoleType::getName));
+                    break;
+
+                case EMAIL:
+                default:
+                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, simpleMapSet(roleTypes, UserRoleType::getName));
+                    break;
+            }
+            return serviceSuccess(simpleMap(userOrganisations, userOrganisationMapper::mapToResource));
+        });
+    }
+
+    private ServiceResult<Void> validateSearchString(String searchString) {
+
+        searchString = StringUtils.trim(searchString);
+
+        if (StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 5) {
+            return serviceFailure(CommonFailureKeys.GENERAL_INVALID_ARGUMENT);
+        } else {
+            return serviceSuccess();
+        }
     }
 
     private List<UserResource> sortByName(List<UserResource> userResources) {
