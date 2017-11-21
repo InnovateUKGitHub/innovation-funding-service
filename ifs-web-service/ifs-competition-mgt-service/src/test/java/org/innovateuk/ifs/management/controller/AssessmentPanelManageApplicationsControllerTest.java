@@ -82,7 +82,12 @@ public class AssessmentPanelManageApplicationsControllerTest extends BaseControl
         assertEquals("Lead 1", model.getApplications().get(0).getLeadOrganisation());
         assertEquals("Lead 2", model.getApplications().get(1).getLeadOrganisation());
 
-        
+        assertEquals(2, model.getAssignedApplications().size());
+        assertEquals("Lead 3", model.getAssignedApplications().get(0).getLeadOrganisation());
+        assertEquals("Lead 4", model.getAssignedApplications().get(1).getLeadOrganisation());
+        assertEquals("three", model.getAssignedApplications().get(0).getTitle());
+        assertEquals("four", model.getAssignedApplications().get(1).getTitle());
+
         PaginationViewModel actualPagination = model.getPagination();
         assertEquals(1, actualPagination.getCurrentPage());
         assertEquals(20,actualPagination.getPageSize());

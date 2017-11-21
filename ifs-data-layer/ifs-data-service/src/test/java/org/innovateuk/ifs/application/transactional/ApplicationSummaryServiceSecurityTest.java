@@ -92,7 +92,8 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
         }
 
         @Override
-        public ServiceResult<List<Long>> getAllSubmittedApplicationIdsByCompetitionId(long competitionId, Optional<String> filter, Optional<FundingDecisionStatus> fundingFilter) {
+        public ServiceResult<List<Long>> getAllSubmittedApplicationIdsByCompetitionId(
+                long competitionId, Optional<String> filter, Optional<FundingDecisionStatus> fundingFilter) {
             return null;
         }
 

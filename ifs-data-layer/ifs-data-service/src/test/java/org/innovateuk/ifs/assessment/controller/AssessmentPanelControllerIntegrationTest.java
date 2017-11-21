@@ -48,7 +48,6 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         assertTrue(result.isSuccess());
         application = applicationRepository.findOne(applicationId);
         assertTrue(application.isInAssessmentPanel());
-
     }
 
     @Test
