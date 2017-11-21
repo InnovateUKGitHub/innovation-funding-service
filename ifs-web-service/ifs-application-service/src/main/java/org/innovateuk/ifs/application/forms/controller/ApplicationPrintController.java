@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping("/application")
-@SecuredBySpring(value="TODO", description = "TODO")
+@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationPrintController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationPrintController {
 

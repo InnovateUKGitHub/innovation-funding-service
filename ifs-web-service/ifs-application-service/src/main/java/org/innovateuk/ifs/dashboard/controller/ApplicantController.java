@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/applicant")
-@SecuredBySpring(value="TODO", description = "TODO")
+@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicantController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicantController {
 

@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.application.resource.ApplicationState.OPEN;
 
 @Controller
 @RequestMapping("/application")
-@SecuredBySpring(value="TODO", description = "TODO")
+@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationController {
     @Autowired

@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/application/download/overheadfile")
-@SecuredBySpring(value="TODO", description = "TODO")
+@SecuredBySpring(value="Controller", description = "TODO", securedType = OverheadFileDownloadController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class OverheadFileDownloadController {
     @Autowired

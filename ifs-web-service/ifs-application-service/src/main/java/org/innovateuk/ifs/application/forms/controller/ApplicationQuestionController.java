@@ -43,7 +43,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.*;
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
-@SecuredBySpring(value="TODO", description = "TODO")
+@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationQuestionController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationQuestionController {
 

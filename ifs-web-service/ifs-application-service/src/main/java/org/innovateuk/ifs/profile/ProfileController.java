@@ -40,7 +40,7 @@ import static org.innovateuk.ifs.util.ProfileUtil.getAddress;
 
 @Controller
 @RequestMapping("/profile")
-@SecuredBySpring(value="TODO", description = "TODO")
+@SecuredBySpring(value="Controller", description = "TODO", securedType = ProfileController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ProfileController {
     private static final Log LOG = LogFactory.getLog(ProfileController.class);

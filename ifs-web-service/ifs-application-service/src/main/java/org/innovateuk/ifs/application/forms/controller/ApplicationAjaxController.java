@@ -55,7 +55,7 @@ import static org.innovateuk.ifs.controller.ErrorLookupHelper.lookupErrorMessage
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
-@SecuredBySpring(value="TODO", description = "TODO")
+@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationAjaxController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationAjaxController {
 

@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
  */
 @Controller
 @RequestMapping("/application/{applicationId}/team")
-@SecuredBySpring(value="TODO", description = "TODO")
+@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationTeamAddOrganisationController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationTeamAddOrganisationController {
 

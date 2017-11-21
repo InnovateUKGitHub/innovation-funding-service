@@ -30,7 +30,7 @@ import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.APPLICATI
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL+"{applicationId}/form/question/{questionId}/innovation-area")
-@SecuredBySpring(value="TODO", description = "TODO")
+@SecuredBySpring(value="Controller", description = "TODO", securedType = InnovationAreaController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class InnovationAreaController {
     private static String APPLICATION_SAVED_MESSAGE = "applicationSaved";

@@ -29,7 +29,7 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping("/application/create-authenticated")
-@SecuredBySpring(value="TODO", description = "TODO")
+@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationCreationAuthenticatedController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationCreationAuthenticatedController {
     public static final String COMPETITION_ID = "competitionId";
