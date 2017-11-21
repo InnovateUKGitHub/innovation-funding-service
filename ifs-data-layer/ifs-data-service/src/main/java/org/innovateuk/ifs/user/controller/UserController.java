@@ -118,11 +118,6 @@ public class UserController {
         return baseUserService.findAll().toGetResponse();
     }
 
-    @GetMapping("/findAllExternal")
-    public RestResult<List<UserOrganisationResource>> findAllExternal() {
-        return userService.findAllByProcessRoles(externalApplicantRoles()).toGetResponse();
-    }
-
     @GetMapping("/findExternalUsers")
     public RestResult<List<UserOrganisationResource>> findExternalUsers(@RequestParam(value = "searchString") final String searchString,
                                                                         @RequestParam(value = "searchCategory") final SearchCategory searchCategory) {
