@@ -17,6 +17,7 @@ import org.innovateuk.ifs.project.bankdetails.viewmodel.BankDetailsViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,10 +48,10 @@ public class BankDetailsController extends AddressLookupBaseController {
     @Autowired
     private OrganisationAddressRestService organisationAddressRestService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @GetMapping
     public String bankDetails(Model model,
-                              @PathVariable("projectId") final Long projectId,
+                              @P("projectId")@PathVariable("projectId") final Long projectId,
                               UserResource loggedInUser,
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) BankDetailsForm form) {
         ProjectResource projectResource = projectService.getById(projectId);
@@ -63,10 +64,10 @@ public class BankDetailsController extends AddressLookupBaseController {
         return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser, false);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @GetMapping("readonly")
     public String bankDetailsAsReadOnly(Model model,
-                              @PathVariable("projectId") final Long projectId,
+                              @P("projectId")@PathVariable("projectId") final Long projectId,
                               UserResource loggedInUser,
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) BankDetailsForm form) {
         ProjectResource projectResource = projectService.getById(projectId);
@@ -80,13 +81,13 @@ public class BankDetailsController extends AddressLookupBaseController {
     }
 
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @PostMapping
     public String submitBankDetails(Model model,
                                     @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                     @SuppressWarnings("unused") BindingResult bindingResult,
                                     ValidationHandler validationHandler,
-                                    @PathVariable("projectId") final Long projectId,
+                                    @P("projectId")@PathVariable("projectId") final Long projectId,
                                     UserResource loggedInUser) {
 
         final Supplier<String> failureView = () -> bankDetails(model, projectId, loggedInUser, form);
@@ -114,13 +115,13 @@ public class BankDetailsController extends AddressLookupBaseController {
         );
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @PostMapping("/confirm")
     public String confirmBankDetails(Model model,
                                      @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                      BindingResult bindingResult,
                                      ValidationHandler validationHandler,
-                                     @PathVariable("projectId") final Long projectId,
+                                     @P("projectId")@PathVariable("projectId") final Long projectId,
                                      UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
@@ -132,10 +133,10 @@ public class BankDetailsController extends AddressLookupBaseController {
                 () -> doViewConfirmBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @PostMapping(params = SEARCH_ADDRESS)
     public String searchAddress(Model model,
-                                @PathVariable("projectId") Long projectId,
+                                @P("projectId")@PathVariable("projectId") Long projectId,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                 BindingResult bindingResult,
                                 UserResource loggedInUser) {
@@ -151,10 +152,10 @@ public class BankDetailsController extends AddressLookupBaseController {
         return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser, false);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @PostMapping(params = SELECT_ADDRESS)
     public String selectAddress(Model model,
-                                @PathVariable("projectId") Long projectId,
+                                @P("projectId")@PathVariable("projectId") Long projectId,
                                 @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
                                 UserResource loggedInUser) {
         form.getAddressForm().setSelectedPostcode(null);
@@ -164,11 +165,11 @@ public class BankDetailsController extends AddressLookupBaseController {
         return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser, false);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_BANK_DETAILS_SECTION')")
     @PostMapping(params = MANUAL_ADDRESS)
     public String manualAddress(Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form,
-                                @PathVariable("projectId") Long projectId,
+                                @P("projectId")@PathVariable("projectId") Long projectId,
                                 UserResource loggedInUser) {
         AddressForm addressForm = form.getAddressForm();
         addressForm.setManualAddress(true);

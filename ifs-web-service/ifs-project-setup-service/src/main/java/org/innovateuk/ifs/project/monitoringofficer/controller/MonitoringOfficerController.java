@@ -6,6 +6,7 @@ import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerV
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,18 +29,18 @@ public class MonitoringOfficerController {
     @Autowired
     private MonitoringOfficerService monitoringOfficerService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_MONITORING_OFFICER_SECTION')")
     @GetMapping
-    public String viewMonitoringOfficer(@PathVariable("projectId") Long projectId, Model model) {
+    public String viewMonitoringOfficer(@P("projectId")@PathVariable("projectId") Long projectId, Model model) {
 
         MonitoringOfficerViewModel viewModel = getMonitoringOfficerViewModel(projectId);
         model.addAttribute("model", viewModel);
         return "project/monitoring-officer";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
+    @PreAuthorize("hasPermission(#projectId,'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_MONITORING_OFFICER_SECTION')")
     @GetMapping("/readonly")
-    public String viewMonitoringOfficerInReadOnly(@PathVariable("projectId") Long projectId, Model model) {
+    public String viewMonitoringOfficerInReadOnly(@P("projectId")@PathVariable("projectId") Long projectId, Model model) {
 
         MonitoringOfficerViewModel viewModel = getMonitoringOfficerViewModel(projectId);
         model.addAttribute("model", viewModel);

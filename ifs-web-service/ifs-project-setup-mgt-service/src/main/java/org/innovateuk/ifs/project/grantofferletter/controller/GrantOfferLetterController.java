@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -60,16 +61,16 @@ public class GrantOfferLetterController {
         binder.registerCustomEditor(ApprovalType.class, new CaseInsensitiveConverter<>(ApprovalType.class));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @GetMapping("/send")
-    public String viewGrantOfferLetterSend(@PathVariable Long projectId, Model model, UserResource loggedInUser) {
+    public String viewGrantOfferLetterSend(@P("projectId")@PathVariable Long projectId, Model model, UserResource loggedInUser) {
         GrantOfferLetterLetterForm form = new GrantOfferLetterLetterForm();
         return doViewGrantOfferLetterSend(projectId, model, form);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping("/send")
-    public String sendGrantOfferLetter(@PathVariable Long projectId,
+    public String sendGrantOfferLetter(@P("projectId")@PathVariable Long projectId,
                                        @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
                                        Model model,
                                        @SuppressWarnings("unused") BindingResult bindingResult,
@@ -90,9 +91,9 @@ public class GrantOfferLetterController {
         return "project/grant-offer-letter-send";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping(value = "/grant-offer-letter", params = "uploadGrantOfferLetterClicked")
-    public String uploadGrantOfferLetterFile(@PathVariable("projectId") final Long projectId,
+    public String uploadGrantOfferLetterFile(@P("projectId")@PathVariable("projectId") final Long projectId,
                                              @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
@@ -107,9 +108,9 @@ public class GrantOfferLetterController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping(value = "/grant-offer-letter", params = "removeGrantOfferLetterClicked")
-    public String removeGrantOfferLetterFile(@PathVariable("projectId") final Long projectId,
+    public String removeGrantOfferLetterFile(@P("projectId")@PathVariable("projectId") final Long projectId,
                                              @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
@@ -120,10 +121,10 @@ public class GrantOfferLetterController {
         return doViewGrantOfferLetterSend(projectId, model, form);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping("/signed/{approvalType}")
     public String signedGrantOfferLetterApproval(
-            @PathVariable("projectId") final Long projectId,
+            @P("projectId")@PathVariable("projectId") final Long projectId,
             @PathVariable("approvalType") final ApprovalType approvalType,
             @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
@@ -145,12 +146,12 @@ public class GrantOfferLetterController {
         return "redirect:/project/" + projectId + "/grant-offer-letter/send";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @GetMapping("/additional-contract")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadAdditionalContractFile(
-            @PathVariable("projectId") final Long projectId) {
+            @P("projectId")@PathVariable("projectId") final Long projectId) {
 
         final Optional<ByteArrayResource> content = grantOfferLetterService.getAdditionalContractFile(projectId);
         final Optional<FileEntryResource> fileDetails = grantOfferLetterService.getAdditionalContractFileDetails(projectId);
@@ -158,12 +159,12 @@ public class GrantOfferLetterController {
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @GetMapping("/grant-offer-letter")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadGeneratedGrantOfferLetterFile(
-            @PathVariable("projectId") final Long projectId) {
+            @P("projectId")@PathVariable("projectId") final Long projectId) {
 
         final Optional<ByteArrayResource> content = grantOfferLetterService.getGrantOfferFile(projectId);
         final Optional<FileEntryResource> fileDetails = grantOfferLetterService.getGrantOfferFileDetails(projectId);
@@ -171,12 +172,12 @@ public class GrantOfferLetterController {
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @GetMapping("/signed-grant-offer-letter")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadSignedGrantOfferLetterFile(
-            @PathVariable("projectId") final Long projectId) {
+            @P("projectId")@PathVariable("projectId") final Long projectId) {
 
         final Optional<ByteArrayResource> content = grantOfferLetterService.getSignedGrantOfferLetterFile(projectId);
         final Optional<FileEntryResource> fileDetails = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
@@ -184,10 +185,10 @@ public class GrantOfferLetterController {
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @PostMapping(params = "uploadAnnexClicked", value = "/upload-annex")
     public String uploadAnnexFile(
-            @PathVariable("projectId") final Long projectId,
+            @P("projectId")@PathVariable("projectId") final Long projectId,
             @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,

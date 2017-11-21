@@ -13,6 +13,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,9 +47,9 @@ public class OtherDocumentsController {
     @Autowired
     private ProjectService projectService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping
-    public String viewOtherDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
+    public String viewOtherDocumentsPage(@P("projectId")@PathVariable("projectId") Long projectId, Model model,
                                          UserResource loggedInUser) {
 
         OtherDocumentsForm form = new OtherDocumentsForm();
@@ -65,9 +66,9 @@ public class OtherDocumentsController {
         return "project/other-documents";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'SUBMIT_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'SUBMIT_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/confirm")
-    public String viewConfirmDocumentsPage(@PathVariable("projectId") Long projectId, Model model,
+    public String viewConfirmDocumentsPage(@P("projectId")@PathVariable("projectId") Long projectId, Model model,
                                            UserResource loggedInUser) {
         OtherDocumentsViewModel viewModel = populator.populate(projectId, loggedInUser);
         model.addAttribute("model", viewModel);
@@ -76,9 +77,9 @@ public class OtherDocumentsController {
         return "project/other-documents-confirm";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/readonly")
-    public String viewDocumentsPageAsReadOnly(@PathVariable("projectId") Long projectId, Model model,
+    public String viewDocumentsPageAsReadOnly(@P("projectId")@PathVariable("projectId") Long projectId, Model model,
                                               UserResource loggedInUser) {
 
         if (isProjectManager(projectId, loggedInUser)) {
@@ -97,9 +98,9 @@ public class OtherDocumentsController {
         return projectService.isProjectManager(loggedInUser.getId(), projectId);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping("/submit")
-    public String submitPartnerDocuments(Model model, @PathVariable("projectId") final Long projectId) {
+    public String submitPartnerDocuments(Model model, @P("projectId")@PathVariable("projectId") final Long projectId) {
         if (otherDocumentsService.isOtherDocumentSubmitAllowed(projectId)) {
             otherDocumentsService.setPartnerDocumentsSubmitted(projectId).getSuccessObjectOrThrowException();
         }
@@ -111,12 +112,12 @@ public class OtherDocumentsController {
         return format("redirect:/project/%s/partner/documents", projectId);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/collaboration-agreement")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
-            @PathVariable("projectId") final Long projectId) {
+            @P("projectId")@PathVariable("projectId") final Long projectId) {
 
         final Optional<ByteArrayResource> content = otherDocumentsService.getCollaborationAgreementFile(projectId);
         final Optional<FileEntryResource> fileDetails = otherDocumentsService.getCollaborationAgreementFileDetails(projectId);
@@ -124,10 +125,10 @@ public class OtherDocumentsController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping(params = "uploadCollaborationAgreementClicked")
     public String uploadCollaborationAgreementFile(
-            @PathVariable("projectId") final Long projectId,
+            @P("projectId")@PathVariable("projectId") final Long projectId,
             @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
@@ -142,9 +143,9 @@ public class OtherDocumentsController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping(params = "removeCollaborationAgreementClicked")
-    public String removeCollaborationAgreementFile(@PathVariable("projectId") final Long projectId,
+    public String removeCollaborationAgreementFile(@P("projectId")@PathVariable("projectId") final Long projectId,
                                                    @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
                                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                                    ValidationHandler validationHandler,
@@ -155,12 +156,12 @@ public class OtherDocumentsController {
                 () -> otherDocumentsService.removeCollaborationAgreementDocument(projectId));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/exploitation-plan")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(
-            @PathVariable("projectId") final Long projectId) {
+            @P("projectId")@PathVariable("projectId") final Long projectId) {
 
         final Optional<ByteArrayResource> content = otherDocumentsService.getExploitationPlanFile(projectId);
         final Optional<FileEntryResource> fileDetails = otherDocumentsService.getExploitationPlanFileDetails(projectId);
@@ -175,10 +176,10 @@ public class OtherDocumentsController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping(params = "uploadExploitationPlanClicked")
     public String uploadExploitationPlanFile(
-            @PathVariable("projectId") final Long projectId,
+            @P("projectId")@PathVariable("projectId") final Long projectId,
             @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
@@ -202,9 +203,9 @@ public class OtherDocumentsController {
         return validationHandler.performActionOrBindErrorsToField(fieldName, failureView, successView, actionFn);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping(params = "removeExploitationPlanClicked")
-    public String removeExploitationPlanFile(@PathVariable("projectId") final Long projectId,
+    public String removeExploitationPlanFile(@P("projectId")@PathVariable("projectId") final Long projectId,
                                              @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,

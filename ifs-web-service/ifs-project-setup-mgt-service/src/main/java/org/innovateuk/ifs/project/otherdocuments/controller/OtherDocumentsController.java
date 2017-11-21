@@ -16,6 +16,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -48,10 +49,10 @@ public class OtherDocumentsController {
     @Autowired
     private ApplicationService applicationService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping
     public String viewOtherDocumentsPage(Model model, @ModelAttribute(name = FORM_ATTR, binding = false) OtherDocumentsForm form,
-                                         @PathVariable("projectId") Long projectId) {
+                                         @P("projectId")@PathVariable("projectId") Long projectId) {
         return doViewOtherDocumentsPage(model, form, projectId);
     }
 
@@ -100,11 +101,11 @@ public class OtherDocumentsController {
         return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @PostMapping
     public String acceptOrRejectOtherDocuments(Model model, @ModelAttribute(FORM_ATTR) OtherDocumentsForm form,
                                                ValidationHandler validationhandler,
-                                               @PathVariable("projectId") Long projectId) {
+                                               @P("projectId")@PathVariable("projectId") Long projectId) {
 
         return validationhandler.performActionOrBindErrorsToField("approved",
                 () -> doViewOtherDocumentsPage(model, form, projectId),
@@ -112,12 +113,12 @@ public class OtherDocumentsController {
                 () -> otherDocumentsService.acceptOrRejectOtherDocuments(projectId, form.isApproved()));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/collaboration-agreement")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadCollaborationAgreementFile(
-            @PathVariable("projectId") final Long projectId) {
+            @P("projectId")@PathVariable("projectId") final Long projectId) {
 
         final Optional<ByteArrayResource> content = otherDocumentsService.getCollaborationAgreementFile(projectId);
         final Optional<FileEntryResource> fileDetails = otherDocumentsService.getCollaborationAgreementFileDetails(projectId);
@@ -133,11 +134,11 @@ public class OtherDocumentsController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @GetMapping("/exploitation-plan")
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(@PathVariable("projectId") final Long projectId) {
+    ResponseEntity<ByteArrayResource> downloadExploitationPlanFile(@P("projectId")@PathVariable("projectId") final Long projectId) {
 
         final Optional<ByteArrayResource> content = otherDocumentsService.getExploitationPlanFile(projectId);
         final Optional<FileEntryResource> fileDetails = otherDocumentsService.getExploitationPlanFileDetails(projectId);

@@ -58,6 +58,7 @@ import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -146,9 +147,9 @@ public class ProjectFinanceChecksController {
     @Autowired
     private ApplicantRestService applicantRestService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
-    public String viewFinanceChecks(Model model, @PathVariable("projectId") final Long projectId,
+    public String viewFinanceChecks(Model model, @P("projectId")@PathVariable("projectId") final Long projectId,
                                     UserResource loggedInUser) {
 
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
@@ -158,9 +159,9 @@ public class ProjectFinanceChecksController {
         return "project/finance-checks";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/{queryId}/new-response")
-    public String viewNewResponse(@PathVariable Long projectId,
+    public String viewNewResponse(@P("projectId")@PathVariable Long projectId,
                                   @PathVariable Long queryId,
                                   Model model,
                                   HttpServletRequest request,
@@ -178,10 +179,10 @@ public class ProjectFinanceChecksController {
     }
 
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @PostMapping("/{queryId}/new-response")
     public String saveResponse(Model model,
-                               @PathVariable("projectId") final Long projectId,
+                               @P("projectId")@PathVariable("projectId") final Long projectId,
                                @PathVariable final Long queryId,
                                @Valid @ModelAttribute(FORM_ATTR) final FinanceChecksQueryResponseForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
@@ -235,10 +236,10 @@ public class ProjectFinanceChecksController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @PostMapping(value = "/{queryId}/new-response", params = "uploadAttachment")
     public String saveNewResponseAttachment(Model model,
-                                            @PathVariable("projectId") final Long projectId,
+                                            @P("projectId")@PathVariable("projectId") final Long projectId,
                                             @PathVariable Long queryId,
                                             @ModelAttribute(FORM_ATTR) FinanceChecksQueryResponseForm form,
                                             @SuppressWarnings("unused") BindingResult bindingResult,
@@ -271,11 +272,11 @@ public class ProjectFinanceChecksController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/{queryId}/new-response/attachment/{attachmentId}")
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadResponseAttachment(@PathVariable Long projectId,
+    ResponseEntity<ByteArrayResource> downloadResponseAttachment(@P("projectId")@PathVariable Long projectId,
                                                                  @PathVariable Long queryId,
                                                                  @PathVariable Long attachmentId,
                                                                  UserResource loggedInUser,
@@ -290,18 +291,18 @@ public class ProjectFinanceChecksController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/attachment/{attachmentId}")
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
+    ResponseEntity<ByteArrayResource> downloadAttachment(@P("projectId")@PathVariable Long projectId,
                                                          @PathVariable Long attachmentId) {
         return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @PostMapping(value = "/{queryId}/new-response", params = "removeAttachment")
-    public String removeAttachment(@PathVariable Long projectId,
+    public String removeAttachment(@P("projectId")@PathVariable Long projectId,
                                    @PathVariable Long queryId,
                                    @RequestParam(value = "removeAttachment") final Long attachmentId,
                                    @ModelAttribute(FORM_ATTR) FinanceChecksQueryResponseForm form,
@@ -327,9 +328,9 @@ public class ProjectFinanceChecksController {
         return "project/finance-checks";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/{queryId}/new-response/cancel")
-    public String cancelNewForm(@PathVariable Long projectId,
+    public String cancelNewForm(@P("projectId")@PathVariable Long projectId,
                                 @PathVariable Long queryId,
                                 HttpServletRequest request,
                                 HttpServletResponse response,
@@ -344,9 +345,9 @@ public class ProjectFinanceChecksController {
         return redirectToQueries(projectId);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility")
-    public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request, UserResource loggedInUser) {
+    public String viewExternalEligibilityPage(@P("projectId")@PathVariable("projectId") final Long projectId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request, UserResource loggedInUser) {
         ProjectResource project = projectService.getById(projectId);
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ApplicationResource application = applicationService.getById(project.getApplication());
@@ -360,9 +361,9 @@ public class ProjectFinanceChecksController {
         return doViewEligibility(competition, application, project, allSections, user, isLeadPartnerOrganisation, organisation, model, null, form, bindingResult);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping("/eligibility/changes")
-    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, Model model, UserResource loggedInUser) {
+    public String viewExternalEligibilityChanges(@P("projectId")@PathVariable("projectId") final Long projectId, Model model, UserResource loggedInUser) {
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);

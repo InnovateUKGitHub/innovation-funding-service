@@ -26,6 +26,7 @@ import org.innovateuk.threads.resource.PostResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,12 +75,10 @@ public class FinanceChecksNotesAddNoteController {
     @Autowired
     private FinanceCheckService financeCheckService;
 
-    @Autowired
-    private AttachmentRestService attachmentRestService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @GetMapping
-    public String viewNewNote(@PathVariable final Long projectId,
+    public String viewNewNote(@P("projectId")@PathVariable final Long projectId,
                               @PathVariable final Long organisationId,
                               Model model,
                               UserResource loggedInUser,
@@ -94,9 +93,9 @@ public class FinanceChecksNotesAddNoteController {
         return NEW_NOTE_VIEW;
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @PostMapping
-    public String saveNote(@PathVariable final Long projectId,
+    public String saveNote(@P("prpjectId")@PathVariable final Long projectId,
                            @PathVariable final Long organisationId,
                            @Valid @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
                            @SuppressWarnings("unused") BindingResult bindingResult,
@@ -142,10 +141,10 @@ public class FinanceChecksNotesAddNoteController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @PostMapping(params = "uploadAttachment")
     public String saveNewNoteAttachment(Model model,
-                                        @PathVariable final Long projectId,
+                                        @P("projectId")@PathVariable final Long projectId,
                                         @PathVariable final Long organisationId,
                                         @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult,
@@ -181,11 +180,11 @@ public class FinanceChecksNotesAddNoteController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @GetMapping("/attachment/{attachmentId}")
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
+    ResponseEntity<ByteArrayResource> downloadAttachment(@P("projectId")@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId,
                                                          UserResource loggedInUser,
@@ -201,9 +200,9 @@ public class FinanceChecksNotesAddNoteController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @PostMapping(params = "removeAttachment")
-    public String removeAttachment(@PathVariable Long projectId,
+    public String removeAttachment(@P("projectId")@PathVariable Long projectId,
                                    @PathVariable Long organisationId,
                                    @RequestParam(value = "removeAttachment") final Long attachmentId,
                                    @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
@@ -228,9 +227,9 @@ public class FinanceChecksNotesAddNoteController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @GetMapping("/cancel")
-    public String cancelNewForm(@PathVariable Long projectId,
+    public String cancelNewForm(@P("projectId")@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
                                 UserResource loggedInUser,
                                 HttpServletRequest request,

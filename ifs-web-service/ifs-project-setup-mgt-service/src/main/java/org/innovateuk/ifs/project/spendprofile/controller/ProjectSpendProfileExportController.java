@@ -4,6 +4,7 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.spendprofile.service.SpendProfileService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,9 +30,9 @@ public class ProjectSpendProfileExportController {
     @Autowired
     private SpendProfileService spendProfileService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
     @GetMapping("/csv")
-    public void exportProjectPartnerSpendProfileAsCSV(@PathVariable("projectId") final Long projectId,
+    public void exportProjectPartnerSpendProfileAsCSV(@P("projectId")@PathVariable("projectId") final Long projectId,
                                                       @PathVariable("organisationId") final Long organisationId,
                                                       UserResource loggedInUser,
                                                       HttpServletResponse response) throws IOException {

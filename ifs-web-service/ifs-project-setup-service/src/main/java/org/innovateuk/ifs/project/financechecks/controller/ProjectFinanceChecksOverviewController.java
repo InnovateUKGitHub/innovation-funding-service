@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.service.PartnerOrganisationRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,9 +51,9 @@ public class ProjectFinanceChecksOverviewController {
     @Autowired
     private OrganisationService organisationService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
-    public String viewOverview(Model model, @PathVariable("projectId") final Long projectId, UserResource loggedInUser) {
+    public String viewOverview(Model model, @P("projectId")@PathVariable("projectId") final Long projectId, UserResource loggedInUser) {
         Long organisationId = organisationService.getOrganisationIdFromUser(projectId, loggedInUser);
         FinanceCheckOverviewViewModel financeCheckOverviewViewModel = buildFinanceCheckOverviewViewModel(projectId);
         ProjectResource project = projectService.getById(projectId);
