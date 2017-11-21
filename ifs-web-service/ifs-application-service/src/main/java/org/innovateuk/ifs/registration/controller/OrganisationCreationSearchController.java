@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
@@ -35,6 +36,7 @@ import static org.springframework.web.util.UriUtils.encodeQueryParam;
  */
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationSearchController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationSearchController extends AbstractOrganisationCreationController {
 

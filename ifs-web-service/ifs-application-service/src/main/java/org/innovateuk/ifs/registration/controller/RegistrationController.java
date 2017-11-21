@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.exception.InviteAlreadyAcceptedException;
@@ -45,6 +46,7 @@ import static org.innovateuk.ifs.login.HomeController.getRedirectUrlForUser;
 
 @Controller
 @RequestMapping("/registration")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = RegistrationController.class)
 @PreAuthorize("permitAll")
 public class RegistrationController {
     public static final String BASE_URL = "/registration/register";

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.innovateuk.ifs.registration.populator.OrganisationCreationSelectTypePopulator;
@@ -31,6 +32,7 @@ import java.util.Optional;
 
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/" + AbstractOrganisationCreationController.LEAD_ORGANISATION_TYPE)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationLeadTypeController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationLeadTypeController extends AbstractOrganisationCreationController {
 

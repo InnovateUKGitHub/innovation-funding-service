@@ -3,6 +3,7 @@ package org.innovateuk.ifs.alert;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.alert.resource.AlertType;
 import org.innovateuk.ifs.alert.service.AlertRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/alert")
+@SecuredBySpring(value = "Controller", description = "TODO" , securedType = AlertController.class)
 @PreAuthorize("permitAll")
 public class AlertController {
 

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.login;
 
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.login.form.RoleSelectionForm;
@@ -34,6 +35,7 @@ import static org.springframework.util.StringUtils.hasText;
  * So we don't have a public homepage, the login page is the homepage.
  */
 @Controller
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = HomeController.class)
 @PreAuthorize("permitAll")
 public class HomeController {
 

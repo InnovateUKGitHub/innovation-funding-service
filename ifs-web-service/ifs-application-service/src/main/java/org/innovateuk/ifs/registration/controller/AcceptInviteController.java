@@ -2,6 +2,7 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.registration.model.AcceptRejectApplicationInviteModelPopulator;
 import org.innovateuk.ifs.registration.viewmodel.ConfirmOrganisationInviteOrganisationViewModel;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
  * This class is use as an entry point to accept a invite, to a application.
  */
 @Controller
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AcceptInviteController.class)
 @PreAuthorize("permitAll")
 public class AcceptInviteController extends AbstractAcceptInviteController {
 
