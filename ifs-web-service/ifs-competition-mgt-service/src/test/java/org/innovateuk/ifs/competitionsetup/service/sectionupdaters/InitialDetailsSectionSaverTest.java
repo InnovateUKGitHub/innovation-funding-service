@@ -118,7 +118,7 @@ public class InitialDetailsSectionSaverTest {
         when(categoryRestService.getInnovationAreasBySector(innovationSectorId)).thenReturn(restSuccess(singletonList(innovationArea)));
         when(competitionSetupRestService.initApplicationForm(competition.getId(), competitionSetupForm.getCompetitionTypeId())).thenReturn(restSuccess());
         when(competitionSetupRestService.updateCompetitionInitialDetails(competition)).thenReturn(restSuccess());
-        when(competitionSetupMilestoneService.createMilestonesForCompetition(anyLong())).thenReturn(serviceSuccess(milestones));
+        when(competitionSetupMilestoneService.createMilestonesForIFSCompetition(anyLong())).thenReturn(serviceSuccess(milestones));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
         when(userService.existsAndHasRole(executiveUserId, COMP_ADMIN)).thenReturn(true);
         when(userService.existsAndHasRole(leadTechnologistId, INNOVATION_LEAD)).thenReturn(true);
@@ -150,7 +150,7 @@ public class InitialDetailsSectionSaverTest {
         competition.setMilestones(singletonList(10L));
         when(milestoneRestService.getAllMilestonesByCompetitionId(competition.getId())).thenReturn(restSuccess(getMilestoneList()));
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
-        when(competitionSetupMilestoneService.createMilestonesForCompetition(anyLong())).thenReturn(serviceSuccess(getMilestoneList()));
+        when(competitionSetupMilestoneService.createMilestonesForIFSCompetition(anyLong())).thenReturn(serviceSuccess(getMilestoneList()));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.autoSaveSectionField(competition, null, "openingDate", "20-10-" + (ZonedDateTime.now().getYear() + 1), null);
@@ -365,7 +365,7 @@ public class InitialDetailsSectionSaverTest {
         when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(asList(innovationArea)));
         when(categoryRestService.getInnovationAreasBySector(innovationSectorId)).thenReturn(restSuccess(singletonList(innovationArea)));
         when(competitionSetupRestService.updateCompetitionInitialDetails(competition)).thenReturn(restFailure(new Error("Some Error", HttpStatus.BAD_REQUEST)));
-        when(competitionSetupMilestoneService.createMilestonesForCompetition(anyLong())).thenReturn(serviceSuccess(getMilestoneList()));
+        when(competitionSetupMilestoneService.createMilestonesForIFSCompetition(anyLong())).thenReturn(serviceSuccess(getMilestoneList()));
         when(competitionSetupMilestoneService.updateMilestonesForCompetition(anyList(), anyMap(), anyLong())).thenReturn(serviceSuccess());
         when(userService.existsAndHasRole(executiveUserId, COMP_ADMIN)).thenReturn(true);
         when(userService.existsAndHasRole(leadTechnologistId, INNOVATION_LEAD)).thenReturn(true);

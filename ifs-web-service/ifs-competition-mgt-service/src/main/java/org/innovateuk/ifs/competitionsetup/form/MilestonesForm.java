@@ -7,13 +7,13 @@ import org.apache.commons.collections4.map.LinkedMap;
  */
 public class MilestonesForm extends CompetitionSetupForm {
 
-    private LinkedMap<String, MilestoneRowForm> milestoneEntries = new LinkedMap<>();
+    private LinkedMap<String, GenericMilestoneRowForm> milestoneEntries = new LinkedMap<>();
 
-    public LinkedMap<String, MilestoneRowForm> getMilestoneEntries() {
+    public LinkedMap<String, GenericMilestoneRowForm> getMilestoneEntries() {
         return milestoneEntries;
     }
 
-    public void setMilestoneEntries(LinkedMap<String, MilestoneRowForm> milestoneEntries) {
+    public void setMilestoneEntries(LinkedMap<String, GenericMilestoneRowForm> milestoneEntries) {
         this.milestoneEntries = milestoneEntries;
     }
 }
