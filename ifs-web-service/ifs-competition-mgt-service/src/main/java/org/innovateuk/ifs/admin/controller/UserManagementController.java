@@ -14,6 +14,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -107,18 +108,18 @@ public class UserManagementController {
                                 }).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException();
     }
 
-    @PreAuthorize("hasPermission(#userId, 'ACCESS_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId' ,'ACCESS_INTERNAL_USER')")
     @GetMapping("/user/{userId}")
-    public String viewUser(@PathVariable Long userId, Model model){
+    public String viewUser(@P("userId")@PathVariable Long userId, Model model){
         return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
                     model.addAttribute("model", new EditUserViewModel(user));
                     return "admin/user";
         }).getSuccessObjectOrThrowException();
     }
 
-    @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
     @GetMapping("/user/{userId}/edit")
-    public String viewEditUser(@PathVariable Long userId,
+    public String viewEditUser(@P("userId") @PathVariable Long userId,
                                Model model,
                                HttpServletRequest request,
                                UserResource loggedInUser) {
@@ -141,9 +142,9 @@ public class UserManagementController {
 
     }
 
-    @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
     @PostMapping("/user/{userId}/edit")
-    public String updateUser(@PathVariable Long userId,
+    public String updateUser(@P("userId")@PathVariable Long userId,
                              Model model,
                              HttpServletRequest request,
                              @Valid @ModelAttribute(FORM_ATTR_NAME) EditUserForm form,
@@ -168,16 +169,16 @@ public class UserManagementController {
         return new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
     }
 
-    @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
     @PostMapping(value = "/user/{userId}/edit", params = "deactivateUser")
-    public String deactivateUser(@PathVariable Long userId) {
+    public String deactivateUser(@P("userId")@PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
                 userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
     }
 
-    @PreAuthorize("hasPermission(#userId, 'ACCESS_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'ACCESS_INTERNAL_USER')")
     @PostMapping(value = "/user/{userId}", params = "reactivateUser")
-    public String reactivateUser(@PathVariable Long userId) {
+    public String reactivateUser(@P("userId") @PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
                 userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
     }

@@ -20,6 +20,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -329,9 +330,9 @@ public class CompetitionSetupController {
         return String.format("redirect:/competition/setup/%d", competitionId);
     }
 
-    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @GetMapping("/{competitionId}/manage-innovation-leads/find")
-    public String manageInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+    public String manageInnovationLead(@P("competitionId")@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        Model model,
                                        UserResource loggedInUser) {
 
@@ -347,9 +348,9 @@ public class CompetitionSetupController {
         return "competition/manage-innovation-leads-find";
     }
 
-    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
+    @PreAuthorize("hasPermission(#competitionId,'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @GetMapping("/{competitionId}/manage-innovation-leads/overview")
-    public String manageInnovationLeadOverview(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+    public String manageInnovationLeadOverview(@P("competitionId") @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        Model model,
                                        UserResource loggedInUser) {
 
@@ -364,9 +365,9 @@ public class CompetitionSetupController {
         return "competition/manage-innovation-leads-overview";
     }
 
-    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @PostMapping("/{competitionId}/add-innovation-lead/{innovationLeadUserId}")
-    public String addInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+    public String addInnovationLead(@P("competitionId")@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                     @PathVariable("innovationLeadUserId") long innovationLeadUserId,
                                     Model model,
                                     UserResource loggedInUser) {
@@ -383,9 +384,9 @@ public class CompetitionSetupController {
         return "competition/manage-innovation-leads-find";
     }
 
-    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @PostMapping("/{competitionId}/remove-innovation-lead/{innovationLeadUserId}")
-    public String removeInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+    public String removeInnovationLead(@P("competitionId") @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        @PathVariable("innovationLeadUserId") long innovationLeadUserId,
                                        Model model,
                                        UserResource loggedInUser) {

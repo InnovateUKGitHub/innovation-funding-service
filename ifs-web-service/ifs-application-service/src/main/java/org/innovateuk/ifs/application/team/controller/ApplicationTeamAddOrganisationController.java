@@ -13,6 +13,7 @@ import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -52,9 +53,9 @@ public class ApplicationTeamAddOrganisationController {
     private ApplicationTeamAddOrganisationModelPopulator applicationTeamAddOrganisationModelPopulator;
 
     @GetMapping("/addOrganisation")
-    @PreAuthorize("hasPermission(#applicationId, 'VIEW_ADD_ORGANISATION_PAGE')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'VIEW_ADD_ORGANISATION_PAGE')")
     public String getAddOrganisation(Model model,
-                                     @PathVariable("applicationId") long applicationId,
+                                     @P("applicationId")@PathVariable("applicationId") long applicationId,
                                      UserResource loggedInUser,
                                      @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
@@ -67,9 +68,9 @@ public class ApplicationTeamAddOrganisationController {
     }
 
     @PostMapping("/addOrganisation")
-    @PreAuthorize("hasPermission(#applicationId, 'ADD_NEW_ORGANISATION')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'ADD_NEW_ORGANISATION')")
     public String submitAddOrganisation(Model model,
-                                        @PathVariable("applicationId") long applicationId,
+                                        @P("applicationId")@PathVariable("applicationId") long applicationId,
                                         UserResource loggedInUser,
                                         @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
                                         @SuppressWarnings("unused") BindingResult bindingResult,
@@ -87,9 +88,9 @@ public class ApplicationTeamAddOrganisationController {
     }
 
     @PostMapping(value = "/addOrganisation", params = {"addApplicant"})
-    @PreAuthorize("hasPermission(#applicationId, 'ADD_APPLICANT')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'ADD_APPLICANT')")
     public String addApplicant(Model model,
-                               @PathVariable("applicationId") long applicationId,
+                               @P("applicationId")@PathVariable("applicationId") long applicationId,
                                UserResource loggedInUser,
                                @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
@@ -98,9 +99,9 @@ public class ApplicationTeamAddOrganisationController {
     }
 
     @PostMapping(value = "/addOrganisation", params = {"removeApplicant"})
-    @PreAuthorize("hasPermission(#applicationId, 'REMOVE_APPLICANT')")
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationCompositeId', 'REMOVE_APPLICANT')")
     public String removeApplicant(Model model,
-                                  @PathVariable("applicationId") long applicationId,
+                                  @P("applicationId")@PathVariable("applicationId") long applicationId,
                                   UserResource loggedInUser,
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationTeamAddOrganisationForm form,
                                   @RequestParam(name = "removeApplicant") Integer position) {
