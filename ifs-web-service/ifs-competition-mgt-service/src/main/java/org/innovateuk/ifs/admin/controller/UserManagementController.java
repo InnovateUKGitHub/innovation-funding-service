@@ -196,7 +196,7 @@ public class UserManagementController {
                                     Model model) {
 
         List<UserOrganisationResource> users;
-        if (StringUtils.isNotEmpty(searchString) && searchCategory != null) {
+        if (validateSearchString(searchString) && searchCategory != null) {
             searchString = "%" + StringUtils.trim(searchString) + "%";
             users = userRestService.findExternalUsers(searchString, searchCategory).getSuccessObjectOrThrowException();
         } else {
@@ -207,6 +207,13 @@ public class UserManagementController {
         return "admin/search-external-users";
     }
 
+    private boolean validateSearchString(String searchString) {
+
+        searchString = StringUtils.trim(searchString);
+
+        return !(StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 3);
+    }
+
     @SecuredBySpring(value = "FIND_EXTERNAL_INVITES", description = "Only the support user or IFS Admin can access external user invites")
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     @GetMapping(value = "/external/invites")
@@ -215,7 +222,7 @@ public class UserManagementController {
                                       Model model) {
 
         List<ExternalInviteResource> invites;
-        if (StringUtils.isNotEmpty(searchString) && searchCategory != null) {
+        if (validateSearchString(searchString) && searchCategory != null) {
             searchString = "%" + StringUtils.trim(searchString) + "%";
             invites = inviteUserRestService.findExternalInvites(searchString, searchCategory).getSuccessObjectOrThrowException();
         } else {
