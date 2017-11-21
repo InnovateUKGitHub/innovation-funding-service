@@ -10,7 +10,7 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 public class AssessmentPanelServiceSecurityTest extends BaseServiceSecurityTest<AssessmentPanelService> {
 
-    private long applicationId = 1L;
+    private static final long applicationId = 1L;
 
     @Override
     protected Class<? extends AssessmentPanelService> getClassUnderTest() {
@@ -19,13 +19,11 @@ public class AssessmentPanelServiceSecurityTest extends BaseServiceSecurityTest<
 
     @Test
     public void assignApplicationToPanel() throws Exception {
-
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.assignApplicationToPanel(applicationId), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void unAssignApplicationFromPanel() throws Exception {
-
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.unassignApplicationFromPanel(applicationId), COMP_ADMIN, PROJECT_FINANCE);
     }
 

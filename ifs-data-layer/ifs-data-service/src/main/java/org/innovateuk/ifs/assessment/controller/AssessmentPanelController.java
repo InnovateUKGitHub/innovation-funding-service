@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Controller for managing applications on an assessment panel.
+ */
 @RestController
 @RequestMapping("/assessmentpanel")
 public class AssessmentPanelController {

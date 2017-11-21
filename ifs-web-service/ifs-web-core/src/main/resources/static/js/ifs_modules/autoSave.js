@@ -67,8 +67,8 @@ IFS.core.autoSave = (function () {
         case 'application':
           dateField = field.is('[data-date]')
           if (dateField) {
-            fieldInfo = field.closest('.date-group').find('input[type="hidden"]')
-            dateValue = fieldInfo.hasClass('day') ? field.attr('data-date').substring(2) : field.attr('data-date')
+            fieldInfo = field.closest('.date-group').find('input[type="hidden"]:not(.day)')
+            dateValue = fieldInfo.attr('data-date-month-year') !== 'undefined' ? field.attr('data-date').substring(2) : field.attr('data-date')
             jsonObj = {
               applicationId: applicationId,
               value: dateValue,

@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class AssessmentPanelControllerTest extends BaseControllerMockMVCTest<AssessmentPanelController> {
 
-    long applicationId = 1L;
+    private static final long applicationId = 1L;
 
     @Override
     public AssessmentPanelController supplyControllerUnderTest() {
