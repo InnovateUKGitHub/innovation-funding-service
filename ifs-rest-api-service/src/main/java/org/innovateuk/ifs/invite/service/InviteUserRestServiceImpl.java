@@ -48,12 +48,6 @@ public class InviteUserRestServiceImpl extends BaseRestService implements Invite
         return getWithRestResult(uriWithParams, RoleInvitePageResource.class);
     }
 
-/*    @Override
-    public RestResult<List<ExternalInviteResource>> findExternalInvitesOLD(String searchString, SearchCategory searchCategory) {
-        String uri = inviteRestUrl + "/external/invites";
-        return getWithRestResult(uri, externalInviteResourceListType());
-    }*/
-
     @Override
     public RestResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory) {
         return getWithRestResult(inviteRestUrl + "/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType());

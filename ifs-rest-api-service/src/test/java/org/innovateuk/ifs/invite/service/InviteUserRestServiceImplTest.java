@@ -66,11 +66,12 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
         assertEquals(expected, result);
     }
 
-    @Test
+    //TODO - Will be deleted/fixed once junits for IFS-1986 are complete.
+/*    @Test
     public void getAllExternalInvites() throws Exception {
         List<ExternalInviteResource> expected = new ArrayList<>();
         setupGetWithRestResultExpectations(inviteRestBaseUrl + "/external/all", externalInviteResourceListType(), expected, OK);
         List<ExternalInviteResource> result = service.getAllExternalInvites().getSuccessObjectOrThrowException();
         assertEquals(expected, result);
-    }
+    }*/
 }
