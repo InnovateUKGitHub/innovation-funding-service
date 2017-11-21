@@ -66,6 +66,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               IFS-1579 Allow change of Finance Contact until generation of GOL
 ...
 ...               IFS-2062 Row to be taken off from Query responses tab once SP is generated
+...
+...               IFS-2016 Project Setup task management: Spend Profile
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -126,11 +128,13 @@ Lead partner responds to query
     When the user enters text to a text field  css=.editor  Responding to finance query
     Then the user clicks the button/link       jQuery=.button:contains("Post response")
 
-Project Finance generates the Spend Profile and should not see query responses flagged
-    [Documentation]    INFUND-5194, INFUND-5987, IFS-2062
+Project Finance goes through the Generate Spend Profile tab to generate the Spend Profile and should not see query responses flagged
+    [Documentation]    INFUND-5194, INFUND-5987, IFS-2062, IFS-2016
     [Tags]    HappyPath
     [Setup]  log in as a different user     &{internal_finance_credentials}
-    Given the user navigates to the page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/finance-check
+    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_APPLICATION_PROJECT}/status/all
+    And the user clicks the button/link     jQuery=a:contains("Generate spend profile")
+    And the user clicks the button/link     link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link    css=.generate-spend-profile-main-button
     And the user clicks the button/link     css=#generate-spend-profile-modal-button
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
@@ -139,6 +143,12 @@ Project Finance generates the Spend Profile and should not see query responses f
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/queries
     Then the user should not see the element  link=${Katz_Name}
     And the user reads his email            ${PS_SP_APPLICATION_PM_EMAIL}  Your spend profile is available  The finance checks for all partners in the project have now been completed
+
+Project Finance should no longer see the project in the Generate Spend Profile tab
+    [Documentation]    IFS-2016
+    [Tags]
+    Given the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_APPLICATION_PROJECT}/status/pending-spend-profiles
+    Then the user should not see the element  link=${PS_SP_APPLICATION_TITLE}
 
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899, INFUND-7685

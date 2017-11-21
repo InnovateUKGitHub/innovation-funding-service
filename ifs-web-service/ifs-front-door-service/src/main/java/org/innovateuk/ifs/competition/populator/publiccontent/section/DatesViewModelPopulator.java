@@ -14,9 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import static org.innovateuk.ifs.competition.resource.MilestoneType.SUBMISSION_DATE;
 
 /**
  * Populates a public content eligibility view model.
@@ -36,55 +33,44 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
     @Override
     protected void populateSection(DatesViewModel model, PublicContentResource publicContentResource, PublicContentSectionResource section, Boolean nonIFS) {
         List<DateViewModel> publicContentDates = mapContentEventsToDatesViewModel(publicContentResource.getContentEvents());
-        publicContentDates.addAll(getMilestonesAsDatesViewModel(nonIFS, publicContentResource.getCompetitionId()));
+        publicContentDates.addAll(getMilestonesAsDatesViewModel(publicContentResource.getCompetitionId()));
 
         model.setPublicContentDates(publicContentDates);
     }
 
-    private List<DateViewModel> getMilestonesAsDatesViewModel(Boolean nonIFS, Long competitionId) {
+    private List<DateViewModel> getMilestonesAsDatesViewModel(Long competitionId) {
         List<MilestoneResource> milestones = milestoneRestService.getAllPublicMilestonesByCompetitionId(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        List<DateViewModel> milestonesMapped = mapMilestoneToDateViewModel(milestones, nonIFS);
-        if (nonIFS) {
-            milestonesMapped.add(addRegistrationCloseDateForNonIFSComp(
-                    milestones.stream().filter(resource -> SUBMISSION_DATE.equals(resource.getType())).findFirst()));
-        }
-
+        List<DateViewModel> milestonesMapped = mapMilestoneToDateViewModel(milestones);
         return milestonesMapped;
     }
 
-    private DateViewModel addRegistrationCloseDateForNonIFSComp(Optional<MilestoneResource> competitionCloseDateMilestone) {
-        DateViewModel registrationClosesDate = new DateViewModel();
-        if (competitionCloseDateMilestone.isPresent()) {
-            registrationClosesDate.setMustBeStrong(false);
-            registrationClosesDate.setContent("Registration closes");
-            registrationClosesDate.setDateTime(competitionCloseDateMilestone.get().getDate().minusDays(7));
-        }
-
-        return registrationClosesDate;
-    }
-
-    private List<DateViewModel> mapMilestoneToDateViewModel(List<MilestoneResource> milestonesNeeded, Boolean nonIfs) {
+    private List<DateViewModel> mapMilestoneToDateViewModel(List<MilestoneResource> milestonesNeeded) {
         List<DateViewModel> publicContentDates = new ArrayList<>();
 
-        milestonesNeeded.forEach(milestoneResource -> {
-            DateViewModel publicContentDate = new DateViewModel();
+        milestonesNeeded.stream()
+                .filter(milestoneResource -> milestoneResource.getDate() != null)
+                .forEach(milestoneResource -> {
+                    DateViewModel publicContentDate = new DateViewModel();
 
-            publicContentDate.setDateTime(milestoneResource.getDate());
-            publicContentDate.setMustBeStrong(Boolean.FALSE);
-            switch (milestoneResource.getType()) {
-                case OPEN_DATE:
-                    publicContentDate.setContent("Competition opens");
-                    publicContentDate.setMustBeStrong(Boolean.TRUE);
-                    break;
-                case SUBMISSION_DATE:
-                    publicContentDate.setContent("Competition closes");
-                    break;
-                case NOTIFICATIONS:
-                    publicContentDate.setContent("Applicants notified");
-                    break;
-            }
+                    publicContentDate.setDateTime(milestoneResource.getDate());
+                    publicContentDate.setMustBeStrong(Boolean.FALSE);
+                    switch (milestoneResource.getType()) {
+                        case OPEN_DATE:
+                            publicContentDate.setContent("Competition opens");
+                            publicContentDate.setMustBeStrong(Boolean.TRUE);
+                            break;
+                        case REGISTRATION_DATE:
+                            publicContentDate.setContent("Registration closes");
+                            break;
+                        case SUBMISSION_DATE:
+                            publicContentDate.setContent("Competition closes");
+                            break;
+                        case NOTIFICATIONS:
+                            publicContentDate.setContent("Applicants notified");
+                            break;
+                }
             publicContentDates.add(publicContentDate);
         });
 
@@ -94,14 +80,16 @@ public class DatesViewModelPopulator extends AbstractPublicContentSectionViewMod
     private List<DateViewModel> mapContentEventsToDatesViewModel(List<ContentEventResource> contentEvents) {
         List<DateViewModel> publicContentDates = new ArrayList<>();
 
-        contentEvents.forEach(contentEventResource -> {
-            DateViewModel publicContentDate = new DateViewModel();
-            publicContentDate.setDateTime(contentEventResource.getDate());
-            publicContentDate.setContent(contentEventResource.getContent());
-            publicContentDate.setMustBeStrong(Boolean.FALSE);
+        contentEvents.stream()
+                .filter(contentEventResource -> contentEventResource.getDate() != null)
+                .forEach(contentEventResource -> {
+                    DateViewModel publicContentDate = new DateViewModel();
+                    publicContentDate.setDateTime(contentEventResource.getDate());
+                    publicContentDate.setContent(contentEventResource.getContent());
+                    publicContentDate.setMustBeStrong(Boolean.FALSE);
 
-            publicContentDates.add(publicContentDate);
-        });
+                    publicContentDates.add(publicContentDate);
+                });
 
         return publicContentDates;
     }

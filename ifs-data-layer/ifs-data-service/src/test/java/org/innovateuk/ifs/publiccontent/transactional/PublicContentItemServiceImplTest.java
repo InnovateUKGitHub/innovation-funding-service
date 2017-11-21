@@ -247,8 +247,10 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         Competition competition = newCompetition().withNonIfs(true).withId(competitionId).withSetupComplete(true).withMilestones(
                 newMilestone()
-                        .withDate(ZonedDateTime.of(2017,1,2,3,4,0,0,ZoneId.systemDefault()), ZonedDateTime.of(2017,3,2,1,4,0,0,ZoneId.systemDefault()))
-                        .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
+                        .withDate(ZonedDateTime.of(2017,1,2,3,4,0,0,ZoneId.systemDefault()),
+                                ZonedDateTime.of(2017,2,1,3,4,0,0,ZoneId.systemDefault()),
+                                ZonedDateTime.of(2017,3,2,1,4,0,0,ZoneId.systemDefault()))
+                        .withType(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.SUBMISSION_DATE)
                         .build(2)
         ).build();
         PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).build();
@@ -264,6 +266,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         assertEquals(competition.getEndDate(), resultObject.getCompetitionCloseDate());
         assertEquals(competition.getStartDate(), resultObject.getCompetitionOpenDate());
+        assertEquals(competition.getRegistrationDate(), resultObject.getRegistrationCloseDate());
         assertEquals(competition.getName(), resultObject.getCompetitionTitle());
         assertEquals(publicContentResource, resultObject.getPublicContentResource());
         assertEquals(true, resultObject.getSetupComplete());
