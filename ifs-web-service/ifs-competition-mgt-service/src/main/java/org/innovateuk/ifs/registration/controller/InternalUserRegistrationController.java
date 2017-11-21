@@ -2,6 +2,7 @@ package org.innovateuk.ifs.registration.controller;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
@@ -30,6 +31,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/registration")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = InternalUserRegistrationController.class)
 @PreAuthorize("permitAll")
 public class InternalUserRegistrationController {
     private static final Log LOG = LogFactory.getLog(InternalUserRegistrationController.class);

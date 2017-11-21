@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupCon
  */
 @Controller
 @RequestMapping("/competition/setup/public-content")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = PublicContentMenuController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class PublicContentMenuController {
 

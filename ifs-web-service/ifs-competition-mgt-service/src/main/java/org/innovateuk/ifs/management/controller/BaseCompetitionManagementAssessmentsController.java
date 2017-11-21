@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.resource.AssessmentCountSummaryPageResource;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 
 // TODO not sure we really need the base class -- could combine into one controller
+
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = BaseCompetitionManagementAssessmentsController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public abstract class BaseCompetitionManagementAssessmentsController<T extends AssessmentCountSummaryPageResource> {
 

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.management.model.AssessmentPanelModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementAssessmentPanelController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionManagementAssessmentPanelController {
 

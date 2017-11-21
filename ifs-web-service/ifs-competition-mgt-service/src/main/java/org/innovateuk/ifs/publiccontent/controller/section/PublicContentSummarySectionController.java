@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.publiccontent.controller.section;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.controller.AbstractContentGroupController;
 import org.innovateuk.ifs.publiccontent.form.section.SummaryForm;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/competition/setup/public-content/summary")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = PublicContentSummarySectionController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class PublicContentSummarySectionController extends AbstractContentGroupController<SummaryViewModel, SummaryForm> {
 

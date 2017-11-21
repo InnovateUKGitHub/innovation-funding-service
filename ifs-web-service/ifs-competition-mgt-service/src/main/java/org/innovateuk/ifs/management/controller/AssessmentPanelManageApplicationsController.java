@@ -3,8 +3,10 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competitionsetup.controller.InnovationAreaAjaxController;
 import org.innovateuk.ifs.management.model.ManagePanelApplicationsModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}/manage-applications")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentPanelManageApplicationsController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class AssessmentPanelManageApplicationsController {
     private static final int PAGE_SIZE  = 20;

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
@@ -32,6 +33,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/panel/competition/{competitionId}/assessors/invite")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentPanelSendInviteController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class AssessmentPanelSendInviteController extends CompetitionManagementCookieController<PanelOverviewSelectionForm> {
 

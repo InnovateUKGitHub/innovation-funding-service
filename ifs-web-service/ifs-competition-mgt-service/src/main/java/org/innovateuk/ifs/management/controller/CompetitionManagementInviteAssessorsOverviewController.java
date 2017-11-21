@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.OverviewAssessorsFilterForm;
@@ -36,6 +37,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementInviteAssessorsOverviewController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class CompetitionManagementInviteAssessorsOverviewController extends CompetitionManagementCookieController<OverviewSelectionForm> {
 
@@ -44,13 +46,7 @@ public class CompetitionManagementInviteAssessorsOverviewController extends Comp
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
-
-    @Autowired
-    private CompetitionInviteAssessorsFindModelPopulator inviteAssessorsFindModelPopulator;
-
-    @Autowired
-    private CompetitionInviteAssessorsInviteModelPopulator inviteAssessorsInviteModelPopulator;
-
+    
     @Autowired
     private CompetitionInviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 

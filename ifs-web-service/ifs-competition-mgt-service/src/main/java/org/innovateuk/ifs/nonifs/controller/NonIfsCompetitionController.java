@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.nonifs.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -26,6 +27,7 @@ import java.util.function.Supplier;
  * Controller for all Non-IFS competition actions.
  */
 @Controller
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = NonIfsCompetitionController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class NonIfsCompetitionController {
     private static final String FORM_ATTR = "form";
