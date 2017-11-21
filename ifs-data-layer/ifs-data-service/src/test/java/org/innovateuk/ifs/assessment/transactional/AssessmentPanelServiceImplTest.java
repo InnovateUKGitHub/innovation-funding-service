@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 
 public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<AssessmentPanelServiceImpl> {
 
-    long applicationId = 1L;
+    private static final long applicationId = 1L;
     private Application application;
 
     @Override
