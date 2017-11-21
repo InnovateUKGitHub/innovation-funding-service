@@ -151,6 +151,7 @@ build.finalizedBy endpointDocumentation
     task prepareFractalDockerInput {
 
         def inputDir = project.file("$project.buildDir/fractal")
+        inputDir.delete();
 
         doFirst {
             copy {
