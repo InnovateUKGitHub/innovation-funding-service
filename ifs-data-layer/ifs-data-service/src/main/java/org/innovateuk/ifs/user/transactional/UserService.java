@@ -45,9 +45,6 @@ public interface UserService {
     ServiceResult<UserPageResource> findActiveByProcessRoles(Set<UserRoleType> roleTypes, Pageable pageable);
 
     @PostFilter("hasPermission(filterObject, 'READ_USER_ORGANISATION')")
-    ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes);
-
-    @PostFilter("hasPermission(filterObject, 'READ_USER_ORGANISATION')")
     ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<UserRoleType> roleTypes, String searchString, SearchCategory searchCategory);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")

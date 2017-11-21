@@ -2,6 +2,7 @@ package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
+import org.innovateuk.ifs.user.resource.UserStatus;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -34,5 +35,13 @@ public class UserOrganisationResourceBuilder extends BaseBuilder<UserOrganisatio
 
     public UserOrganisationResourceBuilder withEmail(String... emails) {
         return withArray((email, userOrganisation) -> setField("email", email, userOrganisation), emails);
+    }
+
+    public UserOrganisationResourceBuilder withStatus(UserStatus... statuses) {
+        return withArray((status, userOrganisation) -> setField("status", status, userOrganisation), statuses);
+    }
+
+    public UserOrganisationResourceBuilder withOrganisationName(String... organisationNames) {
+        return withArray((organisationName, userOrganisation) -> setField("organisationName", organisationName, userOrganisation), organisationNames);
     }
 }

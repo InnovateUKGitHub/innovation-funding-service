@@ -188,16 +188,6 @@ public class UserManagementController {
                 userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAuthority('support')")
-    @GetMapping(value = "/users/created")
-    public String allExternalUsers(Model model) {
-        return userRestService.findAllExternal().andOnSuccessReturn(users -> {
-            model.addAttribute("users", users);
-           return "admin/external-users";
-        }).getSuccessObjectOrThrowException();
-    }
-
     @SecuredBySpring(value = "FIND_EXTERNAL_USERS", description = "Only the support user or IFS Admin can access external user information")
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     @GetMapping(value = "/external/users")
@@ -216,16 +206,6 @@ public class UserManagementController {
         model.addAttribute("users", users);
         return "admin/search-external-users";
     }
-
-/*    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAuthority('support')")
-    @GetMapping(value = "/invites")
-    public String allExternalInvites(Model model) {
-        return inviteUserRestService.getAllExternalInvites().andOnSuccessReturn(invites -> {
-            model.addAttribute("invites", invites);
-            return "admin/invited-users";
-        }).getSuccessObjectOrThrowException();
-    }*/
 
     @SecuredBySpring(value = "FIND_EXTERNAL_INVITES", description = "Only the support user or IFS Admin can access external user invites")
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")

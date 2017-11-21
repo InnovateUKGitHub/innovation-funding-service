@@ -25,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -228,11 +227,6 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesNameIn(UserStatus.INACTIVE, roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable);
         List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(userResources), pagedResult.getNumber(), pagedResult.getSize()));
-    }
-
-    @Override
-    public ServiceResult<List<UserOrganisationResource>> findAllByProcessRoles(Set<UserRoleType> roleTypes) {
-        return serviceSuccess(simpleMap(userOrganisationRepository.findByUserRolesNameInOrderByIdUserEmailAsc(simpleMapSet(roleTypes, UserRoleType::getName)), userOrganisationMapper::mapToResource));
     }
 
     @Override
