@@ -58,7 +58,6 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
                                                                                Optional<String> filter,
                                                                                Optional<FundingDecision> fundingFilter) {
 		return getSubmittedApplicationsWithPanelStatus(competitionId, sortField, pageNumber, pageSize, filter, fundingFilter, Optional.empty());
-
 	}
 
 	@Override
