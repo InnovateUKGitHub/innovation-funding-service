@@ -7,6 +7,7 @@ import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.invite.transactional.InviteUserService;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -84,8 +85,15 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
         }
 
         @Override
-        public ServiceResult<List<ExternalInviteResource>> getExternalInvites() {
+        public ServiceResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory) {
             return null;
         }
+
+        //TODO - Will be deleted/fixed once junits for IFS-1986 are complete.
+        /*
+        @Override
+        public ServiceResult<List<ExternalInviteResource>> getExternalInvites() {
+            return null;
+        }*/
     }
 }

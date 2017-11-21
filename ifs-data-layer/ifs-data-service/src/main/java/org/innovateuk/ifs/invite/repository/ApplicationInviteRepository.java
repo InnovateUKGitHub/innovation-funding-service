@@ -10,6 +10,9 @@ import java.util.Set;
 
 public interface ApplicationInviteRepository extends PagingAndSortingRepository<ApplicationInvite, Long> {
     List<ApplicationInvite> findByStatusIn(Set<InviteStatus> status);
+    List<ApplicationInvite> findByNameLikeAndStatusIn(String name, Set<InviteStatus> status);
+    List<ApplicationInvite> findByEmailLikeAndStatusIn(String email, Set<InviteStatus> status);
+    List<ApplicationInvite> findByInviteOrganisationOrganisationNameLikeAndStatusIn(String organisationName, Set<InviteStatus> status);
     List<ApplicationInvite> findByApplicationId(@Param("applicationId") Long applicationId);
     ApplicationInvite getByHash(@Param("hash") String hash);
 }
