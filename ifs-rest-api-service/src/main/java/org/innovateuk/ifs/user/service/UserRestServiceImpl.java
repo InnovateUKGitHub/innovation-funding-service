@@ -94,11 +94,6 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<List<UserOrganisationResource>> findAllExternal() {
-        return getWithRestResult(userRestURL + "/findAllExternal", userOrganisationListType());
-    }
-
-    @Override
     public RestResult<List<UserOrganisationResource>> findExternalUsers(String searchString, SearchCategory searchCategory) {
         return getWithRestResult(userRestURL + "/findExternalUsers?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), userOrganisationListType());
     }
