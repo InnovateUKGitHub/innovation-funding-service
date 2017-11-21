@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -24,7 +25,7 @@ public class AssessmentPanelControllerTest extends BaseControllerMockMVCTest<Ass
         mockMvc.perform(post("/assessmentpanel/assignApplication/{applicationId}", applicationId))
                 .andExpect(status().isOk());
 
-        verify(assessmentPanelServiceMock.assignApplicationToPanel(applicationId));
+        verify(assessmentPanelServiceMock, only()).assignApplicationToPanel(applicationId);
     }
 
     @Test
@@ -33,6 +34,6 @@ public class AssessmentPanelControllerTest extends BaseControllerMockMVCTest<Ass
         mockMvc.perform(post("/assessmentpanel/unassignApplication/{applicationId}", applicationId))
                 .andExpect(status().isOk());
 
-        verify(assessmentPanelServiceMock.unassignApplicationFromPanel(applicationId));
+        verify(assessmentPanelServiceMock, only()).unassignApplicationFromPanel(applicationId);
     }
 }

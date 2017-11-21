@@ -49,12 +49,24 @@ public class AssessmentPanelManageApplicationsControllerTest extends BaseControl
                 .withInnovationArea("Digital manufacturing")
                 .build(2);
 
+        List<ApplicationSummaryResource> inPanelSummaryResources = newApplicationSummaryResource()
+                .withId(3L, 4L)
+                .withName("three", "four")
+                .withLead("Lead 3", "Lead 4")
+                .withInnovationArea("Digital manufacturing")
+                .build(2);
+
         ApplicationSummaryPageResource expectedPageResource = new ApplicationSummaryPageResource(41, 3, summaryResources, 1, 20);
+        ApplicationSummaryPageResource expectedInPanelPageResource = new ApplicationSummaryPageResource(12, 1, inPanelSummaryResources, 1, 2);
+
 
         when(competitionRestService.getCompetitionById(competitionResource.getId()))
                 .thenReturn(restSuccess(competitionResource));
-        when(applicationSummaryRestService.getSubmittedApplications(competitionResource.getId(), "",1,20, Optional.of("filter"), Optional.empty()))
+        when(applicationSummaryRestService.getSubmittedApplicationsWithPanelStatus(competitionResource.getId(), "",1,20, Optional.of("filter"), Optional.empty(), Optional.of(false)))
                 .thenReturn(restSuccess(expectedPageResource));
+        when(applicationSummaryRestService.getSubmittedApplicationsWithPanelStatus(competitionResource.getId(), null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty(), Optional.of(true)))
+                .thenReturn(restSuccess(expectedInPanelPageResource));
+
 
         ManagePanelApplicationsViewModel model = (ManagePanelApplicationsViewModel) mockMvc
                 .perform(get("/assessment/panel/competition/{competitionId}/manage-applications?page=1&filterSearch=filter", competitionResource.getId()))
@@ -70,6 +82,7 @@ public class AssessmentPanelManageApplicationsControllerTest extends BaseControl
         assertEquals("Lead 1", model.getApplications().get(0).getLeadOrganisation());
         assertEquals("Lead 2", model.getApplications().get(1).getLeadOrganisation());
 
+        
         PaginationViewModel actualPagination = model.getPagination();
         assertEquals(1, actualPagination.getCurrentPage());
         assertEquals(20,actualPagination.getPageSize());

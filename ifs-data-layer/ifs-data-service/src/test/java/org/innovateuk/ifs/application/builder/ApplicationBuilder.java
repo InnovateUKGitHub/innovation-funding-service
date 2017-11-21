@@ -84,6 +84,10 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((fundingEmailDate, application) -> application.setManageFundingEmailDate(fundingEmailDate), manageFundingEmailDates);
     }
 
+    public ApplicationBuilder withAssessmentPanelStatus(Boolean... inAssessmentPanel) {
+        return withArray((assessmentPanelStatus, application) -> application.setInAssessmentPanel(assessmentPanelStatus), inAssessmentPanel);
+    }
+
     @Override
     public void postProcess(int index, Application built) {
 

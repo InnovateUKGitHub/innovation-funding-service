@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.transactional;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.domain.Application;
