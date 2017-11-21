@@ -15,7 +15,7 @@ import java.util.List;
  * Handler for retrieving project finance data.
  */
 public interface ProjectFinanceHandler {
-    @PreAuthorize("hasPermission(#projectId, 'READ_OVERVIEW')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
     BigDecimal getResearchParticipationPercentageFromProject(@P("projectId")final Long projectId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ_PROJECT_FINANCE')")

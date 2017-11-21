@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.domain.Role;
@@ -103,7 +104,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void testProjectFinanceUserCanSaveCreditReport() {
 
-        Long projectId = 1L;
+        ProjectCompositeId projectId = ProjectCompositeId.id(1L);
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(projectFinanceUser())) {
@@ -117,7 +118,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     @Test
     public void testProjectFinanceUserCanViewCreditReport() {
 
-        Long projectId = 1L;
+        ProjectCompositeId projectId = ProjectCompositeId.id(1L);
 
         allGlobalRoleUsers.forEach(user -> {
             if (user.equals(projectFinanceUser())) {
@@ -130,7 +131,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
     @Test
     public void testInternalUserCanViewFinanceChecks() {
-        Long projectId = 1L;
+        ProjectCompositeId projectId = ProjectCompositeId.id(1L);
         allInternalUsers.forEach(user -> assertTrue(rules.internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(projectId, user)));
     }
 
@@ -141,7 +142,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
 
         setupUserAsPartner(project, user);
 
-        assertTrue(rules.partnersCanSeeTheProjectFinanceOverviewsForTheirProject(project.getId(), user));
+        assertTrue(rules.partnersCanSeeTheProjectFinanceOverviewsForTheirProject(ProjectCompositeId.id(project.getId()), user));
     }
 
     @Test
@@ -154,7 +155,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         financeContact.add(newRoleResource().withType(UserRoleType.PARTNER).build());
         user.setRoles(financeContact);
 
-        assertTrue(rules.partnersCanSeeTheProjectFinanceOverviewsForTheirProject(project.getId(), user));
+        assertTrue(rules.partnersCanSeeTheProjectFinanceOverviewsForTheirProject(ProjectCompositeId.id(project.getId()), user));
     }
 
 

@@ -56,8 +56,8 @@ public interface ProjectFinanceRowService {
     @PostAuthorize("hasPermission(returnObject, 'READ_PROJECT_FINANCE')")
     ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId);
 
-    @PreAuthorize("hasPermission(#projectId, 'READ_OVERVIEW')")
-    ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId);
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
+    ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(@P("projectId")Long projectId);
 
     @NotSecured(value = "This is not getting data from the database, just getting a FinanceRowHandler for project", mustBeSecuredByOtherServices = false)
     FinanceRowHandler getCostHandler(FinanceRowItem costItemId);

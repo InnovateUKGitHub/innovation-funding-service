@@ -169,7 +169,7 @@ public abstract class AbstractServiceSecurityAnnotationsTest extends BaseIntegra
      *
      * This test should prevent primitive being secured.
      */
-    // TODO renable when fixed @Test
+    @Test
     public void testThatResourcesSecuredAreReallyResources(){
         PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = getRulesMap(evaluator());
         List<PermissionRulesClassResult> results = simpleMap(rulesMap.entrySet(), e -> fromClassAndPermissionMethods(e.getKey(), e.getValue()));

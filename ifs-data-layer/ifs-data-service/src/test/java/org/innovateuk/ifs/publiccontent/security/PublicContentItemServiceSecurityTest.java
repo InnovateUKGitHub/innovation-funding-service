@@ -4,6 +4,8 @@ import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
+import org.innovateuk.ifs.competition.security.CompetitionLookupStrategy;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentItemService;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
@@ -21,11 +23,12 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class PublicContentItemServiceSecurityTest extends BaseServiceSecurityTest<PublicContentItemService> {
     private PublicContentItemPermissionRules rules;
+    private CompetitionLookupStrategy competitionLookupStrategies;
 
     @Before
     public void setUp() throws Exception {
         rules = getMockPermissionRulesBean(PublicContentItemPermissionRules.class);
-
+        competitionLookupStrategies = getMockPermissionEntityLookupStrategiesBean(CompetitionLookupStrategy .class);
         initMocks(this);
     }
 
@@ -41,6 +44,7 @@ public class PublicContentItemServiceSecurityTest extends BaseServiceSecurityTes
 
     @Test
     public void testGetByCompetitionId() {
+        when(competitionLookupStrategies.getCompetitionCompositeId(1L)).thenReturn(CompetitionCompositeId.id(1L));
         assertAccessDenied(() -> classUnderTest.byCompetitionId(1L), this::verifyPermissionRules);
     }
 

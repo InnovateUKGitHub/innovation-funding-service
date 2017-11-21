@@ -2,6 +2,8 @@ package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
@@ -17,11 +19,14 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class MilestoneServiceSecurityTest extends BaseServiceSecurityTest<MilestoneService> {
 
     private MilestonePermissionRules rules;
+    private CompetitionLookupStrategy competitionLookupStrategies;
 
     @Before
     public void lookupPermissionRules() {
         rules = getMockPermissionRulesBean(MilestonePermissionRules.class);
+        competitionLookupStrategies = getMockPermissionEntityLookupStrategiesBean(CompetitionLookupStrategy.class);
         initMocks(this);
+
     }
 
     @Override
@@ -32,10 +37,10 @@ public class MilestoneServiceSecurityTest extends BaseServiceSecurityTest<Milest
     @Test
     public void getCompetitionById() {
         setLoggedInUser(null);
-
+        when(competitionLookupStrategies.getCompetitionCompositeId(1L)).thenReturn(CompetitionCompositeId.id(1L));
         assertAccessDenied(() -> classUnderTest.getAllMilestonesByCompetitionId(1L), () -> {
-            verify(rules).allInternalUsersCanViewCompetitionMilestonesOtherThanInnovationLeads(anyLong(), isNull(UserResource.class));
-            verify(rules).innovationLeadsCanViewMilestonesOnAssignedComps(anyLong(), isNull(UserResource.class));
+            verify(rules).allInternalUsersCanViewCompetitionMilestonesOtherThanInnovationLeads(any(CompetitionCompositeId.class), isNull(UserResource.class));
+            verify(rules).innovationLeadsCanViewMilestonesOnAssignedComps(any(CompetitionCompositeId.class), isNull(UserResource.class));
             verifyNoMoreInteractions(rules);
         });
     }

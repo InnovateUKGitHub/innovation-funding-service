@@ -2,6 +2,7 @@ package org.innovateuk.ifs.publiccontent.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentGroupCompositeId;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -32,12 +33,13 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
 
     private static final EnumSet<UserRoleType> COMP_ADMIN_ROLES = EnumSet.of(COMP_ADMIN, PROJECT_FINANCE);
     private ContentGroupPermissionRules rules;
+    private ContentGroupLookupStrategy contentGroupLookupStrategies;
 
     @Before
     public void lookupPermissionRules() {
 
         rules = getMockPermissionRulesBean(ContentGroupPermissionRules.class);
-
+        contentGroupLookupStrategies = getMockPermissionEntityLookupStrategiesBean(ContentGroupLookupStrategy.class);
         initMocks(this);
     }
 
@@ -64,11 +66,13 @@ public class ContentGroupServiceSecurityTest extends BaseServiceSecurityTest<Con
 
     @Test
     public void testGetFileDetails() {
+        when(contentGroupLookupStrategies.getContentGroupCompositeId(1L)).thenReturn(ContentGroupCompositeId.id(1L));
         assertAccessDenied(() -> classUnderTest.getFileDetails(1L), this::verifyPermissionRules);
     }
 
     @Test
     public void testGetFileContents() {
+        when(contentGroupLookupStrategies.getContentGroupCompositeId(1L)).thenReturn(ContentGroupCompositeId.id(1L));
         assertAccessDenied(() -> classUnderTest.getFileContents(1L), this::verifyPermissionRules);
     }
 

@@ -33,10 +33,10 @@ public interface ContentGroupService {
             description = "The Competition Admin, or project finance user can remove a content group file.")
     ServiceResult<Void> saveContentGroups(PublicContentResource resource, PublicContent publicContent, PublicContentSectionType section);
 
-    @PreAuthorize("hasPermission(#contentGroupId, 'DOWNLOAD_CONTENT_GROUP_FILE')")
+    @PreAuthorize("hasPermission(#contentGroupId, 'org.innovateuk.ifs.competition.publiccontent.resource.ContentGroupCompositeId', 'DOWNLOAD_CONTENT_GROUP_FILE')")
     ServiceResult<FileEntryResource> getFileDetails(@P("contentGroupId") long contentGroupId);
 
 
-    @PreAuthorize("hasPermission(#contentGroupId, 'DOWNLOAD_CONTENT_GROUP_FILE')")
-    ServiceResult<FileAndContents> getFileContents(long contentGroupId);
+    @PreAuthorize("hasPermission(#contentGroupId, 'org.innovateuk.ifs.competition.publiccontent.resource.ContentGroupCompositeId','DOWNLOAD_CONTENT_GROUP_FILE')")
+    ServiceResult<FileAndContents> getFileContents(@P("contentGroupId")long contentGroupId);
 }

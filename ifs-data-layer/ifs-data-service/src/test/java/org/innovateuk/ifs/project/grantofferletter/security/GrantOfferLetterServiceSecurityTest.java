@@ -7,6 +7,7 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -189,9 +190,9 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void testSubmitGrantOfferLetter() {
-        final Long projectId = 1L;
-
-        assertAccessDenied(() -> classUnderTest.submitGrantOfferLetter(projectId), () -> {
+        final ProjectCompositeId projectId = ProjectCompositeId.id(1L);
+        when(projectLookupStrategy.getProjectCompositeId(projectId.id())).thenReturn(projectId);
+        assertAccessDenied(() -> classUnderTest.submitGrantOfferLetter(projectId.id()), () -> {
             verify(projectGrantOfferPermissionRules).projectManagerSubmitGrantOfferLetter(projectId, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });

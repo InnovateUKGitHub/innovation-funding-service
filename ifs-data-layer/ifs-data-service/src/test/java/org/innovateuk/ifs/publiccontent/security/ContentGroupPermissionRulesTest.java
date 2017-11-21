@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.publiccontent.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentGroupCompositeId;
 import org.innovateuk.ifs.publiccontent.repository.ContentGroupRepository;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -27,23 +28,23 @@ public class ContentGroupPermissionRulesTest extends BasePermissionRulesTest<Con
     public void testInternalUsersCanViewAllContentGroupFiles(){
         allGlobalRoleUsers.forEach(user -> {
             if (allInternalUsers.contains(user)) {
-                assertTrue(rules.internalUsersCanViewAllContentGroupFiles(1L, user));
+                assertTrue(rules.internalUsersCanViewAllContentGroupFiles(ContentGroupCompositeId.id(1L), user));
             } else {
-                assertFalse(rules.internalUsersCanViewAllContentGroupFiles(1L, user));
+                assertFalse(rules.internalUsersCanViewAllContentGroupFiles(ContentGroupCompositeId.id(1L), user));
             }
         });
     }
 
     @Test
     public void testExternalUsersCanViewPublishedContentGroupFiles(){
-        Long unpublishedContentGroupId = 1L;
-        when(contentGroupRepository.findOne(unpublishedContentGroupId)).thenReturn(
+        ContentGroupCompositeId unpublishedContentGroupId = ContentGroupCompositeId.id(1L);
+        when(contentGroupRepository.findOne(unpublishedContentGroupId.id())).thenReturn(
                 newContentGroup().withContentSection(newContentSection()
                         .withPublicContent(newPublicContent().build()).build()).build());
 
 
-        Long publishedContentGroupId = 2L;
-        when(contentGroupRepository.findOne(publishedContentGroupId)).thenReturn(
+        ContentGroupCompositeId publishedContentGroupId = ContentGroupCompositeId.id(2L);;
+        when(contentGroupRepository.findOne(publishedContentGroupId.id())).thenReturn(
                 newContentGroup().withContentSection(newContentSection()
                         .withPublicContent(newPublicContent().withPublishDate(ZonedDateTime.now()).build()).build()).build());
 

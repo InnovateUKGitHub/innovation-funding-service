@@ -69,7 +69,8 @@ public class SecuredBySpringBeanResultsFormatter {
 
     private static Optional<List<String>> classLevelLine(Pair<Class<?>, Optional<SecuredBySpring>> classLevel, Method method){
         return classLevel.getValue().map(securedBySpring -> {
-            String entity = "";
+            Class<?> securedType = securedBySpring.securedType();
+            String entity = securedType.equals(Void.class) ? "" : securedType.getSimpleName();
             String action = securedBySpring.value();
             String ruleDescription = securedBySpring.description();
             String ruleState = securedBySpring.particularBusinessState();
