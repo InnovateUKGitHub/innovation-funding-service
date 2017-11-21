@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.viability.controller;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.OrganisationSizeResource;
@@ -40,6 +41,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Controller
 @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = FinanceChecksViabilityController.class)
 @RequestMapping("/project/{projectId}/finance-check/organisation/{organisationId}/viability")
 public class FinanceChecksViabilityController {
 

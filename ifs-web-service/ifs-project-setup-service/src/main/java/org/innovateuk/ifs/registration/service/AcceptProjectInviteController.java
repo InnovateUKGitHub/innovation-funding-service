@@ -2,6 +2,7 @@ package org.innovateuk.ifs.registration.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.invite.service.ProjectInviteRestService;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.JoinAProjectViewModel;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.util.RestLookupCallbacks.find;
  * This class is use as an entry point to accept a invite to a project, to a application.
  */
 @Controller
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AcceptProjectInviteController.class)
 @PreAuthorize("permitAll")
 public class AcceptProjectInviteController {
 
@@ -35,8 +37,6 @@ public class AcceptProjectInviteController {
 
     @Autowired
     private ProjectInviteRestService projectInviteRestService;
-    @Autowired
-    private OrganisationRestService organisationRestService;
     @Autowired
     private CookieUtil cookieUtil;
 

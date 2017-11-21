@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.upcoming.controller;
 
-import org.innovateuk.ifs.assessment.summary.controller.AssessmentSummaryController;
 import org.innovateuk.ifs.assessment.upcoming.populator.UpcomingCompetitionModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.springframework.beans.factory.annotation.Autowired;

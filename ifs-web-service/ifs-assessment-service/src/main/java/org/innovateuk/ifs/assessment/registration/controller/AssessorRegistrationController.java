@@ -1,8 +1,9 @@
 package org.innovateuk.ifs.assessment.registration.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
-import org.innovateuk.ifs.assessment.profile.controller.AssessorProfileTravelController;
 import org.innovateuk.ifs.assessment.registration.form.AssessorRegistrationForm;
 import org.innovateuk.ifs.assessment.registration.populator.AssessorRegistrationBecomeAnAssessorModelPopulator;
 import org.innovateuk.ifs.assessment.registration.populator.AssessorRegistrationModelPopulator;
@@ -13,10 +14,6 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.AddressForm;
-import org.innovateuk.ifs.invite.service.EthnicityRestService;
-import org.innovateuk.ifs.user.resource.EthnicityResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

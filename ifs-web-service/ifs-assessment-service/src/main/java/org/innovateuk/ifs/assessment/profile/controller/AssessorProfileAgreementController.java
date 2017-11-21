@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.profile.controller;
 
-import org.innovateuk.ifs.assessment.overview.controller.AssessmentOverviewController;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileAgreementModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.profile.service.ProfileRestService;

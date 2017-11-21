@@ -2,6 +2,7 @@ package org.innovateuk.ifs.admin.controller;
 
 import org.innovateuk.ifs.admin.form.InviteUserForm;
 import org.innovateuk.ifs.admin.form.validation.Primary;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
@@ -30,6 +31,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/admin")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = InviteUserController.class)
 @PreAuthorize("hasAuthority('ifs_administrator')")
 public class InviteUserController {
 

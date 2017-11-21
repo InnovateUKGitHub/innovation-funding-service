@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
@@ -18,7 +17,6 @@ import java.util.List;
  */
 
 @RestController
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = InviteUserController.class)
 @RequestMapping("/inviteUser")
 public class InviteUserController {
 
