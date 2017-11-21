@@ -32,6 +32,7 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,10 +44,10 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.*;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -68,6 +69,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
@@ -381,7 +383,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         Long countLive = 1L;
         Long countProjectSetup = 2L;
         Long countUpcoming = 3L;
-        Long countFeedbackReleased = 4l;
+        Long countFeedbackReleased = 4L;
         when(competitionRepositoryMock.countLive()).thenReturn(countLive);
         when(competitionRepositoryMock.countProjectSetup()).thenReturn(countProjectSetup);
         when(competitionRepositoryMock.countUpcoming()).thenReturn(countUpcoming);
@@ -389,6 +391,21 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         CompetitionCountResource response = service.countCompetitions().getSuccessObjectOrThrowException();
 
+        assertEquals(countLive, response.getLiveCount());
+        assertEquals(countProjectSetup, response.getProjectSetupCount());
+        assertEquals(countUpcoming, response.getUpcomingCount());
+        assertEquals(countFeedbackReleased, response.getFeedbackReleasedCount());
+
+        // Test for innovation lead user where only competitions they are assigned to should be counted
+        // actual query tested in repository integration test, this is only testing correct repostiory method is called.
+        UserResource innovationLeadUser = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build(1)).build();
+        setLoggedInUser(innovationLeadUser);
+
+        when(competitionRepositoryMock.countLiveForInnovationLead(innovationLeadUser.getId())).thenReturn(countLive);
+        when(competitionRepositoryMock.countProjectSetupForInnovationLead(innovationLeadUser.getId())).thenReturn(countProjectSetup);
+        when(userRepositoryMock.findOne(innovationLeadUser.getId())).thenReturn(newUser().withId(innovationLeadUser.getId()).withRoles(asLinkedSet(newRole().withType(INNOVATION_LEAD).build())).build());
+
+        response = service.countCompetitions().getSuccessObjectOrThrowException();
         assertEquals(countLive, response.getLiveCount());
         assertEquals(countProjectSetup, response.getProjectSetupCount());
         assertEquals(countUpcoming, response.getUpcomingCount());
@@ -425,7 +442,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
                 competition.getName(),
-                Collections.EMPTY_SET,
+                EMPTY_SET,
                 0,
                 openDate.format(DateTimeFormatter.ofPattern("dd/MM/YYYY")),
                 CompetitionStatus.COMPETITION_SETUP,
@@ -473,7 +490,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
                 competition.getName(),
-                Collections.EMPTY_SET,
+                EMPTY_SET,
                 0,
                 "",
                 CompetitionStatus.COMPETITION_SETUP,
@@ -521,7 +538,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
                 competition.getName(),
-                Collections.EMPTY_SET,
+                EMPTY_SET,
                 0,
                 "",
                 CompetitionStatus.COMPETITION_SETUP,
@@ -772,6 +789,22 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertTopLevelFlagForSupportUser(competitions, response);
     }
 
+    private void assertTopLevelFlagForNonSupportUser(List<Competition> competitions, List<CompetitionSearchResultItem> searchResults) {
+
+        forEachWithIndex(searchResults, (i, searchResult) -> {
+            Competition c = competitions.get(i);
+            assertEquals("/competition/"+ c.getId(), searchResult.getTopLevelNavigationLink());
+        });
+    }
+
+    private void assertTopLevelFlagForSupportUser(List<Competition> competitions, List<CompetitionSearchResultItem> searchResults) {
+
+        forEachWithIndex(searchResults, (i, searchResult) -> {
+            Competition c = competitions.get(i);
+            assertEquals("/competition/" + c.getId() + "/applications/all", searchResult.getTopLevelNavigationLink());
+        });
+    }
+
     @Test
     public void getCompetitionOpenQueries() throws Exception {
         List<CompetitionOpenQueryResource> openQueries = singletonList(new CompetitionOpenQueryResource(1L, 1L, "org", 1L, "proj"));
@@ -792,19 +825,28 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(countOpenQueries, response);
     }
 
-    private void assertTopLevelFlagForNonSupportUser(List<Competition> competitions, List<CompetitionSearchResultItem> searchResults) {
+    @Test
+    public void getPendingSpendProfiles() throws Exception {
 
-        forEachWithIndex(searchResults, (i, searchResult) -> {
-            Competition c = competitions.get(i);
-            assertEquals("/competition/"+ c.getId(), searchResult.getTopLevelNavigationLink());
-        });
+        List<SpendProfileStatusResource> pendingSpendProfiles = singletonList(new SpendProfileStatusResource(11L, 1L, "Project 1"));
+
+        when(competitionRepositoryMock.getPendingSpendProfiles(competitionId)).thenReturn(pendingSpendProfiles);
+
+        ServiceResult<List<SpendProfileStatusResource>> result = service.getPendingSpendProfiles(competitionId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(pendingSpendProfiles, result.getSuccessObject());
     }
 
-    private void assertTopLevelFlagForSupportUser(List<Competition> competitions, List<CompetitionSearchResultItem> searchResults) {
+    @Test
+    public void countPendingSpendProfiles() throws Exception {
 
-        forEachWithIndex(searchResults, (i, searchResult) -> {
-            Competition c = competitions.get(i);
-            assertEquals("/competition/" + c.getId() + "/applications/all", searchResult.getTopLevelNavigationLink());
-        });
+        final Long pendingSpendProfileCount = 3L;
+        when(competitionRepositoryMock.countPendingSpendProfiles(competitionId)).thenReturn(pendingSpendProfileCount);
+
+        ServiceResult<Long> result = service.countPendingSpendProfiles(competitionId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(pendingSpendProfileCount, result.getSuccessObject());
     }
 }

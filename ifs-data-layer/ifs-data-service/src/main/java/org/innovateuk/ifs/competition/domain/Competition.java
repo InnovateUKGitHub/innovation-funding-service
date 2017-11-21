@@ -115,7 +115,7 @@ public class Competition implements ProcessActivity {
         setupComplete = false;
     }
 
-    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate) {
         this.id = id;
         this.applications = applications;
         this.questions = questions;
@@ -123,6 +123,7 @@ public class Competition implements ProcessActivity {
         this.name = name;
         this.setStartDate(startDate);
         this.setEndDate(endDate);
+        this.setRegistrationDate(registrationDate);
         this.setupComplete = true;
     }
 
@@ -231,6 +232,14 @@ public class Competition implements ProcessActivity {
 
     public void setEndDate(ZonedDateTime endDate) {
         setMilestoneDate(SUBMISSION_DATE, endDate);
+    }
+
+    public ZonedDateTime getRegistrationDate() {
+        return getMilestoneDate(REGISTRATION_DATE).orElse(null);
+    }
+
+    public void setRegistrationDate(ZonedDateTime endDate) {
+        setMilestoneDate(REGISTRATION_DATE, endDate);
     }
 
     public ZonedDateTime getStartDate() {

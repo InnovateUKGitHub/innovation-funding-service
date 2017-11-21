@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class InviteOrganisationTeamManagementService extends AbstractTeamManagementService {
+
     public ApplicationTeamManagementViewModel createViewModel(long applicationId, long inviteOrganisationId, UserResource loggedInUser) {
         return applicationTeamManagementModelPopulator.populateModelByInviteOrganisationId(
                 applicationId, inviteOrganisationId, loggedInUser.getId());

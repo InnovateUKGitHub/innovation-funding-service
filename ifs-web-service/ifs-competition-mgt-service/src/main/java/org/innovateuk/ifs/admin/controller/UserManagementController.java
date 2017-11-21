@@ -1,14 +1,19 @@
 package org.innovateuk.ifs.admin.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.admin.form.EditUserForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
+import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
+import org.innovateuk.ifs.user.resource.SearchCategory;
+import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserRestService;
@@ -26,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
 
@@ -54,6 +61,7 @@ public class UserManagementController {
     @Autowired
     private InternalUserService internalUserService;
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/users/active")
     public String viewActive(Model model,
@@ -63,6 +71,7 @@ public class UserManagementController {
         return view(model, "active", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/users/inactive")
     public String viewInactive(Model model,
@@ -72,6 +81,7 @@ public class UserManagementController {
         return view(model, "inactive", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/users/pending")
     public String viewPending(Model model,
@@ -178,21 +188,41 @@ public class UserManagementController {
                 userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
     }
 
-    @PreAuthorize("hasAuthority('support')")
-    @GetMapping(value = "/users/created")
-    public String allExternalUsers(Model model) {
-        return userRestService.findAllExternal().andOnSuccessReturn(users -> {
-            model.addAttribute("users", users);
-           return "admin/external-users";
-        }).getSuccessObjectOrThrowException();
+    @SecuredBySpring(value = "FIND_EXTERNAL_USERS", description = "Only the support user or IFS Admin can access external user information")
+    @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
+    @GetMapping(value = "/external/users")
+    public String findExternalUsers(@RequestParam(value = "searchString", required = false) String searchString,
+                                    @RequestParam(value = "searchCategory", required = false) final SearchCategory searchCategory,
+                                    Model model) {
+
+        List<UserOrganisationResource> users;
+        if (StringUtils.isNotEmpty(searchString) && searchCategory != null) {
+            searchString = "%" + StringUtils.trim(searchString) + "%";
+            users = userRestService.findExternalUsers(searchString, searchCategory).getSuccessObjectOrThrowException();
+        } else {
+            users = Collections.emptyList();
+        }
+
+        model.addAttribute("users", users);
+        return "admin/search-external-users";
     }
 
-    @PreAuthorize("hasAuthority('support')")
-    @GetMapping(value = "/invites")
-    public String allExternalInvites(Model model) {
-        return inviteUserRestService.getAllExternalInvites().andOnSuccessReturn(invites -> {
-            model.addAttribute("invites", invites);
-            return "admin/invited-users";
-        }).getSuccessObjectOrThrowException();
+    @SecuredBySpring(value = "FIND_EXTERNAL_INVITES", description = "Only the support user or IFS Admin can access external user invites")
+    @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
+    @GetMapping(value = "/external/invites")
+    public String findExternalInvites(@RequestParam(value = "searchString", required = false) String searchString,
+                                      @RequestParam(value = "searchCategory", required = false) final SearchCategory searchCategory,
+                                      Model model) {
+
+        List<ExternalInviteResource> invites;
+        if (StringUtils.isNotEmpty(searchString) && searchCategory != null) {
+            searchString = "%" + StringUtils.trim(searchString) + "%";
+            invites = inviteUserRestService.findExternalInvites(searchString, searchCategory).getSuccessObjectOrThrowException();
+        } else {
+            invites = Collections.emptyList();
+        }
+
+        model.addAttribute("invites", invites);
+        return "admin/search-invited-users";
     }
 }
