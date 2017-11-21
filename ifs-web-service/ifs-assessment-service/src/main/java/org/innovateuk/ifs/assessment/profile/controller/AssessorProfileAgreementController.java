@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.assessment.profile.controller;
 
+import org.innovateuk.ifs.assessment.overview.controller.AssessmentOverviewController;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileAgreementModelPopulator;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.ProfileAgreementResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Controller
 @RequestMapping("/profile/agreement")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileAgreementController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessorProfileAgreementController {
 

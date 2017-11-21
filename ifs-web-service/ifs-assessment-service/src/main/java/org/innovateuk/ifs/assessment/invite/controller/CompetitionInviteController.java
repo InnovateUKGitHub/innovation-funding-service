@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.assessment.invite.controller;
 
+import org.innovateuk.ifs.assessment.feedback.controller.AssessmentFeedbackController;
 import org.innovateuk.ifs.assessment.invite.form.CompetitionInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.CompetitionInviteModelPopulator;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.CompetitionRejectionResource;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
@@ -31,6 +33,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  * Controller to manage Invites to a Competition.
  */
 @Controller
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionInviteController.class)
 @PreAuthorize("permitAll")
 public class CompetitionInviteController {
 
@@ -96,6 +99,7 @@ public class CompetitionInviteController {
      * The /invite/ endpoints will not be authenticated and will not trigger a sign in screen.
      */
     @GetMapping("/invite-accept/competition/{inviteHash}/accept")
+    @SecuredBySpring(value= "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('assessor')")
     public String confirmAcceptInvite(@PathVariable("inviteHash") String inviteHash) {
         inviteRestService.acceptInvite(inviteHash).getSuccessObjectOrThrowException();

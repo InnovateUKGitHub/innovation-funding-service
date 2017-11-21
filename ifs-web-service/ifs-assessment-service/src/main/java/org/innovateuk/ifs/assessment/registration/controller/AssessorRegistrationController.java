@@ -2,12 +2,14 @@ package org.innovateuk.ifs.assessment.registration.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
+import org.innovateuk.ifs.assessment.profile.controller.AssessorProfileTravelController;
 import org.innovateuk.ifs.assessment.registration.form.AssessorRegistrationForm;
 import org.innovateuk.ifs.assessment.registration.populator.AssessorRegistrationBecomeAnAssessorModelPopulator;
 import org.innovateuk.ifs.assessment.registration.populator.AssessorRegistrationModelPopulator;
 import org.innovateuk.ifs.assessment.registration.service.AssessorService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.AddressForm;
@@ -39,6 +41,7 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping("/registration")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorRegistrationController.class)
 @PreAuthorize("permitAll")
 public class AssessorRegistrationController {
     private static final Log LOG = LogFactory.getLog(AssessorRegistrationController.class);

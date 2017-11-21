@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.dashboard.controller;
 import org.innovateuk.ifs.assessment.dashboard.form.AssessorCompetitionDashboardAssessmentForm;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorCompetitionDashboardModelPopulator;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -23,6 +24,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
  */
 @Controller
 @RequestMapping(value = "/assessor")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorCompetitionDashboardController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessorCompetitionDashboardController {
 

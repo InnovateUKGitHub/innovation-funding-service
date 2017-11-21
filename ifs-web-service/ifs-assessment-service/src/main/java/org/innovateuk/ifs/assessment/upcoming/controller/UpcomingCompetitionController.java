@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.assessment.upcoming.controller;
 
+import org.innovateuk.ifs.assessment.summary.controller.AssessmentSummaryController;
 import org.innovateuk.ifs.assessment.upcoming.populator.UpcomingCompetitionModelPopulator;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/competition")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = UpcomingCompetitionController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class UpcomingCompetitionController {
 

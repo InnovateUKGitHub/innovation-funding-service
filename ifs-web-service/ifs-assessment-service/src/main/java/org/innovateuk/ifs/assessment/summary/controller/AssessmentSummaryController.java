@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.assessment.summary.controller;
 
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
+import org.innovateuk.ifs.assessment.registration.controller.AssessorRegistrationController;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.summary.form.AssessmentSummaryForm;
 import org.innovateuk.ifs.assessment.summary.populator.AssessmentSummaryModelPopulator;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 @Controller
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentSummaryController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessmentSummaryController {
 

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.assessment.dashboard.controller.AssessorDashboardController;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackApplicationDetailsModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackModelPopulator;
 import org.innovateuk.ifs.assessment.feedback.populator.AssessmentFeedbackNavigationModelPopulator;
@@ -16,6 +17,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -49,6 +51,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Controller
 @RequestMapping("/{assessmentId}")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentFeedbackController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessmentFeedbackController {
 

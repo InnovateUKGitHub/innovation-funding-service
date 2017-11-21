@@ -6,6 +6,7 @@ import org.innovateuk.ifs.assessment.profile.form.AssessorProfileDeclarationForm
 import org.innovateuk.ifs.assessment.profile.form.AssessorProfileFamilyAffiliationForm;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDeclarationFormPopulator;
 import org.innovateuk.ifs.assessment.profile.populator.AssessorProfileDeclarationModelPopulator;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
@@ -36,6 +37,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
  */
 @Controller
 @RequestMapping("/profile/declaration")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorProfileDeclarationController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessorProfileDeclarationController {
 
