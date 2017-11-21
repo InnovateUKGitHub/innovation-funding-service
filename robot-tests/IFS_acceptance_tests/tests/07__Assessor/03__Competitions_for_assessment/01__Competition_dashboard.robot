@@ -70,15 +70,8 @@ User can view the competition brief
     [Teardown]    the user closes the competition brief
 
 Applications should have correct status and order
-    [Documentation]    INFUND-6040
-    ...
-    ...    INFUND-3724
-    ...
-    ...    INFUND-3725
-    ...
-    ...    INFUND-6358
-    Then the order of the applications should be correct according to the status
-    And The user should not see the text in the page    Overall score
+    [Documentation]  INFUND-6040 INFUND-3724 INFUND-3725 INFUND-6358
+    The order of the applications should be correct according to the status
 
 Accept an application for assessment
     [Documentation]    INFUND-1180
