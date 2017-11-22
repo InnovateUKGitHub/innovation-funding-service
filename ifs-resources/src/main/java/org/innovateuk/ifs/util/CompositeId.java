@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.io.Serializable;
 
 /**
- * TODO
+ * Base class to enable the spring security to apply type information when applying security rules to entity ids.
  */
 public abstract class CompositeId implements Serializable {
     private final Long id;
