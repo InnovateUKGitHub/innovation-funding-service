@@ -23,6 +23,8 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...
 ...               IFS-25 Assessment panels - Applications list
 ...
+...               IFS-2039 Assessment panels - Assign and remove applications to panel
+...
 ...               IFS-2049 Assessment panels - Filter on applications list
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
@@ -190,6 +192,15 @@ Assign application link activate if competition is in panel state
     When the user clicks the button/link                      link=Manage assessment panel
     And the user clicks the button/link                       jQuery=a:contains("Assign applications to panel")
     Then the user should see the element                      jQuery=h1:contains("Assign applications to panel")
+
+Manage Assessment Panel Assign and remove button functionality
+    [Documentation]   IFS-2039
+    [Tags]
+    Given the user should see the element                     jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    When the user clicks the button/link                      jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    Then the user should see the element                      jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Remove")
+    When the user clicks the button/link                      jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Remove")
+    Then the user should see the element                      jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
 
 Filter by application number
     [Documentation]  IFS-2049
