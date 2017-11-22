@@ -2,6 +2,10 @@ jar {
     baseName = 'ifs-web-core'
 }
 
+bootRepackage {
+    enabled = false
+}
+
 configurations {
     providedRuntime
 }
