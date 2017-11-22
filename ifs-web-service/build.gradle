@@ -113,6 +113,7 @@ task endpointDocumentation(type: Task) {
     dependsOn "ifs-competition-mgt-service:test"
     dependsOn "ifs-project-setup-mgt-service:test"
     dependsOn "ifs-project-setup-service:test"
+    dependsOn "ifs-front-door-service:test"
 
     def combinedFilename = 'build/web-endpoints.csv'
 
@@ -150,6 +151,7 @@ build.finalizedBy endpointDocumentation
     task prepareFractalDockerInput {
 
         def inputDir = project.file("$project.buildDir/fractal")
+        inputDir.delete();
 
         doFirst {
             copy {

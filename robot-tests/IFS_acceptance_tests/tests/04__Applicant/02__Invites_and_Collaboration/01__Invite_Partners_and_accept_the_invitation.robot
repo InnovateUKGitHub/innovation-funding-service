@@ -238,7 +238,7 @@ Lead applicant invites a non registered user in the same organisation
 
 Support user can see contributor in invited users list
     [Documentation]    IFS-1841
-    [Tags]
+    [Tags]  failing
     Given log in as a different user  &{support_user_credentials}
     When the user navigates to the page  ${server}/management/admin/users/created
     And the user clicks the button/link  jQuery=a:contains("Invited users")

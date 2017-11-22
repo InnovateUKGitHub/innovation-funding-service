@@ -65,25 +65,25 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
 
     @Test
     public void projectManagerPageAccess() {
-        assertLeadPartnerSuccessfulAccess((projectSetupSectionAccessibilityHelper, organisation) -> projectSetupSectionAccessibilityHelper.leadCanAccessProjectManagerPage(organisation),
+        assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage,
                 () -> rules.leadCanAccessProjectManagerPage(123L, user));
     }
 
     @Test
     public void projectStartDatePageAccess() {
-        assertLeadPartnerSuccessfulAccess((projectSetupSectionAccessibilityHelper, organisation) -> projectSetupSectionAccessibilityHelper.leadCanAccessProjectStartDatePage(organisation),
+        assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::leadCanAccessProjectStartDatePage,
                 () -> rules.leadCanAccessProjectStartDatePage(123L, user));
     }
 
     @Test
     public void projectAddressPageAccess() {
-        assertLeadPartnerSuccessfulAccess((projectSetupSectionAccessibilityHelper, organisation) -> projectSetupSectionAccessibilityHelper.leadCanAccessProjectAddressPage(organisation),
+        assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage,
                 () -> rules.leadCanAccessProjectAddressPage(123L, user));
     }
 
     @Test
     public void financeContactPageAccess() {
-        assertNonLeadPartnerSuccessfulAccess((setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessFinanceContactPage(organisation), () -> rules.partnerCanAccessFinanceContactPage(123L, user));
+        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessFinanceContactPage, () -> rules.partnerCanAccessFinanceContactPage(123L, user));
     }
 
     @Test

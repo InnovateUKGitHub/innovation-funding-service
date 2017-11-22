@@ -49,7 +49,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 		return serviceSuccess();
 	}
 
-	public boolean isAllowedFundingDecision(FundingDecision fundingDecision) {
+	private boolean isAllowedFundingDecision(FundingDecision fundingDecision) {
 		if(fundingDecision.equals(FundingDecision.UNDECIDED)) {
 			return false;
 		}

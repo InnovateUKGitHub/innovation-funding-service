@@ -11,6 +11,12 @@ public interface InviteProjectRepository extends PagingAndSortingRepository<Proj
 
     List<ProjectInvite> findByStatusIn(Set<InviteStatus> status);
 
+    List<ProjectInvite> findByNameLikeAndStatusIn(String name, Set<InviteStatus> status);
+
+    List<ProjectInvite> findByEmailLikeAndStatusIn(String email, Set<InviteStatus> status);
+
+    List<ProjectInvite> findByOrganisationNameLikeAndStatusIn(String organisationName, Set<InviteStatus> status);
+
     List<ProjectInvite> findByProjectId(Long projectId);
 
     List<ProjectInvite> findByProjectIdAndEmail(Long projectId, String email);

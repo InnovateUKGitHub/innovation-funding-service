@@ -81,19 +81,19 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     @Spy
     @InjectMocks
-    private InviteAssessorsFindModelPopulator inviteAssessorsFindModelPopulator;
+    private CompetitionInviteAssessorsFindModelPopulator inviteAssessorsFindModelPopulator;
 
     @Spy
     @InjectMocks
-    private InviteAssessorsInviteModelPopulator inviteAssessorsInviteModelPopulator;
+    private CompetitionInviteAssessorsInviteModelPopulator inviteAssessorsInviteModelPopulator;
 
     @Spy
     @InjectMocks
-    private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
+    private CompetitionInviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
     @Spy
     @InjectMocks
-    private InviteAssessorsAcceptedModelPopulator inviteAssessorsAcceptedModelPopulator;
+    private CompetitionInviteAssessorsAcceptedModelPopulator inviteAssessorsAcceptedModelPopulator;
 
     @Spy
     @InjectMocks
@@ -793,6 +793,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {
         return newAvailableAssessorResource()
+                .withId(1L, 2L)
                 .withName("Dave Smith", "John Barnes")
                 .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
@@ -805,6 +806,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     private List<AssessorCreatedInviteResource> setUpAssessorCreatedInviteResources() {
         return newAssessorCreatedInviteResource()
+                .withId(1L, 2L)
                 .withName("Dave Smith", "John Barnes")
                 .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
@@ -816,6 +818,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     private List<AssessorInviteOverviewResource> setUpAssessorInviteOverviewResources() {
         return newAssessorInviteOverviewResource()
+                .withId(1L, 2L)
+                .withInviteId(3L, 4L)
                 .withName("Dave Smith", "John Barnes")
                 .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
@@ -849,13 +853,13 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     }
 
     private void assertAvailableAssessors(List<AvailableAssessorResource> expectedAvailableAssessors, MvcResult result) {
-        assertTrue(result.getModelAndView().getModel().get("model") instanceof InviteAssessorsFindViewModel);
-        InviteAssessorsFindViewModel model = (InviteAssessorsFindViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof CompetitionInviteAssessorsFindViewModel);
+        CompetitionInviteAssessorsFindViewModel model = (CompetitionInviteAssessorsFindViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedAvailableAssessors.size(), model.getAssessors().size());
 
         forEachWithIndex(expectedAvailableAssessors, (i, availableAssessorResource) -> {
-            AvailableAssessorRowViewModel availableAssessorRowViewModel = model.getAssessors().get(i);
+            CompetitionAvailableAssessorRowViewModel availableAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(availableAssessorResource.getName(), availableAssessorRowViewModel.getName());
             assertEquals(formatInnovationAreas(availableAssessorResource.getInnovationAreas()), availableAssessorRowViewModel.getInnovationAreas());
             assertEquals(availableAssessorResource.isCompliant(), availableAssessorRowViewModel.isCompliant());
@@ -871,8 +875,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     }
 
     private void assertInvitedAssessors(List<AssessorCreatedInviteResource> expectedCreatedInvites, MvcResult result) {
-        assertTrue(result.getModelAndView().getModel().get("model") instanceof InviteAssessorsInviteViewModel);
-        InviteAssessorsInviteViewModel model = (InviteAssessorsInviteViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof CompetitionInviteAssessorsInviteViewModel);
+        CompetitionInviteAssessorsInviteViewModel model = (CompetitionInviteAssessorsInviteViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedCreatedInvites.size(), model.getAssessors().size());
 
@@ -886,14 +890,14 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     }
 
     private void assertFindFilterOptionsAreCorrect(List<InnovationSectorResource> expectedInnovationSectorOptions, MvcResult result) {
-        InviteAssessorsFindViewModel viewModel = (InviteAssessorsFindViewModel) result.getModelAndView().getModel().get("model");
+        CompetitionInviteAssessorsFindViewModel viewModel = (CompetitionInviteAssessorsFindViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedInnovationSectorOptions, viewModel.getInnovationSectorOptions());
     }
 
     private void assertInviteOverviews(List<AssessorInviteOverviewResource> expectedInviteOverviews, MvcResult result) {
-        assertTrue(result.getModelAndView().getModel().get("model") instanceof InviteAssessorsOverviewViewModel);
-        InviteAssessorsOverviewViewModel model = (InviteAssessorsOverviewViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof CompetitionInviteAssessorsOverviewViewModel);
+        CompetitionInviteAssessorsOverviewViewModel model = (CompetitionInviteAssessorsOverviewViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedInviteOverviews.size(), model.getAssessors().size());
 
@@ -960,5 +964,4 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
             return Optional.empty();
         }
     }
-
 }

@@ -10,38 +10,23 @@ import java.time.ZonedDateTime;
 /**
  * ViewModel of a CompetitionInvite.
  */
-public class CompetitionInviteViewModel {
+public class CompetitionInviteViewModel extends BaseInviteViewModel {
 
-    private String competitionInviteHash;
-    private Long competitionId;
-    private String competitionName;
     private ZonedDateTime acceptsDate;
     private ZonedDateTime deadlineDate;
     private ZonedDateTime briefingDate;
     private BigDecimal assessorPay;
-    private boolean userLoggedIn;
 
     public CompetitionInviteViewModel(String competitionInviteHash, CompetitionInviteResource invite, boolean userLoggedIn) {
-        this.competitionInviteHash = competitionInviteHash;
-        this.competitionId = invite.getCompetitionId();
-        this.competitionName = invite.getCompetitionName();
+        super(competitionInviteHash, invite.getCompetitionId(), invite.getCompetitionName(), userLoggedIn);
         this.acceptsDate = invite.getAcceptsDate();
         this.deadlineDate = invite.getDeadlineDate();
         this.briefingDate = invite.getBriefingDate();
         this.assessorPay = invite.getAssessorPay();
-        this.userLoggedIn = userLoggedIn;
     }
 
     public String getCompetitionInviteHash() {
-        return competitionInviteHash;
-    }
-
-    public Long getCompetitionId() {
-        return competitionId;
-    }
-
-    public String getCompetitionName() {
-        return competitionName;
+        return getInviteHash();
     }
 
     public ZonedDateTime getAcceptsDate() {
@@ -60,10 +45,6 @@ public class CompetitionInviteViewModel {
         return assessorPay;
     }
 
-    public boolean isUserLoggedIn() {
-        return userLoggedIn;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -73,10 +54,7 @@ public class CompetitionInviteViewModel {
         CompetitionInviteViewModel that = (CompetitionInviteViewModel) o;
 
         return new EqualsBuilder()
-                .append(userLoggedIn, that.userLoggedIn)
-                .append(competitionInviteHash, that.competitionInviteHash)
-                .append(competitionId, that.competitionId)
-                .append(competitionName, that.competitionName)
+                .appendSuper(super.equals(o))
                 .append(acceptsDate, that.acceptsDate)
                 .append(deadlineDate, that.deadlineDate)
                 .append(briefingDate, that.briefingDate)
@@ -87,14 +65,11 @@ public class CompetitionInviteViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(competitionInviteHash)
-                .append(competitionId)
-                .append(competitionName)
+                .appendSuper(super.hashCode())
                 .append(acceptsDate)
                 .append(deadlineDate)
                 .append(briefingDate)
                 .append(assessorPay)
-                .append(userLoggedIn)
                 .toHashCode();
     }
 }
