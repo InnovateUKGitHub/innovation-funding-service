@@ -191,7 +191,7 @@ public class ProjectSpendProfileController {
     @PostMapping("/complete")
     public String markAsCompleteSpendProfile(Model model,
                                              @P("projectId")@PathVariable("projectId") final Long projectId,
-                                             @PathVariable("organisationId") final Long organisationId,
+                                             @P("organisationId")@PathVariable("organisationId") final Long organisationId,
                                              UserResource loggedInUser) {
         return markSpendProfileComplete(model, projectId, organisationId, "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile", loggedInUser);
     }
