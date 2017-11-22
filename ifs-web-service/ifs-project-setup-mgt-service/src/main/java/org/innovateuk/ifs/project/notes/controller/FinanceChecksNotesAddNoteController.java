@@ -95,7 +95,7 @@ public class FinanceChecksNotesAddNoteController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_NOTES_SECTION')")
     @PostMapping
-    public String saveNote(@P("prpjectId")@PathVariable final Long projectId,
+    public String saveNote(@P("projectId")@PathVariable final Long projectId,
                            @PathVariable final Long organisationId,
                            @Valid @ModelAttribute(FORM_ATTR) FinanceChecksNotesAddNoteForm form,
                            @SuppressWarnings("unused") BindingResult bindingResult,
