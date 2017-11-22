@@ -18,7 +18,7 @@ public interface MilestoneService {
             description = "All users can get see the public milestones for the given competition")
     ServiceResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(final Long id);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "VALIDATE_PUBLIC_DATES", securedType = MilestoneResource.class, description = "Only comp admin or project finance can validate the public dates.")
     ServiceResult<Boolean> allPublicDatesComplete(final Long id);
 
@@ -28,17 +28,17 @@ public interface MilestoneService {
     @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'VIEW_MILESTONE_BY_TYPE')")
     ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(final MilestoneType type, @P("id")final Long id);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value="UPDATE", securedType=MilestoneResource.class,
             description = "Only Comp Admins and project finance users are able to save all the milestones for the given competitions")
     ServiceResult<Void> updateMilestones(List<MilestoneResource> milestones);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value="UPDATE", securedType=MilestoneResource.class,
             description = "Only Comp Admins and project finance users are able to save single milestone for the given competitions")
     ServiceResult<Void> updateMilestone(MilestoneResource milestone);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value="UPDATE", securedType=MilestoneResource.class,
             description = "Only Comp Admins and project finance users are able to create the milestone for the given competitions")
     ServiceResult<MilestoneResource> create(MilestoneType type, Long id);

@@ -11,6 +11,7 @@ import java.util.List;
 public class CompetitionOverviewViewModel {
     private String competitionTitle;
     private ZonedDateTime competitionOpenDate;
+    private ZonedDateTime registrationCloseDate;
     private ZonedDateTime competitionCloseDate;
     private Long competitionId;
     private String shortDescription;
@@ -37,7 +38,11 @@ public class CompetitionOverviewViewModel {
     }
 
     public ZonedDateTime getRegistrationCloseDate() {
-        return competitionCloseDate.minusDays(7);
+        return registrationCloseDate;
+    }
+
+    public void setRegistrationCloseDate(ZonedDateTime registrationCloseDate) {
+        this.registrationCloseDate = registrationCloseDate;
     }
 
     public ZonedDateTime getCompetitionCloseDate() {

@@ -11,7 +11,6 @@ import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
@@ -44,6 +43,12 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
     @Before
     public void setUp() {
+        when(competitionRepository.findById(1L))
+                .thenReturn(newCompetition()
+                    .withId(1L)
+                    .withNonIfs(false)
+                    .build());
+
         when(milestoneMapper.mapToDomain(any(MilestoneResource.class))).thenAnswer(new Answer<Milestone>() {
             @Override
             public Milestone answer(InvocationOnMock invocation) throws Throwable {
@@ -65,16 +70,18 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
                 .withDate(ZonedDateTime.of(2050, 3, 11, 0, 0, 0, 0, ZoneId.systemDefault()), ZonedDateTime.of(2050, 3, 10, 0, 0, 0, 0, ZoneId.systemDefault()))
                 .build(2);
 
+        List<Milestone> milestonesToSave = newMilestone()
+                .withCompetition(newCompetition().withId(1L).build(), newCompetition().withId(1L).build())
+                .withType(FUNDERS_PANEL, ASSESSMENT_PANEL)
+                .withDate(ZonedDateTime.of(2050, 3, 11, 0, 0, 0, 0, ZoneId.systemDefault()), ZonedDateTime.of(2050, 3, 10, 0, 0, 0, 0, ZoneId.systemDefault()))
+                .build(2);
+
+        when(milestoneMapper.mapToDomain(milestones)).thenReturn(milestonesToSave);
+
         ServiceResult<Void> result = service.updateMilestones(milestones);
 
         assertTrue(result.isSuccess());
-        ArgumentCaptor<Milestone> milestoneCaptor = ArgumentCaptor.forClass(Milestone.class);
-        verify(milestoneRepository, times(2)).save(milestoneCaptor.capture());
-        List<Milestone> capturedMilestones = milestoneCaptor.getAllValues();
-        assertEquals(ASSESSMENT_PANEL, capturedMilestones.get(0).getType());
-        assertEquals(ZonedDateTime.of(2050, 3, 10, 0, 0, 0, 0, ZoneId.systemDefault()), capturedMilestones.get(0).getDate());
-        assertEquals(FUNDERS_PANEL, capturedMilestones.get(1).getType());
-        assertEquals(ZonedDateTime.of(2050, 3, 11, 0, 0, 0, 0, ZoneId.systemDefault()), capturedMilestones.get(1).getDate());
+        verify(milestoneRepository, times(1)).save(milestonesToSave);
     }
 
     @Test
@@ -187,8 +194,27 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 
     @Test
     public void allPublicDatesCompleteSuccess() {
-        List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE).withDate(ZonedDateTime.now()).build(3);
-        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE)))
+        List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.NOTIFICATIONS).withDate(ZonedDateTime.now()).build(4);
+        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.NOTIFICATIONS)))
+                .thenReturn(milestones);
+
+        ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);
+
+        assertTrue(result.isSuccess());
+        assertTrue(result.getSuccessObject());
+    }
+
+
+    @Test
+    public void allPublicDatesCompleteSuccessForNonIfs() {
+        when(competitionRepository.findById(1L))
+                .thenReturn(newCompetition()
+                        .withId(1L)
+                        .withNonIfs(true)
+                        .build());
+
+        List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE).withDate(ZonedDateTime.now()).build(4);
+        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.SUBMISSION_DATE)))
                 .thenReturn(milestones);
 
         ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);
@@ -200,7 +226,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
     @Test
     public void allPublicDatesCompleteFailure() {
         List<Milestone> milestones = newMilestone().withType(MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE).build(2);
-        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE)))
+        when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.NOTIFICATIONS)))
                 .thenReturn(milestones);
 
         ServiceResult<Boolean> result = service.allPublicDatesComplete(1L);

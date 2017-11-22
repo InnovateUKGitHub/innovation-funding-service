@@ -2,7 +2,11 @@ package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -76,5 +80,35 @@ public class CompetitionPostSubmissionControllerTest extends BaseControllerMockM
                 .andExpect(content().json(toJson(applicationPage)));
 
         verify(competitionServiceMock, only()).findUnsuccessfulApplications(competitionId, pageIndex, pageSize, sortField);
+    }
+
+    @Test
+    public void getPendingSpendProfiles() throws Exception {
+        final Long competitionId = 1L;
+
+        List<SpendProfileStatusResource> pendingSpendProfiles = new ArrayList<>();
+        when(competitionServiceMock.getPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfiles));
+
+        mockMvc.perform(get("/competition/postSubmission/{competitionId}/pending-spend-profiles", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(pendingSpendProfiles)));
+
+        verify(competitionServiceMock, only()).getPendingSpendProfiles(competitionId);
+
+    }
+
+    @Test
+    public void countPendingSpendProfiles() throws Exception {
+        final Long competitionId = 1L;
+        final Long pendingSpendProfileCount = 3L;
+
+        when(competitionServiceMock.countPendingSpendProfiles(competitionId)).thenReturn(serviceSuccess(pendingSpendProfileCount));
+
+        mockMvc.perform(get("/competition/postSubmission/{competitionId}/count-pending-spend-profiles", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(pendingSpendProfileCount)));
+
+        verify(competitionServiceMock, only()).countPendingSpendProfiles(competitionId);
+
     }
 }
