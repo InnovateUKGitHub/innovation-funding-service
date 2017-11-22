@@ -32,7 +32,7 @@ Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
-${assessment_panel}  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
+${assessment_panel}          ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
 ${assessor_ben}              Benjamin Nixon
 ${assessor_joel}             Joel George
 ${assessor_madeleine}        Madeleine Martin
@@ -41,7 +41,7 @@ ${panel_assessor_ben}        benjamin.nixon@gmail.com
 ${panel_assessor_joel}       joel.george@gmail.com
 ${panel_assessor_madeleine}  madeleine.martin@gmail.com
 ${panel_assessor_riley}      riley.butler@gmail.com
-${Neural_network}   ${application_ids["Neural networks to optimise freight train routing"]}
+${Neural_network}            ${application_ids["Neural networks to optimise freight train routing"]}
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
@@ -179,28 +179,26 @@ Assessor tries to accept expired invitation
 Assign application link decativated if competition is in close state
     [Documentation]   IFS-25
     [Tags]
-    [Setup]  Log in as a different user                      &{Comp_admin1_credentials}
-    Given the user clicks the button/link                    link=${CLOSED_COMPETITION_NAME}
-    When the user clicks the button/link                     link=Manage assessment panel
-    Then the user should see the element                     jQuery=.disabled:contains("Assign applications to panel")
+    [Setup]  Log in as a different user     &{Comp_admin1_credentials}
+    Given the user clicks the button/link   link=${CLOSED_COMPETITION_NAME}
+    When the user clicks the button/link    link=Manage assessment panel
+    Then the user should see the element    jQuery=.disabled:contains("Assign applications to panel")
 
 Assign application link activate if competition is in panel state
     [Documentation]   IFS-25
     [Tags]
     [Setup]  the user move the closed competition to in panel
-    Given the user should see the element                     jQuery=h1:contains("Panel")
-    When the user clicks the button/link                      link=Manage assessment panel
-    And the user clicks the button/link                       jQuery=a:contains("Assign applications to panel")
-    Then the user should see the element                      jQuery=h1:contains("Assign applications to panel")
+    Given the user should see the element  jQuery=h1:contains("Panel")
+    When the user clicks the button/link   link=Manage assessment panel
+    And the user clicks the button/link    jQuery=a:contains("Assign applications to panel")
+    Then the user should see the element   jQuery=h1:contains("Assign applications to panel")
 
 Manage Assessment Panel Assign and remove button functionality
     [Documentation]   IFS-2039
     [Tags]
-    Given the user should see the element                     jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
-    When the user clicks the button/link                      jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
-    Then the user should see the element                      jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Remove")
-    When the user clicks the button/link                      jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Remove")
-    Then the user should see the element                      jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    When the user clicks the button/link    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    And the user clicks the button/link     jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Remove")
+    Then the user should see the element    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
 
 Filter by application number
     [Documentation]  IFS-2049
