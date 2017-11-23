@@ -2,11 +2,13 @@ package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
+import org.innovateuk.ifs.user.builder.OrganisationBuilder;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
@@ -37,6 +39,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
@@ -513,23 +516,159 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertEquals(userResource1, resultObject.getContent().get(1));
     }
 
-     //TODO - Will be deleted/fixed once junits for IFS-1986 are complete.
-/*    @Test
-    public void testFindAllByProcessRoles(){
-        List<UserOrganisation> userOrganisations = newUserOrganisation().withUser(newUser().withEmailAddress("a@test.com").build(), newUser().withEmailAddress("b@test.com").build()).build(2);
-        when(userOrganisationRepositoryMock.findByUserRolesNameInOrderByIdUserEmailAsc(anySet())).thenReturn(userOrganisations);
-        when(userOrganisationMapperMock.mapToResource(userOrganisations.get(0))).thenReturn(newUserOrganisationResource().withEmail(userOrganisations.get(0).getUser().getEmail()).build());
-        when(userOrganisationMapperMock.mapToResource(userOrganisations.get(1))).thenReturn(newUserOrganisationResource().withEmail(userOrganisations.get(1).getUser().getEmail()).build());
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchStringIsNull(){
 
-        ServiceResult<List<UserOrganisationResource>> result = service.findAllByProcessRoles(externalApplicantRoles());
+        String searchString = null;
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_INVALID_ARGUMENT));
+
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationMapperMock, never()).mapToResource(any(UserOrganisation.class));
+    }
+
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchStringIsEmpty(){
+
+        String searchString = "";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_INVALID_ARGUMENT));
+
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationMapperMock, never()).mapToResource(any(UserOrganisation.class));
+    }
+
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchStringLengthLessThan5(){
+
+        String searchString = "%a%";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_INVALID_ARGUMENT));
+
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationMapperMock, never()).mapToResource(any(UserOrganisation.class));
+    }
+
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchStringIsAllSpaces(){
+
+        String searchString = "          ";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_INVALID_ARGUMENT));
+
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationMapperMock, never()).mapToResource(any(UserOrganisation.class));
+    }
+
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchCategoryIsName(){
+
+        String searchString = "%well%";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        List<UserOrganisation> userOrganisations = setUpMockingFindByProcessRolesAndSearchCriteria();
+
+        when(userOrganisationRepositoryMock.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet())).thenReturn(userOrganisations);
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
 
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccessObject().size());
-        assertEquals("a@test.com", result.getSuccessObject().get(0).getEmail());
-        assertEquals("b@test.com", result.getSuccessObject().get(1).getEmail());
+        assertEquals("Aaron Powell", result.getSuccessObject().get(0).getName());
+        assertEquals("David Wellington", result.getSuccessObject().get(1).getName());
 
-        verify(userOrganisationRepositoryMock).findByUserRolesNameInOrderByIdUserEmailAsc(anySet());
-    }*/
+        verify(userOrganisationRepositoryMock).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+    }
+
+    private List<UserOrganisation> setUpMockingFindByProcessRolesAndSearchCriteria() {
+
+        UserOrganisationResource userOrganisationResource1 = newUserOrganisationResource().withName("Aaron Powell").withEmail("aaron.powell@example.com").withStatus(UserStatus.ACTIVE)
+                .withOrganisationId(1L).withOrganisationName("Guitar Gods Ltd").build();
+        UserOrganisationResource userOrganisationResource2 = newUserOrganisationResource().withName("David Wellington").withEmail("david.wellington@load.example.com").withStatus(UserStatus.ACTIVE)
+                .withOrganisationId(2L).withOrganisationName("Engine Equations Ltd").build();
+
+        List<UserOrganisation> userOrganisations = newUserOrganisation()
+                .withUser(newUser().withEmailAddress("aaron.powell@example.com").build(),
+                        newUser().withEmailAddress("david.wellington@load.example.com").build())
+                .withOrganisation(OrganisationBuilder.newOrganisation().withId(1L).withName("Guitar Gods Ltd").build(),
+                        OrganisationBuilder.newOrganisation().withId(2L).withName("Engine Equations Ltd").build())
+                .build(2);
+
+        when(userOrganisationMapperMock.mapToResource(userOrganisations.get(0))).thenReturn(userOrganisationResource1);
+        when(userOrganisationMapperMock.mapToResource(userOrganisations.get(1))).thenReturn(userOrganisationResource2);
+
+        return userOrganisations;
+    }
+
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchCategoryIsOrganisationName(){
+
+        String searchString = "%Ltd%";
+        SearchCategory searchCategory = SearchCategory.ORGANISATION_NAME;
+
+        List<UserOrganisation> userOrganisations = setUpMockingFindByProcessRolesAndSearchCriteria();
+
+        when(userOrganisationRepositoryMock.findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet())).thenReturn(userOrganisations);
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+
+        assertTrue(result.isSuccess());
+        assertEquals(2, result.getSuccessObject().size());
+        assertEquals("Guitar Gods Ltd", result.getSuccessObject().get(0).getOrganisationName());
+        assertEquals("Engine Equations Ltd", result.getSuccessObject().get(1).getOrganisationName());
+
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+    }
+
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchCategoryIsEmail(){
+
+        String searchString = "%com%";
+        SearchCategory searchCategory = SearchCategory.EMAIL;
+
+        List<UserOrganisation> userOrganisations = setUpMockingFindByProcessRolesAndSearchCriteria();
+
+        when(userOrganisationRepositoryMock.findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet())).thenReturn(userOrganisations);
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+
+        assertTrue(result.isSuccess());
+        assertEquals(2, result.getSuccessObject().size());
+        assertEquals("aaron.powell@example.com", result.getSuccessObject().get(0).getEmail());
+        assertEquals("david.wellington@load.example.com", result.getSuccessObject().get(1).getEmail());
+
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+    }
 
     @Override
     protected UserService supplyServiceUnderTest() {
