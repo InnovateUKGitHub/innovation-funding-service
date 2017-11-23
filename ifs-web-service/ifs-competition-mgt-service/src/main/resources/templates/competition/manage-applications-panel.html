@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Manage assessment panel',linkClass='link-back',linkUrl=@{/assessment/panel/competition/{id}(id=${model.competitionId})})" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assign applications to panel',subTitle=|${model.competitionId}: ${model.competitionName}, ${model.competitionStatus}| ,size='heading-xlarge'" />
 
-    <h2 class="heading-medium">Assigned applications (<span id="application-count">0</span>)</h2>
+    <h2 class="heading-medium">Assigned applications (<span id="application-count" th:text="${#lists.size(model.assignedApplications)}">0</span>)</h2>
 
     <div class="table-overflow" th:id="application-assigned">
         <table id="application-list">
