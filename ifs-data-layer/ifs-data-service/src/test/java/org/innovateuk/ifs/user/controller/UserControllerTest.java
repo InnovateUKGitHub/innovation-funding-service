@@ -7,6 +7,8 @@ import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.SearchCategory;
+import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -340,11 +342,19 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
         verify(registrationServiceMock).activateUser(123L);
     }
 
-    //TODO - Will be deleted/fixed once junits for IFS-1986 are complete.
-/*    @Test
-    public void findAllExternal() throws Exception {
-        when(userServiceMock.findAllByProcessRoles(externalApplicantRoles())).thenReturn(serviceSuccess(newUserOrganisationResource().build(2)));
-        mockMvc.perform(get("/user/findAllExternal")).andExpect(status().isOk());
-        verify(userServiceMock).findAllByProcessRoles(externalApplicantRoles());
-    }*/
+    @Test
+    public void findExternalUsers() throws Exception {
+
+        String searchString = "%aar%";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
+        when(userServiceMock.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
+
+        mockMvc.perform(get("/user/findExternalUsers?searchString=" + searchString + "&searchCategory=" + searchCategory))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(userOrganisationResources)));
+
+        verify(userServiceMock).findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+    }
 }

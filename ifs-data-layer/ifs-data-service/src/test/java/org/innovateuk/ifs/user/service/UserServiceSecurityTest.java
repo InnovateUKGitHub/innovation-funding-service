@@ -141,6 +141,13 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         verifyNoMoreInteractions(userRules);
     }*/
 
+    @Test
+    public void testFindByProcessRolesAndSearchCriteria(){
+        classUnderTest.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), "%aar%", SearchCategory.NAME);
+        verify(userRules, times(1)).internalUsersCanViewUserOrganisation(isA(UserOrganisationResource.class), eq(getLoggedInUser()));
+        verifyNoMoreInteractions(userRules);
+    }
+
     @Override
     protected Class<? extends UserService> getClassUnderTest() {
         return TestUserService.class;
