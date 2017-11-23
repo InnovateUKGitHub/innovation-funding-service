@@ -15,6 +15,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.junit.Assert.*;
@@ -31,6 +32,7 @@ public class CompetitionTest {
     private String name;
     private ZonedDateTime startDate;
     private ZonedDateTime endDate;
+    private ZonedDateTime registrationDate;
     private Integer maxResearchRatio;
     private Integer academicGrantPercentage;
 
@@ -46,7 +48,9 @@ public class CompetitionTest {
 
         name = "testCompetitionName";
         startDate = ZonedDateTime.now().minusDays(5);
+        registrationDate = startDate.plusDays(4);
         endDate = startDate.plusDays(15);
+
 
         maxResearchRatio = 10;
         academicGrantPercentage = 30;
@@ -61,7 +65,7 @@ public class CompetitionTest {
         sections.add(new Section());
         sections.add(new Section());
 
-        competition = new Competition(id, applications, questions, sections, name, startDate, endDate);
+        competition = new Competition(id, applications, questions, sections, name, startDate, endDate, registrationDate);
         competition.setMaxResearchRatio(maxResearchRatio);
         competition.setAcademicGrantPercentage(academicGrantPercentage);
 
@@ -109,6 +113,7 @@ public class CompetitionTest {
         assertEquals(competition.getSections(), sections);
         assertEquals(competition.getMaxResearchRatio(), maxResearchRatio);
         assertEquals(competition.getAcademicGrantPercentage(), academicGrantPercentage);
+        assertEquals(competition.getRegistrationDate(), registrationDate.truncatedTo(SECONDS));
 
         assertEquals(competition.getBudgetCode(), budgetCode);
         assertEquals(competition.getActivityCode(), activityCode);

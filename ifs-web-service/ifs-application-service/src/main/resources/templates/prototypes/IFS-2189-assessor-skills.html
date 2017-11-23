@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-overview">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+
+<main id="content">
+	<th:block th:insert="fragments/layout :: main-content-start" />
+
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Your skills'}, ${(param.edit == null ? '/prototypes/1176-assessor-create-acc' : '/prototypes/1178-assessor-profile-skills')})"  th:unless="${param.version != null and param.version[0] == 'v2'}" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+    <h1 class="heading-xlarge">
+        Edit your skills
+    </h1>
+
+	<form>
+
+        <h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
+        <p class="form-hint">These innovation areas have been chosen as your current areas of expertise. They will influence the types
+            of competition you will be invited to assess. If you would like to amend them or add new ones please
+            contact a member of the Competitions team <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.
+        </p>
+        <ul class="list list-bullet">
+            <li>Urban living</li>
+            <li>Smart infrastructure</li>
+        </ul>
+
+        <label class="form-label" for="skills-areas">
+            <span class="heading-medium">Skill areas</span>
+        </label>
+        <p class="form-hint">
+            Please tell us about your main areas of expertise or any specialist skills you have. This will help us to assign you the most appropriate applications for assessment.<br />
+            For example; Solar Power, Genetics, Recycling
+        </p>
+
+        <div class="textarea-wrapped word-count">
+            <textarea class="form-control width-full" maxlength="5000" data-max_words="100" data-maxwordslength="100" data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100." rows="4" data-maxlength-errormessage="This field cannot contain more than 5,000 characters." id="skillAreas" name="skillAreas"><th:block th:if="${param.edit != null}">Human Computer Interaction, Wearables, IoT</th:block></textarea>
+            <div class="textarea-footer" aria-live="polite" aria-atomic="true" role="status">
+                <span class="count-label">
+                    <span class="count-down positive">Words remaining: 97 </span>
+                </span>
+            </div>
+        </div>
+
+        <div class="upload-section" style="border: none">
+            <h3 class="heading-small no-margin-top">Upload CV</h3>
+            <details role="group">
+                <summary role="button" aria-controls="details-content-1" aria-expanded="false">
+                    <span class="summary">What should I include in a CV?</span>
+                </summary>
+                <div class="panel wysiwyg-styles" id="details-content-1" aria-hidden="true">
+                    <p>You can submit up to 4 pages in PDF format no larger than 1MB. This can describe your relevant skills, experience and work history.</p>
+                </div>
+            </details>
+            <div>
+                <p class="uploaded-file">No file currently uploaded</p>
+                <input type="file" id="formInput-1066" name="formInput[1066]" class="inputfile">
+                <label for="formInput-1066" class="button-secondary extra-margin">+ Upload</label>
+            </div>
+        </div>
+
+        <div class="form-group extra-margin-top">
+			<fieldset>
+				<legend class="heading-medium">Assessor type</legend>
+				<p class="form-hint">
+					Please select your current area of work. If you are working in both please select the most dominant.
+				</p>
+				    <div class="multiple-choice">
+						<input id="radio-inline-1" name="radio-inline-group" value="Yes" type="radio" checked="checked" th:unless="${param.edit == null}" />
+
+						<input id="radio-inline-1" name="radio-inline-group" value="Yes" type="radio"  th:unless="${param.edit != null}" />
+
+                        <label for="radio-inline-1">Business</label>
+					</div>
+					<div class="multiple-choice">
+						<input id="radio-inline-2" name="radio-inline-group" value="No" type="radio" />
+                        <label for="radio-inline-2">Academic</label>
+					</div>
+			</fieldset>
+		</div>
+
+		<div th:if="${param.edit == null}" class="form-group extra-margin">
+
+			<th:block th:if="${param.version != null and param.version[0] == 'v2'}">
+				<input type="hidden" name="version" value="v2" />
+				<input type="hidden" name="accepted" value="yes" />
+				<input type="hidden" name="user" value="assessor" />
+			</th:block>
+
+			<button class="button" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2':'/prototypes/1247-assessor-doi')}">Save and return to assessor dashboard</button>
+			<a href="#" class="button button-clear">Cancel</a>
+		</div>
+
+
+		<div th:if="${param.edit != null}" class="form-group extra-margin">
+			<button class="button" formaction="/prototypes/1178-assessor-profile-skills">Save and return to your skills</button>
+            <a href="#" class="button button-clear">Cancel</a>
+		</div>
+
+	</form>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>

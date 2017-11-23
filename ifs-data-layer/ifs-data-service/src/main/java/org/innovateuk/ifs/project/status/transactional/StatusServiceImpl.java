@@ -43,6 +43,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -232,7 +233,7 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
             if(monitoringOfficer.isPresent())
                 return COMPLETE;
             else {
-                if(isSupport(user)){
+                if(isSupport(user) || isInnovationLead(user)){
                     return NOT_STARTED;
                 } else {
                     return ACTION_REQUIRED;

@@ -13,6 +13,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class ApplicationTest {
     private Application application;
@@ -132,4 +135,34 @@ public class ApplicationTest {
         application.setNoInnovationAreaApplicable(true);
         application.setInnovationArea(newInnovationArea().build());
     }
+
+    @Test
+    public void applicationFundingDecisionIsNotChangeable() {
+        Application application = new Application();
+        application.setFundingDecision(FundingDecisionStatus.FUNDED);
+        application.setManageFundingEmailDate(ZonedDateTime.now());
+        assertFalse(application.applicationFundingDecisionIsChangeable());
+    }
+
+    @Test
+    public void applicationFundingDecisionIsChangeableNotFunded() {
+        Application application = new Application();
+        application.setManageFundingEmailDate(ZonedDateTime.now());
+        application.setFundingDecision(FundingDecisionStatus.ON_HOLD);
+        assertTrue(application.applicationFundingDecisionIsChangeable());
+    }
+
+    @Test
+    public void applicationFundingDecisionIsChangeableNoFundingEmail() {
+        Application application = new Application();
+        application.setManageFundingEmailDate(null);
+        application.setFundingDecision(FundingDecisionStatus.FUNDED);
+        assertTrue(application.applicationFundingDecisionIsChangeable());
+    }
+
+    @Test
+    public void applicationFundingDecisionIsChangeable() {
+        assertTrue(new Application().applicationFundingDecisionIsChangeable());
+    }
+
 }

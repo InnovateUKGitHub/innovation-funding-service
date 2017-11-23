@@ -92,7 +92,7 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
                 withDescription("finance-check").
                 withCosts(newCost().
                         withCostCategory(costCategories.get(0), costCategories.get(1)).
-                        withValue("0", "0").
+                        withValue("0.0", "0.0").
                         build(2)).
                 build();
 

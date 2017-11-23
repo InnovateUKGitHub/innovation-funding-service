@@ -28,9 +28,9 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return isInternal(user) && !isInnovationLead(user);
     }
 
-    @PermissionRule(value = "READ", description = "Innovation leads can only view competitions without feedback released that are assigned to them")
-    public boolean innovationLeadCanViewCompetitionAssignedToThemWithFeedbackNotReleased(CompetitionResource competition, UserResource user) {
-        return !competition.getCompetitionStatus().isFeedbackReleased() && userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
+    @PermissionRule(value = "READ", description = "Innovation leads can view competitions that are assigned to them")
+    public boolean innovationLeadCanViewCompetitionAssignedToThem(CompetitionResource competition, UserResource user) {
+        return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "READ", description = "Internal users other than innovation leads can see all competition search results")
@@ -38,9 +38,9 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return isInternal(user) && !isInnovationLead(user);
     }
 
-    @PermissionRule(value = "READ", description = "Innovation lead users can only see competitions without feedback released that are assigned to them")
-    public boolean innovationLeadCanViewCompetitionAssignedToThemWithFeedbackNotReleasedInSearchResults(CompetitionSearchResultItem competition, UserResource user) {
-        return !competition.getCompetitionStatus().isFeedbackReleased() && userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
+    @PermissionRule(value = "READ", description = "Innovation lead users can see competitions that are assigned to them")
+    public boolean innovationLeadCanViewCompetitionAssignedToThem(CompetitionSearchResultItem competition, UserResource user) {
+        return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 
     @PermissionRule(value = "MANAGE_INNOVATION_LEADS", description = "Competition Admin and Project Finance can add, remove and view innovation leads for a competition")

@@ -124,7 +124,7 @@ public class FinanceChecksGenerator {
         List<CostCategory> costCategories = costCategoryType.getCostCategories();
         CostGroup costGroup = new CostGroup("finance-check", costs);
         costCategories.forEach(costCategory -> {
-            Cost cost = new Cost(new BigDecimal(0.0));
+            Cost cost = new Cost(BigDecimal.valueOf(0.0));
             costs.add(cost);
             cost.setCostCategory(costCategory);
         });
