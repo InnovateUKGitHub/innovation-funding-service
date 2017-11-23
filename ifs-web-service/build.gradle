@@ -100,11 +100,15 @@ subprojects {
         }
 
 
-//
-//        task tagDocker(type: DockerTagImage) {
+
+        task tagDocker(type: DockerTagImage) {
 //            targetImageId="docker-registry-default.apps.prod.ifs-test-clusters.com/ajb-sticky/application-service:banana2"
 //            tag ="docker-registry-default.apps.prod.ifs-test-clusters.com/ajb-sticky/application-service:banana"
-//        }
+            imageId = buildDockerForOS.getTag()
+            repository = "docker-registry-default.apps.prod.ifs-test-clusters.com/ajb-sticky/application-service"
+            tag = "banana2"
+
+        }
 
 
         def dockerRegistryCredentials = new DockerRegistryCredentials()
@@ -117,7 +121,7 @@ subprojects {
             registryCredentials = dockerRegistryCredentials
 //            imageName="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")
             imageName="docker-registry-default.apps.prod.ifs-test-clusters.com/ajb-sticky/application-service"
-            tag="banana"
+            tag="banana2"
         }
 
 
