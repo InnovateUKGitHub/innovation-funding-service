@@ -1,5 +1,6 @@
 import com.bmuschko.gradle.docker.DockerRegistryCredentials
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
@@ -93,9 +94,18 @@ subprojects {
             dependsOn ":docker:app-base-image:buildDocker"
             dependsOn prepareDockerInput
 
-            tag = "ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
+//            tag = "ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
             inputDir = project.file("$project.buildDir/docker")
+            tag ="docker-registry-default.apps.prod.ifs-test-clusters.com/ajb-sticky/application-service:banana"
         }
+
+
+//
+//        task tagDocker(type: DockerTagImage) {
+//            targetImageId="docker-registry-default.apps.prod.ifs-test-clusters.com/ajb-sticky/application-service:banana2"
+//            tag ="docker-registry-default.apps.prod.ifs-test-clusters.com/ajb-sticky/application-service:banana"
+//        }
+
 
         def dockerRegistryCredentials = new DockerRegistryCredentials()
         dockerRegistryCredentials.url ="docker-registry-default.apps.prod.ifs-test-clusters.com"
@@ -103,11 +113,10 @@ subprojects {
         dockerRegistryCredentials.password="oc whoami -t".execute().text.trim()
         dockerRegistryCredentials.email="unused"
 
-      //  docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
-
         task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
             registryCredentials = dockerRegistryCredentials
-            imageName="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")
+//            imageName="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")
+            imageName="docker-registry-default.apps.prod.ifs-test-clusters.com/ajb-sticky/application-service"
             tag="banana"
         }
 
