@@ -88,12 +88,5 @@ public class InviteUserServiceSecurityTest extends BaseServiceSecurityTest<Invit
         public ServiceResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory) {
             return null;
         }
-
-        //TODO - Will be deleted/fixed once junits for IFS-1986 are complete.
-        /*
-        @Override
-        public ServiceResult<List<ExternalInviteResource>> getExternalInvites() {
-            return null;
-        }*/
     }
 }

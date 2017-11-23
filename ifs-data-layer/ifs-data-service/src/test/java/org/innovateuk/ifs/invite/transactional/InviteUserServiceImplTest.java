@@ -22,8 +22,11 @@ import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.SearchCategory;
+import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -39,6 +42,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -57,6 +61,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -411,24 +416,193 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
 
     }
 
-    //TODO - Will be deleted/fixed once junits for IFS-1986 are complete.
-/*    @Test
-    public void testGetExternalInvites() {
+    @Test
+    public void findExternalInvitesWhenSearchStringIsNull(){
+
+        String searchString = null;
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_INVALID_ARGUMENT));
+
+        verify(applicationInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+
+        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+    }
+
+    @Test
+    public void findExternalInvitesWhenSearchStringIsEmpty(){
+
+        String searchString = "";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_INVALID_ARGUMENT));
+
+        verify(applicationInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+
+        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+    }
+
+    @Test
+    public void findExternalInvitesWhenSearchStringLengthLessThan5(){
+
+        String searchString = "%a%";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_INVALID_ARGUMENT));
+
+        verify(applicationInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+
+        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+    }
+
+    @Test
+    public void findExternalInvitesWhenSearchStringIsAllSpaces(){
+
+        String searchString = "          ";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_INVALID_ARGUMENT));
+
+        verify(applicationInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+
+        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+    }
+
+    @Test
+    public void findExternalInvitesWhenSearchCategoryIsName() {
+
+        String searchString = "%well%";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        List<ApplicationInvite> applicationInvites = setUpMockingCreateApplicationInvites();
+        List<ProjectInvite> projectInvites = setUpMockingCreateProjectInvites();
+
+        when(applicationInviteRepositoryMock.findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
+        when(inviteProjectRepositoryMock.findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
+
+        ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
+
+        assertFindExternalInvites(result);
+
+        verify(applicationInviteRepositoryMock).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+
+        verify(inviteProjectRepositoryMock).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+
+    }
+
+    @Test
+    public void findExternalInvitesWhenSearchCategoryIsOrganisationName() {
+
+        String searchString = "%well%";
+        SearchCategory searchCategory = SearchCategory.ORGANISATION_NAME;
+
+        List<ApplicationInvite> applicationInvites = setUpMockingCreateApplicationInvites();
+        List<ProjectInvite> projectInvites = setUpMockingCreateProjectInvites();
+
+        when(applicationInviteRepositoryMock.findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
+        when(inviteProjectRepositoryMock.findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
+
+        ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
+
+        assertFindExternalInvites(result);
+
+        verify(applicationInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+
+        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+
+    }
+
+    @Test
+    public void findExternalInvitesWhenSearchCategoryIsEmail() {
+
+        String searchString = "%well%";
+        SearchCategory searchCategory = SearchCategory.EMAIL;
+
+        List<ApplicationInvite> applicationInvites = setUpMockingCreateApplicationInvites();
+        List<ProjectInvite> projectInvites = setUpMockingCreateProjectInvites();
+
+        when(applicationInviteRepositoryMock.findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
+        when(inviteProjectRepositoryMock.findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
+
+        ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
+
+        assertFindExternalInvites(result);
+
+        verify(applicationInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+
+        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+
+    }
+
+    private List<ApplicationInvite> setUpMockingCreateApplicationInvites() {
+
         Application app = newApplication().build();
-        Project prj = newProject().withApplication(app).build();
         List<Organisation> appOrganisations = newOrganisation().withName("Tesla", "Columbia Data Products").build(2);
         List<InviteOrganisation> inviteOrganisations = newInviteOrganisation()
                 .withOrganisation(appOrganisations.get(0), appOrganisations.get(1), null)
                 .withOrganisationName(null, null, "Rolls Royce Plc").build(3);
-        List<ApplicationInvite> applicationInvites = newApplicationInvite().withApplication(app).withEmail("x@email.com", "b@email.com", "zz@email.com").withInviteOrganisation(inviteOrganisations.get(0), inviteOrganisations.get(1), inviteOrganisations.get(2)).build(3);
+
+        List<ApplicationInvite> applicationInvites = newApplicationInvite().withApplication(app)
+                .withEmail("x@email.com", "b@email.com", "zz@email.com")
+                .withInviteOrganisation(inviteOrganisations.get(0), inviteOrganisations.get(1), inviteOrganisations.get(2)).build(3);
+
+        return applicationInvites;
+    }
+
+    private List<ProjectInvite> setUpMockingCreateProjectInvites() {
+
+        Application app = newApplication().build();
+        Project prj = newProject().withApplication(app).build();
+
         List<Organisation> organisations = newOrganisation().withName("Cardiff Electric", "Mutiny").build(2);
-        List<ProjectInvite> projectInvites = newProjectInvite().withProject(prj).withOrganisation(organisations.get(0), organisations.get(1)).withEmail("z@email.com", "u@email.com").build(2);
+        List<ProjectInvite> projectInvites = newProjectInvite().withProject(prj)
+                .withOrganisation(organisations.get(0), organisations.get(1))
+                .withEmail("z@email.com", "u@email.com").build(2);
 
-        when(applicationInviteRepositoryMock.findByStatusIn(EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
-        when(inviteProjectRepositoryMock.findByStatusIn(EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
+        return projectInvites;
+    }
 
-        ServiceResult<List<ExternalInviteResource>> result = service.getExternalInvites();
-
+    private void assertFindExternalInvites(ServiceResult<List<ExternalInviteResource>> result) {
         assertTrue(result.isSuccess());
         assertEquals(5, result.getSuccessObject().size());
         assertEquals("b@email.com", result.getSuccessObject().get(0).getEmail());
@@ -446,5 +620,5 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         // The one without pre-exiting organisation has name set correctly
         assertEquals("zz@email.com", result.getSuccessObject().get(4).getEmail());
         assertEquals("Rolls Royce Plc", result.getSuccessObject().get(4).getOrganisationName());
-    }*/
+    }
 }
