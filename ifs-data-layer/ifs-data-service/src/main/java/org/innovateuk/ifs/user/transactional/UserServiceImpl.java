@@ -233,19 +233,20 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<UserRoleType> roleTypes, String searchString, SearchCategory searchCategory) {
 
         return validateSearchString(searchString).andOnSuccess(() -> {
+            Set<String> roleTypeNames = simpleMapSet(roleTypes, UserRoleType::getName);
             List<UserOrganisation> userOrganisations;
             switch (searchCategory) {
                 case NAME:
-                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, searchString, simpleMapSet(roleTypes, UserRoleType::getName));
+                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, searchString, roleTypeNames);
                     break;
 
                 case ORGANISATION_NAME:
-                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, simpleMapSet(roleTypes, UserRoleType::getName));
+                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, roleTypeNames);
                     break;
 
                 case EMAIL:
                 default:
-                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, simpleMapSet(roleTypes, UserRoleType::getName));
+                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, roleTypeNames);
                     break;
             }
             return serviceSuccess(simpleMap(userOrganisations, userOrganisationMapper::mapToResource));
