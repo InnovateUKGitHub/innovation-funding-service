@@ -5,6 +5,8 @@ import org.innovateuk.ifs.documentation.EditUserResourceDocs;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.SearchCategory;
+import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -39,6 +41,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserController> {
@@ -224,16 +228,30 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                 ));
     }
 
-    //TODO - Will be deleted/fixed once junits for IFS-1986 are complete.
-/*    @Test
-    public void findAllExternal() throws Exception {
-        when(userServiceMock.findAllByProcessRoles(externalApplicantRoles())).thenReturn(serviceSuccess(newUserOrganisationResource().build(2)));
+    @Test
+    public void findExternalUsers() throws Exception {
 
-        mockMvc.perform(get("/user/findAllExternal"))
-                .andDo(document("user/{method-name}",
+        String searchString = "%aar%";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
+        when(userServiceMock.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
+
+        mockMvc.perform(get("/user/findExternalUsers?searchString=" + searchString + "&searchCategory=" + searchCategory))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(userOrganisationResources)))
+                .andDo(document(
+                        "user/{method-name}",
+                        requestParameters(
+                                parameterWithName("searchString").description("The string to search"),
+                                parameterWithName("searchCategory").description("The category to search")
+                        )
+                        ,
                         responseFields(
-                                fieldWithPath("[]").description("list of external users with associated organisations")
+                                fieldWithPath("[]").description("List of external users with associated organisations, which contain the search string and match the search category")
                         )
                 ));
-    }*/
+
+        verify(userServiceMock).findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+    }
 }

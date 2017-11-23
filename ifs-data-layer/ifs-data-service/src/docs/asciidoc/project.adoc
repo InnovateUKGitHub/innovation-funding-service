@@ -521,6 +521,18 @@ include::{snippets}/inviteUser/internal/pending/find-pending-internal-user-invit
 ==== Curl Example
 include::{snippets}/inviteUser/internal/pending/find-pending-internal-user-invites/curl-request.adoc[]
 
+=== Find external pending invites which contain the search string and match the search criteria
+==== Request
+include::{snippets}/inviteUser/findExternalInvites/find-external-invites/http-request.adoc[]
+include::{snippets}/inviteUser/findExternalInvites/find-external-invites/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/inviteUser/findExternalInvites/find-external-invites/http-response.adoc[]
+include::{snippets}/inviteUser/findExternalInvites/find-external-invites/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/inviteUser/findExternalInvites/find-external-invites/curl-request.adoc[]
+
 === Get Project Team Status
 ==== Success
 ===== Request

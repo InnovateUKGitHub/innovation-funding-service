@@ -133,18 +133,10 @@ public class UserServiceSecurityTest extends BaseServiceSecurityTest<UserService
         });
     }
 
-    //TODO - Will be deleted/fixed once junits for IFS-1986 are complete.
-/*    @Test
-    public void testFindAllByProcessRoles(){
-        classUnderTest.findAllByProcessRoles(externalApplicantRoles());
-        verify(userRules, times(2)).internalUsersCanViewUserOrganisation(isA(UserOrganisationResource.class), eq(getLoggedInUser()));
-        verifyNoMoreInteractions(userRules);
-    }*/
-
     @Test
     public void testFindByProcessRolesAndSearchCriteria(){
         classUnderTest.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), "%aar%", SearchCategory.NAME);
-        verify(userRules, times(1)).internalUsersCanViewUserOrganisation(isA(UserOrganisationResource.class), eq(getLoggedInUser()));
+        verify(userRules, times(2)).internalUsersCanViewUserOrganisation(isA(UserOrganisationResource.class), eq(getLoggedInUser()));
         verifyNoMoreInteractions(userRules);
     }
 
