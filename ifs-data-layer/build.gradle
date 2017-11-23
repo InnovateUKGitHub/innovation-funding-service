@@ -1,4 +1,6 @@
+import com.bmuschko.gradle.docker.DockerRegistryCredentials
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
 // This is necessary because the java plugin is also applied to
 // the ifs-data-layer project, which does _not_ build a jar.
@@ -74,6 +76,37 @@ subprojects {
 
             tag = "innovateuk/" + project.name.replaceAll(/ifs-/,"")+":latest"
             inputDir = project.file("$project.buildDir/docker")
+        }
+
+
+        def dockerRegistryCredentials = new DockerRegistryCredentials()
+        dockerRegistryCredentials.url =project.dockerRegistry
+        dockerRegistryCredentials.username="unused"
+        dockerRegistryCredentials.password="oc whoami -t".execute().text.trim()
+        dockerRegistryCredentials.email="unused"
+
+
+        task buildDockerForOS(type: DockerBuildImage) {
+            dependsOn ":docker:app-base-image:buildDocker"
+            dependsOn prepareDockerInput
+            inputDir = project.file("$project.buildDir/docker")
+            tag = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")+":latest"
+        }
+
+
+        task tagDocker(type: DockerTagImage) {
+            dependsOn buildDockerForOS
+            imageId = buildDockerForOS.getTag()
+            repository = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+            tag = project.version
+        }
+
+
+        task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+            dependsOn tagDocker
+            registryCredentials = dockerRegistryCredentials
+            imageName=project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+            tag=project.version
         }
 
 
