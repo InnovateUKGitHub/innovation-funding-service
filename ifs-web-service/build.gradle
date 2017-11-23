@@ -81,10 +81,15 @@ subprojects {
             }
         }
 
+        def dockerRegistryCredentials = new DockerRegistryCredentials()
+        dockerRegistryCredentials.url =project.dockerRegistry
+        dockerRegistryCredentials.username="unused"
+        dockerRegistryCredentials.password="oc whoami -t".execute().text.trim()
+        dockerRegistryCredentials.email="unused"
+
         task buildDocker(type: DockerBuildImage) {
             dependsOn ":docker:app-base-image:buildDocker"
             dependsOn prepareDockerInput
-
             tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest "
             inputDir = project.file("$project.buildDir/docker")
         }
@@ -93,35 +98,24 @@ subprojects {
         task buildDockerForOS(type: DockerBuildImage) {
             dependsOn ":docker:app-base-image:buildDocker"
             dependsOn prepareDockerInput
-
-//            tag = "ajb-sticky/"+project.name.replaceAll(/ifs-/,"")+":banana"
             inputDir = project.file("$project.buildDir/docker")
-            tag ="docker-registry-default.apps.prod.ifs-test-clusters.com/ajb-sticky/application-service:banana"
+            tag = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")+":latest"
         }
-
 
 
         task tagDocker(type: DockerTagImage) {
-//            targetImageId="docker-registry-default.apps.prod.ifs-test-clusters.com/ajb-sticky/application-service:banana2"
-//            tag ="docker-registry-default.apps.prod.ifs-test-clusters.com/ajb-sticky/application-service:banana"
+            dependsOn buildDockerForOS
             imageId = buildDockerForOS.getTag()
-            repository = "docker-registry-default.apps.prod.ifs-test-clusters.com/ajb-sticky/application-service"
-            tag = "banana2"
-
+            repository = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+            tag = project.version
         }
 
 
-        def dockerRegistryCredentials = new DockerRegistryCredentials()
-        dockerRegistryCredentials.url ="docker-registry-default.apps.prod.ifs-test-clusters.com"
-        dockerRegistryCredentials.username="unused"
-        dockerRegistryCredentials.password="oc whoami -t".execute().text.trim()
-        dockerRegistryCredentials.email="unused"
-
         task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+            dependsOn tagDocker
             registryCredentials = dockerRegistryCredentials
-//            imageName="ajb-sticky/"+project.name.replaceAll(/ifs-/,"")
-            imageName="docker-registry-default.apps.prod.ifs-test-clusters.com/ajb-sticky/application-service"
-            tag="banana2"
+            imageName=project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+            tag=project.version
         }
 
 
