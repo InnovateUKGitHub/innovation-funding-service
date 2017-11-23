@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.invite.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -13,6 +15,8 @@ import org.mockito.Mockito;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -21,6 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteUserController> {
@@ -85,14 +90,21 @@ public class InviteUserControllerTest  extends BaseControllerMockMVCTest<InviteU
 
     }
 
-    //TODO - Will be deleted/fixed once junits for IFS-1986 are complete.
-/*    @Test
-    public void getExternalInvites() throws Exception {
-        when(inviteUserServiceMock.getExternalInvites()).thenReturn(serviceSuccess(new ArrayList<>()));
+    @Test
+    public void findExternalInvites() throws Exception {
 
-        mockMvc.perform(get("/inviteUser/external/all")).andExpect(status().isOk());
+        String searchString = "%a%";
+        SearchCategory searchCategory = SearchCategory.NAME;
 
-        verify(inviteUserServiceMock).getExternalInvites();
-    }*/
+        List<ExternalInviteResource> externalInviteResources = Collections.singletonList(new ExternalInviteResource());
+
+        when(inviteUserServiceMock.findExternalInvites(searchString, searchCategory)).thenReturn(serviceSuccess(externalInviteResources));
+
+        mockMvc.perform(get("/inviteUser/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name()))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(externalInviteResources)));
+
+        verify(inviteUserServiceMock).findExternalInvites(searchString, searchCategory);
+    }
 }
 

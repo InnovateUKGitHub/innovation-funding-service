@@ -6,11 +6,13 @@ import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.invite.resource.RoleInviteResource;
+import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.LinkedMultiValueMap;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
@@ -66,12 +68,15 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
         assertEquals(expected, result);
     }
 
-    //TODO - Will be deleted/fixed once junits for IFS-1986 are complete.
-/*    @Test
-    public void getAllExternalInvites() throws Exception {
-        List<ExternalInviteResource> expected = new ArrayList<>();
-        setupGetWithRestResultExpectations(inviteRestBaseUrl + "/external/all", externalInviteResourceListType(), expected, OK);
-        List<ExternalInviteResource> result = service.getAllExternalInvites().getSuccessObjectOrThrowException();
+    @Test
+    public void findExternalInvites() throws Exception {
+
+        String searchString = "%a%";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        List<ExternalInviteResource> expected = Collections.singletonList(new ExternalInviteResource());
+        setupGetWithRestResultExpectations(inviteRestBaseUrl + "/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType(), expected, OK);
+        List<ExternalInviteResource> result = service.findExternalInvites(searchString, searchCategory).getSuccessObjectOrThrowException();
         assertEquals(expected, result);
-    }*/
+    }
 }
