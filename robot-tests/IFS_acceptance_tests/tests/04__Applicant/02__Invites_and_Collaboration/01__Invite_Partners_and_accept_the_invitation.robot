@@ -240,7 +240,7 @@ Lead applicant invites a non registered user in the same organisation
 Support user can see contributor in invited users list
     [Documentation]    IFS-1841
     [Tags]      Failing
-#   TODO remove these tests from here and add in Support suite if needed
+#   TODO remove these tests from here and add in Support suite if needed . Check IFS-2259
     Given log in as a different user  &{support_user_credentials}
     When the user navigates to the page  ${server}/management/admin/users/created
     And the user clicks the button/link  jQuery=a:contains("Invited users")
@@ -274,7 +274,7 @@ Lead should not see pending status for accepted invite
 Support user can see contributor in users with account list
     [Documentation]    IFS-1841
     [Tags]    Failing
-#   TODO remove these tests from here and add in Support suite
+#   TODO remove these tests from here and add in Support suite . Check IFS-2259
     Given log in as a different user  &{support_user_credentials}
     When the user navigates to the page  ${server}/management/admin/users/created
     And the user clicks the button/link  jQuery=a:contains("Users with account")
