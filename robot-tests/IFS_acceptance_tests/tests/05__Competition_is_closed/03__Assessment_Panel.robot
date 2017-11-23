@@ -197,8 +197,10 @@ Manage Assessment Panel Assign and remove button functionality
     [Documentation]   IFS-2039
     [Tags]
     When the user clicks the button/link    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    Then the user should see the element    jQuery=h2:contains("Assigned applications (1)")
     And the user clicks the button/link     jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Remove")
     Then the user should see the element    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    And the user should see the element     jQuery=h2:contains("Assigned applications (0)")
 
 Filter by application number
     [Documentation]  IFS-2049
