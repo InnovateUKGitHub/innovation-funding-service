@@ -412,7 +412,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Competition retrievedCompetition = repository.findById(savedCompetition.getId());
         assertTrue(expectedDateTime.isEqual(retrievedCompetition.getStartDate()));
     }
-}
+
     @Test
     public void findByProjectId() {
         Competition competition = repository.save(newCompetition().withId(7L).build());
