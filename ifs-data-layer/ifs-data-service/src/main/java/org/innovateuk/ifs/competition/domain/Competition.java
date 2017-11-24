@@ -322,7 +322,8 @@ public class Competition implements ProcessActivity {
             milestones.add(m);
             return m;
         });
-        milestone.setDate(dateTime);
+        // IFS-2263 truncation to avoid mysql rounding up datetimes to the nearest second
+        milestone.setDate(dateTime == null ? null : dateTime.truncatedTo(ChronoUnit.SECONDS));
     }
 
     private Optional<Milestone> getMilestone(MilestoneType milestoneType) {
