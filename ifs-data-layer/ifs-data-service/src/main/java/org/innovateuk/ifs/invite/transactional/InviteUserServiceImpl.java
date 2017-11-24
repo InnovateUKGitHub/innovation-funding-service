@@ -41,6 +41,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -251,7 +252,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         searchString = StringUtils.trim(searchString);
 
         if (StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 3) {
-            return serviceFailure(CommonFailureKeys.GENERAL_INVALID_ARGUMENT);
+            return serviceFailure(new Error(USER_SEARCH_INVALID_INPUT_LENGTH, singletonList(3)) );
         } else {
             return serviceSuccess();
         }
