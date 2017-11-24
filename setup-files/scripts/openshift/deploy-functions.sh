@@ -111,24 +111,24 @@ function convertFileToBlock() {
 }
 
 function injectDBVariables() {
-    if [ -z "$DB_USER" ]; then echo "Set DB_USER environment variable"; exit -1; fi
-    if [ -z "$DB_PASS" ]; then echo "Set DB_PASS environment variable"; exit -1; fi
-    if [ -z "$DB_NAME" ]; then echo "Set DB_NAME environment variable"; exit -1; fi
-    if [ -z "$DB_HOST" ]; then echo "Set DB_HOST environment variable"; exit -1; fi
+    if [ -z "$DB_DUMP_USER" ]; then echo "Set DB_DUMP_USER environment variable"; exit -1; fi
+    if [ -z "$DB_DUMP_PASS" ]; then echo "Set DB_DUMP_PASS environment variable"; exit -1; fi
+    if [ -z "$DB_DUMP_NAME" ]; then echo "Set DB_DUMP_NAME environment variable"; exit -1; fi
+    if [ -z "$DB_DUMP_HOST" ]; then echo "Set DB_DUMP_HOST environment variable"; exit -1; fi
 
-    DB_PORT=${DB_PORT:-3306}
+    DB_DUMP_PORT=${DB_DUMP_PORT:-3306}
 
-    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" $(getBuildLocation)/db-reset/*.yml
-    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<DB-USER>>#$DB_DUMP_USER#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<DB-PASS>>#$DB_DUMP_PASS#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<DB-NAME>>#$DB_DUMP_NAME#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<DB-HOST>>#$DB_DUMP_HOST#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<DB-PORT>>#$DB_DUMP_PORT#g" $(getBuildLocation)/db-reset/*.yml
 
-    sed -i.bak "s#<<DB-USER>>#$DB_USER#g" $(getBuildLocation)/db-anonymised-data/*.yml
-    sed -i.bak "s#<<DB-PASS>>#$DB_PASS#g" $(getBuildLocation)/db-anonymised-data/*.yml
-    sed -i.bak "s#<<DB-NAME>>#$DB_NAME#g" $(getBuildLocation)/db-anonymised-data/*.yml
-    sed -i.bak "s#<<DB-HOST>>#$DB_HOST#g" $(getBuildLocation)/db-anonymised-data/*.yml
-    sed -i.bak "s#<<DB-PORT>>#$DB_PORT#g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-USER>>#$DB_DUMP_USER#g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-PASS>>#$DB_DUMP_PASS#g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-NAME>>#$DB_DUMP_NAME#g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-HOST>>#$DB_DUMP_HOST#g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s#<<DB-PORT>>#$DB_DUMP_PORT#g" $(getBuildLocation)/db-anonymised-data/*.yml
 }
 
 
