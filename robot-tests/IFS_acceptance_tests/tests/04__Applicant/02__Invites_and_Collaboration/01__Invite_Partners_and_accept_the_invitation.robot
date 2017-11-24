@@ -235,10 +235,12 @@ Lead applicant invites a non registered user in the same organisation
     And The user enters text to a text field       name=stagedInvite.email    ${test_mailbox_one}+inviteorg2@gmail.com
     And the user clicks the button/link            jQuery=button:contains("Invite")
     Then the user should see the element           jQuery=.table-overflow td:contains(${test_mailbox_one}+inviteorg2@gmail.com)+td:contains("Invite pending for 0 days")
+    [Teardown]    Logout as user
 
 Support user can see contributor in invited users list
     [Documentation]    IFS-1841
-    [Tags]
+    [Tags]      Failing
+#   TODO remove these tests from here and add in Support suite if needed . Check IFS-2259
     Given log in as a different user  &{support_user_credentials}
     When the user navigates to the page  ${server}/management/admin/users/created
     And the user clicks the button/link  jQuery=a:contains("Invited users")
@@ -271,7 +273,8 @@ Lead should not see pending status for accepted invite
 
 Support user can see contributor in users with account list
     [Documentation]    IFS-1841
-    [Tags]
+    [Tags]    Failing
+#   TODO remove these tests from here and add in Support suite . Check IFS-2259
     Given log in as a different user  &{support_user_credentials}
     When the user navigates to the page  ${server}/management/admin/users/created
     And the user clicks the button/link  jQuery=a:contains("Users with account")
