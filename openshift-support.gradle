@@ -190,7 +190,15 @@ task dbAnonymisedDumpLocal(type:Exec) {
 
 // Remote tasks
 
+
+task createProject(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-create-project.sh'
+    args = [openshiftEnv]
+}
+
+
 task osStageRemote(type:Exec) {
+    dependsOn createProject
     executable = 'setup-files/scripts/openshift/os-stage.sh'
     args = [openshiftEnv, "remote", project.version]
 }

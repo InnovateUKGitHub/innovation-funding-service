@@ -327,44 +327,6 @@ function useContainerRegistry() {
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/robot-tests/*.yml
 }
 
-function pushApplicationImages() {
-    docker tag innovateuk/data-service:latest \
-        ${REGISTRY}/${PROJECT}/data-service:${VERSION}
-    docker tag innovateuk/project-setup-service:latest \
-        ${REGISTRY}/${PROJECT}/project-setup-service:${VERSION}
-    docker tag innovateuk/project-setup-management-service:latest \
-        ${REGISTRY}/${PROJECT}/project-setup-management-service:${VERSION}
-    docker tag innovateuk/competition-management-service:latest \
-        ${REGISTRY}/${PROJECT}/competition-management-service:${VERSION}
-    docker tag innovateuk/assessment-service:latest \
-        ${REGISTRY}/${PROJECT}/assessment-service:${VERSION}
-    docker tag innovateuk/application-service:latest \
-        ${REGISTRY}/${PROJECT}/application-service:${VERSION}
-    docker tag innovateuk/front-door-service:latest \
-        ${REGISTRY}/${PROJECT}/front-door-service:${VERSION}
-    docker tag innovateuk/sp-service:latest \
-        ${REGISTRY}/${PROJECT}/sp-service:${VERSION}
-    docker tag innovateuk/idp-service:latest \
-        ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
-    docker tag innovateuk/ldap-service:latest \
-        ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
-    docker tag innovateuk/registration-service:latest \
-        ${REGISTRY}/${PROJECT}/registration-service:${VERSION}
-
-    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
-
-    docker push ${REGISTRY}/${PROJECT}/data-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/project-setup-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/project-setup-management-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/competition-management-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/assessment-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/application-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/front-door-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/sp-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/registration-service:${VERSION}
-}
 
 function pushIfsMysqlDatabase(){
     docker tag innovateuk/ifs-mysql:5.6.29 \

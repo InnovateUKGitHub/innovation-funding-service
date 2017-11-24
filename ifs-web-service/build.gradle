@@ -81,12 +81,6 @@ subprojects {
             }
         }
 
-        def dockerRegistryCredentials = new DockerRegistryCredentials()
-        dockerRegistryCredentials.url =project.dockerRegistry
-        dockerRegistryCredentials.username="unused"
-        dockerRegistryCredentials.password="oc whoami -t".execute().text.trim()
-        dockerRegistryCredentials.email="unused"
-
         task buildDocker(type: DockerBuildImage) {
             dependsOn ":docker:app-base-image:buildDocker"
             dependsOn prepareDockerInput
@@ -113,7 +107,7 @@ subprojects {
 
         task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
             dependsOn tagDocker
-            registryCredentials = dockerRegistryCredentials
+            registryCredentials = project.ext.dockerRegistryCredentials
             imageName=project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
             tag=project.version
         }
