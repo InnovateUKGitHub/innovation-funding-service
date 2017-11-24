@@ -140,3 +140,15 @@ include::{snippets}/user/reactivate-user/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/user/reactivate-user/curl-request.adoc[]
+
+== Find External Users which contain the search string and match the search criteria
+==== Request
+include::{snippets}/user/find-external-users/http-request.adoc[]
+include::{snippets}/user/find-external-users/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/user/find-external-users/http-response.adoc[]
+include::{snippets}/user/find-external-users/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/user/find-external-users/curl-request.adoc[]
