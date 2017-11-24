@@ -12,17 +12,63 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Find external users',size='heading-large'" />
 
-    <form method="GET">
-      <th:block th:insert="fragments/external-users :: search-users" />
+    <form th:object="${form}" method="post" novalidate="novalidate" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+        <div class="search-filters extra-margin">
+            <fieldset>
+                <div class="grid-row">
+                    <div class="column-half">
+                        <div class="form-group">
+                            <label class="form-label" for="searchString">
+                            <span class="form-label-bold">Look for</span>
+                            <th:block th:if="${#fields.hasErrors('searchString')}">
+                                <span class="error-message" th:each="err : ${#fields.errors('searchString')}" th:text="${err}"></span>
+                            </th:block>
+                            </label>
+
+                            <input class="form-control extra-margin-bottom"
+                                   type="text"
+                                   th:errorclass="form-control-error"
+                                   th:field="*{searchString}"
+                                   id="searchString"
+                                   name="searchString"
+                                   minlength="3"
+                                   required="required">
+                            <a href="?">Clear</a>
+                        </div>
+                    </div>
+                    <div class="column-half">
+                        <div class="form-group">
+                            <label class="form-label" for="searchCategory">in</label>
+                            <select th:field="*{searchCategory}" class="form-control" id="searchCategory" name="searchCategory">
+                                <option th:each="category : ${T(org.innovateuk.ifs.user.resource.SearchCategory).values()}"
+                                        th:value="${category}"
+                                        th:text="${category.displayName}"
+                                        th:selected="${form.searchCategory == null && category.selectedByDefault}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-row">
+                    <div class="column-full">
+                        <button type="submit" th:name="${tab == 'invites' ? 'pending' : 'active'}" class="button no-margin">Search</button>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <ul class="inline-nav cf" th:if="${mode == 'search'}">
+            <li th:classappend="${tab == 'users' ? 'selected' : ''}">
+                <button type="submit" name="active" class="buttonlink">Active accounts</button>
+            </li>
+            <li th:classappend="${tab == 'invites' ? 'selected' : ''}">
+                <button type="submit" name="pending" class="buttonlink">Pending accounts</button>
+            </li>
+        </ul>
     </form>
 
-    <th:block th:unless="${#lists.isEmpty(users)}">
-        <ul class="inline-nav cf">
-            <li class="selected"><a th:href="@{/admin/external/users?searchString={searchString}&searchCategory={searchCategory}(searchString=${param.searchString},searchCategory=${param.searchCategory})}">Registered</a></li>
-            <li><a th:href="@{/admin/external/invites?searchString={searchString}&searchCategory={searchCategory}(searchString=${param.searchString},searchCategory=${param.searchCategory})}">Unregistered</a></li>
-        </ul>
-
-        <th:block th:insert="fragments/external-users :: user-list(users=${users})" />
+    <th:block th:if="${mode == 'search'}">
+        <th:block th:unless="${tab == 'invites'}" th:insert="fragments/external-users :: user-list(users=${users})" />
+        <th:block th:if="${tab == 'invites'}" th:insert="fragments/invited-users :: invite-list(invites=${invites})" />
     </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
