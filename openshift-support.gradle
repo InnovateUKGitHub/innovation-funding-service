@@ -72,7 +72,7 @@ task dbAnonymisedDumpUat(type:Exec) {
 
 task importAnonDataIntoUat(type:Exec) {
     dependsOn processResources
-    executable = 'setup-files/scripts/openshift/import-anon-live-data-into-uat.sh'
+    executable = 'setup-files/scripts/openshift/import-anon-data-into-environment.sh.sh'
     args = [openshiftEnv, "uat",  project.version]
 }
 
