@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
