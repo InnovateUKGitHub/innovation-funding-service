@@ -156,19 +156,23 @@ ol {
 
       &.selected {
         a,
-        button {
+        .buttonlink {
           border: 1px solid $border-colour;
           border-bottom: 1px solid $white;
           z-index:1;
+          margin: 0;
+          border-radius: 0;
         }
       }
 
       a,
-      button {
+      .buttonlink {
         border: 1px solid transparent;
         padding: 10px 16px;
         display: block;
         position: relative;
+        margin: 0;
+        border-radius: 0;
       }
     }
 
