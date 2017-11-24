@@ -210,11 +210,11 @@ Initial details editable before notify date (Open)
     And the user should see that the element is disabled    id=competitionTypeId
     And the user should see that the element is disabled    id=innovationSectorCategoryId
     And the user should see that the element is disabled    css=[id="innovationAreaCategoryIds[0]"]
-    When the user selects the option from the drop-down menu    Peter Freeman    id=innovationLeadUserId
+    When the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
     And the user clicks the button/link    jQuery=button:contains("Done")
     Then the user should see the element    jQuery=.button:contains("Edit")
-    And The user should see the text in the page    Peter Freeman
+    And The user should see the text in the page    Ian Cooper
     And The user should see the text in the page    John Doe
     [Teardown]    the user clicks the button/link    link=Competition setup
 
