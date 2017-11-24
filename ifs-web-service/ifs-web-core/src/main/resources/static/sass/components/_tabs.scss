@@ -155,14 +155,16 @@ ol {
       float: left;
 
       &.selected {
-        a {
+        a,
+        button {
           border: 1px solid $border-colour;
           border-bottom: 1px solid $white;
           z-index:1;
         }
       }
 
-      a {
+      a,
+      button {
         border: 1px solid transparent;
         padding: 10px 16px;
         display: block;
