@@ -2,7 +2,6 @@ package org.innovateuk.ifs.user.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonErrors;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
@@ -29,8 +28,11 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INVALID_INPUT_LENGTH;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -136,7 +138,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.APPLICANT)
                                         .build()))
@@ -159,7 +161,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Arrays.asList(
+                        asList(
                                 newRoleResource()
                                         .withType(UserRoleType.APPLICANT)
                                         .build(),
@@ -184,7 +186,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.ASSESSOR)
                                         .build()))
@@ -204,7 +206,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.PROJECT_FINANCE)
                                         .build()))
@@ -224,7 +226,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.COMP_ADMIN)
                                         .build()))
@@ -244,7 +246,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.COMP_EXEC)
                                         .build()))
@@ -264,7 +266,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.INNOVATION_LEAD)
                                         .build()))
@@ -283,7 +285,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testSendPasswordResetNotificationInactiveLeadApplicantNoVerifyToken() {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.LEADAPPLICANT)
                                         .build()))
@@ -305,7 +307,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testSendPasswordResetNotificationInactivePartnerNoVerifyToken() {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.PARTNER)
                                         .build()))
@@ -327,7 +329,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testSendPasswordResetNotificationInactiveProjectManagerNoVerifyToken() {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.PROJECT_MANAGER)
                                         .build()))
@@ -350,7 +352,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.COLLABORATOR)
                                         .build()))
@@ -373,7 +375,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.FINANCE_CONTACT)
                                         .build()))
@@ -525,7 +527,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_INVALID_ARGUMENT));
+        assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
         verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
         verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
@@ -542,7 +544,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_INVALID_ARGUMENT));
+        assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
         verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
         verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
@@ -553,13 +555,13 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     @Test
     public void findByProcessRolesAndSearchCriteriaWhenSearchStringLengthLessThan5(){
 
-        String searchString = "%a%";
+        String searchString = "a";
         SearchCategory searchCategory = SearchCategory.NAME;
 
         ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_INVALID_ARGUMENT));
+        assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
         verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
         verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
@@ -576,7 +578,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_INVALID_ARGUMENT));
+        assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
 
         verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
         verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());

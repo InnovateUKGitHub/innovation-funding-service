@@ -42,7 +42,7 @@ public class UserOrganisationResourceBuilder extends BaseBuilder<UserOrganisatio
     }
 
     public UserOrganisationResourceBuilder withOrganisationId(Long... organisationIds) {
-        return withArray((organisationId, userOrganisation) -> setField("organisationId", organisationId, userOrganisation), organisationIds);
+        return withArraySetFieldByReflection("organisationId", organisationIds);
     }
 
     public UserOrganisationResourceBuilder withOrganisationName(String... organisationNames) {
