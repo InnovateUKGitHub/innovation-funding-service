@@ -258,7 +258,7 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
         searchString = StringUtils.trim(searchString);
 
-        if (StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 5) {
+        if (StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 3) {
             return serviceFailure(CommonFailureKeys.GENERAL_INVALID_ARGUMENT);
         } else {
             return serviceSuccess();

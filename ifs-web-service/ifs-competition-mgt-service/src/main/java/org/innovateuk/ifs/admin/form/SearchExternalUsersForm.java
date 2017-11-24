@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 
 public class SearchExternalUsersForm extends BaseBindingResultTarget {
     @Size.List ({
-            @Size(min=5, message="{validation.standard.user.search.min}")
+            @Size(min=3, message="{validation.standard.user.search.min}")
     })
     private String searchString;
 

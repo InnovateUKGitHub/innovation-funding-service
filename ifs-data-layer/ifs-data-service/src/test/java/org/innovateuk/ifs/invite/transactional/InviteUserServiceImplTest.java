@@ -455,7 +455,8 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void findExternalInvitesWhenSearchStringLengthLessThan5(){
 
-        String searchString = "%a%";
+        String searchString = "a";
+        String searchStringExpr = "%a%";
         SearchCategory searchCategory = SearchCategory.NAME;
 
         ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
@@ -463,13 +464,13 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(CommonFailureKeys.GENERAL_INVALID_ARGUMENT));
 
-        verify(applicationInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
-        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
     }
 
     @Test
@@ -495,78 +496,81 @@ public class InviteUserServiceImplTest extends BaseServiceUnitTest<InviteUserSer
     @Test
     public void findExternalInvitesWhenSearchCategoryIsName() {
 
-        String searchString = "%well%";
+        String searchString = "smith";
+        String searchStringExpr = "%smith%";
         SearchCategory searchCategory = SearchCategory.NAME;
 
         List<ApplicationInvite> applicationInvites = setUpMockingCreateApplicationInvites();
         List<ProjectInvite> projectInvites = setUpMockingCreateProjectInvites();
 
-        when(applicationInviteRepositoryMock.findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
-        when(inviteProjectRepositoryMock.findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
+        when(applicationInviteRepositoryMock.findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
+        when(inviteProjectRepositoryMock.findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
 
         ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
 
         assertFindExternalInvites(result);
 
-        verify(applicationInviteRepositoryMock).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
-        verify(inviteProjectRepositoryMock).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
     }
 
     @Test
     public void findExternalInvitesWhenSearchCategoryIsOrganisationName() {
 
-        String searchString = "%well%";
+        String searchString = "smith";
+        String searchStringExpr = "%smith%";
         SearchCategory searchCategory = SearchCategory.ORGANISATION_NAME;
 
         List<ApplicationInvite> applicationInvites = setUpMockingCreateApplicationInvites();
         List<ProjectInvite> projectInvites = setUpMockingCreateProjectInvites();
 
-        when(applicationInviteRepositoryMock.findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
-        when(inviteProjectRepositoryMock.findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
+        when(applicationInviteRepositoryMock.findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
+        when(inviteProjectRepositoryMock.findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
 
         ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
 
         assertFindExternalInvites(result);
 
-        verify(applicationInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(applicationInviteRepositoryMock).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
-        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock).findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
     }
 
     @Test
     public void findExternalInvitesWhenSearchCategoryIsEmail() {
 
-        String searchString = "%well%";
+        String searchString = "smith";
+        String searchStringExpr = "%smith%";
         SearchCategory searchCategory = SearchCategory.EMAIL;
 
         List<ApplicationInvite> applicationInvites = setUpMockingCreateApplicationInvites();
         List<ProjectInvite> projectInvites = setUpMockingCreateProjectInvites();
 
-        when(applicationInviteRepositoryMock.findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
-        when(inviteProjectRepositoryMock.findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
+        when(applicationInviteRepositoryMock.findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(applicationInvites);
+        when(inviteProjectRepositoryMock.findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT))).thenReturn(projectInvites);
 
         ServiceResult<List<ExternalInviteResource>> result = service.findExternalInvites(searchString, searchCategory);
 
         assertFindExternalInvites(result);
 
-        verify(applicationInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(applicationInviteRepositoryMock).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock, never()).findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(applicationInviteRepositoryMock).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
-        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
-        verify(inviteProjectRepositoryMock).findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock, never()).findByOrganisationNameLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
+        verify(inviteProjectRepositoryMock).findByEmailLikeAndStatusIn(searchStringExpr, EnumSet.of(CREATED, SENT));
 
     }
 
