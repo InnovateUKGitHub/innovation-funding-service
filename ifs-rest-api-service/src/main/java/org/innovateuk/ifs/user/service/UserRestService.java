@@ -18,7 +18,7 @@ public interface UserRestService {
 
     RestResult<List<UserResource>> findAll();
 
-    RestResult<List<UserOrganisationResource>> findAllExternal();
+    RestResult<List<UserOrganisationResource>> findExternalUsers(String searchString, SearchCategory searchCategory);
 
     RestResult<List<UserResource>> findByUserRoleType(UserRoleType userRoleType);
 

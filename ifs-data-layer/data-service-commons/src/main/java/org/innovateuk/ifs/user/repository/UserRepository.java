@@ -31,8 +31,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     List<User> findByRolesNameOrderByFirstNameAscLastNameAsc(String name);
 
-    List<User> findByRolesNameInOrderByEmailAsc(Set<String> name);
-
     Page<User> findDistinctByStatusAndRolesNameIn(UserStatus status, Set<String> roleName, Pageable pageable);
 
     User findOneByUid(String uid);

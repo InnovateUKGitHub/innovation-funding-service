@@ -26,8 +26,10 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.mapper.RoleMapper;
 import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -37,6 +39,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -48,6 +51,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -228,17 +232,75 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         return serviceSuccess(new RoleInvitePageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(roleInviteResources), pagedResult.getNumber(), pagedResult.getSize()));
     }
 
+    private List<RoleInviteResource> sortByName(List<RoleInviteResource> roleInviteResources) {
+        return roleInviteResources.stream().sorted(Comparator.comparing(roleInviteResource -> roleInviteResource.getName().toUpperCase())).collect(Collectors.toList());
+    }
+
     @Override
-    public ServiceResult<List<ExternalInviteResource>> getExternalInvites() {
-        return find(() -> serviceSuccess(applicationInviteRepository.findByStatusIn(EnumSet.of(CREATED, SENT))), () -> serviceSuccess(inviteProjectRepository.findByStatusIn(EnumSet.of(CREATED, SENT))))
-                .andOnSuccess((appInvites, prjInvites) ->
-                        serviceSuccess(sortByEmail(Stream.concat(
-                                getApplicationInvitesAsExternalInviteResource(appInvites).stream(),
-                                getProjectInvitesAsExternalInviteResource(prjInvites).stream()).collect(Collectors.toList())))
-                );
+    public ServiceResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory) {
+        return  validateSearchString(searchString)
+                .andOnSuccess(() ->
+                    find(() -> findApplicationInvitesBySearchCriteria(searchString, searchCategory), () -> findProjectInvitesBySearchCriteria(searchString, searchCategory))
+                    .andOnSuccess((appInvites, prjInvites) ->
+                            serviceSuccess(sortByEmail(Stream.concat(
+                                    getApplicationInvitesAsExternalInviteResource(appInvites).stream(),
+                                    getProjectInvitesAsExternalInviteResource(prjInvites).stream()).collect(Collectors.toList())))
+                ));
+    }
+
+    private ServiceResult<Void> validateSearchString(String searchString) {
+
+        searchString = StringUtils.trim(searchString);
+
+        if (StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 5) {
+            return serviceFailure(CommonFailureKeys.GENERAL_INVALID_ARGUMENT);
+        } else {
+            return serviceSuccess();
+        }
+    }
+
+    private ServiceResult<List<ApplicationInvite>> findApplicationInvitesBySearchCriteria(String searchString, SearchCategory searchCategory ) {
+            List<ApplicationInvite> applicationInvites;
+            switch (searchCategory) {
+                case NAME:
+                    applicationInvites = applicationInviteRepository.findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+                    break;
+
+                case ORGANISATION_NAME:
+                    applicationInvites = applicationInviteRepository.findByInviteOrganisationOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+                    break;
+
+                case EMAIL:
+                default:
+                    applicationInvites = applicationInviteRepository.findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+                    break;
+            }
+            return serviceSuccess(applicationInvites);
+
+    }
+
+    private ServiceResult<List<ProjectInvite>> findProjectInvitesBySearchCriteria(String searchString, SearchCategory searchCategory ) {
+            List<ProjectInvite> projectInvites;
+            switch (searchCategory) {
+                case NAME:
+                    projectInvites = inviteProjectRepository.findByNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+                    break;
+
+                case ORGANISATION_NAME:
+                    projectInvites = inviteProjectRepository.findByOrganisationNameLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+                    break;
+
+                case EMAIL:
+                default:
+                    projectInvites = inviteProjectRepository.findByEmailLikeAndStatusIn(searchString, EnumSet.of(CREATED, SENT));
+                    break;
+            }
+            return serviceSuccess(projectInvites);
+
     }
 
     private List<ExternalInviteResource> getApplicationInvitesAsExternalInviteResource(List<ApplicationInvite> appInvites){
+
         return appInvites.stream().map(appInvite -> new ExternalInviteResource(
                 appInvite.getName(),
                 appInvite.getInviteOrganisation().getOrganisation() != null ? appInvite.getInviteOrganisation().getOrganisation().getName() : appInvite.getInviteOrganisation().getOrganisationName(), // organisation may not exist yet (new collaborator)
@@ -249,6 +311,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private List<ExternalInviteResource> getProjectInvitesAsExternalInviteResource(List<ProjectInvite> prjInvites){
+
         return prjInvites.stream().map(projectInvite ->
                 new ExternalInviteResource(
                         projectInvite.getName(),
@@ -257,10 +320,6 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                         projectInvite.getEmail(),
                         projectInvite.getTarget().getApplication().getId(),
                         projectInvite.getStatus())).collect(Collectors.toList());
-    }
-
-    private List<RoleInviteResource> sortByName(List<RoleInviteResource> roleInviteResources) {
-        return roleInviteResources.stream().sorted(Comparator.comparing(roleInviteResource -> roleInviteResource.getName().toUpperCase())).collect(Collectors.toList());
     }
 
     private List<ExternalInviteResource> sortByEmail(List<ExternalInviteResource> extInviteResources) {
