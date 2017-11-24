@@ -19,13 +19,13 @@
                     <div class="column-half">
                         <div class="form-group">
                             <label class="form-label" for="searchString">
-                            <span class="form-label-bold">Look for</span>
+                            <span class="form-label">Look for</span>
                             <th:block th:if="${#fields.hasErrors('searchString')}">
                                 <span class="error-message" th:each="err : ${#fields.errors('searchString')}" th:text="${err}"></span>
                             </th:block>
                             </label>
 
-                            <input class="form-control extra-margin-bottom"
+                            <input class="form-control"
                                    type="text"
                                    th:errorclass="form-control-error"
                                    th:field="*{searchString}"
@@ -33,7 +33,6 @@
                                    name="searchString"
                                    minlength="3"
                                    required="required">
-                            <a href="?">Clear</a>
                         </div>
                     </div>
                     <div class="column-half">
@@ -49,7 +48,10 @@
                     </div>
                 </div>
                 <div class="grid-row">
-                    <div class="column-full">
+                    <div class="column-half">
+                        <a href="?">Clear</a>
+                    </div>
+                    <div class="column-half alignright">
                         <button type="submit" th:name="${tab == 'invites' ? 'pending' : 'active'}" class="button no-margin">Search</button>
                     </div>
                 </div>
