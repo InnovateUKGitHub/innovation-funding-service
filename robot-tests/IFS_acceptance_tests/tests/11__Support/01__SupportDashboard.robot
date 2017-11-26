@@ -59,7 +59,7 @@ the user is searching for external users
     [Arguments]  ${string}  ${category}
     the user enters text to a text field  id=searchString  ${string}
     the user selects the option from the drop-down menu  ${category}  id=searchCategory
-    the user clicks the button/link  css=button.button  #Search
+    the user clicks the button/link  css=button[type="submit"]  #Search
 
 a collaborator has been invited but he has not yet approved the invitation
     log in as a different user       &{lead_applicant_credentials}
