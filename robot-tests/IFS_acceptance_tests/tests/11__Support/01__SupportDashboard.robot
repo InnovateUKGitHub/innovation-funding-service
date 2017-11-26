@@ -7,6 +7,10 @@ Suite Teardown    the user closes the browser
 Force Tags        Support  CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../04__Applicant/Applicant_Commons.robot
+
+*** Variables ***
+${invitedCollaborator}  stuart@empire.com
 
 *** Test Cases ***
 Support dashboard
@@ -29,10 +33,10 @@ Back navigation is to dashboard
     And the user should see the element    jQuery=a:contains("Project setup")
     And the user should see the element    jQuery=a:contains("Previous")
 
-Support user is able to search an external user
+Support user is able to search active external users
     [Documentation]  IFS-1986
     [Tags]  HappyPath
-    Given the user navigates to the page  ${server}/management/admin/external/users
+    Given the user navigates to the page           ${manageExternalUsers}
     When the user is searching for external users  becky  Email
     Then the user should see the element           jQuery=td:contains("Dreambit") ~ td:contains("becky.mason@gmail.com") + td:contains("Verified")
     And the user clicks the button/link            link=Clear
@@ -40,6 +44,15 @@ Support user is able to search an external user
     Then the user should see the element           jQuery=td:contains("${EMPIRE_LTD_NAME}") + td:contains("${EMPIRE_LTD_ID}") + td:contains("${lead_applicant_credentials["email"]}")
     And the user clicks the button/link            link=Clear
 
+Support user is able to search pending external users
+    [Documentation]  IFS-1986
+    [Tags]  HappyPath
+    When a collaborator has been invited but he has not yet approved the invitation
+    Then the support user should be able to see him as  Sent  Pending accounts
+    When the invitee has accepted the invitation but has not yet verified his account
+    Then the support user should be able to see him as  Not Verified  Active accounts
+    When the invitee verifies his account
+    Then the support user should be able to see him as  Verified  Active accounts
 
 *** Keywords ***
 the user is searching for external users
@@ -47,3 +60,33 @@ the user is searching for external users
     the user enters text to a text field  id=searchString  ${string}
     the user selects the option from the drop-down menu  ${category}  id=searchCategory
     the user clicks the button/link  css=button.button  #Search
+
+a collaborator has been invited but he has not yet approved the invitation
+    log in as a different user       &{lead_applicant_credentials}
+    the user navigates to the page   ${server}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/team/update/existing/${EMPIRE_LTD_ID}
+    the user clicks the button/link  jQuery=.buttonlink:contains("Add another contributor")
+    the user enters text to a text field  name=stagedInvite.name  Stuart
+    the user enters text to a text field  name=stagedInvite.email  ${invitedCollaborator}
+    the user clicks the button/link       jQuery=button:contains("Invite")
+    logout as user
+
+the support user should be able to see him as
+    [Arguments]  ${status}  ${tab}
+    the user navigates to the page   ${LOGIN_URL}
+    logging in and error checking    &{support_user_credentials}
+    the user navigates to the page   ${manageExternalUsers}
+    the user is searching for external users  ${invitedCollaborator}  Email
+    the user clicks the button/link  jQuery=.buttonlink:contains("${tab}")
+    #The tab appears after enabling the search functionality
+    the user should see the element  jQuery=td:contains("${invitedCollaborator}") ~ td:contains("${status}")
+    the user logs out if they are logged in
+
+the invitee has accepted the invitation but has not yet verified his account
+    the user reads his email and clicks the link  ${invitedCollaborator}  Invitation to collaborate in ${openCompetitionRTO_name}  to participate in an application  2
+    the user clicks the button/link  link=Yes, accept invitation
+    the user clicks the button/link  link=Confirm and continue
+    the user fills in the create account form  Stuart  Minions  +-0123456789
+
+the invitee verifies his account
+    the user reads his email and clicks the link       ${invitedCollaborator}  Please verify your email address  recently set up an account  1
+    the user should be redirected to the correct page  ${REGISTRATION_VERIFIED}
