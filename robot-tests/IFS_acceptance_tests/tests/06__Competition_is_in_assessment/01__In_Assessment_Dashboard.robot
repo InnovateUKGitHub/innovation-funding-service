@@ -33,7 +33,7 @@ Key statistics of the In Assessment competitions
 *** Keywords ***
 The key statistics counts should be correct
     ${TOTAL_ASSIGNMENT}=    Get text    css=ul:nth-child(4) > li:nth-child(1) > div > span
-    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    14
+    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    16
     ${AWAITING}=    Get text    css=ul:nth-child(4) > li:nth-child(2) > div > span
     Should Be Equal As Integers    ${AWAITING}    7
     ${ACCEPTED}=    Get text    css=ul:nth-child(4) > li:nth-child(3) > div > span
@@ -41,4 +41,4 @@ The key statistics counts should be correct
     ${STARTED}=    Get text    css=.extra-margin > li:nth-child(1) > div > span
     Should Be Equal As Integers    ${STARTED}    0
     ${SUBMITTED}=    Get text    css=.extra-margin > li:nth-child(2) > div > span
-    Should Be Equal As Integers    ${SUBMITTED}    1
+    Should Be Equal As Integers    ${SUBMITTED}    3
