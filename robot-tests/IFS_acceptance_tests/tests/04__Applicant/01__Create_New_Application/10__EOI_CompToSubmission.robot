@@ -12,11 +12,11 @@ Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 *** Variables ***
 ${compType_EOI}    Expression of interest
 *** Test Cases ***
-Comp Admin Creates Competitions where Research or Public sector can lead
+Comp Admin Creates EOI type competition
     [Documentation]  IFS-1012 IFS-182
     [Tags]  CompAdmin  HappyPath
     Given Logging in and Error Checking                     &{Comp_admin1_credentials}
-    Then The competition admin creates a competition for    ${business_type_id}  EOI comp  EOI
+    Then The competition admin creates a EOI Comp     ${business_type_id}  EOI comp  EOI
 
 *** Keywords ***
 Custom Suite Setup
@@ -30,7 +30,7 @@ Custom Suite Setup
     Set suite variable  ${tomorrowday}
     The guest user opens the browser
 
-The competition admin creates a competition for
+The competition admin creates a EOI Comp
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
     the user navigates to the page   ${CA_UpcomingComp}
     the user clicks the button/link  jQuery=.button:contains("Create competition")
@@ -38,7 +38,7 @@ The competition admin creates a competition for
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility  ${orgType}
     the user fills in the CS Milestones   ${month}  ${nextMonth}  ${nextyear}
-    the user marks the Application as done  yes
+    the user marks the Application as done
     the user fills in the CS Assessors
     the user clicks the button/link  link=Public content
     the user fills in the Public content and publishes  ${extraKeyword}
@@ -49,21 +49,26 @@ The competition admin creates a competition for
     the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the user marks the Application as done
-    [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link  link=Application
     the user marks EOI application details as complete
-    the user fills in the Finances questions  ${growthTable}
+    the assessed questions are marked complete(EOI type)
+    the user fills in the Finances questions
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
-the assessed questions are marked complete except finances(EOI type)
-    the user marks each question as complete  Business opportunity
-    the user marks each question as complete  Potential market
-    the user marks each question as complete  Project exploitation
-    the user marks each question as complete  Economic benefit
+the assessed questions are marked complete(EOI type)
+    the user marks each question as complete  Business opportunity and potential market
+    the user marks each question as complete  Innovation
+    the user marks each question as complete  Project team
+    the user marks each question as complete  Funding and adding value
+    the user should see the element           jQuery=button:contains("Add question")
 
 the user marks EOI application details as complete
     the user marks each question as complete  Application details
-    the user marks each question as complete  Public description
+    the user marks each question as complete  Project summary
     the user marks each question as complete  Scope
+
+the user fills in the Finances questions
+    the user clicks the button/link   link=Finances
+    the user clicks the button/link   jQuery=.button:contains("Done")
