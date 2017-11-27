@@ -231,7 +231,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
     @Test
     public void findExternalUsers() throws Exception {
 
-        String searchString = "%aar%";
+        String searchString = "aar";
         SearchCategory searchCategory = SearchCategory.NAME;
 
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);

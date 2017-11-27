@@ -124,7 +124,7 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
     @Test
     public void findExternalInvites() throws Exception {
 
-        String searchString = "%a%";
+        String searchString = "a";
         SearchCategory searchCategory = SearchCategory.NAME;
 
         List<ExternalInviteResource> externalInviteResources = Collections.singletonList(new ExternalInviteResource());
