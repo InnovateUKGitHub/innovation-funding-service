@@ -11,23 +11,23 @@ Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 # This suite covers creating EOI type competition
 *** Variables ***
 ${compType_EOI}    Expression of interest
+${comp_name}       EOI comp
 *** Test Cases ***
 Comp Admin Creates EOI type competition
-    [Documentation]  IFS-1012 IFS-182
+    [Documentation]  IFS-2192
     [Tags]  CompAdmin  HappyPath
     Given Logging in and Error Checking                     &{Comp_admin1_credentials}
-    Then The competition admin creates a EOI Comp     ${business_type_id}  EOI comp  EOI
+    Then The competition admin creates a EOI Comp     ${business_type_id}  ${comp_name}  EOI
+
+Applicant applies to newly created EOI comp
+    [Documentation]  IFS-2192
+    [Tags]  HappyPath
+    [Setup]  the EOI comp is now open to apply    ${comp_name}
+    Lead Applicant applies to the new created competition    ${comp_name}
 
 *** Keywords ***
 Custom Suite Setup
-    ${month} =          get tomorrow month
-    set suite variable  ${month}
-    ${nextMonth} =  get next month
-    set suite variable  ${nextMonth}
-    ${nextyear} =       get next year
-    Set suite variable  ${nextyear}
-    ${tomorrowday} =    get tomorrow day
-    Set suite variable  ${tomorrowday}
+    predefined date keywords
     The guest user opens the browser
 
 The competition admin creates a EOI Comp
@@ -69,6 +69,13 @@ the user marks EOI application details as complete
     the user marks each question as complete  Project summary
     the user marks each question as complete  Scope
 
+# PLease note the finances in the commons cant be used as we have default text in Funding rules text area and
+# finances requirements are not fully ready yet
 the user fills in the Finances questions
     the user clicks the button/link   link=Finances
     the user clicks the button/link   jQuery=.button:contains("Done")
+
+the EOI comp is now open to apply
+    [Arguments]  ${competition_name}
+    Connect to Database  @{database}
+    change the open date of the competition in the database to one day before  ${competition_name}
