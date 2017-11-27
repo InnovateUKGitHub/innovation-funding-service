@@ -1,6 +1,29 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
 task buildDocker(overwrite: true, type: DockerBuildImage) {
   tag = "innovateuk/ifs-mysql:5.6.29"
   inputDir = project.projectDir
 }
+
+task buildDockerForOS(overwrite: true, type: DockerBuildImage) {
+    tag = project.dockerRegistry+"/"+openshiftEnv+"/ifs-mysql:5.6.29"
+    inputDir = project.projectDir
+}
+
+task tagDocker(type: DockerTagImage) {
+    dependsOn buildDockerForOS
+    imageId = buildDockerForOS.getTag()
+    repository = project.dockerRegistry+"/"+openshiftEnv+"/ifs-mysql"
+    tag = "5.6.29"
+}
+
+task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+dependsOn tagDocker
+    registryCredentials = project.ext.dockerRegistryCredentials
+  imageName=project.dockerRegistry+"/"+openshiftEnv+"/ifs-mysql"
+    tag = "5.6.29"
+}
+
+
+

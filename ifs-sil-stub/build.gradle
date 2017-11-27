@@ -1,4 +1,6 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
+
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild+"-build.gradle";
 apply plugin: 'org.asciidoctor.convert'
@@ -84,9 +86,31 @@ task prepareDockerInput {
 }
 
 task buildDocker(type: DockerBuildImage) {
+    dependsOn ":docker:app-base-image:buildDocker"
     dependsOn prepareDockerInput
     tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
     inputDir = project.file("$project.buildDir/docker")
+}
+
+task buildDockerForOS(type: DockerBuildImage) {
+    dependsOn ":docker:app-base-image:buildDocker"
+    dependsOn prepareDockerInput
+    tag = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")+":latest"
+    inputDir = project.file("$project.buildDir/docker")
+}
+
+task tagDocker(type: DockerTagImage) {
+    dependsOn buildDockerForOS
+    imageId = buildDockerForOS.getTag()
+    repository = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+    tag = project.version
+}
+
+task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+    dependsOn tagDocker
+    registryCredentials = project.ext.dockerRegistryCredentials
+    imageName=project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+    tag = project.version
 }
 
 

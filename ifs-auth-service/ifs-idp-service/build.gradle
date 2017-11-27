@@ -1,4 +1,5 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 import org.apache.tools.ant.filters.ReplaceTokens
 
 def String idpCertsVolume = 'src/main/docker/certs'
@@ -117,4 +118,24 @@ task buildDocker(type: DockerBuildImage, dependsOn: prepareDockerFile) {
 
     inputDir = project.file("$project.buildDir/docker")
     tag = 'innovateuk/idp-service:latest'
+}
+
+task buildDockerForOS(type: DockerBuildImage) {
+    dependsOn prepareDockerFile
+    tag = project.dockerRegistry+"/"+openshiftEnv+"/idp-service:latest"
+    inputDir = project.file("$project.buildDir/docker")
+}
+
+task tagDocker(type: DockerTagImage) {
+    dependsOn buildDockerForOS
+    imageId = buildDockerForOS.getTag()
+    repository = project.dockerRegistry+"/"+openshiftEnv+"/idp-service"
+    tag = project.version
+}
+
+task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+    dependsOn tagDocker
+    registryCredentials = project.ext.dockerRegistryCredentials
+    imageName=project.dockerRegistry+"/"+openshiftEnv+"/idp-service"
+    tag = project.version
 }
