@@ -17,10 +17,6 @@ processResources {
 
 // Production tasks
 
-task osStageProduction(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "production", project.version]
-}
 
 task osDeployProduction(type:Exec) {
     dependsOn processResources
@@ -43,10 +39,6 @@ task dbAnonymisedDumpProduction(type:Exec) {
 
 // UAT tasks
 
-task osStageUat(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "uat", project.version]
-}
 
 task osDeployUat(type:Exec) {
     dependsOn processResources
@@ -75,10 +67,6 @@ task dbAnonymisedDumpUat(type:Exec) {
 
 // Demo tasks
 
-task osStageDemo(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "demo", project.version]
-}
 
 task osDeployDemo(type:Exec) {
     dependsOn processResources
@@ -95,10 +83,6 @@ task osUpgradeDemo(type:Exec) {
 
 // Sysint tasks
 
-task osStageSysint(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "sysint", project.version]
-}
 
 task osDeploySysint(type:Exec) {
     dependsOn processResources
@@ -127,10 +111,6 @@ task osDeployFractalSysint(type:Exec) {
 
 // Perf tasks
 
-task osStagePerf(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "perf", project.version]
-}
 
 task osDeployPerf(type:Exec) {
     dependsOn processResources
@@ -155,11 +135,6 @@ task dbResetPerf(type:Exec) {
 
 task osInitClusterLocal(type:Exec) {
     executable = 'setup-files/scripts/openshift/init-local-cluster.sh'
-    args = [openshiftEnv, "local", project.version]
-}
-
-task osStageLocal(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
     args = [openshiftEnv, "local", project.version]
 }
 
