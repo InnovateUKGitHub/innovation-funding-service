@@ -79,7 +79,7 @@ IFS.core.formValidation = (function () {
       // none = nothing happens and we are just running the check
       // visuallyhidden = in the dom, not visible for users but visible for screen readers
       // show = default behaviour, showing the error message
-      dispaySettings: ['none', 'visuallyhidden', 'show'],
+      displaySettings: ['none', 'visuallyhidden', 'show'],
       html5validationMode: false
     },
     init: function () {
@@ -446,6 +446,8 @@ IFS.core.formValidation = (function () {
       var enabled = !d.is('[readonly]') || !m.is('[readonly]') || !y.is('[readonly]')
       var required = (d.attr('required') && m.attr('required') && y.attr('required'))
       var empty = ((d.val().length === 0) && (m.val().length === 0) && (y.val().length === 0))
+      var errorSummary = jQuery('.error-summary')
+
       // don't show the validation messages for numbers in dates but we do check it as part of the date check
       allFields.attr({
         'data-number-showmessage': 'none',
@@ -470,7 +472,6 @@ IFS.core.formValidation = (function () {
 
         if ((date.getDate() === day) && (date.getMonth() + 1 === month) && (date.getFullYear() === year)) {
           valid = true
-
           IFS.core.formValidation.setValid(allFields, invalidErrorMessage, displayValidationMessages)
 
           allFields.attr('data-date', day + '-' + month + '-' + year)
@@ -506,6 +507,9 @@ IFS.core.formValidation = (function () {
         allFields.attr({'data-date': ''})
         valid = false
       } else {
+        if (errorSummary.length) {
+          IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
+        }
         valid = false
       }
 
@@ -615,7 +619,7 @@ IFS.core.formValidation = (function () {
       return display
     },
     setInvalid: function (field, message, displayValidationMessages) {
-      var validShowMessageValue = jQuery.inArray(displayValidationMessages, s.dispaySettings) !== -1
+      var validShowMessageValue = jQuery.inArray(displayValidationMessages, s.displaySettings) !== -1
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
@@ -662,7 +666,8 @@ IFS.core.formValidation = (function () {
       jQuery(window).trigger('updateWysiwygPosition')
     },
     setValid: function (field, message, displayValidationMessages) {
-      var validShowMessageValue = jQuery.inArray(displayValidationMessages, s.dispaySettings) !== -1
+      var validShowMessageValue = jQuery.inArray(displayValidationMessages, s.displaySettings) !== -1
+
       if (validShowMessageValue === false || displayValidationMessages === 'none') {
         return
       }
@@ -775,6 +780,7 @@ IFS.core.formValidation = (function () {
       }
     },
     getIdentifier: function (el) {
+      var formGroupRow = el.closest('.form-group-row')
       if (el.is(':radio') || el.is(':checkbox')) {
         // Ifn it is a radio/checkbox group (so more than one)
         // Then we use the legend as id otherwise just the field id
@@ -783,7 +789,9 @@ IFS.core.formValidation = (function () {
           el = el.closest('fieldset').find('legend')
         }
       }
-      if (el.is('[data-date]')) {
+      if (el.is('[data-date]') && formGroupRow.length) {
+        el = el.closest('.form-group-row').find('legend')
+      } else if (el.is('[data-date]')) {
         el = el.closest('fieldset').find('legend')
       }
       if (typeof (el.attr('id')) !== 'undefined') {
@@ -832,7 +840,11 @@ IFS.core.formValidation = (function () {
       var target = jQuery('[id="' + id + '"]')
       var targetVisible = IFS.core.formValidation.isVisible(target)
       var closedCollapsible = target.closest(IFS.core.collapsible.settings.collapsibleEl).not('.' + IFS.core.collapsible.settings.expandedClass)
-      if (targetVisible) {
+      var formGroupRow = target.closest('.form-group-row')
+      if (targetVisible && formGroupRow.length) {
+        // it is part a date group so don't put focus on the time select
+        formGroupRow.find('input[type!=hidden]').first().focus()
+      } else if (targetVisible) {
         target.first().focus()
       } else if (closedCollapsible.length) {
         // it is within a collapsible element and we open it and then put focus on it
