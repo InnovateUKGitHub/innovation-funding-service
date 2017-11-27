@@ -1,5 +1,8 @@
 import com.bmuschko.gradle.docker.DockerRegistryCredentials
 
+// Deployment behaviour for differing versions has not been tested yet
+// and so version numbers should always equal project.version
+// DO NOT HAVE OUT OF SYNC VERSION NUMBERS - THIS WILL BE IMPLEMENTED AS PART OF IFS-334
 ext.dataServiceVersion=project.properties['data-service.version'] ?:project.version
 ext.frontDoorDataServiceVersion=project.properties['front-door-data-service.version'] ?:project.version
 

@@ -1,5 +1,6 @@
 import com.bmuschko.gradle.docker.DockerRegistryCredentials
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
 // This is necessary because the java plugin is also applied to
@@ -94,7 +95,7 @@ subprojects {
         }
 
 
-        task osStageRemote(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+        task osStageRemote(type: DockerPushImage) {
             dependsOn tagDocker
             registryCredentials = project.ext.dockerRegistryCredentials
             imageName=project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
