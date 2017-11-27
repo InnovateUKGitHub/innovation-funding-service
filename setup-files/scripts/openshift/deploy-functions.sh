@@ -328,24 +328,6 @@ function useContainerRegistry() {
 }
 
 
-function pushIfsMysqlDatabase(){
-    docker tag innovateuk/ifs-mysql:5.6.29 \
-        ${REGISTRY}/${PROJECT}/ifs-mysql:5.6.29
-
-    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
-
-    docker push ${REGISTRY}/${PROJECT}/ifs-mysql:5.6.29
-}
-
-function pushSilStubImages(){
-    docker tag innovateuk/sil-stub:latest \
-        ${REGISTRY}/${PROJECT}/sil-stub:${VERSION}
-
-    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
-
-    docker push ${REGISTRY}/${PROJECT}/sil-stub:${VERSION}
-}
-
 function pushDBResetImages() {
     docker tag innovateuk/dbreset:latest \
         ${REGISTRY}/${PROJECT}/dbreset:${VERSION}
