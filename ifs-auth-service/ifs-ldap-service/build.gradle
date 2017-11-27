@@ -56,7 +56,7 @@ task tagDocker(type: DockerTagImage) {
     tag = project.version
 }
 
-task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+task osStageRemote(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
     dependsOn tagDocker
     registryCredentials = project.ext.dockerRegistryCredentials
     imageName=project.dockerRegistry+"/"+openshiftEnv+"/ldap-service"

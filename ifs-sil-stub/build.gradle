@@ -106,7 +106,8 @@ task tagDocker(type: DockerTagImage) {
     tag = project.version
 }
 
-task pushDocker(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+task osStageRemote(type: com.bmuschko.gradle.docker.tasks.image.DockerPushImage) {
+    onlyIf { isNotProductionEnv() }
     dependsOn tagDocker
     registryCredentials = project.ext.dockerRegistryCredentials
     imageName=project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")

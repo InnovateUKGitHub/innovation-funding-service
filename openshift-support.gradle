@@ -196,13 +196,6 @@ task createProject(type:Exec) {
     args = [openshiftEnv]
 }
 
-
-task osStageRemote(type:Exec) {
-    dependsOn createProject
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "remote", project.version]
-}
-
 task osDeployFractalRemote(type:Exec) {
     dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-deploy-fractal.sh'

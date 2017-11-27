@@ -30,7 +30,6 @@ allprojects {
     project.ext.dockerRegistryCredentials.password="oc whoami -t".execute().text.trim()
     project.ext.dockerRegistryCredentials.email="unused"
 
-
 }
 
 apply from: "openshift-support.gradle"
@@ -42,6 +41,14 @@ if (!project.hasProperty('osTestArgs')) {
 
 build.enabled = false
 jar.enabled = false
+
+def isNamedEnv() {
+    return ["sysint", "uat", "demo", "perf", "production"].contains(openshiftEnv)
+}
+
+def isNotProductionEnv() {
+    !"production".equals(openshiftEnv)
+}
 
 configure(subprojects - project(":ifs-auth-service")) {
     apply plugin: 'org.springframework.boot'
