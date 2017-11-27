@@ -15,6 +15,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.time.temporal.ChronoUnit.SECONDS;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.junit.Assert.*;
@@ -112,7 +113,7 @@ public class CompetitionTest {
         assertEquals(competition.getSections(), sections);
         assertEquals(competition.getMaxResearchRatio(), maxResearchRatio);
         assertEquals(competition.getAcademicGrantPercentage(), academicGrantPercentage);
-        assertEquals(competition.getRegistrationDate(), registrationDate);
+        assertEquals(competition.getRegistrationDate(), registrationDate.truncatedTo(SECONDS));
 
         assertEquals(competition.getBudgetCode(), budgetCode);
         assertEquals(competition.getActivityCode(), activityCode);
