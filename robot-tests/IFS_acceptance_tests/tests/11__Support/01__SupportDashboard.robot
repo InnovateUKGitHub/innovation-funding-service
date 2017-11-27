@@ -9,7 +9,6 @@ Suite Teardown    the user closes the browser
 Force Tags        Support  CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
 ${invitedCollaborator}  stuart@empire.com
@@ -87,7 +86,7 @@ the invitee has accepted the invitation but has not yet verified his account
     the user reads his email and clicks the link  ${invitedCollaborator}  Invitation to collaborate in ${openCompetitionRTO_name}  to participate in an application  2
     the user clicks the button/link  link=Yes, accept invitation
     the user clicks the button/link  link=Confirm and continue
-    the user fills in the create account form  Stuart  Minions  +-0123456789
+    the invited user fills the create account form  Stuart  Minions
 
 the invitee verifies his account
     the user reads his email and clicks the link       ${invitedCollaborator}  Please verify your email address  recently set up an account  1
