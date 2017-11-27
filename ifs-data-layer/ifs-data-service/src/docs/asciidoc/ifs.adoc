@@ -179,6 +179,10 @@ include::publicContent.adoc[]
 include::assessment.adoc[]
 
 [[assessment]]
+== Assessment Panel
+include::assessmentPanel.adoc[]
+
+[[assessment]]
 == Assessment Panel Invite
 include::assessmentPanelInvite.adoc[]
 
