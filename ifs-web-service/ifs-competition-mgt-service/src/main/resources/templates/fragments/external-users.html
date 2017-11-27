@@ -1,35 +1,3 @@
-<th:block th:fragment="search-users">
-  <div class="search-filters extra-margin">
-    <fieldset>
-        <div class="grid-row">
-            <div class="column-half">
-              <div class="form-group">
-                <label class="form-label" for="searchString">Look for</label>
-                <input class="form-control extra-margin-bottom" id="searchString" name="searchString" minlength="3" required="required" value="" type="text">
-                <a href="?">Clear</a>
-              </div>
-            </div>
-            <div class="column-half">
-              <div class="form-group">
-                <label class="form-label" for="searchCategory">in</label>
-                <select class="form-control" id="searchCategory" name="searchCategory">
-                  <option value="NAME">Name</option>
-                  <option value="ORGANISATION_NAME">Organisation name</option>
-                  <option value="EMAIL" selected="">Email</option>
-                </select>
-              </div>
-            </div>
-        </div>
-        <div class="grid-row">
-          <div class="column-full">
-            <button class="button no-margin">Search</button>
-          </div>
-        </div>
-    </fieldset>
-  </div>
-</th:block>
-
-
 <th:block th:fragment="user-list(users)">
     <p>
         <span class="heading-xlarge no-margin" th:text="${users.size()}">38</span>

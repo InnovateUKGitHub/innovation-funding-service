@@ -1,9 +1,10 @@
 package org.innovateuk.ifs.admin.controller;
 
-import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.admin.form.EditUserForm;
+import org.innovateuk.ifs.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -12,7 +13,6 @@ import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
-import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -22,20 +22,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
@@ -125,9 +121,7 @@ public class UserManagementController {
     @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
     @GetMapping("/user/{userId}/edit")
     public String viewEditUser(@PathVariable Long userId,
-                               Model model,
-                               HttpServletRequest request,
-                               UserResource loggedInUser) {
+                               Model model) {
 
         return viewEditUser(model, userId, new EditUserForm());
     }
@@ -151,10 +145,8 @@ public class UserManagementController {
     @PostMapping("/user/{userId}/edit")
     public String updateUser(@PathVariable Long userId,
                              Model model,
-                             HttpServletRequest request,
                              @Valid @ModelAttribute(FORM_ATTR_NAME) EditUserForm form,
-                             @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                             UserResource loggedInUser) {
+                             @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
         Supplier<String> failureView = () -> viewEditUser(model, userId, form);
 
@@ -191,45 +183,68 @@ public class UserManagementController {
     @SecuredBySpring(value = "FIND_EXTERNAL_USERS", description = "Only the support user or IFS Admin can access external user information")
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     @GetMapping(value = "/external/users")
-    public String findExternalUsers(@RequestParam(value = "searchString", required = false) String searchString,
-                                    @RequestParam(value = "searchCategory", required = false) final SearchCategory searchCategory,
-                                    Model model) {
-
-        List<UserOrganisationResource> users;
-        if (validateSearchString(searchString) && searchCategory != null) {
-            searchString = "%" + StringUtils.trim(searchString) + "%";
-            users = userRestService.findExternalUsers(searchString, searchCategory).getSuccessObjectOrThrowException();
-        } else {
-            users = Collections.emptyList();
-        }
-
-        model.addAttribute("users", users);
-        return "admin/search-external-users";
-    }
-
-    private boolean validateSearchString(String searchString) {
-
-        searchString = StringUtils.trim(searchString);
-
-        return !(StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 3);
+    public String viewFindExternalUsers(@ModelAttribute(FORM_ATTR_NAME) SearchExternalUsersForm form, Model model) {
+        model.addAttribute("tab", "users");
+        return emptyPage(model);
     }
 
     @SecuredBySpring(value = "FIND_EXTERNAL_INVITES", description = "Only the support user or IFS Admin can access external user invites")
     @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
     @GetMapping(value = "/external/invites")
-    public String findExternalInvites(@RequestParam(value = "searchString", required = false) String searchString,
-                                      @RequestParam(value = "searchCategory", required = false) final SearchCategory searchCategory,
-                                      Model model) {
+    public String viewFindExternalInvites(@ModelAttribute(FORM_ATTR_NAME) SearchExternalUsersForm form, Model model) {
+        model.addAttribute("tab", "invites");
+        return emptyPage(model);
+    }
 
-        List<ExternalInviteResource> invites;
-        if (validateSearchString(searchString) && searchCategory != null) {
-            searchString = "%" + StringUtils.trim(searchString) + "%";
-            invites = inviteUserRestService.findExternalInvites(searchString, searchCategory).getSuccessObjectOrThrowException();
+    private String emptyPage(Model model){
+        model.addAttribute("mode", "init");
+        model.addAttribute("users", emptyList());
+        return "admin/search-external-users";
+    }
+
+    @SecuredBySpring(value = "FIND_EXTERNAL_USERS", description = "Only the support user or IFS Admin can access external user information")
+    @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
+    @PostMapping({"/external/users", "/external/invites"})
+    public String findExternalUsers(@Valid @ModelAttribute(FORM_ATTR_NAME) SearchExternalUsersForm form,
+                                    @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+                                    Model model, HttpServletRequest request) {
+        Map<String, String[]> requestParams = request.getParameterMap();
+        if (requestParams.containsKey("pending")) {
+            return findExternalInvites(form, validationHandler, model);
         } else {
-            invites = Collections.emptyList();
+            return findExternalUsers(form, validationHandler, model);
         }
+    }
 
-        model.addAttribute("invites", invites);
-        return "admin/search-invited-users";
+    private String findExternalUsers(SearchExternalUsersForm form, ValidationHandler validationHandler, Model model) {
+        Supplier<String> failureView = () -> viewFindExternalUsers(form, model);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            RestResult<List<UserOrganisationResource>> users = userRestService.findExternalUsers(form.getSearchString(), form.getSearchCategory());
+            return validationHandler.addAnyErrors(users, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, () -> {
+                                model.addAttribute("mode", "search");
+                                model.addAttribute("tab", "users");
+                                model.addAttribute("users", users.getSuccessObjectOrThrowException());
+                                return "admin/search-external-users";
+                            }
+                    );
+        });
+    }
+
+    private String findExternalInvites(SearchExternalUsersForm form, ValidationHandler validationHandler, Model model) {
+        Supplier<String> failureView = () -> viewFindExternalInvites(form, model);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            RestResult<List<ExternalInviteResource>> invites = inviteUserRestService.findExternalInvites(form.getSearchString().trim(), form.getSearchCategory());
+            return validationHandler.addAnyErrors(invites, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, () -> {
+                                model.addAttribute("mode", "search");
+                                model.addAttribute("tab", "invites");
+                                model.addAttribute("invites", invites.getSuccessObjectOrThrowException());
+                                return "admin/search-external-users";
+                            }
+                    );
+        });
     }
 }

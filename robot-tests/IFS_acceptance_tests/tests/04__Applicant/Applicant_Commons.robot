@@ -366,6 +366,16 @@ the user completes the new account creation
     the user enters text to a text field        css=input[id="password"]  ${correct_password}
     the user clicks the button/link             jQuery=button:contains("Sign in")
 
+the user fills in the create account form
+    [Arguments]  ${name}  ${lastName}  ${telephone}
+    The user enters text to a text field  id=firstName  ${name}
+    The user enters text to a text field  id=lastName  ${lastName}
+    The user enters text to a text field  id=phoneNumber  ${telephone}
+    The user enters text to a text field  id=password  ${correct_password}
+    the user selects the checkbox         termsAndConditions
+    the user selects the checkbox         allowMarketingEmails
+    the user clicks the button/link       css=button[type="submit"][name="create-account"]
+
 the applicant adds some content and marks this section as complete
     Focus    css=.textarea-wrapped .editor
     Input Text    css=.textarea-wrapped .editor    This is some random text

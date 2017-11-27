@@ -29,7 +29,6 @@ import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -39,10 +38,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -51,7 +50,6 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -238,22 +236,23 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
     @Override
     public ServiceResult<List<ExternalInviteResource>> findExternalInvites(String searchString, SearchCategory searchCategory) {
-        return  validateSearchString(searchString)
-                .andOnSuccess(() ->
-                    find(() -> findApplicationInvitesBySearchCriteria(searchString, searchCategory), () -> findProjectInvitesBySearchCriteria(searchString, searchCategory))
-                    .andOnSuccess((appInvites, prjInvites) ->
-                            serviceSuccess(sortByEmail(Stream.concat(
-                                    getApplicationInvitesAsExternalInviteResource(appInvites).stream(),
-                                    getProjectInvitesAsExternalInviteResource(prjInvites).stream()).collect(Collectors.toList())))
-                ));
+        String searchStringExpr = "%" + StringUtils.trim(searchString) + "%";
+        return validateSearchString(searchString).andOnSuccess(() ->
+                find(() -> findApplicationInvitesBySearchCriteria(searchStringExpr, searchCategory), () -> findProjectInvitesBySearchCriteria(searchStringExpr, searchCategory))
+                        .andOnSuccess((appInvites, prjInvites) ->
+                                serviceSuccess(sortByEmail(Stream.concat(
+                                        getApplicationInvitesAsExternalInviteResource(appInvites).stream(),
+                                        getProjectInvitesAsExternalInviteResource(prjInvites).stream()).collect(Collectors.toList())))
+                        )
+        );
     }
 
     private ServiceResult<Void> validateSearchString(String searchString) {
 
         searchString = StringUtils.trim(searchString);
 
-        if (StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 5) {
-            return serviceFailure(CommonFailureKeys.GENERAL_INVALID_ARGUMENT);
+        if (StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 3) {
+            return serviceFailure(new Error(USER_SEARCH_INVALID_INPUT_LENGTH, singletonList(3)) );
         } else {
             return serviceSuccess();
         }

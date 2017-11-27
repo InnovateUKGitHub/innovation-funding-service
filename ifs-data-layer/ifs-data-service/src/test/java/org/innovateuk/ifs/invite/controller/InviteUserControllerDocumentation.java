@@ -3,16 +3,22 @@ package org.innovateuk.ifs.invite.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.documentation.InviteUserResourceDocs;
 import org.innovateuk.ifs.documentation.PageResourceDocs;
+import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteUserResource;
 import org.innovateuk.ifs.invite.resource.RoleInvitePageResource;
 import org.innovateuk.ifs.user.builder.UserResourceBuilder;
+import org.innovateuk.ifs.user.resource.SearchCategory;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.LinkedMultiValueMap;
+
+import java.util.Collections;
+import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -24,10 +30,12 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -116,6 +124,34 @@ public class InviteUserControllerDocumentation extends BaseControllerMockMVCTest
                 .andDo(document("inviteUser/internal/pending/{method-name}",
                         responseFields(PageResourceDocs.pageResourceFields)
                 ));;
+    }
+
+    @Test
+    public void findExternalInvites() throws Exception {
+
+        String searchString = "%a%";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        List<ExternalInviteResource> externalInviteResources = Collections.singletonList(new ExternalInviteResource());
+
+        when(inviteUserServiceMock.findExternalInvites(searchString, searchCategory)).thenReturn(serviceSuccess(externalInviteResources));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/inviteUser/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name()))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(externalInviteResources)))
+                .andDo(document(
+                        "inviteUser/findExternalInvites/{method-name}",
+                        requestParameters(
+                                parameterWithName("searchString").description("The string to search"),
+                                parameterWithName("searchCategory").description("The category to search")
+                        )
+                        ,
+                        responseFields(
+                                fieldWithPath("[]").description("List of external pending invites with associated organisations, which contain the search string and match the search category")
+                        )
+                ));
+
+        verify(inviteUserServiceMock).findExternalInvites(searchString, searchCategory);
     }
 
     private RoleInvitePageResource buildRoleInvitePageResource() {
