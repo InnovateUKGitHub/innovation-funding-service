@@ -2,6 +2,8 @@
 Documentation     IFS-188 Stakeholder views – Support team
 ...
 ...               IFS-1986 External users: search
+...
+...               IFS-1841 Basic view of all 'external' IFS users
 Suite Setup       The user logs-in in new browser  &{support_user_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Support  CompAdmin
@@ -34,7 +36,7 @@ Back navigation is to dashboard
     And the user should see the element    jQuery=a:contains("Previous")
 
 Support user is able to search active external users
-    [Documentation]  IFS-1986
+    [Documentation]  IFS-1986 IFS-1841
     [Tags]  HappyPath
     Given the user navigates to the page           ${manageExternalUsers}
     When the user is searching for external users  becky  Email
@@ -45,7 +47,7 @@ Support user is able to search active external users
     And the user clicks the button/link            link=Clear
 
 Support user is able to search pending external users
-    [Documentation]  IFS-1986
+    [Documentation]  IFS-1986 IFS-1841
     [Tags]  HappyPath
     When a collaborator has been invited but he has not yet approved the invitation
     Then the support user should be able to see him as  Sent  Pending accounts
