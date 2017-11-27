@@ -16,6 +16,7 @@ Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../10__Project_setup/PS_Common.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
@@ -141,7 +142,7 @@ Comp admin should be able to view but not edit the finances for every partner
     And the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
     When Log in as a different user    &{collaborator1_credentials}
-    Then the user navigates to the page    ${YOUR_FINANCES_URL}
+    Then the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_NAME}
     And the applicant edits the Subcontracting costs section
     And the user reloads the page
     When Log in as a different user    &{Comp_admin1_credentials}
