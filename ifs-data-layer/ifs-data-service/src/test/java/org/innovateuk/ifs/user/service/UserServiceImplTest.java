@@ -9,10 +9,12 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.UserPageResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.user.transactional.UserServiceImpl;
-import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
 import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -32,10 +34,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
-import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -83,6 +82,26 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
 
         ServiceResult<Void> result = service.changePassword("myhash", "mypassword");
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonErrors.badRequestError("bad password")));
+        verify(tokenRepositoryMock, never()).delete(token);
+    }
+
+    @Test
+    public void testChangePasswordButPasswordValidationFailsOnIDP() {
+        final User user = newUser().build();
+        final UserResource userResource = newUserResource().withUID("myuid").build();
+        final String password = "mypassword";
+
+        Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
+        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(ServiceResult.serviceSuccess(token));
+        when(userRepositoryMock.findOne(123L)).thenReturn(user);
+        when(userMapperMock.mapToResource(user)).thenReturn(userResource);
+
+        when(passwordPolicyValidatorMock.validatePassword(password, userResource)).thenReturn(ServiceResult.serviceSuccess());
+        when(idpServiceMock.updateUserPassword(anyString(), anyString())).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
+
+        ServiceResult<Void> result = service.changePassword("myhash", password);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(CommonErrors.badRequestError("bad password")));
         verify(tokenRepositoryMock, never()).delete(token);
