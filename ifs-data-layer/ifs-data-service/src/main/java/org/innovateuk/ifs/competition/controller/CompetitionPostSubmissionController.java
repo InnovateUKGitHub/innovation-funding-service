@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.competition.resource.BankDetailsStatusResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
@@ -81,6 +82,11 @@ public class CompetitionPostSubmissionController {
     @GetMapping("/{competitionId}/pending-spend-profiles")
     public RestResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(@PathVariable(value = "competitionId") Long competitionId) {
         return competitionService.getPendingSpendProfiles(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/pending-bank-details-approvals")
+    public RestResult<List<BankDetailsStatusResource>> getPendingBankDetailsApprovals() {
+        return competitionService.getPendingBankDetailsApprovals().toGetResponse();
     }
 
     @GetMapping("/{competitionId}/count-pending-spend-profiles")
