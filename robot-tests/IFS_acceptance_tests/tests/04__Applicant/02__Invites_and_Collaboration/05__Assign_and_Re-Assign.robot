@@ -96,7 +96,7 @@ Last update message is correctly updating
     And the user clicks the button/link   link= Assign test
     And the user clicks the button/link   link= Public description
     When the collaborator edits the 'public description' question
-    Then the user should see the element  jQuery=.form-footer .form-footer__info:contains("Today"):contains("by you")
+    Then the user should see the element  jQuery=.form-footer .form-footer__info:contains("today"):contains("by you")
 
 Collaborators cannot assign a question
     [Documentation]  INFUND-839
@@ -143,6 +143,7 @@ The question should be reassigned to the lead applicant
     And the user should see the element      jQuery=.assign-container:contains("you")
     And the user clicks the button/link      link= Public description
     And the user should see the element      css=.textarea-wrapped .editor
+    And the user should see the element      jQuery=.form-footer .form-footer__info:contains("today"):contains("by Dennis Bergkamp")
     And the user should not see the element  css=.textarea-wrapped .readonly
 
 Appendices are assigned along with the question
