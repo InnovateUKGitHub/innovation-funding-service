@@ -2,12 +2,13 @@
 Documentation     IFS-188 Stakeholder views – Support team
 ...
 ...               IFS-1986 External users: search
+...
+...               IFS-1841 Basic view of all 'external' IFS users
 Suite Setup       The user logs-in in new browser  &{support_user_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Support  CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
-Resource          ../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
 ${invitedCollaborator}  stuart@empire.com
@@ -34,7 +35,7 @@ Back navigation is to dashboard
     And the user should see the element    jQuery=a:contains("Previous")
 
 Support user is able to search active external users
-    [Documentation]  IFS-1986
+    [Documentation]  IFS-1986 IFS-1841
     [Tags]  HappyPath
     Given the user navigates to the page           ${manageExternalUsers}
     When the user is searching for external users  becky  Email
@@ -45,7 +46,7 @@ Support user is able to search active external users
     And the user clicks the button/link            link=Clear
 
 Support user is able to search pending external users
-    [Documentation]  IFS-1986
+    [Documentation]  IFS-1986 IFS-1841
     [Tags]  HappyPath
     When a collaborator has been invited but he has not yet approved the invitation
     Then the support user should be able to see him as  Sent  Pending accounts
@@ -85,7 +86,7 @@ the invitee has accepted the invitation but has not yet verified his account
     the user reads his email and clicks the link  ${invitedCollaborator}  Invitation to collaborate in ${openCompetitionRTO_name}  to participate in an application  2
     the user clicks the button/link  link=Yes, accept invitation
     the user clicks the button/link  link=Confirm and continue
-    the user fills in the create account form  Stuart  Minions  +-0123456789
+    the invited user fills the create account form  Stuart  Minions
 
 the invitee verifies his account
     the user reads his email and clicks the link       ${invitedCollaborator}  Please verify your email address  recently set up an account  1
