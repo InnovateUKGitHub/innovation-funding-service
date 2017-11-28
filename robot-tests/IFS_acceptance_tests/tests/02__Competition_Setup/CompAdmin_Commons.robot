@@ -179,8 +179,7 @@ the user fills in the CS Assessors
     the user selects the radio button  hasAssessmentPanel  0
     the user selects the radio button  hasInterviewStage  0
     the user clicks the button/link   jQuery=button:contains("Done")
-#    the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
-# Plz uncomment this line TODO due to IFS-1527
+    the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
     the user clicks the button/link   link=Competition setup
     the user should see the element   jQuery=div:contains("Assessors") ~ .task-status-complete
 
