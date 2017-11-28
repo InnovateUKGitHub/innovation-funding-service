@@ -506,10 +506,10 @@ IFS.core.formValidation = (function () {
         IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
         allFields.attr({'data-date': ''})
         valid = false
+      } else if (errorSummary.length) {
+        IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
+        valid = false
       } else {
-        if (errorSummary.length) {
-          IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
-        }
         valid = false
       }
 
