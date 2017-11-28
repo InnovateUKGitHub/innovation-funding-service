@@ -164,8 +164,8 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
                 UserResource userResource = userMapper.mapToResource(user);
 
-                return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccessReturnVoid(() ->
-                        identityProviderService.updateUserPassword(userResource.getUid(), password).andOnSuccess(() ->
+                return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccess(() ->
+                        identityProviderService.updateUserPassword(userResource.getUid(), password).andOnSuccessReturnVoid(() ->
                             tokenRepository.delete(token))
                 );
             })
