@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition.service;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.competition.resource.BankDetailsStatusResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
@@ -12,6 +13,7 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.bankDetailsStatusResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionOpenQueryResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSearchResultItemListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.spendProfileStatusResourceListType;
@@ -52,6 +54,11 @@ public class CompetitionPostSubmissionRestServiceImpl extends BaseRestService im
     @Override
     public RestResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(long competitionId) {
         return getWithRestResult(competitionsRestURL + "/" + competitionId + "/pending-spend-profiles", spendProfileStatusResourceListType());
+    }
+
+    @Override
+    public RestResult<List<BankDetailsStatusResource>> getPendingBankDetailsApprovals() {
+        return getWithRestResult(competitionsRestURL + "/pending-bank-details-approvals", bankDetailsStatusResourceListType());
     }
 
     @Override
