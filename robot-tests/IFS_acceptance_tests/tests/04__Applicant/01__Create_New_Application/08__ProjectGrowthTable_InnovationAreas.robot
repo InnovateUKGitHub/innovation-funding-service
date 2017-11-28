@@ -383,18 +383,6 @@ The competitions date changes so it is now Open
     the user navigates to the page   ${CA_Live}
     the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${competition}")
 
-Lead Applicant applies to the new created competition
-    [Arguments]  ${competition}
-    log in as a different user       &{lead_applicant_credentials}
-    the user navigates to the eligibility of the competition  ${competition}
-    the user clicks the button/link  jQuery=a:contains("Sign in")
-    the user clicks the button/link  jQuery=a:contains("Begin application")
-
-the user navigates to the eligibility of the competition
-    [Arguments]  ${competition}
-    ${competitionId} =               get comp id from comp title    ${competition}
-    the user navigates to the page   ${server}/application/create/check-eligibility/${competitionId}
-
 the user enters value to field
     [Arguments]  ${field}  ${value}
     the user enters text to a text field  jQuery=td:contains("${field}") + td input  ${value}
