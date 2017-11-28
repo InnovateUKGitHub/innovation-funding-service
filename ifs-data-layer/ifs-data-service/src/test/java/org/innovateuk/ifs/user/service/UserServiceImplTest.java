@@ -94,6 +94,26 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     }
 
     @Test
+    public void testChangePasswordButPasswordValidationFailsOnIDP() {
+        final User user = newUser().build();
+        final UserResource userResource = newUserResource().withUID("myuid").build();
+        final String password = "mypassword";
+
+        Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
+        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(ServiceResult.serviceSuccess(token));
+        when(userRepositoryMock.findOne(123L)).thenReturn(user);
+        when(userMapperMock.mapToResource(user)).thenReturn(userResource);
+
+        when(passwordPolicyValidatorMock.validatePassword(password, userResource)).thenReturn(ServiceResult.serviceSuccess());
+        when(idpServiceMock.updateUserPassword(anyString(), anyString())).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
+
+        ServiceResult<Void> result = service.changePassword("myhash", password);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonErrors.badRequestError("bad password")));
+        verify(tokenRepositoryMock, never()).delete(token);
+    }
+
+    @Test
     public void testFindInactiveByEmail() {
         final User user = newUser().build();
         final UserResource userResource = newUserResource()
