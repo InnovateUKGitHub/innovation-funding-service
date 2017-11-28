@@ -18,33 +18,6 @@ INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in
 SET @s_project_details=LAST_INSERT_ID();
 INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES ('Each question should be given a score out of 10. Written feedback should also be given.','These are the 4 questions which will be marked by assessors. Each question is marked out of 10 points.',1,'Application questions',2,@eoi_template_id,NULL,0,'GENERAL');
 SET @s_application_questions=LAST_INSERT_ID();
-INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES ('Each partner is required to submit their own project finances and funding rates. The overall project costs for all partners can be seen in the Finances overview section','Each partner is required to submit their own project finances and funding rates. The overall project costs for all partners can be seen in the Finances overview section',1,'Finances',3,@eoi_template_id,NULL,0,'GENERAL');
-SET @s_finances=LAST_INSERT_ID();
-INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES (NULL,NULL,0,'Your finances',4,@eoi_template_id,@s_finances,1,'FINANCE');
-SET @s_your_finances=LAST_INSERT_ID();
-INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES (NULL,NULL,1,'Your project costs',5,@eoi_template_id,@s_your_finances,1,'PROJECT_COST_FINANCES');
-SET @s_your_project_costs=LAST_INSERT_ID();
-INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES (NULL,NULL,1,'Your organisation',6,@eoi_template_id,@s_your_finances,1,'ORGANISATION_FINANCES');
-SET @s_your_organisation=LAST_INSERT_ID();
-INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES (NULL,NULL,1,'Your funding',7,@eoi_template_id,@s_your_finances,1,'FUNDING_FINANCES');
-SET @s_your_funding=LAST_INSERT_ID();
-INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES (NULL,NULL,0,'Labour',1,@eoi_template_id,@s_your_project_costs,0,'GENERAL');
-SET @s_labour=LAST_INSERT_ID();
-INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES (NULL,NULL,0,'Overhead costs',2,@eoi_template_id,@s_your_project_costs,0,'GENERAL');
-SET @s_overheads=LAST_INSERT_ID();
-INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES (NULL,NULL,0,'Materials',3,@eoi_template_id,@s_your_project_costs,0,'GENERAL');
-SET @s_materials=LAST_INSERT_ID();
-INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES (NULL,NULL,0,'Capital usage',4,@eoi_template_id,@s_your_project_costs,0,'GENERAL');
-SET @s_capital_usage=LAST_INSERT_ID();
-INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES (NULL,NULL,0,'Subcontracting costs',5,@eoi_template_id,@s_your_project_costs,0,'GENERAL');
-SET @s_subcontracting=LAST_INSERT_ID();
-INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES (NULL,NULL,0,'Travel and subsistence',6,@eoi_template_id,@s_your_project_costs,0,'GENERAL');
-SET @s_travel=LAST_INSERT_ID();
-INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES (NULL,NULL,0,'Other costs',7,@eoi_template_id,@s_your_project_costs,0,'GENERAL');
-SET @s_other_costs=LAST_INSERT_ID();
-INSERT INTO `section` (`assessor_guidance_description`,`description`,`display_in_assessment_application_summary`,`name`,`priority`,`competition_id`,`parent_section_id`,`question_group`,`section_type`) VALUES (NULL,'This is the financial overview of all partners in this collaboration. Each partner should submit their organisation\'s finances in the \'your finances\' section. All partners will see this level of detail.',1,'Finances overview',8,@eoi_template_id,@s_finances,1,'OVERVIEW_FINANCES');
-SET @s_finance_overview=LAST_INSERT_ID();
-
 
 /* Project details questions */
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (0,'Enter the full title of the project',1,0,'Application details','Application details',1,NULL,@eoi_template_id,@s_project_details,NULL,'GENERAL');
