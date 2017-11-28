@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.apache.commons.io.IOUtils;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
+import org.innovateuk.ifs.competition.resource.BankDetailsStatusResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionStatusViewModel;
 import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
+import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingBankDetailsApprovalsViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingSpendProfilesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -35,7 +37,7 @@ import static java.lang.String.format;
  * format using {@link CompetitionStatusViewModel}
  */
 @Controller
-@RequestMapping("/competition/{competitionId}/status")
+@RequestMapping("/competition")
 public class CompetitionStatusController {
 
     @Autowired
@@ -51,14 +53,14 @@ public class CompetitionStatusController {
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @GetMapping
+    @GetMapping("/{competitionId}/status")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     public String viewCompetitionStatus(@PathVariable Long competitionId) {
         return format("redirect:/competition/%s/status/all", competitionId);
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @GetMapping("/all")
+    @GetMapping("/{competitionId}/status/all")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     public String viewCompetitionStatusAll(Model model, UserResource loggedInUser,
                                            @PathVariable Long competitionId) {
@@ -75,7 +77,7 @@ public class CompetitionStatusController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @GetMapping("/queries")
+    @GetMapping("/{competitionId}/status/queries")
     @PreAuthorize("hasAnyAuthority('project_finance')")
     public String viewCompetitionStatusQueries(Model model, UserResource loggedInUser,
                                               @PathVariable Long competitionId) {
@@ -89,7 +91,7 @@ public class CompetitionStatusController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @GetMapping("/pending-spend-profiles")
+    @GetMapping("/{competitionId}/status/pending-spend-profiles")
     @PreAuthorize("hasAnyAuthority('project_finance')")
     public String viewPendingSpendProfiles(Model model, UserResource loggedInUser,
                                            @PathVariable Long competitionId) {
@@ -106,9 +108,20 @@ public class CompetitionStatusController {
         return "project/competition-pending-spend-profiles";
     }
 
+    @SecuredBySpring(value = "PENDING_BANK_DETAILS_APPROVALS", description = "Project finance users can view and action pending bank details approvals for all competitions")
+    @GetMapping("/status/pending-bank-details-approvals")
+    @PreAuthorize("hasAnyAuthority('project_finance')")
+    public String viewPendingBankDetailsApprovals(Model model, UserResource loggedInUser) {
+
+        List<BankDetailsStatusResource> pendingBankDetails = competitionPostSubmissionRestService.getPendingBankDetailsApprovals().getSuccessObjectOrThrowException();
+
+        model.addAttribute("model", new CompetitionPendingBankDetailsApprovalsViewModel(pendingBankDetails));
+        return "project/competition-pending-bank-details";
+    }
+
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "EXPORT_BANK_DETAILS", description = "Project finance users should be able export bank details")
-    @GetMapping("/bank-details/export")
+    @GetMapping("/{competitionId}/status/bank-details/export")
     public void exportBankDetails(Model model, UserResource loggedInUser,
                                   @PathVariable Long competitionId, HttpServletResponse response) throws IOException {
 
