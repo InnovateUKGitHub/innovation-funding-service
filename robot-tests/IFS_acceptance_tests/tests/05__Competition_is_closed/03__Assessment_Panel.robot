@@ -20,14 +20,19 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-1565 Assessment panels - Invite assessors to panel - Remove assessors from Invite list
 ...
 ...               IFS-2114 Assessment panels - Invitation expiry
-
+...
+...               IFS-25 Assessment panels - Applications list
+...
+...               IFS-2039 Assessment panels - Assign and remove applications to panel
+...
+...               IFS-2049 Assessment panels - Filter on applications list
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
-${assessment_panel}  ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
+${assessment_panel}          ${server}/management/assessment/panel/competition/${CLOSED_COMPETITION}
 ${assessor_ben}              Benjamin Nixon
 ${assessor_joel}             Joel George
 ${assessor_madeleine}        Madeleine Martin
@@ -36,6 +41,7 @@ ${panel_assessor_ben}        benjamin.nixon@gmail.com
 ${panel_assessor_joel}       joel.george@gmail.com
 ${panel_assessor_madeleine}  madeleine.martin@gmail.com
 ${panel_assessor_riley}      riley.butler@gmail.com
+${Neural_network}            ${application_ids["Neural networks to optimise freight train routing"]}
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
@@ -170,6 +176,40 @@ Assessor tries to accept expired invitation
     Then the user should see the text in the page       This invitation is now closed
     [Teardown]  the assessment panel period changes in the db   2018-02-24 00:00:00
 
+Assign application link decativated if competition is in close state
+    [Documentation]   IFS-25
+    [Tags]
+    [Setup]  Log in as a different user     &{Comp_admin1_credentials}
+    Given the user clicks the button/link   link=${CLOSED_COMPETITION_NAME}
+    When the user clicks the button/link    link=Manage assessment panel
+    Then the user should see the element    jQuery=.disabled:contains("Assign applications to panel")
+
+Assign application link activate if competition is in panel state
+    [Documentation]   IFS-25
+    [Tags]
+    [Setup]  the user move the closed competition to in panel
+    Given the user should see the element  jQuery=h1:contains("Panel")
+    When the user clicks the button/link   link=Manage assessment panel
+    And the user clicks the button/link    jQuery=a:contains("Assign applications to panel")
+    Then the user should see the element   jQuery=h1:contains("Assign applications to panel")
+
+Manage Assessment Panel Assign and remove button functionality
+    [Documentation]   IFS-2039
+    [Tags]
+    When the user clicks the button/link    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    Then the user should see the element    jQuery=h2:contains("Assigned applications (1)")
+    And the user clicks the button/link     jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Remove")
+    Then the user should see the element    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    And the user should see the element     jQuery=h2:contains("Assigned applications (0)")
+
+Filter by application number
+    [Documentation]  IFS-2049
+    [Tags]
+    Given the user enters text to a text field     id=filterSearch   ${Neural_network}
+    When the user clicks the button/link           jQuery=.button:contains("Filter")
+    Then the user should see the element           jQuery=td:contains("Neural networks to optimise freight train routing")
+    #TODO IFS-2069 need to add more checks once the webtest data is ready.
+
 *** Keywords ***
 
 Custom Suite Setup
@@ -181,6 +221,11 @@ the assessment panel period changes in the db
     [Arguments]  ${Date}
     Connect to Database    @{database}
     Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='ASSESSMENT_PANEL' AND competition_id=${competition_ids["${CLOSED_COMPETITION_NAME}"]};
+
+the user move the closed competition to in panel
+    the user clicks the button/link     link=Competition
+    the user clicks the button/link     jQuery=button:contains("Notify assessors")
+    the user clicks the button/link     jQuery=button:contains("Close assessment")
 
 enable assessment panel for the competition
     the user clicks the button/link    link=View and update competition setup
