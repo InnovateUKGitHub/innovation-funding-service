@@ -24,7 +24,7 @@ items:
             value: ifs
           - name: MYSQL_ROOT_PASSWORD
             value: password
-          image: mysql:5.5.49
+          image: innovateuk/ifs-mysql:5.6.29
           name: mysql
           args: ["--character-set-server=utf8", "--collation-server=utf8_bin"]
           imagePullPolicy: IfNotPresent

@@ -67,7 +67,7 @@ IFS.core.formValidation = (function () {
         }
       },
       pattern: {
-        fields: '[pattern]:not([minlength],[readonly])', // minlength is also using pattern as fallback, but in that case we want to show minlength message and not pattern.
+        fields: '[pattern]:not([readonly])',
         messageInvalid: 'Please correct this field.'
       },
       tel: {
@@ -126,7 +126,7 @@ IFS.core.formValidation = (function () {
       jQuery('form:not([novalidate]) input').on('invalid', function () {
         jQuery(this).trigger('change')
       })
-      IFS.core.formValidation.betterMinLengthSupport()
+
       IFS.core.formValidation.initFocusActions()
       jQuery('body').on('click', '.error-summary-list a', function (e) {
         e.preventDefault()
@@ -853,16 +853,6 @@ IFS.core.formValidation = (function () {
         return href.substring(1, href.length)
       }
       return href
-    },
-    betterMinLengthSupport: function () {
-      // if the minlenght is not implemented in the browser we use pattern which is more widely supported
-      if ((s.html5validationMode) && (typeof (jQuery('input')[0].validity.tooShort) === 'undefined')) {
-        jQuery(s.minlength.fields).each(function () {
-          var field = jQuery(this)
-          var minlength = parseInt(field.attr('minlength'), 10)
-          field.attr('pattern', '.{' + minlength + ',}')
-        })
-      }
     }
   }
 })()

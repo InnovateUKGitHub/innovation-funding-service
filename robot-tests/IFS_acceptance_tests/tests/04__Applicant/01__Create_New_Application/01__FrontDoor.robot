@@ -4,6 +4,8 @@ Documentation     INFUND-6923 Create new public Competition listings page for Ap
 ...               INFUND-7946 Sign in page facelift
 ...
 ...               IFS-247 As an applicant I am able to see the competitions in 'Competition listings' in reverse chronological order
+...
+...               IFS-1117 As a comp exec I am able to set Application milestones in Non-IFS competition details (Initial view)
 Suite Setup       The guest user opens the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
@@ -83,15 +85,14 @@ Guest user can see the public information of an unopened competition
     And the user should not see the text in the page    Or sign in to continue an existing application
     And the user should see the element    jQuery=.button:contains("Start new application")
 
-Guest user can see the non ifs competition warnings
-    [Documentation]  IFS-38
+Registration is closed on Non-IFS competitition when the Registration date is in the past
+    [Documentation]  IFS-38 IFS-1117
     [Tags]    MySQL
-    [Setup]    Connect to Database    @{database}
-    Given the user navigates to the page  ${frontDoor}
-    And Change the close date of the Competition in the database to tomorrow    ${NON_IFS_COMPETITION_NAME}
-    And the user clicks the button/link    link=${NON_IFS_COMPETITION_NAME}
-    Then the user should see the text in the page       Registration has now closed.
-    And execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='2020-06-24 11:00:00' WHERE `${database_name}`.`competition`.`name`='Transforming big data' and `${database_name}`.`milestone`.`type` = 'SUBMISSION_DATE';
+    [Setup]  Connect to Database    @{database}
+    Given Change the close date of the Competition in the database to tomorrow  ${NON_IFS_COMPETITION_NAME}
+    And the registration date of the non-ifs competition belongs to the past  ${competition_ids['${NON_IFS_COMPETITION_NAME}']}
+    When the user navigates to the page  ${server}/competition/${competition_ids['${NON_IFS_COMPETITION_NAME}']}/overview
+    Then the user should see the element  jQuery=.warning-alert:contains("Registration has now closed.")
 
 Guest user can see the public information of a competition
     [Documentation]    INFUND-6923
@@ -174,3 +175,8 @@ Close survey window
 the user can see the correct date status of the competition
     [Arguments]    ${competition_name}    ${date_status}    ${open_text}
     the user should see the element    jQuery=h2:contains(${competition_name}) ~ h3:contains(${date_status}) ~ dl dt:contains(${open_text})
+
+the registration date of the non-ifs competition belongs to the past
+    [Arguments]  ${competitionId}
+    ${yesterday} =  get yesterday
+    execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type`='REGISTRATION_DATE';

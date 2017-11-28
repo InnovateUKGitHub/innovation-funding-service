@@ -22,7 +22,7 @@ public class Application extends SpringBootServletInitializer {
         return application.sources(Application.class);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args)  {
         LOG.info("IFS boot Application main method");
         SpringApplication.run(Application.class, args);
     }

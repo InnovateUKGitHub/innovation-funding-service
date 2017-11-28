@@ -2,15 +2,8 @@ package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
-import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
-import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.form.AssessorPanelOverviewSelectionForm;
-import org.innovateuk.ifs.management.form.OverviewAssessorsFilterForm;
-import org.innovateuk.ifs.management.form.OverviewSelectionForm;
-import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
-import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
-import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.form.PanelOverviewSelectionForm;
 import org.innovateuk.ifs.management.model.PanelInviteAssessorsOverviewModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,16 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
-import static java.util.Arrays.asList;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
-import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
@@ -40,7 +25,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}/assessors")
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class CompetitionManagementPanelInviteAssessorsOverviewController extends CompetitionManagementCookieController<AssessorPanelOverviewSelectionForm> {
+public class CompetitionManagementPanelInviteAssessorsOverviewController extends CompetitionManagementCookieController<PanelOverviewSelectionForm> {
 
     private static final String SELECTION_FORM = "assessorPanelOverviewSelectionForm";
 
@@ -56,13 +41,13 @@ public class CompetitionManagementPanelInviteAssessorsOverviewController extends
     }
 
     @Override
-    protected Class<AssessorPanelOverviewSelectionForm> getFormType() {
-        return AssessorPanelOverviewSelectionForm.class;
+    protected Class<PanelOverviewSelectionForm> getFormType() {
+        return PanelOverviewSelectionForm.class;
     }
 
     @GetMapping("/overview")
     public String overview(Model model,
-                           @ModelAttribute(name = SELECTION_FORM, binding = false) AssessorPanelOverviewSelectionForm selectionForm,
+                           @ModelAttribute(name = SELECTION_FORM, binding = false) PanelOverviewSelectionForm selectionForm,
                            @SuppressWarnings("unused") BindingResult bindingResult,
                            @PathVariable("competitionId") long competitionId,
                            @RequestParam(defaultValue = "0") int page,
@@ -85,10 +70,10 @@ public class CompetitionManagementPanelInviteAssessorsOverviewController extends
     private void updateOverviewSelectionForm(HttpServletRequest request,
                                              HttpServletResponse response,
                                              long competitionId,
-                                             AssessorPanelOverviewSelectionForm selectionForm) {
-        AssessorPanelOverviewSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorPanelOverviewSelectionForm());
+                                             PanelOverviewSelectionForm selectionForm) {
+        PanelOverviewSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new PanelOverviewSelectionForm());
 
-        AssessorPanelOverviewSelectionForm trimmedOverviewForm = trimSelectionByFilteredResult(
+        PanelOverviewSelectionForm trimmedOverviewForm = trimSelectionByFilteredResult(
                 storedSelectionForm,
                 competitionId);
         selectionForm.setSelectedInviteIds(trimmedOverviewForm.getSelectedInviteIds());
@@ -97,10 +82,10 @@ public class CompetitionManagementPanelInviteAssessorsOverviewController extends
         saveFormToCookie(response, competitionId, selectionForm);
     }
 
-    private AssessorPanelOverviewSelectionForm trimSelectionByFilteredResult(AssessorPanelOverviewSelectionForm selectionForm,
-                                                                Long competitionId) {
+    private PanelOverviewSelectionForm trimSelectionByFilteredResult(PanelOverviewSelectionForm selectionForm,
+                                                                     Long competitionId) {
         List<Long> filteredResults = getAllInviteIds(competitionId);
-        AssessorPanelOverviewSelectionForm updatedSelectionForm = new AssessorPanelOverviewSelectionForm();
+        PanelOverviewSelectionForm updatedSelectionForm = new PanelOverviewSelectionForm();
 
         selectionForm.getSelectedInviteIds().retainAll(filteredResults);
         updatedSelectionForm.setSelectedInviteIds(selectionForm.getSelectedInviteIds());
@@ -125,7 +110,7 @@ public class CompetitionManagementPanelInviteAssessorsOverviewController extends
         boolean limitExceeded = false;
         try {
             List<Long> InviteIds = getAllInviteIds(competitionId);
-            AssessorPanelOverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorPanelOverviewSelectionForm());
+            PanelOverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new PanelOverviewSelectionForm());
             if (isSelected) {
                 int predictedSize = selectionForm.getSelectedInviteIds().size() + 1;
                 if(limitIsExceeded(predictedSize)){
@@ -154,7 +139,7 @@ public class CompetitionManagementPanelInviteAssessorsOverviewController extends
                                                               HttpServletRequest request,
                                                               HttpServletResponse response) {
         try {
-            AssessorPanelOverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorPanelOverviewSelectionForm());
+            PanelOverviewSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new PanelOverviewSelectionForm());
 
             if (addAll) {
                 selectionForm.setSelectedInviteIds(getAllInviteIds(competitionId));

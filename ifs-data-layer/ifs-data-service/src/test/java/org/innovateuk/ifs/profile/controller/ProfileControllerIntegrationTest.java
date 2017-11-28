@@ -15,6 +15,9 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
+
+import java.time.ZonedDateTime;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
@@ -126,6 +129,7 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
     }
 
     @Test
+    @Rollback
     public void testGetProfileDetails() {
         loginPaulPlum();
 
@@ -138,6 +142,10 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
                 .build();
         Profile profile = newProfile()
                 .withAddress(address)
+                .withCreatedBy(user)
+                .withCreatedOn(ZonedDateTime.now())
+                .withModifiedBy(user)
+                .withModifiedOn(ZonedDateTime.now())
                 .build();
         profile = profileRepository.save(profile);
         user.setProfileId(profile.getId());
@@ -177,14 +185,20 @@ public class ProfileControllerIntegrationTest extends BaseControllerIntegrationT
     }
 
     @Test
+    @Rollback
     public void testGetUserProfileStatus() {
         loginPaulPlum();
 
         User user = userRepository.findOne(getPaulPlum().getId());
+
         Long userId = user.getId();
         Profile profile = newProfile()
                 .withSkillsAreas("java developer")
                 .withAgreementSignedDate(now())
+                .withCreatedBy(user)
+                .withCreatedOn(ZonedDateTime.now())
+                .withModifiedBy(user)
+                .withModifiedOn(ZonedDateTime.now())
                 .build();
         profile = profileRepository.save(profile);
 

@@ -41,7 +41,7 @@ public class SpendProfileTest {
         User generatedBy = newUser().build();
         Calendar generatedDate = Calendar.getInstance();
 
-        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false, ApprovalType.UNSET);
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false);
 
         assertEquals(organisation, spendProfile.getOrganisation());
         assertEquals(project, spendProfile.getProject());

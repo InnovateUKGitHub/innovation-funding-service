@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationTeamResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
@@ -59,8 +58,9 @@ public class ApplicationSummaryController {
             @RequestParam(value = "page", defaultValue = "0") int pageIndex,
             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
             @RequestParam(value = "filter", required = false) Optional<String> filter,
-            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter) {
-        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, fundingFilter).toGetResponse();
+            @RequestParam(value = "fundingFilter", required = false) Optional<FundingDecisionStatus> fundingFilter,
+            @RequestParam(value = "inAssessmentPanel", required = false) Optional<Boolean> inAssessmentPanel) {
+        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter, fundingFilter, inAssessmentPanel).toGetResponse();
     }
 
     @GetMapping("/findByCompetition/{competitionId}/not-submitted")

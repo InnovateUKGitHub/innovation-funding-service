@@ -3,7 +3,6 @@ package org.innovateuk.ifs.assessment.invite.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.invite.form.PanelInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.PanelInviteModelPopulator;
-import org.innovateuk.ifs.assessment.invite.populator.RejectCompetitionModelPopulator;
 import org.innovateuk.ifs.assessment.invite.viewmodel.PanelInviteViewModel;
 import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
@@ -41,13 +40,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(MockitoJUnitRunner.class)
 @TestPropertySource(locations = "classpath:application.properties")
 public class PanelInviteControllerTest extends BaseControllerMockMVCTest<PanelInviteController> {
-    @Spy
-    @InjectMocks
-    private PanelInviteModelPopulator panelInviteModelPopulator;
 
     @Spy
     @InjectMocks
-    private RejectCompetitionModelPopulator rejectCompetitionModelPopulator;
+    private PanelInviteModelPopulator panelInviteModelPopulator;
 
     private List<RejectionReasonResource> rejectionReasons = newRejectionReasonResource()
             .withReason("Reason 1", "Reason 2")

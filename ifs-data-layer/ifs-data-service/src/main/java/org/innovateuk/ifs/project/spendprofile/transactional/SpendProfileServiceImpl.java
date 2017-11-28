@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.spendprofile.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import com.google.common.collect.Lists;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
@@ -28,6 +30,7 @@ import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLette
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfileNotifications;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
@@ -124,6 +127,12 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
+    @Autowired
+    private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
+
+    private static final Log LOG = LogFactory.getLog(SpendProfileServiceImpl.class);
+
+    private static final String SPEND_PROFILE_STATE_ERROR = "Set Spend Profile workflow status to sent failed for project %s";
 
     @Override
     @Transactional
@@ -135,6 +144,16 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
                                     List<Long> organisationIds = removeDuplicates(simpleMap(projectUsers, ProjectUserResource::getOrganisation));
                                     return generateSpendProfileForPartnerOrganisations(project, organisationIds);
                                 }))
+                                .andOnSuccess(() -> {
+                                    getCurrentlyLoggedInUser().andOnSuccess(user -> {
+                                        if (spendProfileWorkflowHandler.spendProfileGenerated(project, user)) {
+                                            return serviceSuccess();
+                                        } else {
+                                            LOG.error(String.format(SPEND_PROFILE_STATE_ERROR, project.getId()));
+                                            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+                                        }
+                                    });
+                                })
                 );
     }
 
@@ -173,12 +192,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private ServiceResult<Void> isSpendProfileAlreadyGenerated(Project project) {
-        List<PartnerOrganisation> partnerOrganisations = project.getPartnerOrganisations();
-
-        Optional<PartnerOrganisation> partnerOrganisationWithSpendProfile = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getOrganisation().getId()).isPresent());
-
-        if (!partnerOrganisationWithSpendProfile.isPresent()) {
+        if (!spendProfileWorkflowHandler.isAlreadyGenerated(project)) {
             return serviceSuccess();
         } else {
             return serviceFailure(SPEND_PROFILE_HAS_ALREADY_BEEN_GENERATED);
@@ -216,7 +230,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         List<Cost> eligibleCosts = generateEligibleCosts(spendProfileCostCategorySummaries);
         List<Cost> spendProfileCosts = generateSpendProfileFigures(spendProfileCostCategorySummaries, project);
         CostCategoryType costCategoryType = costCategoryTypeRepository.findOne(spendProfileCostCategorySummaries.getCostCategoryType().getId());
-        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false, ApprovalType.UNSET);
+        SpendProfile spendProfile = new SpendProfile(organisation, project, costCategoryType, eligibleCosts, spendProfileCosts, generatedBy, generatedDate, false);
         spendProfileRepository.save(spendProfile);
         return serviceSuccess();
     }
@@ -269,7 +283,7 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
      *
      * This method assumes that all the necessary stuff is in the database before the Spend Profile can be generated.
      * This does not perform any validations to check that the Finance Checks are complete, Viability is approved,
-     * Eligibility is approved or if the Spend Profile is already generated.
+     * Eligibility is approved, if the Spend Profile is already generated or the Spend Profile process state is valid.
      *
      */
     @Override
@@ -285,8 +299,31 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Override
     @Transactional
     public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
-        updateApprovalOfSpendProfile(projectId, approvalType);
-        return grantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
+        Project project = projectRepository.findOne(projectId);
+        if (null != project && spendProfileWorkflowHandler.isReadyToApprove(project) && Arrays.asList(ApprovalType.APPROVED, ApprovalType.REJECTED).stream().anyMatch(e -> e.equals(approvalType))) {
+            updateApprovalOfSpendProfile(projectId, approvalType);
+            return approveSpendProfile(approvalType, project);
+        } else {
+            return serviceFailure(CommonFailureKeys.SPEND_PROFILE_NOT_READY_TO_APPROVE);
+        }
+    }
+
+    private ServiceResult<Void> approveSpendProfile(ApprovalType approvalType, Project project) {
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+            if (approvalType.equals(ApprovalType.APPROVED)) {
+                if (spendProfileWorkflowHandler.spendProfileApproved(project, user))
+                    return grantOfferLetterService.generateGrantOfferLetterIfReady(project.getId());
+                else
+                    return serviceFailure(SPEND_PROFILE_CANNOT_BE_APPROVED);
+            }
+            if (approvalType.equals(ApprovalType.REJECTED)) {
+                if (spendProfileWorkflowHandler.spendProfileRejected(project, user))
+                    return serviceSuccess();
+                else
+                    return serviceFailure(SPEND_PROFILE_CANNOT_BE_REJECTED);
+            }
+            return serviceFailure(SPEND_PROFILE_NOT_READY_TO_APPROVE);
+        });
     }
 
     @Override
@@ -300,17 +337,11 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     }
 
     private ApprovalType getSpendProfileStatusBy(Long projectId) {
-        List<SpendProfile> spendProfiles = getSpendProfileByProjectId(projectId);
-
-        if (spendProfiles.isEmpty()) {
-            return ApprovalType.EMPTY;
-        } else if (spendProfiles.stream().anyMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.REJECTED))) {
-            return ApprovalType.REJECTED;
-        } else if (spendProfiles.stream().allMatch(spendProfile -> spendProfile.getApproval().equals(ApprovalType.APPROVED))) {
-            return ApprovalType.APPROVED;
-        }
-
-        return ApprovalType.UNSET;
+        Project project = projectRepository.findOne(projectId);
+        if (project != null)
+            return spendProfileWorkflowHandler.getApproval(project);
+        else
+            return ApprovalType.UNSET;
     }
 
     @Override
@@ -375,7 +406,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
         });
         return returnMap;
     }
-
 
     private Map<String, List<Map<Long, List<BigDecimal>>>> groupCategories(SpendProfileTableResource spendProfileTableResource) {
         Map<String, List<Map<Long, List<BigDecimal>>>> catGroupMap = new HashMap<>();
@@ -460,17 +490,16 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
     @Transactional
     public ServiceResult<Void> completeSpendProfilesReview(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
-            if (project.getSpendProfileSubmittedDate() != null) {
-                return serviceFailure(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED);
-            }
-
             if (project.getSpendProfiles().stream().anyMatch(spendProfile -> !spendProfile.isMarkedAsComplete())) {
                 return serviceFailure(SPEND_PROFILES_MUST_BE_COMPLETE_BEFORE_SUBMISSION);
             }
-
-            project.setSpendProfileSubmittedDate(ZonedDateTime.now());
-            updateApprovalOfSpendProfile(projectId, ApprovalType.UNSET);
-            return serviceSuccess();
+            if (spendProfileWorkflowHandler.submit(project)) {
+                project.setSpendProfileSubmittedDate(ZonedDateTime.now());
+                updateApprovalOfSpendProfile(projectId, ApprovalType.UNSET);
+                return serviceSuccess();
+            } else {
+                return serviceFailure(SPEND_PROFILES_HAVE_ALREADY_BEEN_SUBMITTED);
+            }
         });
     }
 
@@ -540,7 +569,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private void updateApprovalOfSpendProfile(Long projectId, ApprovalType approvalType) {
         List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
-        spendProfiles.forEach(spendProfile -> spendProfile.setApproval(approvalType));
         if (ApprovalType.REJECTED.equals(approvalType)) {
             rejectSpendProfileSubmission(projectId);
         }
@@ -590,10 +618,6 @@ public class SpendProfileServiceImpl extends BaseTransactionalService implements
 
     private ServiceResult<SpendProfile> getSpendProfileEntity(Long projectId, Long organisationId) {
         return EntityLookupCallbacks.find(spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(SpendProfile.class, projectId, organisationId));
-    }
-
-    private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
-        return spendProfileRepository.findByProjectId(projectId);
     }
 
     private SpendProfileCSVResource generateSpendProfileCSVData(SpendProfileTableResource spendProfileTableResource,

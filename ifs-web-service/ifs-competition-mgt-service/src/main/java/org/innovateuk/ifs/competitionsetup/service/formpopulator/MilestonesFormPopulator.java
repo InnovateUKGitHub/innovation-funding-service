@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
@@ -39,12 +40,12 @@ public class MilestonesFormPopulator implements CompetitionSetupFormPopulator {
 
         List<MilestoneResource> milestonesByCompetition = milestoneRestService.getAllMilestonesByCompetitionId(competitionResource.getId()).getSuccessObjectOrThrowException();
         if (milestonesByCompetition.isEmpty()) {
-            milestonesByCompetition.addAll(competitionSetupMilestoneService.createMilestonesForCompetition(competitionResource.getId()).getSuccessObjectOrThrowException());
+            milestonesByCompetition.addAll(competitionSetupMilestoneService.createMilestonesForIFSCompetition(competitionResource.getId()).getSuccessObjectOrThrowException());
         } else {
             milestonesByCompetition.sort(Comparator.comparing(MilestoneResource::getType));
         }
 
-        LinkedMap<String, MilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
+        LinkedMap<String, GenericMilestoneRowForm> milestoneFormEntries = new LinkedMap<>();
         milestonesByCompetition.stream().forEachOrdered(milestone -> {
             milestoneFormEntries.put(milestone.getType().name(), populateMilestoneFormEntries(milestone, competitionResource));
         });

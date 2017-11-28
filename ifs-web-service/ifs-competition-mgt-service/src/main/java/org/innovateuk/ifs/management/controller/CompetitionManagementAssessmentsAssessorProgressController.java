@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.management.model.AssessorAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.service.CompetitionManagementApplicationServiceImpl;
 import org.innovateuk.ifs.management.viewmodel.AssessorAssessmentProgressRemoveViewModel;
@@ -26,6 +27,7 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
     @Autowired
     private AssessmentRestService assessmentRestService;
 
+    @NotSecured("Not currently secured")
     @GetMapping("/{assessorId}")
     public String assessorProgress(@PathVariable("competitionId") long competitionId,
                                    @PathVariable("assessorId") long assessorId,
@@ -43,6 +45,7 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
         return "competition/assessor-progress";
     }
 
+    @NotSecured("Not currently secured")
     @PostMapping("/{assessorId}/withdraw/{assessmentId}")
     public String withdrawAssessment(@PathVariable("competitionId") long competitionId,
                                      @PathVariable("assessorId") long assessorId,
@@ -52,6 +55,7 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
         return format("redirect:/assessment/competition/%s/assessors/%s?sortField=%s", competitionId, assessorId, sortField);
     }
 
+    @NotSecured("Not currently secured")
     @GetMapping(value = "/{assessorId}/withdraw/{assessmentId}/confirm")
     public String withdrawAssessmentConfirm(
             Model model,
@@ -68,6 +72,7 @@ public class CompetitionManagementAssessmentsAssessorProgressController {
         return "competition/assessor-progress-remove-confirm";
     }
 
+    @NotSecured("Not currently secured")
     @PostMapping("/{assessorId}/application/{applicationId}/assign")
     public String assessorAssign(@PathVariable("competitionId") long competitionId,
                                  @PathVariable("assessorId") long assessorId,

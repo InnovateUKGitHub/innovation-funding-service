@@ -54,7 +54,17 @@
 
         <ul class="link-list">
             <li><a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Invite assessors to attend</a></li>
-            <li><a class="disabled" aria-disabled="true">Assign applications to panel</a></li>
+
+            <li><a th:if="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
+                   th:href="@{/assessment/panel/competition/{competitionId}/manage-applications(competitionId=${model.competitionId})}">
+                Assign applications to panel
+                </a>
+                <a th:unless="${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL}"
+                   class="disabled" aria-disabled="true" >
+                    Assign applications to panel
+                </a>
+            </li>
+
             <li><a class="disabled" aria-disabled="true">Allocate applications to assessors</a></li>
         </ul>
     </div>

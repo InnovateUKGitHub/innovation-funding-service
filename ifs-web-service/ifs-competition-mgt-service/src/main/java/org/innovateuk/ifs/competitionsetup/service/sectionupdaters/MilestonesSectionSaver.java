@@ -10,10 +10,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
-import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
-import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
-import org.innovateuk.ifs.competitionsetup.form.MilestoneTime;
-import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
+import org.innovateuk.ifs.competitionsetup.form.*;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.innovateuk.ifs.util.TimeZoneUtil;
@@ -54,7 +51,7 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
     @Override
     protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         MilestonesForm milestonesForm = (MilestonesForm) competitionSetupForm;
-        LinkedMap<String, MilestoneRowForm> milestoneEntries = milestonesForm.getMilestoneEntries();
+        LinkedMap<String, GenericMilestoneRowForm> milestoneEntries = milestonesForm.getMilestoneEntries();
 
         List<Error> errors = returnErrorsFoundOnSave(milestoneEntries, competition);
         if (!errors.isEmpty()) {
@@ -65,9 +62,9 @@ public class MilestonesSectionSaver extends AbstractSectionSaver implements Comp
         return serviceSuccess();
     }
 
-    private List<Error> returnErrorsFoundOnSave(LinkedMap<String, MilestoneRowForm> milestoneEntries, CompetitionResource competition) {
+    private List<Error> returnErrorsFoundOnSave(LinkedMap<String, GenericMilestoneRowForm> milestoneEntries, CompetitionResource competition) {
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competition.getId()).getSuccessObjectOrThrowException();
-        Map<String, MilestoneRowForm> filteredMilestoneEntries = milestoneEntries;
+        Map<String, GenericMilestoneRowForm> filteredMilestoneEntries = milestoneEntries;
 
         //If competition is already set up only allow to save of future milestones.
         if (TRUE.equals(competition.getSetupComplete())) {

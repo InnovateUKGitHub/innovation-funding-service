@@ -365,10 +365,12 @@ Non lead partner invites finance contact
     When the user clicks the button/link       jQuery=button:contains("Invite to project")
     Then the user should see the element       jQuery=label[for="financeContact3"]:contains("Pending")
     And the user clicks the button/link    jQuery=.button:contains("Save finance contact")
+    [Teardown]    Logout as user
 
 Support user can see finance contact in invited users list
     [Documentation]    IFS-1841
-    [Tags]
+    [Tags]  failing
+    # TODO fix IFS-2259 : Move these tests
     Given log in as a different user  &{support_user_credentials}
     When the user navigates to the page  ${server}/management/admin/users/created
     And the user clicks the button/link  jQuery=a:contains("Invited users")
@@ -378,6 +380,7 @@ Support user can see finance contact in invited users list
 Invited Fin Contact for non lead partner
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
     [Tags]  HappyPath
+    # TODO fix IFS-2259
     Given the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
     When log in as a different user     &{collaborator1_credentials}
     Then the user navigates to the page  ${project_in_setup_page}/details
@@ -389,7 +392,8 @@ Invited Fin Contact for non lead partner
 
 Support user can see finance contact in users with account list
     [Documentation]    IFS-1841
-    [Tags]
+    [Tags]  Support  Failing
+    # TODO fix IFS-2259 : Move these tests
     Given log in as a different user  &{support_user_credentials}
     When the user navigates to the page  ${server}/management/admin/users/created
     And the user clicks the button/link  jQuery=a:contains("Users with account")
@@ -400,6 +404,7 @@ Support user can see finance contact in users with account list
 Non lead partner not eligible for funding
     [Documentation]    INFUND-7090, INFUND-7174
     [Tags]  HappyPath
+    # TODO fix IFS-2259
     Given log in as a different user  &{collaborator1_credentials}
     When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    css=ul li.complete:nth-child(2)
@@ -545,6 +550,7 @@ Academic Partner nominates Finance contact
 Project details submission flow
     [Documentation]    INFUND-3381, INFUND-2621, INFUND-5827
     [Tags]  HappyPath
+    # TODO fix IFS-2259
     [Setup]    log in as a different user    &{lead_applicant_credentials}
     Given the user navigates to the page    ${project_in_setup_details_page}
     When all the fields are completed
@@ -554,6 +560,7 @@ Project details submission flow
 Lead partner can see the status update when all Project details are submitted
     [Documentation]    INFUND-5827
     [Tags]  HappyPath
+    # TODO fix IFS-2259
     [Setup]
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   css=ul li.complete:nth-child(2)
@@ -576,6 +583,7 @@ Project details links are still enabled after submission
 All partners can view submitted project details
     [Documentation]    INFUND-3382, INFUND-2621
     [Tags]  HappyPath
+    # TODO fix IFS-2259
     When log in as a different user       &{collaborator1_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
@@ -612,6 +620,7 @@ Non-lead partner cannot change any project details
 Internal user can see the Project details as submitted
     [Documentation]    INFUND-5856
     [Tags]
+    #TODO fix IFS-2259
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page     ${internal_competition_status}
     When the user clicks the button/link     css=#table-project-status tr:nth-child(2) td.status.ok a

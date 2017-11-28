@@ -104,9 +104,9 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
                 .param("closeDate.month", "01")
                 .param("closeDate.day", "01")
                 .param("closeDate.time", "NINE_AM")
-                .param("applicantNotifiedDate.year", "2017")
-                .param("applicantNotifiedDate.month", "01")
-                .param("applicantNotifiedDate.day", "01")
+                .param("registrationCloseDate.year", "2017")
+                .param("registrationCloseDate.month", "01")
+                .param("registrationCloseDate.day", "01")
                 .param("url","https://worth.systems"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/setup/public-content/" + competitionId));
@@ -134,9 +134,9 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
                 .param("closeDate.month", "")
                 .param("closeDate.day", "")
                 .param("closeDate.time", "")
-                .param("applicantNotifiedDate.year", "")
-                .param("applicantNotifiedDate.month", "")
-                .param("applicantNotifiedDate.day", "")
+                .param("registrationCloseDate.year", "")
+                .param("registrationCloseDate.month", "")
+                .param("registrationCloseDate.day", "")
                 .param("url",""))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
@@ -148,7 +148,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         assertTrue(bindingResult.getFieldError("url").getDefaultMessage().equals("Please enter a competition URL."));
         assertTrue(bindingResult.getFieldError("title").getDefaultMessage().equals("Please enter a title."));
         assertTrue(bindingResult.getFieldError("openDate").getDefaultMessage().equals("Please enter a valid date."));
-        assertTrue(bindingResult.getFieldError("applicantNotifiedDate").getDefaultMessage().equals("Please enter a valid date."));
+        assertTrue(bindingResult.getFieldError("registrationCloseDate").getDefaultMessage().equals("Please enter a valid date."));
         assertTrue(bindingResult.getFieldError("closeDate").getDefaultMessage().equals("Please enter a valid date."));
         assertTrue(bindingResult.getFieldError("innovationSectorCategoryId").getDefaultMessage().equals("This field cannot be left blank."));
         assertTrue(bindingResult.getFieldError("innovationAreaCategoryId").getDefaultMessage().equals("This field cannot be left blank."));
@@ -176,8 +176,8 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         assertEquals("Please enter a competition URL.", bindingResult.getFieldError("url").getDefaultMessage());
         assertEquals("Please enter a title.",bindingResult.getFieldError("title").getDefaultMessage());
         assertEquals("Please enter an open date.", bindingResult.getFieldError("openDate").getDefaultMessage());
-        assertEquals("Please enter an applicants notified date.", bindingResult.getFieldError("applicantNotifiedDate").getDefaultMessage());
-        assertEquals("Please enter a close date.", bindingResult.getFieldError("closeDate").getDefaultMessage());
+        assertEquals("Please enter a registration close date.", bindingResult.getFieldError("registrationCloseDate").getDefaultMessage());
+        assertEquals("Please enter a competition close date.", bindingResult.getFieldError("closeDate").getDefaultMessage());
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("innovationSectorCategoryId").getDefaultMessage());
         assertEquals("This field cannot be left blank.", bindingResult.getFieldError("innovationAreaCategoryId").getDefaultMessage());
 
@@ -201,9 +201,9 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
                 .param("closeDate.month", "")
                 .param("closeDate.day", "")
                 .param("closeDate.time", "")
-                .param("applicantNotifiedDate.year", "-1")
-                .param("applicantNotifiedDate.month", "")
-                .param("applicantNotifiedDate.day", ""))
+                .param("registrationCloseDate.year", "-1")
+                .param("registrationCloseDate.month", "")
+                .param("registrationCloseDate.day", ""))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
@@ -212,7 +212,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         );
 
         assertEquals("Please enter a valid date.", bindingResult.getFieldError("openDate.year").getDefaultMessage());
-        assertEquals("Please enter a valid date.", bindingResult.getFieldError("applicantNotifiedDate.year").getDefaultMessage());
+        assertEquals("Please enter a valid date.", bindingResult.getFieldError("registrationCloseDate.year").getDefaultMessage());
         assertEquals("Please enter a valid date.", bindingResult.getFieldError("closeDate.year").getDefaultMessage());
 
         verifyZeroInteractions(nonIfsDetailsFormSaver);
@@ -235,9 +235,9 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
                 .param("closeDate.year", "2017")
                 .param("closeDate.month", "-1")
                 .param("closeDate.day", "01")
-                .param("applicantNotifiedDate.year", "2017")
-                .param("applicantNotifiedDate.month", "02")
-                .param("applicantNotifiedDate.day", "29"))
+                .param("registrationCloseDate.year", "2017")
+                .param("registrationCloseDate.month", "02")
+                .param("registrationCloseDate.day", "29"))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
@@ -246,7 +246,7 @@ public class NonIfsCompetitionControllerTest extends BaseControllerMockMVCTest<N
         );
 
         assertEquals("Please enter a valid date.", bindingResult.getFieldError("openDate").getDefaultMessage());
-        assertEquals("Please enter a valid date.", bindingResult.getFieldError("applicantNotifiedDate").getDefaultMessage());
+        assertEquals("Please enter a valid date.", bindingResult.getFieldError("registrationCloseDate").getDefaultMessage());
         assertEquals("Please enter a valid date.", bindingResult.getFieldError("closeDate").getDefaultMessage());
 
         verifyZeroInteractions(nonIfsDetailsFormSaver);

@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResourc
 import org.innovateuk.ifs.application.service.ApplicationRestService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -71,6 +72,7 @@ public class CompetitionManagementApplicationController {
     @Autowired
     private ReinstateIneligibleApplicationModelPopulator reinstateIneligibleApplicationModelPopulator;
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}")
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
@@ -86,6 +88,7 @@ public class CompetitionManagementApplicationController {
                         .displayApplicationOverview(user, competitionId, form, origin, queryParams, model, application, assessorId));
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'innovation_lead')")
     @PostMapping(value = "/{applicationId}", params = {"markAsIneligible"})
     public String markAsIneligible(@PathVariable("applicationId") final long applicationId,
@@ -121,6 +124,7 @@ public class CompetitionManagementApplicationController {
         );
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @PostMapping(value = "/{applicationId}/reinstateIneligibleApplication")
     public String reinstateIneligibleApplication(Model model,
@@ -140,6 +144,7 @@ public class CompetitionManagementApplicationController {
         });
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @GetMapping(value = "/{applicationId}/reinstateIneligibleApplication/confirm")
     public String reinstateIneligibleApplicationConfirm(final Model model,
@@ -148,6 +153,7 @@ public class CompetitionManagementApplicationController {
         return doReinstateIneligibleApplicationConfirm(model, applicationId);
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}/forminput/{formInputId}/download")
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
@@ -170,6 +176,7 @@ public class CompetitionManagementApplicationController {
     /**
      * Printable version of the application
      */
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @GetMapping(value = "/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
@@ -180,6 +187,7 @@ public class CompetitionManagementApplicationController {
                 .validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> applicationPrintPopulator.print(applicationId, model, user));
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     @GetMapping("/{applicationId}/team")
     public String displayApplicationTeam(@PathVariable("applicationId") final Long applicationId,

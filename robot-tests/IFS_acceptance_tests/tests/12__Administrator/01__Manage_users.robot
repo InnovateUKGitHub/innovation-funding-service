@@ -13,8 +13,8 @@ Resource          ../../resources/defaultResources.robot
 # NOTE: Please do not use hard coded email in this suite. We always need to check local vs remote for the difference in the domain name !!!
 
 *** Variables ***
-${localEmailInvtedUser}   ifs.administrator@innovateuk.test
-${remoteEmailInvtedUser}  ifs.administrator@innovateuk.gov.uk
+${localEmailInvtedUser}   ifs.innovationLead@innovateuk.test
+${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.gov.uk
 
 *** Test Cases ***
 Administrator can navigate to manage users page
@@ -113,7 +113,7 @@ New user account is created and verified
     [Tags]   HappyPath
     When the user enters text to a text field  css=#firstName  New
     And the user enters text to a text field   css=#lastName  Administrator
-    And the user should see the element        jQuery=h3:contains("Email") + p:contains("ifs.administrator@innovateuk")
+    And the user should see the element        jQuery=h3:contains("Email") + p:contains("ifs.innovationLead@innovateuk")
     And the user enters text to a text field   css=#password  ${correct_password}
     And the user clicks the button/link        jQuery=.button:contains("Create account")
     Then the user should see the element       jQuery=h1:contains("Your account has been created")
@@ -122,7 +122,7 @@ New user account is created and verified
     And the user clicks the button/link        jQuery=a:contains("Manage users")
     And the user clicks the button/link        jQuery=a:contains("New Administrator")
     Then the user should see the element       jQuery=dt:contains("Full name") + dd:contains("New Administrator")
-    And the user should see the element        jQuery=dt:contains("Email") + dd:contains("ifs.administrator@innovateuk")
+    And the user should see the element        jQuery=dt:contains("Email") + dd:contains("ifs.innovationLead@innovateuk")
     And the user should see the element        jQuery=dt:contains("Role") + dd:contains("IFS Administrator")
     When the user clicks the button/link       jQuery=a:contains("Manage users")
     And the user clicks the button/link        jQuery=a:contains("Pending")
@@ -161,7 +161,7 @@ Administrator can navigate to edit page to edit the internal user's details
     And the user should see the text in the page  Edit internal user's details
     And the user should see the element           css=#firstName[value="New"]
     And the user should see the element           css=#lastName[value="Administrator"]
-    And the user should see the element           jQuery=dt:contains("Email address") ~ dd:contains("ifs.administrator")
+    And the user should see the element           jQuery=dt:contains("Email address") ~ dd:contains("ifs.innovationLead")
     And the user should see the dropdown option selected  IFS Administrator  id=role
 
 Server side validation for edit internal user's details
@@ -191,8 +191,8 @@ Administrator can successfully edit internal user's details
     [Setup]  log in as a different user                      &{ifs_admin_user_credentials}
     Given the user navigates to the View internal users details  New Administrator  active
     And the user clicks the button/link                      link=Edit
-    When the user enters text to a text field                id=firstName  Edited
-    Then the user enters text to a text field                id=lastName  Admin
+    When the user enters text to a text field                id=firstName  Innovation
+    Then the user enters text to a text field                id=lastName  Lead
     # Has to be an Innovation Lead for the next test
     And the user selects the option from the drop-down menu  Innovation Lead  id=role
     And the user clicks the button/link                      jQuery=.button:contains("Save and return")
@@ -200,21 +200,21 @@ Administrator can successfully edit internal user's details
     When the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
     And the user should see the element                      jQuery=.selected:contains("Active")
-    And the user should see the element                      jQuery=td:contains("Edited Admin") + td:contains("Innovation Lead")
+    And the user should see the element                      jQuery=td:contains("Innovation Lead") + td:contains("Innovation Lead")
+    [Teardown]  the user logs out if they are logged in
 
 The internal user can login with his new role and sees no competitions assigned
-    [Documentation]  IFS-1305
+    [Documentation]  IFS-1305  IFS-1308
     [Tags]  InnovationLead
-    [Setup]  the user logs out if they are logged in
-    the invited user logs in
-    Then the user should see the element  jQuery=p:contains("There are no competitions assigned to you.")
-    And the user should not see the element  css=.form-search
+    Given the invited user logs in
+    Then the user should see the text in the page  There are no competitions assigned to you.
+    And the user clicks the button/link            css=#section-4 a  #Project setup tab
 
 Administrator is able to disable internal users
     [Documentation]  IFS-644
     [Tags]  HappyPath
-    [Setup]  log in as a different user                      &{ifs_admin_user_credentials}
-    Given the user navigates to the View internal users details  Edited Admin  active
+    [Setup]  log in as a different user   &{ifs_admin_user_credentials}
+    Given the user navigates to the View internal users details  Innovation Lead  active
     And the user clicks the button/link   link=Edit
     Then the user should see the element  css=.form-group input
     When the user clicks the button/link  jQuery=button:contains("Deactivate user")
@@ -224,7 +224,7 @@ Administrator is able to disable internal users
     Then the user should see the element  jQuery=.form-footer *:contains("Reactivate user") + *:contains("Deactivated by Arden Pimenta on")
     #TODO Pending due to IFS-1191 add ${today}
     When the user navigates to the page   ${server}/management/admin/users/inactive
-    Then the user should see the element  jQuery=tr:contains("Edited Admin")  #Checking the user swapped tab
+    Then the user should see the element  jQuery=tr:contains("Innovation Lead")  #Checking the user swapped tab
 
 Deactivated user cannot login until he is activated
     [Documentation]  IFS-644
@@ -232,11 +232,11 @@ Deactivated user cannot login until he is activated
     [Setup]  the user logs out if they are logged in
     Given the deactivated user is not able to login
     When Logging in and Error Checking                  &{ifs_admin_user_credentials}
-    Then the user navigates to the View internal users details  Edited Admin  inactive
+    Then the user navigates to the View internal users details  Innovation Lead  inactive
     When the user clicks the button/link                jQuery=button:contains("Reactivate user")
     Then the user clicks the button/link                jQuery=button:contains("Yes, reactivate")
     When the user navigates to the page                 ${server}/management/admin/users/active
-    Then the user should see the element                jQuery=tr:contains("Edited Admin")  #Checking the user swapped tab
+    Then the user should see the element                jQuery=tr:contains("Innovation Lead")  #Checking the user swapped tab
     When the re-activated user tries to login
     Then the user should not see an error in the page
 

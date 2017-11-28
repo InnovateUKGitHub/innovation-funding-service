@@ -201,13 +201,10 @@ public class ApplicationSectionAndQuestionModelPopulator {
 
     public void addCompletedDetails(Model model, ApplicationResource application, Optional<OrganisationResource> userOrganisation, Map<Long, Set<Long>> completedSectionsByOrganisation) {
 
-        Future<Set<Long>> markedAsComplete = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
-        model.addAttribute("markedAsComplete", markedAsComplete);
+        Future<Set<Long>> markedAsCompleteQuestions = getMarkedAsCompleteDetails(application, userOrganisation); // List of question ids
+        model.addAttribute("markedAsComplete", markedAsCompleteQuestions);
 
-        Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId).orElse(-1L));
-        if(null != sectionsMarkedAsComplete) {
-            completedSectionsByOrganisation.forEach((key, values) -> sectionsMarkedAsComplete.retainAll(values));
-        }
+        Set<Long> sectionsMarkedAsComplete = getCompletedSectionsForUserOrganisation(completedSectionsByOrganisation, userOrganisation);
 
         model.addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
@@ -217,13 +214,25 @@ public class ApplicationSectionAndQuestionModelPopulator {
         addFinanceDetails(model, application);
 
         List<SectionResource> eachOrganisationFinanceSections = sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE);
-        Long eachCollaboratorFinanceSectionId;
-        if (eachOrganisationFinanceSections.isEmpty()) {
-            eachCollaboratorFinanceSectionId = null;
-        } else {
-            eachCollaboratorFinanceSectionId = eachOrganisationFinanceSections.get(0).getId();
-        }
+        Long eachCollaboratorFinanceSectionId = getEachCollaboratorFinanceSectionId(eachOrganisationFinanceSections);
+
         model.addAttribute("eachCollaboratorFinanceSectionId", eachCollaboratorFinanceSectionId);
+    }
+
+    private Long getEachCollaboratorFinanceSectionId(List<SectionResource> eachOrganisationFinanceSections) {
+        if (!eachOrganisationFinanceSections.isEmpty()) {
+            return eachOrganisationFinanceSections.get(0).getId();
+        }
+        
+        return null;
+    }
+
+    private Set<Long> getCompletedSectionsForUserOrganisation(Map<Long, Set<Long>> completedSectionsByOrganisation, Optional<OrganisationResource> userOrganisation) {
+        return completedSectionsByOrganisation.getOrDefault(
+                userOrganisation.map(OrganisationResource::getId)
+                        .orElse(-1L),
+                new HashSet<>()
+        );
     }
 
     public Optional<SectionResource> getSectionByIds(Long competitionId, Optional<Long> sectionId, boolean selectFirstSectionIfNoneCurrentlySelected) {
@@ -256,10 +265,12 @@ public class ApplicationSectionAndQuestionModelPopulator {
     }
 
     private Future<Set<Long>> getMarkedAsCompleteDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
-        Long organisationId=0L;
-        if (userOrganisation.isPresent()) {
-            organisationId = userOrganisation.get().getId();
-        }
+        Long organisationId = userOrganisation.orElseGet(() -> {
+            OrganisationResource organisation = new OrganisationResource();
+            organisation.setId(0L);
+            return organisation;
+        }).getId();
+
         return questionService.getMarkedAsComplete(application.getId(), organisationId);
     }
 

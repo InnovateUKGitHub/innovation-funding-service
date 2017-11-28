@@ -7,42 +7,23 @@ import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
 import java.time.ZonedDateTime;
 
 /**
- * ViewModel of a AssessmentPanelInvite.
+ * ViewModel of an AssessmentPanelInvite.
  */
-public class PanelInviteViewModel {
+public class PanelInviteViewModel extends BaseInviteViewModel {
 
-    private String panelInviteHash;
-    private Long competitionId;
-    private String competitionName;
     private ZonedDateTime panelDate;
-    private boolean userLoggedIn;
 
     public PanelInviteViewModel(String panelInviteHash, AssessmentPanelInviteResource invite, boolean userLoggedIn) {
-        this.panelInviteHash = panelInviteHash;
-        this.competitionId = invite.getCompetitionId();
-        this.competitionName = invite.getCompetitionName();
+        super(panelInviteHash, invite.getCompetitionId(), invite.getCompetitionName(), userLoggedIn);
         this.panelDate = invite.getPanelDate();
-        this.userLoggedIn = userLoggedIn;
     }
 
     public String getPanelInviteHash() {
-        return panelInviteHash;
-    }
-
-    public Long getCompetitionId() {
-        return competitionId;
-    }
-
-    public String getCompetitionName() {
-        return competitionName;
+        return getInviteHash();
     }
 
     public ZonedDateTime getPanelDate() {
         return panelDate;
-    }
-
-    public boolean isUserLoggedIn() {
-        return userLoggedIn;
     }
 
     @Override
@@ -54,10 +35,7 @@ public class PanelInviteViewModel {
         PanelInviteViewModel that = (PanelInviteViewModel) o;
 
         return new EqualsBuilder()
-                .append(userLoggedIn, that.userLoggedIn)
-                .append(panelInviteHash, that.panelInviteHash)
-                .append(competitionId, that.competitionId)
-                .append(competitionName, that.competitionName)
+                .appendSuper(super.equals(o))
                 .append(panelDate, that.panelDate)
                 .isEquals();
     }
@@ -65,11 +43,8 @@ public class PanelInviteViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(panelInviteHash)
-                .append(competitionId)
-                .append(competitionName)
+                .appendSuper(super.hashCode())
                 .append(panelDate)
-                .append(userLoggedIn)
                 .toHashCode();
     }
 }

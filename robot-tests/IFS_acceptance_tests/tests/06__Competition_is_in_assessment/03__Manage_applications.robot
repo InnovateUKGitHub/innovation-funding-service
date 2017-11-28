@@ -27,7 +27,7 @@ Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
 ${Molecular_id}        ${application_ids['Molecular tree breeding']}
-${Virtual_Reality_id}  ${application_ids['Living with Virtual Reality']}
+${Cryptocurrencies_id}  ${application_ids['Living with Cryptocurrencies']}
 ${Paul_Plum_id}        ${user_ids['${assessor_credentials["email"]}']}
 ${Intelligent_water}   ${application_ids['Intelligent water system']}
 
@@ -80,8 +80,8 @@ View assessor progress page
     And the user should see the element    jQuery=h4:contains("Type") ~ span:contains("Academic")
     And the user should see the element    jQuery=h2:contains("Assigned") + div td:contains("${Molecular_id}") + td:contains("Molecular tree breeding") + td:contains("Forest Universe") + td:contains("2")
     And the user should see the element    jQuery=h2:contains("Assigned") + div td:contains("${Molecular_id}") ~ td:contains("Yes") + td:contains("-") + td:contains("-")
-    And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Virtual_Reality_id}") + td:contains("Living with Virtual Reality") + td:contains("Caneplus")
-    And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Virtual_Reality_id}") ~ td:contains("0") + td:contains("0") + td:contains("0")
+    And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") + td:contains("Living with Cryptocurrencies") + td:contains("Moveis")
+    And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${Cryptocurrencies_id}") ~ td:contains("0") + td:contains("0") + td:contains("0")
 
 Selecting Review assessor link shows the assessor page
     [Documentation]  IFS-1046
@@ -154,9 +154,9 @@ Application number navigates to Overview
 View application progress page
     [Documentation]    INFUND-7042, INFUND-7046
     [Tags]
-    Given the user clicks the button/link          jQuery=td:contains("Living with Augmented Reality") ~ td:contains("View progress")
-    Then The user should see the element           jQuery=h2:contains("Living with Augmented Reality")
-    And the user should see the element            jQuery=h3:contains("Partners") ~ ul:contains("Tripplezap (Lead)")
+    Given the user clicks the button/link          jQuery=td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
+    Then The user should see the element           jQuery=h2:contains("Living with Cryptocurrencies")
+    And the user should see the element            jQuery=h3:contains("Partners") ~ ul:contains("Moveis (Lead)")
     And the user should see the element            jQuery=h3:contains("Innovation area") ~ span:contains("Digital manufacturing")
     And the user should see the element            jQuery=p:contains("No assessors have been assigned to this application")
     And the user should see the element            jQuery=p:contains("No assessors have rejected this application.")
@@ -185,12 +185,12 @@ View the application assigned list
     Then the user should see the text in the page  Assigned (1)
     And the assigned list is correct before notification
     And the user clicks the button/link            link=Allocate applications
-    Then the user should see the element           jQuery=td:contains("Living with Augmented Reality") ~ td:nth-child(4):contains("1")
+    Then the user should see the element           jQuery=td:contains("Living with Cryptocurrencies") ~ td:nth-child(4):contains("1")
 
 Remove an assigned user (Not notified)
     [Documentation]    INFUND-7230
     [Tags]
-    Given the user clicks the button/link  jQuery=td:contains("Living with Augmented Reality") ~ td:contains("View progress")
+    Given the user clicks the button/link  jQuery=td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
     And the user clicks the button/link    jQuery=td:contains("Paul Plum") ~ td:contains("Remove")
     And the user clicks the button/link    jQuery=.pagination-label:contains("Next")
     And the available assessors information is correct
@@ -209,7 +209,7 @@ Assessor should see the assigned application
     [Documentation]    INFUND-7050
     [Setup]    Log in as a different user  &{assessor_credentials}
     When The user clicks the button/link   link=Sustainable living models for the future
-    Then The user should see the element   Link=Living with Augmented Reality
+    Then The user should see the element   Link=Living with Cryptocurrencies
 
 Remove and notify an assessor (Notified)
     [Documentation]    INFUND-7232
@@ -218,7 +218,7 @@ Remove and notify an assessor (Notified)
     Given The user clicks the button/link         link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link           jQuery=a:contains("Manage assessments")
     And the user clicks the button/link           jQuery=a:contains("Manage applications")
-    And the user clicks the button/link           jQuery=td:contains("Living with Augmented Reality") ~ td:contains("View progress")
+    And the user clicks the button/link           jQuery=td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
     When the user clicks the button/link          jQuery=td:contains("Paul Plum") ~ td:contains("Remove")
     And the user clicks the button/link           jQuery=.buttonlink:contains("Cancel")
     And the user should not see the element       jQuery=button:contains("Remove assessor")
@@ -231,7 +231,7 @@ Assessor should not see the removed application
     [Documentation]    INFUND-7232
     [Setup]    Log in as a different user     &{assessor_credentials}
     When The user clicks the button/link      link=Sustainable living models for the future
-    Then The user should not see the element  Link=Living with Augmented Reality
+    Then The user should not see the element  Link=Living with Cryptocurrencies
 
 Reassign and notify an assessor (Notified)
     [Documentation]    INFUND-7048
@@ -240,7 +240,7 @@ Reassign and notify an assessor (Notified)
     Given The user clicks the button/link          link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link            jQuery=a:contains("Manage assessments")
     And the user clicks the button/link            jQuery=a:contains("Manage applications")
-    And the user clicks the button/link            jQuery=td:contains("Living with Augmented Reality") ~ td:contains("View progress")
+    And the user clicks the button/link            jQuery=td:contains("Living with Cryptocurrencies") ~ td:contains("View progress")
     And the user should see the text in the page   Previously assigned (1)
     And the user clicks the button/link            jQuery=tr:contains("Paul Plum") button:contains("Reassign")
     Then the user should see the text in the page  Assigned (1)
@@ -255,7 +255,7 @@ Assessor should see the reassigned application
     [Documentation]    INFUND-7050
     [Setup]    Log in as a different user  &{assessor_credentials}
     When The user clicks the button/link   link=Sustainable living models for the future
-    Then The user should see the element   Link=Living with Augmented Reality
+    Then The user should see the element   Link=Living with Cryptocurrencies
 
 *** Keywords ***
 the application list is correct before changes
@@ -300,7 +300,7 @@ the user see the correct key statistics
 
 The key statistics counts should be correct
     ${TOTAL_ASSIGNMENT}=    Get text    css=.column-fifth:nth-child(1) span
-    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    14
+    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    16
     ${AWAITING}=    Get text    css=.column-fifth:nth-child(2) span
     Should Be Equal As Integers    ${AWAITING}    7
     ${ACCEPTED}=    Get text    css=.column-fifth:nth-child(3) span
@@ -308,11 +308,11 @@ The key statistics counts should be correct
     ${STARTED}=    Get text    css=.column-fifth:nth-child(4) span
     Should Be Equal As Integers    ${STARTED}    0
     ${SUBMITTED}=    Get text    css=.column-fifth:nth-child(5) span
-    Should Be Equal As Integers    ${SUBMITTED}    1
+    Should Be Equal As Integers    ${SUBMITTED}    3
 
 the assessor list is correct before changes
     the user clicks the button/link  jQuery=a:contains("21 to 40")
-    the user should see the element  jQuery=td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("7") ~ td:contains("7") ~ td:contains("3") ~ td:contains("0")
+    the user should see the element  jQuery=td:contains("Paul Plum") ~ td:contains("Town Planning, Construction") ~ td:contains("7") ~ td:contains("7") ~ td:contains("3") ~ td:contains("1")
 
 the user accepts the application
     the user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}

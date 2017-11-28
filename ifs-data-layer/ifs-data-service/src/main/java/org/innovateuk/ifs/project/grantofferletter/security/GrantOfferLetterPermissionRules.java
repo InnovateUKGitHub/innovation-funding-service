@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.security;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -35,6 +36,14 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
+            value = "DOWNLOAD_GRANT_OFFER",
+            description = "Innovation lead users can download grant offer documents (Unsigned grant offer, signed grant offer, Additional contract), of projects from competition assigned to them")
+    public boolean innovationLeadUsersCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
+        Application application = applicationRepository.findOne(project.getApplication());
+        return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
+    }
+
+    @PermissionRule(
             value = "VIEW_GRANT_OFFER",
             description = "Partners can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
 
@@ -54,6 +63,14 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             description = "Support users can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
     public boolean supportUsersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
         return isSupport(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER",
+            description = "Innovation lead users can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract), of projects from competition assigned to them")
+    public boolean innovationLeadUsersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
+        Application application = applicationRepository.findOne(project.getApplication());
+        return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
     }
 
     @PermissionRule(
@@ -117,6 +134,14 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
             description = "Support users can view the send status of Grant Offer Letter for a project")
     public boolean supportUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
         return isSupport(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
+            description = "Innovation lead users can view the send status of Grant Offer Letter for a project from competition assigned to them")
+    public boolean innovationLeadUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
+        Application application = applicationRepository.findOne(project.getApplication());
+        return userIsInnovationLeadOnCompetition(application.getCompetition().getId(), user.getId());
     }
 
     @PermissionRule(

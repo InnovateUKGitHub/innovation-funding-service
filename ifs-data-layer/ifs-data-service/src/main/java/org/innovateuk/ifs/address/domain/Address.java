@@ -34,7 +34,7 @@ public class Address {
     private List<OrganisationAddress> organisations = new ArrayList<>();
 
     public Address() {
-    	// no-arg constructor
+        // no-arg constructor
     }
 
     public Address(String addressLine1, String addressLine2, String addressLine3, String town, String county, String postcode) {

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
+import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -13,6 +14,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionOpenQueryResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.competitionSearchResultItemListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.spendProfileStatusResourceListType;
 
 /**
  * Implements {@link CompetitionPostSubmissionRestService}
@@ -45,6 +47,16 @@ public class CompetitionPostSubmissionRestServiceImpl extends BaseRestService im
     @Override
     public RestResult<Long> getCompetitionOpenQueriesCount(long competitionId) {
         return getWithRestResult(competitionsRestURL + "/" + competitionId + "/queries/open/count", Long.class);
+    }
+
+    @Override
+    public RestResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/pending-spend-profiles", spendProfileStatusResourceListType());
+    }
+
+    @Override
+    public RestResult<Long> countPendingSpendProfiles(long competitionId) {
+        return getWithRestResult(competitionsRestURL + "/" + competitionId + "/count-pending-spend-profiles", Long.class);
     }
 
     @Override

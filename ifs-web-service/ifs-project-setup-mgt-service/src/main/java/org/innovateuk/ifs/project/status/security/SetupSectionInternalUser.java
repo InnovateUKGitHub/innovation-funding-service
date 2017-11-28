@@ -11,6 +11,7 @@ import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
 import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isInternalAdmin;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
 
@@ -44,7 +45,7 @@ public class SetupSectionInternalUser {
             return fail("Unable to access Monitoring Officer section until Project Details are submitted");
         }
 
-        if(isSupport(userResource)){
+        if(isSupport(userResource) || isInnovationLead(userResource)){
             return projectSetupProgressChecker.isMonitoringOfficerSubmitted() ? ACCESSIBLE : NOT_ACCESSIBLE;
         }
 
@@ -68,7 +69,7 @@ public class SetupSectionInternalUser {
         boolean approved = projectSetupProgressChecker.isSpendProfileApproved();
         boolean submitted = projectSetupProgressChecker.isSpendProfileSubmitted();
         if (approved || submitted) {
-            if(isSupport(userResource)) {
+            if(isSupport(userResource) || isInnovationLead(userResource)) {
                 if(approved) {
                     return ACCESSIBLE;
                 } else {
@@ -87,7 +88,7 @@ public class SetupSectionInternalUser {
             return NOT_ACCESSIBLE;
         }
 
-        if(isSupport(userResource) && !projectSetupProgressChecker.isOtherDocumentsApproved()){
+        if((isSupport(userResource) || isInnovationLead(userResource)) && !projectSetupProgressChecker.isOtherDocumentsApproved()){
             return NOT_ACCESSIBLE;
         }
 
@@ -104,7 +105,7 @@ public class SetupSectionInternalUser {
 
     public SectionAccess canAccessGrantOfferLetterSendSection(UserResource userResource) {
         if(projectSetupProgressChecker.isOtherDocumentsApproved() && projectSetupProgressChecker.isSpendProfileApproved()) {
-            if(isSupport(userResource)) {
+            if(isSupport(userResource) || isInnovationLead(userResource)) {
                 if(projectSetupProgressChecker.isGrantOfferLetterApproved()){
                     return ACCESSIBLE;
                 } else {

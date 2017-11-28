@@ -5,7 +5,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.stereotype.Component;
 
 /**
- * An interceptor that keeps track of whether a method has been secured at somepoint in the calling chain.
+ * An interceptor that keeps track of whether a method has been secured at some point in the calling chain.
  */
 @Component
 public class SecuredMethodsInStackCountInterceptor implements MethodInterceptor {

@@ -2,7 +2,7 @@ IFS.core.debug = (function () {
   'use strict'
   return {
     init: function () {
-      if (window.location.hostname === 'ifs.local-dev' && window.location.pathname.indexOf('/prototypes') === -1) {
+      if ((window.location.hostname === 'ifs.local-dev' && window.location.port !== '4000') && window.location.pathname.indexOf('/prototypes') === -1) {
         jQuery(document).on('dblclick', '#footer', function () {
           IFS.core.debug.toggleDebug()
         })

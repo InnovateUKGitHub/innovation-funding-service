@@ -86,6 +86,7 @@ public class CompetitionOverviewPopulatorTest {
                 .withCompetitionId(23523L)
                 .build();
 
+
         CompetitionOverviewViewModel viewModel = populator.populateViewModel(setupPublicContent(publicContentResource), true);
 
         assertEquals(publicContentResource.getShortDescription(), viewModel.getShortDescription());
@@ -207,6 +208,7 @@ public class CompetitionOverviewPopulatorTest {
         final PublicContentItemResource publicContentItem = newPublicContentItemResource()
                 .withCompetitionOpenDate(openDate)
                 .withCompetitionCloseDate(closeDate)
+                .withRegistrationCloseDate(closeDate.minusDays(7))
                 .withCompetitionTitle(competitionTitle)
                 .withContentSection(publicContentResource)
                 .withNonIfsUrl(nonIfsUrl)

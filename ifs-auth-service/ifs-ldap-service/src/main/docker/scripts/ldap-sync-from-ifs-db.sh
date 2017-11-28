@@ -5,7 +5,7 @@
 # Wipes all users on the ldap.
 # Uses the same password for all users.
 #
-# Update history: 
+# Update history:
 # A Munro 10 Mar 2017 Big gotya, slapadd is intermittent with replication; sometimes it works
 # and sometimes it doesn't (even with the -w arg). To be safe, need to use ldapadd.
 
@@ -45,6 +45,11 @@ echo database:$db
 echo user:$user
 echo port:$port
 
+echo ldap host:$LDAP_HOST
+echo ldap port:$LDAP_PORT
+echo ldap domain:$LDAP_DOMAIN
+echo ldap scheme:$LDAP_SCHEME
+
 wipeLdapUsers() {
   ldapsearch -H ldapi:/// -b "$domain" -s sub '(objectClass=person)' -x \
    | grep 'dn: ' \
@@ -58,7 +63,7 @@ executeMySQLCommand() {
 
 addUserToShibboleth() {
   email=$1
-  uid=$(executeMySQLCommand "select uid from user where email='$email';")
+  uid=$(executeMySQLCommand "select uid from user where email='$(escaped $email)';")
 
   echo "dn: uid=$uid,$domain"
   echo "uid: $uid"
@@ -71,6 +76,11 @@ addUserToShibboleth() {
   echo "employeeType: active"
   echo "userPassword:: $password"
   echo ""
+}
+
+# Escape single quote for use in sql where clauses.
+escaped() {
+  echo $1 | sed "s/'/\\\\'/g"
 }
 
 # Main

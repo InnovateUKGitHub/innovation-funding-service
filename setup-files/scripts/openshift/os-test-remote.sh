@@ -9,13 +9,16 @@ ROUTE_DOMAIN=apps.${HOST}
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
+. $(dirname $0)/deploy-functions.sh
+. $(dirname $0)/local-deploy-functions.sh
+
 echo "Deploying tests to the current oc project ($PROJECT)"
 
 function tailorToAppInstance() {
-    rm -rf os-files-tmp
-    cp -r os-files os-files-tmp
-    sed -i.bak "s#innovateuk/#${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/robot-tests/*.yml
-    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/robot-tests/*.yml
+    rm -rf $(getBuildLocation)
+    cp -r os-files $(getBuildLocation)
+    sed -i.bak "s#innovateuk/#${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/robot-tests/*.yml
+    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" $(getBuildLocation)/robot-tests/*.yml
 
     cp -r robot-tests robot-tests-tmp
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" robot-tests-tmp/openshift/*.sh
@@ -26,7 +29,7 @@ function tailorToAppInstance() {
 
 function cleanUp() {
     rm -rf robot-tests-tmp/
-    rm -rf os-files-tmp
+    rm -rf $(getBuildLocation)
 }
 
 function buildAndPushTestImages() {
@@ -36,9 +39,9 @@ function buildAndPushTestImages() {
 }
 
 function deployTests() {
-    oc create -f os-files-tmp/robot-tests/7-chrome.yml
+    oc create -f $(getBuildLocation)/robot-tests/7-chrome.yml
     sleep 5
-    oc create -f os-files-tmp/robot-tests/8-robot.yml
+    oc create -f $(getBuildLocation)/robot-tests/8-robot.yml
     sleep 2
 }
 

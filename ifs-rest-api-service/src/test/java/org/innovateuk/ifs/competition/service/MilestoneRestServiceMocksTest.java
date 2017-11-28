@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.junit.Assert;
@@ -118,6 +119,21 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         setupPutWithRestResultExpectations(milestonesRestURL + "/", Void.class, response, null, HttpStatus.OK);
         service.updateMilestone(response);
         setupPutWithRestResultVerifications(milestonesRestURL + "/", Void.class, response);
+    }
+
+    @Test
+    public void test_resetMilestone() {
+        MilestoneResource milestoneToReset = milestone(1L,
+                MilestoneType.NOTIFICATIONS,
+                null,
+                competitionId);
+
+        setupPutWithRestResultExpectations(milestonesRestURL + "/", Void.class, milestoneToReset, null, HttpStatus.OK);
+        RestResult<Void> result = service.resetMilestone(milestoneToReset);
+
+        assertTrue(result.isSuccess());
+
+        setupPutWithRestResultVerifications(milestonesRestURL + "/", Void.class, milestoneToReset);
     }
 
     private MilestoneResource getOpenDateMilestone() {

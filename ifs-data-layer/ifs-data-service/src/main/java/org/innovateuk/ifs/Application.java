@@ -19,19 +19,19 @@ import javax.servlet.ServletException;
 @EnableScheduling
 @EnableSpringDataWebSupport
 public class Application extends SpringBootServletInitializer {
-    private static final Log log = LogFactory.getLog(Application.class);
+    private static final Log LOG = LogFactory.getLog(Application.class);
 
 
     @Override
     protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        log.info("Spring Application builder configure method");
-        log.info("======== org.innovateuk.ifs.Application.configure()");
+        LOG.info("Spring Application builder configure method");
+        LOG.info("======== org.innovateuk.ifs.Application.configure()");
         return application.sources(Application.class);
     }
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         super.onStartup(servletContext);
-        log.info("======== org.innovateuk.ifs.Application.onStartup()");
+        LOG.info("======== org.innovateuk.ifs.Application.onStartup()");
     }
 
     /**
@@ -42,8 +42,8 @@ public class Application extends SpringBootServletInitializer {
         return new DefaultFormattingConversionService();
     }
 
-    public static void main(String[] args) throws Exception {
-        log.info("======== org.innovateuk.ifs.Application.main()");
+    public static void main(String[] args)  {
+        LOG.info("======== org.innovateuk.ifs.Application.main()");
         SpringApplication.run(Application.class, args);
     }
 }

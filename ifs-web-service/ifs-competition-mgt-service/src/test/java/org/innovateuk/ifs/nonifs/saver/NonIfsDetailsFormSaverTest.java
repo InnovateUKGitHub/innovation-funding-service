@@ -8,6 +8,8 @@ import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
+import org.innovateuk.ifs.competitionsetup.form.GenericMilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.form.MilestoneOrEmptyRowForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
@@ -46,7 +48,8 @@ public class NonIfsDetailsFormSaverTest {
     private static final String COMPETITION_URL = "COMPETITION_URL";
     private static final ZonedDateTime NOTIFIED = ZonedDateTime.now().plusDays(1);
     private static final ZonedDateTime OPEN = ZonedDateTime.now().plusDays(2);
-    private static final ZonedDateTime CLOSE = ZonedDateTime.now().plusDays(3);
+    private static final ZonedDateTime REGISTRATION = ZonedDateTime.now().plusDays(3);
+    private static final ZonedDateTime CLOSE = ZonedDateTime.now().plusDays(4);
 
     @InjectMocks
     private NonIfsDetailsFormSaver target;
@@ -64,7 +67,7 @@ public class NonIfsDetailsFormSaverTest {
     private MilestoneRestService milestoneRestService;
 
     @Captor
-    private ArgumentCaptor<Map<String, MilestoneRowForm>> captor;
+    private ArgumentCaptor<Map<String, GenericMilestoneRowForm>> captor;
 
     @Test
     public void testSaveSuccess() {
@@ -86,10 +89,11 @@ public class NonIfsDetailsFormSaverTest {
 
         verify(competitionSetupMilestoneService).updateMilestonesForCompetition(eq(allMilestones), captor.capture(), eq(competition.getId()));
 
-        Map<String, MilestoneRowForm> milestones = captor.getValue();
+        Map<String, GenericMilestoneRowForm> milestones = captor.getValue();
 
         assertThat(milestones.get(NOTIFICATIONS.name()).getDate(), equalTo(NOTIFIED));
         assertThat(milestones.get(OPEN_DATE.name()).getDate(), equalTo(OPEN));
+        assertThat(milestones.get(REGISTRATION_DATE.name()).getDate(), equalTo(REGISTRATION));
         assertThat(milestones.get(SUBMISSION_DATE.name()).getDate(), equalTo(CLOSE));
     }
 
@@ -111,8 +115,9 @@ public class NonIfsDetailsFormSaverTest {
         form.setInnovationSectorCategoryId(INNOVATION_SECTOR);
         form.setInnovationAreaCategoryId(INNOVATION_AREA);
         form.setOpenDate(new MilestoneRowForm(MilestoneType.OPEN_DATE, OPEN));
+        form.setRegistrationCloseDate(new MilestoneRowForm(MilestoneType.REGISTRATION_DATE, REGISTRATION));
         form.setCloseDate(new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, CLOSE));
-        form.setApplicantNotifiedDate(new MilestoneRowForm(MilestoneType.RELEASE_FEEDBACK, NOTIFIED));
+        form.setApplicantNotifiedDate(new MilestoneOrEmptyRowForm(MilestoneType.RELEASE_FEEDBACK, NOTIFIED));
         return form;
     }
 

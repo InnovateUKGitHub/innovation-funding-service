@@ -10,11 +10,12 @@ import org.springframework.stereotype.Component;
  * Build the model for the Assessment Panel Invitation view.
  */
 @Component
-public class PanelInviteModelPopulator {
+public class PanelInviteModelPopulator extends InviteModelPopulator<PanelInviteViewModel> {
 
     @Autowired
     private AssessmentPanelInviteRestService inviteRestService;
 
+    @Override
     public PanelInviteViewModel populateModel(String inviteHash, boolean userLoggedIn) {
         AssessmentPanelInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccessObjectOrThrowException();
 

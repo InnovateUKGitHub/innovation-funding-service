@@ -23,7 +23,7 @@ public class SpendProfileController {
     /**
      * This method assumes that all the necessary stuff is in the database before the Spend Profile can be generated.
      * This does not perform any validations to check that the Finance Checks are complete, Viability is approved,
-     * Eligibility is approved or if the Spend Profile is already generated.
+     * Eligibility is approved, if the Spend Profile is already generated or if the Spend Profile process is in a valid state.
      */
     @PostMapping("/partner-organisation/{organisationId}/user/{userId}/spend-profile/generate")
     public RestResult<Void> generateSpendProfileForPartnerOrganisation(@PathVariable("projectId") final Long projectId,

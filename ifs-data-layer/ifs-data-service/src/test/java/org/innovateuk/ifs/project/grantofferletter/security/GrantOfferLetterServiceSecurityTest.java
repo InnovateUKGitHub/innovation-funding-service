@@ -56,6 +56,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
             verify(projectGrantOfferPermissionRules).supportUsersCanViewGrantOfferLetter(project, getLoggedInUser());
 
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project, getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -75,6 +77,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
             verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project, getLoggedInUser());
 
             verify(projectGrantOfferPermissionRules).supportUsersCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project, getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -96,6 +100,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
             verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferLetter(project, getLoggedInUser());
 
             verify(projectGrantOfferPermissionRules).supportUsersCanViewGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanViewGrantOfferLetter(project, getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -131,6 +137,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
             verify(projectGrantOfferPermissionRules).supportUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -151,6 +159,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
             verify(projectGrantOfferPermissionRules).supportUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
 
@@ -170,6 +180,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
             verify(projectGrantOfferPermissionRules).internalUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
             verify(projectGrantOfferPermissionRules).supportUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
+
+            verify(projectGrantOfferPermissionRules).innovationLeadUsersCanDownloadGrantOfferLetter(project, getLoggedInUser());
 
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -273,6 +285,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         assertAccessDenied(() -> classUnderTest.isGrantOfferLetterAlreadySent(123L), () -> {
             verify(projectGrantOfferPermissionRules).internalAdminUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verify(projectGrantOfferPermissionRules).supportUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).innovationLeadUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verify(projectGrantOfferPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -309,6 +322,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         assertAccessDenied(() -> classUnderTest.getGrantOfferLetterWorkflowState(123L), () -> {
             verify(projectGrantOfferPermissionRules).internalAdminUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verify(projectGrantOfferPermissionRules).supportUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).innovationLeadUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verify(projectGrantOfferPermissionRules).externalUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });

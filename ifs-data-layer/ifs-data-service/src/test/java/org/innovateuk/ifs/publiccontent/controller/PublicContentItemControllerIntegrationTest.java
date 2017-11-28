@@ -85,7 +85,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         long innovationId = 5L;
 
         flushAndClearSession();
-        addOpenDateToCompetition(competition);
+        addOpenDateToCompetition(competition, YESTERDAY);
 
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(innovationId), Optional.of("key wor"), Optional.of(0), 20);
 
@@ -136,7 +136,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         Competition competition = competitionRepository.findById(COMPETITION_ID);
         flushAndClearSession();
 
-        addOpenDateToCompetition(competition);
+        addOpenDateToCompetition(competition, TOMORROW);
         setPrivateCompetitionToPublic();
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.empty(), Optional.empty(), Optional.empty(), 10);
 
@@ -157,7 +157,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         Category category = categoryRepository.findOne(innovationId);
 
         flushAndClearSession();
-        addOpenDateToCompetition(competition);
+        addOpenDateToCompetition(competition, YESTERDAY);
 
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(innovationId), Optional.empty(), Optional.empty(), 10);
 
@@ -175,7 +175,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         long innovationId = 5L;
 
         flushAndClearSession();
-        addOpenDateToCompetition(competition);
+        addOpenDateToCompetition(competition, YESTERDAY);
 
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(innovationId), Optional.of("Nothing key wor"), Optional.empty(), 10);
 
@@ -189,7 +189,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Test
     @Rollback
     public void findFilteredItems_openCompetitionsAreFilteredFromResultListAndTotalFound() throws Exception {
-        addOpenDateToCompetition(competitionRepository.findById(COMPETITION_ID));
+        addOpenDateToCompetition(competitionRepository.findById(COMPETITION_ID), YESTERDAY);
         RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("Nothing key wor"), Optional.of(0), 20);
 
         assertTrue(result.isSuccess());
@@ -342,7 +342,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         Competition privateCompetition = competitionRepository.save(newCompetition().withName(PRIVATE_OR_PUBLIC_COMP_NAME).build());
         privateCompetition.setInnovationSector(innovationArea.getSector());
 
-        addOpenDateToCompetition(privateCompetition);
+        addOpenDateToCompetition(privateCompetition, YESTERDAY);
 
         Milestone closedMilestone = newMilestone()
                 .withCompetition(privateCompetition)
@@ -380,11 +380,11 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         publicContentRepository.save(publicContent);
     }
 
-    private void addOpenDateToCompetition(Competition competition) {
+    private void addOpenDateToCompetition(Competition competition, ZonedDateTime openDate) {
         Milestone openDateMilestone = newMilestone()
                 .withCompetition(competition)
                 .withType(MilestoneType.OPEN_DATE)
-                .withDate(YESTERDAY).build();
+                .withDate(openDate).build();
         milestoneRepository.save(openDateMilestone);
     }
 

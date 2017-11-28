@@ -24,6 +24,7 @@ import org.innovateuk.ifs.project.projectdetails.workflow.configuration.ProjectD
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -88,6 +89,9 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     @Autowired
     private EligibilityWorkflowHandler eligibilityWorkflowHandler;
+
+    @Autowired
+    private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
 
     @Autowired
     protected PartnerOrganisationRepository partnerOrganisationRepository;
@@ -164,7 +168,7 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
 
     protected ProjectActivityStates createLeadSpendProfileStatus(final Project project, final  ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
         ProjectActivityStates spendProfileStatus = createSpendProfileStatus(financeCheckStatus, spendProfile);
-        if (COMPLETE.equals(spendProfileStatus) && !APPROVED.equals(spendProfile.get().getApproval())) {
+        if (COMPLETE.equals(spendProfileStatus) && !APPROVED.equals(spendProfileWorkflowHandler.getApproval(project))) {
             return project.getSpendProfileSubmittedDate() != null ? PENDING : ACTION_REQUIRED;
         } else {
             return spendProfileStatus;

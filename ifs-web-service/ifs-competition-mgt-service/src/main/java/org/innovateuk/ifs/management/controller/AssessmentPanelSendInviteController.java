@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.innovateuk.ifs.management.form.AssessorPanelOverviewSelectionForm;
+import org.innovateuk.ifs.management.form.PanelOverviewSelectionForm;
 import org.innovateuk.ifs.management.form.ResendInviteForm;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.viewmodel.SendInvitesViewModel;
@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Controller
 @RequestMapping("/panel/competition/{competitionId}/assessors/invite")
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class AssessmentPanelSendInviteController extends CompetitionManagementCookieController<AssessorPanelOverviewSelectionForm> {
+public class AssessmentPanelSendInviteController extends CompetitionManagementCookieController<PanelOverviewSelectionForm> {
 
     private static final String SELECTION_FORM = "assessorPanelOverviewSelectionForm";
 
@@ -46,8 +46,8 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
     }
 
     @Override
-    protected Class<AssessorPanelOverviewSelectionForm> getFormType() {
-        return AssessorPanelOverviewSelectionForm.class;
+    protected Class<PanelOverviewSelectionForm> getFormType() {
+        return PanelOverviewSelectionForm.class;
     }
 
     @GetMapping("/send")
@@ -97,13 +97,13 @@ public class AssessmentPanelSendInviteController extends CompetitionManagementCo
     public String getInvitesToResend(Model model,
                                      @PathVariable("competitionId") long competitionId,
                                      @RequestParam(defaultValue = "0") int page,
-                                     @ModelAttribute(SELECTION_FORM) AssessorPanelOverviewSelectionForm selectionForm,
+                                     @ModelAttribute(SELECTION_FORM) PanelOverviewSelectionForm selectionForm,
                                      @ModelAttribute(name = "form", binding = false) ResendInviteForm inviteform,
                                      ValidationHandler validationHandler,
                                      BindingResult bindingResult,
                                      HttpServletRequest request) {
 
-        AssessorPanelOverviewSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
+        PanelOverviewSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
                 .filter(form -> !form.getSelectedInviteIds().isEmpty())
                 .orElse(selectionForm);
         Supplier<String> failureView = () -> redirectToOverview(competitionId, page);

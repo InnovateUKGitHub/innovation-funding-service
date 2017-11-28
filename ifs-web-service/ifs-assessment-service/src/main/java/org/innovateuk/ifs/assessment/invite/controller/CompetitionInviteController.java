@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.invite.controller;
 
 import org.innovateuk.ifs.assessment.invite.form.CompetitionInviteForm;
 import org.innovateuk.ifs.assessment.invite.populator.CompetitionInviteModelPopulator;
-import org.innovateuk.ifs.assessment.invite.populator.RejectCompetitionModelPopulator;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -43,9 +42,6 @@ public class CompetitionInviteController {
 
     @Autowired
     private CompetitionInviteModelPopulator competitionInviteModelPopulator;
-
-    @Autowired
-    private RejectCompetitionModelPopulator rejectCompetitionModelPopulator;
 
     @GetMapping("/invite/competition/{inviteHash}")
     public String openInvite(@PathVariable("inviteHash") String inviteHash,

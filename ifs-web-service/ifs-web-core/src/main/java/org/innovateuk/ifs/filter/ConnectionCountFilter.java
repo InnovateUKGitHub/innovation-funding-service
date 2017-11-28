@@ -27,7 +27,8 @@ public class ConnectionCountFilter extends OncePerRequestFilter {
     private int max;
 
 
-    @Override public void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain) throws IOException, ServletException {
+    @Override
+    public void doFilterInternal(final HttpServletRequest request, final HttpServletResponse response, final FilterChain chain) throws IOException, ServletException {
         try {
             count.incrementAndGet();
             chain.doFilter(request, response);
