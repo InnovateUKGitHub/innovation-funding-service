@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Pending Bank Details Approvals'" />
+</head>
+<body class="project-management">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content" class="full-width">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <div class="grid-container">
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
+
+        <div class="grid-row">
+            <div class="column-two-thirds">
+                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank details',subTitle=|Project setup|,size='heading-xlarge'" />
+            </div>
+        </div>
+    </div>
+
+    <th:block th:if="${model.pendingBankDetails.size() > 0}">
+        <div>
+            <table id="table-project-organisation-query-status" class="table-overview extra-margin-bottom">
+                <thead>
+                <tr>
+                    <th scope="col">Application number</th>
+                    <th scope="col">Competition Name</th>
+                    <th scope="col">Project Title</th>
+                    <th scope="col">Awaiting Approval</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="pendingBankDetail : ${model.pendingBankDetails}">
+                    <td th:text="${pendingBankDetail.applicationId}"></td>
+                    <td th:text="${pendingBankDetail.competitionName}"></td>
+                    <td th:text="${pendingBankDetail.projectName}"></td>
+                    <td><a th:text="${pendingBankDetail.organisationName}" th:href="@{/project/{projectId}/review-all-bank-details(projectId=${pendingBankDetail.projectId})}"></a></td>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+    <th:block th:unless="${model.pendingBankDetails.size() > 0}">
+        There are no outstanding Bank Details to be approved.
+    </th:block>
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
