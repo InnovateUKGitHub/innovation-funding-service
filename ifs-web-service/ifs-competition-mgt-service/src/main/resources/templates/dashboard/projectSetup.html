@@ -26,7 +26,10 @@
                     informComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).ASSESSOR_FEEDBACK)},
                     panelComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).FUNDERS_PANEL)}">
             <h2 class="heading-medium" th:text="'Project setup ('+${model.counts.projectSetupCount}+')'"></h2>
-            <ul class="list-overview">
+
+            <a href="/project-setup-management/competition/status/pending-bank-details-approvals">Bank details</a>
+
+            <ul class="list-overview extra-margin">
                 <!-- Deliberate separation from PS list.  Check with BAs if this should be categorised like in live tab for clarity of status -->
                 <li class="grid-row" th:each="competition : ${panelComps}">
                     <th:block

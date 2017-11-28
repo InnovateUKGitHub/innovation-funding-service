@@ -3,22 +3,20 @@
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Pending Bank Details Approvals'" />
 </head>
-<body class="project-management">
+<body class="project-management wide-page">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
-<main tabindex="-1" id="content" class="full-width">
+<main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div class="grid-container">
-        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}" />
 
-        <div class="grid-row">
-            <div class="column-two-thirds">
-                <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank details',subTitle=|Project setup|,size='heading-xlarge'" />
-            </div>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank details',subTitle=|Project setup|,size='heading-xlarge'" />
         </div>
     </div>
-
+    
     <th:block th:if="${model.pendingBankDetails.size() > 0}">
         <div>
             <table id="table-project-organisation-query-status" class="table-overview extra-margin-bottom">
