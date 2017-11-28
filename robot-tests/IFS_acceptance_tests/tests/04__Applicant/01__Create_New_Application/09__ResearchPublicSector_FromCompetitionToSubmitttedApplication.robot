@@ -76,14 +76,7 @@ Project Finance is able to see the Overheads costs file
 
 *** Keywords ***
 Custom Suite Setup
-    ${month} =          get tomorrow month
-    set suite variable  ${month}
-    ${nextMonth} =  get next month
-    set suite variable  ${nextMonth}
-    ${nextyear} =       get next year
-    Set suite variable  ${nextyear}
-    ${tomorrowday} =    get tomorrow day
-    Set suite variable  ${tomorrowday}
+    predefined date keywords
     The guest user opens the browser
 
 The competition admin creates a competition for

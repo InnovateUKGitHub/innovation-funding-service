@@ -5,10 +5,9 @@ Resource    ../../resources/defaultResources.robot
 #CA = Competition Administration
 ${CA_UpcomingComp}   ${server}/management/dashboard/upcoming
 ${CA_Live}           ${server}/management/dashboard/live
-${compType_Programme}  Programme
-${compType_Sector}     Sector
-${compType_Generic}    Generic
-
+#${compType_Programme}  Programme
+#${compType_Sector}     Sector
+#${compType_Generic}    Generic
 
 *** Keywords ***
 the user edits the assessed question information
@@ -119,14 +118,21 @@ the user fills in the CS Milestones
 the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link  link=Application
-    the user marks application details as complete
+    the user marks application details as complete    ${comp_type}
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
+    Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
+    Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user fills no finances for EOI comp
     #No need to mark generic competition assessed question as complete as they already are.
-    the user fills in the Finances questions  ${growthTable}
+    Run keyword If  '${comp_type}'!='${compType_EOI}'   the user fills in the Finances questions  ${growthTable}
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
+
+the user fills no finances for EOI comp
+    the user clicks the button/link   link=Finances
+    the user clicks the button/link    radio-3     # TODO need to replace the selector based on what we do with implementation to exclude finances
+    the user clicks the button/link   jQuery=.button:contains("Done")
 
 the assessed questions are marked complete except finances(programme type)
     the user marks each question as complete  Business opportunity
@@ -152,10 +158,18 @@ the assessed questions are marked complete except finances(sector type)
     the user marks each question as complete  Additionality
     the user marks each question as complete  Costs and value for money
 
+the assessed questions are marked complete(EOI type)
+    the user marks each question as complete  Business opportunity and potential market
+    the user marks each question as complete  Innovation
+    the user marks each question as complete  Project team
+    the user marks each question as complete  Funding and adding value
+    the user should see the element           jQuery=button:contains("Add question")
+
 the user marks application details as complete
+    [Arguments]  ${compType}
     the user marks each question as complete  Application details
     the user marks each question as complete  Project summary
-    the user marks each question as complete  Public description
+    Run Keyword If    '${compType}'!='${compType_EOI}'    the user marks each question as complete  Public description
     the user marks each question as complete  Scope
 
 the user marks each question as complete
@@ -352,3 +366,9 @@ the competition moves to Open state
     ${yesterday} =  get yesterday
     Connect to Database  @{database}
     execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
+
+# Note here we are passing the comp title not the comp ID to update the correct comp milestone
+the competition is open
+    [Arguments]  ${compTitle}
+    Connect to Database  @{database}
+    change the open date of the competition in the database to one day before  ${compTitle}

@@ -8,10 +8,10 @@ Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 
-# This suite covers creating EOI type competition
+# This suite covers creation of EOI type competition and apply to it
 *** Variables ***
-${compType_EOI}    Expression of interest
 ${comp_name}       EOI comp
+
 *** Test Cases ***
 Comp Admin Creates EOI type competition
     [Documentation]  IFS-2192
@@ -22,12 +22,12 @@ Comp Admin Creates EOI type competition
 Applicant applies to newly created EOI comp
     [Documentation]  IFS-2192
     [Tags]  HappyPath
-    [Setup]  the EOI comp is now open to apply    ${comp_name}
+    [Setup]  the competition is open     ${comp_name}
     Lead Applicant applies to the new created competition    ${comp_name}
 
 *** Keywords ***
 Custom Suite Setup
-    predefined date keywords
+    predefined date variables
     The guest user opens the browser
 
 The competition admin creates a EOI Comp
@@ -38,7 +38,7 @@ The competition admin creates a EOI Comp
     the user fills in the CS Funding Information
     the user fills in the CS Eligibility  ${orgType}
     the user fills in the CS Milestones   ${month}  ${nextMonth}  ${nextyear}
-    the user marks the Application as done
+    the user marks the Application as done  no  ${compType_EOI}
     the user fills in the CS Assessors
     the user clicks the button/link  link=Public content
     the user fills in the Public content and publishes  ${extraKeyword}
@@ -48,34 +48,3 @@ The competition admin creates a EOI Comp
     the user navigates to the page   ${CA_UpcomingComp}
     the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
-the user marks the Application as done
-    the user clicks the button/link  link=Application
-    the user marks EOI application details as complete
-    the assessed questions are marked complete(EOI type)
-    the user fills in the Finances questions
-    the user clicks the button/link  jQuery=button:contains("Done")
-    the user clicks the button/link  link=Competition setup
-    the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
-
-the assessed questions are marked complete(EOI type)
-    the user marks each question as complete  Business opportunity and potential market
-    the user marks each question as complete  Innovation
-    the user marks each question as complete  Project team
-    the user marks each question as complete  Funding and adding value
-    the user should see the element           jQuery=button:contains("Add question")
-
-the user marks EOI application details as complete
-    the user marks each question as complete  Application details
-    the user marks each question as complete  Project summary
-    the user marks each question as complete  Scope
-
-# PLease note the finances in the commons cant be used as we have default text in Funding rules text area and
-# finances requirements are not fully ready yet
-the user fills in the Finances questions
-    the user clicks the button/link   link=Finances
-    the user clicks the button/link   jQuery=.button:contains("Done")
-
-the EOI comp is now open to apply
-    [Arguments]  ${competition_name}
-    Connect to Database  @{database}
-    change the open date of the competition in the database to one day before  ${competition_name}

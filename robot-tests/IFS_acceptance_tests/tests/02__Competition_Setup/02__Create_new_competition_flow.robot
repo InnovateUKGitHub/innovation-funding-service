@@ -813,6 +813,7 @@ the user should the server side validation working
     #TODO Amend the following to cover error-summary. Cover radio buttons as well - IFS-?
     the user should see a field error  This field cannot be left blank.
     the user should see a field error  Please enter a justification.
+
 the user marks question as complete
     [Arguments]  ${question_link}
     the user should not see the element  jQuery=li:contains("${question_link}") .task-status-complete

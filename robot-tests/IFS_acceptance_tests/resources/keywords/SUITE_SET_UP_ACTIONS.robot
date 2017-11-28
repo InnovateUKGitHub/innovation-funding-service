@@ -250,13 +250,3 @@ the user clicks the forgot psw link
 Close browser and delete emails
     Close any open browsers
     Delete the emails from both test mailboxes
-
-Predefined date keywords
-    ${month} =          get tomorrow month
-    set suite variable  ${month}
-    ${nextMonth} =  get next month
-    set suite variable  ${nextMonth}
-    ${nextyear} =       get next year
-    Set suite variable  ${nextyear}
-    ${tomorrowday} =    get tomorrow day
-    Set suite variable  ${tomorrowday}
