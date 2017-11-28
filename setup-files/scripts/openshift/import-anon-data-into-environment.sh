@@ -30,44 +30,33 @@ function checkVariables() {
     DB_DESTINATION_PORT=${DB_DESTINATION_PORT:-3306}
 }
 
-function setProject() {
-  PROJECT=$1
-  if [[ "$PROJECT" != "uat" ]]; then
-    echo "Only the current projects are allowed: uat"
-    exit -1;
-  fi
-  oc project $PROJECT
-}
-
 function getDatapodName {
- oc get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' \
+ oc get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' ${SVC_ACCOUNT_CLAUSE} \
  | grep data-service \
  | head -n1
 }
 
 function copyDumpToDatapod() {
   DATA_POD_NAME=$1
-  oc rsh $DATA_POD_NAME mkdir -p /tmp/anonymised
-  oc rsync /tmp/anonymised $DATA_POD_NAME:/tmp/
+  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME mkdir -p /tmp/anonymised
+  oc rsync ${SVC_ACCOUNT_CLAUSE} /tmp/anonymised $DATA_POD_NAME:/tmp/
 }
 
 function insertDataIntoDestinationDatabase() {
   DATA_POD_NAME=$1
-  oc rsh $DATA_POD_NAME apt-get install mysql-client
-  oc rsh $DATA_POD_NAME \
-  sh -c "gpg --decrypt --passphrase $DB_DUMP_PASS /tmp/anonymised/anonymised-dump.sql.gpg \
+  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME apt-get install mysql-client -y
+  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME \
+  bash -c "gpg --decrypt --passphrase $DB_DUMP_PASS /tmp/anonymised/anonymised-dump.sql.gpg \
   | mysql -u$DB_DESTINATION_USER -p$DB_DESTINATION_PASS -h$DB_DESTINATION_HOST -P$DB_DESTINATION_PORT $DB_DESTINATION_NAME"
 }
 
-function deleteDumpFromPod() {
+function deleteDumpFromDataPod() {
   DATA_POD_NAME=$1
-  oc rsh $DATA_POD_NAME
+  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME rm /tmp/anonymised/anonymised-dump.sql.gpg
 }
 
 checkVariables
-setProject $PROJECT
 DATA_POD_NAME=$(getDatapodName)
-echo $DATA_POD_NAME
 copyDumpToDatapod $DATA_POD_NAME
 insertDataIntoDestinationDatabase $DATA_POD_NAME
-deleteDumpFromDataPod $DATA_POD_NAME /tmp/anonymised/anonymised-dump.sql.gpg
+deleteDumpFromDataPod $DATA_POD_NAME
