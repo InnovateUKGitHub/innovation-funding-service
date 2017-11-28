@@ -67,7 +67,7 @@ IFS.core.formValidation = (function () {
         }
       },
       pattern: {
-        fields: '[pattern]:not([readonly])', 
+        fields: '[pattern]:not([readonly])',
         messageInvalid: 'Please correct this field.'
       },
       tel: {

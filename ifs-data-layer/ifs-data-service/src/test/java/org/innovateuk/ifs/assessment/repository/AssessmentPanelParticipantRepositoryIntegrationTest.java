@@ -6,10 +6,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.domain.AssessmentPanelInvite;
-import org.innovateuk.ifs.invite.domain.AssessmentPanelParticipant;
-import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
@@ -119,7 +116,7 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
 
         List<AssessmentPanelParticipant> retrievedParticipants = repository.findAll();
 
-        assertEquals(2, retrievedParticipants.size());
+        assertEquals(10, retrievedParticipants.size());  // Including 8 pre-existing paricipants added via patch
         assertEqualParticipants(savedParticipants, retrievedParticipants);
     }
 
@@ -215,7 +212,7 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
         repository.save(assessmentPanelParticipants);
         flushAndClearSession();
 
-        assertEquals(4, repository.count());
+        assertEquals(12, repository.count()); // Including 8 pre-existing paricipants added via patch
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
         Page<AssessmentPanelParticipant> pagedResult = repository.getPanelAssessorsByCompetitionAndStatusContains(
@@ -245,7 +242,8 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
     }
 
     private void assertEqualParticipants(List<AssessmentPanelParticipant> expected, List<AssessmentPanelParticipant> actual) {
-        zip(expected, actual, this::assertEqualParticipants);
+        List<AssessmentPanelParticipant> subList = actual.subList(actual.size() - expected.size(), actual.size()); // Exclude pre-existing participants added via patch
+        zip(expected, subList, this::assertEqualParticipants);
     }
 
     private void assertEqualParticipants(AssessmentPanelParticipant expected, AssessmentPanelParticipant actual) {

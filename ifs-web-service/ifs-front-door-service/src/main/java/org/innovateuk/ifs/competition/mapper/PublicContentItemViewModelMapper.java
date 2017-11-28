@@ -15,6 +15,7 @@ public class PublicContentItemViewModelMapper {
         publicContentItemViewModel.setCompetitionTitle(publicContentItemResource.getCompetitionTitle());
         publicContentItemViewModel.setCompetitionCloseDate(publicContentItemResource.getCompetitionCloseDate());
         publicContentItemViewModel.setCompetitionOpenDate(publicContentItemResource.getCompetitionOpenDate());
+        publicContentItemViewModel.setRegistrationCloseDate(publicContentItemResource.getRegistrationCloseDate());
 
         PublicContentResource publicContentResource = publicContentItemResource.getPublicContentResource();
         publicContentItemViewModel.setEligibilitySummary(publicContentResource.getEligibilitySummary());

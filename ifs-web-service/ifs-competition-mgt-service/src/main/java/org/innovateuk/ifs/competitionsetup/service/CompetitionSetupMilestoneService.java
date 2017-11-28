@@ -3,8 +3,8 @@ package org.innovateuk.ifs.competitionsetup.service;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
+import org.innovateuk.ifs.competitionsetup.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
-import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 
 import java.util.List;
 import java.util.Map;
@@ -14,11 +14,11 @@ import java.util.Map;
  */
 public interface CompetitionSetupMilestoneService {
 
-	ServiceResult<List<MilestoneResource>> createMilestonesForCompetition(Long competitionId);
+	ServiceResult<List<MilestoneResource>> createMilestonesForIFSCompetition(Long competitionId);
 
-    ServiceResult<Void> updateMilestonesForCompetition(List<MilestoneResource> milestones, Map<String, MilestoneRowForm> milestoneEntries, Long competitionId);
+    ServiceResult<Void> updateMilestonesForCompetition(List<MilestoneResource> milestones, Map<String, GenericMilestoneRowForm> milestoneEntries, Long competitionId);
 
-	List<Error> validateMilestoneDates(Map<String, MilestoneRowForm> milestonesFormEntries);
+	List<Error> validateMilestoneDates(Map<String, GenericMilestoneRowForm> milestonesFormEntries);
 
 	void sortMilestones(MilestonesForm MilestoneForm);
 

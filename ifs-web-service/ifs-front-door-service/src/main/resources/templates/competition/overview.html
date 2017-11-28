@@ -22,12 +22,9 @@
                          time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
                 <strong>Competition closes:</strong> <th:block th:text="${date + ' ' + time}"/></li>
 
-
             <li th:if="${model.nonIfs}" th:with="date=${#temporals.format(model.registrationCloseDate, 'EEEE d MMMM yyyy')},
-                                                 time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
+                                                 time=${#strings.toLowerCase(#temporals.format(model.registrationCloseDate, ' h:mma'))}">
                 <strong>Registration closes:</strong> <th:block th:text="${date + ' ' + time}"/></li>
-
-
 
         </ul>
         <div>

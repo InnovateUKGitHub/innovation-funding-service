@@ -61,7 +61,7 @@ public class NonIfsCompetitionController {
 
 
     @PostMapping("/non-ifs-competition/setup/{competitionId}")
-    public String save(Model model, @Valid @ModelAttribute(FORM_ATTR) NonIfsDetailsForm form,
+    public String save(Model model,@Valid @ModelAttribute(FORM_ATTR) NonIfsDetailsForm form,
                        BindingResult bindingResult, ValidationHandler validationHandler,
                        @PathVariable("competitionId") Long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);

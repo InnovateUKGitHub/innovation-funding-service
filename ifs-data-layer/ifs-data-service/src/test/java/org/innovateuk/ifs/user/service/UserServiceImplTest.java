@@ -9,12 +9,17 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.resource.UserPageResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.user.transactional.UserServiceImpl;
+import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -30,7 +35,6 @@ import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -43,6 +47,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Captor
     ArgumentCaptor<Notification> notificationArgumentCaptor;
+
+    @Mock
+    UserOrganisationMapper userOrganisationMapperMock;
 
     @Test
     public void testChangePassword() {
@@ -75,6 +82,26 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
 
         ServiceResult<Void> result = service.changePassword("myhash", "mypassword");
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonErrors.badRequestError("bad password")));
+        verify(tokenRepositoryMock, never()).delete(token);
+    }
+
+    @Test
+    public void testChangePasswordButPasswordValidationFailsOnIDP() {
+        final User user = newUser().build();
+        final UserResource userResource = newUserResource().withUID("myuid").build();
+        final String password = "mypassword";
+
+        Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
+        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(ServiceResult.serviceSuccess(token));
+        when(userRepositoryMock.findOne(123L)).thenReturn(user);
+        when(userMapperMock.mapToResource(user)).thenReturn(userResource);
+
+        when(passwordPolicyValidatorMock.validatePassword(password, userResource)).thenReturn(ServiceResult.serviceSuccess());
+        when(idpServiceMock.updateUserPassword(anyString(), anyString())).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
+
+        ServiceResult<Void> result = service.changePassword("myhash", password);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(CommonErrors.badRequestError("bad password")));
         verify(tokenRepositoryMock, never()).delete(token);
@@ -505,16 +532,23 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         assertEquals(userResource1, resultObject.getContent().get(1));
     }
 
-    @Test
+     //TODO - Will be deleted/fixed once junits for IFS-1986 are complete.
+/*    @Test
     public void testFindAllByProcessRoles(){
-        List<User> users = newUser().build(2);
-        when(userRepositoryMock.findByRolesNameInOrderByEmailAsc(externalApplicantRoles().stream().map(UserRoleType::getName).collect(Collectors.toSet()))).thenReturn(users);
+        List<UserOrganisation> userOrganisations = newUserOrganisation().withUser(newUser().withEmailAddress("a@test.com").build(), newUser().withEmailAddress("b@test.com").build()).build(2);
+        when(userOrganisationRepositoryMock.findByUserRolesNameInOrderByIdUserEmailAsc(anySet())).thenReturn(userOrganisations);
+        when(userOrganisationMapperMock.mapToResource(userOrganisations.get(0))).thenReturn(newUserOrganisationResource().withEmail(userOrganisations.get(0).getUser().getEmail()).build());
+        when(userOrganisationMapperMock.mapToResource(userOrganisations.get(1))).thenReturn(newUserOrganisationResource().withEmail(userOrganisations.get(1).getUser().getEmail()).build());
 
         ServiceResult<List<UserOrganisationResource>> result = service.findAllByProcessRoles(externalApplicantRoles());
 
         assertTrue(result.isSuccess());
         assertEquals(2, result.getSuccessObject().size());
-    }
+        assertEquals("a@test.com", result.getSuccessObject().get(0).getEmail());
+        assertEquals("b@test.com", result.getSuccessObject().get(1).getEmail());
+
+        verify(userOrganisationRepositoryMock).findByUserRolesNameInOrderByIdUserEmailAsc(anySet());
+    }*/
 
     @Override
     protected UserService supplyServiceUnderTest() {

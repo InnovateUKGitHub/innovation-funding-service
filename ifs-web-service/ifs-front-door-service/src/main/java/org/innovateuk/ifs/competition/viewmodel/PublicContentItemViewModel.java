@@ -15,6 +15,7 @@ public class PublicContentItemViewModel {
     private Long competitionId;
     private ZonedDateTime competitionOpenDate;
     private ZonedDateTime competitionCloseDate;
+    private ZonedDateTime registrationCloseDate;
     private PublicContentStatusText publicContentStatusText;
 
     public String getShortDescription() {
@@ -47,6 +48,14 @@ public class PublicContentItemViewModel {
 
     public void setCompetitionCloseDate(ZonedDateTime competitionCloseDate) {
         this.competitionCloseDate = competitionCloseDate;
+    }
+
+    public ZonedDateTime getRegistrationCloseDate() {
+        return registrationCloseDate;
+    }
+
+    public void setRegistrationCloseDate(ZonedDateTime registrationCloseDate) {
+        this.registrationCloseDate = registrationCloseDate;
     }
 
     public PublicContentStatusText getPublicContentStatusText() {

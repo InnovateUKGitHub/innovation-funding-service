@@ -174,20 +174,24 @@
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'pending'}">
 
-        <span class="heading-xlarge no-margin" th:text="${param.pending != null and param.pending[0] ==  '1' ? '1' : '0' }">0</span>
-        <span class="heading-small">pending assessors</span>
+        <th:block th:if="${param.pending == null}">
+            <p>There are no pending assessors.</p>
+        </th:block>
 
-        <div class="table-overflow">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Email address</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
+        <th:block th:if="${param.pending != null and param.pending[0] ==  '1'}">
 
-                <th:block th:if="${param.pending != null and param.pending[0] ==  '1'}">
+            <span class="heading-xlarge no-margin" th:text="${param.pending != null and param.pending[0] ==  '1' ? '1' : '0' }">0</span>
+            <span class="heading-small">pending assessors</span>
+
+            <div class="table-overflow">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email address</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
                     <tbody>
                         <tr>
                             <td><a href="#">Carl Test</a></td>
@@ -195,11 +199,9 @@
                             <td>Invite sent: 12 Sep 2017</td>
                         </tr>
                     </tbody>
-                </th:block>
-
-
-            </table>
-        </div>
+                </table>
+            </div>
+        </th:block>
     </th:block>
 
 
