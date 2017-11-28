@@ -93,6 +93,10 @@ public interface CompetitionService {
     ServiceResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(Long competitionId);
 
     @PreAuthorize("hasAnyAuthority('project_finance')")
+    @SecuredBySpring(value = "GET_PENDING_BANK_DETAILS_APPROVALS", description = "Project finance users can get organisations for which Bank Details approval is pending")
+    ServiceResult<List<BankDetailsStatusResource>> getPendingBankDetailsApprovals();
+
+    @PreAuthorize("hasAnyAuthority('project_finance')")
     @SecuredBySpring(value = "COUNT_PENDING_SPEND_PROFILES", description = "Project finance users can count projects for which Spend Profile generation is pending, for a given competition")
     ServiceResult<Long> countPendingSpendProfiles(Long competitionId);
 }
