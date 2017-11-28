@@ -72,11 +72,11 @@ function shutdownMysqlDumpPodAfterUse() {
 # Entry point
 
 if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
-    export DB_DUMP_NAME=ifs
-    export DB_DUMP_USER=root
-    export DB_DUMP_PASS=password
-    export DB_DUMP_HOST=ifs-database
-    export DB_DUMP_PORT=3306
+    export DB_NAME=ifs
+    export DB_USER=root
+    export DB_PASS=password
+    export DB_HOST=ifs-database
+    export DB_PORT=3306
 fi
 
 injectDBVariables
