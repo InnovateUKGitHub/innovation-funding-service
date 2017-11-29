@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.status.controller;
 
 import org.apache.commons.io.IOUtils;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.competition.resource.BankDetailsStatusResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -10,7 +9,6 @@ import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.project.status.populator.PopulatedCompetitionStatusViewModel;
 import org.innovateuk.ifs.project.status.service.StatusRestService;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionOpenQueriesViewModel;
-import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingBankDetailsApprovalsViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionPendingSpendProfilesViewModel;
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -108,16 +106,16 @@ public class CompetitionStatusController {
         return "project/competition-pending-spend-profiles";
     }
 
-    @SecuredBySpring(value = "PENDING_BANK_DETAILS_APPROVALS", description = "Project finance users can view and action pending bank details approvals for all competitions")
+/*    @SecuredBySpring(value = "PENDING_BANK_DETAILS_APPROVALS", description = "Project finance users can view and action pending bank details approvals for all competitions")
     @GetMapping("/status/pending-bank-details-approvals")
     @PreAuthorize("hasAnyAuthority('project_finance')")
     public String viewPendingBankDetailsApprovals(Model model, UserResource loggedInUser) {
 
-        List<BankDetailsStatusResource> pendingBankDetails = competitionPostSubmissionRestService.getPendingBankDetailsApprovals().getSuccessObjectOrThrowException();
+        List<BankDetailsReviewResource> pendingBankDetails = competitionPostSubmissionRestService.getPendingBankDetailsApprovals().getSuccessObjectOrThrowException();
 
         model.addAttribute("model", new CompetitionPendingBankDetailsApprovalsViewModel(pendingBankDetails));
         return "project/competition-pending-bank-details";
-    }
+    }*/
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "EXPORT_BANK_DETAILS", description = "Project finance users should be able export bank details")
