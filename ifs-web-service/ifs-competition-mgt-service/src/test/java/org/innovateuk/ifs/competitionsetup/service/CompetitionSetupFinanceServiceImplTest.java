@@ -17,25 +17,25 @@ public class CompetitionSetupFinanceServiceImplTest {
     private CompetitionSetupFinanceServiceImpl service;
 
     @Test
-    public void testIsNoneFinanceCompetitionSuccess() {
+    public void testIsNoFinanceCompetitionSuccess() {
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withCompetitionTypeName("Expression of interest")
                 .build();
 
-        boolean result = service.isNoneFinanceCompetition(competition);
+        boolean result = service.isNoFinanceCompetition(competition);
 
         assertTrue(result);
     }
 
     @Test
-    public void testIsNoneFinanceCompetitionFailing() {
+    public void testIsNoFinanceCompetitionFailing() {
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withCompetitionTypeName("Generic")
                 .build();
 
-        boolean result = service.isNoneFinanceCompetition(competition);
+        boolean result = service.isNoFinanceCompetition(competition);
 
         assertFalse(result);
     }

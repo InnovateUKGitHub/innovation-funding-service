@@ -51,7 +51,7 @@ public class ApplicationFinanceModelPopulatorTest {
 				.withCompetitionTypeName("programme")
 				.build();
 
-		when(competitionSetupFinanceService.isNoneFinanceCompetition(cr)).thenReturn(true);
+		when(competitionSetupFinanceService.isNoFinanceCompetition(cr)).thenReturn(true);
 
 		ApplicationFinanceViewModel viewModel = (ApplicationFinanceViewModel) populator.populateModel(cr, Optional.empty());
 

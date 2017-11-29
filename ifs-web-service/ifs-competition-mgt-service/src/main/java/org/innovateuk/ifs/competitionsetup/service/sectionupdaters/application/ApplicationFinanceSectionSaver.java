@@ -52,7 +52,7 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
 
     @Override
     protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-        if(competitionSetupFinanceService.isNoneFinanceCompetition(competition)) {
+        if(competitionSetupFinanceService.isNoFinanceCompetition(competition)) {
             return serviceSuccess();
         } else {
             ApplicationFinanceForm form = (ApplicationFinanceForm) competitionSetupForm;

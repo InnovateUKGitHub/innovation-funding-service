@@ -14,5 +14,5 @@ public interface CompetitionSetupFinanceService {
 
 	CompetitionSetupFinanceResource getByCompetitionId(Long competitionId);
 
-    boolean isNoneFinanceCompetition(CompetitionResource competitionResource);
+    boolean isNoFinanceCompetition(CompetitionResource competitionResource);
 }

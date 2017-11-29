@@ -30,7 +30,7 @@ public class CompetitionSetupFinanceServiceImpl implements CompetitionSetupFinan
     }
 
     @Override
-    public boolean isNoneFinanceCompetition(CompetitionResource competitionResource) {
+    public boolean isNoFinanceCompetition(CompetitionResource competitionResource) {
         return competitionResource.getCompetitionTypeName().equals(COMPETITION_TYPE_EOI);
     }
 }
