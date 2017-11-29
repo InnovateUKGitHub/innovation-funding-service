@@ -106,17 +106,6 @@ public class CompetitionStatusController {
         return "project/competition-pending-spend-profiles";
     }
 
-/*    @SecuredBySpring(value = "PENDING_BANK_DETAILS_APPROVALS", description = "Project finance users can view and action pending bank details approvals for all competitions")
-    @GetMapping("/status/pending-bank-details-approvals")
-    @PreAuthorize("hasAnyAuthority('project_finance')")
-    public String viewPendingBankDetailsApprovals(Model model, UserResource loggedInUser) {
-
-        List<BankDetailsReviewResource> pendingBankDetails = competitionPostSubmissionRestService.getPendingBankDetailsApprovals().getSuccessObjectOrThrowException();
-
-        model.addAttribute("model", new CompetitionPendingBankDetailsApprovalsViewModel(pendingBankDetails));
-        return "project/competition-pending-bank-details";
-    }*/
-
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "EXPORT_BANK_DETAILS", description = "Project finance users should be able export bank details")
     @GetMapping("/{competitionId}/status/bank-details/export")

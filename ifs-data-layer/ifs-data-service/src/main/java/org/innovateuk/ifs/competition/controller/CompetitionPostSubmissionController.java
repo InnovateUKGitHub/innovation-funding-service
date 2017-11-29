@@ -82,11 +82,6 @@ public class CompetitionPostSubmissionController {
     public RestResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(@PathVariable(value = "competitionId") Long competitionId) {
         return competitionService.getPendingSpendProfiles(competitionId).toGetResponse();
     }
-/*
-    @GetMapping("/pending-bank-details-approvals")
-    public RestResult<List<BankDetailsStatusResource>> getPendingBankDetailsApprovals() {
-        return competitionService.getPendingBankDetailsApprovals().toGetResponse();
-    }*/
 
     @GetMapping("/{competitionId}/count-pending-spend-profiles")
     public RestResult<Long> countPendingSpendProfiles(@PathVariable(value = "competitionId") Long competitionId) {

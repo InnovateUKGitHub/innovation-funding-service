@@ -414,14 +414,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess(competitionRepository.getPendingSpendProfiles(competitionId));
     }
 
-/*    @Override
-    public ServiceResult<List<BankDetailsStatusResource>> getPendingBankDetailsApprovals() {
-
-        List<BankDetailsStatusResource> pendingBankDetails = competitionRepository.getPendingBankDetailsApprovals();
-
-        return serviceSuccess(pendingBankDetails);
-    }*/
-
     @Override
     public ServiceResult<Long> countPendingSpendProfiles(Long competitionId) {
 

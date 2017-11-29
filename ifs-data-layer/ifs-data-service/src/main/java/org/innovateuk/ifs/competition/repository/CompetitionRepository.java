@@ -140,24 +140,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             " JOIN p.application.competition c " +
             PENDING_SPEND_PROFILES_WHERE_CLAUSE;
 
-/*    String PENDING_BANK_DETAILS_APPROVALS_QUERY_OLD = " SELECT NEW org.innovateuk.ifs.competition.resource.BankDetailsStatusResource("
-            + " p.application.id, c.id, c.name, p.id, p.name, bd.organisation.id, bd.organisation.name)"
-            + " FROM Competition c, Project p, BankDetails bd"
-            + " WHERE ( EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = c.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL))"
-            + " AND c.setupComplete = TRUE"
-            + " AND c.template = FALSE"
-            + " AND c.nonIfs = FALSE"
-            + " AND p.application.competition.id = c.id"
-            + " AND bd.project.id = p.id"
-            + " AND bd.manualApproval = FALSE";*/
-
-/*        String PENDING_BANK_DETAILS_APPROVALS_QUERY = " SELECT NEW org.innovateuk.ifs.competition.resource.BankDetailsStatusResource("
-                + " p.application.id, c.id, c.name, p.id, p.name, bd.organisation.id, bd.organisation.name)"
-                + " FROM Competition c, Project p, BankDetails bd"
-                + " WHERE p.application.competition.id = c.id"
-                + " AND bd.project.id = p.id"
-                + " AND bd.manualApproval = FALSE";*/
-
     @Query(LIVE_QUERY)
     List<Competition> findLive();
 
@@ -227,9 +209,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     @Query(GET_PENDING_SPEND_PROFILES)
     List<SpendProfileStatusResource> getPendingSpendProfiles(@Param("competitionId") long competitionId);
-
-/*    @Query(PENDING_BANK_DETAILS_APPROVALS_QUERY)
-    List<BankDetailsStatusResource> getPendingBankDetailsApprovals();*/
 
     @Query(COUNT_PENDING_SPEND_PROFILES)
     Long countPendingSpendProfiles(@Param("competitionId") Long competitionId);
