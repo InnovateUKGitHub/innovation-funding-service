@@ -257,7 +257,6 @@ public enum CommonFailureKeys implements ErrorTemplate {
     PROJECT_SETUP_OTHER_DOCUMENTS_APPROVAL_DECISION_MUST_BE_PROVIDED(BAD_REQUEST),
     PROJECT_SETUP_OTHER_DOCUMENTS_HAVE_ALREADY_BEEN_APPROVED(BAD_REQUEST),
 
-
     /**
      * SIL CRM
      */
@@ -266,7 +265,13 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * IFS Admin
      */
-    ADMIN_INVALID_USER_ROLE(BAD_REQUEST);
+    ADMIN_INVALID_USER_ROLE(BAD_REQUEST),
+
+    /**
+     * External user search
+     */
+    USER_SEARCH_INVALID_INPUT_LENGTH(BAD_REQUEST)
+    ;
 
 
     private ErrorTemplate errorTemplate;
