@@ -444,7 +444,8 @@ IFS.core.formValidation = (function () {
       var fieldsVisited = (d.hasClass('js-visited') && m.hasClass('js-visited') && y.hasClass('js-visited'))
       var filledOut = ((d.val().length > 0) && (m.val().length > 0) && (y.val().length > 0))
       var enabled = !d.is('[readonly]') || !m.is('[readonly]') || !y.is('[readonly]')
-
+      var required = (d.attr('required') && m.attr('required') && y.attr('required'))
+      var empty = ((d.val().length === 0) && (m.val().length === 0) && (y.val().length === 0))
       // don't show the validation messages for numbers in dates but we do check it as part of the date check
       allFields.attr({
         'data-number-showmessage': 'none',
@@ -497,6 +498,9 @@ IFS.core.formValidation = (function () {
             valid = false
           }
         }
+      } else if (empty && required !== 'required') {
+        valid = true
+        IFS.core.formValidation.setValid(allFields, invalidErrorMessage, displayValidationMessages)
       } else if ((filledOut || fieldsVisited) && enabled) {
         IFS.core.formValidation.setInvalid(allFields, invalidErrorMessage, displayValidationMessages)
         allFields.attr({'data-date': ''})
