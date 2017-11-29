@@ -140,6 +140,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             " JOIN p.application.competition c " +
             PENDING_SPEND_PROFILES_WHERE_CLAUSE;
 
+
     @Query(LIVE_QUERY)
     List<Competition> findLive();
 

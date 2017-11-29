@@ -35,7 +35,7 @@ import static java.lang.String.format;
  * format using {@link CompetitionStatusViewModel}
  */
 @Controller
-@RequestMapping("/competition")
+@RequestMapping("/competition/{competitionId}/status")
 public class CompetitionStatusController {
 
     @Autowired
@@ -51,14 +51,14 @@ public class CompetitionStatusController {
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @GetMapping("/{competitionId}/status")
+    @GetMapping
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     public String viewCompetitionStatus(@PathVariable Long competitionId) {
         return format("redirect:/competition/%s/status/all", competitionId);
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @GetMapping("/{competitionId}/status/all")
+    @GetMapping("/all")
     @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin', 'support', 'innovation_lead')")
     public String viewCompetitionStatusAll(Model model, UserResource loggedInUser,
                                            @PathVariable Long competitionId) {
@@ -75,7 +75,7 @@ public class CompetitionStatusController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @GetMapping("/{competitionId}/status/queries")
+    @GetMapping("/queries")
     @PreAuthorize("hasAnyAuthority('project_finance')")
     public String viewCompetitionStatusQueries(Model model, UserResource loggedInUser,
                                               @PathVariable Long competitionId) {
@@ -89,7 +89,7 @@ public class CompetitionStatusController {
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @GetMapping("/{competitionId}/status/pending-spend-profiles")
+    @GetMapping("/pending-spend-profiles")
     @PreAuthorize("hasAnyAuthority('project_finance')")
     public String viewPendingSpendProfiles(Model model, UserResource loggedInUser,
                                            @PathVariable Long competitionId) {
@@ -108,7 +108,7 @@ public class CompetitionStatusController {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "EXPORT_BANK_DETAILS", description = "Project finance users should be able export bank details")
-    @GetMapping("/{competitionId}/status/bank-details/export")
+    @GetMapping("/bank-details/export")
     public void exportBankDetails(Model model, UserResource loggedInUser,
                                   @PathVariable Long competitionId, HttpServletResponse response) throws IOException {
 
