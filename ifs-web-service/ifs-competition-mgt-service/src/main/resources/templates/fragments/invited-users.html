@@ -7,7 +7,8 @@
 </th:block>
 
 <th:block th:fragment="invites-table(invites)" xmlns:th="http://www.w3.org/1999/html">
-    <div class="table-overflow">
+    <p th:if="${#lists.isEmpty(invites)}">There are no results for this search.</p>
+    <div class="table-overflow" th:unless="${#lists.isEmpty(invites)}">
         <table>
             <thead>
             <tr>
