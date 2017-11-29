@@ -187,11 +187,11 @@ public class CompetitionSetupApplicationController {
     }
 
     @PostMapping("/question/finance/none/edit")
-    public String submitApplicationNoneFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
-                                            BindingResult bindingResult,
-                                            ValidationHandler validationHandler,
-                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                            Model model) {
+    public String submitApplicationNoFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
+                                              BindingResult bindingResult,
+                                              ValidationHandler validationHandler,
+                                              @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                              Model model) {
 
        return handleFinanceSaving(competitionId, model, form, validationHandler);
     }
