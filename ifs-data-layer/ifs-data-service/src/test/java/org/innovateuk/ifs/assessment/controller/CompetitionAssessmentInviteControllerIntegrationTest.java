@@ -10,10 +10,10 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.*;
@@ -61,7 +61,7 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResource
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
-import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
@@ -73,7 +73,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class CompetitionInviteControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionInviteController> {
+public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionInviteController> {
 
     private static final long INNOVATION_AREA_ID = 5L;
 
@@ -178,7 +178,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                         .withStatus(SENT)
                         .withInnovationArea(innovationArea)
                         .build(2)
-        ).iterator()), CompetitionInvite::getId);
+        ).iterator()), CompetitionAssessmentInvite::getId);
 
         loginCompAdmin();
 
@@ -216,7 +216,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     public void getInvite_hashNotExists() {
         RestResult<CompetitionInviteResource> serviceResult = controller.getInvite("not exists hash");
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionInvite.class, "not exists hash")));
+        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionAssessmentInvite.class, "not exists hash")));
     }
 
     @Test
@@ -241,7 +241,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     public void openInvite_hashNotExists() {
         RestResult<CompetitionInviteResource> serviceResult = controller.openInvite("not exists hash");
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionInvite.class, "not exists hash")));
+        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionAssessmentInvite.class, "not exists hash")));
     }
 
     @Test
@@ -318,7 +318,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     public void checkExistingUser_hashNotExists() {
         RestResult<Boolean> serviceResult = controller.checkExistingUser("not exists hash");
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionInvite.class, "not exists hash")));
+        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionAssessmentInvite.class, "not exists hash")));
     }
 
     @Test
@@ -730,7 +730,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     public void inviteNewUsers_userExists() throws Exception {
         InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
 
-        competitionInviteRepository.save(new CompetitionInvite("Test Name 1", "testname1@for-this.address", "hash", competition, innovationArea));
+        competitionInviteRepository.save(new CompetitionAssessmentInvite("Test Name 1", "testname1@for-this.address", "hash", competition, innovationArea));
 
         loginCompAdmin();
         NewUserStagedInviteListResource newUserInvites = buildNewUserInviteList(competition.getId(), innovationArea.getId());
@@ -763,7 +763,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
     @Test
     public void sendAllInvites() throws Exception {
-        List<CompetitionInvite> invitesToSend = newCompetitionInvite()
+        List<CompetitionAssessmentInvite> invitesToSend = newCompetitionInvite()
                 .with(id(null))
                 .withName("tom poly", "cari poly")
                 .withEmail("tom@poly.io", "cari@poly.io")
@@ -788,7 +788,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     @Test
     public void resendInvites() throws Exception {
         ZonedDateTime initialInviteDate = ZonedDateTime.now();
-        List<CompetitionInvite> invitesToResend = newCompetitionInvite()
+        List<CompetitionAssessmentInvite> invitesToResend = newCompetitionInvite()
                 .with(id(null))
                 .withName("tom poly", "cari poly")
                 .withEmail("tom@poly.io", "cari@poly.io")
@@ -801,7 +801,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         competitionInviteRepository.save(invitesToResend);
 
         List<Long> inviteIds =  simpleMap(IteratorUtils.toList(competitionInviteRepository.save(invitesToResend)
-                .iterator()), CompetitionInvite::getId);
+                .iterator()), CompetitionAssessmentInvite::getId);
 
         AssessorInviteSendResource assessorInviteSendResource = newAssessorInviteSendResource()
                 .withSubject("subject")
@@ -813,9 +813,9 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         RestResult<Void> serviceResult = controller.resendInvites(inviteIds, assessorInviteSendResource);
         assertTrue(serviceResult.isSuccess());
 
-        CompetitionInvite inviteOne = competitionInviteRepository.findOne(inviteIds.get(0));
+        CompetitionAssessmentInvite inviteOne = competitionInviteRepository.findOne(inviteIds.get(0));
         ZonedDateTime inviteOneResendDate = inviteOne.getSentOn();
-        CompetitionInvite inviteTwo = competitionInviteRepository.findOne(inviteIds.get(1));
+        CompetitionAssessmentInvite inviteTwo = competitionInviteRepository.findOne(inviteIds.get(1));
         ZonedDateTime inviteTwoResendDate = inviteTwo.getSentOn();
 
         assertTrue(inviteOneResendDate.isAfter(initialInviteDate));
@@ -1098,7 +1098,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     private void addTestCreatedInvites() {
         InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
 
-        List<CompetitionInvite> createdInvites = newCompetitionInvite()
+        List<CompetitionAssessmentInvite> createdInvites = newCompetitionInvite()
                 .withId()
                 .withName("Will Smith", "Bill Gates", "Serena Williams", "Angela Merkel")
                 .withEmail("ws@test.com", "bg@test.com", "sw@test.com", "am@test.com")
@@ -1107,7 +1107,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .withInnovationArea(innovationArea)
                 .build(4);
 
-        List<CompetitionInvite> existingUserInvites = newCompetitionInvite()
+        List<CompetitionAssessmentInvite> existingUserInvites = newCompetitionInvite()
                 .withId()
                 .withName("Paul Plum", "Felix Wilson")
                 .withEmail("paul.plum@gmail.com", "felix.wilson@gmail.com")
@@ -1196,7 +1196,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                                 .withCompetition(competition)
                                 .withStatus(SENT)
                                 .withSentOn(now().minusDays(1))
-                                .buildArray(6, CompetitionInvite.class)
+                                .buildArray(6, CompetitionAssessmentInvite.class)
                 )
                 .withCompetition(competition)
                 .withStatus(PENDING)
@@ -1276,7 +1276,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                                 .withCompetition(competition)
                                 .withStatus(SENT)
                                 .withSentOn(now().minusDays(1))
-                                .buildArray(6, CompetitionInvite.class)
+                                .buildArray(6, CompetitionAssessmentInvite.class)
                 )
                 .withCompetition(competition)
                 .withStatus(PENDING)
@@ -1316,8 +1316,8 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
     public void deleteInvite() throws Exception {
         InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
 
-        CompetitionInvite savedCompetition = competitionInviteRepository.save(
-                new CompetitionInvite("Test Tester", "test@test.com", "hash1", competition, innovationArea)
+        CompetitionAssessmentInvite savedCompetition = competitionInviteRepository.save(
+                new CompetitionAssessmentInvite("Test Tester", "test@test.com", "hash1", competition, innovationArea)
         );
 
         flushAndClearSession();
@@ -1340,8 +1340,8 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
 
         competitionInviteRepository.save(asList(
-                new CompetitionInvite("Test Tester 1", "test1@test.com", "hash1", competition, innovationArea),
-                new CompetitionInvite("Test Tester 2", "test2@test.com", "hash2", competition, innovationArea)
+                new CompetitionAssessmentInvite("Test Tester 1", "test1@test.com", "hash1", competition, innovationArea),
+                new CompetitionAssessmentInvite("Test Tester 2", "test2@test.com", "hash2", competition, innovationArea)
         ));
 
         assertEquals(2, competitionInviteRepository.countByCompetitionIdAndStatusIn(competition.getId(), inviteStatuses));
