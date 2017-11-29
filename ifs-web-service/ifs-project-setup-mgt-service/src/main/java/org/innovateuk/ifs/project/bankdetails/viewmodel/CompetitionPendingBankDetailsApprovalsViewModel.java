@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.project.status.viewmodel;
+package org.innovateuk.ifs.project.bankdetails.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.competition.resource.BankDetailsStatusResource;
+import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 
 import java.util.List;
 
@@ -11,20 +11,20 @@ import java.util.List;
  */
 public class CompetitionPendingBankDetailsApprovalsViewModel {
 
-    private List<BankDetailsStatusResource> pendingBankDetails;
+    private List<BankDetailsReviewResource> pendingBankDetails;
 
     public CompetitionPendingBankDetailsApprovalsViewModel() {
     }
 
-    public CompetitionPendingBankDetailsApprovalsViewModel(List<BankDetailsStatusResource> pendingBankDetails) {
+    public CompetitionPendingBankDetailsApprovalsViewModel(List<BankDetailsReviewResource> pendingBankDetails) {
         this.pendingBankDetails = pendingBankDetails;
     }
 
-    public List<BankDetailsStatusResource> getPendingBankDetails() {
+    public List<BankDetailsReviewResource> getPendingBankDetails() {
         return pendingBankDetails;
     }
 
-    public void setPendingBankDetails(List<BankDetailsStatusResource> pendingBankDetails) {
+    public void setPendingBankDetails(List<BankDetailsReviewResource> pendingBankDetails) {
         this.pendingBankDetails = pendingBankDetails;
     }
 

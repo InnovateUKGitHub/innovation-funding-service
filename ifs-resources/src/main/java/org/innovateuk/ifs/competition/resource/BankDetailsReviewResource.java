@@ -4,9 +4,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Resource to hold Bank Details Status fields.
+ * Resource to hold Bank Details review fields.
  */
-public class BankDetailsStatusResource {
+public class BankDetailsReviewResource {
 
     private Long applicationId;
 
@@ -23,10 +23,10 @@ public class BankDetailsStatusResource {
     private String organisationName;
 
 
-    public BankDetailsStatusResource() {
+    public BankDetailsReviewResource() {
     }
 
-    public BankDetailsStatusResource(Long applicationId, Long competitionId, String competitionName,
+    public BankDetailsReviewResource(Long applicationId, Long competitionId, String competitionName,
                                      Long projectId, String projectName,
                                      Long organisationId, String organisationName) {
         this.applicationId = applicationId;
@@ -100,7 +100,7 @@ public class BankDetailsStatusResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        BankDetailsStatusResource that = (BankDetailsStatusResource) o;
+        BankDetailsReviewResource that = (BankDetailsReviewResource) o;
 
         return new EqualsBuilder()
                 .append(applicationId, that.applicationId)
