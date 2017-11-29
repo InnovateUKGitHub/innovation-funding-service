@@ -138,12 +138,13 @@
 <!-- =========================== Element: Formatted Date =========================== -->
 <th:block th:fragment="pretty-date (date)">
     <th:block th:with="today=(${#temporals.createToday()})">
-        <th:block th:if="${date.toLocalDate().equals(today)}" th:text="Today" />
-        <th:block th:if="${date.toLocalDate().equals(today.minusDays(1))}" th:text="Yesterday" />
+        <th:block th:if="${date.toLocalDate().equals(today)}" th:text="today" />
+        <th:block th:if="${date.toLocalDate().equals(today.minusDays(1))}" th:text="yesterday" />
         <th:block th:unless="${date.toLocalDate().equals(today)} or ${date.toLocalDate().equals(today.minusDays(1))}">
-          <th:block th:text="${#temporals.format(date, 'dd MMMM')}"/> <th:block th:text="${#strings.toLowerCase(#temporals.format(date, 'hh:mma'))}"/>
+          <th:block th:text="${#temporals.format(date, 'dd MMMM')}"/>
         </th:block>
     </th:block>
+    <th:block th:text="${#strings.toLowerCase(#temporals.format(date, 'h:mma'))}"/>
 </th:block>
 
 <!--  ========================== Element: Agree to application terms =============== -->
