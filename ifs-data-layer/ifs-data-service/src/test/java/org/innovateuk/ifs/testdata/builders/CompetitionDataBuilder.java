@@ -246,7 +246,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withNewMilestones() {
         return asCompAdmin(data ->
-            Stream.of(MilestoneType.presetValues()).forEach(type ->
+            Stream.of(MilestoneType.presetValues())
+                    .filter(m -> !m.isOnlyNonIfs())
+                    .forEach(type ->
                 milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
                         .handleSuccessOrFailure(
                                 failure -> milestoneService.create(type, data.getCompetition().getId()).getSuccessObjectOrThrowException(),
@@ -262,6 +264,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withBriefingDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, BRIEFING_EVENT);
+    }
+
+    public CompetitionDataBuilder withRegistrationDate(ZonedDateTime date) {
+        return withMilestoneUpdate(date, REGISTRATION_DATE);
     }
 
     public CompetitionDataBuilder withSubmissionDate(ZonedDateTime date) {
