@@ -100,6 +100,10 @@ class CsvUtils {
         return simpleMap(readCsvLines("projects"), ProjectLine::new);
     }
 
+    static List<QuestionLine> readQuestions() {
+        return simpleMap(readCsvLines("questions"), QuestionLine::new);
+    }
+
     static class ProjectLine {
 
         String name;
@@ -671,6 +675,23 @@ class CsvUtils {
 
                 return kvMap;
             });
+        }
+    }
+
+    static class QuestionLine {
+        int ordinal;
+        String competitionName;
+        String heading;
+        String title;
+        String subtitle;
+
+        private QuestionLine(List<String> line) {
+            int i = 0;
+            competitionName = nullable(line.get(i++));
+            ordinal = nullableInteger(line.get(i++));
+            heading = nullable(line.get(i++));
+            title = nullable(line.get(i++));
+            subtitle = nullable(line.get(i++));
         }
     }
 
