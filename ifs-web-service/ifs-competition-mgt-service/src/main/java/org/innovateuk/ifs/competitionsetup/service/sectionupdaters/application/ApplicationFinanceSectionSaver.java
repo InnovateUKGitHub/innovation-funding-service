@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 import static org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection.FINANCES;
 
@@ -51,15 +52,19 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
 
     @Override
     protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-        ApplicationFinanceForm form = (ApplicationFinanceForm) competitionSetupForm;
-        CompetitionSetupFinanceResource compSetupFinanceRes = new CompetitionSetupFinanceResource();
-        // INFUND-6773 - Not allowed to at this moment
-        compSetupFinanceRes.setFullApplicationFinance(true);
-        compSetupFinanceRes.setIncludeGrowthTable(form.isIncludeGrowthTable());
-        compSetupFinanceRes.setCompetitionId(competition.getId());
+        if(competitionSetupFinanceService.isNoneFinanceCompetition(competition)) {
+            return serviceSuccess();
+        } else {
+            ApplicationFinanceForm form = (ApplicationFinanceForm) competitionSetupForm;
+            CompetitionSetupFinanceResource compSetupFinanceRes = new CompetitionSetupFinanceResource();
+            // INFUND-6773 - Not allowed to at this moment
+            compSetupFinanceRes.setFullApplicationFinance(true);
+            compSetupFinanceRes.setIncludeGrowthTable(form.isIncludeGrowthTable());
+            compSetupFinanceRes.setCompetitionId(competition.getId());
 
-        updateFundingRulesQuestion(form.getFundingRules(), competition.getId());
-        return competitionSetupFinanceService.updateFinance(compSetupFinanceRes);
+            updateFundingRulesQuestion(form.getFundingRules(), competition.getId());
+            return competitionSetupFinanceService.updateFinance(compSetupFinanceRes);
+        }
     }
 
     private void updateFundingRulesQuestion(String fundingRules, Long competitionId) {

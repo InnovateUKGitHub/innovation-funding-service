@@ -197,6 +197,27 @@ public class CompetitionSetupApplicationController {
 
     }
 
+    @PostMapping("/question/finance/none/edit")
+    public String submitApplicationNoneFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
+                                            BindingResult bindingResult,
+                                            ValidationHandler validationHandler,
+                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                            Model model) {
+
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
+
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
+            return "redirect:/competition/setup/" + competitionResource.getId();
+        }
+
+        Supplier<String> failureView = () -> getFinancePage(model, competitionResource, true, form);
+        Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
+
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
+                () -> competitionSetupService.saveCompetitionSetupSubsection(form, competitionResource, APPLICATION_FORM, FINANCES));
+
+    }
+
     @GetMapping("/question/{questionId}")
     public String seeQuestionInCompSetup(@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                          @PathVariable("questionId") Long questionId,
