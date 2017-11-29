@@ -101,10 +101,10 @@ Existing Assessor tries to accept closed competition
     [Documentation]    INFUND-943
     [Tags]
     [Setup]    Close the competition in assessment
-    Given Log in as a different user                &{existing_assessor1_credentials}
+    Given Log in as a different user               &{existing_assessor1_credentials}
     Then The user should not see the element       link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user navigates to the page             ${Invitation_for_upcoming_comp_assessor1}
-    Then The user should see the text in the page  This invitation is now closed
+    Then the user should see the element           jQuery=h1:contains("This invitation is now closed")
     [Teardown]    Run Keywords    Connect to Database    @{database}
     ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=${competition_ids["${IN_ASSESSMENT_COMPETITION_NAME}"]};
 
@@ -112,21 +112,21 @@ Existing assessor: Accept invitation from the invite link
     [Documentation]    INFUND-228  INFUND-304  INFUND-3716  INFUND-5509  INFUND-6500
     [Tags]    HappyPath
     [Setup]    Logout as user
-    Given the user navigates to the page           ${Invitation_for_upcoming_comp_assessor1}
-    And the user should see the element      jQuery=h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
-    And the user should see the element   jQuery=h2:contains("12 January 2068 to 28 January 2068: Assessment period")
-    And the user selects the radio button          acceptInvitation  true
-    And The user clicks the button/link            jQuery=button:contains("Confirm")
-    Then the user should see the element  jQuery=p:contains("Your email address is linked to an existing account.")
-    And the user clicks the button/link            jQuery=a:contains("Click here to sign in")
-    And Invited guest user log in                  &{existing_assessor1_credentials}
-    And the user should see the element            link=${IN_ASSESSMENT_COMPETITION_NAME}
+    Given the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
+    And the user should see the element     jQuery=h1:contains("Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'")
+    And the user should see the element     jQuery=h2:contains("12 January 2068 to 28 January 2068: Assessment period")
+    And the user selects the radio button   acceptInvitation  true
+    And The user clicks the button/link     jQuery=button:contains("Confirm")
+    Then the user should see the element    jQuery=p:contains("Your email address is linked to an existing account.")
+    And the user clicks the button/link     jQuery=a:contains("Click here to sign in")
+    And Invited guest user log in           &{existing_assessor1_credentials}
+    And the user should see the element     link=${IN_ASSESSMENT_COMPETITION_NAME}
 
 Accepted and Rejected invites are not visible
     [Documentation]    INFUND-6455
     [Tags]
-    Then the user should not see the element          link=${READY_TO_OPEN_COMPETITION_NAME}
-    And The user should not see the text in the page  Invitations to assess
+    Then the user should not see the element   link=${READY_TO_OPEN_COMPETITION_NAME}
+    And the user should not see the element    jQuery=h2:contains("Invitations to assess")
 
 Upcoming competition should be visible
     [Documentation]    INFUND-3718
@@ -136,15 +136,15 @@ Upcoming competition should be visible
     Given the user navigates to the page           ${ASSESSOR_DASHBOARD}
     And the assessor should see the correct date
     When The user clicks the button/link           link=Home and industrial efficiency programme
-    And the user should see the text in the page   You have agreed to be an assessor for the upcoming competition 'Home and industrial efficiency programme'
+    And the user should see the element            jQuery=p:contains("You have agreed to be an assessor for the upcoming competition 'Home and industrial efficiency programme'")
     And The user clicks the button/link            link=Assessor dashboard
-    Then The user should see the text in the page  Upcoming competitions to assess
+    Then the user should see the element           jQuery=h2:contains("Upcoming competitions to assess")
 
 The assessment period starts the comp moves to the comp for assessment
     [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
     Given the assessment start period changes in the db in the past
-    Then The user should not see the text in the page    Upcoming competitions to assess
+    Then the user should not see the element   jQuery=h2:contains("Upcoming competitions to assess")
     [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
 
 Milestone date for assessment submission is visible
