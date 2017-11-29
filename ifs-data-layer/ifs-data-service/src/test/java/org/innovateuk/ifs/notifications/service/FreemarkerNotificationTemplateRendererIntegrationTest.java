@@ -67,7 +67,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
 
         Map<String, Object> templateArguments = asMap(
                 "applicationName", "My Application",
-                "applicationNumber", "1234",
+                "applicationNumber", 1234L,
                 "message", "Body of message."
         );
 

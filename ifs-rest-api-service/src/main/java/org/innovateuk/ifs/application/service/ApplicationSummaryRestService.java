@@ -22,6 +22,14 @@ public interface ApplicationSummaryRestService {
                                                                         Optional<String> filter,
                                                                         Optional<FundingDecision> fundingFilter);
 
+    RestResult<ApplicationSummaryPageResource> getSubmittedApplicationsWithPanelStatus(long competitionId,
+                                                                        String sortField,
+                                                                        int pageNumber,
+                                                                        int pageSize,
+                                                                        Optional<String> filter,
+                                                                        Optional<FundingDecision> fundingFilter,
+                                                                        Optional<Boolean> inAssessmentPanel);
+
     RestResult<List<Long>> getAllSubmittedApplicationIds(long competitionId,
                                                          Optional<String> filter,
                                                          Optional<FundingDecision> fundingFilter);
