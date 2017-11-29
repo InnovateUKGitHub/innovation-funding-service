@@ -323,7 +323,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                         questionLine.competitionName,
                         questionLine.heading,
                         questionLine.title,
-                        questionLine.subtitle);
+                        questionLine.subtitle).build();
     }
 
     private void createProjects() {

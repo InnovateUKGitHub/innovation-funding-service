@@ -50,7 +50,7 @@ public class QuestionDataBuilder extends BaseDataBuilder<QuestionData, QuestionD
     @Override
     protected void postProcess(int index, QuestionData instance) {
         super.postProcess(index, instance);
-        LOG.info("Created Question: ", instance.getQuestionResource().getName());
+        LOG.info("Updated question headings");
     }
 
     public static QuestionDataBuilder newQuestionData(ServiceLocator serviceLocator) {
