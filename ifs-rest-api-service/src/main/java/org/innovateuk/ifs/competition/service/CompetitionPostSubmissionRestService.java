@@ -2,8 +2,8 @@ package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.resource.BankDetailsStatusResource;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
+import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.competition.resource.SpendProfileStatusResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 
@@ -26,7 +26,7 @@ public interface CompetitionPostSubmissionRestService {
 
     RestResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(long competitionId);
 
-    RestResult<List<BankDetailsStatusResource>> getPendingBankDetailsApprovals();
+/*    RestResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals();*/
 
     RestResult<Long> countPendingSpendProfiles(long competitionId);
 
