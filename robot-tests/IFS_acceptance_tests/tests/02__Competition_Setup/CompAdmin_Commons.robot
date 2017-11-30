@@ -5,9 +5,6 @@ Resource    ../../resources/defaultResources.robot
 #CA = Competition Administration
 ${CA_UpcomingComp}   ${server}/management/dashboard/upcoming
 ${CA_Live}           ${server}/management/dashboard/live
-#${compType_Programme}  Programme
-#${compType_Sector}     Sector
-#${compType_Generic}    Generic
 
 *** Keywords ***
 the user edits the assessed question information

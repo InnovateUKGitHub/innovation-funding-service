@@ -27,6 +27,7 @@ Applicant applies to newly created EOI comp
     [Tags]  HappyPath
     [Setup]  the competition is open     ${comp_name}
     Lead Applicant applies to the new created competition    ${comp_name}
+    the lead applicant invites a registered user
 
 Applicant submits his application
     [Documentation]  IFS-2196
