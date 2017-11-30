@@ -1,6 +1,6 @@
 /* Create the apc competition type  */
 INSERT INTO `competition_type` (`name`, `state_aid`, `active`, `template_competition_id`)
-VALUES ('APC', 1, 1, NULL);
+VALUES ('Advanced Propulsion Centre', 1, 1, NULL);
 SET @competition_type_apc_id=LAST_INSERT_ID();
 
 
@@ -8,7 +8,7 @@ SET @not_empty_validator = (SELECT `id` FROM form_validator WHERE `clazz_name` =
 SET @word_count_validator = (SELECT `id` FROM form_validator WHERE `clazz_name` = 'org.innovateuk.ifs.validator.WordCountValidator');
 
 /* Create the apc competition for template purpose  */
-INSERT INTO `competition` (`name`,`max_research_ratio`,`academic_grant_percentage`,`budget_code`,`code`,`paf_code`,`executive_user_id`,`lead_technologist_user_id`,`competition_type_id`,`activity_code`,`innovate_budget`,`multi_stream`,`collaboration_level`,`stream_name`,`resubmission`,`setup_complete`,`full_application_finance`,`assessor_count`,`assessor_pay`,`template`,`use_resubmission_question`) VALUES ('Template for the APC competition type',0,100,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,1,0,0.00,1,1);
+INSERT INTO `competition` (`name`,`max_research_ratio`,`academic_grant_percentage`,`budget_code`,`code`,`paf_code`,`executive_user_id`,`lead_technologist_user_id`,`competition_type_id`,`activity_code`,`innovate_budget`,`multi_stream`,`collaboration_level`,`stream_name`,`resubmission`,`setup_complete`,`full_application_finance`,`assessor_count`,`assessor_pay`,`template`,`use_resubmission_question`) VALUES ('Template for the Advanced Propulsion Centre competition type',0,100,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,1,0,0.00,1,1);
 SET @apc_template_id=LAST_INSERT_ID();
 UPDATE competition_type SET template_competition_id = @apc_template_id WHERE id = @competition_type_apc_id;
 
