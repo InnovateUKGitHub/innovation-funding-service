@@ -12,7 +12,7 @@ Documentation  INFUND-6390 As an Applicant I will be invited to add project cost
 ...            IFS-40 As a comp executive I am able to select an 'Innovation area' of 'All' where the 'Innovation sector' is 'Open'
 ...
 ...            IFS-1015 As a Lead applicant with an existing account I am informed if my Organisation type is NOT eligible to lead
-Suite Setup     predefined date variables
+Suite Setup     Set predefined date variables
 Suite Teardown  Close browser and delete emails
 Force Tags      Applicant  CompAdmin  HappyPath
 Resource        ../../../resources/defaultResources.robot

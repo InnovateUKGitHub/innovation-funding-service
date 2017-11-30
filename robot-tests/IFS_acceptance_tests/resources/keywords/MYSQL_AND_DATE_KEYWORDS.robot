@@ -168,7 +168,7 @@ verify first date is greater than or equal to second
     ${date2}=  Convert Date  ${date_in_text_format2}  date_format=%d %B %Y  exclude_millis=true
     Should be true  '${date1}'>='${date2}'
 
-Predefined date variables
+Set predefined date variables
     ${month} =          get tomorrow month
     set suite variable  ${month}
     ${nextMonth} =  get next month

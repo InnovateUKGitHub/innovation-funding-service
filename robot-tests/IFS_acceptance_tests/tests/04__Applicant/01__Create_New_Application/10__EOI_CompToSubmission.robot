@@ -25,14 +25,13 @@ Comp Admin Creates EOI type competition
 Applicant applies to newly created EOI comp
     [Documentation]  IFS-2192  IFS-2196
     [Tags]  HappyPath
-    [Setup]  the competition is open     ${comp_name}
-    Lead Applicant applies to the new created competition    ${comp_name}
-    the lead applicant invites a registered user
+    When the competition is open                                 ${comp_name}
+    Then Lead Applicant applies to the new created competition   ${comp_name}
 
 Applicant submits his application
     [Documentation]  IFS-2196
     [Tags]  HappyPath
-    [Setup]  the user clicks the button/link            link=Application details
+    Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${EOI_application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     and the lead applicant fills all the questions and marks as complete(EOI comp type)
     Then the user clicks the button/link                link=Review and submit
@@ -40,7 +39,7 @@ Applicant submits his application
 
 *** Keywords ***
 Custom Suite Setup
-    predefined date variables
+    Set predefined date variables
     The guest user opens the browser
 
 The competition admin creates a EOI Comp

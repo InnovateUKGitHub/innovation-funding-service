@@ -76,7 +76,7 @@ Project Finance is able to see the Overheads costs file
 
 *** Keywords ***
 Custom Suite Setup
-    predefined date keywords
+    Set predefined date keywords
     The guest user opens the browser
 
 The competition admin creates a competition for
