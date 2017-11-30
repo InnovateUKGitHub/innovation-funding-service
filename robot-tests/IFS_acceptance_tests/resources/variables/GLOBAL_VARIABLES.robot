@@ -27,6 +27,8 @@ ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    92,000
 ${EMPIRE_LTD_ID}    22
 ${EMPIRE_LTD_NAME}    Empire Ltd
 
+${manageExternalUsers}  ${server}/management/admin/external/users
+
 #Competitions and Applications Variables
 ${openCompetitionRTO_name}       Predicting market trends programme
 ${openCompetitionRTO}            ${competition_ids['${openCompetitionRTO_name}']}
@@ -99,12 +101,9 @@ ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
 
-${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/461
-${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/467
-${YOUR_FINANCES_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/section/202
-${FINANCES_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/section/213
+${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/462
+${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/468
 ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
-
 
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
 ${APPLICATION_TEAM_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/team
