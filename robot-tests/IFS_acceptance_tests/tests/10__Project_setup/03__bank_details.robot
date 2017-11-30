@@ -324,11 +324,6 @@ Project Finance approves Bank Details through the Bank Details list
     Then the user should see the element    jQuery=h2:contains(The bank details provided have been approved.)
     And the project finance user confirms the approved bank details
 
-The Project Finance user should be able to see submitted bank details in the Bank Details list
-    [Documentation]    IFS-2015
-    [Tags]
-    Given the user navigates the
-
 *** Keywords ***
 the user moves focus away from the element
     [Arguments]    ${element}
