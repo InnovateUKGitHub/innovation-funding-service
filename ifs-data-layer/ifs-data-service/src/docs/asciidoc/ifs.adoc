@@ -109,6 +109,10 @@ include::affiliation.adoc[]
 == Alert
 include::alert.adoc[]
 
+[[analytics]]
+== Analytics
+include::analytics.adoc[]
+
 [[application]]
 == Application
 include::application.adoc[]
