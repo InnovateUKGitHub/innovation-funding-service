@@ -86,6 +86,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         switch (formInput.getType()) {
             case FILEUPLOAD:
                 setupResource.setAppendix(formInput.getActive());
+                setupResource.setAllowedFileTypes(formInput.getAllowedFileTypes());
                 break;
             case TEXTAREA:
                 setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
@@ -156,6 +157,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         questionFormInput.setGuidanceTitle(competitionSetupQuestionResource.getGuidanceTitle());
         questionFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getGuidance());
         questionFormInput.setWordCount(competitionSetupQuestionResource.getMaxWords());
+        questionFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedFileTypes());
 
         markAppendixAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markScoredAsActiveOrInactive(questionId, competitionSetupQuestionResource);
@@ -210,6 +212,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             writtenFeedbackFormInput.setGuidanceAnswer(competitionSetupQuestionResource.getAssessmentGuidance());
             writtenFeedbackFormInput.setGuidanceTitle(competitionSetupQuestionResource.getAssessmentGuidanceTitle());
             writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
+            writtenFeedbackFormInput.setAllowedFileTypes(competitionSetupQuestionResource.getAllowedFileTypes());
 
             // Delete all existing guidance rows and replace with new list
             List<GuidanceRow> newRows = newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows()));

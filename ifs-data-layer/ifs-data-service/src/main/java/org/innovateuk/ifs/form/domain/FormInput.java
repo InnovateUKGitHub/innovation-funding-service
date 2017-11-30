@@ -73,6 +73,8 @@ public class FormInput {
 
     private boolean active = true;
 
+    private String allowedFileTypes;
+
     public FormInput() {
         inputValidators = new LinkedHashSet<>();
     }
@@ -214,5 +216,17 @@ public class FormInput {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public String getAllowedFileTypes() {
+        return allowedFileTypes;
+    }
+
+    public void setAllowedFileTypes(String allowedFileTypes) {
+        this.allowedFileTypes = allowedFileTypes;
     }
 }
