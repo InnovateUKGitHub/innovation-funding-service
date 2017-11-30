@@ -165,27 +165,33 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withSetupComplete() {
         return asCompAdmin(data -> {
-
-            asList(CompetitionSetupSection.values()).forEach(competitionSetupSection -> {
-                competitionSetupService.markSectionComplete(data.getCompetition().getId(), competitionSetupSection);
-                competitionSetupSection.getSubsections().forEach(subsection -> {
-                    competitionSetupService.markSubsectionComplete(data.getCompetition().getId(), competitionSetupSection, subsection);
-                });
-            });
-
-            List<SectionResource> competitionSections = sectionService.getByCompetitionId(data.getCompetition().getId()).getSuccessObject();
-
-            SectionResource applicationSection = competitionSections.stream().filter(section -> section.getName().equals("Application questions")).findFirst().get();
-            SectionResource projectDetails = competitionSections.stream().filter(section -> section.getName().equals("Project details")).findFirst().get();
-
-            List<QuestionResource> questionResources = questionService.findByCompetition(data.getCompetition().getId()).getSuccessObject();
-            questionResources.stream()
-                    .filter(question -> question.getSection().equals(applicationSection.getId())
-                            || question.getSection().equals(projectDetails.getId()))
-                    .forEach(question -> questionSetupService.markQuestionInSetupAsComplete(question.getId(), data.getCompetition().getId(), CompetitionSetupSection.APPLICATION_FORM));
-
-            competitionSetupService.markAsSetup(data.getCompetition().getId());
+            markSetupSectionsAndSubsectionsAsComplete(data);
+            markSetupApplicationQuestionsAsComplete(data);
         });
+    }
+
+    private void markSetupSectionsAndSubsectionsAsComplete(CompetitionData data) {
+        asList(CompetitionSetupSection.values()).forEach(competitionSetupSection -> {
+            competitionSetupService.markSectionComplete(data.getCompetition().getId(), competitionSetupSection);
+            competitionSetupSection.getSubsections().forEach(subsection -> {
+                competitionSetupService.markSubsectionComplete(data.getCompetition().getId(), competitionSetupSection, subsection);
+            });
+        });
+    }
+
+    private void markSetupApplicationQuestionsAsComplete(CompetitionData data) {
+        List<SectionResource> competitionSections = sectionService.getByCompetitionId(data.getCompetition().getId()).getSuccessObject();
+
+        SectionResource applicationSection = competitionSections.stream().filter(section -> section.getName().equals("Application questions")).findFirst().get();
+        SectionResource projectDetails = competitionSections.stream().filter(section -> section.getName().equals("Project details")).findFirst().get();
+
+        List<QuestionResource> questionResources = questionService.findByCompetition(data.getCompetition().getId()).getSuccessObject();
+        questionResources.stream()
+                .filter(question -> question.getSection().equals(applicationSection.getId())
+                        || question.getSection().equals(projectDetails.getId()))
+                .forEach(question -> questionSetupService.markQuestionInSetupAsComplete(question.getId(), data.getCompetition().getId(), CompetitionSetupSection.APPLICATION_FORM));
+
+        competitionSetupService.markAsSetup(data.getCompetition().getId());
     }
 
     public CompetitionDataBuilder moveCompetitionIntoOpenStatus() {
