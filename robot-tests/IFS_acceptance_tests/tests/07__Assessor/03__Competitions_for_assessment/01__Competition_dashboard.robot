@@ -75,7 +75,7 @@ Accept an application for assessment
     ...
     ...    INFUND-4128
     [Tags]    HappyPath
-    Then the user should see the element                      jQuery=.in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
+    Given the user should see the element                      jQuery=.in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
     When The user clicks the button/link                      jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
     And the user should see the element                       jQuery=h1:contains("Accept application")
     And the user selects the radio button                     assessmentAccept  true

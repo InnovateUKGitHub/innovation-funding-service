@@ -102,8 +102,8 @@ Existing Assessor tries to accept closed competition
     [Tags]
     [Setup]    Close the competition in assessment
     Given Log in as a different user               &{existing_assessor1_credentials}
-    Then The user should not see the element       link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user navigates to the page             ${Invitation_for_upcoming_comp_assessor1}
+    And The user should not see the element        link=${IN_ASSESSMENT_COMPETITION_NAME}
+    When the user navigates to the page            ${Invitation_for_upcoming_comp_assessor1}
     Then the user should see the element           jQuery=h1:contains("This invitation is now closed")
     [Teardown]    Run Keywords    Connect to Database    @{database}
     ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=${competition_ids["${IN_ASSESSMENT_COMPETITION_NAME}"]};
