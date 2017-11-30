@@ -28,7 +28,7 @@ public interface BankDetailsService {
     @SecuredBySpring(value = "READ", description = "Project Finance users can see bank details status summary for all partners", securedType = ProjectBankDetailsStatusSummary.class)
     ServiceResult<ProjectBankDetailsStatusSummary> getProjectBankDetailsStatusSummary(final Long projectId);
 
-    @PreAuthorize("hasAnyAuthority('project_finance')")
+    @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "GET_PENDING_BANK_DETAILS_APPROVALS", description = "Project finance users can get organisations for which Bank Details approval is pending")
     ServiceResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals();
 }
