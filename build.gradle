@@ -14,6 +14,12 @@ ext.projectSetupMgtServiceVersion=project.properties['project-setup-mgt-service.
 ext.projectSetupServiceVersion=project.properties['project-setup-service.version'] ?:project.version
 ext.registrationServiceVersion=project.properties['registration-service.version'] ?:project.version
 
+ext.spVersion=project.properties['sp.version'] ?:project.version
+ext.idpVersion=project.properties['idp.version'] ?:project.version
+ext.ldapVersion=project.properties['ldap.version'] ?:project.version
+
+ext.silStubVersion=project.properties['sil-stub.version'] ?:project.version
+
 allprojects {
     group 'innovateuk'
     version project.version

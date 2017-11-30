@@ -20,7 +20,7 @@ subprojects{
     task tagDocker(type: DockerTagImage) {
         dependsOn buildDockerForOS
         imageId = buildDockerForOS.getTag()
-        repository = dockerRegistryCredentials.url+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+        repository = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
         tag = project.version
     }
 
