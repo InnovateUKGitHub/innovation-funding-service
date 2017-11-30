@@ -108,7 +108,13 @@ public class ApplicationTeamModelPopulator {
         boolean editable = userLeadApplicant || isUserMemberOfOrganisation(loggedInUserId, inviteOrganisationResource);
         return new ApplicationTeamOrganisationRowViewModel(inviteOrganisationResource.getOrganisation(),
                 inviteOrganisationResource.getId(), getOrganisationName(inviteOrganisationResource), inviteOrganisationResource.getOrganisationTypeName(), leadOrganisation,
-                inviteOrganisationResource.getInviteResources().stream().sorted(Comparator.comparing(a -> a.getSentOn(), Comparator.nullsFirst(Comparator.naturalOrder()))).map(this::getApplicantViewModel).collect(toList()), editable);
+                inviteOrganisationResource.getInviteResources().stream()
+                        .sorted(getSentOnNullFirstComparator())
+                        .map(this::getApplicantViewModel).collect(toList()), editable);
+    }
+
+    private Comparator<ApplicationInviteResource> getSentOnNullFirstComparator() {
+        return Comparator.comparing(ApplicationInviteResource::getSentOn, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     private ApplicationTeamApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource) {
