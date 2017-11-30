@@ -20,6 +20,8 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-8688 Experian response - Error message if wrong bank details are submitted
 ...
 ...               IFS-1881 Project Setup internal project dashboard navigation
+...
+...               IFS-2015 Project Setup task management: Bank details
 
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
@@ -48,7 +50,6 @@ Links to other sections in Project setup dependent on project details for partne
     And the user should see the element       link = Finance checks
     And the user should not see the element       link= Spend profile
     And the user should not see the element       link = Grant offer letter
-
 
 Project Finance should not be able to access bank details page
     [Documentation]    INFUND-7090, INFUND-7109
@@ -310,6 +311,24 @@ Project Finance user can export bank details
     Then the user opens the excel and checks the content
     [Teardown]  remove the file from the operating system  bank_details.csv
 
+Project Finance approves Bank Details through the Bank Details list
+    [Documentation]    IFS-2015
+    [Tags]
+    Given log in as a different user    &{internal_finance_credentials}
+    And the user navigates to the page    ${server}/management/dashboard/project-setup
+    And the user clicks the button/link  jQuery=a:contains(Bank details)
+    When the user clicks the button/link    jQuery=a:contains(Dreambit)
+    And the user clicks the button/link    jQuery=a:contains(Dreambit)
+    And the user clicks the button/link    jQuery=button:contains(Approve bank account details)
+    And the user clicks the button/link    jQuery=button:contains(Approve account)
+    Then the user should see the element    jQuery=h2:contains(The bank details provided have been approved.)
+    And the project finance user confirms the approved bank details
+
+The Project Finance user should be able to see submitted bank details in the Bank Details list
+    [Documentation]    IFS-2015
+    [Tags]
+    Given the user navigates the
+
 *** Keywords ***
 the user moves focus away from the element
     [Arguments]    ${element}
@@ -350,3 +369,9 @@ the user opens the excel and checks the content
     should be equal                 ${bank_account_number}  ${account_two}
     ${bank_account_sort_code}=      get from list  ${vitruvius_details}  11
     should be equal                 ${bank_account_sort_code}  ${sortCode_two}
+
+The project finance user confirms the approved Bank Details
+    the user navigates to the page    ${server}/project-setup-management/competitions/status/pending-bank-details-approvals
+    the user should not see the element    jQuery=a:contains(Dreambit)
+    the user navigates to the page    ${server}/project-setup-management/competition/11/status/all
+    the user should see the element    jQuery=tr:contains(Complete) td:nth-child(4) a:contains(Complete)
