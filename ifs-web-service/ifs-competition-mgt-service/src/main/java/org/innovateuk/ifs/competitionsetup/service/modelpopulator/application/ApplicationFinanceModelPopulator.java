@@ -28,6 +28,6 @@ public class ApplicationFinanceModelPopulator implements CompetitionSetupSubsect
 	@Override
 	public CompetitionSetupSubsectionViewModel populateModel(CompetitionResource competitionResource, Optional<Long> objectId) {
         return new ApplicationFinanceViewModel("sector".equalsIgnoreCase(competitionResource.getCompetitionTypeName()),
-                competitionSetupFinanceService.isNoneFinanceCompetition(competitionResource));
+                competitionSetupFinanceService.isNoFinanceCompetition(competitionResource));
     }
 }

@@ -183,27 +183,20 @@ public class CompetitionSetupApplicationController {
                                             @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                             Model model) {
 
-        CompetitionResource competitionResource = competitionService.getById(competitionId);
-
-        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
-            return "redirect:/competition/setup/" + competitionResource.getId();
-        }
-
-        Supplier<String> failureView = () -> getFinancePage(model, competitionResource, true, form);
-        Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
-
-        return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> competitionSetupService.saveCompetitionSetupSubsection(form, competitionResource, APPLICATION_FORM, FINANCES));
-
+        return handleFinanceSaving(competitionId, model, form, validationHandler);
     }
 
     @PostMapping("/question/finance/none/edit")
-    public String submitApplicationNoneFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
-                                            BindingResult bindingResult,
-                                            ValidationHandler validationHandler,
-                                            @PathVariable(COMPETITION_ID_KEY) long competitionId,
-                                            Model model) {
+    public String submitApplicationNoFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
+                                              BindingResult bindingResult,
+                                              ValidationHandler validationHandler,
+                                              @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                              Model model) {
 
+       return handleFinanceSaving(competitionId, model, form, validationHandler);
+    }
+
+    private String handleFinanceSaving(long competitionId, Model model, ApplicationFinanceForm form, ValidationHandler validationHandler) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
@@ -215,7 +208,6 @@ public class CompetitionSetupApplicationController {
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> competitionSetupService.saveCompetitionSetupSubsection(form, competitionResource, APPLICATION_FORM, FINANCES));
-
     }
 
     @GetMapping("/question/{questionId}")

@@ -43,7 +43,7 @@ public class ApplicationFinanceFormPopulator implements CompetitionSetupSubsecti
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
         ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
 
-        if(!competitionSetupFinanceService.isNoneFinanceCompetition(competitionResource)) {
+        if(!competitionSetupFinanceService.isNoFinanceCompetition(competitionResource)) {
             CompetitionSetupFinanceResource competitionSetupFinanceResource = competitionSetupFinanceService.getByCompetitionId(competitionResource.getId());
 
             competitionSetupForm.setApplicationFinanceType(getFinanceType(competitionSetupFinanceResource.isFullApplicationFinance()));

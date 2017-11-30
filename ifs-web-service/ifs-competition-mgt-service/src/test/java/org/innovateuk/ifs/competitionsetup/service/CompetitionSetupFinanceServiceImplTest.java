@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,33 +16,26 @@ public class CompetitionSetupFinanceServiceImplTest {
     @InjectMocks
     private CompetitionSetupFinanceServiceImpl service;
 
-    @Before
-    public void setup() {
-
-    }
-
     @Test
-    public void testIsNoneFinanceCompetitionSuccess() {
+    public void testIsNoFinanceCompetitionSuccess() {
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withCompetitionTypeName("Expression of interest")
                 .build();
 
-
-        boolean result = service.isNoneFinanceCompetition(competition);
+        boolean result = service.isNoFinanceCompetition(competition);
 
         assertTrue(result);
     }
 
     @Test
-    public void testIsNoneFinanceCompetitionFailing() {
+    public void testIsNoFinanceCompetitionFailing() {
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
                 .withCompetitionTypeName("Generic")
                 .build();
 
-
-        boolean result = service.isNoneFinanceCompetition(competition);
+        boolean result = service.isNoFinanceCompetition(competition);
 
         assertFalse(result);
     }

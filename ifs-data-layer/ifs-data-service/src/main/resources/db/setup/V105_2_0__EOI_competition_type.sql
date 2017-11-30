@@ -143,6 +143,6 @@ INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_
 /* Assessor counts for this new competition type */
 INSERT INTO `assessor_count_option` (`competition_type_id`, `option_name`, `option_value`, `default_option`)
 VALUES
-(@competition_type_eoi_id, '1', 0, 0),
-(@competition_type_eoi_id, '3', 0, 0),
-(@competition_type_eoi_id, '5', 0, 1);
+(@competition_type_eoi_id, '1', 1, 0),
+(@competition_type_eoi_id, '3', 3, 0),
+(@competition_type_eoi_id, '5', 5, 1);
