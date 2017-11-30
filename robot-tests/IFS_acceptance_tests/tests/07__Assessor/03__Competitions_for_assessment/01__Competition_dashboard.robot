@@ -44,13 +44,10 @@ Calculation of the applications for assessment should be correct
 Details of the competition are visible
     [Documentation]    INFUND-3723
     [Tags]    HappyPath
-    Then the user should see the text in the page   Competition
-    And the user should see the text in the page    Innovation Lead
-    And the user should see the text in the page    Ian Cooper
-    And the user should see the text in the page    Accept applications deadline
-    And the user should see the text in the page    Submit applications deadline
-    And the user should see the text in the page    12:00pm Thursday 12 January 2068
-    And the user should see the text in the page    12:00pm Saturday 28 January 2068
+    Then the user should see the element   jQuery=dt:contains("Competition") + dd:contains("Sustainable living models for the future")
+    And the user should see the element    jQuery=dt:contains("Innovation Lead") + dd:contains("Ian Cooper")
+    And the user should see the element    jQuery=dt:contains("Accept applications deadline") + dd:contains("12:00pm Thursday 12 January 2068")
+    And the user should see the element    jQuery=dt:contains("Submit applications deadline:") + dd:contains("12:00pm Saturday 28 January 2068")
 
 Competition brief link can be seen
     [Documentation]    INFUND-5494
@@ -80,7 +77,7 @@ Accept an application for assessment
     [Tags]    HappyPath
     Then the user should see the element                      jQuery=.in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
     When The user clicks the button/link                      jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
-    And the user should see the text in the page              Accept application
+    And the user should see the element                       jQuery=h1:contains("Accept application")
     And the user selects the radio button                     assessmentAccept  true
     And The user clicks the button/link                       jQuery=button:contains("Confirm")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
@@ -97,7 +94,7 @@ Reject an application for assessment
     Given The user clicks the button/link                link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user should see the element                  jQuery=.in-progress li:nth-child(1):contains("Park living"):contains("Pending")
     When The user clicks the button/link                 jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
-    And the user should see the text in the page         Accept application
+    And the user should see the element                  jQuery=h1:contains("Accept application")
     And the user should not see the element              id=rejectComment
     And the user selects the radio button                assessmentAccept  false
     And The user clicks the button/link                  jQuery=button:contains("Confirm")

@@ -18,11 +18,11 @@ Assessment overview should show all the questions
     ...
     ...    INFUND-1188
     [Tags]
-    Given The user clicks the button/link           link=${IN_ASSESSMENT_COMPETITION_NAME}
-    when the user clicks the button/link            link=Intelligent water system
-    Then The user should see the text in the page   Project details
-    And The user should see the text in the page    Application questions
-    And The user should see the text in the page    Finances
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    When the user clicks the button/link     link=Intelligent water system
+    Then The user should see the element     jQuery=h2:contains("Project details")
+    And The user should see the element      jQuery=h2:contains("Application questions")
+    And The user should see the element      jQuery=h2:contains("Finances")
 
 Number of days remaining until assessment submission
     [Documentation]    INFUND-3720
