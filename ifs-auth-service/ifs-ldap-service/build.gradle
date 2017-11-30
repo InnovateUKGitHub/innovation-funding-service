@@ -1,4 +1,3 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import org.apache.tools.ant.filters.ReplaceTokens
 
 def String ldapCertsVolume = 'src/main/docker/certs'
@@ -35,9 +34,4 @@ task prepareDockerFile {
     }
 }
 
-task buildDocker(type: DockerBuildImage) {
-    dependsOn prepareDockerFile
-
-    tag = 'innovateuk/ldap-service:latest'
-    inputDir = file("${project.buildDir}/docker")
-}
+buildDocker.dependsOn prepareDockerFile
