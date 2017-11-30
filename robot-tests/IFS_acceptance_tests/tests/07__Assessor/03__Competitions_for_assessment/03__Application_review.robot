@@ -109,7 +109,7 @@ Appendix can be opened on the question view
     And the user goes back to the previous tab
 
 Scope: Validations
-        [Documentation]  IFS-508
+    [Documentation]  IFS-508
     [Tags]
     Given the user clicks the button/link               link=Back to your assessment overview
     And the user clicks the button/link                 link=Scope
