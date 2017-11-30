@@ -20,14 +20,14 @@ subprojects{
     task tagDocker(type: DockerTagImage) {
         dependsOn buildDockerForOS
         imageId = buildDockerForOS.getTag()
-        repository = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name
+        repository = dockerRegistryCredentials.url+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
         tag = project.version
     }
 
     task osStageRemote(type: DockerPushImage) {
         dependsOn tagDocker
         registryCredentials = project.ext.dockerRegistryCredentials
-        imageName=project.dockerRegistry+"/"+openshiftEnv+"/"+project.name
+        imageName=dockerRegistryCredentials.url+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
         tag = project.version
     }
 
