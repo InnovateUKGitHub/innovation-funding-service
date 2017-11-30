@@ -400,3 +400,9 @@ the user navigates to the eligibility of the competition
     [Arguments]  ${competition}
     ${competitionId} =  get comp id from comp title    ${competition}
     the user navigates to the page   ${server}/application/create/check-eligibility/${competitionId}
+
+the lead applicant marks every question as complete(EOI)
+    [Arguments]  ${question_link}
+    the user clicks the button/link             jQuery=h3 a:contains("${question_link}")
+    the user marks the section as complete
+    the user clicks the button/link             link=Application overview

@@ -122,17 +122,17 @@ the user marks the Application as done
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
-    Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user fills no finances for EOI comp
+    Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
     #No need to mark generic competition assessed question as complete as they already are.
     Run keyword If  '${comp_type}'!='${compType_EOI}'   the user fills in the Finances questions  ${growthTable}
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
-the user fills no finances for EOI comp
-    the user clicks the button/link   link=Finances
-    the user clicks the button/link    radio-3     # TODO need to replace the selector based on what we do with implementation to exclude finances
-    the user clicks the button/link   jQuery=.button:contains("Done")
+the user opts no finances for EOI comp
+    the user clicks the button/link    link=Finances
+    the user selects the radio button  applicationFinanceTyp  NONE
+    the user clicks the button/link    jQuery=.button:contains("Done")
 
 the assessed questions are marked complete except finances(programme type)
     the user marks each question as complete  Business opportunity
