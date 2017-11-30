@@ -21,6 +21,7 @@ public class ApplicationSummaryResource {
     private String innovationArea;
     private ZonedDateTime manageFundingEmailDate;
     private Boolean ineligibleInformed;
+    private boolean inAssessmentPanel;
 
     public ZonedDateTime getManageFundingEmailDate() {
         return manageFundingEmailDate;
@@ -144,5 +145,13 @@ public class ApplicationSummaryResource {
         }
 
         return true;
+    }
+
+    public boolean isInAssessmentPanel() {
+        return inAssessmentPanel;
+    }
+
+    public void setInAssessmentPanel(boolean inAssessmentPanel) {
+        this.inAssessmentPanel = inAssessmentPanel;
     }
 }
