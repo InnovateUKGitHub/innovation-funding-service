@@ -1,8 +1,6 @@
 jar {
     baseName = 'project-setup-management'
 }
-buildDocker.tag = 'innovateuk/project-setup-management-service:latest'
-
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')

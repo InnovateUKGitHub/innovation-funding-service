@@ -114,15 +114,9 @@ task buildDocker(type: DockerBuildImage) {
     inputDir = project.file("$project.buildDir/docker")
 }
 
-task buildDockerForOS(type: DockerBuildImage) {
-    dependsOn prepareDockerInput
-    tag = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")+":latest"
-    inputDir = project.file("$project.buildDir/docker")
-}
-
 task tagDocker(type: DockerTagImage) {
-    dependsOn buildDockerForOS
-    imageId = buildDockerForOS.getTag()
+    dependsOn buildDocker
+    imageId = buildDocker.getTag()
     repository = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
     tag = project.version
 }
@@ -135,8 +129,8 @@ task osStageRemote(type: DockerPushImage) {
 }
 
 task tagDockerLocal(type: DockerTagImage) {
-    dependsOn buildDockerForOS
-    imageId = buildDockerForOS.getTag()
+    dependsOn buildDocker
+    imageId = buildDocker.getTag()
     repository = localDockerRegistryCredentials.url+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
     tag = project.version
 }

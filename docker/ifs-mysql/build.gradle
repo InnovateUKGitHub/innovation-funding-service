@@ -9,18 +9,11 @@ task buildDocker(overwrite: true, type: DockerBuildImage) {
     inputDir = project.projectDir
 }
 
-task buildDockerForOS(overwrite: true, type: DockerBuildImage) {
-    onlyIf { !isNamedEnv() }
-
-    tag = project.dockerRegistry + "/" + openshiftEnv + "/"+sqlVersion
-    inputDir = project.projectDir
-}
-
 task tagDocker(type: DockerTagImage) {
     onlyIf { !isNamedEnv() }
 
-    dependsOn buildDockerForOS
-    imageId = buildDockerForOS.getTag()
+    dependsOn buildDocker
+    imageId = buildDocker.getTag()
     repository = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
     tag = sqlVersion
 }
@@ -35,8 +28,8 @@ task osStageRemote(type: DockerPushImage) {
 }
 
 task tagDockerLocal(type: DockerTagImage) {
-    dependsOn buildDockerForOS
-    imageId = buildDockerForOS.getTag()
+    dependsOn buildDocker
+    imageId = buildDocker.getTag()
     repository = localDockerRegistryCredentials.url + "/" + openshiftEnv + "/ifs-mysql"
     tag = sqlVersion
 }

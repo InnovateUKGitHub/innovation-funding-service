@@ -79,17 +79,9 @@ subprojects {
             inputDir = project.file("$project.buildDir/docker")
         }
 
-        task buildDockerForOS(type: DockerBuildImage) {
-            dependsOn ":docker:app-base-image:buildDocker"
-            dependsOn prepareDockerInput
-            inputDir = project.file("$project.buildDir/docker")
-            tag = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")+":latest"
-        }
-
-
         task tagDocker(type: DockerTagImage) {
-            dependsOn buildDockerForOS
-            imageId = buildDockerForOS.getTag()
+            dependsOn buildDocker
+            imageId = buildDocker.getTag()
             repository = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
             tag = project.version
         }
@@ -103,8 +95,8 @@ subprojects {
         }
 
         task tagDockerLocal(type: DockerTagImage) {
-            dependsOn buildDockerForOS
-            imageId = buildDockerForOS.getTag()
+            dependsOn buildDocker
+            imageId = buildDocker.getTag()
             repository = localDockerRegistryCredentials.url+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
             tag = project.version
         }

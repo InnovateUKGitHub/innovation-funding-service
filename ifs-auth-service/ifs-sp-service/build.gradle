@@ -49,4 +49,3 @@ task prepareDockerFile {
 }
 
 buildDocker.dependsOn prepareDockerFile
-buildDockerForOS.dependsOn prepareDockerFile
