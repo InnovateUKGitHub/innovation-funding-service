@@ -25,8 +25,11 @@
                 <dd class="column-two-thirds" th:text="${question.maxWords}"></dd>
                 <th:block th:if="${question.appendix != null}">
                     <dt class="column-third">Appendix</dt>
-                    <dd class="column-two-thirds" th:if="${question.appendix}">Yes</dd>
-                    <dd class="column-two-thirds" th:if="${question.allowedFileTypes}">application/pdf</dd>
+                    <dd class="column-two-thirds" th:if="${question.appendix}">
+                        <ul th:each="fileType : ${question.allowedFileTypes}">
+                            <li th:text="${fileType}"></li>
+                        </ul>
+                    </dd>
                     <dd class="column-two-thirds" th:unless="${question.appendix}">No</dd>
                 </th:block>
             </dl>
@@ -210,6 +213,9 @@
                     </div>
                 </fieldset>
                 <fieldset id="allowedFileTypesDiv" class="panel extra-margin">
+                    <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
+                        <span class="error-message"  th:each="err : ${#fields.errors('question.allowedFileTypes')}" th:text="${err}" ></span>
+                    </th:block>
                     <div class="multiple-choice" th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
                         <input type="checkbox" th:field="*{question.allowedFileTypes}" th:value="${fileTypeCategory.displayName}" />
                         <label th:for="${#ids.prev('question.allowedFileTypes')}" th:text="${fileTypeCategory.displayName}">PDF</label>
