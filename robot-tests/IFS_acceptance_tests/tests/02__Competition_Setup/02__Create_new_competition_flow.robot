@@ -465,7 +465,6 @@ Application: marking questions as complete
     And the user marks question as complete   Additionality
     And the user marks question as complete   Costs and value for money
 
-
 Adding a new Assessed Application Question
     [Documentation]  IFS-182
     [Tags]
@@ -492,13 +491,15 @@ Application: Finances
     And the user should see the element      jQuery=.panel:contains("The competition template will select the following finance sections for each partner.")
     Then the user should see the element     css=input:checked ~ label[for="application-finance-full"]
     And the user should see the element      css=label[for="application-finance-light"]
-    # Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
+#   Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
     And the user should see the element      css=label[for="application-finance-none"]
-    When the user selects the radio button   includeGrowthTable  include-growth-table-no
+    When the user clicks the button/link      css=input[id="include-growth-table-yes"]
+#   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
+    And the user should not see the element  css=input[id="include-growth-table-no"]
     And the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
-    And The user clicks the button/link      css=button[type="submit"]  #Save and close
+    Then The user clicks the button/link      css=button[type="submit"]  #Save and close
     When the user clicks the button/link     link=Finances
-    Then the user should see the element     jQuery=dt:contains("Include project growth table")+dd:contains("No")
+    Then the user should see the element     jQuery=dt:contains("Include project growth table")+dd:contains("Yes")
     And the user should see the element      jQuery=dt:contains("Funding rules for this competition")+dd:contains("Funding rules for this competition are now entered.")
     [Teardown]  the user clicks the button/link  link=Return to application questions
 
