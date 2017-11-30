@@ -372,4 +372,21 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         count = repository.countLiveForInnovationLead(innovationLead1Id);
         assertEquals(new Long(0L), count);
     }
+
+    // IFS-2263 -- ensure milestone dates aren't rounded up
+    @Test
+    @Rollback
+    public void testMilestoneDatesTruncated() {
+        final ZonedDateTime dateTime = ZonedDateTime.parse("2017-12-03T10:18:30.500Z");
+        final ZonedDateTime expectedDateTime = ZonedDateTime.parse("2017-12-03T10:18:30.000Z");
+
+        Competition savedCompetition = repository.save(
+                new Competition(null, null, null,null,"comp", dateTime, null, null)
+        );
+
+        flushAndClearSession();
+
+        Competition retrievedCompetition = repository.findById(savedCompetition.getId());
+        assertTrue(expectedDateTime.isEqual(retrievedCompetition.getStartDate()));
+    }
 }

@@ -64,6 +64,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -413,6 +414,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 eq(simpleMapSet(asLinkedSet(APPROVED, REJECTED, SUBMITTED), ApplicationState::getBackingState)),
                 eq(""),
                 eq(UNFUNDED),
+                eq(null),
                 argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
                 .thenReturn(page);
 
@@ -423,7 +425,8 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                         0,
                         20,
                         of(""),
-                        of(UNFUNDED));
+                        of(UNFUNDED),
+                        empty());
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -442,6 +445,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 eq(COMP_ID),
                 eq(simpleMapSet(asLinkedSet(ApplicationState.INELIGIBLE, ApplicationState.INELIGIBLE_INFORMED), ApplicationState::getBackingState)),
                 eq(""),
+                eq(null),
                 eq(null),
                 argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
                 .thenReturn(page);
@@ -472,6 +476,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 eq(COMP_ID),
                 eq(singleton(ApplicationState.INELIGIBLE_INFORMED.getBackingState())),
                 eq(""),
+                eq(null),
                 eq(null),
                 argThat(new PageableMatcher(0, 20, srt("id", ASC)))))
                 .thenReturn(page);
@@ -547,7 +552,7 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
                 .build(2);
 
         when(applicationRepositoryMock.findByCompetitionIdAndApplicationProcessActivityStateStateInAndIdLike(
-                eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED))).thenReturn(applications);
+                eq(COMP_ID), eq(SUBMITTED_STATES),  eq("filter"), eq(UNFUNDED), eq(null))).thenReturn(applications);
 
         ServiceResult<List<Long>> result = applicationSummaryService.getAllSubmittedApplicationIdsByCompetitionId(COMP_ID, of("filter"), of(UNFUNDED));
         assertTrue(result.isSuccess());

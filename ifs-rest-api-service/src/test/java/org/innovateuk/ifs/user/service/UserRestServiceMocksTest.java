@@ -346,16 +346,20 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         assertEquals(OK, result.getStatusCode());
     }
 
-    //TODO - Will be deleted/fixed once junits for IFS-1986 are complete.
-/*    @Test
-    public void findAllExternal() throws Exception {
-        String url = usersUrl + "/findAllExternal";
+    @Test
+    public void findExternalUsers() throws Exception {
+
+        String searchString = "%aar%";
+        SearchCategory searchCategory = SearchCategory.NAME;
+        String url = usersUrl + "/findExternalUsers?searchString=" + searchString + "&searchCategory=" + searchCategory.name();
+
         List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
         setupGetWithRestResultExpectations(url, userOrganisationListType(), userOrganisationResources);
 
-        RestResult<List<UserOrganisationResource>> result = service.findAllExternal();
+        RestResult<List<UserOrganisationResource>> result = service.findExternalUsers(searchString, searchCategory);
+
         assertTrue(result.isSuccess());
         assertEquals(OK, result.getStatusCode());
         assertEquals(userOrganisationResources, result.getSuccessObject());
-    }*/
+    }
 }
