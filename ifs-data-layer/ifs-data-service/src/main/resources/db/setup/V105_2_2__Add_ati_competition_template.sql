@@ -473,6 +473,6 @@ INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`in
 /* Assessor counts for this new competition type */
 INSERT INTO `assessor_count_option` (`competition_type_id`, `option_name`, `option_value`, `default_option`)
 VALUES
-(@competition_type_ati_id, '1', 0, 0),
-(@competition_type_ati_id, '3', 0, 0),
-(@competition_type_ati_id, '5', 0, 1);
+(@competition_type_ati_id, '1', 1, 0),
+(@competition_type_ati_id, '3', 3, 0),
+(@competition_type_ati_id, '5', 5, 1);
