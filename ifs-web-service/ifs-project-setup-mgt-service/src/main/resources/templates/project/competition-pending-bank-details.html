@@ -41,7 +41,7 @@
         </div>
     </th:block>
     <th:block th:unless="${model.pendingBankDetails.size() > 0}">
-        There are no outstanding Bank Details to be approved.
+        There are no bank details awaiting approval.
     </th:block>
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
