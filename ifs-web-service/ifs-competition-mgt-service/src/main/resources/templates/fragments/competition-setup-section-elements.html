@@ -204,17 +204,15 @@
                         <input id="appendix-yes" th:name="question.appendix" th:checked="${question.appendix}" value="1" type="radio"/>
                         <label for="appendix-yes">Yes</label>
                     </div>
-                    <div id="allowedFileTypesDiv">
-                        <ul>
-                            <li th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
-                                <input type="checkbox" th:field="*{question.allowedFileTypes}" th:value="${fileTypeCategory.displayName}" />
-                                <label th:for="${#ids.prev('question.allowedFileTypes')}" th:text="${fileTypeCategory.displayName}">PDF</label>
-                            </li>
-                        </ul>
-                    </div>
                     <div class="multiple-choice">
                         <input id="appendix-no" th:name="question.appendix" th:checked="${!question.appendix}" value="0" type="radio" />
                         <label for="appendix-no">No</label>
+                    </div>
+                </fieldset>
+                <fieldset id="allowedFileTypesDiv" class="panel extra-margin">
+                    <div class="multiple-choice" th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
+                        <input type="checkbox" th:field="*{question.allowedFileTypes}" th:value="${fileTypeCategory.displayName}" />
+                        <label th:for="${#ids.prev('question.allowedFileTypes')}" th:text="${fileTypeCategory.displayName}">PDF</label>
                     </div>
                 </fieldset>
             </div>
