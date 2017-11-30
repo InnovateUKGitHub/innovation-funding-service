@@ -316,12 +316,12 @@ Project Finance approves Bank Details through the Bank Details list
     [Tags]
     Given log in as a different user    &{internal_finance_credentials}
     And the user navigates to the page    ${server}/management/dashboard/project-setup
-    And the user clicks the button/link  jQuery=a:contains(Bank details)
-    When the user clicks the button/link    jQuery=a:contains(Dreambit)
-    And the user clicks the button/link    jQuery=a:contains(Dreambit)
-    And the user clicks the button/link    jQuery=button:contains(Approve bank account details)
-    And the user clicks the button/link    jQuery=button:contains(Approve account)
-    Then the user should see the element    jQuery=h2:contains(The bank details provided have been approved.)
+    And the user clicks the button/link  jQuery=a:contains("Bank details")
+    When the user clicks the button/link    jQuery=a:contains("Dreambit")
+    And the user clicks the button/link    jQuery=a:contains("Dreambit")
+    And the user clicks the button/link    jQuery=button:contains("Approve bank account details")
+    And the user clicks the button/link    jQuery=button:contains("Approve account")
+    Then the user should see the element    jQuery=h2:contains("The bank details provided have been approved.")
     And the project finance user confirms the approved bank details
 
 *** Keywords ***
@@ -367,6 +367,6 @@ the user opens the excel and checks the content
 
 The project finance user confirms the approved Bank Details
     the user navigates to the page    ${server}/project-setup-management/competitions/status/pending-bank-details-approvals
-    the user should not see the element    jQuery=a:contains(Dreambit)
+    the user should not see the element    jQuery=a:contains("Dreambit")
     the user navigates to the page    ${server}/project-setup-management/competition/11/status/all
-    the user should see the element    jQuery=tr:contains(Complete) td:nth-child(4) a:contains(Complete)
+    the user should see the element    jQuery=tr:contains("Complete") td:nth-child(4) a:contains("Complete")
