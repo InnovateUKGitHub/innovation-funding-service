@@ -115,6 +115,20 @@ task osStageRemote(type: DockerPushImage) {
     tag = project.version
 }
 
+task tagDockerLocal(type: DockerTagImage) {
+    dependsOn buildDockerForOS
+    imageId = buildDockerForOS.getTag()
+    repository = localDockerRegistryCredentials.url+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+    tag = project.version
+}
+
+task osStageLocal(type: DockerPushImage) {
+    dependsOn tagDockerLocal
+    registryCredentials = project.ext.localDockerRegistryCredentials
+    imageName=localDockerRegistryCredentials.url +"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+    tag = project.version
+}
+
 
 // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
 // Can reinstate excludeDevtools in the bootRepackage task in next release

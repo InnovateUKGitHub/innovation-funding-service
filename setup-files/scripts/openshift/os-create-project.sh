@@ -3,7 +3,7 @@
 set -e
 
 PROJECT=$1
-TARGET="remote"
+TARGET=$2
 . $(dirname $0)/deploy-functions.sh
 . $(dirname $0)/local-deploy-functions.sh
 PROJECT=$(getProjectName $PROJECT $TARGET)

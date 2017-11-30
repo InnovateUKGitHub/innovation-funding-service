@@ -170,13 +170,18 @@ task dbAnonymisedDumpLocal(type:Exec) {
     args = [openshiftEnv, "local", project.version]
 }
 
+task createProjectLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-create-project.sh'
+    args = [openshiftEnv, "local"]
+}
+
 
 // Remote tasks
 
 
 task createProject(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-create-project.sh'
-    args = [openshiftEnv]
+    args = [openshiftEnv, "remote"]
 }
 
 task osDeployFractalRemote(type:Exec) {
