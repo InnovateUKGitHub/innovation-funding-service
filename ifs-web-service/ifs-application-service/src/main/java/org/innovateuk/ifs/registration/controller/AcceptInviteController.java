@@ -46,6 +46,9 @@ public class AcceptInviteController extends AbstractAcceptInviteController {
             UserResource loggedInUser,
             HttpServletResponse response,
             Model model) {
+
+        registrationCookieService.deleteAllRegistrationJourneyCookies(response);
+
         RestResult<String> view = inviteRestService.getInviteByHash(hash).andOnSuccess(invite ->
                 inviteRestService.getInviteOrganisationByHash(hash).andOnSuccessReturn(inviteOrganisation -> {
                             if (!SENT.equals(invite.getStatus())) {
