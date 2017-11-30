@@ -495,7 +495,7 @@ Application: Finances
     # Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
     And the user should see the element      css=label[for="application-finance-none"]
     When the user selects the radio button   includeGrowthTable  include-growth-table-no
-    And the user entersgit  text to a text field  css=.editor  Funding rules for this competition are now entered.
+    And the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
     And The user clicks the button/link      css=button[type="submit"]  #Save and close
     When the user clicks the button/link     link=Finances
     Then the user should see the element     jQuery=dt:contains("Include project growth table")+dd:contains("No")
