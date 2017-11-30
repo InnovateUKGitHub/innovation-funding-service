@@ -51,6 +51,13 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
+        ApplicationResource application = newApplicationResource().withCompetition(4L).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionTypeName("Programme")
+                .build();
+
+        when(applicationServiceMock.getApplicationById(1L)).thenReturn(serviceSuccess(application));
+        when(competitionServiceMock.getCompetitionById(4L)).thenReturn(serviceSuccess(competition));
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
 
@@ -89,6 +96,13 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
+        ApplicationResource application = newApplicationResource().withCompetition(4L).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionTypeName("Programme")
+                .build();
+
+        when(applicationServiceMock.getApplicationById(1L)).thenReturn(serviceSuccess(application));
+        when(competitionServiceMock.getCompetitionById(4L)).thenReturn(serviceSuccess(competition));
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceFailure(internalServerErrorError()));
 
         mockMvc.perform(post("/applicationfunding/sendNotifications")
@@ -106,6 +120,13 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED, 3L, FundingDecision.ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
 
+        ApplicationResource application = newApplicationResource().withCompetition(4L).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionTypeName("Programme")
+                .build();
+
+        when(applicationServiceMock.getApplicationById(1L)).thenReturn(serviceSuccess(application));
+        when(competitionServiceMock.getCompetitionById(4L)).thenReturn(serviceSuccess(competition));
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceFailure(internalServerErrorError()));
 
