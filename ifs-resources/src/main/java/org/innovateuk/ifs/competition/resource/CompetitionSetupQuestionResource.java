@@ -57,7 +57,7 @@ public class CompetitionSetupQuestionResource {
     private Boolean researchCategoryQuestion;
     private Boolean scope;
 
-    private String allowedFileTypes;
+    private List<String> allowedFileTypes;
 
     public Long getQuestionId() {
         return questionId;
@@ -219,11 +219,11 @@ public class CompetitionSetupQuestionResource {
         this.assessmentGuidanceTitle = assessmentGuidanceTitle;
     }
 
-    public String getAllowedFileTypes() {
+    public List<String> getAllowedFileTypes() {
         return allowedFileTypes;
     }
 
-    public void setAllowedFileTypes(String allowedFileTypes) {
+    public void setAllowedFileTypes(List<String> allowedFileTypes) {
         this.allowedFileTypes = allowedFileTypes;
     }
 
