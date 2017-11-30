@@ -30,6 +30,20 @@ subprojects{
         imageName=project.dockerRegistry+"/"+openshiftEnv+"/"+project.name
         tag = project.version
     }
+
+    task tagDockerLocal(type: DockerTagImage) {
+        dependsOn buildDockerForOS
+        imageId = buildDockerForOS.getTag()
+        repository = localDockerRegistryCredentials.url+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+        tag = project.version
+    }
+
+    task osStageLocal(type: DockerPushImage) {
+        dependsOn tagDockerLocal
+        registryCredentials = project.ext.localDockerRegistryCredentials
+        imageName=localDockerRegistryCredentials.url +"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+        tag = project.version
+    }
 }
 
 buildscript {

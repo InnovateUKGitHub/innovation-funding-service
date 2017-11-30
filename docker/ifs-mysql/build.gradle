@@ -34,5 +34,19 @@ task osStageRemote(type: DockerPushImage) {
     tag = sqlVersion
 }
 
+task tagDockerLocal(type: DockerTagImage) {
+    dependsOn buildDockerForOS
+    imageId = buildDockerForOS.getTag()
+    repository = localDockerRegistryCredentials.url + "/" + openshiftEnv + "/ifs-mysql"
+    tag = sqlVersion
+}
+
+task osStageLocal(type: DockerPushImage) {
+    dependsOn tagDockerLocal
+    registryCredentials = project.ext.localDockerRegistryCredentials
+    imageName=localDockerRegistryCredentials.url + "/" + openshiftEnv + "/ifs-mysql"
+    tag = sqlVersion
+}
+
 
 

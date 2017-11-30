@@ -33,6 +33,16 @@ allprojects {
     project.ext.dockerRegistryCredentials.password="oc whoami -t".execute().text.trim()
     project.ext.dockerRegistryCredentials.email="unused"
 
+    // Get the docker repository for the local OS cluster
+    project.ext.localDockerRegistryCredentials = new DockerRegistryCredentials()
+    def localIpCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.clusterIP}'"
+    def localPortCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.ports..port}'"
+    project.ext.localIp = localIpCommand.execute().text.replace("'", "").trim()
+    project.ext.localPort = localPortCommand.execute().text.replace("'", "").trim()
+    project.ext.localDockerRegistryCredentials.url = project.ext.localIp + ":" + project.ext.localPort
+    project.ext.localDockerRegistryCredentials.username="unused"
+    project.ext.localDockerRegistryCredentials.password="oc whoami -t".execute().text.trim()
+    project.ext.localDockerRegistryCredentials.email="unused"
 }
 
 apply from: "openshift-support.gradle"
