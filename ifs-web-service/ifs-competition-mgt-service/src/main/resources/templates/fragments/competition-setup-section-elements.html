@@ -212,13 +212,23 @@
                         <label for="appendix-no">No</label>
                     </div>
                 </fieldset>
-                <fieldset id="allowedFileTypesDiv" class="panel extra-margin">
-                    <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
-                        <span class="error-message"  th:each="err : ${#fields.errors('question.allowedFileTypes')}" th:text="${err}" ></span>
-                    </th:block>
+            </div>
+            <div  id="allowedFileTypesDiv" class="form-group panel" th:if="${question.appendix != null}" th:classappend="${#fields.hasErrors('question.allowedFileTypes')} ? 'form-group-error'">
+                <fieldset>
+                    <legend id="question.allowedFileTypes">
+                        <span class="form-label-bold visuallyhidden">Allowed file types</span>
+                        <th:block th:if="${#fields.hasErrors('question.allowedFileTypes')}">
+                            <span class="error-message"  th:each="err : ${#fields.errors('question.allowedFileTypes')}" th:text="${err}" ></span>
+                        </th:block>
+                    </legend>
                     <div class="multiple-choice" th:each="fileTypeCategory : ${question.getSupportedTypeCategories()}">
-                        <input type="checkbox" th:field="*{question.allowedFileTypes}" th:value="${fileTypeCategory.displayName}" />
-                        <label th:for="${#ids.prev('question.allowedFileTypes')}" th:text="${fileTypeCategory.displayName}">PDF</label>
+                        <input type="checkbox"
+                               th:id="${'allowed-file-types-' + fileTypeCategory.displayName}"
+                               th:field="*{question.allowedFileTypes}"
+                               th:value="${fileTypeCategory.displayName}"
+                               name="allowedFileTypes"
+                               required="required" />
+                        <label th:for="${'allowed-file-types-' + fileTypeCategory.displayName}" th:text="${fileTypeCategory.displayName}">PDF</label>
                     </div>
                 </fieldset>
             </div>
