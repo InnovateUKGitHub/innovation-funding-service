@@ -3,21 +3,27 @@ if(project.hasProperty('profile') && profile == 'automated') {
     ext.openshiftEnv = project.properties['openshiftEnv'] ?: "automated"
 }
 
+
 processResources {
 
     from ('os-files') {
         include '**/*.yml'
     }
+    // Note the presence of a $ character that is not then substituted or escaped
+    // will cause process resources to fail.  This is why we are selective here
+    //about which directories / files we perform property substitution on.
+    //top level files
     filesMatching("*.*") {
         expand project.properties
     }
-}
+    // shib yml files
+    filesMatching("shib/*.*") {
+        expand project.properties
+    }
 
-// Production tasks
-
-task osStageProduction(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "production", project.version]
+    filesMatching("sil-stub/*.*") {
+        expand project.properties
+    }
 }
 
 task osDeployProduction(type:Exec) {
@@ -41,10 +47,6 @@ task dbAnonymisedDumpProduction(type:Exec) {
 
 // UAT tasks
 
-task osStageUat(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "uat", project.version]
-}
 
 task osDeployUat(type:Exec) {
     dependsOn processResources
@@ -73,10 +75,6 @@ task dbAnonymisedDumpUat(type:Exec) {
 
 // Demo tasks
 
-task osStageDemo(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "demo", project.version]
-}
 
 task osDeployDemo(type:Exec) {
     dependsOn processResources
@@ -93,10 +91,6 @@ task osUpgradeDemo(type:Exec) {
 
 // Sysint tasks
 
-task osStageSysint(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "sysint", project.version]
-}
 
 task osDeploySysint(type:Exec) {
     dependsOn processResources
@@ -125,10 +119,6 @@ task osDeployFractalSysint(type:Exec) {
 
 // Perf tasks
 
-task osStagePerf(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "perf", project.version]
-}
 
 task osDeployPerf(type:Exec) {
     dependsOn processResources
@@ -156,11 +146,6 @@ task osInitClusterLocal(type:Exec) {
     args = [openshiftEnv, "local", project.version]
 }
 
-task osStageLocal(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "local", project.version]
-}
-
 task osDeployLocal(type:Exec) {
     dependsOn processResources
     executable = 'setup-files/scripts/openshift/os-deploy.sh'
@@ -185,12 +170,18 @@ task dbAnonymisedDumpLocal(type:Exec) {
     args = [openshiftEnv, "local", project.version]
 }
 
+task createProjectLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-create-project.sh'
+    args = [openshiftEnv, "local"]
+}
+
 
 // Remote tasks
 
-task osStageRemote(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-stage.sh'
-    args = [openshiftEnv, "remote", project.version]
+
+task createProject(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-create-project.sh'
+    args = [openshiftEnv, "remote"]
 }
 
 task osDeployFractalRemote(type:Exec) {
@@ -242,4 +233,5 @@ task osTestResults(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-test-results.sh'
     args = []
 }
+
 

@@ -23,7 +23,7 @@ items:
           deploymentconfig: project-setup-svc
       spec:
         containers:
-        - image: innovateuk/project-setup-service:1.0-SNAPSHOT
+        - image: innovateuk/project-setup-service:${projectSetupServiceVersion}
           name: project-setup-svc
           livenessProbe:
             httpGet:
