@@ -27,6 +27,11 @@ div {
   &[disabled],
   &.readonly {
     @extend %read-only;
+
+    &.form-control-error {
+      @include box-shadow(none);
+      border: 4px solid $error-colour;
+    }
   }
 }
 
