@@ -370,6 +370,48 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
+    public void submitSectionApplicationQuestionWithAppendixWithoutTypeResultsInErrors() throws Exception {
+        Long questionId = 4L;
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .build();
+        CompetitionSetupQuestionResource question = new CompetitionSetupQuestionResource();
+        question.setQuestionId(questionId);
+        question.setType(ASSESSED_QUESTION);
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(QUESTIONS))).thenReturn(serviceFailure(Collections.emptyList()));
+        when(competitionSetupQuestionService.getQuestion(questionId)).thenReturn(serviceSuccess(question));
+
+        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/question/" + questionId.toString() + "/edit")
+                .param("question.type", ASSESSED_QUESTION.name())
+                .param("question.questionId", questionId.toString())
+                .param("question.title", "My Title")
+                .param("question.shortTitle", "My Short Title")
+                .param("question.guidanceTitle", "My Title")
+                .param("question.guidance", "My guidance")
+                .param("question.maxWords", "400")
+                .param("question.appendix", "true")
+                .param("question.scored", "true")
+                .param("question.scoreTotal", "100")
+                .param("question.writtenFeedback", "true")
+                .param("question.assessmentGuidance", "My assessment guidance")
+                .param("question.assessmentGuidanceTitle", "My assessment guidance title")
+                .param("question.assessmentMaxWords", "200")
+                .param("guidanceRows[0].scoreFrom", "1")
+                .param("guidanceRows[0].scoreTo", "10")
+                .param("guidanceRows[0].justification", "My justification"))
+                .andExpect(model().hasErrors())
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult."+CompetitionSetupController.COMPETITION_SETUP_FORM_KEY);
+        assertEquals("FieldRequiredIf", bindingResult.getFieldError("question.allowedFileTypes").getCode());
+
+        verify(competitionSetupService, never()).saveCompetitionSetupSubsection(isA(ApplicationQuestionForm.class), eq(competition), eq(CompetitionSetupSection.APPLICATION_FORM), eq(CompetitionSetupSubsection.QUESTIONS));
+    }
+
+    @Test
     public void submitSectionApplicationAssessedQuestionWithCheckedOptionsShouldResultInError() throws Exception {
         Long questionId = 4L;
         CompetitionResource competition = newCompetitionResource()

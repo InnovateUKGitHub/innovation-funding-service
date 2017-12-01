@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.service.CompetitionSetupQuestionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
@@ -72,9 +71,6 @@ public class CompetitionSetupApplicationController {
 
     @Autowired
     private CompetitionSetupPopulator competitionSetupPopulator;
-
-    @Autowired
-    private CompetitionSetupQuestionRestService competitionSetupQuestionRestService;
 
     @Autowired
     @Qualifier("mvcValidator")
