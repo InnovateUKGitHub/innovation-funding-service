@@ -19,46 +19,13 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 /**
  * Generate output that can be easily rendered into a CSV from a {@link List} of {@link SecuredBySpringBeanResult}
  */
-public class SecuredBySpringBeanResultsFormatter {
-
-    private final List<SecuredBySpringBeanResult> results;
-
-    private static final String[] SIMPLE_CSV_HEADERS
-            = new String[]{"Entity", "Action", "Rule description", "Particular business state where rule is enforced"};
-
-    private static final String[] FULL_CSV_HEADERS
-            = new String[]{"Entity", "Action", "Rule description", "Particular business state where rule is enforced", "Rule method", "Additional rule comments"};
-
-    public SecuredBySpringBeanResultsFormatter(List<SecuredBySpringBeanResult> results){
-        this.results = results;
+public class SecuredBySpringBeanResultsFormatter extends AbstractResultsFormatter<SecuredBySpringBeanResult> {
+    
+    public SecuredBySpringBeanResultsFormatter(List<SecuredBySpringBeanResult> results) {
+        super(results);
     }
 
-    public String[] simpleHeaders(){
-        return SIMPLE_CSV_HEADERS;
-    }
-
-    public String[] headers(){
-        return FULL_CSV_HEADERS;
-    }
-
-    public List<String[]> simpleLines(){
-        return simpleMap(lines(), row -> new String[]{row[0], row[1], row[2], row[3]});
-    }
-
-    public List<String[]> lines(){
-        List<List<String>> lines = format(results);
-        return simpleMap(lines, line -> line.toArray(new String[line.size()]));
-    }
-
-    private List<List<String>> format(List<SecuredBySpringBeanResult> results) {
-        return flattenLists(simpleMap(results, this::format));
-    }
-
-    private List<List<String>> format(SecuredBySpringBeanResult result) {
-        return linesFromResult(result);
-    }
-
-    private static List<List<String>> linesFromResult(SecuredBySpringBeanResult result){
+    protected List<List<String>> linesFromResult(SecuredBySpringBeanResult result){
         List<List<String>> lines = new ArrayList<>();
         for (Map.Entry<Method, Optional<SecuredBySpring>> entry : result.methodLevel.entrySet()) {
             classLevelLine(result.classLevel, entry.getKey()).map(line -> lines.add(line)); // Only add if classLevel is present
