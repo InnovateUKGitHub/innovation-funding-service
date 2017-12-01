@@ -318,7 +318,6 @@ Project Finance approves Bank Details through the Bank Details list
     And the user navigates to the page    ${server}/management/dashboard/project-setup
     And the user clicks the button/link  jQuery=a:contains("Bank details")
     When the user clicks the button/link    jQuery=a:contains("Dreambit")
-    And the user clicks the button/link    jQuery=a:contains("Dreambit")
     And the user clicks the button/link    jQuery=button:contains("Approve bank account details")
     And the user clicks the button/link    jQuery=button:contains("Approve account")
     Then the user should see the element    jQuery=h2:contains("The bank details provided have been approved.")
