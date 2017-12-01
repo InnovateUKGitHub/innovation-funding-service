@@ -73,8 +73,7 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
                                                 HttpServletResponse response) {
 
         Long organisationTypeId = organisationForm.getOrganisationTypeId();
-        if (organisationTypeId == null ||
-                !isValidLeadOrganisationType(organisationTypeId)) {
+        if (!isValidLeadOrganisationType(organisationTypeId)) {
             bindingResult.addError(new FieldError(ORGANISATION_FORM, ORGANISATION_TYPE_ID, "Please select an organisation type."));
         }
 
@@ -120,7 +119,10 @@ public class OrganisationCreationLeadTypeController extends AbstractOrganisation
     }
 
     private boolean isValidLeadOrganisationType(Long organisationTypeId) {
-        return OrganisationTypeEnum.getFromId(organisationTypeId) != null;
+        if(organisationTypeId != null) {
+            return OrganisationTypeEnum.getFromId(organisationTypeId) != null;
+        }
+        return true;
     }
 
     private void saveOrganisationTypeToCreationForm(HttpServletResponse response, OrganisationTypeForm organisationTypeForm) {

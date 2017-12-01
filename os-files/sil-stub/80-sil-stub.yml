@@ -23,7 +23,7 @@ items:
           deploymentconfig: sil-stub
       spec:
         containers:
-        - image: innovateuk/sil-stub:1.0-SNAPSHOT
+        - image: innovateuk/sil-stub:${silStubVersion}
           name: sil-stub
           livenessProbe:
             httpGet:
