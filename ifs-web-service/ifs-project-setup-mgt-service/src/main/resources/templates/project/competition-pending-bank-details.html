@@ -33,7 +33,7 @@
                     <td th:text="${pendingBankDetail.applicationId}"></td>
                     <td th:text="${pendingBankDetail.competitionName}"></td>
                     <td th:text="${pendingBankDetail.projectName}"></td>
-                    <td><a th:text="${pendingBankDetail.organisationName}" th:href="@{/project/{projectId}/review-all-bank-details(projectId=${pendingBankDetail.projectId})}"></a></td>
+                    <td><a th:text="${pendingBankDetail.organisationName}" th:href="@{/project/{projectId}/organisation/{organisationId}/review-bank-details(projectId=${pendingBankDetail.projectId}, organisationId=${pendingBankDetail.organisationId})}"></a></td>
 
                 </tr>
                 </tbody>
