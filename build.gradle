@@ -3,22 +3,22 @@ import com.bmuschko.gradle.docker.DockerRegistryCredentials
 // Deployment behaviour for differing versions has not been tested yet
 // and so version numbers should always equal project.version
 // DO NOT HAVE OUT OF SYNC VERSION NUMBERS - THIS WILL BE IMPLEMENTED AS PART OF IFS-334
-ext.dataServiceVersion=project.properties['data-service.version'] ?:project.version
-ext.frontDoorDataServiceVersion=project.properties['front-door-data-service.version'] ?:project.version
+ext.dataServiceVersion = project.properties['data-service.version'] ?: project.version
+ext.frontDoorDataServiceVersion = project.properties['front-door-data-service.version'] ?: project.version
 
-ext.applicationServiceVersion=project.properties['application-service.version'] ?:project.version
-ext.frontDoorServiceVersion=project.properties['front-door-service.version'] ?:project.version
-ext.assessmentServiceVersion=project.properties['assessment-service.version'] ?:project.version
-ext.competitionMgtServiceVersion=project.properties['competition-mgt-service.version'] ?:project.version
-ext.projectSetupMgtServiceVersion=project.properties['project-setup-mgt-service.version'] ?:project.version
-ext.projectSetupServiceVersion=project.properties['project-setup-service.version'] ?:project.version
-ext.registrationServiceVersion=project.properties['registration-service.version'] ?:project.version
+ext.applicationServiceVersion = project.properties['application-service.version'] ?: project.version
+ext.frontDoorServiceVersion = project.properties['front-door-service.version'] ?: project.version
+ext.assessmentServiceVersion = project.properties['assessment-service.version'] ?: project.version
+ext.competitionMgtServiceVersion = project.properties['competition-mgt-service.version'] ?: project.version
+ext.projectSetupMgtServiceVersion = project.properties['project-setup-mgt-service.version'] ?: project.version
+ext.projectSetupServiceVersion = project.properties['project-setup-service.version'] ?: project.version
+ext.registrationServiceVersion = project.properties['registration-service.version'] ?: project.version
 
-ext.spVersion=project.properties['sp.version'] ?:project.version
-ext.idpVersion=project.properties['idp.version'] ?:project.version
-ext.ldapVersion=project.properties['ldap.version'] ?:project.version
+ext.spVersion = project.properties['sp.version'] ?: project.version
+ext.idpVersion = project.properties['idp.version'] ?: project.version
+ext.ldapVersion = project.properties['ldap.version'] ?: project.version
 
-ext.silStubVersion=project.properties['sil-stub.version'] ?:project.version
+ext.silStubVersion = project.properties['sil-stub.version'] ?: project.version
 
 allprojects {
     group 'innovateuk'
@@ -33,22 +33,39 @@ allprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    project.ext.dockerRegistryCredentials = new DockerRegistryCredentials()
-    project.ext.dockerRegistryCredentials.url =project.dockerRegistry
-    project.ext.dockerRegistryCredentials.username="unused"
-    project.ext.dockerRegistryCredentials.password="oc whoami -t".execute().text.trim()
-    project.ext.dockerRegistryCredentials.email="unused"
+    try {
+        // It is possible that a user will not have OpenShift commandline client installed on their machine - in which
+        // case the "oc" commands will fail, and will be caught in the catch block and logged.
+        // This will not be a problem unless the user wants to deploy to an OpenShift cluster - in which case they will
+        // have to install the commandline client. However in order for the build to not completely fail we still need
+        // a dockerRegistryCredentials and a localDockerRegistryCredentials, even if they are not filled in. Therefore
+        // declare them before we might raise any exceptions.
+        project.ext.dockerRegistryCredentials = new DockerRegistryCredentials()
+        project.ext.localDockerRegistryCredentials = new DockerRegistryCredentials()
 
-    // Get the docker repository for the local OS cluster
-    project.ext.localDockerRegistryCredentials = new DockerRegistryCredentials()
-    def localIpCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.clusterIP}'"
-    def localPortCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.ports..port}'"
-    project.ext.localIp = localIpCommand.execute().text.replace("'", "").trim()
-    project.ext.localPort = localPortCommand.execute().text.replace("'", "").trim()
-    project.ext.localDockerRegistryCredentials.url = project.ext.localIp + ":" + project.ext.localPort
-    project.ext.localDockerRegistryCredentials.username="unused"
-    project.ext.localDockerRegistryCredentials.password="oc whoami -t".execute().text.trim()
-    project.ext.localDockerRegistryCredentials.email="unused"
+        // Get the docker repository for the remote OS cluster
+        project.ext.dockerRegistryCredentials.url = project.dockerRegistry
+        project.ext.dockerRegistryCredentials.username = "unused"
+        project.ext.dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
+        project.ext.dockerRegistryCredentials.email = "unused"
+
+        // Get the docker repository for the local OS cluster
+        def localIpCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.clusterIP}'"
+        def localPortCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.ports..port}'"
+        project.ext.localIp = localIpCommand.execute().text.replace("'", "").trim()
+        project.ext.localPort = localPortCommand.execute().text.replace("'", "").trim()
+        project.ext.localDockerRegistryCredentials.url = project.ext.localIp + ":" + project.ext.localPort
+        project.ext.localDockerRegistryCredentials.username = "unused"
+        project.ext.localDockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
+        project.ext.localDockerRegistryCredentials.email = "unused"
+    }
+    catch (ignored) {
+        println("Exception thrown creating the OpenShift docker registry credentials. " +
+                "This is most likely because the OpenShift commandline client is not installed. " +
+                "This is only an issue if wanting to deploy to an OpenShift cluster, " +
+                "in which case it will need to be installed")
+        println(ignored)
+    }
 }
 
 apply from: "openshift-support.gradle"
@@ -217,7 +234,7 @@ sonarqube {
         property "sonar.projectName", "IFS_Project"
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
         property "sonar.branch", "development"
-         property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
+        property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
         property "sonar.exclusions", "**/*MapperImpl.java"
     }
 }
