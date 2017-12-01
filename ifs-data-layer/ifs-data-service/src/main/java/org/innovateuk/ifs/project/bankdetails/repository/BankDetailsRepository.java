@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface BankDetailsRepository extends PagingAndSortingRepository<BankDetails, Long> {
 
+    //TODO - This query will need to be modified once IFS-468 is completed. IFS-468 is about having a workflow in place for the Bank Details process.
     String PENDING_BANK_DETAILS_APPROVALS_QUERY = " SELECT NEW org.innovateuk.ifs.competition.resource.BankDetailsReviewResource("
             + " p.application.id, c.id, c.name, p.id, p.name, bd.organisation.id, bd.organisation.name)"
             + " FROM Competition c, Project p, BankDetails bd"
