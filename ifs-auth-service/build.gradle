@@ -8,7 +8,7 @@ subprojects{
     }
 
     task buildDocker(type: DockerBuildImage) {
-        tag = "innovateuk/"+project.name+":latest"
+        tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
         inputDir = file("${project.buildDir}/docker")
     }
 
