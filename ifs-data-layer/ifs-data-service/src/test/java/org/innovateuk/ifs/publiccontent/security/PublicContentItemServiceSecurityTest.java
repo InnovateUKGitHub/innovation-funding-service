@@ -28,7 +28,7 @@ public class PublicContentItemServiceSecurityTest extends BaseServiceSecurityTes
     @Before
     public void setUp() throws Exception {
         rules = getMockPermissionRulesBean(PublicContentItemPermissionRules.class);
-        competitionLookupStrategies = getMockPermissionEntityLookupStrategiesBean(CompetitionLookupStrategy .class);
+        competitionLookupStrategies = getMockPermissionEntityLookupStrategiesBean(CompetitionLookupStrategy.class);
         initMocks(this);
     }
 
