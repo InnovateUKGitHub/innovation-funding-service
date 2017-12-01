@@ -4,6 +4,8 @@ import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
@@ -18,8 +20,10 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.junit.Assert;
 import org.junit.Before;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,8 +37,11 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
+
 import static org.junit.Assert.*;
 
 public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionRepository> {
@@ -47,6 +54,12 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private AssessmentRepository assessmentRepository;
+
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
 
     @Autowired
     private OrganisationRepository organisationRepository;
@@ -88,9 +101,9 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed).withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(ZonedDateTime.now()).build();
         applicationRepository.save(applicationFundedAndInformed);
 
-        Assert.assertEquals(1L, repository.countProjectSetup().longValue());
-        Assert.assertEquals(1, repository.findProjectSetup().size());
-        Assert.assertEquals(compFundedAndInformed.getId().longValue(), repository.findProjectSetup().get(0).getId().longValue());
+        assertEquals(1L, repository.countProjectSetup().longValue());
+        assertEquals(1, repository.findProjectSetup().size());
+        assertEquals(compFundedAndInformed.getId().longValue(), repository.findProjectSetup().get(0).getId().longValue());
     }
 
     @Test
@@ -111,10 +124,10 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Competition compNonIfs = newCompetition().withName("Comp3").withNonIfs(true).withSetupComplete(true).build();
         repository.save(compNonIfs);
 
-        Assert.assertEquals(2L, repository.countProjectSetup().longValue());
+        assertEquals(2L, repository.countProjectSetup().longValue());
         List<Competition> competitions = repository.findProjectSetup();
-        Assert.assertEquals(2, competitions.size());
-        Assert.assertTrue(competitions.get(0).getName().equals("Comp2") && competitions.get(1).getName().equals("Comp1") || competitions.get(1).getName().equals("Comp2") && competitions.get(0).getName().equals("Comp1"));
+        assertEquals(2, competitions.size());
+        assertTrue(competitions.get(0).getName().equals("Comp2") && competitions.get(1).getName().equals("Comp1") || competitions.get(1).getName().equals("Comp2") && competitions.get(0).getName().equals("Comp1"));
     }
 
     @Test
@@ -126,8 +139,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed).withFundingDecision(FundingDecisionStatus.FUNDED).build();
         applicationRepository.save(applicationFundedAndInformed);
 
-        Assert.assertEquals(0L, repository.countProjectSetup().longValue());
-        Assert.assertEquals(0, repository.findProjectSetup().size());
+        assertEquals(0L, repository.countProjectSetup().longValue());
+        assertEquals(0, repository.findProjectSetup().size());
     }
 
     @Test
@@ -139,8 +152,8 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed).withFundingDecision(FundingDecisionStatus.UNFUNDED).withManageFundingEmailDate(ZonedDateTime.now()).build();
         applicationRepository.save(applicationFundedAndInformed);
 
-        Assert.assertEquals(0L, repository.countProjectSetup().longValue());
-        Assert.assertEquals(0, repository.findProjectSetup().size());
+        assertEquals(0L, repository.countProjectSetup().longValue());
+        assertEquals(0, repository.findProjectSetup().size());
     }
 
     private List<Milestone> replaceOpenDateMilestoneDate(List<Milestone> milestones, ZonedDateTime time) {
@@ -228,32 +241,32 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Page<Competition> searchResults = repository.search("%o%", pageable);
         List<Competition> filteredSearchResults = searchResults.getContent().stream().filter(r -> existingSearchResults.stream().filter(er -> er.getId().equals(r.getId())).count() == 0L).collect(Collectors.toList());
-        Assert.assertEquals(7, filteredSearchResults.size());
-        Assert.assertEquals("earliestOpenComp", filteredSearchResults.get(0).getName());
-        Assert.assertEquals("compInProjectSetup", filteredSearchResults.get(1).getName());
-        Assert.assertEquals("compInInform", filteredSearchResults.get(2).getName());
-        Assert.assertEquals("compInPreparation", filteredSearchResults.get(3).getName());
-        Assert.assertEquals("compWithNoInnovationLead", filteredSearchResults.get(4).getName());
-        Assert.assertEquals("openComp", filteredSearchResults.get(5).getName());
-        Assert.assertEquals("compReadyToOpen", filteredSearchResults.get(6).getName());
+        assertEquals(7, filteredSearchResults.size());
+        assertEquals("earliestOpenComp", filteredSearchResults.get(0).getName());
+        assertEquals("compInProjectSetup", filteredSearchResults.get(1).getName());
+        assertEquals("compInInform", filteredSearchResults.get(2).getName());
+        assertEquals("compInPreparation", filteredSearchResults.get(3).getName());
+        assertEquals("compWithNoInnovationLead", filteredSearchResults.get(4).getName());
+        assertEquals("openComp", filteredSearchResults.get(5).getName());
+        assertEquals("compReadyToOpen", filteredSearchResults.get(6).getName());
 
         Page<Competition> leadTechnologistSearchResults = repository.searchForLeadTechnologist("%o%", leadTechnologist.getId(), pageable);
         List<Competition> filteredLeadTechnologistSearchResults = leadTechnologistSearchResults.getContent().stream().filter(r -> existingSearchResults.stream().filter(er -> er.getId().equals(r.getId())).count() == 0L).collect(Collectors.toList());
-        Assert.assertEquals(4, filteredLeadTechnologistSearchResults.size());
-        Assert.assertEquals("earliestOpenComp", filteredLeadTechnologistSearchResults.get(0).getName());
-        Assert.assertEquals("compInProjectSetup", filteredLeadTechnologistSearchResults.get(1).getName());
-        Assert.assertEquals("compInInform", filteredLeadTechnologistSearchResults.get(2).getName());
-        Assert.assertEquals("openComp", filteredLeadTechnologistSearchResults.get(3).getName());
+        assertEquals(4, filteredLeadTechnologistSearchResults.size());
+        assertEquals("earliestOpenComp", filteredLeadTechnologistSearchResults.get(0).getName());
+        assertEquals("compInProjectSetup", filteredLeadTechnologistSearchResults.get(1).getName());
+        assertEquals("compInInform", filteredLeadTechnologistSearchResults.get(2).getName());
+        assertEquals("openComp", filteredLeadTechnologistSearchResults.get(3).getName());
 
         Page<Competition> supportUserSearchResults = repository.searchForSupportUser("%o%", pageable);
         List<Competition> filteredSupportUserSearchResults = supportUserSearchResults.getContent().stream().filter(r -> existingSearchResults.stream().filter(er -> er.getId().equals(r.getId())).count() == 0L).collect(Collectors.toList());
-        Assert.assertEquals(6, filteredSupportUserSearchResults.size());
-        Assert.assertEquals("earliestOpenComp", filteredSupportUserSearchResults.get(0).getName());
-        Assert.assertEquals("compInProjectSetup", filteredSupportUserSearchResults.get(1).getName());
-        Assert.assertEquals("compInInform", filteredSupportUserSearchResults.get(2).getName());
-        Assert.assertEquals("compWithNoInnovationLead", filteredSupportUserSearchResults.get(3).getName());
-        Assert.assertEquals("openComp", filteredSupportUserSearchResults.get(4).getName());
-        Assert.assertEquals("compReadyToOpen", filteredSupportUserSearchResults.get(5).getName());
+        assertEquals(6, filteredSupportUserSearchResults.size());
+        assertEquals("earliestOpenComp", filteredSupportUserSearchResults.get(0).getName());
+        assertEquals("compInProjectSetup", filteredSupportUserSearchResults.get(1).getName());
+        assertEquals("compInInform", filteredSupportUserSearchResults.get(2).getName());
+        assertEquals("compWithNoInnovationLead", filteredSupportUserSearchResults.get(3).getName());
+        assertEquals("openComp", filteredSupportUserSearchResults.get(4).getName());
+        assertEquals("compReadyToOpen", filteredSupportUserSearchResults.get(5).getName());
     }
 
     private CompetitionAssessmentParticipant buildCompetitionParticipant(Competition competition, User user){
@@ -371,5 +384,66 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         count = repository.countLiveForInnovationLead(innovationLead1Id);
         assertEquals(new Long(0L), count);
+    }
+
+    @Test
+    public void findByApplicationsId() {
+        Competition competition = repository.save(newCompetition().withId(7L).build());
+        Application application = applicationRepository.save(newApplication().withId(11L).withCompetition(competition).build());
+
+        Competition retrieved = repository.findByApplicationsId(application.getId());
+
+        assertEquals(competition, retrieved);
+    }
+
+    // IFS-2263 -- ensure milestone dates aren't rounded up
+    @Test
+    @Rollback
+    public void testMilestoneDatesTruncated() {
+        final ZonedDateTime dateTime = ZonedDateTime.parse("2017-12-03T10:18:30.500Z");
+        final ZonedDateTime expectedDateTime = ZonedDateTime.parse("2017-12-03T10:18:30.000Z");
+
+        Competition savedCompetition = repository.save(
+                new Competition(null, null, null,null,"comp", dateTime, null, null)
+        );
+
+        flushAndClearSession();
+
+        Competition retrievedCompetition = repository.findById(savedCompetition.getId());
+        assertTrue(expectedDateTime.isEqual(retrievedCompetition.getStartDate()));
+    }
+
+    @Test
+    public void findByProjectId() {
+        Competition competition = repository.save(newCompetition().withId(7L).build());
+        Application application = applicationRepository.save(newApplication().withId(17L).withCompetition(competition).build());
+        Project project = projectRepository.save(newProject()
+                .withId(17L)
+                .withApplication(application)
+                .withName("Project Name")
+                .build()
+        );
+
+        Competition retrieved = repository.findByProjectId(project.getId());
+
+        assertEquals(competition, retrieved);
+    }
+
+    @Test
+    public void findByAssessmentId() {
+        Competition competition = repository.save(newCompetition().withId(7L).build());
+        Application application = applicationRepository.save(newApplication().withId(11L).withCompetition(competition).build());
+
+
+        Assessment assessment = assessmentRepository.save(newAssessment()
+                .withId(13L)
+                .withApplication(application)
+                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.SUBMITTED))
+                .build()
+        );
+
+        Competition retrieved = repository.findByAssessmentId(assessment.getId());
+
+        assertEquals(competition, retrieved);
     }
 }
