@@ -44,6 +44,7 @@ function copyDumpToDatapod() {
 
 function insertDataIntoDestinationDatabase() {
   DATA_POD_NAME=$1
+  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME apt-get update
   oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME apt-get install mysql-client -y
   oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME \
   bash -c "gpg --decrypt --passphrase $DB_DUMP_PASS /tmp/anonymised/anonymised-dump.sql.gpg \
