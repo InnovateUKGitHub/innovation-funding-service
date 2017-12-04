@@ -42,9 +42,7 @@ Initial details: server-side validations
     And the user should see an error    Please select a competition type.
     And the user should see an error    Please select an innovation sector.
     And the user should see an error    Please select an innovation area.
-    And the user should see an error    Please enter an opening year.
-    And the user should see an error    Please enter an opening day.
-    And the user should see an error    Please enter an opening month.
+    And the user should see an error    Please enter a vald date.
     And the user should see an error    Please select an Innovation Lead.
     And the user should see an error    Please select a Portfolio Manager.
 
