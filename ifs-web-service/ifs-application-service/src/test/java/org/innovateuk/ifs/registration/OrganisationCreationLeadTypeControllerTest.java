@@ -71,4 +71,13 @@ public class OrganisationCreationLeadTypeControllerTest extends BaseControllerMo
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("organisationForm", "organisationTypeId"));
     }
+
+    @Test
+    public void testLeadOrganisationTypeIncorrectSelected() throws Exception {
+        mockMvc.perform(post("/organisation/create/lead-organisation-type")
+                .param("organisationTypeId", "300"))
+                .andExpect(view().name("registration/organisation/lead-organisation-type"))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeHasFieldErrors("organisationForm", "organisationTypeId"));
+    }
 }

@@ -164,7 +164,6 @@ ${too_large_pdf_validation_error}    the size of file or request being submitted
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
 ${empty_field_warning_message}    This field cannot be left blank.
 
-
 # Database variables
 ${database_name}    ifs
 ${database_user}    root
@@ -184,3 +183,9 @@ ${BUSINESS_TYPE_ID}       1
 ${ACADEMIC_TYPE_ID}       2
 ${RTO_TYPE_ID}            3
 ${PUBLIC_SECTOR_TYPE_ID}  4
+
+# Competition template type
+${compType_Programme}  Programme
+${compType_Sector}     Sector
+${compType_Generic}    Generic
+${compType_EOI}        Expression of interest

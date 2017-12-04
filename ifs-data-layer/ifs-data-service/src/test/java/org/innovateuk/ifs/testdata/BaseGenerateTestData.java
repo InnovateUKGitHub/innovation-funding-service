@@ -74,6 +74,7 @@ import static org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder.newOr
 import static org.innovateuk.ifs.testdata.builders.ProjectDataBuilder.newProjectData;
 import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.QuestionDataBuilder.newQuestionData;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
@@ -135,6 +136,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     private TestService testService;
 
     private CompetitionDataBuilder competitionDataBuilder;
+    private QuestionDataBuilder questionDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
     private PublicContentGroupDataBuilder publicContentGroupDataBuilder;
     private PublicContentDateDataBuilder publicContentDateDataBuilder;
@@ -153,6 +155,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
      * select "Competition", "Application", "Question", "Answer", "File upload", "Answered by", "Assigned to", "Marked as complete" UNION ALL select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_type fit on fi.form_input_type_id = fit.id left join form_input_response fir on fir.form_input_id = fi.id left join process_role updaterrole on updaterrole.id = fir.updated_by_id left join user updater on updater.id = updaterrole.user_id join question_status qs on qs.application_id = a.id and qs.question_id = q.id left join process_role assigneerole on assigneerole.id = qs.assignee_id left join user assignee on assignee.id = assigneerole.user_id where fit.title in ('textinput','textarea','date','fileupload','percentage') INTO OUTFILE '/var/lib/mysql-files/application-questions3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      */
     private static List<CompetitionLine> competitionLines;
+
+    private static List<QuestionLine> questionLines;
 
     private static List<CompetitionFunderLine> competitionFunderLines;
 
@@ -223,6 +227,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     public void readCsvs() throws Exception {
         organisationLines = readOrganisations();
         competitionLines = readCompetitions();
+        questionLines = readQuestions();
         competitionFunderLines = readCompetitionFunders();
         publicContentGroupLines = readPublicContentGroups();
         publicContentDateLines = readPublicContentDates();
@@ -273,6 +278,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         competitionDataBuilder = newCompetitionData(serviceLocator);
         competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
+        questionDataBuilder = newQuestionData(serviceLocator);
         externalUserBuilder = newExternalUserData(serviceLocator);
         internalUserBuilder = newInternalUserData(serviceLocator);
         organisationBuilder = newOrganisationData(serviceLocator);
@@ -293,6 +299,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         createInternalUsers();
         createExternalUsers();
         createCompetitions();
+        updateQuestions();
         createCompetitionFunders();
         createPublicContentGroups();
         createPublicContentDates();
@@ -305,6 +312,18 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         LOG.info("Finished generating data in " + ((after - before) / 1000) + " seconds");
         System.out.println("Finished generating data in " + ((after - before) / 1000) + " seconds");
+    }
+
+    private void updateQuestions() {
+        questionLines.forEach(this::updateQuestion);
+    }
+
+    private void updateQuestion(QuestionLine questionLine) {
+        this.questionDataBuilder.updateApplicationQuestionHeading(questionLine.ordinal,
+                        questionLine.competitionName,
+                        questionLine.heading,
+                        questionLine.title,
+                        questionLine.subtitle).build();
     }
 
     private void createProjects() {
@@ -768,6 +787,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 .withSubmissionDate(line.submissionDate)
                 .withFundersPanelEndDate(line.fundersPanelEndDate)
                 .withReleaseFeedbackDate(line.releaseFeedback)
+                .withRegistrationDate(line.registrationDate)
                 .withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
                         line.competitionDescription, line.fundingType, line.projectSize, line.keywords, line.inviteOnly);
     }
