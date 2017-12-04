@@ -5,10 +5,6 @@ Resource    ../../resources/defaultResources.robot
 #CA = Competition Administration
 ${CA_UpcomingComp}   ${server}/management/dashboard/upcoming
 ${CA_Live}           ${server}/management/dashboard/live
-${compType_Programme}  Programme
-${compType_Sector}     Sector
-${compType_Generic}    Generic
-
 
 *** Keywords ***
 the user edits the assessed question information
@@ -75,6 +71,9 @@ the user fills in the CS Eligibility
 the user fills in the CS Milestones
     [Arguments]  ${month}  ${nextyear}
     the user clicks the button/link       link=Milestones
+    the user enters text to a text field  jQuery=th:contains("Open date") ~ td.day input  1
+    the user enters text to a text field  jQuery=th:contains("Open date") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Open date") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input  2
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.year input  ${nextyear}
@@ -119,14 +118,21 @@ the user fills in the CS Milestones
 the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link  link=Application
-    the user marks application details as complete
+    the user marks application details as complete    ${comp_type}
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
+    Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
+    Run Keyword If  '${comp_type}' == '${compType_EOI}'  the user opts no finances for EOI comp
     #No need to mark generic competition assessed question as complete as they already are.
-    the user fills in the Finances questions  ${growthTable}
+    Run keyword If  '${comp_type}'!='${compType_EOI}'   the user fills in the Finances questions  ${growthTable}
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
+
+the user opts no finances for EOI comp
+    the user clicks the button/link    link=Finances
+    the user selects the radio button  applicationFinanceType  NONE
+    the user clicks the button/link    jQuery=.button:contains("Done")
 
 the assessed questions are marked complete except finances(programme type)
     the user marks each question as complete  Business opportunity
@@ -152,10 +158,18 @@ the assessed questions are marked complete except finances(sector type)
     the user marks each question as complete  Additionality
     the user marks each question as complete  Costs and value for money
 
+the assessed questions are marked complete(EOI type)
+    the user marks each question as complete  Business opportunity and potential market
+    the user marks each question as complete  Innovation
+    the user marks each question as complete  Project team
+    the user marks each question as complete  Funding and adding value
+    the user should see the element           jQuery=button:contains("Add question")
+
 the user marks application details as complete
+    [Arguments]  ${compType}
     the user marks each question as complete  Application details
     the user marks each question as complete  Project summary
-    the user marks each question as complete  Public description
+    Run Keyword If    '${compType}'!='${compType_EOI}'    the user marks each question as complete  Public description
     the user marks each question as complete  Scope
 
 the user marks each question as complete
@@ -167,7 +181,6 @@ the user marks each question as complete
 the user fills in the Finances questions
     [Arguments]  ${growthTable}
     the user clicks the button/link       link=Finances
-    the user clicks the button/link  jQuery=.button:contains("Done")
     the user selects the radio button     includeGrowthTable  include-growth-table-${growthTable}
     the user enters text to a text field  css=.editor  Those are the rules that apply to Finances
     the user clicks the button/link       css=button[type="submit"]
@@ -179,7 +192,12 @@ the user fills in the CS Assessors
     the user selects the radio button  hasAssessmentPanel  0
     the user selects the radio button  hasInterviewStage  0
     the user clicks the button/link   jQuery=button:contains("Done")
+<<<<<<< HEAD
     the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
+=======
+#    the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
+#    Plz uncomment this line TODO due to IFS-1527
+>>>>>>> origin/development
     the user clicks the button/link   link=Competition setup
     the user should see the element   jQuery=div:contains("Assessors") ~ .task-status-complete
 
@@ -351,3 +369,9 @@ the competition moves to Open state
     ${yesterday} =  get yesterday
     Connect to Database  @{database}
     execute sql string  UPDATE `${database_name}`.`milestone` SET `date`='${yesterday}' WHERE `competition_id`='${competitionId}' AND `type`='OPEN_DATE';
+
+# Note here we are passing the comp title not the comp ID to update the correct comp milestone
+the competition is open
+    [Arguments]  ${compTitle}
+    Connect to Database  @{database}
+    change the open date of the competition in the database to one day before  ${compTitle}
