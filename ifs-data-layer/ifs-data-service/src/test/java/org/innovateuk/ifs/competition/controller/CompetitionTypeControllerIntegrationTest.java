@@ -60,8 +60,8 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
         assertEquals("Special", competitionTypes.get(3).getName());
         assertEquals("Sector", competitionTypes.get(4).getName());
         assertEquals("Generic", competitionTypes.get(5).getName());
-        assertEquals("APC", competitionTypes.get(6).getName());
-        assertEquals("ATI", competitionTypes.get(7).getName());
+        assertEquals("Advanced Propulsion Centre", competitionTypes.get(6).getName());
+        assertEquals("Aerospace Technology Institute", competitionTypes.get(7).getName());
     }
 
 }
