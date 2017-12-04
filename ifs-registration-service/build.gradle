@@ -142,6 +142,12 @@ task osStageLocal(type: DockerPushImage) {
     tag = project.version
 }
 
+project.version = registrationServiceVersion
+tagDocker.tag=registrationServiceVersion
+osStageRemote.tag=registrationServiceVersion
+tagDockerLocal.tag=registrationServiceVersion
+osStageLocal.tag=registrationServiceVersion
+
 // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
 // Can reinstate excludeDevtools in the bootRepackage task in next release
 springBoot {

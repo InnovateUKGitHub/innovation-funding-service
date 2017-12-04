@@ -35,3 +35,8 @@ task prepareDockerFile {
 }
 
 buildDocker.dependsOn prepareDockerFile
+project.version = ldapVersion
+tagDocker.tag=ldapVersion
+osStageRemote.tag=ldapVersion
+tagDockerLocal.tag=ldapVersion
+osStageLocal.tag=ldapVersion

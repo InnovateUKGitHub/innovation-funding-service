@@ -122,6 +122,12 @@ task osStageLocal(type: DockerPushImage) {
     tag = project.version
 }
 
+project.version = silStubVersion
+tagDocker.tag=silStubVersion
+osStageRemote.tag=silStubVersion
+tagDockerLocal.tag=silStubVersion
+osStageLocal.tag=silStubVersion
+
 
 // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
 // Can reinstate excludeDevtools in the bootRepackage task in next release

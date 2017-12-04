@@ -113,3 +113,8 @@ task prepareDockerFile {
 }
 
 buildDocker.dependsOn prepareDockerFile
+project.version = idpVersion
+tagDocker.tag=idpVersion
+osStageRemote.tag=idpVersion
+tagDockerLocal.tag=idpVersion
+osStageLocal.tag=idpVersion

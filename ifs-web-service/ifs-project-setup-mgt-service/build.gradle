@@ -2,6 +2,12 @@ jar {
     baseName = 'project-setup-management'
 }
 
+project.version = projectSetupMgtServiceVersion
+tagDocker.tag=projectSetupMgtServiceVersion
+osStageRemote.tag=projectSetupMgtServiceVersion
+tagDockerLocal.tag=projectSetupMgtServiceVersion
+osStageLocal.tag=projectSetupMgtServiceVersion
+
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')
 

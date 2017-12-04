@@ -49,3 +49,8 @@ task prepareDockerFile {
 }
 
 buildDocker.dependsOn prepareDockerFile
+project.version = spVersion
+tagDocker.tag=spVersion
+osStageRemote.tag=spVersion
+tagDockerLocal.tag=spVersion
+osStageLocal.tag=spVersion
