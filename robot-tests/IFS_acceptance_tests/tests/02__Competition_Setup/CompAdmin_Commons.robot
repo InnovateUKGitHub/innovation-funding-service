@@ -75,6 +75,9 @@ the user fills in the CS Eligibility
 the user fills in the CS Milestones
     [Arguments]  ${month}  ${nextyear}
     the user clicks the button/link       link=Milestones
+    the user enters text to a text field  jQuery=th:contains("Open date") ~ td.day input  1
+    the user enters text to a text field  jQuery=th:contains("Open date") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Open date") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input  2
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.year input  ${nextyear}
@@ -167,7 +170,6 @@ the user marks each question as complete
 the user fills in the Finances questions
     [Arguments]  ${growthTable}
     the user clicks the button/link       link=Finances
-    the user clicks the button/link  jQuery=.button:contains("Done")
     the user selects the radio button     includeGrowthTable  include-growth-table-${growthTable}
     the user enters text to a text field  css=.editor  Those are the rules that apply to Finances
     the user clicks the button/link       css=button[type="submit"]
