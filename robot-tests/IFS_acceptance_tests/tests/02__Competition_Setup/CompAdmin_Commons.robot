@@ -71,6 +71,9 @@ the user fills in the CS Eligibility
 the user fills in the CS Milestones
     [Arguments]  ${month}  ${nextyear}
     the user clicks the button/link       link=Milestones
+    the user enters text to a text field  jQuery=th:contains("Open date") ~ td.day input  1
+    the user enters text to a text field  jQuery=th:contains("Open date") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Open date") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input  2
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.year input  ${nextyear}
