@@ -69,7 +69,7 @@ the user fills in the CS Eligibility
     #Elements in this page need double clicking
 
 the user fills in the CS Milestones
-    [Arguments]  ${month}  ${nextMonth}  ${nextyear}
+    [Arguments]  ${month}  ${nextyear}
     the user clicks the button/link       link=Milestones
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input  2
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.month input  ${month}
@@ -79,34 +79,34 @@ the user fills in the CS Milestones
     the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.year input  ${nextyear}
     # the below dates need to be in a future date
     the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.day input  3
-    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.month input  ${nextMonth}
+    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.day input  3
-    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.month input  ${nextMonth}
+    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.day input  3
-    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.month input  ${nextMonth}
+    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.day input  3
-    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.month input  ${nextMonth}
+    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.month input  ${nextMonth}
+    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.month input  ${nextMonth}
+    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.month input  ${nextMonth}
+    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.month input  ${nextMonth}
+    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.month input  ${nextMonth}
+    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.year input  ${nextyear}
     the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.month input  ${nextMonth}
+    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.month input  ${month}
     the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.year input  ${nextyear}
     the user clicks the button/link       jQuery=button:contains("Done")
     the user clicks the button/link       link=Competition setup
@@ -191,7 +191,7 @@ the user fills in the CS Assessors
     the user selects the radio button  hasInterviewStage  0
     the user clicks the button/link   jQuery=button:contains("Done")
 #    the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
-# Plz uncomment this line TODO due to IFS-1527
+#    Plz uncomment this line TODO due to IFS-1527
     the user clicks the button/link   link=Competition setup
     the user should see the element   jQuery=div:contains("Assessors") ~ .task-status-complete
 

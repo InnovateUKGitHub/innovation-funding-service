@@ -40,7 +40,7 @@ Comp Admin starts a new Competition
     Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}
-    And the user fills in the CS Milestones        ${month}  ${nextMonth}  ${nextyear}
+    And the user fills in the CS Milestones        ${month}  ${nextyear}
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]    INFUND-7820
@@ -111,7 +111,7 @@ Once the project growth table is selected
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}
-    And the user fills in the CS Milestones              ${month}  ${nextMonth}  ${nextyear}
+    And the user fills in the CS Milestones              ${month}  ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
     When the user clicks the button/link                 link=Public content
@@ -345,8 +345,21 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
     Then the user should see the text in the page  ${ineligibleMessage}
 
 *** Keywords ***
+<<<<<<< HEAD
+=======
+Custom Suite Setup
+    ${tomorrowday} =    get tomorrow day
+    Set suite variable  ${tomorrowday}
+    ${month} =          get tomorrow month
+    set suite variable  ${month}
+    ${monthWord} =  get month as word
+    set suite variable  ${monthWord}
+    ${nextyear} =       get next year
+    Set suite variable  ${nextyear}
+
+>>>>>>> development
 the user should see the dates in full format
-    the user should see the element  jQuery=td:contains("Allocate assessors") ~ td:contains("3 ${nextMonthWord} ${nextyear}")
+    the user should see the element  jQuery=td:contains("Allocate assessors") ~ td:contains("3 ${monthWord} ${nextyear}")
 
 the user should see that the funding depends on the research area
     the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")
