@@ -376,13 +376,6 @@ the user decides about the growth table
     the user clicks the button/link   link=Application
     the user clicks the button/link   link=Competition setup
 
-The competitions date changes so it is now Open
-    [Arguments]  ${competition}
-    Connect to Database  @{database}
-    Change the open date of the Competition in the database to one day before  ${competition}
-    the user navigates to the page   ${CA_Live}
-    the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${competition}")
-
 Lead Applicant applies to the new created competition
     [Arguments]  ${competition}
     log in as a different user       &{lead_applicant_credentials}

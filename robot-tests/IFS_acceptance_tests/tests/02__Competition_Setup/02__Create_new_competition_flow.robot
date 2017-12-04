@@ -470,7 +470,7 @@ Adding a new Assessed Application Question
     Given the user clicks the button/link  css=p button[type="submit"]  #Add question link
     When the user clicks the button/link   css=button[type="submit"]
     Then the user should the server side validation working
-    When the user is able to configure the new question
+    When the user is able to configure the new question  How innovative is your project?
     Then the user should be able to see the read only view of question correctly
 
 Removing an Assessed Application Question
