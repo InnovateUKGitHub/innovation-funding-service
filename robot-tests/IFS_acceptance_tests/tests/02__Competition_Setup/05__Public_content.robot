@@ -219,7 +219,7 @@ Dates: Add, remove dates and submit
     [Documentation]    INFUND-6919
     [Tags]  HappyPath
     When the user clicks the button/link           link=Dates
-    Then the user should see the text in the page  ${nextMonthWord} ${nextyear}
+    Then the user should see the text in the page  ${monthWord} ${nextyear}
     And the user should see the text in the page   Competition opens
     And the user should see the text in the page   Submission deadline, competition closed.
     And the user should see the text in the page   Applicants notified
@@ -373,7 +373,7 @@ Guest user can filter competitions by Keywords
     Given the user navigates to the page       ${frontDoor}
     When the user enters text to a text field  id=keywords  Robot
     And the user clicks the button/link        jQuery=button:contains("Update results")
-    Then the user should see the element       jQuery=a:contains("${public_content_competition_name}")
+    Then the user should see the element       link=${public_content_competition_name}
 
 Guest user can see the updated Summary information
     [Documentation]  INFUND-7486 IFS-1969
@@ -445,10 +445,8 @@ Custom suite setup
     Set suite variable  ${day}
     ${month} =  get tomorrow month
     set suite variable  ${month}
-    ${nextMonth} =  get next month
-    set suite variable  ${nextMonth}
-    ${nextMonthWord} =  get next month as word
-    set suite variable  ${nextMonthWord}
+    ${monthWord} =  get month as word
+    set suite variable  ${monthWord}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
     User creates a new competition   ${public_content_competition_name}
@@ -462,7 +460,7 @@ User creates a new competition
     Given the user navigates to the page    ${CA_UpcomingComp}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
     When the user fills in the CS Initial details  ${competition_name}  ${month}  ${nextyear}  ${compType_Programme}
-    And the user fills in the CS Milestones  ${month}  ${nextMonth}  ${nextyear}
+    And the user fills in the CS Milestones  ${month}  ${nextyear}
 
 the user enters valid data in the summary details
     The user enters text to a text field    css=.editor  This is a Summary description
