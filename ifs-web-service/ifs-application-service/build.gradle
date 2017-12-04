@@ -6,10 +6,10 @@ configurations {
     providedRuntime
 }
 project.version = applicationServiceVersion
-tagDocker.tag=applicationServiceVersion
-osStageRemote.tag=applicationServiceVersion
-tagDockerLocal.tag=applicationServiceVersion
-osStageLocal.tag=applicationServiceVersion
+tagDocker.tag = applicationServiceVersion
+osStageRemote.tag = applicationServiceVersion
+tagDockerLocal.tag = applicationServiceVersion
+osStageLocal.tag = applicationServiceVersion
 
 jar {
     baseName = 'ifs-application-service'

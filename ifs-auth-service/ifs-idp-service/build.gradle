@@ -14,11 +14,11 @@ def String idpEncryptionKeyFile = "${idpCertsVolume}/idp-encryption.key"
 def String idpEncryptionCertificateFile = "${idpCertsVolume}/idp-encryption.crt"
 
 def String ldapEncryptionCertificateFile = "${idpCertsVolume}/ldap-encryption.crt"
-def String javaKeystorePassword = project.properties['java.keystore.password'] ?:"changeit"
+def String javaKeystorePassword = project.properties['java.keystore.password'] ?: "changeit"
 
 task getNewRelicAgent {
-    if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
-         !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists() ) {
+    if (!file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
+            !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists()) {
         exec {
             executable = 'curl'
             args = ['--connect-timeout', '30',
@@ -57,21 +57,21 @@ task prepareDockerFile {
 
     doFirst {
         copy {
-             from 'src/main/docker/'
-             into inputDir
-             include 'Dockerfile-template'
-             rename 'Dockerfile-template', 'Dockerfile'
-             filter(ReplaceTokens, tokens: [auth_idp_proxy_key: idpProxyKey,
-                                            auth_idp_proxy_certificate: idpProxyCertificate,
-                                            auth_idp_proxy_cacertificate: idpProxyCacertificate,
-                                            auth_sp_proxy_certificate: spProxyCertificate,
-                                            auth_idp_signing_key: idpSigningKey,
-                                            auth_idp_signing_certificate: idpSigningCertificate,
-                                            auth_idp_encryption_key: idpEncryptionKey,
-                                            auth_idp_encryption_certificate: idpEncryptionCertificate,
-                                            auth_ldap_encryption_certificate: ldapEncryptionCertificate,
-                                            java_keystore_password: javaKeystorePassword,
-                                            version: project.properties['version']])
+            from 'src/main/docker/'
+            into inputDir
+            include 'Dockerfile-template'
+            rename 'Dockerfile-template', 'Dockerfile'
+            filter(ReplaceTokens, tokens: [auth_idp_proxy_key              : idpProxyKey,
+                                           auth_idp_proxy_certificate      : idpProxyCertificate,
+                                           auth_idp_proxy_cacertificate    : idpProxyCacertificate,
+                                           auth_sp_proxy_certificate       : spProxyCertificate,
+                                           auth_idp_signing_key            : idpSigningKey,
+                                           auth_idp_signing_certificate    : idpSigningCertificate,
+                                           auth_idp_encryption_key         : idpEncryptionKey,
+                                           auth_idp_encryption_certificate : idpEncryptionCertificate,
+                                           auth_ldap_encryption_certificate: ldapEncryptionCertificate,
+                                           java_keystore_password          : javaKeystorePassword,
+                                           version                         : project.properties['version']])
         }
 
         copy {
@@ -114,7 +114,7 @@ task prepareDockerFile {
 
 buildDocker.dependsOn prepareDockerFile
 project.version = idpVersion
-tagDocker.tag=idpVersion
-osStageRemote.tag=idpVersion
-tagDockerLocal.tag=idpVersion
-osStageLocal.tag=idpVersion
+tagDocker.tag = idpVersion
+osStageRemote.tag = idpVersion
+tagDockerLocal.tag = idpVersion
+osStageLocal.tag = idpVersion

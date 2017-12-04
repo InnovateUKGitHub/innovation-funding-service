@@ -3,10 +3,10 @@ configurations {
 }
 
 project.version = assessmentServiceVersion
-tagDocker.tag=assessmentServiceVersion
-osStageRemote.tag=assessmentServiceVersion
-tagDockerLocal.tag=assessmentServiceVersion
-osStageLocal.tag=assessmentServiceVersion
+tagDocker.tag = assessmentServiceVersion
+osStageRemote.tag = assessmentServiceVersion
+tagDockerLocal.tag = assessmentServiceVersion
+osStageLocal.tag = assessmentServiceVersion
 
 jar {
     baseName = 'assessment'

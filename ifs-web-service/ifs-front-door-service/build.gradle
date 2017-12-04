@@ -7,10 +7,10 @@ configurations {
 }
 
 project.version = frontDoorServiceVersion
-tagDocker.tag=frontDoorServiceVersion
-osStageRemote.tag=frontDoorServiceVersion
-tagDockerLocal.tag=frontDoorServiceVersion
-osStageLocal.tag=frontDoorServiceVersion
+tagDocker.tag = frontDoorServiceVersion
+osStageRemote.tag = frontDoorServiceVersion
+tagDockerLocal.tag = frontDoorServiceVersion
+osStageLocal.tag = frontDoorServiceVersion
 
 
 jar {

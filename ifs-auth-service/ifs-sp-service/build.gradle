@@ -27,10 +27,10 @@ task prepareDockerFile {
             into 'src/main/docker/'
             include 'Dockerfile-template'
             rename 'Dockerfile-template', 'Dockerfile'
-            filter(ReplaceTokens, tokens: [auth_sp_proxy_key: spProxyKey,
-                                           auth_sp_proxy_certificate: spProxyCertificate,
-                                           auth_sp_proxy_cacertificate: spProxyCacertificate,
-                                           auth_idp_signing_certificate: idpSigningCertificate,
+            filter(ReplaceTokens, tokens: [auth_sp_proxy_key              : spProxyKey,
+                                           auth_sp_proxy_certificate      : spProxyCertificate,
+                                           auth_sp_proxy_cacertificate    : spProxyCacertificate,
+                                           auth_idp_signing_certificate   : idpSigningCertificate,
                                            auth_idp_encryption_certificate: idpEncryptionCertificate])
         }
         copy {
@@ -50,7 +50,7 @@ task prepareDockerFile {
 
 buildDocker.dependsOn prepareDockerFile
 project.version = spVersion
-tagDocker.tag=spVersion
-osStageRemote.tag=spVersion
-tagDockerLocal.tag=spVersion
-osStageLocal.tag=spVersion
+tagDocker.tag = spVersion
+osStageRemote.tag = spVersion
+tagDockerLocal.tag = spVersion
+osStageLocal.tag = spVersion
