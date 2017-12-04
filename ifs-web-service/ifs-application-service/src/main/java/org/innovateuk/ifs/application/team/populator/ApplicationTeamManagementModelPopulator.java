@@ -115,7 +115,13 @@ public class ApplicationTeamManagementModelPopulator {
     }
 
     private List<ApplicationTeamManagementApplicantRowViewModel> sortApplicants(List<ApplicationTeamManagementApplicantRowViewModel> applicants) {
-        return applicants.stream().sorted(Comparator.comparing(a -> a.getPendingSince(), Comparator.nullsFirst(Comparator.naturalOrder()))).collect(Collectors.toList());
+        return applicants.stream()
+                .sorted(getPendingOnNullFirstComparator())
+                .collect(Collectors.toList());
+    }
+
+    private Comparator<ApplicationTeamManagementApplicantRowViewModel> getPendingOnNullFirstComparator() {
+        return Comparator.comparing(ApplicationTeamManagementApplicantRowViewModel::getPendingSince, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     private ApplicationTeamManagementApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource, boolean userLeadApplicant) {
