@@ -119,9 +119,8 @@ get next month
     ${month} =  Add time To Date  ${today}    31 days    result_format=%m    exclude_millis=true
     [Return]    ${month}
 
-get next month as word
-    ${today}=  get time
-    ${month} =  Add time To Date  ${today}    31 days    result_format=%B    exclude_millis=true
+get month as word
+    ${month} =  Get Current Date  UTC   result_format=%B    exclude_millis=true
     # This format is like June instead of 06
     [Return]    ${month}
 
