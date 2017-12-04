@@ -493,9 +493,9 @@ Application: Finances
     And the user should see the element      css=label[for="application-finance-light"]
 #   Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
     And the user should see the element      css=label[for="application-finance-none"]
-    When the user clicks the button/link      css=input[id="include-growth-table-yes"]
 #   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
     And the user should not see the element  css=input[id="include-growth-table-no"]
+    When the user selects the radio button    includeGrowthTable  true
     And the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
     Then The user clicks the button/link      css=button[type="submit"]  #Save and close
     When the user clicks the button/link     link=Finances
