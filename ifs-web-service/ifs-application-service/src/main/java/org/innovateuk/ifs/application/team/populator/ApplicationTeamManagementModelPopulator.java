@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.team.populator;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamApplicantRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementApplicantRowViewModel;
 import org.innovateuk.ifs.application.team.viewmodel.ApplicationTeamManagementViewModel;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -47,10 +48,7 @@ public class ApplicationTeamManagementModelPopulator {
         OrganisationResource leadOrganisationResource = getLeadOrganisation(applicationId);
         boolean requestForLeadOrganisation = isRequestForLeadOrganisation(organisationId, leadOrganisationResource);
 
-        ApplicationTeamManagementViewModel result = populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
-
-        result.setApplicants(result.getApplicants().stream().sorted(Comparator.comparing(a -> a.getPendingSince(), Comparator.nullsFirst(Comparator.naturalOrder()))).collect(Collectors.toList()));
-        return result;
+        return populateModel(applicationId, loggedInUserId, leadOrganisationResource, requestForLeadOrganisation, inviteOrganisationResource);
     }
 
     public ApplicationTeamManagementViewModel populateModelByInviteOrganisationId(Long applicationId, Long inviteOrganisationId, long loggedInUserId) {
@@ -94,8 +92,8 @@ public class ApplicationTeamManagementModelPopulator {
                 organisationName,
                 true,
                 userLeadApplicant,
-                combineLists(getLeadApplicantViewModel(leadApplicant), simpleMap(invites, applicationInviteResource ->
-                        getApplicantViewModel(applicationInviteResource, userLeadApplicant))),
+                sortApplicants(combineLists(getLeadApplicantViewModel(leadApplicant), simpleMap(invites, applicationInviteResource ->
+                        getApplicantViewModel(applicationInviteResource, userLeadApplicant)))),
                 true
         );
     }
@@ -111,9 +109,13 @@ public class ApplicationTeamManagementModelPopulator {
                 getOrganisationName(inviteOrganisationResource),
                 false,
                 userLeadApplicant,
-                simpleMap(inviteOrganisationResource.getInviteResources(), applicationInviteResource ->
-                        getApplicantViewModel(applicationInviteResource, userLeadApplicant)),
+                sortApplicants(simpleMap(inviteOrganisationResource.getInviteResources(), applicationInviteResource ->
+                        getApplicantViewModel(applicationInviteResource, userLeadApplicant))),
                 organisationExists);
+    }
+
+    private List<ApplicationTeamManagementApplicantRowViewModel> sortApplicants(List<ApplicationTeamManagementApplicantRowViewModel> applicants) {
+        return applicants.stream().sorted(Comparator.comparing(a -> a.getPendingSince(), Comparator.nullsFirst(Comparator.naturalOrder()))).collect(Collectors.toList());
     }
 
     private ApplicationTeamManagementApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource, boolean userLeadApplicant) {
