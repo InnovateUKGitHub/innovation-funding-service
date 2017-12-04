@@ -176,5 +176,5 @@ Set predefined date variables
     Set suite variable  ${nextyear}
     ${tomorrowday} =    get tomorrow day
     Set suite variable  ${tomorrowday}
-    ${nextMonthWord} =  get next month as word
-    set suite variable  ${nextMonthWord}
+    ${monthWord} =      get month as word
+    set suite variable  ${monthWord}

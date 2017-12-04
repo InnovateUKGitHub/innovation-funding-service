@@ -345,16 +345,6 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
     Then the user should see the text in the page  ${ineligibleMessage}
 
 *** Keywords ***
-Custom Suite Setup
-    ${tomorrowday} =    get tomorrow day
-    Set suite variable  ${tomorrowday}
-    ${month} =          get tomorrow month
-    set suite variable  ${month}
-    ${monthWord} =  get month as word
-    set suite variable  ${monthWord}
-    ${nextyear} =       get next year
-    Set suite variable  ${nextyear}
-
 the user should see the dates in full format
     the user should see the element  jQuery=td:contains("Allocate assessors") ~ td:contains("3 ${monthWord} ${nextyear}")
 
