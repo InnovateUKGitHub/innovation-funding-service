@@ -4,6 +4,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -163,11 +165,33 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withSetupComplete() {
         return asCompAdmin(data -> {
-            asList(CompetitionSetupSection.values()).forEach(competitionSetupSection -> {
-                competitionSetupService.markSectionComplete(data.getCompetition().getId(), competitionSetupSection);
-            });
-            competitionSetupService.markAsSetup(data.getCompetition().getId());
+            markSetupSectionsAndSubsectionsAsComplete(data);
+            markSetupApplicationQuestionsAsComplete(data);
         });
+    }
+
+    private void markSetupSectionsAndSubsectionsAsComplete(CompetitionData data) {
+        asList(CompetitionSetupSection.values()).forEach(competitionSetupSection -> {
+            competitionSetupService.markSectionComplete(data.getCompetition().getId(), competitionSetupSection);
+            competitionSetupSection.getSubsections().forEach(subsection -> {
+                competitionSetupService.markSubsectionComplete(data.getCompetition().getId(), competitionSetupSection, subsection);
+            });
+        });
+    }
+
+    private void markSetupApplicationQuestionsAsComplete(CompetitionData data) {
+        List<SectionResource> competitionSections = sectionService.getByCompetitionId(data.getCompetition().getId()).getSuccessObject();
+
+        SectionResource applicationSection = competitionSections.stream().filter(section -> section.getName().equals("Application questions")).findFirst().get();
+        SectionResource projectDetails = competitionSections.stream().filter(section -> section.getName().equals("Project details")).findFirst().get();
+
+        List<QuestionResource> questionResources = questionService.findByCompetition(data.getCompetition().getId()).getSuccessObject();
+        questionResources.stream()
+                .filter(question -> question.getSection().equals(applicationSection.getId())
+                        || question.getSection().equals(projectDetails.getId()))
+                .forEach(question -> questionSetupService.markQuestionInSetupAsComplete(question.getId(), data.getCompetition().getId(), CompetitionSetupSection.APPLICATION_FORM));
+
+        competitionSetupService.markAsSetup(data.getCompetition().getId());
     }
 
     public CompetitionDataBuilder moveCompetitionIntoOpenStatus() {
@@ -246,7 +270,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withNewMilestones() {
         return asCompAdmin(data ->
-            Stream.of(MilestoneType.presetValues()).forEach(type ->
+            Stream.of(MilestoneType.presetValues())
+                    .filter(m -> !m.isOnlyNonIfs())
+                    .forEach(type ->
                 milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId())
                         .handleSuccessOrFailure(
                                 failure -> milestoneService.create(type, data.getCompetition().getId()).getSuccessObjectOrThrowException(),
@@ -262,6 +288,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
     public CompetitionDataBuilder withBriefingDate(ZonedDateTime date) {
         return withMilestoneUpdate(date, BRIEFING_EVENT);
+    }
+
+    public CompetitionDataBuilder withRegistrationDate(ZonedDateTime date) {
+        return withMilestoneUpdate(date, REGISTRATION_DATE);
     }
 
     public CompetitionDataBuilder withSubmissionDate(ZonedDateTime date) {

@@ -79,7 +79,7 @@ services:
       - ifs
 
   competition-mgt-svc:
-    image: innovateuk/competition-management-service
+    image: innovateuk/competition-mgt-service
     healthcheck:
       test: ["CMD", "curl", "-f",  "http://localhost:8080/management/monitoring/health"]
       interval: 15s
@@ -88,7 +88,7 @@ services:
       - ifs
 
   project-setup-mgt-svc:
-    image: innovateuk/project-setup-management-service
+    image: innovateuk/project-setup-mgt-service
     healthcheck:
       test: ["CMD", "curl", "-f",  "http://localhost:8080/project-setup-management/monitoring/health"]
       interval: 15s
