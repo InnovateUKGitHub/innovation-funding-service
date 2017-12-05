@@ -2,8 +2,7 @@
 Documentation     INFUND-5629 As a Competitions team member I want to be able to edit Application Questions individually in Competition Setup so that I can manage the question and associated applicant and assessor guidance in one place
 ...
 ...               INFUND-6468 Competition setup autosave should be validating types, allowing invalid data and doing a complete validate on mark as complete
-Suite Setup       Run Keywords  The user logs-in in new browser  &{Comp_admin1_credentials}
-...               AND           User creates a new competition for Application tests
+Suite Setup       Custom suite setup
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          CompAdmin_Commons.robot
@@ -82,6 +81,12 @@ Scope: Sever-side validations assessment questions
     And the user should not see the text in the page    Please enter a justification.
 
 *** Keywords ***
+Custom Suite setup
+    The user logs-in in new browser  &{Comp_admin1_credentials}
+    ${nextYear} =  get next year
+    Set suite variable  ${nextYear}
+    User creates a new competition for Application tests
+
 the user leaves all the question field empty
     Clear Element Text    css=.editor
     Press Key    css=.editor    \\8
@@ -150,7 +155,7 @@ User creates a new competition for Application tests
     And the user selects the option from the drop-down menu    Advanced therapies    css=[id="innovationAreaCategoryIds[0]"]
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
-    And the user enters text to a text field    id=openingDateYear    2017
+    And the user enters text to a text field    id=openingDateYear  ${nextYear}
     And the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
     And the user clicks the button/link    jQuery=button:contains("Done")
