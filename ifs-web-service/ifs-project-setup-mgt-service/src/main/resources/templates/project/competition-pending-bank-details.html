@@ -16,7 +16,7 @@
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Bank details',subTitle=|Project setup|,size='heading-xlarge'" />
         </div>
     </div>
-    
+
     <th:block th:if="${model.pendingBankDetails.size() > 0}">
         <div>
             <table id="table-project-organisation-query-status" class="table-overview extra-margin-bottom">
