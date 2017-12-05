@@ -388,3 +388,21 @@ navigate to next page if not found
     [Arguments]  ${competition}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link=${competition}
     Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery=a:contains("Next")
+
+Lead Applicant applies to the new created competition
+    [Arguments]  ${competition}
+    log in as a different user       &{lead_applicant_credentials}
+    the user navigates to the eligibility of the competition  ${competition}
+    the user clicks the button/link  jQuery=a:contains("Sign in")
+    the user clicks the button/link  jQuery=a:contains("Begin application")
+
+the user navigates to the eligibility of the competition
+    [Arguments]  ${competition}
+    ${competitionId} =  get comp id from comp title    ${competition}
+    the user navigates to the page   ${server}/application/create/check-eligibility/${competitionId}
+
+the lead applicant marks every question as complete(EOI)
+    [Arguments]  ${question_link}
+    the user clicks the button/link             jQuery=h3 a:contains("${question_link}")
+    the user marks the section as complete
+    the user clicks the button/link             link=Application overview
