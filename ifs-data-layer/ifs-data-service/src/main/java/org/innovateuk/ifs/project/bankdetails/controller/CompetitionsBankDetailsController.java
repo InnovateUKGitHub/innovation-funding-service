@@ -21,5 +21,10 @@ public class CompetitionsBankDetailsController {
     public RestResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals() {
         return bankDetailsService.getPendingBankDetailsApprovals().toGetResponse();
     }
+
+    @GetMapping("/count-bank-details-approvals")
+    public RestResult<Long> countBankDetailsApprovals() {
+        return bankDetailsService.countBankDetailsApprovals().toGetResponse();
+    }
 }
 
