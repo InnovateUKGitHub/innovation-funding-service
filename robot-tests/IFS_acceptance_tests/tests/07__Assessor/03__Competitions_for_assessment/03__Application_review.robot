@@ -82,7 +82,7 @@ Application questions should be scorable
     Then The user should see the element          jQuery=label:contains("Question score")
     When the user clicks the button/link          jQuery=span:contains("Next")
     And The user should see the text in the page  What are the risks
-    And the user should see the text in the page  This is the applicant response for what are the risks (technical, commercial and environmental) to your project's success? what is your risk management strategy?.
+    And the user should see the text in the page  This is the applicant response for what are the risks (technical, commercial and environmental) to your project's success? what is your risk management strategy?
     Then The user should see the element          jQuery=label:contains("Question score")
     When the user clicks the button/link          jQuery=span:contains("Next")
     And The user should see the text in the page  Does your project team have the skills,
