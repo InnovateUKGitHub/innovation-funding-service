@@ -325,6 +325,8 @@ the user is able to configure the new question
     the user enters text to a text field  css=.editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id=question.maxWords  500
     the user selects the radio button     question.appendix  1
+    #the user clicks the button/link       id=allowed-file-types-PDF
+    the user clicks the button/link       jQuery=label:contains("PDF")
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10
     the user selects the radio button     question.writtenFeedback  1
@@ -338,6 +340,13 @@ the user is able to configure the new question
     the user enters text to a text field  question.assessmentMaxWords  120
     the user clicks the button/link       css=button[type="submit"]
 
+the user checks for Appendix validation
+    [Documentation]  IFS-2285
+    the user should see the element       jQuery=h2:contains("There is a problem on this page")
+    the user clicks the button/link       jQuery=label:contains("PDF")
+    the user clicks the button/link       jQuery=label:contains("Spreadsheet")
+    the user clicks the button/link       css=button[type="submit"]
+
 the user should be able to see the read only view of question correctly
     the user clicks the button/link  jQuery=a:contains("Tell us how your project is innovative.")
     the user should see the element  jQuery=dt:contains("Question heading") + dd:contains("Tell us how your project is innovative")
@@ -346,7 +355,9 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery=dt:contains("Guidance title") + dd:contains("Innovation is crucial to the continuing success of any organization.")
     the user should see the element  jQuery=dt:contains("Guidance") + dd:contains("Please use Microsoft Word where possible.")
     the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("500")
-    the user should see the element  jQuery=dt:contains("Appendix") + dd:contains("Yes")
+    the user should see the element  jQuery=dt:contains("Appendix") + dd:contains("PDF")
+    the user should not see the element    jQuery=li:contains("PDF")
+    the user should see the element      jQuery=li:contains("Spreadsheet")
     the user should see the element  jQuery=dt:contains("Scored") + dd:contains("Yes")
     the user should see the element  jQuery=dt:contains("Out of") + dd:contains("10")
     the user should see the element  jQuery=dt:contains("Written feedback") + dd:contains("Yes")

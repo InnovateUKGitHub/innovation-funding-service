@@ -61,6 +61,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-1104 Add Stakeholder link to Competition Setup
 ...
 ...               IFS-2192 As a Portfolio manager I am able to create an EOI competition
+...
+...               IFS-2285 APC Competition template: BEIS Value for Money: Pro-forma Spreadsheet
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -466,12 +468,13 @@ Application: marking questions as complete
     And the user marks question as complete   Costs and value for money
 
 Adding a new Assessed Application Question
-    [Documentation]  IFS-182
+    [Documentation]  IFS-182    IFS-2285
     [Tags]
     Given the user clicks the button/link  css=p button[type="submit"]  #Add question link
     When the user clicks the button/link   css=button[type="submit"]
     Then the user should see the server side validation working
     When the user is able to configure the new question
+    And the user checks for Appendix validation
     Then the user should be able to see the read only view of question correctly
 
 Removing an Assessed Application Question
