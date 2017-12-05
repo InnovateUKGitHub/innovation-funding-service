@@ -121,7 +121,3 @@ the user navigates to the Non IFS competitions tab
     the user clicks the button/link  jQuery=a:contains(Non-IFS)
     # We have used the JQuery selector for the link because the title will change according to the competitions number
 
-the competition is open
-    [Arguments]  ${compTitle}
-    Connect to Database  @{database}
-    change the open date of the competition in the database to one day before  ${compTitle}
