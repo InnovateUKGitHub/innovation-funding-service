@@ -54,4 +54,9 @@ public class BankDetailsRestServiceImpl extends BaseRestService implements BankD
     public RestResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals() {
         return getWithRestResult(competitionsRestURL + "/pending-bank-details-approvals", bankDetailsReviewResourceListType());
     }
+
+    @Override
+    public RestResult<Long> countBankDetailsApprovals() {
+        return getWithRestResult(competitionsRestURL + "/count-bank-details-approvals", Long.class);
+    }
 }
