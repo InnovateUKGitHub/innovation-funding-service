@@ -1,0 +1,43 @@
+=== Retrieve competition name by id
+==== Request
+include::{snippets}/analytics/get-competition-name/http-request.adoc[]
+include::{snippets}/analytics/get-competition-name/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/analytics/get-competition-name/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/analytics/get-competition-name/curl-request.adoc[]
+
+=== Retrieve competition name by application id
+==== Request
+include::{snippets}/analytics/get-competition-name-for-application/http-request.adoc[]
+include::{snippets}/analytics/get-competition-name-for-application/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/analytics/get-competition-name-for-application/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/analytics/get-competition-name-for-application/curl-request.adoc[]
+
+=== Retrieve competition name by assessment id
+==== Request
+include::{snippets}/analytics/get-competition-name-for-assessment/http-request.adoc[]
+include::{snippets}/analytics/get-competition-name-for-assessment/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/analytics/get-competition-name-for-assessment/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/analytics/get-competition-name-for-assessment/curl-request.adoc[]
+
+=== Retrieve competition name by project id
+==== Request
+include::{snippets}/analytics/get-competition-name-for-project/http-request.adoc[]
+include::{snippets}/analytics/get-competition-name-for-project/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/analytics/get-competition-name-for-project/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/analytics/get-competition-name-for-project/curl-request.adoc[]

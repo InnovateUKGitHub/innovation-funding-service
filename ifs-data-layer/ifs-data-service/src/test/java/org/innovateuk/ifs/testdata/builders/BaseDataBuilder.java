@@ -106,6 +106,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected InnovationSectorRepository innovationSectorRepository;
     protected ResearchCategoryRepository researchCategoryRepository;
     protected CompetitionSetupService competitionSetupService;
+    protected QuestionSetupService questionSetupService;
     protected PublicContentService publicContentService;
     protected PublicContentRepository publicContentRepository;
     protected ContentGroupRepository contentGroupRepository;
@@ -229,6 +230,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         activityStateRepository = serviceLocator.getBean(ActivityStateRepository.class);
         sectionRepository = serviceLocator.getBean(SectionRepository.class);
         questionRepository = serviceLocator.getBean(QuestionRepository.class);
+        questionSetupService = serviceLocator.getBean(QuestionSetupService.class);
         formInputRepository = serviceLocator.getBean(FormInputRepository.class);
         fileEntryRepository = serviceLocator.getBean(FileEntryRepository.class);
         applicationFinanceRepository = serviceLocator.getBean(ApplicationFinanceRepository.class);
