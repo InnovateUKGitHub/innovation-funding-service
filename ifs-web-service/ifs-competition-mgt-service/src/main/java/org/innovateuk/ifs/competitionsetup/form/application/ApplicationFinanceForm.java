@@ -2,22 +2,23 @@ package org.innovateuk.ifs.competitionsetup.form.application;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 
 public class ApplicationFinanceForm extends CompetitionSetupForm {
 
-    private boolean fullApplicationFinance;
+    private ApplicationFinanceType applicationFinanceType;
 
     private boolean includeGrowthTable;
 
     @NotBlank(message = "{validation.field.must.not.be.blank}")
     private String fundingRules;
 
-    public boolean isFullApplicationFinance() {
-        return fullApplicationFinance;
+    public ApplicationFinanceType getApplicationFinanceType() {
+        return applicationFinanceType;
     }
 
-    public void setFullApplicationFinance(boolean fullApplicationFinance) {
-        this.fullApplicationFinance = fullApplicationFinance;
+    public void setApplicationFinanceType(ApplicationFinanceType applicationFinanceType) {
+        this.applicationFinanceType = applicationFinanceType;
     }
 
     public boolean isIncludeGrowthTable() {
