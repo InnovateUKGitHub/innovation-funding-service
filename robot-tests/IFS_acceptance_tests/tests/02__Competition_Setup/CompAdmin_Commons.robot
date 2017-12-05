@@ -356,7 +356,7 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery=dt:contains("Guidance") + dd:contains("Please use Microsoft Word where possible.")
     the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("500")
     the user should see the element  jQuery=dt:contains("Appendix") + dd:contains("PDF")
-    the user should not see the element    jQuery=li:contains("PDF")
+    the user should see the element    jQuery=li:contains("PDF")
     the user should see the element      jQuery=li:contains("Spreadsheet")
     the user should see the element  jQuery=dt:contains("Scored") + dd:contains("Yes")
     the user should see the element  jQuery=dt:contains("Out of") + dd:contains("10")

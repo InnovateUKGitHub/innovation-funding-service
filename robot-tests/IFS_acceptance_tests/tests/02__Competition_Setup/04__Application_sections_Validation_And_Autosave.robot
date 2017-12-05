@@ -57,28 +57,29 @@ Business opportunity: Autosave
 Business opportunity: Mark as done
     [Documentation]    INFUND-5629
     [Tags]    HappyPath
-    When The user clicks the button/link    css=button[type="submit"]
-    And the user clicks the button/link    jQuery=a:contains("Test Heading")
+    When The user clicks the button/link             css=button[type="submit"]
+    And the user clicks the button/link              jQuery=a:contains("Test Heading")
     Then The user should see the text in the page    Test Heading
-    And The user should see the text in the page    Test title
-    And The user should see the text in the page    Subtitle test
-    And The user should see the text in the page    Test guidance title
-    And The user should see the text in the page    Guidance text test
-    And The user should see the text in the page    150
-    And The user should see the text in the page    No
+    And The user should see the text in the page     Test title
+    And The user should see the text in the page     Subtitle test
+    And The user should see the text in the page     Test guidance title
+    And The user should see the text in the page     Guidance text test
+    And The user should see the text in the page     150
+    And The user should see the text in the page     No
     [Teardown]    the user clicks the button/link    link=Application
 
 Scope: Sever-side validations assessment questions
     [Documentation]    INFUND-6444
     [Tags]
-    Given the user clicks the button/link    link=Scope
-    When the user clicks the button/link    jQuery=Button:contains("+Add guidance row")
-    And the user clicks the button/link    css=button[type="submit"]
-    Then the user should see the text in the page    Please enter a value.
-    And the user should see the text in the page    Please enter a justification.
-    And The user clicks the button/link    id=remove-guidance-row-2
-    And the user should not see the text in the page    Please enter a subject.
-    And the user should not see the text in the page    Please enter a justification.
+    Given the user clicks the button/link               link=Scope
+    When the user clicks the button/link                jQuery=Button:contains("+Add guidance row")
+    And the user clicks the button/link                 css=button[type="submit"]
+    Then the user should see the text in the page       Please enter a value.
+    And the user should see the element                 jQuery=a:contains("Please enter a justification")
+    And The user clicks the button/link                 id=remove-guidance-row-2
+    And the user clicks the button/link                 css=button[type="submit"]
+    And the user should not see the element             jQuery=a:contains("Please enter a subject")
+    And the user should not see the element             jQuery=a:contains("Please enter a justification")
 
 *** Keywords ***
 Custom Suite setup
