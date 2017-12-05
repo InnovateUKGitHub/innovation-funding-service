@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.repository;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,24 +18,24 @@ import java.util.Set;
  * For more info:
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
-public interface CompetitionInviteRepository extends PagingAndSortingRepository<CompetitionInvite, Long> {
+public interface CompetitionInviteRepository extends PagingAndSortingRepository<CompetitionAssessmentInvite, Long> {
 
-    CompetitionInvite getByEmailAndCompetitionId(String email, long competitionId);
+    CompetitionAssessmentInvite getByEmailAndCompetitionId(String email, long competitionId);
 
-    List<CompetitionInvite> getByCompetitionIdAndStatus(long competitionId, InviteStatus status);
+    List<CompetitionAssessmentInvite> getByCompetitionIdAndStatus(long competitionId, InviteStatus status);
 
-    Page<CompetitionInvite> getByCompetitionIdAndStatus(long competitionId, InviteStatus status, Pageable pageable);
+    Page<CompetitionAssessmentInvite> getByCompetitionIdAndStatus(long competitionId, InviteStatus status, Pageable pageable);
 
     void deleteByCompetitionIdAndStatus(long competitionId, InviteStatus status);
 
-    CompetitionInvite getByHash(String hash);
+    CompetitionAssessmentInvite getByHash(String hash);
 
     int countByCompetitionIdAndStatusIn(long competitionId, Set<InviteStatus> statuses);
 
-    List<CompetitionInvite> getByIdIn(List<Long> inviteIds);
+    List<CompetitionAssessmentInvite> getByIdIn(List<Long> inviteIds);
 
     String USERS_WITH_COMPETITION_INVITE = "SELECT invite.user.id " +
-            "FROM CompetitionInvite invite " +
+            "FROM CompetitionAssessmentInvite invite " +
             "WHERE invite.competition.id = :competitionId " +
             "AND invite.user IS NOT NULL";
 

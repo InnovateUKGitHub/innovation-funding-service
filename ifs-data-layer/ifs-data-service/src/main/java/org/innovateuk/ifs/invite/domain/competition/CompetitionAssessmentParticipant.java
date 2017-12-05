@@ -1,9 +1,10 @@
-package org.innovateuk.ifs.invite.domain;
+package org.innovateuk.ifs.invite.domain.competition;
 
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
@@ -19,23 +20,22 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
  */
 @Entity
 @Table(name = "competition_user")
-public class CompetitionAssessmentParticipant extends CompetitionParticipant<CompetitionInvite> {
+public class CompetitionAssessmentParticipant extends CompetitionParticipant<CompetitionAssessmentInvite> {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "invite_id")
-    private CompetitionInvite invite;
+    private CompetitionAssessmentInvite invite;
 
     @Override
-    public CompetitionInvite getInvite() {
+    public CompetitionAssessmentInvite getInvite() {
         return this.invite;
     }
 
     public CompetitionAssessmentParticipant() {
-        // no-arg constructor
         super.setProcess(null);
     }
 
-    public CompetitionAssessmentParticipant(CompetitionInvite invite) {
+    public CompetitionAssessmentParticipant(CompetitionAssessmentInvite invite) {
         super();
         if (invite == null) {
             throw new NullPointerException("invite cannot be null");
@@ -63,7 +63,7 @@ public class CompetitionAssessmentParticipant extends CompetitionParticipant<Com
         }
 
         if (getInvite().getStatus() != OPENED) {
-            throw new IllegalStateException("Cannot accept a CompetitionInvite that hasn't been opened");
+            throw new IllegalStateException("Cannot accept a CompetitionAssessmentInvite that hasn't been opened");
         }
 
         if (getStatus() == REJECTED) {
@@ -101,13 +101,13 @@ public class CompetitionAssessmentParticipant extends CompetitionParticipant<Com
         }
 
         if (getInvite().getStatus() != OPENED) {
-            throw new IllegalStateException("Cannot accept a CompetitionInvite that hasn't been opened");
+            throw new IllegalStateException("Cannot accept a CompetitionAssessmentInvite that hasn't been opened");
         }
         if (getStatus() == ACCEPTED) {
-            throw new IllegalStateException("Cannot reject a CompetitionInvite that has been accepted");
+            throw new IllegalStateException("Cannot reject a CompetitionAssessmentInvite that has been accepted");
         }
         if (getStatus() == REJECTED) {
-            throw new IllegalStateException("CompetitionInvite has already been rejected");
+            throw new IllegalStateException("CompetitionAssessmentInvite has already been rejected");
         }
 
         super.setRejectionReason(rejectionReason);
