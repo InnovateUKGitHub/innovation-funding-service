@@ -7,7 +7,7 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
@@ -25,7 +25,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -46,7 +45,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionInviteRepository> {
+public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionInviteRepository> {
 
     private final long INNOVATION_AREA_ID = 5L;
 
@@ -86,22 +85,22 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test
     public void findAll() {
-        repository.save(new CompetitionInvite("name1", "tom@poly.io", "hash", competition, innovationArea));
-        repository.save(new CompetitionInvite("name2", "tom@2poly.io", "hash2", competition, innovationArea));
+        repository.save(new CompetitionAssessmentInvite("name1", "tom@poly.io", "hash", competition, innovationArea));
+        repository.save(new CompetitionAssessmentInvite("name2", "tom@2poly.io", "hash2", competition, innovationArea));
 
-        Iterable<CompetitionInvite> invites = repository.findAll();
+        Iterable<CompetitionAssessmentInvite> invites = repository.findAll();
 
         assertEquals(2, invites.spliterator().getExactSizeIfKnown());
     }
 
     @Test
     public void getByHash() {
-        CompetitionInvite invite = new CompetitionInvite("name", "tom@poly.io", "hash", competition, innovationArea);
-        CompetitionInvite saved = repository.save(invite);
+        CompetitionAssessmentInvite invite = new CompetitionAssessmentInvite("name", "tom@poly.io", "hash", competition, innovationArea);
+        CompetitionAssessmentInvite saved = repository.save(invite);
 
         flushAndClearSession();
 
-        CompetitionInvite retrievedInvite = repository.getByHash("hash");
+        CompetitionAssessmentInvite retrievedInvite = repository.getByHash("hash");
         assertNotNull(retrievedInvite);
 
         assertEquals("name", retrievedInvite.getName());
@@ -112,7 +111,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test
     public void getByInviteIds() {
-        List<CompetitionInvite> invites = newCompetitionInvite()
+        List<CompetitionAssessmentInvite> invites = newCompetitionInvite()
                 .withName("fred", "jake")
                 .withEmail("fred@test.com", "jake@test.com")
                 .withHash("hash1", "hash2")
@@ -120,12 +119,12 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
                 .withInnovationArea(innovationArea)
                 .build(2);
 
-        CompetitionInvite saved1 = repository.save(invites.get(0));
-        CompetitionInvite saved2 = repository.save(invites.get(1));
+        CompetitionAssessmentInvite saved1 = repository.save(invites.get(0));
+        CompetitionAssessmentInvite saved2 = repository.save(invites.get(1));
 
         flushAndClearSession();
 
-        List<CompetitionInvite> retrievedInvites = repository.getByIdIn(asList(saved1.getId(), saved2.getId()));
+        List<CompetitionAssessmentInvite> retrievedInvites = repository.getByIdIn(asList(saved1.getId(), saved2.getId()));
         assertNotNull(retrievedInvites);
 
         assertEquals("fred", retrievedInvites.get(0).getName());
@@ -141,10 +140,10 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test
     public void getByEmailAndCompetitionId() {
-        CompetitionInvite invite = new CompetitionInvite("name", "tom@poly.io", "hash", competition, innovationArea);
-        CompetitionInvite saved = repository.save(invite);
+        CompetitionAssessmentInvite invite = new CompetitionAssessmentInvite("name", "tom@poly.io", "hash", competition, innovationArea);
+        CompetitionAssessmentInvite saved = repository.save(invite);
 
-        CompetitionInvite retrievedInvite = repository.getByEmailAndCompetitionId("tom@poly.io", competition.getId());
+        CompetitionAssessmentInvite retrievedInvite = repository.getByEmailAndCompetitionId("tom@poly.io", competition.getId());
         assertNotNull(retrievedInvite);
 
         assertEquals(saved, retrievedInvite);
@@ -166,9 +165,9 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        Page<CompetitionInvite> pageResult = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
+        Page<CompetitionAssessmentInvite> pageResult = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
 
-        List<CompetitionInvite> retrievedInvites = pageResult.getContent();
+        List<CompetitionAssessmentInvite> retrievedInvites = pageResult.getContent();
 
         assertEquals(1, retrievedInvites.size());
 
@@ -193,7 +192,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
                 .withStatus(CREATED, CREATED, OPENED, OPENED, SENT, SENT)
                 .build(6));
 
-        List<CompetitionInvite> retrievedInvites = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
+        List<CompetitionAssessmentInvite> retrievedInvites = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
         assertEquals(1, retrievedInvites.size());
 
@@ -224,14 +223,14 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test
     public void save() {
-        CompetitionInvite invite = new CompetitionInvite("name", "tom@poly.io", "hash", competition, innovationArea);
+        CompetitionAssessmentInvite invite = new CompetitionAssessmentInvite("name", "tom@poly.io", "hash", competition, innovationArea);
         repository.save(invite);
 
         flushAndClearSession();
 
         long id = invite.getId();
 
-        CompetitionInvite retrievedInvite = repository.findOne(id);
+        CompetitionAssessmentInvite retrievedInvite = repository.findOne(id);
 
         assertEquals("name", retrievedInvite.getName());
         assertEquals("tom@poly.io", retrievedInvite.getEmail());
@@ -241,14 +240,14 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test(expected = DataIntegrityViolationException.class)
     public void save_duplicateHash() {
-        repository.save(new CompetitionInvite("name1", "tom@poly.io", "sameHash", competition, innovationArea));
-        repository.save(new CompetitionInvite("name2", "tom@2poly.io", "sameHash", competition, innovationArea));
+        repository.save(new CompetitionAssessmentInvite("name1", "tom@poly.io", "sameHash", competition, innovationArea));
+        repository.save(new CompetitionAssessmentInvite("name2", "tom@2poly.io", "sameHash", competition, innovationArea));
     }
 
     @Test
     public void deleteByCompetitionIdAndStatus() throws Exception {
-        CompetitionInvite invite1 = new CompetitionInvite("Test Tester 1", "test2@test.com", "hash1", competition, innovationArea);
-        CompetitionInvite invite2 = new CompetitionInvite("Test Tester 2", "test1@test.com", "hash2", competition, innovationArea);
+        CompetitionAssessmentInvite invite1 = new CompetitionAssessmentInvite("Test Tester 1", "test2@test.com", "hash1", competition, innovationArea);
+        CompetitionAssessmentInvite invite2 = new CompetitionAssessmentInvite("Test Tester 2", "test1@test.com", "hash2", competition, innovationArea);
 
         HashSet<InviteStatus> inviteStatuses = newHashSet(CREATED);
 
@@ -370,7 +369,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
         flushAndClearSession();
     }
     private void saveInvite(Competition competition, User user) {
-        CompetitionInvite invite = new CompetitionInvite(user, CompetitionInvite.generateInviteHash(), competition);
+        CompetitionAssessmentInvite invite = new CompetitionAssessmentInvite(user, CompetitionAssessmentInvite.generateInviteHash(), competition);
         repository.save(invite);
     }
 }
