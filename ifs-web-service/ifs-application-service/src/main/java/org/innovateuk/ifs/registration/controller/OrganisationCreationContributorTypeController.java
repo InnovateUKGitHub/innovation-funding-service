@@ -3,6 +3,7 @@ package org.innovateuk.ifs.registration.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/new-account-organisation-type")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationContributorTypeController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationContributorTypeController extends AbstractOrganisationCreationController {
     private static final Log LOG = LogFactory.getLog(OrganisationCreationContributorTypeController.class);

@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.organisation.resource.OrganisationCompositeId;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.otherdocuments.OtherDocumentsService;
 import org.innovateuk.ifs.project.resource.*;
@@ -49,92 +50,86 @@ public class SetupSectionsPermissionRules {
     private SetupSectionPartnerAccessorSupplier accessorSupplier = new SetupSectionPartnerAccessorSupplier();
 
     @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "A partner can access the Project Details section when their Companies House data is complete or not required")
-    public boolean partnerCanAccessProjectDetailsSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessProjectDetailsSection);
+    public boolean partnerCanAccessProjectDetailsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessProjectDetailsSection);
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CONTACT_PAGE", description = "A partner can access the Finance Contact " +
             "page when their Companies House data is complete or not required, and the Grant Offer Letter has not yet been generated")
-    public boolean partnerCanAccessFinanceContactPage(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessFinanceContactPage);
+    public boolean partnerCanAccessFinanceContactPage(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessFinanceContactPage);
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_MANAGER_PAGE", description = "A lead can access the Project Manager " +
             "page when their Companies House data is complete or not required, and the Grant Offer Letter has not yet been generated")
-    public boolean leadCanAccessProjectManagerPage(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage);
+    public boolean leadCanAccessProjectManagerPage(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage);
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_START_DATE_PAGE", description = "A lead can access the Project Start Date " +
             "page when their Companies House data is complete or not required, and the Spend Profile has not yet been generated")
-    public boolean leadCanAccessProjectStartDatePage(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::leadCanAccessProjectStartDatePage);
+    public boolean leadCanAccessProjectStartDatePage(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::leadCanAccessProjectStartDatePage);
     }
 
     @PermissionRule(value = "ACCESS_PROJECT_ADDRESS_PAGE", description = "A lead can access the Project Address " +
             "page when their Companies House data is complete or not required, and the Grant Offer Letter has not yet been generated")
-    public boolean leadCanAccessProjectAddressPage(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage);
+    public boolean leadCanAccessProjectAddressPage(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage);
     }
 
     @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "A partner can access the Monitoring Officer " +
             "section when their Companies House details are complete or not required, and the Project Details have been submitted")
-    public boolean partnerCanAccessMonitoringOfficerSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessMonitoringOfficerSection);
+    public boolean partnerCanAccessMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessMonitoringOfficerSection);
     }
 
     @PermissionRule(value = "ACCESS_BANK_DETAILS_SECTION", description = "A partner can access the Bank Details " +
             "section when their Companies House details are complete or not required, and they have a Finance Contact " +
             "available for their Organisation")
-    public boolean partnerCanAccessBankDetailsSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessBankDetailsSection);
+    public boolean partnerCanAccessBankDetailsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessBankDetailsSection);
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL", description = "A partner can access the finance details " +
             " when their Companies House details are complete or not required, and the Project Details have been submitted")
-    public boolean partnerCanAccessFinanceChecksSection(Long projectId, UserResource user) {
-            return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
+    public boolean partnerCanAccessFinanceChecksSection(ProjectCompositeId projectCompositeId, UserResource user) {
+            return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessFinanceChecksSection);
     }
 
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "A partner can access the Spend Profile " +
             "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
             "and the Organisation's Bank Details have been approved or queried")
-    public boolean partnerCanAccessSpendProfileSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
-    }
-
-    @PermissionRule(value = "ACCESS_COMPANIES_HOUSE_SECTION", description = "A partner can access the Companies House " +
-            "section if their Organisation is a business type (i.e. if Companies House details are required)")
-    public boolean partnerCanAccessCompaniesHouseSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessCompaniesHouseSection);
+    public boolean partnerCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
     }
 
     @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "A partner can access the Other Documents " +
             "section if their Organisation is a business type (i.e. if Companies House details are required)")
-    public boolean partnerCanAccessOtherDocumentsSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessOtherDocumentsSection);
+    public boolean partnerCanAccessOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessOtherDocumentsSection);
     }
 
     @PermissionRule(value = "SUBMIT_OTHER_DOCUMENTS_SECTION", description = "A project manager can submit uploaded Other Documents " +
             "if they have not already been submitted, they are allowed to submit and haven't been rejected")
-    public boolean projectManagerCanSubmitOtherDocumentsSection(Long projectId, UserResource user) {
-        return doSubmitOtherDocumentsCheck(projectId, user);
+    public boolean projectManagerCanSubmitOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSubmitOtherDocumentsCheck(projectCompositeId.id(), user);
     }
 
     @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SECTION", description = "A lead partner can access the Grant Offer Letter " +
             "section when all other sections are complete and a Grant Offer Letter has been generated by the internal team")
-    public boolean partnerCanAccessGrantOfferLetterSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection);
+    public boolean partnerCanAccessGrantOfferLetterSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection);
     }
 
     @PermissionRule(value = "ACCESS_SIGNED_GRANT_OFFER_LETTER", description = "A lead partner can view and download signed grant offer letter document")
-    public boolean leadPartnerAccess(Long projectId, UserResource user) {
-        return projectService.isUserLeadPartner(projectId, user.getId());
+    public boolean leadPartnerAccess(ProjectCompositeId projectCompositeId, UserResource user) {
+        return projectService.isUserLeadPartner(projectCompositeId.id(), user.getId());
     }
 
     @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "All lead partners can mark partners spend profiles as incomplete")
-    public boolean userCanMarkSpendProfileIncomplete(Long projectId, UserResource user) {
-        List<ProjectUserResource> projectLeadPartners = projectService.getLeadPartners(projectId);
+    public boolean userCanMarkSpendProfileIncomplete(ProjectCompositeId projectCompositeId, UserResource user) {
+        List<ProjectUserResource> projectLeadPartners = projectService.getLeadPartners(projectCompositeId.id());
         Optional<ProjectUserResource> returnedProjectUser = simpleFindFirst(projectLeadPartners, projectUserResource -> projectUserResource.getUser().equals(user.getId()));
 
         return returnedProjectUser.isPresent();
@@ -152,10 +147,10 @@ public class SetupSectionsPermissionRules {
     }
 
     @PermissionRule(value = "IS_NOT_FROM_OWN_ORGANISATION", description = "A lead partner cannot mark their own spend profiles as incomplete")
-    public boolean userCannotMarkOwnSpendProfileIncomplete(Long organisationId, UserResource user) {
+    public boolean userCannotMarkOwnSpendProfileIncomplete(OrganisationCompositeId organisationCompositeId, UserResource user) {
         OrganisationResource organisation = organisationService.getOrganisationForUser(user.getId());
 
-        return !organisation.getId().equals(organisationId);
+        return !organisation.getId().equals(organisationCompositeId.id());
     }
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> sectionCheckFn) {

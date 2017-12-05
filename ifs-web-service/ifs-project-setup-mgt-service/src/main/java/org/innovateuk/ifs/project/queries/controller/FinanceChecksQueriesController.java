@@ -30,6 +30,7 @@ import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -79,9 +80,9 @@ public class FinanceChecksQueriesController {
     @Autowired
     private FinanceCheckService financeCheckService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping
-    public String showPage(@PathVariable Long projectId,
+    public String showPage(@P("projectId")@PathVariable Long projectId,
                            @PathVariable Long organisationId,
                            @RequestParam(value = "query_section", required = false) String querySection,
                            Model model) {
@@ -91,20 +92,20 @@ public class FinanceChecksQueriesController {
         return QUERIES_VIEW;
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping("/attachment/{attachmentId}")
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
+    ResponseEntity<ByteArrayResource> downloadAttachment(@P("projectId")@PathVariable Long projectId,
                                                          @PathVariable Long organisationId,
                                                          @PathVariable Long attachmentId) {
         projectService.getPartnerOrganisation(projectId, organisationId);
         return getFileResponseEntity(financeCheckService.downloadFile(attachmentId), financeCheckService.getAttachmentInfo(attachmentId));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping("/{queryId}/new-response")
-    public String viewNewResponse(@PathVariable Long projectId,
+    public String viewNewResponse(@P("projectId")@PathVariable Long projectId,
                                   @PathVariable Long organisationId,
                                   @PathVariable Long queryId,
                                   @RequestParam(value = "query_section", required = false) String querySection,
@@ -130,10 +131,10 @@ public class FinanceChecksQueriesController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @PostMapping("/{queryId}/new-response")
     public String saveResponse(Model model,
-                               @PathVariable("projectId") final Long projectId,
+                               @P("projectId")@PathVariable("projectId") final Long projectId,
                                @PathVariable final Long organisationId,
                                @PathVariable final Long queryId,
                                @RequestParam(value = "query_section", required = false) String querySection,
@@ -187,10 +188,10 @@ public class FinanceChecksQueriesController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @PostMapping(value = "/{queryId}/new-response", params = "uploadAttachment")
     public String saveNewResponseAttachment(Model model,
-                                            @PathVariable("projectId") final Long projectId,
+                                            @P("projectId")@PathVariable("projectId") final Long projectId,
                                             @PathVariable Long organisationId,
                                             @PathVariable Long queryId,
                                             @RequestParam(value = "query_section", required = false) String querySection,
@@ -223,11 +224,11 @@ public class FinanceChecksQueriesController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping("/{queryId}/new-response/attachment/{attachmentId}")
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadResponseAttachment(@PathVariable Long projectId,
+    ResponseEntity<ByteArrayResource> downloadResponseAttachment(@P("projectId")@PathVariable Long projectId,
                                                                  @PathVariable Long organisationId,
                                                                  @PathVariable Long queryId,
                                                                  @PathVariable Long attachmentId,
@@ -242,9 +243,9 @@ public class FinanceChecksQueriesController {
         }
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @PostMapping(value = "/{queryId}/new-response", params = "removeAttachment")
-    public String removeAttachment(@PathVariable Long projectId,
+    public String removeAttachment(@P("projectId")@PathVariable Long projectId,
                                    @PathVariable Long organisationId,
                                    @PathVariable Long queryId,
                                    @RequestParam(value = "query_section", required = false) final String querySection,
@@ -263,9 +264,9 @@ public class FinanceChecksQueriesController {
         return redirectTo(rootView(projectId, organisationId, queryId, querySection));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping("/{queryId}/new-response/cancel")
-    public String cancelNewForm(@PathVariable Long projectId,
+    public String cancelNewForm(@P("projectId")@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
                                 @PathVariable Long queryId,
                                 @RequestParam(value = "query_section", required = false) String querySection,

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.publiccontent.controller.section;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.publiccontent.controller.AbstractPublicContentSectionController;
 import org.innovateuk.ifs.publiccontent.form.section.SearchInformationForm;
 import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/competition/setup/public-content/search")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = PublicContentSearchSectionController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class PublicContentSearchSectionController extends AbstractPublicContentSectionController<SearchInformationViewModel, SearchInformationForm> {
 

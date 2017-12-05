@@ -48,6 +48,7 @@ import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.util.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -121,9 +122,9 @@ public class FinanceChecksEligibilityController {
     @Autowired
     private ApplicantRestService applicantRestService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
-    public String viewEligibility(@PathVariable("projectId") Long projectId,
+    public String viewEligibility(@P("projectId")@PathVariable("projectId") Long projectId,
                                   @PathVariable("organisationId") Long organisationId,
                                   @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationForm form,
                                   BindingResult bindingResult,
@@ -183,12 +184,12 @@ public class FinanceChecksEligibilityController {
         return new FinanceChecksEligibilityForm(eligibility.getEligibilityRagStatus(), confirmEligibilityChecked);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping(value = "/" + ADD_COST + "/{"+QUESTION_ID+"}")
     public String addCostRow(@ModelAttribute(name = FORM_ATTR_NAME, binding = false) ApplicationForm form,
                              BindingResult bindingResult,
                              Model model,
-                             @PathVariable("projectId") Long projectId,
+                             @P("projectId")@PathVariable("projectId") Long projectId,
                              @PathVariable("organisationId") Long organisationId,
                              @PathVariable(QUESTION_ID) final Long questionId,
                              UserResource user) {
@@ -202,10 +203,10 @@ public class FinanceChecksEligibilityController {
         return String.format("finance/finance :: %s_row(viewmode='edit')", costType.getType());
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping(value = "/remove_cost/{costId}")
     public @ResponseBody
-    String removeCostRow(@PathVariable("projectId") Long projectId,
+    String removeCostRow(@P("projectId")@PathVariable("projectId") Long projectId,
                          @PathVariable("organisationId") Long organisationId,
                          @PathVariable("costId") final Long costId) throws JsonProcessingException {
         projectFinanceRowRestService.delete(projectId, organisationId, costId).getSuccessObjectOrThrowException();
@@ -214,9 +215,9 @@ public class FinanceChecksEligibilityController {
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "save-eligibility")
-    public String projectFinanceFormSubmit(@PathVariable("projectId") final Long projectId,
+    public String projectFinanceFormSubmit(@P("projectId")@PathVariable("projectId") final Long projectId,
                                            @PathVariable("organisationId") Long organisationId,
                                            @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
                                            BindingResult bindingResult,
@@ -277,9 +278,9 @@ public class FinanceChecksEligibilityController {
         return financeHandler.getProjectFinanceFormHandler(orgType).addCostWithoutPersisting(projectId, organisationId, questionId);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "confirm-eligibility")
-    public String confirmEligibility(@PathVariable("projectId") Long projectId,
+    public String confirmEligibility(@P("projectId")@PathVariable("projectId") Long projectId,
                                      @PathVariable("organisationId") Long organisationId,
                                      @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
                                      @SuppressWarnings("unused") BindingResult bindingResult,
@@ -303,9 +304,9 @@ public class FinanceChecksEligibilityController {
                 validationHandler, successView, bindingResult, model);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @PostMapping(params = "save-and-continue")
-    public String saveAndContinue(@PathVariable("projectId") Long projectId,
+    public String saveAndContinue(@P("projectId")@PathVariable("projectId") Long projectId,
                                   @PathVariable("organisationId") Long organisationId,
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
                                   @ModelAttribute("eligibilityForm") FinanceChecksEligibilityForm eligibilityForm,
@@ -327,9 +328,9 @@ public class FinanceChecksEligibilityController {
         return doSaveEligibility(competition, applicationResource, projectResource, allSections, user, isLeadPartnerOrganisation, organisationResource, Eligibility.REVIEW, eligibilityForm, form, validationHandler, successView, bindingResult, model);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping("/changes")
-    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, Model model, UserResource loggedInUser){
+    public String viewExternalEligibilityChanges(@P("projectId")@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, Model model, UserResource loggedInUser){
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
         return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
