@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.status.populator.SetupStatusViewModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Controller
 @RequestMapping("/project")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = SetupStatusController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class SetupStatusController {
 

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.service.CompetitionSetupFinanceRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CompetitionSetupFinanceServiceImpl implements CompetitionSetupFinanceService {
+
+    private static final String COMPETITION_TYPE_EOI = "Expression of interest";
 
     @Autowired
     private CompetitionSetupFinanceRestService competitionSetupFinanceRestService;
@@ -26,5 +29,8 @@ public class CompetitionSetupFinanceServiceImpl implements CompetitionSetupFinan
         return competitionSetupFinanceRestService.getByCompetitionId(competitionId).getSuccessObjectOrThrowException();
     }
 
-
+    @Override
+    public boolean isNoFinanceCompetition(CompetitionResource competitionResource) {
+        return competitionResource.getCompetitionTypeName().equals(COMPETITION_TYPE_EOI);
+    }
 }
