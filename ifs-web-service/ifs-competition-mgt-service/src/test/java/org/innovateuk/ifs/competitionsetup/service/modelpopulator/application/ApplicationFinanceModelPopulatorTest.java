@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.competitionsetup.viewmodel.application.ApplicationFinanceViewModel;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
@@ -16,12 +17,16 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationFinanceModelPopulatorTest {
 
 	@InjectMocks
 	private ApplicationFinanceModelPopulator populator;
+
+	@Mock
+	private CompetitionSetupFinanceService competitionSetupFinanceService;
 
 	@Mock
 	private CompetitionService competitionService;
@@ -37,7 +42,7 @@ public class ApplicationFinanceModelPopulatorTest {
 	
 	@Test
 	public void testPopulateModel() {
-		long competitionId = 8L;
+	    long competitionId = 8L;
 		CompetitionResource cr = newCompetitionResource()
 				.withCompetitionCode("code")
 				.withName("name")
@@ -46,9 +51,12 @@ public class ApplicationFinanceModelPopulatorTest {
 				.withCompetitionTypeName("programme")
 				.build();
 
+		when(competitionSetupFinanceService.isNoFinanceCompetition(cr)).thenReturn(true);
+
 		ApplicationFinanceViewModel viewModel = (ApplicationFinanceViewModel) populator.populateModel(cr, Optional.empty());
 
 		assertEquals(ApplicationFinanceViewModel.class, viewModel.getClass());
 		assertEquals(false, viewModel.isSectorCompetition());
+		assertEquals(true, viewModel.isNoneFinanceCompetition());
 	}
 }

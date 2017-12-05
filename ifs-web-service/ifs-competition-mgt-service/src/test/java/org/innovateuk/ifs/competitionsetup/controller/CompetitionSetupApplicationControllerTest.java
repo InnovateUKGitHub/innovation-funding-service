@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.service.populator.CompetitionSetupPopulator;
 import org.innovateuk.ifs.competitionsetup.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
+import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -129,15 +130,36 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES)))
                 .thenReturn(ServiceResult.serviceSuccess());
 
-        final boolean fullApplicationFinance = true;
+        final ApplicationFinanceType applicationFinanceType = ApplicationFinanceType.FULL;
         final boolean includeGrowthTable = false;
         final String fundingRules = "Funding rules for this competition";
 
         mockMvc.perform(post(URL_PREFIX + "/question/finance/edit")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("fullApplicationFinance", String.valueOf(fullApplicationFinance))
+                .param("fullApplicationFinance", String.valueOf(applicationFinanceType))
                 .param("includeGrowthTable", String.valueOf(includeGrowthTable))
                 .param("fundingRules", String.valueOf(fundingRules)))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
+
+        verify(competitionSetupService).saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES));
+    }
+
+    @Test
+    public void testPostEditCompetitionFinanceNoFinance() throws Exception {
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .build();
+
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
+        when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES)))
+                .thenReturn(ServiceResult.serviceSuccess());
+
+        final ApplicationFinanceType applicationFinanceType = ApplicationFinanceType.NONE;
+
+        mockMvc.perform(post(URL_PREFIX + "/question/finance/none/edit")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("fullApplicationFinance", String.valueOf(applicationFinanceType)))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
 

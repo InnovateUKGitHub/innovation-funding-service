@@ -59,6 +59,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-192 Select additional Innovation Lead stakeholders in Competition Setup
 ...
 ...               IFS-1104 Add Stakeholder link to Competition Setup
+...
+...               IFS-2192 As a Portfolio manager I am able to create an EOI competition
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -463,13 +465,12 @@ Application: marking questions as complete
     And the user marks question as complete   Additionality
     And the user marks question as complete   Costs and value for money
 
-
 Adding a new Assessed Application Question
     [Documentation]  IFS-182
     [Tags]
     Given the user clicks the button/link  css=p button[type="submit"]  #Add question link
     When the user clicks the button/link   css=button[type="submit"]
-    Then the user should the server side validation working
+    Then the user should see the server side validation working
     When the user is able to configure the new question
     Then the user should be able to see the read only view of question correctly
 
@@ -483,20 +484,23 @@ Removing an Assessed Application Question
     Then the user should not see the element  jQuery=li:contains("Additionality") button:contains("Remove")
 
 Application: Finances
-    [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773
+    [Documentation]    INFUND-5640, INFUND-6039, INFUND-6773  IFS-2192
     [Tags]  HappyPath
     Given the user clicks the button/link    link=Finances
     When the user should see the element     jQuery=h1:contains("Application finances")
     And the user should see the element      jQuery=.panel:contains("The competition template will select the following finance sections for each partner.")
-    Then the user should see the element     css=input:checked ~ label[for="full-application-finance-yes"]
-    And the user should see the element      css=label[for="full-application-finance-no"]
-    # Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
-    When the user selects the radio button   includeGrowthTable  include-growth-table-no
+    Then the user should see the element     css=input:checked ~ label[for="application-finance-full"]
+    And the user should see the element      css=label[for="application-finance-light"]
+#   Please note that the above radio button is not clickable at the moment. Not part of the MVP. Is included for future functionality purpose.
+    And the user should see the element      css=label[for="application-finance-none"]
+#   The Project Growth table option is defaulted to yes for Sector type comp and "No" option is disabled.
+    And the user should not see the element  css=input[id="include-growth-table-no"]
+    When the user selects the radio button    includeGrowthTable  true
     And the user enters text to a text field  css=.editor  Funding rules for this competition are now entered.
-    And The user clicks the button/link      css=button[type="submit"]  #Save and close
+    Then The user clicks the button/link      css=button[type="submit"]  #Save and close
     When the user clicks the button/link     link=Finances
-    Then the user should see the element     jQuery=dt:contains("Include project growth table") ~ dd:contains("No")
-    And the user should see the element      jQuery=dt:contains("Funding rules for this competition") ~ dd:contains("Funding rules for this competition are now entered.")
+    Then the user should see the element     jQuery=dt:contains("Include project growth table")+dd:contains("Yes")
+    And the user should see the element      jQuery=dt:contains("Funding rules for this competition")+dd:contains("Funding rules for this competition are now entered.")
     [Teardown]  the user clicks the button/link  link=Return to application questions
 
 Application: Done enabled when all questions are marked as complete
@@ -809,10 +813,11 @@ the user enters multiple innovation areas
 The user should not see the selected option again
     List Should not Contain Value    css=[id="innovationAreaCategoryIds[1]"]    Biosciences
 
-the user should the server side validation working
-    #TODO Amend the following to cover error-summary. Cover radio buttons as well - IFS-?
+the user should see the server side validation working
+    #TODO Amend the following to cover error-summary. Cover radio buttons as well - IFS-2304
     the user should see a field error  This field cannot be left blank.
     the user should see a field error  Please enter a justification.
+
 the user marks question as complete
     [Arguments]  ${question_link}
     the user should not see the element  jQuery=li:contains("${question_link}") .task-status-complete
