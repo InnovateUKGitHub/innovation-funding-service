@@ -5,7 +5,7 @@
     <th:block th:fragment="finance">
         <th:block th:fragment="finance(model)" th:with="formInput=${model.formInput}, question=${model.question}">
             <th:block th:unless="${model.readonly}">
-                <div th:class="form-group" th:classappend="${model.maximumGrantClaimPercentage != null and model.maximumGrantClaimPercentage &lt; model.organisationGrantClaimPercentage} ? 'form-group-error'">
+                <div th:class="form-group" th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'form-group-error'">
                     <label class="form-label form-label-bold" th:for="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|">
                         <div th:text="'Enter your funding level (maximum ' + ${model.maximumGrantClaimPercentage} + '%).'"></div>
                         <span class="form-hint" th:text="'The maximum funding level is ' + ${model.maximumGrantClaimPercentage} + '%. This is based on your organisation size and the project research category.' " />
@@ -19,7 +19,7 @@
                            class="form-control width-small"
                            th:max="${model.maximumGrantClaimPercentage}"
                            th:readonly="${model.readonly}"
-                           th:classappend="${model.maximumGrantClaimPercentage != null and model.maximumGrantClaimPercentage &lt; model.organisationGrantClaimPercentage} ? 'form-control-error'"
+                           th:classappend="${model.maximumGrantClaimPercentageIsSmallerThanOrganisationGrantClaimPercentage()} ? 'form-control-error'"
                            th:id="|formInput[cost-${model.organisationGrantClaimPercentageId}-grantClaimPercentage]|"
                            th:name="${'finance-grantclaimpercentage-' + question.id + '-' + model.organisationGrantClaimPercentageId}"
                            th:value="${model.organisationGrantClaimPercentage}"
