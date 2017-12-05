@@ -12,7 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,14 +29,14 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.mockito.Mockito.*;
 
-public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTest<CompetitionInviteService> {
+public class CompetitionAssessmentInviteServiceSecurityTest extends BaseServiceSecurityTest<CompetitionInviteService> {
 
     private CompetitionParticipantPermissionRules competitionParticipantPermissionRules;
     private CompetitionParticipantLookupStrategy competitionParticipantLookupStrategy;
 
     @Override
     protected Class<? extends CompetitionInviteService> getClassUnderTest() {
-        return TestCompetitionInviteService.class;
+        return TestCompetitionAssessmentInviteService.class;
     }
 
     @Before
@@ -221,7 +220,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteAllInvites(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
-    public static class TestCompetitionInviteService implements CompetitionInviteService {
+    public static class TestCompetitionAssessmentInviteService implements CompetitionInviteService {
 
         @Override
         public ServiceResult<AssessorInvitesToSendResource> getAllInvitesToSend(long competitionId) {

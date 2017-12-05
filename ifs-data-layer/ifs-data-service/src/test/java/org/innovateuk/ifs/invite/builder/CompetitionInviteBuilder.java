@@ -3,7 +3,7 @@ package org.innovateuk.ifs.invite.builder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.time.ZonedDateTime;
@@ -14,11 +14,11 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Collections.emptyList;
 
 /**
- * Builder for {@link CompetitionInvite}s.
+ * Builder for {@link CompetitionAssessmentInvite}s.
  */
-public class CompetitionInviteBuilder extends BaseInviteBuilder<Competition, CompetitionInvite, CompetitionInviteBuilder> {
+public class CompetitionInviteBuilder extends BaseInviteBuilder<Competition, CompetitionAssessmentInvite, CompetitionInviteBuilder> {
 
-    private CompetitionInviteBuilder(List<BiConsumer<Integer, CompetitionInvite>> multiActions) {
+    private CompetitionInviteBuilder(List<BiConsumer<Integer, CompetitionAssessmentInvite>> multiActions) {
         super(multiActions);
     }
 
@@ -31,7 +31,7 @@ public class CompetitionInviteBuilder extends BaseInviteBuilder<Competition, Com
     }
 
     @Override
-    protected CompetitionInviteBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionInvite>> actions) {
+    protected CompetitionInviteBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionAssessmentInvite>> actions) {
         return new CompetitionInviteBuilder(actions);
     }
 
@@ -59,7 +59,7 @@ public class CompetitionInviteBuilder extends BaseInviteBuilder<Competition, Com
         return  withArraySetFieldByReflection("sentOn", dates);
     }
     @Override
-    protected CompetitionInvite createInitial() {
-        return new CompetitionInvite();
+    protected CompetitionAssessmentInvite createInitial() {
+        return new CompetitionAssessmentInvite();
     }
 }

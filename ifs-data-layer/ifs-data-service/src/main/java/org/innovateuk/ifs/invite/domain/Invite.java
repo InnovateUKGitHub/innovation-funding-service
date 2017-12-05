@@ -60,7 +60,7 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
         return UUID.randomUUID().toString();
     }
 
-    Invite() {
+    protected Invite() {
     	// no-arg constructor
         this.status= InviteStatus.CREATED;
     }
