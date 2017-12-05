@@ -11,8 +11,8 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -174,7 +174,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
                 .withPassword("Password123")
                 .build();
 
-        ServiceResult<CompetitionInviteResource> inviteResult = serviceFailure(notFoundError(CompetitionInvite.class, hash));
+        ServiceResult<CompetitionInviteResource> inviteResult = serviceFailure(notFoundError(CompetitionAssessmentInvite.class, hash));
 
         when(competitionInviteServiceMock.getInvite(hash)).thenReturn(inviteResult);
 
@@ -186,7 +186,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         verifyNoMoreInteractions(competitionInviteServiceMock);
 
         assertTrue(serviceResult.isFailure());
-        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionInvite.class, "inviteHashNotExists")));
+        assertTrue(serviceResult.getFailure().is(notFoundError(CompetitionAssessmentInvite.class, "inviteHashNotExists")));
     }
 
     @Test

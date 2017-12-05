@@ -1,9 +1,12 @@
-package org.innovateuk.ifs.invite.domain;
+package org.innovateuk.ifs.invite.domain.competition;
 
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.invite.domain.Invite;
+import org.innovateuk.ifs.invite.domain.Participant;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
@@ -45,7 +48,6 @@ public abstract class CompetitionParticipant<I extends Invite<Competition,I>> ex
     private CompetitionParticipantRole role;
 
     protected CompetitionParticipant() {
-        // no-arg constructor
         this.competition = null;
     }
 

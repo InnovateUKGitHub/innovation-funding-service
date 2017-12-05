@@ -2,15 +2,13 @@ package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
-import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
 /**
- * Provides the permissions around CRUD operations for {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite} resources.
+ * Provides the permissions around CRUD operations for {@link AssessmentPanelInvite} resources.
  */
 @Component
 @PermissionRules

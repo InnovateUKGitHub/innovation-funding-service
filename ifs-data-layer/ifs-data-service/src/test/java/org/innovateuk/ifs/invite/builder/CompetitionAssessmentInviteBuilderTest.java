@@ -3,7 +3,7 @@ package org.innovateuk.ifs.invite.builder;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
 
-public class CompetitionInviteBuilderTest {
+public class CompetitionAssessmentInviteBuilderTest {
 
     @Test
     public void buildOne() {
@@ -33,7 +33,7 @@ public class CompetitionInviteBuilderTest {
         User expectedSentBy = newUser().withId(6L).build();
         ZonedDateTime expectedSentOn = ZonedDateTime.now();
 
-        CompetitionInvite invite = newCompetitionInvite()
+        CompetitionAssessmentInvite invite = newCompetitionInvite()
                 .withId(expectedId)
                 .withStatus(expectedStatus)
                 .withEmail(expectedEmail)
@@ -72,7 +72,7 @@ public class CompetitionInviteBuilderTest {
         User[] expectedSentBy = newUser().withId(6L, 12L).buildArray(2, User.class);
         ZonedDateTime[] expectedSentOn = { ZonedDateTime.now(), ZonedDateTime.now().plusMinutes(1) };
 
-        List<CompetitionInvite> invites = newCompetitionInvite()
+        List<CompetitionAssessmentInvite> invites = newCompetitionInvite()
                 .withId(expectedIds)
                 .withStatus(expectedStatuses)
                 .withEmail(expectedEmails)
@@ -85,7 +85,7 @@ public class CompetitionInviteBuilderTest {
                 .withSentOn(expectedSentOn)
                 .build(2);
 
-        CompetitionInvite first = invites.get(0);
+        CompetitionAssessmentInvite first = invites.get(0);
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedStatuses[0], first.getStatus());
         assertEquals(expectedEmails[0], first.getEmail());
@@ -97,7 +97,7 @@ public class CompetitionInviteBuilderTest {
         assertEquals(expectedSentBy[0], first.getSentBy());
         assertEquals(expectedSentOn[0], first.getSentOn());
 
-        CompetitionInvite second = invites.get(1);
+        CompetitionAssessmentInvite second = invites.get(1);
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedStatuses[1], second.getStatus());
         assertEquals(expectedEmails[1], second.getEmail());
