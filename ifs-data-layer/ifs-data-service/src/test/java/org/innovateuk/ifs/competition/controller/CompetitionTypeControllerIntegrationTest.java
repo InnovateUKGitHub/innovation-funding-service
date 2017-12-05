@@ -53,6 +53,7 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
         // Check if all the type are here.
         assertEquals(9L, (long) competitionTypes.size());
 
+
         // Test ordering.
         assertEquals("Programme", competitionTypes.get(0).getName());
         assertEquals("Additive Manufacturing", competitionTypes.get(1).getName());
