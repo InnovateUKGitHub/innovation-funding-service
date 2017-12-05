@@ -13,11 +13,20 @@ import java.util.Map;
  */
 public class ProjectSetupDashboardViewModel extends DashboardViewModel {
 
+
+    private Long countBankDetails;
+
     public ProjectSetupDashboardViewModel(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions,
                                           CompetitionCountResource counts,
+                                          Long countBankDetails,
                                           DashboardTabsViewModel tabs) {
         this.competitions = competitions;
         this.counts = counts;
         this.tabs = tabs;
+        this.countBankDetails = countBankDetails;
+    }
+
+    public Long getCountBankDetails() {
+        return countBankDetails;
     }
 }

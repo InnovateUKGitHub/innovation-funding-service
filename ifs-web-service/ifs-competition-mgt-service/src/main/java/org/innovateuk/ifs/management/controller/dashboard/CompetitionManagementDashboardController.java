@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.viewmodel.dashboard.*;
+import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +34,9 @@ public class CompetitionManagementDashboardController {
     @Autowired
     private CompetitionSetupRestService competitionSetupRestService;
 
+    @Autowired
+    private BankDetailsRestService bankDetailsRestService;
+
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/dashboard")
@@ -54,8 +58,10 @@ public class CompetitionManagementDashboardController {
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model, UserResource user) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
+        Long countBankDetails = bankDetailsRestService.countBankDetailsApprovals().getSuccessObjectOrThrowException();
+
         model.addAttribute(MODEL_ATTR,
-                new ProjectSetupDashboardViewModel(projectSetupCompetitions, competitionDashboardSearchService.getCompetitionCounts(), new DashboardTabsViewModel(user)));
+                new ProjectSetupDashboardViewModel(projectSetupCompetitions, competitionDashboardSearchService.getCompetitionCounts(), countBankDetails, new DashboardTabsViewModel(user)));
 
         return TEMPLATE_PATH + "projectSetup";
     }
