@@ -371,9 +371,10 @@ the user is able to configure the new question
     the user should see the element       jQuery=li:contains("${questionTitle}") .task-status-complete
 
 the user should be able to see the read only view of question correctly
-    the user clicks the button/link  jQuery=a:contains("Tell us how your project is innovative.")
-    the user should see the element  jQuery=dt:contains("Question heading") + dd:contains("Tell us how your project is innovative")
-    the user should see the element  jQuery=dt:contains("Question title") + dd:contains("Please provide us with more inforrmation on how your project is different from pre-existing projects.")
+    [Arguments]  ${questionTitle}
+    the user clicks the button/link  jQuery=a:contains("${questionTitle}")
+    the user should see the element  jQuery=dt:contains("Question heading") + dd:contains("${questionTitle}")
+    the user should see the element  jQuery=dt:contains("Question title") + dd:contains("Tell us how your project is innovative.")
     the user should see the element  jQuery=dt:contains("Question subtitle") + dd:contains("Adding value on existing projects is important to InnovateUK.")
     the user should see the element  jQuery=dt:contains("Guidance title") + dd:contains("Innovation is crucial to the continuing success of any organization.")
     the user should see the element  jQuery=dt:contains("Guidance") + dd:contains("Please use Microsoft Word where possible.")
