@@ -51,7 +51,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CompetitionInviteControllerDocumentation extends BaseControllerMockMVCTest<CompetitionInviteController> {
+public class CompetitionAssessmentInviteControllerDocumentation extends BaseControllerMockMVCTest<CompetitionInviteController> {
 
     @Override
     protected CompetitionInviteController supplyControllerUnderTest() {
