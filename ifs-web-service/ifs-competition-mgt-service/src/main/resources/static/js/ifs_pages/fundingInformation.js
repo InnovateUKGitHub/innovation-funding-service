@@ -11,6 +11,9 @@ IFS.competitionManagement.fundingInformation = (function () {
       var button = jQuery(el)
       var competitionId = button.val()
       var field = button.closest('.form-group').find('input')
+      var requiredAttribute = 'required'
+      var displayValidationMessages = IFS.core.formValidation.getMessageDisplaySetting(field, requiredAttribute)
+      var errorMessage = IFS.core.formValidation.getErrorMessage(field, requiredAttribute)
       var url = window.location.protocol + '//' + window.location.host + '/management/competition/setup/' + competitionId + '/generateCompetitionCode'
       // todo ajax failure
       jQuery.ajaxProtected({
@@ -19,7 +22,7 @@ IFS.competitionManagement.fundingInformation = (function () {
       }).done(function (data) {
         if (typeof (data) !== 'undefined') {
           if (data.success === 'true') {
-            IFS.core.formValidation.setValid(field, IFS.core.formValidation.getErrorMessage(field, 'required'))
+            IFS.core.formValidation.setValid(field, errorMessage, displayValidationMessages)
             field.val(data.message)
             jQuery('body').trigger('updateSerializedFormState')
           } else {
