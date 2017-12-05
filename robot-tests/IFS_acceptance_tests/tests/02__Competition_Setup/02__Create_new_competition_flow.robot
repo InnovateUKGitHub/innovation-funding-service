@@ -819,7 +819,6 @@ the user should see the server side validation working
     #TODO Amend the following to cover error-summary. Cover radio buttons as well - IFS-2304
     the user should see a field error  This field cannot be left blank.
     the user should see a field error  Please enter a justification.
-    capture large screenshot
 
 the user marks question as complete
     [Arguments]  ${question_link}
