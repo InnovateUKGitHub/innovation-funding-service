@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.invite.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.mapper.RejectionReasonMapper;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
- * Transactional and secured service providing operations around {@link org.innovateuk.ifs.invite.domain.RejectionReason} data.
+ * Transactional and secured service providing operations around {@link RejectionReason} data.
  */
 @Service
 @Transactional(readOnly = true)

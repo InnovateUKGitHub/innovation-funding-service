@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.invite.mapper;
 
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.mapstruct.Mapper;
 
 /**
- * Maps between domain and resource DTO for {@link org.innovateuk.ifs.invite.domain.CompetitionParticipantRole}.
+ * Maps between domain and resource DTO for {@link CompetitionParticipantRole}.
  */
 @Mapper(
         componentModel = "spring"

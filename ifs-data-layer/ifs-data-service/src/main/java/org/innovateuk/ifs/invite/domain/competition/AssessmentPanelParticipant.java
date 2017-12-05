@@ -1,9 +1,10 @@
-package org.innovateuk.ifs.invite.domain;
+package org.innovateuk.ifs.invite.domain.competition;
 
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
@@ -30,7 +31,6 @@ public class AssessmentPanelParticipant extends CompetitionParticipant<Assessmen
     }
 
     public AssessmentPanelParticipant() {
-        // no-arg constructor
         super.setProcess(null);
     }
 
@@ -89,13 +89,13 @@ public class AssessmentPanelParticipant extends CompetitionParticipant<Assessmen
 
     public AssessmentPanelParticipant reject() {
         if (getInvite().getStatus() != OPENED) {
-            throw new IllegalStateException("Cannot accept a CompetitionInvite that hasn't been opened");
+            throw new IllegalStateException("Cannot accept a CompetitionAssessmentInvite that hasn't been opened");
         }
         if (getStatus() == ACCEPTED) {
-            throw new IllegalStateException("Cannot reject a CompetitionInvite that has been accepted");
+            throw new IllegalStateException("Cannot reject a CompetitionAssessmentInvite that has been accepted");
         }
         if (getStatus() == REJECTED) {
-            throw new IllegalStateException("CompetitionInvite has already been rejected");
+            throw new IllegalStateException("CompetitionAssessmentInvite has already been rejected");
         }
 
         super.setStatus(REJECTED);

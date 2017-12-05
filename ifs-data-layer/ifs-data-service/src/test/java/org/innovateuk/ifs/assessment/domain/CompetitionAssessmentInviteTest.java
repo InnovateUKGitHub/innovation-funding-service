@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.domain;
 
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,9 +16,9 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 
-public class CompetitionInviteTest {
+public class CompetitionAssessmentInviteTest {
 
-    private CompetitionInvite invite;
+    private CompetitionAssessmentInvite invite;
     private Competition competition;
     private InnovationArea innovationArea;
 
@@ -26,7 +26,7 @@ public class CompetitionInviteTest {
     public void setup() {
         competition = newCompetition().build();
         innovationArea = newInnovationArea().build();
-        invite = new CompetitionInvite("invite name", "email", "hash", competition, innovationArea);
+        invite = new CompetitionAssessmentInvite("invite name", "email", "hash", competition, innovationArea);
     }
 
     @Test
