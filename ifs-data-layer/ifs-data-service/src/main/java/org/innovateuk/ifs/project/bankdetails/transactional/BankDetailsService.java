@@ -31,4 +31,8 @@ public interface BankDetailsService {
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "GET_PENDING_BANK_DETAILS_APPROVALS", description = "Project finance users can get organisations for which Bank Details approval is pending")
     ServiceResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals();
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "COUNT_BANK_DETAILS_APPROVALS", description = "Project finance users can get organisations for which Bank Details approval is pending")
+    ServiceResult<Long> countBankDetailsApprovals();
 }
