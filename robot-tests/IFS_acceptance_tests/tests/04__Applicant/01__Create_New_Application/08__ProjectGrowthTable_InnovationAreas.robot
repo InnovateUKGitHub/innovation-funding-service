@@ -12,7 +12,7 @@ Documentation  INFUND-6390 As an Applicant I will be invited to add project cost
 ...            IFS-40 As a comp executive I am able to select an 'Innovation area' of 'All' where the 'Innovation sector' is 'Open'
 ...
 ...            IFS-1015 As a Lead applicant with an existing account I am informed if my Organisation type is NOT eligible to lead
-Suite Setup     Custom Suite Setup
+Suite Setup     Set predefined date variables
 Suite Teardown  Close browser and delete emails
 Force Tags      Applicant  CompAdmin  HappyPath
 Resource        ../../../resources/defaultResources.robot
@@ -345,16 +345,6 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
     Then the user should see the text in the page  ${ineligibleMessage}
 
 *** Keywords ***
-Custom Suite Setup
-    ${tomorrowday} =    get tomorrow day
-    Set suite variable  ${tomorrowday}
-    ${month} =          get tomorrow month
-    set suite variable  ${month}
-    ${monthWord} =  get month as word
-    set suite variable  ${monthWord}
-    ${nextyear} =       get next year
-    Set suite variable  ${nextyear}
-
 the user should see the dates in full format
     the user should see the element  jQuery=td:contains("Allocate assessors") ~ td:contains("3 ${monthWord} ${nextyear}")
 
@@ -380,18 +370,6 @@ The competitions date changes so it is now Open
     Change the open date of the Competition in the database to one day before  ${competition}
     the user navigates to the page   ${CA_Live}
     the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${competition}")
-
-Lead Applicant applies to the new created competition
-    [Arguments]  ${competition}
-    log in as a different user       &{lead_applicant_credentials}
-    the user navigates to the eligibility of the competition  ${competition}
-    the user clicks the button/link  jQuery=a:contains("Sign in")
-    the user clicks the button/link  jQuery=a:contains("Begin application")
-
-the user navigates to the eligibility of the competition
-    [Arguments]  ${competition}
-    ${competitionId} =               get comp id from comp title    ${competition}
-    the user navigates to the page   ${server}/application/create/check-eligibility/${competitionId}
 
 the user enters value to field
     [Arguments]  ${field}  ${value}
