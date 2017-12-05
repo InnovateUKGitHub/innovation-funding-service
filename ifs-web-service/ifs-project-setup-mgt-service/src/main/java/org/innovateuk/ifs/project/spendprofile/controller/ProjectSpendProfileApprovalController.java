@@ -18,6 +18,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,15 +59,15 @@ public class ProjectSpendProfileApprovalController {
         binder.registerCustomEditor(ApprovalType.class, new CaseInsensitiveConverter<>(ApprovalType.class));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
     @GetMapping("/approval")
-    public String viewSpendProfileApproval(@PathVariable Long projectId, Model model) {
+    public String viewSpendProfileApproval(@P("projectId")@PathVariable Long projectId, Model model) {
         return doViewSpendProfileApproval(projectId, model);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
     @PostMapping("/approval/{approvalType}")
-    public String saveSpendProfileApproval(@PathVariable Long projectId,
+    public String saveSpendProfileApproval(@P("projectId")@PathVariable Long projectId,
                                            @PathVariable ApprovalType approvalType,
                                            @ModelAttribute ProjectSpendProfileApprovalForm form,
                                            Model model,

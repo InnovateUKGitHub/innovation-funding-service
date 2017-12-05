@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -23,6 +24,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/competition/{competitionId}")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionController.class)
 @PreAuthorize("permitAll")
 public class CompetitionController {
 

@@ -15,6 +15,6 @@ public interface PublicContentItemService {
     @PreAuthorize("hasAuthority('system_registrar')")
     ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize);
 
-    @PreAuthorize("hasPermission(#competitionId, 'READ_PUBLISHED')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'READ_PUBLISHED')")
     ServiceResult<PublicContentItemResource> byCompetitionId(@P("competitionId") Long competitionId);
 }

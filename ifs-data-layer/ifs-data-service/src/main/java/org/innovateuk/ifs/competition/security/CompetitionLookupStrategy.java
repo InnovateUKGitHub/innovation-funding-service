@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -31,5 +32,10 @@ public class CompetitionLookupStrategy {
     @PermissionEntityLookupStrategy
     public CompetitionResource getCompetititionResource(Long competitionId) {
         return competitionMapper.mapToResource(competitionRepository.findOne(competitionId));
+    }
+
+    @PermissionEntityLookupStrategy
+    public CompetitionCompositeId getCompetitionCompositeId(Long competitionId) {
+        return CompetitionCompositeId.id(competitionId);
     }
 }

@@ -4,6 +4,7 @@ import org.innovateuk.ifs.assessment.assignment.form.AssessmentAssignmentForm;
 import org.innovateuk.ifs.assessment.assignment.populator.AssessmentAssignmentModelPopulator;
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping(value = "/{assessmentId}")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentAssignmentController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessmentAssignmentController {
 
