@@ -130,7 +130,7 @@ the user marks the Application as done
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
 
 the user fills in the CS Application section with custom questions
-    [Arguments]  ${growthTable}
+    [Arguments]  ${growthTable}  ${competitionType}
     the user clicks the button/link   link=Application
     Remove previous rows              jQuery=li:last-of-type button[type="submit"]:contains("Remove")
     the user clicks the button/link   jQuery=li:contains("1.") a  # Click the last question left - which now will be first
@@ -140,7 +140,7 @@ the user fills in the CS Application section with custom questions
     the user clicks the button/link   css=button[name="createQuestion"]
     the user is able to configure the new question  Your technical approach.
     the user marks the Finance section as complete if it's present  ${growthTable}
-    the user marks the Application details section as complete
+    the user marks the Application details section as complete  ${competitionType}
     the user should see the element  jQuery=h1:contains("Application process")  # to check i am on the right page
     the user clicks the button/link   jQuery=button:contains("Done")
     the user clicks the button/link   link=Competition setup
