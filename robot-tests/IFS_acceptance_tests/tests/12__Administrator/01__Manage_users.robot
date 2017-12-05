@@ -221,8 +221,7 @@ Administrator is able to disable internal users
     Then the user clicks the button/link  jQuery=button:contains("Cancel")
     When the user clicks the button/link  jQuery=button:contains("Deactivate user")
     And the user clicks the button/link   jQuery=button:contains("Yes, deactivate")
-    Then the user should see the element  jQuery=.form-footer *:contains("Reactivate user") + *:contains("Deactivated by Arden Pimenta on")
-    #TODO Pending due to IFS-1191 add ${today}
+    Then the user should see the element  jQuery=.form-footer *:contains("Reactivate user") + *:contains("Deactivated by Arden Pimenta on ${today}")
     When the user navigates to the page   ${server}/management/admin/users/inactive
     Then the user should see the element  jQuery=tr:contains("Innovation Lead")  #Checking the user swapped tab
 
