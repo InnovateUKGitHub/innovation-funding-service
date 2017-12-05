@@ -24,7 +24,7 @@
 
     <th:block th:if="${ineligibility.ineligible}">
         <h2 class="heading-small">Removed by</h2>
-        <p th:text="|${ineligibility.removedBy}, ${#temporals.format(ineligibility.removedOn, 'dd MMMM yyyy')}|">Peter Kault, 20 December 2016</p>
+        <p th:text="|${ineligibility.removedBy}, ${#temporals.format(ineligibility.removedOn, 'd MMMM yyyy')}|">Peter Kault, 20 December 2016</p>
 
         <h2 class="heading-small">Reason for removal</h2>
         <p th:text="${ineligibility.reasonForRemoval}"></p>
