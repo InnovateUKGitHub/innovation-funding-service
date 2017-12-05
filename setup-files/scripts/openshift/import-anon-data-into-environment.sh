@@ -27,6 +27,7 @@ function checkVariables() {
     if [ -z "$DB_DESTINATION_PASS" ]; then echo "Set DB_DESTINATION_PASS environment variable"; exit -1; fi
     if [ -z "$DB_DESTINATION_NAME" ]; then echo "Set DB_DESTINATION_NAME environment variable"; exit -1; fi
     if [ -z "$DB_DESTINATION_HOST" ]; then echo "Set DB_DESTINATION_HOST environment variable"; exit -1; fi
+    if [ -z "$DB_DUMP_PASS" ]; then echo "Set DB_DUMP_PASS environment variable"; exit -1; fi
     DB_DESTINATION_PORT=${DB_DESTINATION_PORT:-3306}
 }
 
