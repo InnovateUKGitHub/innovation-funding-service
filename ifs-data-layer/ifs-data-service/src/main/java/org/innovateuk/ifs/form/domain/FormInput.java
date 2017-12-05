@@ -218,10 +218,6 @@ public class FormInput {
         this.active = active;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
     public String getAllowedFileTypes() {
         return allowedFileTypes;
     }
