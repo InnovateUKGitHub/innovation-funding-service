@@ -4,6 +4,7 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
@@ -24,13 +25,13 @@ import java.util.Optional;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 /**
  * Controller for the 'Manage Applications' assessment panel page.
  */
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentPanelManageApplicationsController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class AssessmentPanelManageApplicationsController {
     private static final int PAGE_SIZE  = 20;

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,11 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/download/overheadfile")
-@PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = OverheadFileDownloaderController.class)
+// TODO The previous security rules below and have been replaced with a permit all until the correct values are
+// TODO determined. See IFS-2281
+//@PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+@PreAuthorize("permitAll")
 public  class OverheadFileDownloaderController {
     @Autowired
     private OverheadFileRestService overheadFileRestService;
