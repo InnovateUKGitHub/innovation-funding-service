@@ -26,7 +26,7 @@ Navigation using previous button
     Given the user clicks the button/link              link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link                link=Products and Services Personalised
     When the user clicks the button/link               link=4. Economic benefit
-    Then the user should see the text in the page      Economic benefit
+    Then the user should see the element               jQuery=h1:contains("Economic benefit")
     And the user clicks previous and goes to the page  Project exploitation
     And the user clicks previous and goes to the page  Potential market
     And the user clicks previous and goes to the page  Business opportunity
