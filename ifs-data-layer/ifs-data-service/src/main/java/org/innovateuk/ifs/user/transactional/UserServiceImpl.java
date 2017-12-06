@@ -3,7 +3,7 @@ package org.innovateuk.ifs.user.transactional;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -34,6 +34,7 @@ import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INVALID_INPUT_LENGTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
@@ -233,19 +234,21 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
     public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<UserRoleType> roleTypes, String searchString, SearchCategory searchCategory) {
 
         return validateSearchString(searchString).andOnSuccess(() -> {
+            String searchStringExpr = "%" + StringUtils.trim(searchString) + "%";
+            Set<String> roleTypeNames = simpleMapSet(roleTypes, UserRoleType::getName);
             List<UserOrganisation> userOrganisations;
             switch (searchCategory) {
                 case NAME:
-                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, searchString, simpleMapSet(roleTypes, UserRoleType::getName));
+                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchStringExpr, searchStringExpr, roleTypeNames);
                     break;
 
                 case ORGANISATION_NAME:
-                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, simpleMapSet(roleTypes, UserRoleType::getName));
+                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchStringExpr, roleTypeNames);
                     break;
 
                 case EMAIL:
                 default:
-                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchString, simpleMapSet(roleTypes, UserRoleType::getName));
+                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchStringExpr, roleTypeNames);
                     break;
             }
             return serviceSuccess(simpleMap(userOrganisations, userOrganisationMapper::mapToResource));
@@ -256,8 +259,8 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
         searchString = StringUtils.trim(searchString);
 
-        if (StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 5) {
-            return serviceFailure(CommonFailureKeys.GENERAL_INVALID_ARGUMENT);
+        if (StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 3) {
+            return serviceFailure(new Error(USER_SEARCH_INVALID_INPUT_LENGTH, singletonList(3)) );
         } else {
             return serviceSuccess();
         }

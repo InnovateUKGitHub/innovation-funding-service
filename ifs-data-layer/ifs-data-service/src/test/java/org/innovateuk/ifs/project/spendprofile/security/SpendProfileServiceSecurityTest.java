@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.spendprofile.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
@@ -221,9 +222,9 @@ public class SpendProfileServiceSecurityTest extends BaseServiceSecurityTest<Spe
 
     @Test
     public void testCompleteSpendProfilesReview() {
-        Long projectId = 1L;
-
-        assertAccessDenied(() -> classUnderTest.completeSpendProfilesReview(projectId),
+        ProjectCompositeId projectId = ProjectCompositeId.id(1L);
+        when(projectLookupStrategy.getProjectCompositeId(projectId.id())).thenReturn(projectId);
+        assertAccessDenied(() -> classUnderTest.completeSpendProfilesReview(projectId.id()),
                 () -> {
                     verify(spendProfilePermissionRules).projectManagerCanCompleteSpendProfile(projectId, getLoggedInUser());
                     verifyNoMoreInteractions(spendProfilePermissionRules);

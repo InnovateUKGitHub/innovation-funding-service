@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping("/competition/{competitionId}")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionController.class)
 @PreAuthorize("permitAll")
 public class CompetitionController {
 
@@ -50,6 +53,9 @@ public class CompetitionController {
 
     @GetMapping("info/terms-and-conditions")
     public String termsAndConditions(@PathVariable("competitionId") final long competitionId) {
-        return "competition/info/terms-and-conditions";
+        CompetitionResource compResource = competitionService.getById(competitionId);
+        final Long APC_COMPETITION_TYPE_ID = 7L;
+        return APC_COMPETITION_TYPE_ID.equals(compResource.getCompetitionType()) ?
+                "competition/info/apc-terms-and-conditions" : "competition/info/default-terms-and-conditions";
     }
 }

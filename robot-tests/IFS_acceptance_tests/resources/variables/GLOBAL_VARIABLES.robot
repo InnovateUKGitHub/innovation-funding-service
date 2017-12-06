@@ -27,6 +27,8 @@ ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    92,000
 ${EMPIRE_LTD_ID}    22
 ${EMPIRE_LTD_NAME}    Empire Ltd
 
+${manageExternalUsers}  ${server}/management/admin/external/users
+
 #Competitions and Applications Variables
 ${openCompetitionRTO_name}       Predicting market trends programme
 ${openCompetitionRTO}            ${competition_ids['${openCompetitionRTO_name}']}
@@ -162,7 +164,6 @@ ${too_large_pdf_validation_error}    the size of file or request being submitted
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
 ${empty_field_warning_message}    This field cannot be left blank.
 
-
 # Database variables
 ${database_name}    ifs
 ${database_user}    root
@@ -182,3 +183,11 @@ ${BUSINESS_TYPE_ID}       1
 ${ACADEMIC_TYPE_ID}       2
 ${RTO_TYPE_ID}            3
 ${PUBLIC_SECTOR_TYPE_ID}  4
+
+# Competition template type
+${compType_Programme}  Programme
+${compType_Sector}     Sector
+${compType_Generic}    Generic
+${compType_EOI}        Expression of interest
+${compType_APC}        Advanced Propulsion Centre
+${compType_ATI}        Aerospace Technology Institute

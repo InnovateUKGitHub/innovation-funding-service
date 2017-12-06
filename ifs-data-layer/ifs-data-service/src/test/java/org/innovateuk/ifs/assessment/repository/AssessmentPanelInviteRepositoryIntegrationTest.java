@@ -5,7 +5,7 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.mapper.UserMapper;

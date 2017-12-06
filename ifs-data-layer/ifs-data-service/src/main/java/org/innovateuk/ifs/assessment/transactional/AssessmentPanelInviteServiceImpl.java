@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.domain.competition.*;
 import org.innovateuk.ifs.invite.mapper.AssessmentPanelParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
@@ -36,7 +37,6 @@ import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +52,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
-import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
@@ -404,7 +404,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     }
 
     private ServiceResult<AssessmentPanelInvite> getByEmailAndCompetition(String email, long competitionId) {
-        return find(assessmentPanelInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(CompetitionInvite.class, email, competitionId));
+        return find(assessmentPanelInviteRepository.getByEmailAndCompetitionId(email, competitionId), notFoundError(CompetitionAssessmentInvite.class, email, competitionId));
     }
 
     private boolean isUserCompliant(AssessmentPanelInvite competitionInvite) {
@@ -463,7 +463,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     }
 
     private ServiceResult<AssessmentPanelInvite> getByHash(String inviteHash) {
-        return find(assessmentPanelInviteRepository.getByHash(inviteHash), notFoundError(CompetitionInvite.class, inviteHash));
+        return find(assessmentPanelInviteRepository.getByHash(inviteHash), notFoundError(CompetitionAssessmentInvite.class, inviteHash));
     }
 
     private ServiceResult<AssessmentPanelParticipant> accept(AssessmentPanelParticipant participant, User user) {
