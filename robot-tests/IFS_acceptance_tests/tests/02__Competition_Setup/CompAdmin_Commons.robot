@@ -118,7 +118,7 @@ the user fills in the CS Milestones
 the user marks the Application as done
     [Arguments]  ${growthTable}  ${comp_type}
     the user clicks the button/link  link=Application
-    the user marks application details as complete    ${comp_type}
+    the user marks the Application details section as complete    ${comp_type}
     Run Keyword If  '${comp_type}' == 'Sector'   the assessed questions are marked complete except finances(sector type)
     Run Keyword If  '${comp_type}' == 'Programme'    the assessed questions are marked complete except finances(programme type)
     Run keyword If  '${comp_type}' == '${compType_EOI}'  the assessed questions are marked complete(EOI type)
@@ -128,6 +128,28 @@ the user marks the Application as done
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element  jQuery=div:contains("Application") ~ .task-status-complete
+
+the user fills in the CS Application section with custom questions
+    [Arguments]  ${growthTable}  ${competitionType}
+    the user clicks the button/link   link=Application
+    Remove previous rows              jQuery=li:last-of-type button[type="submit"]:contains("Remove")
+    the user clicks the button/link   jQuery=li:contains("1.") a  # Click the last question left - which now will be first
+    the user is able to configure the new question  How innovative is your project?
+    the user clicks the button/link   css=button[name="createQuestion"]
+    the user is able to configure the new question  Your approach regarding innovation.
+    the user clicks the button/link   css=button[name="createQuestion"]
+    the user is able to configure the new question  Your technical approach.
+    the user marks the Finance section as complete if it's present  ${growthTable}
+    the user marks the Application details section as complete  ${competitionType}
+    the user should see the element  jQuery=h1:contains("Application process")  # to check i am on the right page
+    the user clicks the button/link   jQuery=button:contains("Done")
+    the user clicks the button/link   link=Competition setup
+    the user should see the element   jQuery=div:contains("Application") ~ .task-status-complete
+
+the user marks the Finance section as complete if it's present
+    [Arguments]  ${growthTable}
+    ${status}   ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  jQuery=.heading-small a:contains("Finances")
+    Run Keyword If  '${status}' == 'PASS'  the user fills in the Finances questions  ${growthTable}
 
 the user opts no finances for EOI comp
     the user clicks the button/link    link=Finances
@@ -165,7 +187,7 @@ the assessed questions are marked complete(EOI type)
     the user marks each question as complete  Funding and adding value
     the user should see the element           jQuery=button:contains("Add question")
 
-the user marks application details as complete
+the user marks the Application details section as complete
     [Arguments]  ${compType}
     the user marks each question as complete  Application details
     the user marks each question as complete  Project summary
@@ -184,6 +206,7 @@ the user fills in the Finances questions
     the user selects the radio button     includeGrowthTable  include-growth-table-${growthTable}
     the user enters text to a text field  css=.editor  Those are the rules that apply to Finances
     the user clicks the button/link       css=button[type="submit"]
+    the user should see the element       jQuery=li:contains("Finances") .task-status-complete
 
 the user fills in the CS Assessors
     the user clicks the button/link   link=Assessors
@@ -253,6 +276,13 @@ the user fills in the Public content and publishes
     # Publish and return
     the user clicks the button/link         jQuery=button:contains("Publish content")
 
+The competitions date changes so it is now Open
+    [Arguments]  ${competition}
+    Connect to Database  @{database}
+    Change the open date of the Competition in the database to one day before  ${competition}
+    the user navigates to the page   ${CA_Live}
+    the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${competition}")
+
 Change the open date of the Competition in the database to one day before
     [Arguments]  ${competition}
     ${yesterday} =  get yesterday
@@ -318,8 +348,9 @@ the user should see all live competitions
     the user should see the element  jQuery=h2:contains("Inform")
 
 the user is able to configure the new question
-    the user enters text to a text field  id=question.title  Please provide us with more inforrmation on how your project is different from pre-existing projects.
-    the user enters text to a text field  id=question.shortTitle  Tell us how your project is innovative.
+    [Arguments]  ${questionTitle}
+    the user enters text to a text field  id=question.title  Tell us how your project is innovative.
+    the user enters text to a text field  id=question.shortTitle  ${questionTitle}
     the user enters text to a text field  id=question.subTitle  Adding value on existing projects is important to InnovateUK.
     the user enters text to a text field  id=question.guidanceTitle  Innovation is crucial to the continuing success of any organization.
     the user enters text to a text field  css=.editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
@@ -337,11 +368,13 @@ the user is able to configure the new question
     the user enters text to a text field  guidanceRows[4].justification  This the 1-2 Justification
     the user enters text to a text field  question.assessmentMaxWords  120
     the user clicks the button/link       css=button[type="submit"]
+    the user should see the element       jQuery=li:contains("${questionTitle}") .task-status-complete
 
 the user should be able to see the read only view of question correctly
-    the user clicks the button/link  jQuery=a:contains("Tell us how your project is innovative.")
-    the user should see the element  jQuery=dt:contains("Question heading") + dd:contains("Tell us how your project is innovative")
-    the user should see the element  jQuery=dt:contains("Question title") + dd:contains("Please provide us with more inforrmation on how your project is different from pre-existing projects.")
+    [Arguments]  ${questionTitle}
+    the user clicks the button/link  jQuery=a:contains("${questionTitle}")
+    the user should see the element  jQuery=dt:contains("Question heading") + dd:contains("${questionTitle}")
+    the user should see the element  jQuery=dt:contains("Question title") + dd:contains("Tell us how your project is innovative.")
     the user should see the element  jQuery=dt:contains("Question subtitle") + dd:contains("Adding value on existing projects is important to InnovateUK.")
     the user should see the element  jQuery=dt:contains("Guidance title") + dd:contains("Innovation is crucial to the continuing success of any organization.")
     the user should see the element  jQuery=dt:contains("Guidance") + dd:contains("Please use Microsoft Word where possible.")

@@ -189,3 +189,5 @@ ${compType_Programme}  Programme
 ${compType_Sector}     Sector
 ${compType_Generic}    Generic
 ${compType_EOI}        Expression of interest
+${compType_APC}        Advanced Propulsion Centre
+${compType_ATI}        Aerospace Technology Institute
