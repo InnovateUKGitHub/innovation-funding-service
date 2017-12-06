@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -289,9 +290,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                         "executiveUserId",
                         "title",
                         "innovationLeadUserId",
-                        "openingDateDay",
-                        "openingDateMonth",
-                        "openingDateYear",
                         "openingDate",
                         "innovationSectorCategoryId",
                         "innovationAreaCategoryIds",
@@ -305,21 +303,18 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         bindingResult.getAllErrors();
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(10, bindingResult.getFieldErrorCount());
+        assertEquals(8, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("executiveUserId"));
         assertEquals("Please select a Portfolio Manager.", bindingResult.getFieldError("executiveUserId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("title"));
         assertEquals("Please enter a title.", bindingResult.getFieldError("title").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("innovationLeadUserId"));
         assertEquals("Please select an Innovation Lead.", bindingResult.getFieldError("innovationLeadUserId").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("openingDateDay"));
-        assertEquals("Please enter an opening day.", bindingResult.getFieldError("openingDateDay").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("openingDateMonth"));
-        assertEquals("Please enter an opening month.", bindingResult.getFieldError("openingDateMonth").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("openingDateYear"));
-        assertEquals("Please enter an opening year.", bindingResult.getFieldError("openingDateYear").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("openingDate"));
-        assertEquals("Please enter a future date.", bindingResult.getFieldError("openingDate").getDefaultMessage());
+        assertEquals(bindingResult.getFieldErrorCount("openingDate"), 2);
+        List<String> errorsOnOpeningDate = bindingResult.getFieldErrors("openingDate").stream()
+                .map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+        assertTrue(errorsOnOpeningDate.contains("Please enter a valid date."));
+        assertTrue(errorsOnOpeningDate.contains("Please enter a future date."));
         assertTrue(bindingResult.hasFieldErrors("innovationSectorCategoryId"));
         assertEquals("Please select an innovation sector.", bindingResult.getFieldError("innovationSectorCategoryId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("innovationAreaCategoryIds"));
@@ -343,9 +338,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                         "executiveUserId",
                         "title",
                         "innovationLeadUserId",
-                        "openingDateDay",
-                        "openingDateMonth",
-                        "openingDateYear",
+                        "openingDate",
                         "innovationSectorCategoryId",
                         "innovationAreaCategoryIds"))
                 .andExpect(view().name("competition/setup"))
@@ -357,19 +350,15 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         bindingResult.getAllErrors();
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(8, bindingResult.getFieldErrorCount());
+        assertEquals(6, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("executiveUserId"));
         assertEquals("Please select a Portfolio Manager.", bindingResult.getFieldError("executiveUserId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("title"));
         assertEquals("Please enter a title.", bindingResult.getFieldError("title").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("innovationLeadUserId"));
         assertEquals("Please select an Innovation Lead.", bindingResult.getFieldError("innovationLeadUserId").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("openingDateDay"));
-        assertEquals("Please enter an opening day.", bindingResult.getFieldError("openingDateDay").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("openingDateMonth"));
-        assertEquals("Please enter an opening month.", bindingResult.getFieldError("openingDateMonth").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("openingDateYear"));
-        assertEquals("Please enter an opening year.", bindingResult.getFieldError("openingDateYear").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("openingDate"));
+        assertEquals("Please enter a valid date.", bindingResult.getFieldError("openingDate").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("innovationSectorCategoryId"));
         assertEquals("Please select an innovation sector.", bindingResult.getFieldError("innovationSectorCategoryId").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("innovationAreaCategoryIds"));
@@ -445,9 +434,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .andExpect(status().isOk())
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY,
-                        "openingDateDay",
-                        "openingDateMonth",
-                        "openingDateYear",
                         "openingDate"
                 ))
                 .andExpect(view().name("competition/setup"))
@@ -468,15 +454,12 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         BindingResult bindingResult = initialDetailsForm.getBindingResult();
 
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(4, bindingResult.getFieldErrorCount());
-        assertTrue(bindingResult.hasFieldErrors("openingDateDay"));
-        assertEquals("Please enter a valid date.", bindingResult.getFieldError("openingDateDay").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("openingDateMonth"));
-        assertEquals("Please enter a valid date.", bindingResult.getFieldError("openingDateMonth").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("openingDateYear"));
-        assertEquals("Please enter a valid date.", bindingResult.getFieldError("openingDateYear").getDefaultMessage());
+        assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("openingDate"));
-        assertEquals("Please enter a future date.", bindingResult.getFieldError("openingDate").getDefaultMessage());
+        List<String> errorsOnOpeningDate = bindingResult.getFieldErrors("openingDate").stream()
+                .map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+        assertTrue(errorsOnOpeningDate.contains("Please enter a valid date."));
+        assertTrue(errorsOnOpeningDate.contains("Please enter a future date."));
 
         verify(competitionSetupRestService, never()).update(competition);
     }
@@ -504,9 +487,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("unrestricted", "1"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeHasFieldErrors(COMPETITION_SETUP_FORM_KEY,
-                        "openingDateDay",
-                        "openingDateMonth",
-                        "openingDateYear",
                         "openingDate"
                 ))
                 .andExpect(view().name("competition/setup"))
@@ -528,15 +508,11 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         bindingResult.getAllErrors();
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(4, bindingResult.getFieldErrorCount());
-        assertTrue(bindingResult.hasFieldErrors("openingDateDay"));
-        assertEquals("Please enter a valid date.", bindingResult.getFieldError("openingDateDay").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("openingDateMonth"));
-        assertEquals("Please enter a valid date.", bindingResult.getFieldError("openingDateMonth").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("openingDateYear"));
-        assertEquals("Please enter a valid date.", bindingResult.getFieldError("openingDateYear").getDefaultMessage());
-        assertTrue(bindingResult.hasFieldErrors("openingDate"));
-        assertEquals("Please enter a future date.", bindingResult.getFieldError("openingDate").getDefaultMessage());
+        assertEquals(2, bindingResult.getFieldErrorCount("openingDate"));
+        List<String> errorsOnOpeningDate = bindingResult.getFieldErrors("openingDate").stream()
+                .map(fieldError -> fieldError.getDefaultMessage()).collect(Collectors.toList());
+        assertTrue(errorsOnOpeningDate.contains("Please enter a valid date."));
+        assertTrue(errorsOnOpeningDate.contains("Please enter a future date."));
 
         verify(competitionSetupRestService, never()).update(competition);
     }

@@ -306,17 +306,6 @@ the user should see all finance subsections incomplete
     the user should see the element  css=li:nth-of-type(2) .action-required
     the user should see the element  jQuery=h3:contains("Your funding")
 
-Remove previous rows
-    [Arguments]  ${element}
-    :FOR    ${i}    IN RANGE  10
-    # The sleep of 200 ms is actually for speed, originally the test used "should not see the element" however that made it wait for 10 seconds on every loop.
-    \  sleep    200ms
-    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    ${element}
-    \  Log    ${status}
-    \  Exit For Loop If  '${status}'=='FAIL'
-    \  run keyword if  '${status}'=='PASS'  the user clicks the button/link  ${element}
-    \  ${i} =  Set Variable  ${i + 1}
-
 Invite a non-existing collaborator
     [Arguments]   ${email}  ${competition_name}
     the user should see the element        jQuery=h1:contains("Application overview")
@@ -388,3 +377,21 @@ navigate to next page if not found
     [Arguments]  ${competition}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link=${competition}
     Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery=a:contains("Next")
+
+Lead Applicant applies to the new created competition
+    [Arguments]  ${competition}
+    log in as a different user       &{lead_applicant_credentials}
+    the user navigates to the eligibility of the competition  ${competition}
+    the user clicks the button/link  jQuery=a:contains("Sign in")
+    the user clicks the button/link  jQuery=a:contains("Begin application")
+
+the user navigates to the eligibility of the competition
+    [Arguments]  ${competition}
+    ${competitionId} =  get comp id from comp title    ${competition}
+    the user navigates to the page   ${server}/application/create/check-eligibility/${competitionId}
+
+the lead applicant marks every question as complete(EOI)
+    [Arguments]  ${question_link}
+    the user clicks the button/link             jQuery=h3 a:contains("${question_link}")
+    the user marks the section as complete
+    the user clicks the button/link             link=Application overview

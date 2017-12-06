@@ -20,7 +20,7 @@ items:
         - env:
           - name: LDAP_PORT
             value: "8389"
-          image: innovateuk/ldap-service:1.0-SNAPSHOT
+          image: innovateuk/ldap-service:${ldapVersion}
           name: ldap
           livenessProbe:
             exec:

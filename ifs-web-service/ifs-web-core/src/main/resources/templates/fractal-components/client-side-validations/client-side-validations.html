@@ -1,0 +1,95 @@
+<h1 class="heading-xlarge">Client side validation</h1>
+
+<p>See notes for documentation</p>
+
+<button id="invalidate" class="button" type="button">Invalidate all inputs</button>
+
+
+<div class="form-group">
+    <label class="form-label" for="minlength-field">
+      Minimum length validation
+    </label>
+    <input class="form-control" type="text" id="minlength-field" minlength="8" value="" name="minlength" data-minlength-errormessage="This field requires at least 8 characters." />
+</div>
+
+<div class="form-group">
+    <label class="form-label" for="required-field">Empty field validation</label>
+    <input class="form-control" type="text" id="required-field" required="required" value="" name="empty"  data-required-errormessage="This field cannot be empty." />
+</div>
+
+<div class="form-group">
+    <label class="form-label" for="pattern-field">Pattern validation field (i.e. MM-YYYY)
+        <span class="form-hint">
+            We can also use the pattern attributes, see <a href="http://html5pattern.com">html5pattern.com</a> for examples.
+        </span>
+    </label>
+    <input class="form-control" type="text" id="pattern-field"  pattern="(0[1-9]|1[012])-[0-9]{4}" value="" name="date"  data-pattern-errormessage="Invalid date. Please use MM-YYYY format." />
+</div>
+
+<div class="form-group">
+    <label class="form-label" for="min-field">Minimum amount number field</label>
+    <input class="form-control" type="number" id="min-field" min="15" data-min-errormessage="This field should be 15 or higher." value="" name="number2"  />
+</div>
+
+<div class="form-group">
+    <label class="form-label" for="max-field">Maximum amount number field</label>
+    <input class="form-control" type="number" id="max-field" max="15" data-max-errormessage="This field should be 15 or lower." value="" name="number1"  />
+</div>
+
+<div class="form-group">
+    <label class="form-label" for="required-field">Email field</label>
+    <input class="form-control" type="email" data-email-errormessage="Please enter a valid email address." value="" name="email" />
+</div>
+
+
+<h2 class="heading-medium">Advanced use cases; hiding messages</h2>
+<p>See notes for more documentation</p>
+
+<div class="form-group">
+    <label class="form-label" for="required-field">Email field</label>
+    <input class="form-control" data-email-showmessage="none" type="email" data-email-errormessage="Please enter a valid email address." value="" name="email" />
+</div>
+
+<h2 class="heading-medium">Advanced use cases; getting the status</h2>
+<p>See notes for more documentation</p>
+
+<div class="form-group">
+  <div class="form-hint" id="advanced-hint">
+      <p>This field has:</p>
+      <ul class="list list-bullet status">
+          <li data-minlength-validationStatus="">at least 5 characters</li>
+      </ul>
+  </div>
+    <label for="advanced-use-case">
+      Type characters in the field underneath (at least 5)
+    </label>
+    <div>
+      <input id="advanced-use-case"
+             aria-describedby="advanced-hint"
+             type="text"
+             value=""
+             name="advanced"
+             class="form-control"
+             minlength="5"
+        />
+    </div>
+</div>
+
+
+<!-- script underneath is added for demonstration purpose -->
+<script type="text/javascript">
+  // ----- THIS IS FOR DEMO PURPOSE, don't let me say it another time ---------
+  // sneaky event listener as jQuery only gets defined at the end of the page
+  document.addEventListener("DOMContentLoaded", function(event) {
+    // jQuery should be defined by now
+    jQuery(document).on('click','button#invalidate',function(){
+      jQuery('[minlength]').val('1234567');
+      jQuery('[pattern]').val('13-2010');
+      jQuery('[type="email"]').val('blaat.com')
+      jQuery('[min]').val('5')
+      jQuery('[max]').val('42')
+
+      jQuery('input').trigger('change');
+    })
+  });
+</script>

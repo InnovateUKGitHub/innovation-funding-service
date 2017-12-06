@@ -240,7 +240,7 @@ the invited user fills the create account form
     Input Password    id=password    ${correct_password}
     the user selects the checkbox    termsAndConditions
     the user selects the checkbox    allowMarketing
-    the user clicks the button/link    jQuery=.button:contains("Create account")
+    the user clicks the button/link  css=button[type="submit"][name="create-account"]
 
 the user clicks the forgot psw link
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element    link=forgot your password?
