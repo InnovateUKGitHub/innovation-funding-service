@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.application.transactional.ApplicationSummarySer
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.workflow.resource.State.*;
 
 @Service

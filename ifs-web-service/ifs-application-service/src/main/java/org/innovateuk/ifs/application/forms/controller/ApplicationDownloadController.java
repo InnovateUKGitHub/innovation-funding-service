@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.forms.controller;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
@@ -26,6 +27,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
  */
 @Controller
 @RequestMapping(APPLICATION_BASE_URL + "{applicationId}/form")
+@SecuredBySpring(value="Controller", description = "ApplicationDownloadController")
 @PreAuthorize("hasAnyAuthority('applicant', 'comp_admin', 'project_finance')")
 public class ApplicationDownloadController {
 

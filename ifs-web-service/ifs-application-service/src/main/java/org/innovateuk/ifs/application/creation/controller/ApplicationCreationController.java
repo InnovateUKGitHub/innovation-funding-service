@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.creation.controller;
 
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.registration.controller.RegistrationController;
@@ -27,6 +28,7 @@ import java.time.ZonedDateTime;
  */
 @Controller
 @RequestMapping("/application/create")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = ApplicationCreationController.class)
 @PreAuthorize("permitAll")
 public class ApplicationCreationController {
     public static final String COMPETITION_ID = "competitionId";

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.domain.competition.*;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -62,7 +63,7 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResource
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
@@ -917,7 +918,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         assertFalse(assessorInviteOverviewResource.isCompliant());
     }
 
-    private CompetitionInvite setUpCompetitionInvite(Competition competition, InviteStatus status, InnovationArea innovationArea) {
+    private CompetitionAssessmentInvite setUpCompetitionInvite(Competition competition, InviteStatus status, InnovationArea innovationArea) {
         return newCompetitionInvite()
                 .withCompetition(competition)
                 .withHash(Invite.generateInviteHash())

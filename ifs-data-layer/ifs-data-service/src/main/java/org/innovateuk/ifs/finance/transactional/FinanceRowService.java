@@ -61,7 +61,7 @@ public interface FinanceRowService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
     ServiceResult<Double> getResearchParticipationPercentage(@P("applicationId") Long applicationId);
 
-    @PreAuthorize("hasPermission(#projectId, 'READ_OVERVIEW')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'READ_OVERVIEW')")
     ServiceResult<Double> getResearchParticipationPercentageFromProject(@P("projectId") Long projectId);
 
     @PreAuthorize("hasPermission(#applicationFinanceResourceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")

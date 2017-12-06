@@ -3,8 +3,8 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -43,7 +43,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
             final Competition competition = retrieveCompetitionByName(competitionName);
             final InnovationArea innovationArea = retrieveInnovationAreaByName(innovationAreaName);
 
-            final CompetitionInvite invite = newCompetitionInvite().
+            final CompetitionAssessmentInvite invite = newCompetitionInvite().
                     withCompetition(competition).
                     withEmail(emailAddress).
                     withStatus(inviteStatus).
@@ -56,7 +56,7 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
                     build();
 
             testService.doWithinTransaction(() -> {
-                CompetitionInvite savedInvite = competitionInviteRepository.save(invite);
+                CompetitionAssessmentInvite savedInvite = competitionInviteRepository.save(invite);
                 competitionParticipantRepository.save(new CompetitionAssessmentParticipant(savedInvite));
             });
         }));
