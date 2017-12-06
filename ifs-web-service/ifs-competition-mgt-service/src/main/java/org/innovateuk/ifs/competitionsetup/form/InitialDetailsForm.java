@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.hibernate.validator.constraints.Range;
-import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
 import org.innovateuk.ifs.commons.validation.constraints.FutureZonedDateTime;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 
@@ -26,16 +24,10 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.initialdetailsform.executiveuserid.required}")
     private Long executiveUserId;
 
-    @NotNull(message = "{validation.initialdetailsform.openingdateday.required}")
-    @Range(min=1, max=31, message= "{validation.initialdetailsform.openingdateday.range}", groups = Unrestricted.class)
     private Integer openingDateDay;
 
-    @NotNull(message = "{validation.initialdetailsform.openingdatemonth.required}")
-    @Range(min=1, max=12, message= "{validation.initialdetailsform.openingdatemonth.range}", groups = Unrestricted.class)
     private Integer openingDateMonth;
 
-    @NotNull(message = "{validation.initialdetailsform.openingdateyear.required}")
-    @Range(min=1900, max=9999, message= "{validation.initialdetailsform.openingdateyear.range}", groups = Unrestricted.class)
     private Integer openingDateYear;
 
     @NotEmpty(message = "{validation.standard.title.required}")
@@ -63,6 +55,7 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.executiveUserId = executiveUserId;
     }
 
+    @NotNull(message = "{validation.standard.date.format}")
     @FutureZonedDateTime(message = "{validation.standard.date.future}", groups = Unrestricted.class)
     public ZonedDateTime getOpeningDate() {
         if (openingDateYear == null || openingDateMonth == null || openingDateDay == null) {

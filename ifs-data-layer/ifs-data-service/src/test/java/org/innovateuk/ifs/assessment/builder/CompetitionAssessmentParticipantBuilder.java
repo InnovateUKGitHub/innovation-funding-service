@@ -4,6 +4,10 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.lang.reflect.Constructor;
@@ -16,7 +20,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 /**
- * Builder for {@link org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant}s.
+ * Builder for {@link CompetitionAssessmentParticipant}s.
  */
 public class CompetitionAssessmentParticipantBuilder extends BaseBuilder<CompetitionAssessmentParticipant, CompetitionAssessmentParticipantBuilder> {
 
@@ -66,11 +70,11 @@ public class CompetitionAssessmentParticipantBuilder extends BaseBuilder<Competi
         return withCompetition(competitions.build());
     }
 
-    public CompetitionAssessmentParticipantBuilder withInvite(CompetitionInvite... invites) {
+    public CompetitionAssessmentParticipantBuilder withInvite(CompetitionAssessmentInvite... invites) {
         return withArray((invite, i) -> setField("invite", invite, i), invites);
     }
 
-    public CompetitionAssessmentParticipantBuilder withInvite(Builder<CompetitionInvite, ?> invite) {
+    public CompetitionAssessmentParticipantBuilder withInvite(Builder<CompetitionAssessmentInvite, ?> invite) {
         return withInvite(invite.build());
     }
 
