@@ -10,6 +10,7 @@ import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.management.viewmodel.dashboard.*;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.SecurityRuleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -58,12 +59,21 @@ public class CompetitionManagementDashboardController {
     @GetMapping("/dashboard/project-setup")
     public String projectSetup(Model model, UserResource user) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
-        Long countBankDetails = bankDetailsRestService.countBankDetailsApprovals().getSuccessObjectOrThrowException();
+
+        Long countBankDetails = 0L;
+        boolean projectFinanceUser = isProjectFinanceUser(user);
+        if (projectFinanceUser) {
+            countBankDetails = bankDetailsRestService.countBankDetailsApprovals().getSuccessObjectOrThrowException();
+        }
 
         model.addAttribute(MODEL_ATTR,
-                new ProjectSetupDashboardViewModel(projectSetupCompetitions, competitionDashboardSearchService.getCompetitionCounts(), countBankDetails, new DashboardTabsViewModel(user)));
+                new ProjectSetupDashboardViewModel(projectSetupCompetitions, competitionDashboardSearchService.getCompetitionCounts(), countBankDetails, new DashboardTabsViewModel(user), projectFinanceUser));
 
         return TEMPLATE_PATH + "projectSetup";
+    }
+
+    private boolean isProjectFinanceUser(UserResource user) {
+        return SecurityRuleUtil.isProjectFinanceUser(user);
     }
 
     @SecuredBySpring(value = "TODO", description = "TODO")
