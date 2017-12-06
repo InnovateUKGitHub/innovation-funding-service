@@ -6,6 +6,12 @@ configurations {
     providedRuntime
 }
 
+project.version = frontDoorServiceVersion
+tagDocker.tag = frontDoorServiceVersion
+osStageRemote.tag = frontDoorServiceVersion
+tagDockerLocal.tag = frontDoorServiceVersion
+osStageLocal.tag = frontDoorServiceVersion
+
 
 jar {
     baseName = 'ifs-front-door-service'
