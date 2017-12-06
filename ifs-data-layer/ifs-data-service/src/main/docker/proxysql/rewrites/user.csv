@@ -5,5 +5,5 @@ invite_name|MASK(2, 'x')
 phone_number|MASK(2, 'x')
 disability|'NOT_STATED'
 gender|'NOT_STATED'
-uid|''
+uid|UUID_REPLACEMENT
 ethnicity_id|7
