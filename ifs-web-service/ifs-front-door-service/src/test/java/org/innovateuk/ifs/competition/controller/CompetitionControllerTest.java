@@ -76,7 +76,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     public void termsAndConditions_apcComp() throws Exception {
         final CompetitionResource competitionResource = newCompetitionResource()
                 .withCompetitionTypeName("APC")
-                .withCompetitionType(7L)
+                .withCompetitionType(8L)
                 .build();
         when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
 
