@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -58,7 +59,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     @PermissionRule(
             value = "VIEW_CREDIT_REPORT",
             description = "Project Finance Users can view the Credit Report flag")
-    public boolean projectFinanceUserCanViewCreditReport(Long projectId, UserResource user) {
+    public boolean projectFinanceUserCanViewCreditReport(ProjectCompositeId projectCompositeId, UserResource user) {
 
         return isProjectFinanceUser(user);
     }
@@ -66,8 +67,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     @PermissionRule(
             value = "SAVE_CREDIT_REPORT",
             description = "Project Finance Users can save Credit Report flag")
-    public boolean projectFinanceUserCanSaveCreditReport(Long projectId, UserResource user) {
-
+    public boolean projectFinanceUserCanSaveCreditReport(ProjectCompositeId projectCompositeId, UserResource user) {
         return isProjectFinanceUser(user);
     }
 
@@ -102,13 +102,13 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value="READ_OVERVIEW", description = "Internal users can see the project finance overview")
-    public boolean internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(final Long projectId, final UserResource user) {
+    public boolean internalUsersCanSeeTheProjectFinanceOverviewsForAllProjects(final ProjectCompositeId projectCompositeId, final UserResource user) {
         return isInternal(user);
     }
 
     @PermissionRule(value="READ_OVERVIEW", description = "Project partners can see their project finance overview")
-    public boolean partnersCanSeeTheProjectFinanceOverviewsForTheirProject(final Long projectId, final UserResource user) {
-        return isPartner(projectId, user.getId());
+    public boolean partnersCanSeeTheProjectFinanceOverviewsForTheirProject(final ProjectCompositeId projectCompositeId, final UserResource user) {
+        return isPartner(projectCompositeId.id(), user.getId());
     }
 
 }

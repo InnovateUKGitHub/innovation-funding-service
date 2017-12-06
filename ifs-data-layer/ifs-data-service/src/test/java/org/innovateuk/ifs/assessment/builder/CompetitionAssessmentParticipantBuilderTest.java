@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.domain.competition.*;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentPartici
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
-import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -28,7 +29,7 @@ public class CompetitionAssessmentParticipantBuilderTest {
         Competition expectedCompetition = newCompetition().withName("Juggling Craziness").build();
         RejectionReason expectedRejectionReason = newRejectionReason().withReason("Unavailable").build();
         String expectedRejectionComment = "Too busy";
-        CompetitionInvite expectedInvite = newCompetitionInvite().build();
+        CompetitionAssessmentInvite expectedInvite = newCompetitionInvite().build();
 
         CompetitionAssessmentParticipant participant = newCompetitionAssessmentParticipant()
                 .withId(expectedId)
@@ -58,7 +59,7 @@ public class CompetitionAssessmentParticipantBuilderTest {
         User[] expectedUsers = newUser().withId(5L, 11L).buildArray(2, User.class);
         CompetitionParticipantRole[] expectedRoles = { ASSESSOR, ASSESSOR };
         Competition[] expectedCompetitions = newCompetition().withName("Juggling Craziness", "Intermediate Juggling").buildArray(2, Competition.class);
-        CompetitionInvite[] expectedCompetitionInvites = newCompetitionInvite().buildArray(2, CompetitionInvite.class);
+        CompetitionAssessmentInvite[] expectedCompetitionAssessmentInvites = newCompetitionInvite().buildArray(2, CompetitionAssessmentInvite.class);
         RejectionReason[] expectedRejectionReasons = { newRejectionReason().withReason("Unavailable").build(), null };
         String[] expectedRejectionComment = { "Too busy", null };
 
@@ -68,7 +69,7 @@ public class CompetitionAssessmentParticipantBuilderTest {
                 .withUser(expectedUsers)
                 .withRole(expectedRoles)
                 .withCompetition(expectedCompetitions)
-                .withInvite(expectedCompetitionInvites)
+                .withInvite(expectedCompetitionAssessmentInvites)
                 .withRejectionReason(expectedRejectionReasons)
                 .withRejectionComment(expectedRejectionComment)
                 .build(2);
@@ -79,7 +80,7 @@ public class CompetitionAssessmentParticipantBuilderTest {
         assertEquals(expectedUsers[0], first.getUser());
         assertEquals(expectedRoles[0], first.getRole());
         assertEquals(expectedCompetitions[0], first.getProcess());
-        assertEquals(expectedCompetitionInvites[0], first.getInvite());
+        assertEquals(expectedCompetitionAssessmentInvites[0], first.getInvite());
         assertEquals(expectedRejectionReasons[0], first.getRejectionReason());
         assertEquals(expectedRejectionComment[0], first.getRejectionReasonComment());
 
@@ -89,7 +90,7 @@ public class CompetitionAssessmentParticipantBuilderTest {
         assertEquals(expectedUsers[1], second.getUser());
         assertEquals(expectedRoles[1], second.getRole());
         assertEquals(expectedCompetitions[1], second.getProcess());
-        assertEquals(expectedCompetitionInvites[1], second.getInvite());
+        assertEquals(expectedCompetitionAssessmentInvites[1], second.getInvite());
         assertEquals(expectedRejectionReasons[1], second.getRejectionReason());
         assertEquals(expectedRejectionComment[1], second.getRejectionReasonComment());
     }

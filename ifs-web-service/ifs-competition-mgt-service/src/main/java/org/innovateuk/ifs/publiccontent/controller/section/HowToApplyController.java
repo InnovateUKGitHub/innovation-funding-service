@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.publiccontent.controller.section;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.controller.AbstractContentGroupController;
 import org.innovateuk.ifs.publiccontent.form.section.HowToApplyForm;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/competition/setup/public-content/how-to-apply")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = HowToApplyController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class HowToApplyController extends AbstractContentGroupController<HowToApplyViewModel, HowToApplyForm> {
 

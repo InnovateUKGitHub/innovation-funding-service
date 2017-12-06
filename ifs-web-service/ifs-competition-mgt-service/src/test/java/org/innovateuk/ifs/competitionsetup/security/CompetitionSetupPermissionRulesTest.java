@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionCompositeId;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -19,14 +20,14 @@ public class CompetitionSetupPermissionRulesTest extends BasePermissionRulesTest
     @Test
     public void manageInnovationLeads() {
 
-        long competitionId = 14L;
+        CompetitionCompositeId competitionId = CompetitionCompositeId.id(14L);
 
         CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource().withSetupComplete(Boolean.TRUE).build();
 
         UserResource loggedInUser = new UserResource();
 
-        when(competitionServiceMock.getById(competitionId)).thenReturn(competitionResource);
-        when(competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)).thenReturn(Boolean.TRUE);
+        when(competitionServiceMock.getById(competitionId.id())).thenReturn(competitionResource);
+        when(competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId.id())).thenReturn(Boolean.TRUE);
         assertTrue(rules.manageInnovationLead(competitionId, loggedInUser));
     }
 

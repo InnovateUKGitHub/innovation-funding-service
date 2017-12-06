@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.spendprofile.controller;
 
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.spendprofile.form.TotalSpendProfileForm;
@@ -31,6 +32,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
  */
 @Controller
 @RequestMapping("/" + TotalProjectSpendProfileController.BASE_DIR + "/{projectId}/spend-profile/total")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = TotalProjectSpendProfileController .class)
 @PreAuthorize("hasAnyAuthority('project_finance', 'applicant', 'comp_admin')")
 public class TotalProjectSpendProfileController {
 

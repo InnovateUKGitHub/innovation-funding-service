@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.form.*;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
@@ -32,6 +33,7 @@ import static java.util.stream.Collectors.toList;
 
 @Controller
 @RequestMapping("/competition/{competitionId}")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementFundingNotificationsController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionManagementFundingNotificationsController extends CompetitionManagementCookieController<FundingNotificationSelectionCookie> {
 

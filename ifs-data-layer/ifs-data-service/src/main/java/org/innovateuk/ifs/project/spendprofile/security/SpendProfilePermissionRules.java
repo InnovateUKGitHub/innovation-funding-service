@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
@@ -114,7 +115,7 @@ public class SpendProfilePermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "COMPLETE_SPEND_PROFILE_REVIEW", description = "Only a Project Manager can complete the project's spend profiles review")
-    public boolean projectManagerCanCompleteSpendProfile(Long projectId, UserResource user) {
-        return isProjectManager(projectId, user.getId());
+    public boolean projectManagerCanCompleteSpendProfile(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isProjectManager(projectCompositeId.id(), user.getId());
     }
 }

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.grantofferletter.security;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -97,15 +98,8 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
     @PermissionRule(
             value = "SUBMIT_GRANT_OFFER_LETTER",
             description = "Project manager can submit the grant offer letter")
-    public boolean projectManagerSubmitGrantOfferLetter(Long projectId, UserResource user) {
-        return isProjectManager(projectId, user.getId());
-    }
-
-    @PermissionRule(
-            value = "APPROVE_SIGNED_GRANT_OFFER",
-            description = "Competitions team & Project Finance can approve signed grant offer letter")
-    public boolean internalUsersCanApproveSignedGrantOfferLetter(Long projectId, UserResource user) {
-        return isInternalAdmin(user);
+    public boolean projectManagerSubmitGrantOfferLetter(ProjectCompositeId projectCompositeId, UserResource user) {
+        return isProjectManager(projectCompositeId.id(), user.getId());
     }
 
     @PermissionRule(
