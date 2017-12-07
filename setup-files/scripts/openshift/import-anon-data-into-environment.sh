@@ -56,18 +56,20 @@ function insertDataIntoDestinationDatabase() {
 
 function resetSystemUserUids() {
   DATA_POD_NAME=$1
+  echo
   oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME \
   mysql -u$DB_DESTINATION_USER -p$DB_DESTINATION_PASS -h$DB_DESTINATION_HOST -P$DB_DESTINATION_PORT $DB_DESTINATION_NAME \
-  --execute "UPDATE user SET uid = $DB_DESTINATION_SYSTEM_USER_UID WHERE email = "ifs_web_user@innovateuk.org"
+  --execute "UPDATE user SET uid = '$DB_DESTINATION_SYSTEM_USER_UID' WHERE email = 'ifs_web_user@innovateuk.org'"
   oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME \
-    mysql -u$DB_DESTINATION_USER -p$DB_DESTINATION_PASS -h$DB_DESTINATION_HOST -P$DB_DESTINATION_PORT $DB_DESTINATION_NAME \
-    --execute "UPDATE user SET uid = $DB_DESTINATION_SYSTEM_MAINTENANCE_USER_UID WHERE email = "ifs_system_maintenance_user@innovateuk.org"
+  mysql -u$DB_DESTINATION_USER -p$DB_DESTINATION_PASS -h$DB_DESTINATION_HOST -P$DB_DESTINATION_PORT $DB_DESTINATION_NAME \
+  --execute "UPDATE user SET uid = '$DB_DESTINATION_SYSTEM_MAINTENANCE_USER_UID' WHERE email = 'ifs_system_maintenance_user@innovateuk.org'"
 }
 
 function deleteDumpFromDataPod() {
   DATA_POD_NAME=$1
   oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME rm /tmp/anonymised/anonymised-dump.sql.gpg
 }
+
 
 checkVariables
 DATA_POD_NAME=$(getDatapodName)
