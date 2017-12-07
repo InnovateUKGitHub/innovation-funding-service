@@ -1,0 +1,1 @@
+INSERT INTO role (name) VALUES ('assessor_panel');
