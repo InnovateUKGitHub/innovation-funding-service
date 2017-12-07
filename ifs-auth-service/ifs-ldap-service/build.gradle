@@ -5,7 +5,7 @@ def String ldapCertsVolume = 'src/main/docker/certs'
 def String ldapEncryptionKeyFile = "${ldapCertsVolume}/ldap-encryption.key"
 def String ldapEncryptionCertificateFile = "${ldapCertsVolume}/ldap-encryption.crt"
 
-def String ldapPassword = project.properties['auth.ldap.password'] ?:"default"
+def String ldapPassword = project.properties['auth.ldap.password'] ?: "default"
 
 task prepareDockerFile {
     def inputDir = file("${project.buildDir}/docker")
@@ -19,13 +19,13 @@ task prepareDockerFile {
             into 'src/main/docker/'
             include 'Dockerfile-template'
             rename 'Dockerfile-template', 'Dockerfile'
-            filter(ReplaceTokens, tokens: [auth_ldap_password: ldapPassword,
-                                           auth_ldap_encryption_key: ldapEncryptionKey,
+            filter(ReplaceTokens, tokens: [auth_ldap_password              : ldapPassword,
+                                           auth_ldap_encryption_key        : ldapEncryptionKey,
                                            auth_ldap_encryption_certificate: ldapEncryptionCertificate])
         }
         copy {
-          from file('src/main/docker/Dockerfile')
-          into inputDir
+            from file('src/main/docker/Dockerfile')
+            into inputDir
         }
         copy {
             from fileTree('src/main/docker/scripts')
@@ -35,3 +35,8 @@ task prepareDockerFile {
 }
 
 buildDocker.dependsOn prepareDockerFile
+project.version = ldapVersion
+tagDocker.tag = ldapVersion
+osStageRemote.tag = ldapVersion
+tagDockerLocal.tag = ldapVersion
+osStageLocal.tag = ldapVersion

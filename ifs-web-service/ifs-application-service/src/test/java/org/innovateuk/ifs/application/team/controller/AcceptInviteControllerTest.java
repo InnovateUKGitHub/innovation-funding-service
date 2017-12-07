@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.Validator;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
@@ -90,6 +91,7 @@ public class AcceptInviteControllerTest extends BaseUnitTest {
 
         assertTrue(viewModel.getClass().equals(AcceptRejectApplicationInviteViewModel.class));
 
+        verify(registrationCookieService, times(1)).deleteAllRegistrationJourneyCookies(any(HttpServletResponse.class));
         verify(registrationCookieService, times(1)).saveToInviteHashCookie(eq(INVITE_HASH), any());
     }
 
