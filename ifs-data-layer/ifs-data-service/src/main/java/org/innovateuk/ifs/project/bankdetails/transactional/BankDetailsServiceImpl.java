@@ -8,6 +8,7 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.mapper.OrganisationAddressMapper;
@@ -286,5 +287,13 @@ public class BankDetailsServiceImpl implements BankDetailsService {
                     return globalError(EXPERIAN_VALIDATION_FAILED, singletonList(condition.getDescription()));
                 }).
                 collect(Collectors.toList());
+    }
+
+    @Override
+    public ServiceResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals() {
+
+        List<BankDetailsReviewResource> pendingBankDetails = bankDetailsRepository.getPendingBankDetailsApprovals();
+
+        return serviceSuccess(pendingBankDetails);
     }
 }
