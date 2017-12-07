@@ -54,8 +54,7 @@ public class CompetitionController {
     @GetMapping("info/terms-and-conditions")
     public String termsAndConditions(@PathVariable("competitionId") final long competitionId) {
         CompetitionResource compResource = competitionService.getById(competitionId);
-        final Long APC_COMPETITION_TYPE_ID = 8L;
-        return APC_COMPETITION_TYPE_ID.equals(compResource.getCompetitionType()) ?
+        return "Advanced Propulsion Centre".equals(compResource.getCompetitionTypeName()) ?
                 "competition/info/apc-terms-and-conditions" : "competition/info/default-terms-and-conditions";
     }
 }
