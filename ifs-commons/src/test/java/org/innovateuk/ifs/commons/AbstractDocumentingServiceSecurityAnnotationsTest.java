@@ -5,210 +5,119 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
-import org.innovateuk.ifs.commons.security.evaluator.ListOfOwnerAndMethod;
 import org.innovateuk.ifs.commons.security.evaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.commons.security.evaluator.RootCustomPermissionEvaluator;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.stereotype.Service;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.PermissionRulesClassResult.fromClassAndPermissionMethods;
+import static org.innovateuk.ifs.commons.ProxyUtils.allUnwrappedComponentsWithClassAnnotations;
 import static org.innovateuk.ifs.commons.ProxyUtils.unwrapProxies;
 import static org.innovateuk.ifs.commons.security.evaluator.CustomPermissionEvaluatorTestUtil.getRulesMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * Base class to document security permissions and rules.
+ * There are several ways that security is documented and enforced in the code.
+ * This test suite test generates the documentation for three of these mechanisms.
+ *
+ * Methods can be secured by Spring security annotations which delegate to the {@link RootCustomPermissionEvaluator}.
+ * The documentation of these is done by inspecting the internals of {@link RootCustomPermissionEvaluator} and finding
+ * the relevant Methods with their {@link PermissionRule} {@link Annotation}.
+ *
+ * Methods can be secured by Spring security annotations which which use the standard Spring security syntax. This can
+ * be done at class or method level. These rules are documented by reading the {@link SecuredBySpring}
+ * {@link Annotation}s which are located with the Spring annotations.
+ *
+ * Finally methods can have a {@link NotSecured} {@link Annotation} which means that either they do not need securing
+ * or if {@link NotSecured#mustBeSecuredByOtherServices()} is set to true that there must be a call in the stack above
+ * which is secured. The method are also documented here.
+ *
+ * Note the following points:
+ *
+ * This documentation does not include the mapping of the secured service methods to the actual
+ * customised permission rule methods. There is no good way of generating these on mass and they must be
+ * documented by more focused security tests.
+ *
+ * This test does not enforce the presence of security annotations outlined above,
+ * See {@link AbstractServiceSecurityAnnotationsTest} for that.
+ *
  */
 public abstract class AbstractDocumentingServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
     protected abstract List<Class<?>> excludedClasses();
     protected abstract RootCustomPermissionEvaluator evaluator();
-
-    protected String[] simpleCsvHeaders(){
-        return new String[]{"Entity", "Action", "Rule description", "Particular business state where rule is enforced"};
-    };
-
-    protected String[] fullCsvHeaders(){
-        return new String[]{"Entity", "Action", "Rule description", "Particular business state where rule is enforced", "Rule method", "Additional rule comments"};
-    };
-
-    protected String permissionRulesSummaryLocation(){
-        return "build/permission-rules-summary.csv";
-    }
-
-    protected String permissionRulesFullLocation() {
-        return "build/permission-rules-full.csv";
-    }
+    protected abstract List<Class<? extends Annotation>> annotationsOnClassesToSecure();
 
     @Autowired
     protected ApplicationContext context;
 
+
     /**
-     * There are several ways that security is documented and enforced in the code.
-     * This test generates the aggregated documentation for these:
-     * <ol>
-     *     <li>Goes through all of the classes annotated with {@link PermissionRules} and ascertains from the
-     *     contained {@link PermissionRule} annotated methods the rules which can be applied to each entity.</li>
-     *     <li>Service methods which are secured with standard Spring rules, and are annotated with
-     *     {@link SecuredBySpring} which describes the permission.</li>
-     *     <li>Service methods that have the {@link NotSecured} annotation which has a description field of why this is
-     *     the case.</li>
-     * </ol>
-     *
-     * This documentation generated is a CSV.
-     *
-     * Where the permissions are dictated by the custom {@link PermissionRules} class then the format of the CSV is:
-     * "Entity", "Action", "Rule description"
-     *
-     * Note that this documentation does not include the mapping of the secured service methods to the actual
-     * customised permission rule methods. There is no good way of generating these on mass and they must be
-     * documented by more focused security tests.
-     *
+     * Generate security documentation based on the {@link SecuredBySpring} {@link Annotation}s.
+     * These {@link Annotation}s are used on methods and classes to document simple security rules that are enforced
+     * by Spring security {@link Annotation}s. They are not required where more complex rules that are processed by
+     * the {@link RootCustomPermissionEvaluator}, as these are documented by processing the classes annotated with
+     * {@link PermissionRules}
      * @throws Exception
      */
     @Test
-    public void generateLowLevelPermissionsDocumentation() throws Exception {
-
-        List<String[]> permissionRuleSecuredRows = getPermissionRulesBasedSecurity(evaluator());
-        List<String[]> simpleSpringSecuritySecuredRows = getSimpleSpringSecurityBasedSecurity();
-        List<String[]> notSecuredRows = getNotSecuredMethods();
-        List<String[]> allSecuredRows = combineLists(permissionRuleSecuredRows, simpleSpringSecuritySecuredRows, notSecuredRows);
-
-        allSecuredRows.sort((row1, row2) -> {
-            int column1Compare = row1[0].compareTo(row2[0]);
-            if (column1Compare != 0) {
-                return column1Compare;
-            }
-            int column2Compare = row1[1].compareTo(row2[1]);
-            return column2Compare;
-        });
-
-        // output a simple csv of rule information
-        List<String[]> simpleRows = simpleMap(allSecuredRows, row -> new String[]{row[0], row[1], row[2], row[3]});
-        writeCsv(permissionRulesSummaryLocation(), simpleCsvHeaders(), simpleRows);
-
-        // output a more complex csv of rule information
-        writeCsv(permissionRulesFullLocation(), fullCsvHeaders(), allSecuredRows);
+    public void generateLowLevelPermissionsDocumentationForSecuredBySpring() throws Exception {
+        List<Object> beans = getApplicableServices();
+        // Get the results for the Annotations
+        List<SecuredBySpringBeanResult> results = simpleMap(beans, bean -> SecuredBySpringBeanResult.fromBean(bean));
+        // Format the results for output to a CSV
+        SecuredBySpringBeanResultsFormatter formatter = new SecuredBySpringBeanResultsFormatter(results);
+        writeCsv("build/secured-by-spring-rules-summary.csv", formatter.simpleHeaders(), formatter.simpleLines());
+        writeCsv("build/secured-by-spring-rules-details.csv", formatter.headers(), formatter.lines());
     }
 
-    private List<String[]> getSimpleSpringSecurityBasedSecurity() {
-
-        List<Object> services = getApplicableServices();
-
-        List<List<String[]>> securedMethodRowsByService = simpleMap(services, service -> {
-
-            List<Method> serviceMethods = asList(service.getClass().getMethods());
-            List<Method> springSecurityAnnotatedMethods = simpleFilter(serviceMethods, method -> hasOneOf(method, singletonList(SecuredBySpring.class)));
-
-            return simpleMap(springSecurityAnnotatedMethods, method -> {
-                SecuredBySpring securityAnnotation = AnnotationUtils.findAnnotation(method, SecuredBySpring.class);
-                String entity = securityAnnotation.securedType().equals(Void.class) ? "" : cleanEntityName(securityAnnotation.securedType());
-                String action = securityAnnotation.value();
-                String ruleDescription = securityAnnotation.description();
-                String ruleMethod = getMethodCallDescription(method);
-                String ruleComments = securityAnnotation.additionalComments();
-                String ruleState = securityAnnotation.particularBusinessState();
-                String[] securedMethodRow = new String[]{entity, action, ruleDescription, ruleState, ruleMethod, ruleComments};
-                return securedMethodRow;
-            });
-        });
-
-        return flattenLists(securedMethodRowsByService);
+    /**
+     * Document the methods that have the {@link NotSecured} {@link Annotation}.
+     * @throws Exception
+     */
+    @Test
+    public void generateLowLevelPermissionsDocumentationForNotSecured() throws Exception {
+        List<Object> beans = getApplicableServices();
+        // Get the results for the Annotations
+        List<NotSecuredBeanResult> results = simpleMap(beans, bean -> NotSecuredBeanResult.fromBean(bean));
+        // Format the results for output to a CSV
+        NotSecuredBeanResultsFormatter formatter = new NotSecuredBeanResultsFormatter(results);
+        writeCsv("build/not-secured-rules-summary.csv", formatter.simpleHeaders(), formatter.simpleLines());
+        writeCsv("build/not-secured-rules-details.csv", formatter.headers(), formatter.lines());
     }
 
-    private List<String[]> getNotSecuredMethods() {
 
-        List<Object> services = getApplicableServices();
-
-        List<List<String[]>> nonSecuredMethodRowsByService = simpleMap(services, service -> {
-
-            List<Method> serviceMethods = asList(service.getClass().getMethods());
-            List<Method> springSecurityAnnotatedMethods = simpleFilter(serviceMethods, method -> hasOneOf(method, singletonList(NotSecured.class)));
-
-            return simpleMap(springSecurityAnnotatedMethods, method -> {
-                NotSecured notSecuredAnnotation = AnnotationUtils.findAnnotation(method, NotSecured.class);
-                String entity = ""; //notSecuredAnnotation.securedType().equals(Void.class) ? "" : cleanEntityName(notSecuredAnnotation.securedType());
-                String action = ""; //notSecuredAnnotation.value();
-                String ruleDescription = notSecuredAnnotation.value(); //notSecuredAnnotation.description();
-                String ruleMethod = getMethodCallDescription(method);
-                String ruleComments = ""; //notSecuredAnnotation.additionalComments();
-                String[] nonSecuredMethodRow = new String[]{entity, action, ruleDescription, ruleMethod, ruleComments};
-                return nonSecuredMethodRow;
-            });
-        });
-
-        return flattenLists(nonSecuredMethodRowsByService);
+    /**
+     * Document rules that are generated from the custom permission rules classes - i.e. those annotated with
+     * {@link PermissionRules}. We use the {@link RootCustomPermissionEvaluator} and reverse engineer the documentation.
+     * Doing this means that we don't document anything that isn't present in the running application which would be
+     * a risk if we inspected the classpath for {@link PermissionRule}s directly.
+     * @throws Exception
+     */
+    @Test
+    public void generateLowLevelPermissionsDocumentationForPermissionRules() throws Exception {
+        // Get the internal mappings of classes to be secured to the securing mechanisms.
+        PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = getRulesMap(evaluator());
+        List<PermissionRulesClassResult> results = simpleMap(rulesMap.entrySet(), e -> fromClassAndPermissionMethods(e.getKey(), e.getValue()));
+        // Format the results for output to CSV
+        PermissionRulesClassResultFormatter formatter = new PermissionRulesClassResultFormatter(results);
+        writeCsv("build/permission-rules-summary.csv", formatter.simpleHeaders(), formatter.simpleLines());
+        writeCsv("build/permission-rules-details.csv", formatter.headers(), formatter.lines());
     }
 
     private List<Object> getApplicableServices() {
         return unwrapProxies(servicesToTest());
     }
 
-    private List<String[]> getPermissionRulesBasedSecurity(RootCustomPermissionEvaluator evaluator) {
-        List<String[]> permissionRuleRows = new ArrayList<>();
-
-        PermissionedObjectClassToPermissionsToPermissionsMethods rulesMap = getRulesMap(evaluator);
-
-        Set<Class<?>> securedEntities = rulesMap.keySet();
-
-        securedEntities.forEach(clazz -> {
-
-            Map<String, ListOfOwnerAndMethod> rulesForSecuringEntity = rulesMap.get(clazz);
-            Set<String> actionsSecuredForEntity = rulesForSecuringEntity.keySet();
-
-            actionsSecuredForEntity.forEach(actionName -> {
-
-                ListOfOwnerAndMethod permissionRuleMethodsForThisAction = rulesForSecuringEntity.get(actionName);
-
-                permissionRuleMethodsForThisAction.forEach(serviceAndMethod -> {
-
-                    Method ruleMethod = serviceAndMethod.getValue();
-                    PermissionRule permissionRule = ruleMethod.getDeclaredAnnotation(PermissionRule.class);
-
-                    final String finalClassName = cleanEntityName(clazz);
-
-                    permissionRuleRows.add(new String[]{
-                            finalClassName,
-                            actionName,
-                            permissionRule.description(),
-                            permissionRule.particularBusinessState(),
-                            getMethodCallDescription(ruleMethod),
-                            permissionRule.additionalComments()});
-                });
-            });
-        });
-        return permissionRuleRows;
-    }
-
-    private String getMethodCallDescription(Method ruleMethod) {
-        Class<?>[] interfaces = ruleMethod.getDeclaringClass().getInterfaces();
-        Class<?> owningClass = interfaces.length > 0 ? interfaces[0] : ruleMethod.getDeclaringClass();
-        return owningClass.getSimpleName() + "." + ruleMethod.getName();
-    }
-
-    private String cleanEntityName(Class<?> clazz) {
-        final String finalClassName;
-        if (clazz.getSimpleName().endsWith("Resource")) {
-            finalClassName = clazz.getSimpleName().substring(0, clazz.getSimpleName().length() - "Resource".length());
-        } else {
-            finalClassName = clazz.getSimpleName();
-        }
-        return finalClassName;
-    }
-
     private void writeCsv(String filename, String[] headers, List<String[]> rows) {
-
         try {
             try (FileWriter fileWriter = new FileWriter(filename)) {
 
@@ -219,34 +128,14 @@ public abstract class AbstractDocumentingServiceSecurityAnnotationsTest extends 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-    }
-
-    private boolean hasOneOf(Method method, List<Class<? extends Annotation>> annotations) {
-        for (Class<? extends Annotation> clazz : annotations) {
-            if (findAnnotation(method, clazz) != null) {
-                return true;
-            }
-        }
-        return false;
     }
 
     private Collection<Object> servicesToTest() {
-        Collection<Object> services = context.getBeansWithAnnotation(Service.class).values();
-        for (Iterator<Object> i = services.iterator(); i.hasNext(); ) {
-            Object service = i.next();
-            excludedClasses().stream().filter(exclusion -> unwrapProxy(service).getClass().isAssignableFrom(exclusion)).forEach(exclusion -> {
-                i.remove();
-            });
-        }
-        return services;
+        List<Object> unwrappedServices = allUnwrappedComponentsWithClassAnnotations(context, annotationsOnClassesToSecure());
+        return simpleFilter(unwrappedServices, service -> isAssignableFromOneOf(service, excludedClasses()));
     }
 
-    private Object unwrapProxy(Object services) {
-        try {
-            return unwrapProxies(asList(services)).get(0);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    private boolean isAssignableFromOneOf(Object service, List<Class<?>> from){
+        return simpleFilter(from, clazz ->  service.getClass().isAssignableFrom(clazz)).isEmpty();
     }
 }

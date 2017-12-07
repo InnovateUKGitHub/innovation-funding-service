@@ -4,6 +4,9 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
+
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
+
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -235,7 +238,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setUpUserAsProjectManager(project, user);
 
-        assertTrue(rules.projectManagerSubmitGrantOfferLetter(project.getId(), user));
+        assertTrue(rules.projectManagerSubmitGrantOfferLetter(ProjectCompositeId.id(project.getId()), user));
 
     }
 
@@ -246,7 +249,7 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setUpUserNotAsProjectManager(user);
 
-        assertFalse(rules.projectManagerSubmitGrantOfferLetter(project.getId(), user));
+        assertFalse(rules.projectManagerSubmitGrantOfferLetter(ProjectCompositeId.id(project.getId()), user));
     }
 
     @Test
@@ -256,7 +259,6 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setUpUserAsCompAdmin(project, user);
 
-        assertTrue(rules.internalUsersCanApproveSignedGrantOfferLetter(project.getId(), user));
         assertTrue(rules.internalUsersCanApproveSignedGrantOfferLetter(project, user));
     }
 
@@ -267,7 +269,6 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
 
         setUpUserNotAsCompAdmin(project, user);
 
-        assertFalse(rules.internalUsersCanApproveSignedGrantOfferLetter(project.getId(), user));
         assertFalse(rules.internalUsersCanApproveSignedGrantOfferLetter(project, user));
     }
 

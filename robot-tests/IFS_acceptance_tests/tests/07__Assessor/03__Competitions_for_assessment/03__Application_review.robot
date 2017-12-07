@@ -26,7 +26,7 @@ Navigation using previous button
     Given the user clicks the button/link              link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link                link=Products and Services Personalised
     When the user clicks the button/link               link=4. Economic benefit
-    Then the user should see the text in the page      Economic benefit
+    Then the user should see the element               jQuery=h1:contains("Economic benefit")
     And the user clicks previous and goes to the page  Project exploitation
     And the user clicks previous and goes to the page  Potential market
     And the user clicks previous and goes to the page  Business opportunity
@@ -34,69 +34,69 @@ Navigation using previous button
     And the user clicks previous and goes to the page  Public description
     And the user clicks previous and goes to the page  Project summary
     And the user clicks previous and goes to the page  Application details
-    And the user should not see the element            css=.prev
+    And the user should not see the element            jQuery=span:contains("Previous")
 
 Project details sections should not be scorable
     [Documentation]    INFUND-3400 INFUND-4264
     [Tags]
-    When the user clicks the button/link               link=Back to your assessment overview
-    And the user clicks the button/link                link=Application details
-    And the user should see the text in the page       Project title
-    Then the user should not see the text in the page  Question score
-    When the user clicks the button/link               jQuery=span:contains("Next")
-    And the user should see the text in the page       This is the applicant response for project summary.
-    Then the user should not see the text in the page  Question score
-    When the user clicks the button/link               jQuery=span:contains("Next")
-    And the user should see the text in the page       This is the applicant response for public description.
-    Then the user should not see the text in the page  Question score
-    And the user clicks the button/link                jQuery=span:contains("Next")
-    And the user should see the text in the page       This is the applicant response for how does your project align with the scope of this competition?.
-    Then the user should not see the text in the page  Question score
+    When the user clicks the button/link       link=Back to your assessment overview
+    And the user clicks the button/link        link=Application details
+    And the user should see the element        jQuery=h3:contains("Project title")
+    Then the user should not see the element   jQuery=label:contains("Question score")
+    When the user clicks the button/link       jQuery=span:contains("Next")
+    And the user should see the element        jQuery=p:contains("This is the applicant response for project summary.")
+    Then the user should not see the element   jQuery=label:contains("Question score")
+    When the user clicks the button/link       jQuery=span:contains("Next")
+    And the user should see the element        jQuery=p:contains("This is the applicant response for public description.")
+    Then the user should not see the element   jQuery=label:contains("Question score")
+    And the user clicks the button/link        jQuery=span:contains("Next")
+    And the user should see the element        jQuery=p:contains("This is the applicant response for how does your project align with the scope of this competition?.")
+    Then the user should not see the element   jQuery=label:contains("Question score")
 
 Application questions should be scorable
     [Documentation]    INFUND-3400 INFUND-4264
     [Tags]
     When the user clicks the button/link          jQuery=span:contains("Next")
-    And The user should see the text in the page  What is the business opportunity that your project addresses?
-    And the user should see the text in the page  This is the applicant response for what is the business opportunity that your project addresses?.
+    And The user should see the element           jQuery=h2:contains("What is the business opportunity that your project addresses?")
+    And the user should see the element           jQuery=p:contains("This is the applicant response for what is the business opportunity that your project addresses?.")
     Then The user should see the element          jQuery=label:contains("Question score")
     When the user clicks the button/link          jQuery=span:contains("Next")
-    And The user should see the text in the page  What is the size of the potential market for your project
-    And the user should see the text in the page  This is the applicant response for what is the size of the potential market for your project?.
+    And The user should see the element           jQuery=h2:contains("What is the size of the potential market for your project")
+    And the user should see the element           jQuery=p:contains("This is the applicant response for what is the size of the potential market for your project?.")
     Then The user should see the element          jQuery=label:contains("Question score")
     When the user clicks the button/link          jQuery=span:contains("Next")
-    And The user should see the text in the page  How will you exploit and market your project?
-    And the user should see the text in the page  This is the applicant response for how will you exploit and market your project?.
+    And The user should see the element           jQuery=h2:contains("How will you exploit and market your project?")
+    And the user should see the element           jQuery=p:contains("This is the applicant response for how will you exploit and market your project?.")
     Then The user should see the element          jQuery=label:contains("Question score")
     When the user clicks the button/link          jQuery=span:contains("Next")
-    And The user should see the text in the page  What economic, social and environmental benefits do you expect
-    And the user should see the text in the page  This is the applicant response for what economic, social and environmental benefits do you expect your project to deliver and when?.
+    And The user should see the element           jQuery=h2:contains("What economic, social and environmental benefits do you expect your project to deliver and when?")
+    And the user should see the element           jQuery=p:contains("This is the applicant response for what economic, social and environmental benefits do you expect your project to deliver and when?.")
     Then The user should see the element          jQuery=label:contains("Question score")
     When the user clicks the button/link          jQuery=span:contains("Next")
-    And The user should see the text in the page  What technical approach will you use and how will you manage your project?
-    And the user should see the text in the page  This is the applicant response for what technical approach will you use and how will you manage your project?.
+    And The user should see the element           jQuery=h2:contains("What technical approach will you use and how will you manage your project?")
+    And the user should see the element           jQuery=p:contains("This is the applicant response for what technical approach will you use and how will you manage your project?.")
     Then The user should see the element          jQuery=label:contains("Question score")
     When the user clicks the button/link          jQuery=span:contains("Next")
-    And The user should see the text in the page  What is innovative about your project
-    And the user should see the text in the page  This is the applicant response for what is innovative about your project?.
+    And The user should see the element           jQuery=h2:contains("What is innovative about your project")
+    And the user should see the element           jQuery=p:contains("This is the applicant response for what is innovative about your project?.")
     Then The user should see the element          jQuery=label:contains("Question score")
     When the user clicks the button/link          jQuery=span:contains("Next")
-    And The user should see the text in the page  What are the risks
-    And the user should see the text in the page  This is the applicant response for what are the risks (technical, commercial and environmental) to your project's success? what is your risk management strategy?
+    And The user should see the element           jQuery=h2:contains("What are the risks")
+    And the user should see the element           jQuery=p:contains("This is the applicant response for what are the risks (technical, commercial and environmental) to your project's success? what is your risk management strategy?.")
     Then The user should see the element          jQuery=label:contains("Question score")
     When the user clicks the button/link          jQuery=span:contains("Next")
-    And The user should see the text in the page  Does your project team have the skills,
-    And the user should see the text in the page  This is the applicant response for does your project team have the skills, experience and facilities to deliver this project?.
+    And The user should see the element           jQuery=h2:contains("Does your project team have the skills,")
+    And the user should see the element           jQuery=p:contains("This is the applicant response for does your project team have the skills, experience and facilities to deliver this project?.")
     Then The user should see the element          jQuery=label:contains("Question score")
     When the user clicks the button/link          jQuery=span:contains("Next")
-    And The user should see the text in the page  What will your project cost
-    And the user should see the text in the page  This is the applicant response for what will your project cost?.
+    And The user should see the element           jQuery=h2:contains("What will your project cost")
+    And the user should see the element           jQuery=p:contains("This is the applicant response for what will your project cost?.")
     Then The user should see the element          jQuery=label:contains("Question score")
     When the user clicks the button/link          jQuery=span:contains("Next")
-    And The user should see the text in the page  How does financial support from Innovate UK
-    And the user should see the text in the page  This is the applicant response for how does financial support from innovate uk and its funding partners add value?.
+    And The user should see the element           jQuery=h2:contains("How does financial support from Innovate UK")
+    And the user should see the element           jQuery=p:contains("This is the applicant response for how does financial support from innovate uk and its funding partners add value?.")
     Then The user should see the element          jQuery=label:contains("Question score")
-    [Teardown]  the user clicks the button/link    link=Back to your assessment overview
+    [Teardown]  the user clicks the button/link   link=Back to your assessment overview
 
 Appendix can be opened on the question view
     [Documentation]    INFUND-8065
@@ -126,7 +126,7 @@ Scope: Status in the overview is updated
     And the user clicks the button/link                      jQuery=label:contains("Yes")
     And The user enters text to a text field                 css=.editor    Testing feedback field when "Yes" is selected.
     And the user clicks the button/link                      jquery=button:contains("Save and return to assessment overview")
-    And the user should see the text in the page             In scope
+    And the user should see the element                      jQuery=li:nth-child(4) span:contains("In scope")
     And the user should see the element                      css=.task-status-complete
 
 Scope: Autosave
@@ -184,7 +184,7 @@ Economic Benefit: Autosave
     [Tags]
     When the user selects the option from the drop-down menu  9    css=.assessor-question-score
     And the user enters text to a text field                  css=.editor    This is to test the feedback entry.
-    And the user clicks the button/link                       jQuery=a:contains(Back to your assessment overview)
+    And the user clicks the button/link                       jQuery=a:contains("Back to your assessment overview")
     And the user clicks the button/link                       link=4. Economic benefit
     Then the user should see the text in the page             This is to test the feedback entry.
     And the user should see the text in the page              9
@@ -217,7 +217,7 @@ Status of the application should be In Progress
 *** Keywords ***
 the user clicks next and goes to the page
     [Arguments]    ${page_content}
-    the user clicks the button/link           css=.next
+    the user clicks the button/link           jQuery=span:contains("Next")
     the user should see the text in the page  ${page_content}
 
 I enter feedback of words
@@ -242,7 +242,7 @@ I open one of the application questions
 
 the user clicks previous and goes to the page
     [Arguments]    ${page_content}
-    the user clicks the button/link           css=.prev
+    the user clicks the button/link           jQuery=span:contains("Previous")
     the user should see the text in the page  ${page_content}
 
 the finance summary total should be correct

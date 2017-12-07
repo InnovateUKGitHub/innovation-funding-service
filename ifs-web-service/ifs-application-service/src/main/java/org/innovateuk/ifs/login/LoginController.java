@@ -3,6 +3,7 @@ package org.innovateuk.ifs.login;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.login.form.ResetPasswordForm;
 import org.innovateuk.ifs.login.form.ResetPasswordRequestForm;
@@ -26,6 +27,7 @@ import java.util.List;
 
 @Controller
 @Configuration
+@SecuredBySpring(value = "Controller", description = "Anyone can access the login controller", securedType = LoginController.class)
 @PreAuthorize("permitAll")
 public class LoginController {
     public static final String LOGIN_BASE = "login";

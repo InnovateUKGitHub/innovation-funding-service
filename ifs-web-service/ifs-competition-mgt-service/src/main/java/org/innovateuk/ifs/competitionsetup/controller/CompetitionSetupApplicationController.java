@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.CompetitionSetupQuestionRestService;
@@ -47,6 +48,7 @@ import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupCon
  */
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/application")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionSetupApplicationController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionSetupApplicationController {
 

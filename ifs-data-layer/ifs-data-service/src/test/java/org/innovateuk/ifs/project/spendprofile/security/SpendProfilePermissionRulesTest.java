@@ -4,6 +4,9 @@ import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.domain.Competition;
+
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
+
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -92,7 +95,7 @@ public class SpendProfilePermissionRulesTest extends BasePermissionRulesTest<Spe
 
         setUpUserAsProjectManager(project, user);
 
-        assertTrue(rules.projectManagerCanCompleteSpendProfile(project.getId(), user));
+        assertTrue(rules.projectManagerCanCompleteSpendProfile(ProjectCompositeId.id(project.getId()), user));
     }
 
     @Test

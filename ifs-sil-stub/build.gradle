@@ -3,7 +3,7 @@ import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
 def targetBuild = hasProperty('profile') ? profile : 'docker';
-apply from: targetBuild+"-build.gradle";
+apply from: targetBuild + "-build.gradle";
 apply plugin: 'org.asciidoctor.convert'
 
 configurations {
@@ -47,11 +47,11 @@ test {
 asciidoctor {
     dependsOn test
     attributes 'snippets': snippetsDir
-    backends  'html5'
+    backends 'html5'
     inputs.dir snippetsDir
     outputs.dir file("static/docs")
 
-    doLast{
+    doLast {
         copy {
             from "build/asciidoc/html5"
             into 'static/docs'
@@ -89,14 +89,14 @@ task prepareDockerInput {
 task buildDocker(type: DockerBuildImage) {
     dependsOn ":docker:app-base-image:buildDocker"
     dependsOn prepareDockerInput
-    tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+    tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
     inputDir = project.file("$project.buildDir/docker")
 }
 
 task tagDocker(type: DockerTagImage) {
     dependsOn buildDocker
     imageId = buildDocker.getTag()
-    repository = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+    repository = project.dockerRegistry + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
     tag = project.version
 }
 
@@ -104,24 +104,29 @@ task osStageRemote(type: DockerPushImage) {
     onlyIf { isNotProductionEnv() }
     dependsOn tagDocker
     registryCredentials = project.ext.dockerRegistryCredentials
-    imageName=project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+    imageName = project.dockerRegistry + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
     tag = project.version
 }
 
 task tagDockerLocal(type: DockerTagImage) {
     dependsOn buildDocker
     imageId = buildDocker.getTag()
-    repository = localDockerRegistryCredentials.url+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+    repository = localDockerRegistryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
     tag = project.version
 }
 
 task osStageLocal(type: DockerPushImage) {
     dependsOn tagDockerLocal
     registryCredentials = project.ext.localDockerRegistryCredentials
-    imageName=localDockerRegistryCredentials.url +"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
+    imageName = localDockerRegistryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
     tag = project.version
 }
 
+project.version = silStubVersion
+tagDocker.tag = silStubVersion
+osStageRemote.tag = silStubVersion
+tagDockerLocal.tag = silStubVersion
+osStageLocal.tag = silStubVersion
 
 // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
 // Can reinstate excludeDevtools in the bootRepackage task in next release
