@@ -27,6 +27,8 @@ function checkVariables() {
     if [ -z "$DB_DESTINATION_PASS" ]; then echo "Set DB_DESTINATION_PASS environment variable"; exit -1; fi
     if [ -z "$DB_DESTINATION_NAME" ]; then echo "Set DB_DESTINATION_NAME environment variable"; exit -1; fi
     if [ -z "$DB_DESTINATION_HOST" ]; then echo "Set DB_DESTINATION_HOST environment variable"; exit -1; fi
+    if [ -z "$DB_DESTINATION_SYSTEM_USER_UID" ]; then echo "Set DB_DESTINATION_SYSTEM_USER_UID environment variable"; exit -1; fi
+    if [ -z "$DB_DESTINATION_SYSTEM_MAINTENANCE_USER_UID" ]; then echo "DB_DESTINATION_SYSTEM_MAINTENANCE_USER_UID environment variable"; exit -1; fi
     if [ -z "$DB_DUMP_PASS" ]; then echo "Set DB_DUMP_PASS environment variable"; exit -1; fi
     DB_DESTINATION_PORT=${DB_DESTINATION_PORT:-3306}
 }
@@ -52,6 +54,16 @@ function insertDataIntoDestinationDatabase() {
   | mysql -u$DB_DESTINATION_USER -p$DB_DESTINATION_PASS -h$DB_DESTINATION_HOST -P$DB_DESTINATION_PORT $DB_DESTINATION_NAME"
 }
 
+function resetSystemUserUids() {
+  DATA_POD_NAME=$1
+  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME \
+  mysql -u$DB_DESTINATION_USER -p$DB_DESTINATION_PASS -h$DB_DESTINATION_HOST -P$DB_DESTINATION_PORT $DB_DESTINATION_NAME \
+  --execute "UPDATE user SET uid = $DB_DESTINATION_SYSTEM_USER_UID WHERE email = "ifs_web_user@innovateuk.org"
+  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME \
+    mysql -u$DB_DESTINATION_USER -p$DB_DESTINATION_PASS -h$DB_DESTINATION_HOST -P$DB_DESTINATION_PORT $DB_DESTINATION_NAME \
+    --execute "UPDATE user SET uid = $DB_DESTINATION_SYSTEM_MAINTENANCE_USER_UID WHERE email = "ifs_system_maintenance_user@innovateuk.org"
+}
+
 function deleteDumpFromDataPod() {
   DATA_POD_NAME=$1
   oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME rm /tmp/anonymised/anonymised-dump.sql.gpg
@@ -61,4 +73,5 @@ checkVariables
 DATA_POD_NAME=$(getDatapodName)
 copyDumpToDatapod $DATA_POD_NAME
 insertDataIntoDestinationDatabase $DATA_POD_NAME
+resetSystemUserUids $DATA_POD_NAME
 deleteDumpFromDataPod $DATA_POD_NAME
