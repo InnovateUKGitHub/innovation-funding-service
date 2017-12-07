@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.bankdetails.service;
 
+import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -7,10 +8,15 @@ import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.bankDetailsReviewResourceListType;
+
 @Service
 public class BankDetailsRestServiceImpl extends BaseRestService implements BankDetailsRestService {
     
-    private String competitionsRestURL = "/competition";
+    private String competitionRestURL = "/competition";
+    private String competitionsRestURL = "/competitions";
     private String projectRestURL = "/project";
     
     @Override
@@ -40,7 +46,12 @@ public class BankDetailsRestServiceImpl extends BaseRestService implements BankD
     
     @Override
     public RestResult<ByteArrayResource> downloadByCompetition(Long competitionId) {
-        String url = competitionsRestURL + "/" + competitionId + "/bank-details/export";
+        String url = competitionRestURL + "/" + competitionId + "/bank-details/export";
         return getWithRestResult(url, ByteArrayResource.class);
+    }
+
+    @Override
+    public RestResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals() {
+        return getWithRestResult(competitionsRestURL + "/pending-bank-details-approvals", bankDetailsReviewResourceListType());
     }
 }
