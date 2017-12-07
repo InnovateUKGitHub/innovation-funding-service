@@ -10,11 +10,13 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
 Resource          ../../resources/defaultResources.robot
+
 # NOTE: Please do not use hard coded email in this suite. We always need to check local vs remote for the difference in the domain name !!!
 
 *** Variables ***
 ${localEmailInvtedUser}   ifs.innovationLead@innovateuk.test
 ${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.gov.uk
+${today}
 
 *** Test Cases ***
 Administrator can navigate to manage users page
