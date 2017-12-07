@@ -11,7 +11,7 @@ import static java.util.function.Function.*;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
-public enum AssessmentPanelApplicationInviteState implements ProcessState {
+public enum AssessmentReviewState implements ProcessState {
     CREATED(State.CREATED),
     PENDING(State.PENDING),
     REJECTED(State.REJECTED),
@@ -20,11 +20,11 @@ public enum AssessmentPanelApplicationInviteState implements ProcessState {
 
     private final State backingState;
 
-    private static final Map<String, AssessmentPanelApplicationInviteState> assessmentPanelApplicationInviteStateMap =
-            Stream.of(values()).collect(toMap(AssessmentPanelApplicationInviteState::getStateName, identity()));
+    private static final Map<String, AssessmentReviewState> assessmentPanelApplicationInviteStateMap =
+            Stream.of(values()).collect(toMap(AssessmentReviewState::getStateName, identity()));
 
     // creates the enum with the chosen type.
-    AssessmentPanelApplicationInviteState(State backingState) {
+    AssessmentReviewState(State backingState) {
         this.backingState = backingState;
     }
 
@@ -42,15 +42,15 @@ public enum AssessmentPanelApplicationInviteState implements ProcessState {
         return assessmentPanelApplicationInviteStateMap.keySet();
     }
 
-    public static AssessmentPanelApplicationInviteState getByState(String state) {
+    public static AssessmentReviewState getByState(String state) {
         return assessmentPanelApplicationInviteStateMap.get(state);
     }
 
-    public static AssessmentPanelApplicationInviteState fromState(State state) {
+    public static AssessmentReviewState fromState(State state) {
         return ProcessState.fromState(values(), state);
     }
 
-    public static Set<State> getBackingStates(Set<AssessmentPanelApplicationInviteState> states) {
-        return simpleMapSet(states, AssessmentPanelApplicationInviteState::getBackingState);
+    public static Set<State> getBackingStates(Set<AssessmentReviewState> states) {
+        return simpleMapSet(states, AssessmentReviewState::getBackingState);
     }
 }

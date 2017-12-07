@@ -12,6 +12,7 @@ import org.springframework.data.repository.query.Param;
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -109,5 +110,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 	int countByCompetitionIdAndApplicationProcessActivityStateStateInAndCompletionLessThanEqual(long competitionId, Collection<State> submittedStates, BigDecimal limit);
 
 	int countByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
+
+	Stream<Application> findByCompetitionIdAndInAssessmentPanelAndApplicationProcessActivityStateState(long competitionId, boolean inAssessmentPanel, State applicationState);
 
 }

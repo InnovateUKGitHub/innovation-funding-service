@@ -20,4 +20,6 @@ public interface AssessmentPanelService {
             value = "UNASSIGN_APPLICATIONS_FROM_PANEL",
             description = "Comp admins and execs can unassign applications from an assessment panel")
     ServiceResult<Void> unassignApplicationFromPanel(long applicationId);
+
+    ServiceResult<Void> createAndNotifyAll(long competitionId);
 }

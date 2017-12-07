@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.assessment.panel.workflow;
 
-import org.innovateuk.ifs.assessment.panel.domain.AssessmentPanelApplicationInvite;
-import org.innovateuk.ifs.assessment.panel.domain.AssessmentPanelApplicationInviteRejectOutcome;
-import org.innovateuk.ifs.assessment.panel.repository.AssessmentPanelApplicationInviteRepository;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelApplicationInviteState;
-import org.innovateuk.ifs.assessment.panel.workflow.configuration.AssessmentPanelApplicationInviteWorkflowHandler;
+import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
+import org.innovateuk.ifs.assessment.panel.domain.AssessmentReviewRejectOutcome;
+import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState;
+import org.innovateuk.ifs.assessment.panel.workflow.configuration.AssessmentReviewWorkflowHandler;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
@@ -21,32 +21,32 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelApplicationInviteBuilder.newAssessmentPanelApplicationInvite;
-import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelApplicationInviteRejectOutcomeBuilder.newAssessmentPanelApplicationInviteRejectOutcome;
-import static org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelApplicationInviteState.*;
+import static org.innovateuk.ifs.assessment.panel.builder.AssessmentReviewBuilder.newAssessmentReview;
+import static org.innovateuk.ifs.assessment.panel.builder.AssessmentReviewRejectOutcomeBuilder.newAssessmentPanelApplicationInviteRejectOutcome;
+import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @Transactional
-public class AssessmentPanelApplicationInviteWorkflowHandlerIntegrationTest
+public class AssessmentReviewWorkflowHandlerIntegrationTest
         extends BaseWorkflowHandlerIntegrationTest<
-        AssessmentPanelApplicationInviteWorkflowHandler,
-        AssessmentPanelApplicationInviteRepository, TestableTransitionWorkflowAction> {
+        AssessmentReviewWorkflowHandler,
+        AssessmentReviewRepository, TestableTransitionWorkflowAction> {
 
     private static final ActivityType ACTIVITY_TYPE = ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE;
 
     @Autowired
-    private AssessmentPanelApplicationInviteWorkflowHandler workflowHandler;
+    private AssessmentReviewWorkflowHandler workflowHandler;
 
     private ActivityStateRepository activityStateRepositoryMock;
-    private AssessmentPanelApplicationInviteRepository repositoryMock;
+    private AssessmentReviewRepository repositoryMock;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
         activityStateRepositoryMock = (ActivityStateRepository) mockSupplier.apply(ActivityStateRepository.class);
-        repositoryMock = (AssessmentPanelApplicationInviteRepository) mockSupplier.apply(AssessmentPanelApplicationInviteRepository.class);
+        repositoryMock = (AssessmentReviewRepository) mockSupplier.apply(AssessmentReviewRepository.class);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class AssessmentPanelApplicationInviteWorkflowHandlerIntegrationTest
         );
     }
 
-    private AssessmentPanelApplicationInviteRejectOutcome createRejection() {
+    private AssessmentReviewRejectOutcome createRejection() {
         return newAssessmentPanelApplicationInviteRejectOutcome().withRejectionComment("reason").build();
     }
 
@@ -93,34 +93,34 @@ public class AssessmentPanelApplicationInviteWorkflowHandlerIntegrationTest
     }
 
     @Override
-    protected Class<AssessmentPanelApplicationInviteWorkflowHandler> getWorkflowHandlerType() {
-        return AssessmentPanelApplicationInviteWorkflowHandler.class;
+    protected Class<AssessmentReviewWorkflowHandler> getWorkflowHandlerType() {
+        return AssessmentReviewWorkflowHandler.class;
     }
 
     @Override
-    protected Class<AssessmentPanelApplicationInviteRepository> getProcessRepositoryType() {
-        return AssessmentPanelApplicationInviteRepository.class;
+    protected Class<AssessmentReviewRepository> getProcessRepositoryType() {
+        return AssessmentReviewRepository.class;
     }
 
     private ActivityType getActivityType() {
         return ACTIVITY_TYPE;
     }
 
-    private AssessmentPanelApplicationInviteRepository getRepositoryMock() {
+    private AssessmentReviewRepository getRepositoryMock() {
         return repositoryMock;
     }
 
 
-    private AssessmentPanelApplicationInvite buildWorkflowProcessWithInitialState(AssessmentPanelApplicationInviteState initialState) {
-        return newAssessmentPanelApplicationInvite().withState(initialState).build();
+    private AssessmentReview buildWorkflowProcessWithInitialState(AssessmentReviewState initialState) {
+        return newAssessmentReview().withState(initialState).build();
     }
 
-    private void assertStateChangeOnWorkflowHandlerCall(AssessmentPanelApplicationInviteState initialState, AssessmentPanelApplicationInviteState expectedState, Function<AssessmentPanelApplicationInvite, Boolean> workflowHandlerMethod) {
+    private void assertStateChangeOnWorkflowHandlerCall(AssessmentReviewState initialState, AssessmentReviewState expectedState, Function<AssessmentReview, Boolean> workflowHandlerMethod) {
         assertStateChangeOnWorkflowHandlerCall(initialState, expectedState, workflowHandlerMethod, null);
     }
 
-    private void assertStateChangeOnWorkflowHandlerCall(AssessmentPanelApplicationInviteState initialState, AssessmentPanelApplicationInviteState expectedState, Function<AssessmentPanelApplicationInvite, Boolean> workflowHandlerMethod, Consumer<AssessmentPanelApplicationInvite> additionalVerifications) {
-        AssessmentPanelApplicationInvite workflowProcess = buildWorkflowProcessWithInitialState(initialState);
+    private void assertStateChangeOnWorkflowHandlerCall(AssessmentReviewState initialState, AssessmentReviewState expectedState, Function<AssessmentReview, Boolean> workflowHandlerMethod, Consumer<AssessmentReview> additionalVerifications) {
+        AssessmentReview workflowProcess = buildWorkflowProcessWithInitialState(initialState);
         when(getRepositoryMock().findOneByTargetId(workflowProcess.getId())).thenReturn(workflowProcess);
 
         ActivityState expectedActivityState = new ActivityState(getActivityType(), expectedState.getBackingState());

@@ -3,9 +3,9 @@ package org.innovateuk.ifs.assessment.panel.resource;
 import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 
 /**
- * Events that can happen during the AssessmentPanelApplicationProcess workflow.
+ * Events that can happen during the AssessmentReview workflow.
  */
-public enum AssessmentPanelApplicationInviteEvent implements ProcessEvent {
+public enum AssessmentReviewEvent implements ProcessEvent {
     NOTIFY("notify"),
     ACCEPT("accept"),
     REJECT("reject"),
@@ -14,7 +14,7 @@ public enum AssessmentPanelApplicationInviteEvent implements ProcessEvent {
 
     String event;
 
-    AssessmentPanelApplicationInviteEvent(String event) {
+    AssessmentReviewEvent(String event) {
         this.event = event;
     }
 
