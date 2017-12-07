@@ -142,7 +142,7 @@ include::{snippets}/user/reactivate-user/http-response.adoc[]
 include::{snippets}/user/reactivate-user/curl-request.adoc[]
 
 == Find External Users which contain the search string and match the search criteria
-==== Request
+=== Request
 include::{snippets}/user/find-external-users/http-request.adoc[]
 include::{snippets}/user/find-external-users/request-parameters.adoc[]
 

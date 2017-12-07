@@ -2,6 +2,7 @@ package org.innovateuk.ifs.publiccontent.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentGroupCompositeId;
 import org.innovateuk.ifs.publiccontent.domain.ContentGroup;
 import org.innovateuk.ifs.publiccontent.repository.ContentGroupRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
@@ -22,13 +23,13 @@ public class ContentGroupPermissionRules extends BasePermissionRules {
     private ContentGroupRepository contentGroupRepository;
 
     @PermissionRule(value = "DOWNLOAD_CONTENT_GROUP_FILE", description = "Internal users can see all content group files")
-    public boolean internalUsersCanViewAllContentGroupFiles(Long contentGroupId, UserResource user) {
+    public boolean internalUsersCanViewAllContentGroupFiles(ContentGroupCompositeId contentGroupCompositeId, UserResource user) {
         return isInternal(user);
     }
 
     @PermissionRule(value = "DOWNLOAD_CONTENT_GROUP_FILE", description = "External users can only see published content group files")
-    public boolean externalUsersCanViewPublishedContentGroupFiles(Long contentGroupId, UserResource user) {
-        ContentGroup contentGroup = contentGroupRepository.findOne(contentGroupId);
+    public boolean externalUsersCanViewPublishedContentGroupFiles(ContentGroupCompositeId contentGroupCompositeId, UserResource user) {
+        ContentGroup contentGroup = contentGroupRepository.findOne(contentGroupCompositeId.id());
         if (contentGroup != null) {
             return isSystemRegistrationUser(user) && isPublished(contentGroup);
         }

@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -13,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Service for managing {@link org.innovateuk.ifs.invite.domain.CompetitionInvite}s.
+ * Service for managing {@link CompetitionAssessmentInvite}s.
  */
 public interface CompetitionInviteService {
 

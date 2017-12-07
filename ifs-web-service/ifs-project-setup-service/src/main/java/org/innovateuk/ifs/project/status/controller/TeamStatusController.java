@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.consortiumoverview.viewmodel.ProjectConsortiumStatusViewModel;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
@@ -22,6 +23,7 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE
  */
 @Controller
 @RequestMapping("/project/{projectId}/team-status")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = TeamStatusController.class)
 @PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'comp_admin')")
 public class TeamStatusController {
 

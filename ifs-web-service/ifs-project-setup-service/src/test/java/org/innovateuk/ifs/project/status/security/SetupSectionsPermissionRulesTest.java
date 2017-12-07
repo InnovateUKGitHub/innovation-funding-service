@@ -3,9 +3,11 @@ package org.innovateuk.ifs.project.status.security;
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
+import org.innovateuk.ifs.organisation.resource.OrganisationCompositeId;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.sections.SectionAccess;
+import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -54,56 +56,51 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
     }
 
     @Test(expected = ForbiddenActionException.class)
-    public void companiesHouseSectionAccess() {
-        assertScenariousForSections(SetupSectionAccessibilityHelper::canAccessCompaniesHouseSection, () -> rules.partnerCanAccessCompaniesHouseSection(123L, user));
-    }
-
-    @Test(expected = ForbiddenActionException.class)
     public void projectDetailsSectionAccess() {
-        assertScenariousForSections(SetupSectionAccessibilityHelper::canAccessProjectDetailsSection, () -> rules.partnerCanAccessProjectDetailsSection(123L, user));
+        assertScenariousForSections(SetupSectionAccessibilityHelper::canAccessProjectDetailsSection, () -> rules.partnerCanAccessProjectDetailsSection(ProjectCompositeId.id(123L), user));
     }
 
     @Test
     public void projectManagerPageAccess() {
         assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::leadCanAccessProjectManagerPage,
-                () -> rules.leadCanAccessProjectManagerPage(123L, user));
+                () -> rules.leadCanAccessProjectManagerPage(ProjectCompositeId.id(123L), user));
     }
 
     @Test
     public void projectStartDatePageAccess() {
         assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::leadCanAccessProjectStartDatePage,
-                () -> rules.leadCanAccessProjectStartDatePage(123L, user));
+                () -> rules.leadCanAccessProjectStartDatePage(ProjectCompositeId.id(123L), user));
     }
 
     @Test
     public void projectAddressPageAccess() {
         assertLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::leadCanAccessProjectAddressPage,
-                () -> rules.leadCanAccessProjectAddressPage(123L, user));
+                () -> rules.leadCanAccessProjectAddressPage(ProjectCompositeId.id(123L), user));
     }
 
     @Test
     public void financeContactPageAccess() {
-        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessFinanceContactPage, () -> rules.partnerCanAccessFinanceContactPage(123L, user));
+        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessFinanceContactPage, () -> rules.partnerCanAccessFinanceContactPage(ProjectCompositeId.id(123L), user));
     }
 
     @Test
     public void monitoringOfficerSectionAccess() {
-        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessMonitoringOfficerSection, () -> rules.partnerCanAccessMonitoringOfficerSection(123L, user));
+        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessMonitoringOfficerSection, () -> rules.partnerCanAccessMonitoringOfficerSection(ProjectCompositeId.id(123L), user));
     }
 
     @Test
     public void bankDetailsSectionAccess() {
-        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessBankDetailsSection, () -> rules.partnerCanAccessBankDetailsSection(123L, user));
+        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessBankDetailsSection, () -> rules.partnerCanAccessBankDetailsSection(ProjectCompositeId.id(123L), user));
     }
 
     @Test
     public void spendProfileSectionAccess() {
-        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(123L, user));
+        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessSpendProfileSection, () -> rules.partnerCanAccessSpendProfileSection(ProjectCompositeId.id(123L), user));
     }
 
     @Test
     public void otherDocumentsSectionAccess() {
-        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessOtherDocumentsSection, () -> rules.partnerCanAccessOtherDocumentsSection(123L, user));
+        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessOtherDocumentsSection, () -> rules.partnerCanAccessOtherDocumentsSection(ProjectCompositeId.id(123L), user));
     }
 
     @Test
@@ -116,7 +113,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         when(projectServiceMock.getById(projectId)).thenReturn(project);
         when(projectServiceMock.isProjectManager(user.getId(), projectId)).thenReturn(true);
         when(otherDocumentsServiceMock.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
-        assertTrue(rules.projectManagerCanSubmitOtherDocumentsSection(projectId, user));
+        assertTrue(rules.projectManagerCanSubmitOtherDocumentsSection(ProjectCompositeId.id(projectId), user));
     }
 
     @Test
@@ -129,12 +126,12 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         when(projectServiceMock.getById(projectId)).thenReturn(project);
         when(projectServiceMock.isProjectManager(user.getId(), projectId)).thenReturn(false);
         when(otherDocumentsServiceMock.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
-        assertFalse(rules.projectManagerCanSubmitOtherDocumentsSection(projectId, user));
+        assertFalse(rules.projectManagerCanSubmitOtherDocumentsSection(ProjectCompositeId.id(projectId), user));
     }
 
     @Test
     public void grantOfferLetterSectionAccess() {
-        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection, () -> rules.partnerCanAccessGrantOfferLetterSection(123L, user));
+        assertNonLeadPartnerSuccessfulAccess(SetupSectionAccessibilityHelper::canAccessGrantOfferLetterSection, () -> rules.partnerCanAccessGrantOfferLetterSection(ProjectCompositeId.id(123L), user));
     }
 
     @Test
@@ -142,7 +139,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         UserResource userRes = new UserResource();
         userRes.setId(1L);
         when(projectServiceMock.isUserLeadPartner(123L, 1L)).thenReturn(true);
-        assertTrue(rules.leadPartnerAccess(123L, userRes));
+        assertTrue(rules.leadPartnerAccess(ProjectCompositeId.id(123L), userRes));
     }
 
     @Test
@@ -150,7 +147,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         UserResource userRes = new UserResource();
         userRes.setId(1L);
         when(projectServiceMock.isUserLeadPartner(123L, 1L)).thenReturn(false);
-        assertFalse(rules.leadPartnerAccess(123L, userRes));
+        assertFalse(rules.leadPartnerAccess(ProjectCompositeId.id(123L), userRes));
     }
 
     @Test
@@ -158,7 +155,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         ProjectUserResource leadPartnerProjectUserResource = newProjectUserResource().withUser(user.getId()).build();
 
         when(projectServiceMock.getLeadPartners(123L)).thenReturn(singletonList(leadPartnerProjectUserResource));
-        assertTrue(rules.userCanMarkSpendProfileIncomplete(123L, user));
+        assertTrue(rules.userCanMarkSpendProfileIncomplete(ProjectCompositeId.id(123L), user));
         verify(projectServiceMock).getLeadPartners(123L);
     }
 
@@ -170,7 +167,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).build();
 
         when(organisationServiceMock.getOrganisationForUser(userId)).thenReturn(organisationResource);
-        assertFalse(rules.userCannotMarkOwnSpendProfileIncomplete(organisationId, userResource));
+        assertFalse(rules.userCannotMarkOwnSpendProfileIncomplete(OrganisationCompositeId.id(organisationId), userResource));
         verify(organisationServiceMock).getOrganisationForUser(userId);
     }
 
@@ -183,7 +180,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         OrganisationResource organisationResource = newOrganisationResource().withId(organisationId).build();
 
         when(organisationServiceMock.getOrganisationForUser(userId)).thenReturn(organisationResource);
-        assertTrue(rules.userCannotMarkOwnSpendProfileIncomplete(otherOrganisationId, userResource));
+        assertTrue(rules.userCannotMarkOwnSpendProfileIncomplete(OrganisationCompositeId.id(otherOrganisationId), userResource));
         verify(organisationServiceMock).getOrganisationForUser(userId);
     }
 
@@ -208,7 +205,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         when(statusServiceMock.getProjectTeamStatus(projectId, Optional.of(user.getId()))).thenReturn(teamStatus);
         when(accessor.canAccessFinanceChecksSection(any())).thenReturn(ACCESSIBLE);
 
-        assertTrue(rules.partnerCanAccessFinanceChecksSection(123L, user));
+        assertTrue(rules.partnerCanAccessFinanceChecksSection(ProjectCompositeId.id(123L), user));
 
         verify(accessor).canAccessFinanceChecksSection(any());
     }
@@ -234,7 +231,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         when(accessor.canAccessFinanceChecksSection(any())).thenReturn(NOT_ACCESSIBLE);
         when(organisationServiceMock.getOrganisationIdFromUser(projectId, user)).thenReturn(organisationId);
 
-        assertFalse(rules.partnerCanAccessFinanceChecksSection(123L, user));
+        assertFalse(rules.partnerCanAccessFinanceChecksSection(ProjectCompositeId.id(123L), user));
 
     }
 
@@ -260,7 +257,7 @@ public class SetupSectionsPermissionRulesTest extends BasePermissionRulesTest<Se
         when(statusServiceMock.getProjectTeamStatus(projectId, Optional.of(user.getId()))).thenReturn(teamStatus);
         when(accessor.canAccessFinanceChecksSection(any())).thenReturn(ACCESSIBLE);
 
-        assertTrue(rules.partnerCanAccessFinanceChecksSection(123L, user));
+        assertTrue(rules.partnerCanAccessFinanceChecksSection(ProjectCompositeId.id(123L), user));
 
         verify(statusServiceMock).getProjectTeamStatus(projectId, Optional.of(user.getId()));
     }

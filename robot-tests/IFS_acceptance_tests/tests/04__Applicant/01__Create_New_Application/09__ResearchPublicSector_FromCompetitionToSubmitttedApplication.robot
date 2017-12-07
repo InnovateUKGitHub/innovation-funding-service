@@ -18,6 +18,7 @@ ${researchLeadApp}  Research Leading Application
 ${publicLeadApp}    Public Sector leading Application
 ${collaborator}     ${test_mailbox_one}+amy@gmail.com
 ${compPublicPage}   ${server}/management/competition/${openCompetitionPublicSector}
+${customQuestion}   How innovative is your project?
 
 *** Test Cases ***
 Comp Admin Creates Competitions where Research or Public sector can lead
@@ -40,7 +41,7 @@ The Applicant is able to apply to the competition once is Open and see the corre
     [Setup]  the competition moves to Open state  ${reseachCompId}
     Given log in as a different user              &{collaborator2_credentials}
     And logged in user applies to competition     ${compResearch}
-    Then the user should see the element          jQuery=li:contains("Tell us how your project is innovative.")
+    Then the user should see the element          jQuery=li:contains("${customQuestion}")
 
 Applicant Applies to Research leading Competition
     [Documentation]  IFS-1012
@@ -76,12 +77,7 @@ Project Finance is able to see the Overheads costs file
 
 *** Keywords ***
 Custom Suite Setup
-    ${month} =          get tomorrow month
-    set suite variable  ${month}
-    ${nextyear} =       get next year
-    Set suite variable  ${nextyear}
-    ${tomorrowday} =    get tomorrow day
-    Set suite variable  ${tomorrowday}
+    Set predefined date variables
     The guest user opens the browser
 
 The competition admin creates a competition for
@@ -171,6 +167,6 @@ the project finance is able to download the Overheads file
 the internal user can see that the Generic competition has only one Application Question
     the user clicks the button/link  link=Application
     the user clicks the button/link  link=1. Edit this question
-    the user is able to configure the new question
-    the user should be able to see the read only view of question correctly
+    the user is able to configure the new question  ${customQuestion}
+    the user should be able to see the read only view of question correctly  ${customQuestion}
     the user clicks the button/link  link=Competition setup
