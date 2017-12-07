@@ -268,6 +268,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<SpendProfileStatusResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<BankDetailsReviewResource>> bankDetailsReviewResourceListType() {
+        return new ParameterizedTypeReference<List<BankDetailsReviewResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryListType() {
         return new ParameterizedTypeReference<List<CompetitionOpenQueryResource>>() {};
     }
