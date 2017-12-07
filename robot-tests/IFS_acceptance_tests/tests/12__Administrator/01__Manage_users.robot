@@ -7,6 +7,7 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-643: Complete internal user registration
 ...               IFS-644: Disable or reenable user profile
 ...               IFS-983: Manage users: Pending registration tab
+Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -16,7 +17,6 @@ Resource          ../../resources/defaultResources.robot
 *** Variables ***
 ${localEmailInvtedUser}   ifs.innovationLead@innovateuk.test
 ${remoteEmailInvtedUser}  ifs.innovationLead@innovateuk.gov.uk
-${today}
 
 *** Test Cases ***
 Administrator can navigate to manage users page
@@ -244,6 +244,10 @@ Deactivated user cannot login until he is activated
 # TODO: Add ATs for IFS-605 with pagination when IFS-637 is implemented
 
 *** Keywords ***
+Custom suite setup
+    ${today} =  get today
+    set suite variable  ${today}
+
 User cannot see manage users page
     [Arguments]  ${email}  ${password}
     Log in as a different user  ${email}  ${password}
