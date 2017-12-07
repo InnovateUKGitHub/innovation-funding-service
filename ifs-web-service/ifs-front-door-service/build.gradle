@@ -6,6 +6,12 @@ configurations {
     providedRuntime
 }
 
+project.version = frontDoorServiceVersion
+tagDocker.tag = frontDoorServiceVersion
+osStageRemote.tag = frontDoorServiceVersion
+tagDockerLocal.tag = frontDoorServiceVersion
+osStageLocal.tag = frontDoorServiceVersion
+
 
 jar {
     baseName = 'ifs-front-door-service'
@@ -25,6 +31,7 @@ dependencies {
 
     testCompile "com.openpojo:openpojo:0.8.6"
     testCompile "org.skyscreamer:jsonassert:1.5.0"
+    testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
 

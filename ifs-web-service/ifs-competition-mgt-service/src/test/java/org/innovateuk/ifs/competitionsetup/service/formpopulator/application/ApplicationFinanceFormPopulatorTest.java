@@ -11,6 +11,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
+import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -66,6 +67,11 @@ public class ApplicationFinanceFormPopulatorTest {
                 .withFullApplicationFinance(isFullApplication)
                 .build();
 
+        CompetitionResource competition = newCompetitionResource()
+                .withId(compId)
+                .build();
+
+        when(competitionSetupFinanceService.isNoFinanceCompetition(competition)).thenReturn(false);
         when(competitionSetupFinanceService.getByCompetitionId(compId)).thenReturn(csfr);
         when(sectionService.getSectionsForCompetitionByType(compId, SectionType.OVERVIEW_FINANCES)).thenReturn(asList(overviewFinanceSection));
         when(questionService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL)).thenReturn(newQuestionResource()
@@ -73,16 +79,39 @@ public class ApplicationFinanceFormPopulatorTest {
                 .withDescription("", fundingRules)
                 .build(2));
 
+        CompetitionSetupForm result = populator.populateForm(competition, Optional.empty());
+
+        assertTrue(result instanceof ApplicationFinanceForm);
+        ApplicationFinanceForm form = (ApplicationFinanceForm) result;
+        assertEquals(ApplicationFinanceType.FULL, form.getApplicationFinanceType());
+        assertEquals(isIncludeGrowthTable, form.isIncludeGrowthTable());
+        assertEquals(fundingRules, form.getFundingRules());
+    }
+
+    @Test
+    public void testPopulateWithoutErrorsForNonFinances() {
+        final long compId = 8L;
+        final long sectionId = 234L;
+        final boolean isFullApplication = false;
+        final boolean isIncludeGrowthTable = true;
+        final String fundingRules = "Funding rules for competition are fun, right?";
+
+        SectionResource overviewFinanceSection = newSectionResource()
+                .withId(sectionId)
+                .withType(SectionType.OVERVIEW_FINANCES)
+                .build();
+
         CompetitionResource competition = newCompetitionResource()
                 .withId(compId)
                 .build();
+
+
+        when(competitionSetupFinanceService.isNoFinanceCompetition(competition)).thenReturn(true);
 
         CompetitionSetupForm result = populator.populateForm(competition, Optional.empty());
 
         assertTrue(result instanceof ApplicationFinanceForm);
         ApplicationFinanceForm form = (ApplicationFinanceForm) result;
-        assertEquals(isFullApplication, form.isFullApplicationFinance());
-        assertEquals(isIncludeGrowthTable, form.isIncludeGrowthTable());
-        assertEquals(fundingRules, form.getFundingRules());
+        assertEquals(ApplicationFinanceType.NONE, form.getApplicationFinanceType());
     }
 }

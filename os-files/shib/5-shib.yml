@@ -21,7 +21,7 @@ items:
           deploymentconfig: shib
       spec:
         containers:
-        - image: innovateuk/sp-service:1.0-SNAPSHOT
+        - image: innovateuk/sp-service:${spVersion}
           name: shib
           livenessProbe:
             httpGet:
