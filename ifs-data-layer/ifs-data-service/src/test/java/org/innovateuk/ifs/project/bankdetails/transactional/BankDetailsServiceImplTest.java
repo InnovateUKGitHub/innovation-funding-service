@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.project.bankdetails.builder.BankDetailsBuilder;
 import org.innovateuk.ifs.project.bankdetails.domain.BankDetails;
 import org.innovateuk.ifs.project.bankdetails.mapper.SILBankDetailsMapper;
@@ -28,6 +29,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
@@ -225,6 +227,19 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         ServiceResult<ProjectBankDetailsStatusSummary> result = service.getProjectBankDetailsStatusSummary(projectId);
         assertTrue(result.isSuccess());
         assertEquals(expected, result.getSuccessObject());
+    }
+
+    @Test
+    public void getPendingBankDetailsApprovals() throws Exception {
+
+        List<BankDetailsReviewResource> pendingBankDetails = Collections.singletonList(new BankDetailsReviewResource(1L, 11L, "Comp1", 12L, "project1", 22L, "Org1"));
+
+        when(bankDetailsRepositoryMock.getPendingBankDetailsApprovals()).thenReturn(pendingBankDetails);
+
+        ServiceResult<List<BankDetailsReviewResource>> result = service.getPendingBankDetailsApprovals();
+
+        assertTrue(result.isSuccess());
+        assertEquals(pendingBankDetails, result.getSuccessObject());
     }
 
     @Override
