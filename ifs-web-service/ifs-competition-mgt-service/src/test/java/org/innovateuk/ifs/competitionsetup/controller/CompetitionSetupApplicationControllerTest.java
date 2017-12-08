@@ -16,6 +16,7 @@ import org.innovateuk.ifs.competitionsetup.viewmodel.QuestionSetupViewModel;
 import org.innovateuk.ifs.competitionsetup.viewmodel.fragments.GeneralSetupViewModel;
 import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -392,6 +393,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
+    @Ignore
     public void submitSectionApplicationQuestionWithAppendixWithoutTypeResultsInErrors() throws Exception {
         Long questionId = 4L;
         CompetitionResource competition = newCompetitionResource()
