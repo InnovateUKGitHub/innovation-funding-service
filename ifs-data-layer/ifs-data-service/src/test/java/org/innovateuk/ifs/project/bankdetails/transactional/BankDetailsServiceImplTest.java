@@ -242,6 +242,19 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         assertEquals(pendingBankDetails, result.getSuccessObject());
     }
 
+    @Test
+    public void countPendingBankDetailsApprovals() throws Exception {
+
+        Long pendingBankDetailsCount = 8L;
+
+        when(bankDetailsRepositoryMock.countPendingBankDetailsApprovals()).thenReturn(pendingBankDetailsCount);
+
+        ServiceResult<Long> result = service.countPendingBankDetailsApprovals();
+
+        assertTrue(result.isSuccess());
+        assertEquals(pendingBankDetailsCount, result.getSuccessObject());
+    }
+
     @Override
     protected BankDetailsService supplyServiceUnderTest() {
         return new BankDetailsServiceImpl();
