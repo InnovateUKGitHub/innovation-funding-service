@@ -11,7 +11,7 @@ import static org.springframework.web.context.request.RequestContextHolder.getRe
 @Component
 public class RequestUidSupplier implements UidSupplier {
 
-    private static final String REQUEST_UID_KEY = "REQUEST_UID_KEY";
+    public static final String REQUEST_UID_KEY = "REQUEST_UID_KEY";
 
     @Override
     public String get() {
