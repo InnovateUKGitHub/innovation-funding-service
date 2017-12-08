@@ -12,7 +12,6 @@ Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 ${apcCompetitionTitle}  Advanced Propulsion Centre Competition
 ${apcApplicationTitle}  Advanced Propulsion Centre Application
 
-
 *** Test Cases ***
 Comp Admin creates an APC competition
     [Documentation]  IFS-2284, IFS-2286
@@ -33,6 +32,21 @@ Comp Admin creates an APC competition
     When the user clicks the button/link           jQuery=a:contains("Complete")
     Then the user clicks the button/link           jQuery=a:contains("Done")
 
+Applicant applies to newly created EOI comp
+    [Documentation]  IFS-2192  IFS-2196
+    [Tags]  HappyPath
+    When the competition is open                                 ${apcCompetitionTitle}
+    Then Lead Applicant applies to the new created competition   ${apcCompetitionTitle}
+
+Applicant submits his application
+    [Documentation]  IFS-2196
+    [Tags]  HappyPath
+    Given the user clicks the button/link               link=Application details
+    When the user fills in the Application details      ${apcApplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    and the lead applicant fills all the questions and marks as complete(programme)
+    And the user marks the finances as complete
+    Then the applicant submits the application
+
 Requesting the id of this Competition
     [Documentation]  retrieving the id of the competition so that we can use it in urls
     [Tags]  MySQL
@@ -41,10 +55,5 @@ Requesting the id of this Competition
 
 *** Keywords ***
 Custom Suite Setup
-    ${month} =          get tomorrow month
-    set suite variable  ${month}
-    ${nextyear} =       get next year
-    Set suite variable  ${nextyear}
-    ${tomorrowday} =    get tomorrow day
-    Set suite variable  ${tomorrowday}
+    Set predefined date variables
     The guest user opens the browser
