@@ -42,14 +42,9 @@ public class QuestionStatusRules {
         return userIsConnected(questionStatusResource.getApplication(), user);
     }
 
-    @PermissionRule(value = "READ", description = "Support users can read statuses of all questions")
-    public boolean supportCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
-        return isSupport(user);
-    }
-
     @PermissionRule(value = "READ", description = "Innovation lead users can read statuses of all questions")
     public boolean internalUserCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
-        return isInnovationLead(user) || isCompAdmin(user) || isProjectFinanceUser(user);
+        return isInternal(user);
     }
 
     @PermissionRule(value = "UPDATE", description = "Users can only update statuses of questions they are assigned to")
