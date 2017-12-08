@@ -21,7 +21,7 @@ Comp Admin creates an APC competition
     When the user clicks the button/link           link=Create competition
     Then the user fills in the CS Initial details  ${apcCompetitionTitle}  ${month}  ${nextyear}  Advanced Propulsion Centre
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility      ${RTO_TYPE_ID}
+    And the user fills in the CS Eligibility      ${business_type_id}
     And the user fills in the CS Milestones       ${month}  ${nextyear}
     And the user fills in the CS Application section with custom questions  yes  ${compType_APC}
     And the user fills in the CS Assessors
@@ -46,12 +46,6 @@ Applicant submits his application
     and the lead applicant fills all the questions and marks as complete(programme)
     And the user marks the finances as complete
     Then the applicant submits the application
-
-Requesting the id of this Competition
-    [Documentation]  retrieving the id of the competition so that we can use it in urls
-    [Tags]  MySQL
-    ${apcCompetitionId} =  get comp id from comp title  ${apcCompetitionTitle}
-    Set suite variable  ${apcCompetitionId}
 
 *** Keywords ***
 Custom Suite Setup
