@@ -58,7 +58,7 @@ Mark application details as incomplete
     the user clicks the button/link       link=Application details
     the user clicks the button/link       jQuery=button:contains("Edit")
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
-    the user should see the element       jQuery=li:contains("Application details") > .action-required
+    the user should see the element       jQuery=li:contains("Application details") > .task-status-incomplete
 
 the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=img.complete[alt*="Application details"]
