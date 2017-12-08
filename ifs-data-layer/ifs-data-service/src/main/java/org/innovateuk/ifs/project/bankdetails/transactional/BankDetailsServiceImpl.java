@@ -298,9 +298,9 @@ public class BankDetailsServiceImpl implements BankDetailsService {
     }
 
     @Override
-    public ServiceResult<Long> countBankDetailsApprovals() {
+    public ServiceResult<Long> countPendingBankDetailsApprovals() {
 
-        Long countBankDetails = bankDetailsRepository.countBankDetailsApprovals();
+        Long countBankDetails = bankDetailsRepository.countPendingBankDetailsApprovals();
 
         return serviceSuccess(countBankDetails);
     }

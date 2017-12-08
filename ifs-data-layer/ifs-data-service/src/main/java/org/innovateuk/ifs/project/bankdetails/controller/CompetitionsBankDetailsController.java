@@ -22,9 +22,9 @@ public class CompetitionsBankDetailsController {
         return bankDetailsService.getPendingBankDetailsApprovals().toGetResponse();
     }
 
-    @GetMapping("/count-bank-details-approvals")
-    public RestResult<Long> countBankDetailsApprovals() {
-        return bankDetailsService.countBankDetailsApprovals().toGetResponse();
+    @GetMapping("/count-pending-bank-details-approvals")
+    public RestResult<Long> countPendingBankDetailsApprovals() {
+        return bankDetailsService.countPendingBankDetailsApprovals().toGetResponse();
     }
 }
 
