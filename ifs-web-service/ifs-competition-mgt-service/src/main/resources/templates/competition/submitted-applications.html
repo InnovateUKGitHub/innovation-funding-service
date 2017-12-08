@@ -90,8 +90,8 @@
                             <td th:text="${row.lead}">PWC</td>
                             <td th:text="${row.innovationArea} ?: 'Not listed'">HVM</td>
                             <td th:text="${row.numberOfPartners}">5</td>
-                            <td th:text="${#numbers.formatInteger(row.grantRequested, 3, 'DEFAULT')}">£203,000</td>
-                            <td th:text="${#numbers.formatInteger(row.totalProjectCost, 3, 'DEFAULT')}">£324,000</td>
+                            <td th:text="${#numbers.formatInteger(row.grantRequested, 1, 'DEFAULT')}">£203,000</td>
+                            <td th:text="${#numbers.formatInteger(row.totalProjectCost, 1, 'DEFAULT')}">£324,000</td>
                             <td class="alignright" th:text="${row.durationInMonths}">12</td>
                         </tr>
                     </tbody>
