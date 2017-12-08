@@ -63,7 +63,7 @@ public class CompetitionManagementDashboardController {
         Long countBankDetails = 0L;
         boolean projectFinanceUser = isProjectFinanceUser(user);
         if (projectFinanceUser) {
-            countBankDetails = bankDetailsRestService.countBankDetailsApprovals().getSuccessObjectOrThrowException();
+            countBankDetails = bankDetailsRestService.countPendingBankDetailsApprovals().getSuccessObjectOrThrowException();
         }
 
         model.addAttribute(MODEL_ATTR,
