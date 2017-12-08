@@ -41,6 +41,9 @@ echo ldap host:$LDAP_HOST
 echo ldap port:$LDAP_PORT
 echo ldap domain:$LDAP_DOMAIN
 echo ldap scheme:$LDAP_SCHEME
+## TODO remove
+echo "qqRP"
+echo ldap pass:$LDAP_PASS
 
 wipeLdapUsers() {
   [ -z "$LDAP_PORT" ] && LDAP_PORT=8389
