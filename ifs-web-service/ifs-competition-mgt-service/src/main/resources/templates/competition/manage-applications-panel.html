@@ -88,7 +88,7 @@
 
             <tbody>
             <tr th:each="app : ${model.applications}">
-                <td><a th:href="@{/competition/{cid}/application/{aid}/assign-to-panel(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
+                <td><a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${app.id})} + ${originQuery}" th:text="${app.id}"/></td>
                 <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                 <td th:text="${app.innovationArea}">Information and communications technology (ICT)</td>
                 <td th:text="${app.leadOrganisation}">Wessex University</td>
