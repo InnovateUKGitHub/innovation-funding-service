@@ -16,5 +16,5 @@ public interface BankDetailsRestService {
     RestResult<ProjectBankDetailsStatusSummary> getBankDetailsStatusSummaryByProject(final Long projectId);
     RestResult<ByteArrayResource> downloadByCompetition(Long competitionId);
     RestResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals();
-    RestResult<Long> countBankDetailsApprovals();
+    RestResult<Long> countPendingBankDetailsApprovals();
 }
