@@ -198,4 +198,5 @@ ${compType_ATI}        Aerospace Technology Institute
 @{programme_questions}    Business opportunity  Potential market  Project exploitation  Economic benefit  Technical approach  Innovation  Risks  Project team  Funding  Adding value
 @{sector_questions}       Need or challenge  Approach and innovation  Team and resources   Market awareness  Outcomes and route to market  Wider impacts  Project management  Risks  Additionality  Costs and value for money
 @{EOI_questions}          Business opportunity and potential market  Innovation  Project team  Funding and adding value
+@{APC_questions}          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
 @{project_details}        Project summary  Public description  Scope

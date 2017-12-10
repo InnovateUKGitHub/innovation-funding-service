@@ -43,11 +43,17 @@ Applicant submits his application
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${apcApplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
-    and the lead applicant fills all the questions and marks as complete(programme)
-    And the user marks the finances as complete
+    Then the lead applicant fills all the questions and marks as complete(APC)
+    When the user navigates to Your-finances page       ${apcApplicationTitle}
+    And  the user marks the finances as complete        ${apcApplicationTitle}   labour costs  54,000
     Then the applicant submits the application
 
 *** Keywords ***
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
+
+the lead applicant fills all the questions and marks as complete(APC)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{APC_questions}
+     \     the lead applicant marks every question as complete     ${ELEMENT}
