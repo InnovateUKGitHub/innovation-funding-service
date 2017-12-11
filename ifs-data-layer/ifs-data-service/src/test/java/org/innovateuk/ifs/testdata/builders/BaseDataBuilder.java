@@ -165,6 +165,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationInnovationAreaService applicationInnovationAreaService;
     protected AssessorFormInputResponseService assessorFormInputResponseService;
     protected IneligibleOutcomeMapper ineligibleOutcomeMapper;
+    protected ApplicationResearchCategoryService applicationResearchCategoryService;
 
     private static Cache<Long, List<QuestionResource>> questionsByCompetitionId = CacheBuilder.newBuilder().build();
 
@@ -255,6 +256,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         assessorFormInputResponseService = serviceLocator.getBean(AssessorFormInputResponseService.class);
         applicationInnovationAreaService = serviceLocator.getBean(ApplicationInnovationAreaService.class);
         ineligibleOutcomeMapper = serviceLocator.getBean(IneligibleOutcomeMapper.class);
+        applicationResearchCategoryService = serviceLocator.getBean(ApplicationResearchCategoryService.class);
     }
 
     protected UserResource compAdmin() {
