@@ -57,7 +57,7 @@ The question is enabled for the assignee
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=Assign test  #Application Title
     Then the user should see the browser notification  Stuart ANDERSON has assigned a question to you
-    And the user should see the element   jQuery=li:contains("Public description") .action-required
+    And the user should see the element   jQuery=li:contains("Public description") .task-status-incomplete
     And the user clicks the button/link   link= Public description
     And the user should see the element   css=.textarea-wrapped .editor
 
