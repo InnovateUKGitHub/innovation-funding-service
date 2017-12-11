@@ -23,7 +23,7 @@ Comp Admin creates an APC competition
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility      ${business_type_id}
     And the user fills in the CS Milestones       ${month}  ${nextyear}
-    And the user fills in the CS Application section with custom questions  no  ${compType_APC}
+    And the user fills in the CS Application section with custom questions  yes  ${compType_APC}
     And the user fills in the CS Assessors
     When the user clicks the button/link           link=Public content
     Then the user fills in the Public content and publishes  APC
@@ -46,7 +46,7 @@ Applicant submits his application
     When the user fills in the Application details      ${apcApplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     Then the lead applicant fills all the questions and marks as complete(APC)
     When the user navigates to Your-finances page       ${apcApplicationTitle}
-    And the user marks the finances as complete         ${apcApplicationTitle}   labour costs  54,000
+    And the user marks the finances as complete         ${apcApplicationTitle}   labour costs  54,000  yes
     Then the applicant submits the application
 
 *** Keywords ***
