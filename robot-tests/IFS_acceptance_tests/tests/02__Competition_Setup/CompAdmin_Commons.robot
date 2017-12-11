@@ -73,10 +73,10 @@ the user fills in the CS Milestones
     the user clicks the button/link       link=Milestones
     ${i} =  Set Variable   1
      :FOR   ${ELEMENT}   IN    @{milestones}
-      \    ${i} =   Evaluate   ${i} + 1
       \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.day input  ${i}
       \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.month input  ${month}
       \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.year input  ${nextyear}
+      \    ${i} =   Evaluate   ${i} + 1
     the user clicks the button/link       jQuery=button:contains("Done")
     the user clicks the button/link       link=Competition setup
     the user should see the element       jQuery=div:contains("Milestones") ~ .task-status-complete
