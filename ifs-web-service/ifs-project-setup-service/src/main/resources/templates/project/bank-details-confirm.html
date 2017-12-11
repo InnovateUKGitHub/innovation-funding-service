@@ -21,10 +21,10 @@
         <hr />
         <div class="grid-row">
             <div class="column-half">
-                <a th:href="@{/project/{id}/bank-details(id=${project.id})}" class="js-close buttonlink">Cancel</a>
-            </div>
-            <div class="column-half alignright-button">
                 <button class="button">Submit</button>
+            </div>
+            <div class="column-half alignright">
+                <a th:href="@{/project/{id}/bank-details(id=${project.id})}" class="js-close buttonlink">Cancel</a>
             </div>
         </div>
     </form>

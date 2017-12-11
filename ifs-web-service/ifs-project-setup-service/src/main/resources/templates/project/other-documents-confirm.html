@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Submit other documents'" />
 </head>
@@ -13,9 +13,18 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit other documents',subTitle=${model.projectName},size='heading-xlarge'" />
     <p>Are you sure that you wish to submit your documents to Innovate UK?</p>
     <hr/>
+
     <form th:action="@{/project/{projectId}/partner/documents/submit(projectId=${model.projectId})}" th:if="${model.isShowSubmitDocumentsButton() and  model.submitAllowed and model.submitDate == null}" method="post">
-        <button class="button" name="submit-other-documents">Submit</button>
+        <div class="grid-row">
+            <div class="column-half">
+                <button class="button" name="submit-other-documents">Submit</button>
+            </div>
+            <div class="column-half alignright">
+                <a th:href="@{/project/{projectId}/partner/documents(projectId=${model.projectId})}" class="js-close buttonlink">Cancel</a>
+            </div>
+        </div>
     </form>
+
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
