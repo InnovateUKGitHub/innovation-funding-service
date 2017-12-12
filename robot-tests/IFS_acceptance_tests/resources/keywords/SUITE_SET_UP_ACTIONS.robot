@@ -37,44 +37,27 @@ the user marks every section but one as complete
     [Arguments]  ${application_name}
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
-    the user clicks the button/link    link=Project summary
+    the lead applicant fills all the questions and marks as complete(programme)
+
+the lead applicant fills all the questions and marks as complete(programme)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{programme_questions}
+     \     the lead applicant marks every question as complete     ${ELEMENT}
+
+the lead applicant fills all the questions and marks as complete(sector)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{sector_questions}
+     \     the lead applicant marks every question as complete     ${ELEMENT}
+
+the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{project_details}
+     \     the lead applicant marks every question as complete     ${ELEMENT}
+
+the lead applicant marks every question as complete
+    [Arguments]  ${question_link}
+    the user clicks the button/link             jQuery=h3 a:contains("${question_link}")
     the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=Public description
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=Scope
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=1. Business opportunity
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=2. Potential market
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=3. Project exploitation
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=4. Economic benefit
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=5. Technical approach
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=6. Innovation
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=7. Risks
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=8. Project team
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=9. Funding
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=10. Adding value
-    the user marks the section as complete
+    the user clicks the button/link             link=Application overview
 
 the user marks the section as complete
     Wait Until Element Is Visible Without Screenshots    css=.textarea-wrapped .editor

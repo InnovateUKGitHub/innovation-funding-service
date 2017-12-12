@@ -127,8 +127,9 @@ public class ApplicationSectionAndQuestionModelPopulator {
         } else {
             applicantId = userId;
         }
-        Map<Long, AbstractFormInputViewModel> formInputViewModels = sectionQuestions.values().stream().flatMap(List::stream).map(question -> applicantRestService.getQuestion(applicantId, application.getId(), question.getId()))
-                .map(question -> formInputViewModelGenerator.fromQuestion(question, new ApplicationForm()))
+        Map<Long, AbstractFormInputViewModel> formInputViewModels = sectionQuestions.values().stream().flatMap(List::stream)
+                .map(question -> applicantRestService.getQuestion(applicantId, application.getId(), question.getId()))
+                .map(applicationQuestion -> formInputViewModelGenerator.fromQuestion(applicationQuestion, new ApplicationForm()))
                 .flatMap(List::stream)
                 .collect(Collectors.toMap(viewModel -> viewModel.getFormInput().getId(), Function.identity()));
         model.addAttribute("formInputViewModels", formInputViewModels);
