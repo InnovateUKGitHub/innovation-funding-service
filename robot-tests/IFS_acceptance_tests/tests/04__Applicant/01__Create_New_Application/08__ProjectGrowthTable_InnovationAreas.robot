@@ -346,7 +346,7 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
 
 *** Keywords ***
 the user should see the dates in full format
-    the user should see the element  jQuery=td:contains("Allocate assessors") ~ td:contains("3 ${monthWord} ${nextyear}")
+    the user should see the element  jQuery=td:contains("Allocate assessors") ~ td:contains("4 ${monthWord} ${nextyear}")
 
 the user should see that the funding depends on the research area
     the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")
@@ -363,18 +363,6 @@ the user decides about the growth table
     the user should see the element   jQuery=dt:contains("Include project growth table") + dd:contains("${read}")
     the user clicks the button/link   link=Application
     the user clicks the button/link   link=Competition setup
-
-Lead Applicant applies to the new created competition
-    [Arguments]  ${competition}
-    log in as a different user       &{lead_applicant_credentials}
-    the user navigates to the eligibility of the competition  ${competition}
-    the user clicks the button/link  jQuery=a:contains("Sign in")
-    the user clicks the button/link  jQuery=a:contains("Begin application")
-
-the user navigates to the eligibility of the competition
-    [Arguments]  ${competition}
-    ${competitionId} =               get comp id from comp title    ${competition}
-    the user navigates to the page   ${server}/application/create/check-eligibility/${competitionId}
 
 the user enters value to field
     [Arguments]  ${field}  ${value}
