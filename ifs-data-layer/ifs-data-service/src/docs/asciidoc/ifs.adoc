@@ -152,7 +152,7 @@ include::competition.adoc[]
 
 [[competitioninvite]]
 == Competition Invite
-include::competitionAssessmentInvite.adoc[]
+include::competitionInvite.adoc[]
 
 [[competitionparticipant]]
 == Competition Participant

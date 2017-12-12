@@ -58,7 +58,7 @@ Mark application details as incomplete
     the user clicks the button/link       link=Application details
     the user clicks the button/link       jQuery=button:contains("Edit")
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
-    the user should see the element       jQuery=li:contains("Application details") > .action-required
+    the user should see the element       jQuery=li:contains("Application details") > .task-status-incomplete
 
 the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=img.complete[alt*="Application details"]
@@ -107,9 +107,10 @@ the user selects Research category
     the user clicks the button/link   jQuery=button:contains("Save")
 
 the user marks the finances as complete
-    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
+    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
     the user fills in the project costs  ${overheadsCost}  ${totalCosts}
-    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    Run Keyword if  '${Project_growth_table}'=='no'    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    Run Keyword if  '${Project_growth_table}'=='yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
     the user clicks the button/link  link=Application overview
@@ -306,17 +307,6 @@ the user should see all finance subsections incomplete
     the user should see the element  css=li:nth-of-type(2) .action-required
     the user should see the element  jQuery=h3:contains("Your funding")
 
-Remove previous rows
-    [Arguments]  ${element}
-    :FOR    ${i}    IN RANGE  10
-    # The sleep of 200 ms is actually for speed, originally the test used "should not see the element" however that made it wait for 10 seconds on every loop.
-    \  sleep    200ms
-    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    ${element}
-    \  Log    ${status}
-    \  Exit For Loop If  '${status}'=='FAIL'
-    \  run keyword if  '${status}'=='PASS'  the user clicks the button/link  ${element}
-    \  ${i} =  Set Variable  ${i + 1}
-
 Invite a non-existing collaborator
     [Arguments]   ${email}  ${competition_name}
     the user should see the element        jQuery=h1:contains("Application overview")
@@ -401,8 +391,10 @@ the user navigates to the eligibility of the competition
     ${competitionId} =  get comp id from comp title    ${competition}
     the user navigates to the page   ${server}/application/create/check-eligibility/${competitionId}
 
-the lead applicant marks every question as complete(EOI)
-    [Arguments]  ${question_link}
-    the user clicks the button/link             jQuery=h3 a:contains("${question_link}")
-    the user marks the section as complete
-    the user clicks the button/link             link=Application overview
+the applicant submits the application
+    the user clicks the button/link                    link=Review and submit
+    the user clicks the button/link                    jQuery=.button:contains("Submit application")
+    the user clicks the button/link                    jQuery=.button:contains("Yes, I want to submit my application")
+    the user should be redirected to the correct page  submit
+
+

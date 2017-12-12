@@ -276,7 +276,7 @@
 </th:block>
 
 <th:block th:fragment="assign-buttons(model)" th:with="question=${model.question}">
-    <div th:class="(${model.assignedToCurrentUser} ? 'assign-container action-required' : 'assign-container')"
+    <div th:class="(${model.assignedToCurrentUser} ? 'assign-container secondary-notification' : 'assign-container')"
          th:if="${question.isAssignEnabled()}">
         <th:block th:insert="question-type/form-elements :: assign-button-body (${model})" />
     </div>
@@ -289,7 +289,7 @@
 <!-- ========================= Assign - make selection =========================== -->
 <th:block th:fragment="assign-button-body (model)" th:with="question=${model.question}">
     <th:block th:if="${model.assigned}">
-        <span class="action-required" th:if="${model.assignedToCurrentUser}">
+        <span class="secondary-notification" th:if="${model.assignedToCurrentUser}">
           <th:block th:if="${model.assignedByLead}"
                     th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you </th:block>
           <th:block th:unless="${model.assignedByLead}"
@@ -304,7 +304,7 @@
     </th:block>
 
     <th:block th:if="${model.notAssigned}">
-        <span class="action-required" th:if="${model.currentUserIsLead}">
+        <span class="secondary-notification" th:if="${model.currentUserIsLead}">
             <th:block th:text="${fullButtonText} ? 'Assigned to you.' : 'Assigned to'">Assigned to you</th:block>
         </span>
         <span class="secondary-notification" th:unless="${model.currentUserIsLead}">
@@ -350,7 +350,7 @@
   <th:block th:unless="${model.notAssigned} ">
 
     <th:block th:if="${model.currentUserIsLead}">
-        <span class="action-required" th:if="${model.assignedToCurrentUser}">
+        <span class="secondary-notification" th:if="${model.assignedToCurrentUser}">
             <th:block th:if="${model.assignedByLead}"
                       th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'">ASSIGN BUTTON TEXT</th:block>
             <th:block th:unless="${model.assignedByLead}"
@@ -359,7 +359,7 @@
     </th:block>
 
     <th:block th:unless="${model.currentUserIsLead}">
-        <span class="action-required" th:if="${model.assignedToCurrentUser}">
+        <span class="secondary-notification" th:if="${model.assignedToCurrentUser}">
             <th:block th:if="${model.assignedByLead}">Assigned to you</th:block>
             <th:block th:unless="${model.assignedByLead}">Reassigned to you</th:block>
         </span>
@@ -376,7 +376,7 @@
   </th:block>
 
   <th:block th:if="${model.notAssigned}">
-    <span class="action-required" th:if="${model.currentUserIsLead}">
+    <span class="secondary-notification" th:if="${model.currentUserIsLead}">
         <th:block th:text="${fullButtonText == TRUE} ? 'Assign this question to someone else' : 'you'"
                   th:if="${question.isAssignEnabled()}">ASSIGN BUTTON TEXT</th:block>
         <th:block th:unless="${question.isAssignEnabled()}">Assigned to you</th:block>
