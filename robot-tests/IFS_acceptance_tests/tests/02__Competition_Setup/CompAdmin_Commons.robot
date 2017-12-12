@@ -356,7 +356,7 @@ the user is able to configure the new question
     the user enters text to a text field  css=.editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id=question.maxWords  500
     the user selects the radio button     question.appendix  1
-    the user clicks the button/link       css=label[for="allowed-file-types-PDF"]
+    #the user clicks the button/link       css=label[for="allowed-file-types-PDF"]  #TODO Enable as part of IFS-2425 in another sprint
     the user clicks the button/link       css=label[for="allowed-file-types-Spreadsheet"]
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10
