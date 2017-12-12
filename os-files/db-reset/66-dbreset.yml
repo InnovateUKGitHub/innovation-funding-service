@@ -27,6 +27,7 @@ items:
     LDAP_PASS: "<<LDAP-PASS>>"
     LDAP_DOMAIN: "<<LDAP-DOMAIN>>"
     LDAP_SCHEME: "<<LDAP-SCHEME>>"
+    ONLY_SYNC_LDAP: "<<ONLY-SYNC-LDAP>>"
 - apiVersion: v1
   kind: Pod
   metadata:
@@ -46,11 +47,7 @@ items:
         flyway.user=$DB_USER
         flyway.password=$DB_PASS
         EOF
-        flyway clean
-        flyway migrate
-        flyway info
-        flyway validate
-        . /ldap-sync-from-ifs-db.sh
+        . /clean-migrate-db-sync-ldap.sh
       env:
       - name: DB_HOST
         valueFrom:
@@ -97,6 +94,11 @@ items:
           configMapKeyRef:
             name: ldap-config
             key: LDAP_DOMAIN
+      - name: ONLY_SYNC_LDAP
+        valueFrom:
+          configMapKeyRef:
+            name: ldap-config
+            key: ONLY_SYNC_LDAP
       - name: LDAP_SCHEME
         valueFrom:
           configMapKeyRef:

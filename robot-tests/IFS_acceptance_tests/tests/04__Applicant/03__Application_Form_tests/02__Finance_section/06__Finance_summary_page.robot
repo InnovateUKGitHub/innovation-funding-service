@@ -101,7 +101,7 @@ Collaborator marks finances as complete
     [Tags]  HappyPath
     log in as a different user                     &{collaborator1_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}  labour costs  n/a
+    the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}  labour costs  n/a  no
     [Teardown]  logout as user
 
 Alert shows If the academic research participation is too high
@@ -127,12 +127,12 @@ Alert should not show If research participation is below the maximum level
     [Setup]
     When lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
-    Then the user should see the text in the page  The participation levels of this project are within the required range
+    Then the user should not see the element       jQuery=.warning-alert:contains("The participation levels of this project are not within the required range")
     And the user navigates to the page             ${DASHBOARD_URL}
     And the user clicks the button/link            link=Academic robot test application
     And the user clicks the button/link            link=Review and submit
     And the user clicks the button/link            jquery=button:contains("Finances summary")
-    Then the user should see the text in the page  The participation levels of this project are within the required range
+    Then the user should not see the element       jQuery=.warning-alert:contains("The participation levels of this project are not within the required range")
 
 Support User can see read only summary link for each partner
     [Documentation]  IFS-401
