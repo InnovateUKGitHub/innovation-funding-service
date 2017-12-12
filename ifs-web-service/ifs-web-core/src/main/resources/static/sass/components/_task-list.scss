@@ -74,12 +74,9 @@
         width: 100%;
         margin-top: 10px;
         padding-left: 0;
-
-        &.action-required {
-          padding-left: 20px;
-        }
       }
 
+      padding-left: 20px;
       width: 40%;
       box-sizing: border-box;
 
@@ -128,6 +125,20 @@
         background-size: 14px;
         background-position: left center;
         color: $button-colour;
+        font-weight: bold;
+      }
+    }
+
+    .task-status-incomplete {
+      @extend .task-status;
+      right: 0;
+
+      span {
+
+        @extend %action-required;
+        @include core-16;
+        background-size: 14px;
+        background-position: left center;
         font-weight: bold;
       }
     }

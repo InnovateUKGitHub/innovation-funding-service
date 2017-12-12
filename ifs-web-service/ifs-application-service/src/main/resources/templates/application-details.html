@@ -73,7 +73,10 @@
                                 </h3>
                             </div>
                             <th:block th:if="${childSection.id.equals(model.financeSectionId)}">
-                                <span th:unless="${model.completed.userFinanceSectionCompleted}" class="action-required"><strong>Incomplete</strong></span>
+                                <div th:unless="${model.completed.userFinanceSectionCompleted}"
+                                     class="task-status-incomplete">
+                                    <span>Incomplete</span>
+                                </div>
                                 <div th:if="${model.completed.userFinanceSectionCompleted}"
                                      class="task-status-complete">
                                     <span>Complete</span>
