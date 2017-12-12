@@ -73,7 +73,7 @@ Competition is Open to Applications
 
 Create new Application for this Competition
     [Tags]  MySQL
-    Lead Applicant applies to the new created competition  ${compWithoutGrowth}
+    Lead Applicant applies to the new created competition    &{lead_applicant_credentials}  ${compWithoutGrowth}
 
 Applicant visits his Finances
     [Documentation]    INFUND-6393
@@ -127,7 +127,7 @@ Once the project growth table is selected
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
     [Tags]    MySQL
-    Given Lead Applicant applies to the new created competition  ${compWithGrowth}
+    Given Lead Applicant applies to the new created competition  &{lead_applicant_credentials}  ${compWithGrowth}
     When the user clicks the button/link                         link=Your finances
     And the user clicks the button/link                          link=Your organisation
     Then the user should not see the text in the page            Turnover (£)

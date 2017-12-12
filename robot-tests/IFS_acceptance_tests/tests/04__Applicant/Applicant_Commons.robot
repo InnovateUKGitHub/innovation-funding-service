@@ -380,8 +380,8 @@ navigate to next page if not found
     Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery=a:contains("Next")
 
 Lead Applicant applies to the new created competition
-    [Arguments]  ${competition}
-    log in as a different user       &{lead_applicant_credentials}
+    [Arguments]   ${competition}  &{lead_credentials}
+    log in as a different user       &{lead_credentials}
     the user navigates to the eligibility of the competition  ${competition}
     the user clicks the button/link  jQuery=a:contains("Sign in")
     the user clicks the button/link  jQuery=a:contains("Begin application")

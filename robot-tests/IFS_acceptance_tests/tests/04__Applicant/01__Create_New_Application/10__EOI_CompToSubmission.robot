@@ -26,7 +26,7 @@ Applicant applies to newly created EOI competition
     [Documentation]  IFS-2192  IFS-2196
     [Tags]  HappyPath  MySQL
     When the competition is open                                 ${comp_name}
-    Then Lead Applicant applies to the new created competition   ${comp_name}
+    Then Lead Applicant applies to the new created competition   &{lead_applicant_credentials}  ${comp_name}
 
 Applicant submits his application
     [Documentation]  IFS-2196
