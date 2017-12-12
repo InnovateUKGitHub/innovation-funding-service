@@ -43,5 +43,10 @@ public class AssessmentPanelServiceSecurityTest extends BaseServiceSecurityTest<
         public ServiceResult<Void> createAndNotifyAll(long competitionId) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Boolean> isPendingReviewNotifications(long competitionId) {
+            return null;
+        }
     }
 }

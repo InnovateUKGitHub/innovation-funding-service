@@ -18,10 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.util.Collections;
 import java.util.stream.Stream;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.CREATED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -70,6 +68,22 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
         return notifyAllCreated(competitionId);
     }
 
+    @Override
+    public ServiceResult<Boolean> isPendingReviewNotifications(long competitionId) {
+
+        return serviceSuccess(assessmentReviewRepository.notifiable(competitionId));
+        // applications in panel
+//        assessmentReviewRepository.foo(competitionId, true, CREATED);
+//        return serviceSuccess(getAllAssessorsOnPanel(competitionId)
+//                .map(CompetitionParticipant::getUser)
+//                .allMatch(u -> assessmentReviewRepository.foo(competitionId, u))
+//        );
+        // this will be correct, however, right now we don't create an intermediate
+//        return serviceSuccess(
+//                assessmentReviewRepository.existsByTargetCompetitionIdAndActivityStateState(competitionId, State.CREATED)
+//        );
+    }
+
     private ServiceResult<Void> createAssessmentPanelApplication(AssessmentPanelParticipant assessor, Application application) {
         if (!assessmentReviewRepository.existsByParticipantUserAndTarget(assessor.getUser(), application)) {
             final ProcessRole processRole = getOrCreateAssessorProcessRoleForApplication(assessor, application);
@@ -97,7 +111,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     }
 
     private ServiceResult<Void> notifyAllCreated(long competitionId) {
-        assessmentReviewRepository.findByTargetIdAndActivityStateState(competitionId, CREATED.getBackingState())
+        assessmentReviewRepository.findByTargetCompetitionIdAndActivityStateState(competitionId, CREATED.getBackingState())
                 .forEach(workflowHandler::notifyInvitation);
 
         // do we just catch the notify event to send the email?

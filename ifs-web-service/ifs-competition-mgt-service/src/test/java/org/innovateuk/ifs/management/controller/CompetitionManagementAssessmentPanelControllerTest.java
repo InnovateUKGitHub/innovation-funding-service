@@ -45,7 +45,7 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
 
     @Test
     public void assessmentPanel() throws Exception {
-        Long competitionId = 1L;
+        long competitionId = 1L;
         String competitionName = "Competition x";
         CompetitionStatus competitionStatus = CLOSED;
         int applicationsInPanel = 5;

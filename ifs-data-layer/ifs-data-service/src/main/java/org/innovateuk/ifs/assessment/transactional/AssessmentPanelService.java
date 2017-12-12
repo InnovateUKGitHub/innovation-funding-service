@@ -22,4 +22,6 @@ public interface AssessmentPanelService {
     ServiceResult<Void> unassignApplicationFromPanel(long applicationId);
 
     ServiceResult<Void> createAndNotifyAll(long competitionId);
+
+    ServiceResult<Boolean> isPendingReviewNotifications(long competitionId);
 }

@@ -58,7 +58,7 @@ import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilde
 import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
+import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
@@ -919,7 +919,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
     }
 
     private CompetitionAssessmentInvite setUpCompetitionInvite(Competition competition, InviteStatus status, InnovationArea innovationArea) {
-        return newCompetitionInvite()
+        return newCompetitionAssessmentInvite()
                 .withCompetition(competition)
                 .withHash(Invite.generateInviteHash())
                 .withStatus(status)

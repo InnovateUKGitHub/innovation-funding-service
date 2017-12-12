@@ -13,20 +13,20 @@
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Manage assessment panel',subTitle=|${model.competitionId}: ${model.competitionName}, competition ${#strings.toLowerCase(model.competitionStatus.displayName)} |,size='heading-xlarge'" />
 
     <div class="no-constrain-width justify-left">
-        <!--/*
         <p class="form-hint">If you make any changes on this page, you must confirm them in order to make them visible on the assessors' dashboards.</p>
 
         <div class="grid-row">
             <div class="column-quarter">
-                <button class="button width-full" th:disabled="${param.action == null}">Confirm actions</button>
+                <button class="button width-full" th:disabled="${!model.pendingReviewNotifications}">Confirm actions</button>
             </div>
-            <div class="column-quarter">
-                <div class="highlight-panel highlight-panel--tall">
-                    <span class="heading-large" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
+            <!--/*
+                <div class="column-quarter">
+                    <div class="highlight-panel highlight-panel--tall">
+                        <span class="heading-large" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
+                    </div>
                 </div>
+                    */-->
             </div>
-        </div>
-                */-->
 
         <h2 class="heading-medium">Key statistics</h2>
 

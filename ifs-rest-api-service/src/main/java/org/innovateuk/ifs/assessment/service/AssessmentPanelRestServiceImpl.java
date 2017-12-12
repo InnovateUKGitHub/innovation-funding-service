@@ -25,4 +25,9 @@ public class AssessmentPanelRestServiceImpl extends BaseRestService implements A
     public RestResult<Void> notifyAssessors(long competitionId) {
         return postWithRestResult(format("%s/%s/%s", assessmentPanelRestUrl, "notify-assessors", competitionId), Void.class);
     }
+
+    @Override
+    public RestResult<Boolean> isPendingReviewNotifications(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s", assessmentPanelRestUrl, "notify-assessors", competitionId), Boolean.class);
+    }
 }
