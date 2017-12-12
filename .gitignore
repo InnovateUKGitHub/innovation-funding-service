@@ -34,6 +34,7 @@ bin/
 /ifs-web-service/ifs-project-setup-service/src/main/docker/Dockerfile
 
 /ifs-data-layer/ifs-data-service/src/main/docker/Dockerfile
+/ifs-data-layer/ifs-finance-totals-data-service/src/main/docker/Dockerfile
 **/Dockerfile-base
 
 

@@ -29,6 +29,10 @@ services:
     links:
       - admin
 
+  finance-totals-data-service:
+    links:
+      - admin
+
   admin:
     hostname: admin
     image: enmobile/docker-spring-boot-admin

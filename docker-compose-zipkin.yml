@@ -29,6 +29,10 @@ services:
     links:
       - zipkin
 
+  finance-totals-data-service:
+    links:
+      - zipkin
+
   zipkin:
     hostname: zipkin
     image: openzipkin/zipkin
