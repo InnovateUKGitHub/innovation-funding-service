@@ -202,7 +202,7 @@ Lead applicant marks the finances as complete
     the user clicks the button/link                  link=Academic robot test application
     the applicant completes the application details  Application details
     the user navigates to the academic application finances
-    the user marks the finances as complete          Academic robot test application  labour costs  n/a
+    the user marks the finances as complete          Academic robot test application  labour costs  n/a  no
 
 
 Lead applicant marks the finances as incomplete

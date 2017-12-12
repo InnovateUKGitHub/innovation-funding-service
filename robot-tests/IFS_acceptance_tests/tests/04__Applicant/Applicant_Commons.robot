@@ -107,9 +107,10 @@ the user selects Research category
     the user clicks the button/link   jQuery=button:contains("Save")
 
 the user marks the finances as complete
-    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
+    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
     the user fills in the project costs  ${overheadsCost}  ${totalCosts}
-    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    Run Keyword if  '${Project_growth_table}'=='no'    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    Run Keyword if  '${Project_growth_table}'=='yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
     the user clicks the button/link  link=Application overview
@@ -390,8 +391,10 @@ the user navigates to the eligibility of the competition
     ${competitionId} =  get comp id from comp title    ${competition}
     the user navigates to the page   ${server}/application/create/check-eligibility/${competitionId}
 
-the lead applicant marks every question as complete(EOI)
-    [Arguments]  ${question_link}
-    the user clicks the button/link             jQuery=h3 a:contains("${question_link}")
-    the user marks the section as complete
-    the user clicks the button/link             link=Application overview
+the applicant submits the application
+    the user clicks the button/link                    link=Review and submit
+    the user clicks the button/link                    jQuery=.button:contains("Submit application")
+    the user clicks the button/link                    jQuery=.button:contains("Yes, I want to submit my application")
+    the user should be redirected to the correct page  submit
+
+
