@@ -22,9 +22,9 @@ Comp Admin Creates EOI type competition
     Given Logging in and Error Checking                     &{Comp_admin1_credentials}
     Then The competition admin creates a EOI Comp     ${business_type_id}  ${comp_name}  EOI
 
-Applicant applies to newly created EOI comp
+Applicant applies to newly created EOI competition
     [Documentation]  IFS-2192  IFS-2196
-    [Tags]  HappyPath
+    [Tags]  HappyPath  MySQL
     When the competition is open                                 ${comp_name}
     Then Lead Applicant applies to the new created competition   ${comp_name}
 

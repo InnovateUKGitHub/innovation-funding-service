@@ -32,9 +32,9 @@ Comp Admin creates an APC competition
     When the user clicks the button/link           jQuery=a:contains("Complete")
     Then the user clicks the button/link           jQuery=a:contains("Done")
 
-Applicant applies to newly created APC comp
+Applicant applies to newly created APC competition
     [Documentation]  IFS-2286
-    [Tags]  HappyPath
+    [Tags]  HappyPath  MySQL
     When the competition is open                                 ${apcCompetitionTitle}
     Then Lead Applicant applies to the new created competition   ${apcCompetitionTitle}
 
