@@ -72,6 +72,7 @@ Resource          ../04__Applicant/Applicant_Commons.robot
 ${peter_freeman}  Peter Freeman
 ${competitionTitle}  Test competition
 ${amendedQuestion}  Need or challenge
+${customQuestion}  How innovative is your project?
 
 *** Test Cases ***
 User can create a new competition
@@ -471,8 +472,8 @@ Adding a new Assessed Application Question
     Given the user clicks the button/link  css=p button[type="submit"]  #Add question link
     When the user clicks the button/link   css=button[type="submit"]
     Then the user should see the server side validation working
-    When the user is able to configure the new question
-    Then the user should be able to see the read only view of question correctly
+    When the user is able to configure the new question  ${customQuestion}
+    Then the user should be able to see the read only view of question correctly  ${customQuestion}
 
 Removing an Assessed Application Question
     [Documentation]  IFS-182
@@ -651,8 +652,9 @@ The Applicant is able to apply to the competition once is Open and see the corre
     [Setup]  the competition moves to Open state  ${competitionId}
     Given log in as a different user              &{lead_applicant_credentials}
     And logged in user applies to competition     ${competitionTitle}
-    Then the user should see the element          jQuery=li:contains("Tell us how your project is innovative.")
+    Then the user should see the element          jQuery=li:contains("${customQuestion}")
     And the user should not see the element       jQuery=li:contains("Costs and value for money")
+    #default question that has been removed is not there.
 
 *** Keywords ***
 the user moves focus and waits for autosave

@@ -3,6 +3,7 @@ package org.innovateuk.ifs.management.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
@@ -47,6 +48,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementInviteAssessorsController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class CompetitionManagementInviteAssessorsController extends CompetitionManagementCookieController<AssessorSelectionForm> {
 

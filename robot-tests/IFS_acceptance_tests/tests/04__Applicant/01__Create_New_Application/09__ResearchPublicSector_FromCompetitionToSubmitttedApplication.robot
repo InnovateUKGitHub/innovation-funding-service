@@ -18,6 +18,7 @@ ${researchLeadApp}  Research Leading Application
 ${publicLeadApp}    Public Sector leading Application
 ${collaborator}     ${test_mailbox_one}+amy@gmail.com
 ${compPublicPage}   ${server}/management/competition/${openCompetitionPublicSector}
+${customQuestion}   How innovative is your project?
 
 *** Test Cases ***
 Comp Admin Creates Competitions where Research or Public sector can lead
@@ -40,7 +41,7 @@ The Applicant is able to apply to the competition once is Open and see the corre
     [Setup]  the competition moves to Open state  ${reseachCompId}
     Given log in as a different user              &{collaborator2_credentials}
     And logged in user applies to competition     ${compResearch}
-    Then the user should see the element          jQuery=li:contains("Tell us how your project is innovative.")
+    Then the user should see the element          jQuery=li:contains("${customQuestion}")
 
 Applicant Applies to Research leading Competition
     [Documentation]  IFS-1012
@@ -64,7 +65,7 @@ Applicant Applies to Public content leading Competition
     Then the user fills in the Application details        ${publicLeadApp}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
     And the user marks every section but one as complete  ${publicLeadApp}
     When the user navigates to Your-finances page         ${publicLeadApp}
-    Then the user marks the finances as complete          ${publicLeadApp}  Calculate  52,214
+    Then the user marks the finances as complete          ${publicLeadApp}  Calculate  52,214  no
     And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  becky.mason@gmail.com
 
 Project Finance is able to see the Overheads costs file
@@ -116,7 +117,7 @@ the collaborator accepts and fills in his part in the application
     the user reads his email and clicks the link  ${collaborator}  Invitation to collaborate in ${competition}  You are invited by  2
     the user is able to confirm the invite        ${collaborator}  ${short_password}
     the user navigates to Your-finances page      ${application}
-    the user marks the finances as complete       ${application}  Calculate  52,214
+    the user marks the finances as complete       ${application}  Calculate  52,214  no
 
 the lead is able to submit the application
     [Arguments]  ${user}  ${application}
@@ -166,6 +167,6 @@ the project finance is able to download the Overheads file
 the internal user can see that the Generic competition has only one Application Question
     the user clicks the button/link  link=Application
     the user clicks the button/link  link=1. Edit this question
-    the user is able to configure the new question
-    the user should be able to see the read only view of question correctly
+    the user is able to configure the new question  ${customQuestion}
+    the user should be able to see the read only view of question correctly  ${customQuestion}
     the user clicks the button/link  link=Competition setup

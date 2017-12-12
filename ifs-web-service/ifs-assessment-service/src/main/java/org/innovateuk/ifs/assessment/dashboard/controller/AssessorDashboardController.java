@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.dashboard.controller;
 
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorDashboardModelPopulator;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping(value = "/assessor")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorDashboardController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessorDashboardController {
 
@@ -22,6 +24,7 @@ public class AssessorDashboardController {
     private AssessorDashboardModelPopulator assessorDashboardModelPopulator;
 
     @PreAuthorize("hasAuthority('assessor')")
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @GetMapping("/dashboard")
     public String dashboard(Model model, UserResource loggedInUser) {
 

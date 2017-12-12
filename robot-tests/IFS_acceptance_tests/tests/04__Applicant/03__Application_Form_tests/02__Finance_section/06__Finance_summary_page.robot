@@ -101,7 +101,7 @@ Collaborator marks finances as complete
     [Tags]  HappyPath
     log in as a different user                     &{collaborator1_credentials}
     When the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_2_NAME}
-    the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}  labour costs  n/a
+    the user marks the finances as complete        ${OPEN_COMPETITION_APPLICATION_2_NAME}  labour costs  n/a  no
     [Teardown]  logout as user
 
 Alert shows If the academic research participation is too high
