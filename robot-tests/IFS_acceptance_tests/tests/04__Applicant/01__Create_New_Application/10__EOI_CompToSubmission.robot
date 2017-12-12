@@ -22,9 +22,9 @@ Comp Admin Creates EOI type competition
     Given Logging in and Error Checking                     &{Comp_admin1_credentials}
     Then The competition admin creates a EOI Comp     ${business_type_id}  ${comp_name}  EOI
 
-Applicant applies to newly created EOI comp
+Applicant applies to newly created EOI competition
     [Documentation]  IFS-2192  IFS-2196
-    [Tags]  HappyPath
+    [Tags]  HappyPath  MySQL
     When the competition is open                                 ${comp_name}
     Then Lead Applicant applies to the new created competition   ${comp_name}
 
@@ -34,8 +34,8 @@ Applicant submits his application
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${EOI_application}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     and the lead applicant fills all the questions and marks as complete(EOI comp type)
-    Then the user clicks the button/link                link=Review and submit
     and the user should not see the element             jQuery=h2:contains("Finances")
+    Then the applicant submits the application
 
 *** Keywords ***
 Custom Suite Setup
@@ -61,11 +61,8 @@ The competition admin creates a EOI Comp
     the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competition}")
 
 the lead applicant fills all the questions and marks as complete(EOI comp type)
-    the lead applicant marks every question as complete(EOI)   Project summary
-    the lead applicant marks every question as complete(EOI)   Scope
-    the lead applicant marks every question as complete(EOI)   Business opportunity and potential market
-    the lead applicant marks every question as complete(EOI)   Innovation
-    the lead applicant marks every question as complete(EOI)   Project team
-    the lead applicant marks every question as complete(EOI)   Funding and adding value
-
+    the lead applicant marks every question as complete   Project summary
+    the lead applicant marks every question as complete   Scope
+    :FOR  ${ELEMENT}    IN    @{EOI_questions}
+     \     the lead applicant marks every question as complete     ${ELEMENT}
 
