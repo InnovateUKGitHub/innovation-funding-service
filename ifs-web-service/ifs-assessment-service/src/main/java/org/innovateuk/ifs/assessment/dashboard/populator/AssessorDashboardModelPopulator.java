@@ -41,12 +41,16 @@ public class AssessorDashboardModelPopulator {
 
         List<AssessmentPanelParticipantResource> assessmentPanelParticipantResourceList = assessmentPanelInviteRestService.getAllInvitesByUser(userId).getSuccessObject();
 
+        List<AssessmentPanelParticipantResource> assessmentPanelAcceptedResourceList = assessmentPanelInviteRestService.getAllPanelsByUser(userId).getSuccessObject();
+
         return new AssessorDashboardViewModel(
                 getProfileStatus(profileStatusResource),
                 getActiveCompetitions(participantResourceList),
                 getUpcomingCompetitions(participantResourceList),
                 getPendingParticipations(participantResourceList),
-                getAssessmentPanelInvites(assessmentPanelParticipantResourceList)
+                getAssessmentPanelInvites(assessmentPanelParticipantResourceList),
+                getAssessmentPanelAccepted(assessmentPanelAcceptedResourceList)
+
         );
     }
 
@@ -103,8 +107,24 @@ public class AssessorDashboardModelPopulator {
                 .map(invite -> new AssessorDashboardAssessmentPanelInviteViewModel(
                         invite.getHash(),
                         invite.getCompetitionName(),
-                        invite.getCompetitionId()
+                        invite.getCompetitionId(),
+                        invite.getPanelDate().toLocalDate(),
+                        invite.getPanelDaysLeft()
                 ))
                 .collect(toList());
     }
+
+    private List<AssessorDashboardAssessmentPanelInviteViewModel> getAssessmentPanelAccepted(List<AssessmentPanelParticipantResource> assessmentPanelAcceptedResourceList) {
+        return assessmentPanelAcceptedResourceList.stream()
+                .map(AssessmentPanelParticipantResource::getInvite)
+                .map(invite -> new AssessorDashboardAssessmentPanelInviteViewModel(
+                        invite.getHash(),
+                        invite.getCompetitionName(),
+                        invite.getCompetitionId(),
+                        invite.getPanelDate().toLocalDate(),
+                        invite.getPanelDaysLeft()
+                        ))
+                .collect(toList());
+    }
+
 }

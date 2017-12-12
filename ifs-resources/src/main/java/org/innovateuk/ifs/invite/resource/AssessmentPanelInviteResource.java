@@ -4,7 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+
+import java.time.Clock;
 import java.time.ZonedDateTime;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * DTO for {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite}s.
@@ -19,6 +23,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
     private String email;
     private ZonedDateTime panelDate;
 
+    private Clock clock = Clock.systemDefaultZone();
 
     public AssessmentPanelInviteResource(String hash,
                                          long competitionId,
@@ -98,6 +103,10 @@ public class AssessmentPanelInviteResource extends InviteResource {
         this.panelDate = panelDate;
     }
 
+    @JsonIgnore
+    public long getPanelDaysLeft() {
+        return DAYS.between(ZonedDateTime.now(clock), panelDate);
+    }
 
     @JsonIgnore
     public boolean isPending() {
@@ -120,6 +129,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
                 .append(competitionName, that.competitionName)
                 .append(email, that.email)
                 .append(panelDate, that.panelDate)
+                .append(clock, that.clock)
                 .isEquals();
     }
 
@@ -133,6 +143,8 @@ public class AssessmentPanelInviteResource extends InviteResource {
                 .append(competitionName)
                 .append(email)
                 .append(panelDate)
+                .append(clock)
                 .toHashCode();
     }
+
 }

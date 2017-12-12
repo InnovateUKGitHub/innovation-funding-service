@@ -48,6 +48,8 @@ public interface AssessmentPanelParticipantRepository extends PagingAndSortingRe
 
     List<AssessmentPanelParticipant> findByUserIdAndRole(long userId, CompetitionParticipantRole role);
 
+    List<AssessmentPanelParticipant> findByUserIdAndRoleAndStatus(long userId, CompetitionParticipantRole role, ParticipantStatus status);
+
     int countByCompetitionIdAndRoleAndStatusAndInviteIdIn(long competitionId,
                                                           CompetitionParticipantRole role,
                                                           ParticipantStatus status,

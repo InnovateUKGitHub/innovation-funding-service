@@ -82,6 +82,12 @@ public class AssessmentPanelInviteController {
         return assessmentPanelInviteService.getAllInvitesByUser(userId).toGetResponse();
     }
 
+    @GetMapping("/getAllPanelsByUser/{userId}")
+    public RestResult<List<AssessmentPanelParticipantResource>> getAllPanelsByUser(
+            @PathVariable long userId) {
+        return assessmentPanelInviteService.getAllPanelsByUser(userId).toGetResponse();
+    }
+
     @GetMapping(value = "/getNonAcceptedAssessorInviteIds/{competitionId}")
     public RestResult<List<Long>> getNonAcceptedAssessorInviteIds(
             @PathVariable long competitionId) {

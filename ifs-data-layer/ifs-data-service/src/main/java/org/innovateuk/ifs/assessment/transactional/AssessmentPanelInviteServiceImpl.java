@@ -359,6 +359,16 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                 .collect(toList()));
     }
 
+    @Override
+    public ServiceResult<List<AssessmentPanelParticipantResource>> getAllPanelsByUser(long userId) {
+        return serviceSuccess(
+                assessmentPanelParticipantRepository
+                        .findByUserIdAndRoleAndStatus(userId, PANEL_ASSESSOR,ACCEPTED)
+                        .stream()
+                        .map(assessmentPanelParticipantMapper::mapToResource)
+                        .collect(toList()));
+    }
+
     private ServiceResult<Competition> getCompetition(long competitionId) {
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId));
     }

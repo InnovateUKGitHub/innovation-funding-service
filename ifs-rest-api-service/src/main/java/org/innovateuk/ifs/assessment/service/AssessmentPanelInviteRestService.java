@@ -28,6 +28,8 @@ public interface AssessmentPanelInviteRestService {
 
     RestResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId);
 
+    RestResult<List<AssessmentPanelParticipantResource>> getAllPanelsByUser(long userId);
+
     RestResult<List<Long>> getNonAcceptedAssessorInviteIds(long competitionId);
 
     RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
