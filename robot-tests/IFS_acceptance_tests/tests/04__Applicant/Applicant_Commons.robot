@@ -58,7 +58,7 @@ Mark application details as incomplete
     the user clicks the button/link       link=Application details
     the user clicks the button/link       jQuery=button:contains("Edit")
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
-    the user should see the element       jQuery=li:contains("Application details") > .action-required
+    the user should see the element       jQuery=li:contains("Application details") > .task-status-incomplete
 
 the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=img.complete[alt*="Application details"]
@@ -305,17 +305,6 @@ the user should see all finance subsections incomplete
     the user should see the element  css=li:nth-of-type(1) .action-required
     the user should see the element  css=li:nth-of-type(2) .action-required
     the user should see the element  jQuery=h3:contains("Your funding")
-
-Remove previous rows
-    [Arguments]  ${element}
-    :FOR    ${i}    IN RANGE  10
-    # The sleep of 200 ms is actually for speed, originally the test used "should not see the element" however that made it wait for 10 seconds on every loop.
-    \  sleep    200ms
-    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    ${element}
-    \  Log    ${status}
-    \  Exit For Loop If  '${status}'=='FAIL'
-    \  run keyword if  '${status}'=='PASS'  the user clicks the button/link  ${element}
-    \  ${i} =  Set Variable  ${i + 1}
 
 Invite a non-existing collaborator
     [Arguments]   ${email}  ${competition_name}

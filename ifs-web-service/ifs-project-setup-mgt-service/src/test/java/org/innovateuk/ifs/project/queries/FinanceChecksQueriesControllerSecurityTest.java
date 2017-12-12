@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.project.queries;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
+import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.project.status.security.SetupSectionsPermissionRules;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
@@ -20,8 +23,22 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.when;
 
 public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<FinanceChecksQueriesController> {
+
+
+    private ProjectLookupStrategy projectLookupStrategy;
+    private ProjectCompositeId projectCompositeId;
+
+    @Override
+    @Before
+    public void lookupPermissionRules() {
+        super.lookupPermissionRules();
+        projectLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectLookupStrategy.class);
+        projectCompositeId = ProjectCompositeId.id(123l);
+        when(projectLookupStrategy.getProjectCompositeId(projectCompositeId.id())).thenReturn(projectCompositeId);
+    }
 
     @Override
     protected Class<? extends FinanceChecksQueriesController> getClassUnderTest() {
@@ -30,13 +47,13 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
 
     @Override
     protected Consumer<SetupSectionsPermissionRules> getVerification() {
-        return permissionRules -> permissionRules.internalCanAccessFinanceChecksQueriesSection(eq(1L), isA(UserResource.class));
+        return permissionRules -> permissionRules.internalCanAccessFinanceChecksQueriesSection(eq(projectCompositeId), isA(UserResource.class));
     }
 
     @Test
     public void testDownloadAttachment() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.downloadAttachment(1L, 2L, 3L));
+        assertSecured(() -> classUnderTest.downloadAttachment(projectCompositeId.id(), 2L, 3L));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -46,7 +63,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.downloadAttachment(1L, 2L, 3L);
+                classUnderTest.downloadAttachment(projectCompositeId.id(), 2L, 3L);
                 Assert.fail("Should not have been able to download attachment without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -57,7 +74,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
     @Test
     public void testShowPage() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.showPage(1L, 2L, "", null));
+        assertSecured(() -> classUnderTest.showPage(projectCompositeId.id(), 2L, "", null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -67,7 +84,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.showPage(1L, 2L, "", null);
+                classUnderTest.showPage(projectCompositeId.id(), 2L, "", null);
                 Assert.fail("Should not have been able to view the page without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -78,7 +95,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
     @Test
     public void testCancelNewForm() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.cancelNewForm(1L, 2L, 3L, "", null, null));
+        assertSecured(() -> classUnderTest.cancelNewForm(projectCompositeId.id(), 2L, 3L, "", null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -88,7 +105,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.cancelNewForm(1L, 2L, 3L, "", null, null);
+                classUnderTest.cancelNewForm(projectCompositeId.id(), 2L, 3L, "", null, null);
                 Assert.fail("Should not have been able to cancel the response form without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -99,7 +116,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
     @Test
     public void testDownloadResponseAttachment() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.downloadResponseAttachment(1L, 2L, 3L, 4L, null));
+        assertSecured(() -> classUnderTest.downloadResponseAttachment(projectCompositeId.id(), 2L, 3L, 4L, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -109,7 +126,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.downloadResponseAttachment(1L, 2L, 3L, 4L, null);
+                classUnderTest.downloadResponseAttachment(projectCompositeId.id(), 2L, 3L, 4L, null);
                 Assert.fail("Should not have been able to download attachment without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -120,7 +137,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
     @Test
     public void testSaveResponse() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.saveResponse(null, 1L, 2L, 3L, "", null, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.saveResponse(null, projectCompositeId.id(), 2L, 3L, "", null, null, null, null, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -130,7 +147,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.saveResponse(null, 1L, 2L, 3L, "", null, null, null, null, null, null);
+                classUnderTest.saveResponse(null, projectCompositeId.id(), 2L, 3L, "", null, null, null, null, null, null);
                 Assert.fail("Should not have been able to save response without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -141,7 +158,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
     @Test
     public void testSaveResponseAttachment() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.saveNewResponseAttachment(null, 1L, 2L, 3L, "", null, null, null, null, null));
+        assertSecured(() -> classUnderTest.saveNewResponseAttachment(null, projectCompositeId.id(), 2L, 3L, "", null, null, null, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -151,7 +168,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.saveNewResponseAttachment(null, 1L, 2L, 3L, "", null, null, null, null, null);
+                classUnderTest.saveNewResponseAttachment(null, projectCompositeId.id(), 2L, 3L, "", null, null, null, null, null);
                 Assert.fail("Should not have been able to save a response attachment without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -162,7 +179,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
     @Test
     public void testViewNewResponse() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.viewNewResponse(1L, 2L, 3L,"", null, null, null));
+        assertSecured(() -> classUnderTest.viewNewResponse(projectCompositeId.id(), 2L, 3L,"", null, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -172,7 +189,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.viewNewResponse(1L, 2L, 3L, "", null, null, null);
+                classUnderTest.viewNewResponse(projectCompositeId.id(), 2L, 3L, "", null, null, null);
                 Assert.fail("Should not have been able to show the add response form without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -182,7 +199,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
     @Test
     public void testRemoveAttachment() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.removeAttachment(1L, 2L, 3L, "", 4L, null, null, null));
+        assertSecured(() -> classUnderTest.removeAttachment(projectCompositeId.id(), 2L, 3L, "", 4L, null, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -192,7 +209,7 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.removeAttachment(1L, 2L, 3L, "", 4L, null, null, null);
+                classUnderTest.removeAttachment(projectCompositeId.id(), 2L, 3L, "", 4L, null, null, null);
                 Assert.fail("Should not have been able to remove attachments from the create response form without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
