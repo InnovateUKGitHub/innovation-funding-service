@@ -21,8 +21,8 @@ subprojects {
 
     task osStageRemote(type: DockerPushImage) {
         dependsOn tagDocker
-        registryCredentials = project.ext.dockerRegistryCredentials
-        imageName = dockerRegistryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        registryCredentials=getRemoteOCCredentials()
+        imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
         tag = project.version
     }
 

@@ -22,7 +22,7 @@ task osStageRemote(type: DockerPushImage) {
     onlyIf { !isNamedEnv() }
 
     dependsOn tagDocker
-    registryCredentials = project.ext.dockerRegistryCredentials
+    registryCredentials=getRemoteOCCredentials()
     imageName = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
     tag = sqlVersion
 }

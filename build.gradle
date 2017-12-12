@@ -3,7 +3,7 @@ import com.bmuschko.gradle.docker.DockerRegistryCredentials
 // Deployment behaviour for differing versions has not been tested yet
 // and so version numbers should always equal project.version
 // DO NOT HAVE OUT OF SYNC VERSION NUMBERS - THIS WILL BE IMPLEMENTED AS PART OF IFS-334
-ext.dataServiceVersion=project.properties['data-service.version'] ?:project.version
+ext.dataServiceVersion = project.properties['data-service.version'] ?: project.version
 
 ext.applicationServiceVersion = project.properties['application-service.version'] ?: project.version
 ext.frontDoorServiceVersion = project.properties['front-door-service.version'] ?: project.version
@@ -32,31 +32,43 @@ allprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
+    // It is possible that a user will not have OpenShift commandline client installed on their machine - in which
+    // case the "oc" commands will fail, and will be caught in the catch block and logged.
+    // This will not be a problem unless the user wants to deploy to an OpenShift cluster - in which case they will
+    // have to install the commandline client. However in order for the build to not completely fail we still need
+    // a dockerRegistryCredentials and a localDockerRegistryCredentials, even if they are not filled in. Therefore
+    // declare them before we might raise any exceptions.
+//        project.ext.dockerRegistryCredentials = new DockerRegistryCredentials()
+    project.ext.localDockerRegistryCredentials = new DockerRegistryCredentials()
+
+//        // Get the docker repository for the remote OS cluster
+//        project.ext.dockerRegistryCredentials.url = project.dockerRegistry
+//        project.ext.dockerRegistryCredentials.username = "unused"
+////        project.ext.dockerRegistryCredentials.password = "oc whoami -t"
+//        project.ext.dockerRegistryCredentials.email = "unused"
+
+    // Get the docker repository for the local OS cluster
+    def localIpCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.clusterIP}'"
+    def localPortCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.ports..port}'"
+    project.ext.localIp = localIpCommand
+    project.ext.localPort = localPortCommand
+    project.ext.localDockerRegistryCredentials.url = project.ext.localIp + ":" + project.ext.localPort
+    project.ext.localDockerRegistryCredentials.username = "unused"
+    project.ext.localDockerRegistryCredentials.password = "oc whoami -t"
+    project.ext.localDockerRegistryCredentials.email = "unused"
+
+}
+
+def getRemoteOCCredentials() {
+    println "*** Executing getRemoteOCCredentials ***"
+    def dockerRegistryCredentials = new DockerRegistryCredentials()
     try {
-        // It is possible that a user will not have OpenShift commandline client installed on their machine - in which
-        // case the "oc" commands will fail, and will be caught in the catch block and logged.
-        // This will not be a problem unless the user wants to deploy to an OpenShift cluster - in which case they will
-        // have to install the commandline client. However in order for the build to not completely fail we still need
-        // a dockerRegistryCredentials and a localDockerRegistryCredentials, even if they are not filled in. Therefore
-        // declare them before we might raise any exceptions.
-        project.ext.dockerRegistryCredentials = new DockerRegistryCredentials()
-        project.ext.localDockerRegistryCredentials = new DockerRegistryCredentials()
-
         // Get the docker repository for the remote OS cluster
-        project.ext.dockerRegistryCredentials.url = project.dockerRegistry
-        project.ext.dockerRegistryCredentials.username = "unused"
-        project.ext.dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
-        project.ext.dockerRegistryCredentials.email = "unused"
+        dockerRegistryCredentials.url = project.dockerRegistry
+        dockerRegistryCredentials.username = "unused"
+        dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
+        dockerRegistryCredentials.email = "unused"
 
-        // Get the docker repository for the local OS cluster
-        def localIpCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.clusterIP}'"
-        def localPortCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.ports..port}'"
-        project.ext.localIp = localIpCommand.execute().text.replace("'", "").trim()
-        project.ext.localPort = localPortCommand.execute().text.replace("'", "").trim()
-        project.ext.localDockerRegistryCredentials.url = project.ext.localIp + ":" + project.ext.localPort
-        project.ext.localDockerRegistryCredentials.username = "unused"
-        project.ext.localDockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
-        project.ext.localDockerRegistryCredentials.email = "unused"
     }
     catch (ignored) {
         println("Exception thrown creating the OpenShift docker registry credentials. " +
@@ -65,6 +77,7 @@ allprojects {
                 "in which case it will need to be installed")
         println(ignored)
     }
+    return dockerRegistryCredentials
 }
 
 apply from: "openshift-support.gradle"

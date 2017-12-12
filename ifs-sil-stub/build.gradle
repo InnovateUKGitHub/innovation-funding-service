@@ -100,10 +100,11 @@ task tagDocker(type: DockerTagImage) {
     tag = project.version
 }
 
+
 task osStageRemote(type: DockerPushImage) {
     onlyIf { isNotProductionEnv() }
     dependsOn tagDocker
-    registryCredentials = project.ext.dockerRegistryCredentials
+    registryCredentials=getRemoteOCCredentials()
     imageName = project.dockerRegistry + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
     tag = project.version
 }
