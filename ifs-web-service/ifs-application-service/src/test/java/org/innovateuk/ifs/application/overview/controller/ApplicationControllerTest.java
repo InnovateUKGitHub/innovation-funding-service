@@ -26,6 +26,8 @@ import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -56,6 +58,8 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
@@ -369,10 +373,13 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
     }
 
     @Test
-    public void testApplicationStateBeingUpdatedToStarted() throws Exception {
+    public void testApplicationDetails_applicationStateIsForwardedToOpenWhenLeadApplicationVisitsOverview() throws Exception {
         ApplicationResource app = applications.get(0);
         app.setApplicationState(ApplicationState.CREATED);
         app.setCompetitionStatus(CompetitionStatus.OPEN);
+        UserResource leadApplicant = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.LEADAPPLICANT).build(1)).build();
+
+        this.setLoggedInUser(leadApplicant);
 
         when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
 
@@ -382,6 +389,29 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andReturn().getModelAndView().getModel();
 
         verify(applicationRestService, times(1)).updateApplicationState(app.getId(), ApplicationState.OPEN);
+
+        this.loginDefaultUser();
+    }
+
+    @Test
+    public void testApplicationDetails_applicationStateIsNotForwardedToOpenWhenCollaboratorVisitsOverview() throws Exception {
+        ApplicationResource app = applications.get(0);
+        app.setApplicationState(ApplicationState.CREATED);
+        app.setCompetitionStatus(CompetitionStatus.OPEN);
+        UserResource collaborator = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.COLLABORATOR).build(1)).build();
+
+        this.setLoggedInUser(collaborator);
+
+        when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
+
+        mockMvc.perform(get("/application/" + app.getId()))
+                .andExpect(status().isOk())
+                .andExpect(view().name("application-details"))
+                .andReturn().getModelAndView().getModel();
+
+        verify(applicationRestService, times(0)).updateApplicationState(app.getId(), ApplicationState.OPEN);
+
+        this.loginDefaultUser();
     }
 
     @Test
