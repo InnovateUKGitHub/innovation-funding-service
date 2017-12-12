@@ -67,23 +67,81 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date) {
 
         return getProject(projectId).andOnSuccess(project ->
-                retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
+                retrieveUploadedDocuments(project).handleSuccessOrFailure(
                         failure -> serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT),
                         success -> setDocumentsSubmittedDate(project, date)));
     }
 
-    private ServiceResult<List<FileEntryResource>> retrieveUploadedDocuments(Long projectId) {
+    private ServiceResult<List<FileEntryResource>> retrieveUploadedDocumentsOLD(Long projectId) {
 
         ServiceResult<FileEntryResource> exploitationPlanFile = getExploitationPlanFileEntryDetails(projectId);
         return getProject(projectId).
                 andOnSuccess(project -> {
                     return validateProjectNeedsCollaborationAgreement(project).
+
+                            // Means we have multiple partners
                             andOnSuccess(() -> {
                                 ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(projectId);
                                 return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
                             }).
-                    andOnFailure(() -> aggregate(asList(exploitationPlanFile)));
+
+                            // Means we have a sole partner
+                            andOnFailure(() -> aggregate(asList(exploitationPlanFile)));
                 });
+    }
+
+    private ServiceResult<List<FileEntryResource>> retrieveUploadedDocumentsNEW1(Long projectId) {
+
+        ServiceResult<FileEntryResource> exploitationPlanFile = getExploitationPlanFileEntryDetails(projectId);
+        return getProject(projectId).
+                andOnSuccess(project -> {
+                    return validateProjectNeedsCollaborationAgreement(project)
+                            // Means we have multiple partners
+                            .andOnSuccess(() -> {
+                                return getCollaborationAgreementFileEntryDetails(projectId)
+                                                .andOnSuccess(collaborationAgreementFile -> aggregate(asList(serviceSuccess(collaborationAgreementFile), exploitationPlanFile)));
+                                    }
+                            )
+                            // Means we have a sole partner
+                            .andOnFailure(() -> aggregate(asList(exploitationPlanFile)));
+                });
+    }
+
+    private ServiceResult<List<FileEntryResource>> retrieveUploadedDocumentsNew2(Long projectId) {
+
+        ServiceResult<FileEntryResource> exploitationPlanFile = getExploitationPlanFileEntryDetails(projectId);
+        return getProject(projectId).
+                andOnSuccess(project -> {
+                    return validateProjectNeedsCollaborationAgreement(project).
+
+                            // Means we have multiple partners
+                                    andOnSuccess(() -> {
+                                ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(projectId);
+                                if (collaborationAgreementFile.isSuccess()) {
+                                    return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
+                                } else {
+                                    return serviceFailure(notFoundError(FileEntry.class));
+                                }
+
+                            }).
+
+                            // Means we have a sole partner
+                                    andOnFailure(() -> aggregate(asList(exploitationPlanFile)));
+                });
+    }
+
+    private ServiceResult<List<FileEntryResource>> retrieveUploadedDocuments(Project project) {
+
+        ServiceResult<FileEntryResource> exploitationPlanFile = getExploitationPlanFileEntryDetails(project.getId());
+
+        ServiceResult<Project> needsCollaborationAgreement = validateProjectNeedsCollaborationAgreement(project);
+
+        if (needsCollaborationAgreement.isSuccess()) {
+            ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(project.getId());
+            return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
+        } else {
+            return aggregate(asList(exploitationPlanFile));
+        }
     }
 
     @Override
@@ -121,14 +179,14 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceSuccess();
     }
 
-    @Override
-    public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
+    //@Override
+    public ServiceResult<Boolean> isOtherDocumentsSubmitAllowedOLD(Long projectId, Long userId) {
 
         return getProject(projectId).andOnSuccess(project -> {
             Optional<ProjectUser> projectManager = getExistingProjectManager(project);
             if (project.getPartnerOrganisations().size() > 1) {
 
-                return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
+                return retrieveUploadedDocuments(project).handleSuccessOrFailure(
                         failure -> serviceSuccess(false),
                         success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getDocumentsSubmittedDate() == null ?
                                 serviceSuccess(true) :
@@ -138,7 +196,22 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
                         failure -> serviceSuccess(false),
                         success -> serviceSuccess(true));
             }
-        }).andOnFailure(() -> serviceSuccess(false));
+        })
+        .andOnFailure(() -> serviceSuccess(false));
+    }
+
+    @Override
+    public ServiceResult<Boolean> isOtherDocumentsSubmitAllowed(Long projectId, Long userId) {
+
+        return getProject(projectId).andOnSuccess(project -> {
+            Optional<ProjectUser> projectManager = getExistingProjectManager(project);
+
+            return retrieveUploadedDocuments(project).handleSuccessOrFailure(
+                    failure -> serviceSuccess(false),
+                    success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getDocumentsSubmittedDate() == null ?
+                            serviceSuccess(true) :
+                            serviceSuccess(false));
+        });
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {
@@ -202,7 +275,7 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
         return serviceSuccess(project);
     }
 
-    private ServiceResult<Project> validateProjectNeedsCollaborationAgreement(final Project project) {
+    private ServiceResult<Project> validateProjectNeedsCollaborationAgreement(Project project) {
         if (project.getPartnerOrganisations().size() <= 1) {
             return serviceFailure(PROJECT_HAS_SOLE_PARTNER);
         }
