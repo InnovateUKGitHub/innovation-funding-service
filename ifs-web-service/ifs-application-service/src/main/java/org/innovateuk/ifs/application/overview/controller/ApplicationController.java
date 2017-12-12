@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -74,7 +75,7 @@ public class ApplicationController {
         }
 
         form.setApplication(application);
-        changeApplicationStatusToOpen(application);
+        changeApplicationStatusToOpen(application, user);
 
         Long userId = user.getId();
         model.addAttribute("form", form);
@@ -82,8 +83,10 @@ public class ApplicationController {
         return "application-details";
     }
 
-    private void changeApplicationStatusToOpen(ApplicationResource applicationResource) {
-        if (ApplicationState.CREATED.equals(applicationResource.getApplicationState())) {
+    private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {
+        //IFS-2440 TODO: We should reconsider this approach and the value of tracking CREATED state.
+        if (ApplicationState.CREATED.equals(applicationResource.getApplicationState())
+                && userResource.hasRoles(UserRoleType.LEADAPPLICANT)) {
             applicationRestService.updateApplicationState(applicationResource.getId(), OPEN).getSuccessObjectOrThrowException();
         }
     }
