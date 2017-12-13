@@ -68,7 +68,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     }
 
     @Override
-    public ServiceResult<Void> createAndNotifyAll(long competitionId) {
+    public ServiceResult<Void> createAndNotifyReviews(long competitionId) {
         getAllAssessorsOnPanel(competitionId)
                 .forEach(assessor -> getAllApplicationsOnPanel(competitionId)
                         .forEach(application -> createAssessmentPanelApplication(assessor, application)));
