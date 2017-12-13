@@ -14,7 +14,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Profile',linkClass='link-back',linkUrl=@{/profile/view}" />
 
     <div th:if="${#fields.hasErrors('${userDetailsForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We were unable to save your changes</h2>
+        <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We were unable to save your changes.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(userDetailsForm)" />
     </div>
 
