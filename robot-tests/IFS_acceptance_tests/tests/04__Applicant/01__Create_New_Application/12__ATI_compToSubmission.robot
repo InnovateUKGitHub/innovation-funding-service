@@ -1,5 +1,4 @@
 *** Settings ***
-Documentation    Suite description
 Documentation   IFS-2396  ATI Competition type template
 ...
 Suite Setup     Custom Suite Setup
