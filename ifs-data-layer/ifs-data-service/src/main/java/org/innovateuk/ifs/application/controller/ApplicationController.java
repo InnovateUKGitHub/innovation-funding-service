@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.application.mapper.IneligibleOutcomeMapper;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -46,6 +47,12 @@ public class ApplicationController {
                                                    @RequestBody ApplicationResource application) {
 
         return applicationService.saveApplicationDetails(id, application).toPostResponse();
+    }
+
+    @GetMapping("/competition/{competitionId}")
+    public RestResult<List<ApplicationResource>> findByCompetitionId(
+            @PathVariable("competitionId") long competitionId) {
+        return applicationService.findByCompetitionId(competitionId).toGetResponse();
     }
 
     @GetMapping("/getProgressPercentageByApplicationId/{applicationId}")

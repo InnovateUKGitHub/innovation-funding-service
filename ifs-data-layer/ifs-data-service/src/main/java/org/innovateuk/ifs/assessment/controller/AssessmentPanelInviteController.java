@@ -72,6 +72,7 @@ public class AssessmentPanelInviteController {
 
     @GetMapping(value = "/getAvailableAssessorIds/{competitionId}")
     public RestResult<List<Long>> getAvailableAssessorIds(
+
             @PathVariable long competitionId) {
         return assessmentPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
     }

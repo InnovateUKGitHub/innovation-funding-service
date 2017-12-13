@@ -18,19 +18,22 @@ public class AssessorDashboardAssessmentPanelInviteViewModel {
     private final long competitionId;
     private final LocalDate panelDateDeadline;
     private long daysLeft;
+    private final long awaitingApplications;
 
     public AssessorDashboardAssessmentPanelInviteViewModel(
             String hash,
             String competitionName,
             long competitionId,
             LocalDate panelDateDeadline,
-            long daysLeft
+            long daysLeft,
+            long awaitingApplications
             ) {
         this.hash = hash;
         this.competitionName = competitionName;
         this.competitionId = competitionId;
         this.panelDateDeadline = panelDateDeadline;
         this.daysLeft = daysLeft;
+        this.awaitingApplications = awaitingApplications;
     }
 
     public long getCompetitionId() {
@@ -57,6 +60,10 @@ public class AssessorDashboardAssessmentPanelInviteViewModel {
         this.daysLeft = daysLeft;
     }
 
+    public long getAwaitingApplications() {
+        return awaitingApplications;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -75,6 +82,7 @@ public class AssessorDashboardAssessmentPanelInviteViewModel {
                 .append(competitionId, that.competitionId)
                 .append(panelDateDeadline, that.panelDateDeadline)
                 .append(daysLeft, that.daysLeft)
+                .append(awaitingApplications, that.awaitingApplications)
                 .isEquals();
     }
 
@@ -86,6 +94,7 @@ public class AssessorDashboardAssessmentPanelInviteViewModel {
                 .append(competitionId)
                 .append(panelDateDeadline)
                 .append(daysLeft)
+                .append(awaitingApplications)
                 .toHashCode();
     }
 }

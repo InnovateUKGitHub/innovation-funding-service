@@ -64,11 +64,6 @@ public interface AssessmentPanelInviteService {
             description = "An Assessor can view assessor panel invites provided that the invites belong to them")
     ServiceResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId);
 
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'READ_ASSESSMENT_PANEL_INVITES')")
-    @SecuredBySpring(value = "READ_ASSESSMENT_PANEL_INVITES",
-            description = "An Assessor can view assessor panels that they have accepted")
-    ServiceResult<List<AssessmentPanelParticipantResource>> getAllPanelsByUser(long userId);
-
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_PANEL_INVITE_OVERVIEW_BY_COMPETITION",
             description = "Competition Admins and Project Finance users can retrieve assessment panel invitation overview by competition")
@@ -114,4 +109,10 @@ public interface AssessmentPanelInviteService {
     @SecuredBySpring(value = "DELETE_ALL_INVITES",
             description = "The Competition Admins and Project Finance users can delete all the assessment panel invites")
     ServiceResult<Void> deleteAllInvites(long competitionId);
+
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'READ_ASSESSMENT_PANEL_INVITES')")
+    @SecuredBySpring(value = "READ_ASSESSMENT_PANEL_INVITES",
+            description = "An Assessor can view assessor panels that they have accepted invites provided that the invites belong to them")
+    ServiceResult<List<AssessmentPanelParticipantResource>> getAllPanelsByUser(long userId);
+
 }

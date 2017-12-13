@@ -33,6 +33,9 @@ public class AssessorDashboardModelPopulator {
     @Autowired
     private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
 
+    @Autowired
+    private AssessmentPanelInviteRestService assessmentPanelRestService;
+
     public AssessorDashboardViewModel populateModel(Long userId) {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
                 .getParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR).getSuccessObject();
@@ -50,7 +53,6 @@ public class AssessorDashboardModelPopulator {
                 getPendingParticipations(participantResourceList),
                 getAssessmentPanelInvites(assessmentPanelParticipantResourceList),
                 getAssessmentPanelAccepted(assessmentPanelAcceptedResourceList)
-
         );
     }
 
@@ -109,7 +111,8 @@ public class AssessorDashboardModelPopulator {
                         invite.getCompetitionName(),
                         invite.getCompetitionId(),
                         invite.getPanelDate().toLocalDate(),
-                        invite.getPanelDaysLeft()
+                        invite.getPanelDaysLeft(),
+                        invite.getAwaitingApplications()
                 ))
                 .collect(toList());
     }
@@ -122,9 +125,11 @@ public class AssessorDashboardModelPopulator {
                         invite.getCompetitionName(),
                         invite.getCompetitionId(),
                         invite.getPanelDate().toLocalDate(),
-                        invite.getPanelDaysLeft()
+                        invite.getPanelDaysLeft(),
+                        invite.getAwaitingApplications()
                         ))
                 .collect(toList());
     }
+
 
 }

@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 
+import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.mapper.AssessmentPanelInviteMapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
@@ -116,6 +118,9 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
 
     enum Notifications {
@@ -359,15 +364,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                 .collect(toList()));
     }
 
-    @Override
-    public ServiceResult<List<AssessmentPanelParticipantResource>> getAllPanelsByUser(long userId) {
-        return serviceSuccess(
-                assessmentPanelParticipantRepository
-                        .findByUserIdAndRoleAndStatus(userId, PANEL_ASSESSOR,ACCEPTED)
-                        .stream()
-                        .map(assessmentPanelParticipantMapper::mapToResource)
-                        .collect(toList()));
-    }
+
 
     private ServiceResult<Competition> getCompetition(long competitionId) {
         return find(competitionRepository.findOne(competitionId), notFoundError(Competition.class, competitionId));
@@ -544,4 +541,33 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         assessmentPanelInviteRepository.delete(invite);
         return serviceSuccess();
     }
+
+    @Override
+    public ServiceResult<List<AssessmentPanelParticipantResource>> getAllPanelsByUser(long userId) {
+
+        List<AssessmentPanelParticipantResource> assessmentPanelParticipantResources = assessmentPanelParticipantRepository
+                .findByUserIdAndRoleAndStatus(userId, PANEL_ASSESSOR,ACCEPTED)
+                .stream()
+                .map(assessmentPanelParticipantMapper::mapToResource)
+                .collect(toList());
+
+        assessmentPanelParticipantResources.forEach(this::determineStatusOfPanelApplications);
+
+        return serviceSuccess(assessmentPanelParticipantResources);
+    }
+
+    private void determineStatusOfPanelApplications(AssessmentPanelParticipantResource assessmentPanelParticipantResource) {
+
+        List<Application> applications = applicationRepository.findByCompetitionId(
+                assessmentPanelParticipantResource.getCompetitionId()
+        );
+
+        assessmentPanelParticipantResource.setAwaitingApplications(getApplicationsPendingForPanelCount(applications));
+    }
+
+    private Long getApplicationsPendingForPanelCount(List<Application> applications) {
+        return applications.stream().filter(application -> application.isInAssessmentPanel()).count();
+    }
+
+
 }

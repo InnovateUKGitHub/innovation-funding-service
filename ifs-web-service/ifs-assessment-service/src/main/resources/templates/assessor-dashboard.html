@@ -156,51 +156,19 @@
                                        th:text="${assessmentPanelAccept.competitionName}"/>
                                 </h3>
 
-                                <!--start of block to bring in applications-->
-                                <!--===-->
-                                <!--===-->
-                                <!--===-->
-                                <!--===-->
-                                <!--===-->
+                                <div th:if="${assessmentPanelAccept.awaitingApplications == 0}">
+                                    <strong>
+                                        0 applications awaiting review | applications to be added soon
+                                    </strong>
+                                </div>
 
-                                <!--<div th:if="${assessmentPanelAccept.progressTotal == 0 && assessmentPanelAccept.pendingAssessments == 0}">-->
-                                    <!--<strong>-->
-                                        <!--There are currently no assessments for you to review.-->
-                                    <!--</strong>-->
-                                <!--</div>-->
-
-                                <!--<div th:if="${assessmentPanelAccept.progressTotal == 0 && assessmentPanelAccept.pendingAssessments > 0}" class="action-required">-->
-                                    <!--<strong>-->
-                                            <!--<span th:text="${assessmentPanelAccept.pendingAssessments}" class="pending-applications">-->
-                                                <!--COUNT-->
-                                            <!--</span> applications awaiting acceptance-->
-                                    <!--</strong>-->
-                                <!--</div>-->
-
-                                <!--<div th:if="${assessmentPanelAccept.progressTotal - assessmentPanelAccept.progressAssessed > 0 && assessmentPanelAccept.pendingAssessments > 0}" class="action-required">-->
-                                    <!--<strong>-->
-                                        <!--<span th:text="${assessmentPanelAccept.pendingAssessments}" class="pending-applications" /> applications awaiting acceptance | <span th:text="${assessmentPanelAccept.progressTotal - assessmentPanelAccept.progressAssessed}" class="accepted-applications" /> applications to assess-->
-                                    <!--</strong>-->
-                                <!--</div>-->
-
-                                <!--<div th:if="${assessmentPanelAccept.progressTotal - assessmentPanelAccept.progressAssessed > 0 && assessmentPanelAccept.pendingAssessments == 0}" class="action-required">-->
-                                    <!--<strong>-->
-                                            <!--<span th:text="${assessmentPanelAccept.progressTotal - assessmentPanelAccept.progressAssessed}" class="accepted-applications">-->
-                                                <!--COUNT-->
-                                            <!--</span> applications to assess-->
-                                    <!--</strong>-->
-                                <!--</div>-->
-
-
-                                <!--===-->
-                                <!--===-->
-                                <!--===-->
-                                <!--===-->
-                                <!--===-->
-                                <!--===-->
-                                <!--===-->
-                                <!--end of block to bring in applications-->
-
+                                <div th:if="${assessmentPanelAccept.awaitingApplications > 0}" class="action-required">
+                                    <strong>
+                                            <span th:text="${assessmentPanelAccept.awaitingApplications}" class="accepted-applications">
+                                                COUNT
+                                            </span> applications awaiting review
+                                    </strong>
+                                </div>
 
                                 <div class="status">
                                     <div class="status-msg msg-deadline">

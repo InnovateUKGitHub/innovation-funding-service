@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.IneligibleOutcome;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
@@ -47,6 +48,9 @@ public interface ApplicationService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> findByUserId(final Long userId);
+
+    @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
+    ServiceResult<List<ApplicationResource>> findByCompetitionId(long competitionId);
 
     /**
      * This method saves only a few application attributes that
