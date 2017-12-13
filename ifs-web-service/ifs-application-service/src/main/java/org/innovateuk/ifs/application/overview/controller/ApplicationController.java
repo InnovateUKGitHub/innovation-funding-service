@@ -84,7 +84,6 @@ public class ApplicationController {
     }
 
     private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {
-        //IFS-2456 TODO: We should reconsider this approach and the value of tracking CREATED state.
         if (ApplicationState.CREATED.equals(applicationResource.getApplicationState())
                 && userIsLeadApplicant(userResource.getId(), applicationResource.getId())) {
             applicationRestService.updateApplicationState(applicationResource.getId(), OPEN).getSuccessObjectOrThrowException();
