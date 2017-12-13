@@ -1,3 +1,4 @@
+-- For IFS-2439 - copying grant claim maximums from the Programme Competition to the ATI Competition
 SET @programme_competition_type_id=(SELECT id FROM competition_type where name = 'Programme');
 SET @ati_competition_type_id=(SELECT id FROM competition_type where name = 'Aerospace Technology Institute');
 

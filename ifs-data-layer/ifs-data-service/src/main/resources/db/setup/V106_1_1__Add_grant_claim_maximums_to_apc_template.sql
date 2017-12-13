@@ -1,4 +1,5 @@
-SET @programme_competition_type_id=(SELECT id FROM competition_type where name = 'Programme');
+-- For IFS-2439 - copying grant claim maximums from the Programme Competition to the APC Competition
+SET @programme_competition_type_id=(SELECT id FROM competition_type where name = 'Programme');SET @programme_competition_type_id=(SELECT id FROM competition_type where name = 'Programme');
 SET @apc_competition_type_id=(SELECT id FROM competition_type where name = 'Advanced Propulsion Centre');
 
 
