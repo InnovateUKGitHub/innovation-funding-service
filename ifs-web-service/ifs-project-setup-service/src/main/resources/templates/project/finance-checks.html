@@ -53,7 +53,7 @@
                     <div class="heading-small no-margin">
                         <th:block th:text="${post.username}">Created by user</th:block>
                         <small>
-                            <th:block th:text="${#temporals.format(post.createdOn, 'dd MMMM yyyy')}"/>
+                            <th:block th:text="${#temporals.format(post.createdOn, 'd MMMM yyyy')}"/>
                             <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'hh:mma'))}"/>
                         </small>
                     </div>
