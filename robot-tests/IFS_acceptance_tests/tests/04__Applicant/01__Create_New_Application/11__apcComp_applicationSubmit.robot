@@ -36,7 +36,7 @@ Applicant applies to newly created APC competition
     [Documentation]  IFS-2286
     [Tags]  HappyPath  MySQL
     When the competition is open                                 ${apcCompetitionTitle}
-    Then Lead Applicant applies to the new created competition   &{lead_applicant_credentials}  ${apcCompetitionTitle}
+    Then Lead Applicant applies to the new created competition   ${apcCompetitionTitle}  &{lead_applicant_credentials}
 
 Applicant submits his application
     [Documentation]  IFS-2286

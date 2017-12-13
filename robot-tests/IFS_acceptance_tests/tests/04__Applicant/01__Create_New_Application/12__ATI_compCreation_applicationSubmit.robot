@@ -39,7 +39,7 @@ Applicant applies to newly created ATI competition
 
 Applicant submits his application
     [Documentation]  IFS-2286
-    [Tags]  HappyPath
+    [Tags]  HappyPath  Pending
 #    TODO  Pending due to IFS-2447
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${ATIapplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
