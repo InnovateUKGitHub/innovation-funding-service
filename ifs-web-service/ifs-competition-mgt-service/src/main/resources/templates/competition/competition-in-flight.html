@@ -146,7 +146,7 @@
                             th:class="${(milestone.passed ? 'done' : 'not-done')}">
                             <h3 class="heading-small" th:text="${milestone.milestoneType.milestoneDescription}">
                                 Milestone</h3>
-                            <p th:text="${milestone.dateTime} ? ${#temporals.format(milestone.dateTime, 'dd MMMM yyyy')}">
+                            <p th:text="${milestone.dateTime} ? ${#temporals.format(milestone.dateTime, 'd MMMM yyyy')}">
                                 10 October 2017</p>
                         </li>
                         <th:block th:switch="${milestone.milestoneType}">
