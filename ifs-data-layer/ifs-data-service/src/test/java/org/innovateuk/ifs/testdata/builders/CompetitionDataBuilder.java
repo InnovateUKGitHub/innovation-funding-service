@@ -71,7 +71,9 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return asCompAdmin(data -> {
             CompetitionResource existingCompetition = competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
             updateCompetitionInCompetitionData(data, existingCompetition.getId());
-//            publicContentService.initialiseByCompetitionId(competitionId).getSuccessObjectOrThrowException();
+
+            publicContentService.findByCompetitionId(competitionId).andOnFailure(() ->
+                    publicContentService.initialiseByCompetitionId(competitionId).getSuccessObjectOrThrowException());
         });
     }
 
