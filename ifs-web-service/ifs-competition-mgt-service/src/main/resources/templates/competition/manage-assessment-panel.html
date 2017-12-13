@@ -17,7 +17,12 @@
 
         <div class="grid-row">
             <div class="column-quarter">
-                <button class="button width-full" th:disabled="${!model.pendingReviewNotifications}">Confirm actions</button>
+                // TODO not sure we actually need to be in a form
+                <form th:action="@{/competition}" method="post">
+                <button class="button width-full" type="submit"
+                        th:disabled="${!model.pendingReviewNotifications}"
+                        th:formaction="@{/assessment/panel/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}">Confirm actions</button>
+                </form>
             </div>
             <!--/*
                 <div class="column-quarter">

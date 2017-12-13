@@ -111,6 +111,6 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	int countByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
 
-	Stream<Application> findByCompetitionIdAndInAssessmentPanelAndApplicationProcessActivityStateState(long competitionId, boolean inAssessmentPanel, State applicationState);
+	List<Application> findByCompetitionIdAndInAssessmentPanelAndApplicationProcessActivityStateState(long competitionId, boolean inAssessmentPanel, State applicationState);
 
 }

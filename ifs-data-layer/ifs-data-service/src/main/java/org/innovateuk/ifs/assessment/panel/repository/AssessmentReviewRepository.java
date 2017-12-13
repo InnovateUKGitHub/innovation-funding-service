@@ -34,7 +34,7 @@ public interface AssessmentReviewRepository extends ProcessRepository<Assessment
             "INNER JOIN CompetitionAssessmentParticipant cap ON cap.competition = a.competition " +
             "WHERE " +
             "  a.competition.id = :competitionId AND a.inAssessmentPanel=true AND " +
-            "  cap.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
+            "  cap.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND cap.role=org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR AND" +
             "  NOT EXISTS (SELECT 1 FROM AssessmentReview r WHERE r.target=a AND r.participant.user = cap.user) " )
     boolean notifiable(@Param("competitionId") long competitionId);
 }
