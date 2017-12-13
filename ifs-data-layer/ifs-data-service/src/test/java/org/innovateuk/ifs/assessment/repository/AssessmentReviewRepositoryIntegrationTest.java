@@ -9,10 +9,10 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
-import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.repository.CompetitionAssessmentInviteRepository;
-import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
+import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
+import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
@@ -25,12 +25,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentReviewBuilder.newAssessmentReview;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertFalse;
@@ -54,9 +53,10 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
     private ApplicationRepository applicationRepository;
 
     @Autowired
-    private CompetitionAssessmentInviteRepository competitionAssessmentInviteRepository;
+    private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
+
     @Autowired
-    private CompetitionParticipantRepository competitionParticipantRepository;
+    private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
 
     @Autowired
     @Override
@@ -98,7 +98,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
         assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
         repository.save(assessmentReview);
 
-        assertTrue(repository.existsByParticipantUserAndTarget(user, application)); // probably should be notExists if that's allowed
+        assertTrue(repository.existsByParticipantUserAndTargetAndActivityStateStateNot(user, application, State.WITHDRAWN)); // probably should be notExists if that's allowed
     }
 
     @Test
@@ -133,7 +133,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
         assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
         repository.save(assessmentReview);
 
-        assertFalse(repository.existsByParticipantUserAndTarget(user, application2));
+        assertFalse(repository.existsByParticipantUserAndTargetAndActivityStateStateNot(user, application2, State.WITHDRAWN));
     }
 
     @Test
@@ -178,7 +178,6 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
 
     @Test
     public void existsByTargetIdAndActivityStateState_notExists() {
-
         Competition competition = newCompetition().with(id(null)).build();
         Competition competition2 = newCompetition().with(id(null)).build();
         competitionRepository.save(competition);
@@ -231,7 +230,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
 
         userRepository.save(user);
 
-        CompetitionAssessmentInvite competitionAssessmentInvite = newCompetitionAssessmentInvite()
+        AssessmentPanelInvite assessmentPanelInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -239,11 +238,11 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
                 .withStatus(InviteStatus.SENT)
                 .withName("tom baldwin")
                 .build();
-        competitionAssessmentInviteRepository.save(competitionAssessmentInvite);
+        assessmentPanelInviteRepository.save(assessmentPanelInvite);
 
-        CompetitionAssessmentParticipant competitionAssessmentParticipant = new CompetitionAssessmentParticipant(competitionAssessmentInvite);
-        competitionAssessmentParticipant.setStatus(ParticipantStatus.ACCEPTED);
-        competitionParticipantRepository.save(competitionAssessmentParticipant);
+        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentPanelInvite);
+        assessmentPanelParticipant.setStatus(ParticipantStatus.ACCEPTED);
+        assessmentPanelParticipantRepository.save(assessmentPanelParticipant);
 
         Application application = newApplication()
                 .with(id(null))
@@ -251,6 +250,116 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
                 .withInAssessmentPanel(true)
                 .build();
         applicationRepository.save(application);
+
+        assertTrue(repository.notifiable(competition.getId()));
+    }
+
+    @Test
+    public void notifiable_assigned() {
+        Competition competition = newCompetition().with(id(null)).build();
+        competitionRepository.save(competition);
+
+        User user = newUser()
+                .with(id(null))
+                .withUid("foo")
+                .build();
+
+        userRepository.save(user);
+
+        AssessmentPanelInvite competitionAssessmentInvite = newAssessmentPanelInvite()
+                .with(id(null))
+                .withCompetition(competition)
+                .withUser(user)
+                .withEmail("tom@poly.io")
+                .withStatus(InviteStatus.SENT)
+                .withName("tom baldwin")
+                .build();
+
+        assessmentPanelInviteRepository.save(competitionAssessmentInvite);
+
+        AssessmentPanelParticipant competitionAssessmentParticipant = new AssessmentPanelParticipant(competitionAssessmentInvite);
+        competitionAssessmentParticipant.setStatus(ParticipantStatus.ACCEPTED);
+
+        assessmentPanelParticipantRepository.save(competitionAssessmentParticipant);
+
+        Application application = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withInAssessmentPanel(true)
+                .build();
+        applicationRepository.save(application);
+
+        ProcessRole processRole = newProcessRole()
+                .with(id(null))
+                .withUser(user)
+                .withApplication(application)
+                .withRole(UserRoleType.ASSESSOR_PANEL)
+                .build();
+        processRoleRepository.save(processRole);
+
+        AssessmentReview assessmentReview =
+                newAssessmentReview()
+                        .with(id(null))
+                        .withParticipant(processRole)
+                        .withTarget(application)
+                        .build();
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
+
+        repository.save(assessmentReview);
+
+        assertFalse(repository.notifiable(competition.getId()));
+    }
+
+    @Test
+    public void notifiable_assigned_withdrawn() {
+        Competition competition = newCompetition().with(id(null)).build();
+        competitionRepository.save(competition);
+
+        User user = newUser()
+                .with(id(null))
+                .withUid("foo")
+                .build();
+
+        userRepository.save(user);
+
+        AssessmentPanelInvite assessmentPanelInvite = newAssessmentPanelInvite()
+                .with(id(null))
+                .withCompetition(competition)
+                .withUser(user)
+                .withEmail("tom@poly.io")
+                .withStatus(InviteStatus.SENT)
+                .withName("tom baldwin")
+                .build();
+        assessmentPanelInviteRepository.save(assessmentPanelInvite);
+
+        AssessmentPanelParticipant competitionAssessmentParticipant = new AssessmentPanelParticipant(assessmentPanelInvite);
+        competitionAssessmentParticipant.setStatus(ParticipantStatus.ACCEPTED);
+        assessmentPanelParticipantRepository.save(competitionAssessmentParticipant);
+
+        Application application = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withInAssessmentPanel(true)
+                .build();
+        applicationRepository.save(application);
+
+        ProcessRole processRole = newProcessRole()
+                .with(id(null))
+                .withUser(user)
+                .withApplication(application)
+                .withRole(UserRoleType.ASSESSOR_PANEL)
+                .build();
+        processRoleRepository.save(processRole);
+
+        AssessmentReview assessmentReview =
+                newAssessmentReview()
+                        .with(id(null))
+                        .withParticipant(processRole)
+                        .withTarget(application)
+                        .build();
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.WITHDRAWN));
+
+        repository.save(assessmentReview);
 
         assertTrue(repository.notifiable(competition.getId()));
     }

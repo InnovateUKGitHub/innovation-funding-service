@@ -87,6 +87,31 @@ public class AssessmentReviewWorkflowHandlerIntegrationTest
         assertStateChangeOnWorkflowHandlerCall(CONFLICT_OF_INTEREST, ACCEPTED, invite -> workflowHandler.unmarkConflictOfInterest(invite));
     }
 
+    @Test
+    public void withdraw_created() {
+        assertStateChangeOnWorkflowHandlerCall(CREATED, WITHDRAWN, invite -> workflowHandler.withdraw(invite));
+    }
+
+    @Test
+    public void withdraw_pending() {
+        assertStateChangeOnWorkflowHandlerCall(PENDING, WITHDRAWN, invite -> workflowHandler.withdraw(invite));
+    }
+
+    @Test
+    public void withdraw_rejected() {
+        assertStateChangeOnWorkflowHandlerCall(REJECTED, WITHDRAWN, invite -> workflowHandler.withdraw(invite));
+    }
+
+    @Test
+    public void withdraw_accepted() {
+        assertStateChangeOnWorkflowHandlerCall(ACCEPTED, WITHDRAWN, invite -> workflowHandler.withdraw(invite));
+    }
+
+    @Test
+    public void withdraw_conflict_of_interest() {
+        assertStateChangeOnWorkflowHandlerCall(CONFLICT_OF_INTEREST, WITHDRAWN, invite -> workflowHandler.withdraw(invite));
+    }
+
     @Override
     protected Class<TestableTransitionWorkflowAction> getBaseActionType() {
         return TestableTransitionWorkflowAction.class;

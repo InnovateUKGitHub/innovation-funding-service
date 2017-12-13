@@ -16,7 +16,8 @@ public enum AssessmentReviewState implements ProcessState {
     PENDING(State.PENDING),
     REJECTED(State.REJECTED),
     ACCEPTED(State.ACCEPTED),
-    CONFLICT_OF_INTEREST(State.CONFLICT_OF_INTEREST);
+    CONFLICT_OF_INTEREST(State.CONFLICT_OF_INTEREST),
+    WITHDRAWN(State.WITHDRAWN);
 
     private final State backingState;
 

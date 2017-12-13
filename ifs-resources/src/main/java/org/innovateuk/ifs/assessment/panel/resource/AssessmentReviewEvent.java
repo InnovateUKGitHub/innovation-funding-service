@@ -10,7 +10,8 @@ public enum AssessmentReviewEvent implements ProcessEvent {
     ACCEPT("accept"),
     REJECT("reject"),
     MARK_CONFLICT_OF_INTEREST("mark_conflict_of_interest"),
-    UNMARK_CONFLICT_OF_INTEREST("unmark_conflict_of_interest");
+    UNMARK_CONFLICT_OF_INTEREST("unmark_conflict_of_interest"),
+    WITHDRAW("withdraw");
 
     String event;
 
