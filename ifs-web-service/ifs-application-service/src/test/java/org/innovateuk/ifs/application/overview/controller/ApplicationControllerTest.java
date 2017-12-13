@@ -26,7 +26,7 @@ import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
-import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,14 +58,14 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -377,10 +377,10 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationResource app = applications.get(0);
         app.setApplicationState(ApplicationState.CREATED);
         app.setCompetitionStatus(CompetitionStatus.OPEN);
-        UserResource leadApplicant = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.LEADAPPLICANT).build(1)).build();
 
-        this.setLoggedInUser(leadApplicant);
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withRoleName(UserRoleType.LEADAPPLICANT.getName()).build();
 
+        when(processRoleService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(processRoleResource);
         when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
 
         mockMvc.perform(get("/application/" + app.getId()))
@@ -389,8 +389,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andReturn().getModelAndView().getModel();
 
         verify(applicationRestService, times(1)).updateApplicationState(app.getId(), ApplicationState.OPEN);
-
-        this.loginDefaultUser();
     }
 
     @Test
@@ -398,10 +396,10 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationResource app = applications.get(0);
         app.setApplicationState(ApplicationState.CREATED);
         app.setCompetitionStatus(CompetitionStatus.OPEN);
-        UserResource collaborator = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.COLLABORATOR).build(1)).build();
 
-        this.setLoggedInUser(collaborator);
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withRoleName(UserRoleType.COLLABORATOR.getName()).build();
 
+        when(processRoleService.findProcessRole(this.loggedInUser.getId(), app.getId())).thenReturn(processRoleResource);
         when(applicationRestService.getApplicationById(app.getId())).thenReturn(restSuccess(app));
 
         mockMvc.perform(get("/application/" + app.getId()))
@@ -410,8 +408,6 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andReturn().getModelAndView().getModel();
 
         verify(applicationRestService, times(0)).updateApplicationState(app.getId(), ApplicationState.OPEN);
-
-        this.loginDefaultUser();
     }
 
     @Test
