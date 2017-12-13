@@ -45,7 +45,7 @@ echo ldap scheme:$LDAP_SCHEME
 wipeLdapUsers() {
   [ -z "$LDAP_PORT" ] && LDAP_PORT=8389
 
-  ldapsearch -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -b $LDAP_DOMAIN -s sub '(objectClass=person)' -x \
+  ldapsearch -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -b $LDAP_DOMAIN -s sub '(objectClass=person)' -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS \
    | grep 'dn: ' \
    | cut -c4- \
    | xargs ldapdelete -H $LDAP_SCHEME://$LDAP_HOST:$LDAP_PORT/ -D "cn=admin,$LDAP_DOMAIN" -w $LDAP_PASS
