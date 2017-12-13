@@ -91,12 +91,12 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
 
-    public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
     public static final String IFS_SYSTEM_MAINTENANCE_USER_EMAIL = "ifs_system_maintenance_user@innovateuk.org";
     public static final String IFS_SYSTEM_REGISTRAR_USER_EMAIL = "ifs_web_user@innovateuk.org";
-    public static final String PROJECT_FINANCE_EMAIL = "lee.bowman@innovateuk.test";
 
     protected ServiceLocator serviceLocator;
+    protected String compAdminEmail;
+    protected String projectFinanceEmail;
     protected BaseUserService baseUserService;
     protected UserService userService;
     protected CompetitionService competitionService;
@@ -257,10 +257,12 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         applicationInnovationAreaService = serviceLocator.getBean(ApplicationInnovationAreaService.class);
         ineligibleOutcomeMapper = serviceLocator.getBean(IneligibleOutcomeMapper.class);
         applicationResearchCategoryService = serviceLocator.getBean(ApplicationResearchCategoryService.class);
+        compAdminEmail = serviceLocator.getCompAdminEmail();
+        projectFinanceEmail = serviceLocator.getProjectFinanceEmail();
     }
 
     protected UserResource compAdmin() {
-        return retrieveUserByEmailInternal(COMP_ADMIN_EMAIL, UserRoleType.COMP_ADMIN);
+        return retrieveUserByEmailInternal(compAdminEmail, UserRoleType.COMP_ADMIN);
     }
 
     protected UserResource systemRegistrar() {
@@ -268,7 +270,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected UserResource projectFinanceUser() {
-        return retrieveUserByEmail(PROJECT_FINANCE_EMAIL);
+        return retrieveUserByEmail(projectFinanceEmail);
     }
 
     protected UserResource ifsAdmin() {
