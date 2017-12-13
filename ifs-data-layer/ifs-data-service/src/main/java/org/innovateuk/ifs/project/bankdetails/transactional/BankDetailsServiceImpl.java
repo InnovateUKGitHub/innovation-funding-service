@@ -233,10 +233,13 @@ public class BankDetailsServiceImpl implements BankDetailsService {
                 handleSuccessOrFailure(
                         failure -> serviceFailure(failure.getErrors()),
                         validationResult -> {
-                            if (validationResult.isCheckPassed()) {
-                                return serviceSuccess(accountDetails);
-                            } else {
+                            if (validationResult
+                                    .getConditions()
+                                    .stream()
+                                    .anyMatch(condition -> condition.getSeverity().equals("error"))) {
                                 return serviceFailure(convertExperianValidationMsgToUserMsg(validationResult.getConditions()));
+                            } else {
+                                return serviceSuccess(accountDetails);
                             }
                         }
                 );
