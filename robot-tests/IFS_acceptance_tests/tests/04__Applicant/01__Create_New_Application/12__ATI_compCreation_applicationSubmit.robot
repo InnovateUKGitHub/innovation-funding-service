@@ -8,8 +8,8 @@ Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
-${ATIcompetitionTitle}  Aerospace Technology Institute
-${ATIapplicationTitle}  Aerospace Technology Institute
+${ATIcompetitionTitle}  ATI Competition
+${ATIapplicationTitle}  ATI application
 
 *** Test Cases ***
 Comp Admin creates an ATI competition
