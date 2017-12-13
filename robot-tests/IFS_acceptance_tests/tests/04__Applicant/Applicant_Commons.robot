@@ -404,9 +404,9 @@ the user applies to competition and enters organisation type
 
 the user selects his organisation in Companys House
     [Arguments]  ${search}  ${link}
-    the user enters text to a text field            id=organisationSearchName  ${search}
-    the user clicks the button/link                 id=org-search
-    the user clicks the button/link                 link=${link}
-    the user selects the checkbox                   address-same
-    the user clicks the button/link                 css=button[name="save-organisation-details"]
-    the user clicks the button/link                 css=button[name="save-organisation"]
+    the user enters text to a text field  id=organisationSearchName  ${search}
+    the user clicks the button/link       id=org-search
+    the user clicks the button/link       link=${link}
+    the user selects the checkbox         address-same
+    the user clicks the button/link       css=button[name="save-organisation-details"]
+    the user clicks the button/link       css=button[name="save-organisation"]

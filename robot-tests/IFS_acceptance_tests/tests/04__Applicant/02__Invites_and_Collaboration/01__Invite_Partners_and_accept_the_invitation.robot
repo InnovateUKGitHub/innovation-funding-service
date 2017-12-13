@@ -297,7 +297,6 @@ The lead applicant should have the correct status
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
 
-
 the applicant cannot assign to pending invitees
     the user clicks the button/link      jQuery=button:contains("Assign this question to someone else")
     the user should not see the element  jQuery=button:contains("Adrian Booth")
