@@ -21,22 +21,27 @@ subprojects {
 
     task osStageRemote(type: DockerPushImage) {
         dependsOn tagDocker
-        registryCredentials = project.ext.dockerRegistryCredentials
-        imageName = dockerRegistryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        registryCredentials=getRemoteOCCredentials()
+        imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
         tag = project.version
     }
 
     task tagDockerLocal(type: DockerTagImage) {
         dependsOn buildDocker
         imageId = buildDocker.getTag()
-        repository = localDockerRegistryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        doFirst {
+            repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        }
         tag = project.version
     }
 
     task osStageLocal(type: DockerPushImage) {
         dependsOn tagDockerLocal
-        registryCredentials = project.ext.localDockerRegistryCredentials
-        imageName = localDockerRegistryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        doFirst {
+            registryCredentials = getLocalOCCredentials()
+            imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        }
+
         tag = project.version
     }
 }

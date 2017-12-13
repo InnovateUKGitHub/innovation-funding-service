@@ -229,10 +229,6 @@
 
     <!-- ===========================Form: Research Participations alert messages =========================== -->
     <th:block th:fragment="research_participation_alert">
-        <div th:unless="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio}" class="success-alert">
-            <h2 class="heading-small no-margin">The participation levels of this project are within the required range.</h2>
-            <p>This application can be submitted with these project costs.</p>
-        </div>
         <div th:if="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio}" class="warning-alert">
             <h2 class="heading-small no-margin">The participation levels of this project are not within the required range</h2>
             <p>The research participation costs must be <span th:text="${currentCompetition.maxResearchRatio}"></span>% or less of the total project costs.</p>

@@ -140,7 +140,7 @@
                             <td th:case="*">-</td>
                         </th:block>
                         <td th:text="${applicationSummary.manageFundingEmailDate} ? 'Sent' : '-'">-</td>
-                        <td class="alignright" th:text="${applicationSummary.manageFundingEmailDate} ? ${#temporals.format(applicationSummary.manageFundingEmailDate, 'dd MMMM yyyy')} : '-'">9 January 2017</td>
+                        <td class="alignright" th:text="${applicationSummary.manageFundingEmailDate} ? ${#temporals.format(applicationSummary.manageFundingEmailDate, 'd MMMM yyyy')} : '-'">9 January 2017</td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(model.content)}">
                         <td colspan="5">No applications found.</td>
