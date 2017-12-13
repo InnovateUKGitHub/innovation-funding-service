@@ -18,6 +18,7 @@ public class CompetitionSetupQuestionResourceDocs {
             fieldWithPath("guidance").description("The content of the guidance for the question"),
             fieldWithPath("maxWords").description("The maximum words allowed for the question response"),
             fieldWithPath("appendix").description("Does the question include an appendix section"),
+            fieldWithPath("allowedFileTypes").description("Specifies types of files that will be allowed to be uploaded for appendix"),
             fieldWithPath("assessmentGuidance").description("Guidance for the assessor"),
             fieldWithPath("assessmentGuidanceTitle").description("Guidance title for the assessor"),
             fieldWithPath("assessmentMaxWords").description("Maximum words for the assessors feedback"),
