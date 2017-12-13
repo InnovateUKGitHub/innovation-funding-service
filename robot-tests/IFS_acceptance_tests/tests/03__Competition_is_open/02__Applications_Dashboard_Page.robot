@@ -114,7 +114,7 @@ Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
     [Tags]    HappyPath
     [Setup]  The user logs-in in new browser                             &{lead_applicant_credentials}
-    When the user can see the option to upload a file on the page        ${technical_approach_url}
+    When the user can see the option to upload a file on the page        ${APPLICATION_OVERVIEW_URL}
     Then the user uploads the file to the 'technical approach' question  ${valid_pdf}
     When log in as a different user                         &{Comp_admin1_credentials}
     And the user navigates to the page                      ${applicationsForRTOComp}
@@ -157,6 +157,7 @@ the user uploads the file to the 'technical approach' question
 the user can see the option to upload a file on the page
     [Arguments]    ${url}
     The user navigates to the page    ${url}
+    the user clicks the button/link   jQuery=a:contains("Technical approach")
     the user should see the text in the page    Upload
 
 the user can view this file without any errors

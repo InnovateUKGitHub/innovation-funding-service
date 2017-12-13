@@ -8,6 +8,7 @@ import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.repository.FormValidatorRepository;
 import org.innovateuk.ifs.validator.NotEmptyValidator;
 import org.innovateuk.ifs.validator.WordCountValidator;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -20,8 +21,24 @@ import static org.mockito.Mockito.when;
 public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<DefaultApplicationQuestionCreator> {
     private static final Integer ASSESSOR_MAXIMUM_DEFAULT = 10;
 
+    private Competition competition;
+
+    private FormValidator notEmptyValidator;
+    private FormValidator wordCountValidator;
+
     @Mock
     private FormValidatorRepository formValidatorRepositoryMock;
+
+    @Before
+    public void setup() {
+        competition  = newCompetition().build();
+
+        notEmptyValidator = newFormValidator().withClazzName(NotEmptyValidator.class.getName()).build();
+        wordCountValidator = newFormValidator().withClazzName(WordCountValidator.class.getName()).build();
+
+        when(formValidatorRepositoryMock.findByClazzName(NotEmptyValidator.class.getName())).thenReturn(notEmptyValidator);
+        when(formValidatorRepositoryMock.findByClazzName(WordCountValidator.class.getName())).thenReturn(wordCountValidator);
+    }
 
     public DefaultApplicationQuestionCreator supplyServiceUnderTest() {
         return new DefaultApplicationQuestionCreator();
@@ -29,13 +46,6 @@ public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<D
 
     @Test
     public void buildQuestion_createdQuestionShouldUseValidatorsFromRepository() throws Exception {
-        Competition competition  = newCompetition().build();
-
-        FormValidator notEmptyValidator = newFormValidator().withClazzName(NotEmptyValidator.class.getName()).build();
-        FormValidator wordCountValidator = newFormValidator().withClazzName(WordCountValidator.class.getName()).build();
-
-        when(formValidatorRepositoryMock.findByClazzName(NotEmptyValidator.class.getName())).thenReturn(notEmptyValidator);
-        when(formValidatorRepositoryMock.findByClazzName(WordCountValidator.class.getName())).thenReturn(wordCountValidator);
 
         Question defaultQuestion = service.buildQuestion(competition);
 
@@ -54,14 +64,6 @@ public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<D
 
     @Test
     public void buildQuestion_createQuestionShouldContainTheCorrectNumberOfChildrenEntities() throws Exception {
-        Competition competition  = newCompetition().build();
-
-        FormValidator notEmptyValidator = newFormValidator().withClazzName(NotEmptyValidator.class.getName()).build();
-        FormValidator wordCountValidator = newFormValidator().withClazzName(WordCountValidator.class.getName()).build();
-
-        when(formValidatorRepositoryMock.findByClazzName(NotEmptyValidator.class.getName())).thenReturn(notEmptyValidator);
-        when(formValidatorRepositoryMock.findByClazzName(WordCountValidator.class.getName())).thenReturn(wordCountValidator);
-
         Question defaultQuestion = service.buildQuestion(competition);
         FormInput feedbackInput = defaultQuestion.getFormInputs().get(2);
 
@@ -71,17 +73,18 @@ public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<D
 
     @Test
     public void buildQuestion_createQuestionShouldBeInitializedWithCompetition() throws Exception {
-        Competition competition  = newCompetition().build();
-
-        FormValidator notEmptyValidator = newFormValidator().withClazzName(NotEmptyValidator.class.getName()).build();
-        FormValidator wordCountValidator = newFormValidator().withClazzName(WordCountValidator.class.getName()).build();
-
-        when(formValidatorRepositoryMock.findByClazzName(NotEmptyValidator.class.getName())).thenReturn(notEmptyValidator);
-        when(formValidatorRepositoryMock.findByClazzName(WordCountValidator.class.getName())).thenReturn(wordCountValidator);
-
         Question defaultQuestion = service.buildQuestion(competition);
 
         assertEquals(defaultQuestion.getCompetition(), competition);
         assertEquals(defaultQuestion.getAssessorMaximumScore(), ASSESSOR_MAXIMUM_DEFAULT);
+    }
+
+    @Test
+    public void buildQuestion_createQuestionShouldContainTheDefaultAllowedFileTypeForFileUpload() throws Exception {
+        Question defaultQuestion = service.buildQuestion(competition);
+        FormInput fileUploadFormInput = defaultQuestion.getFormInputs().get(3);
+
+        assertEquals(defaultQuestion.getFormInputs().size(), 4);
+        assertTrue(fileUploadFormInput.getAllowedFileTypes().contains("PD"));
     }
 }
