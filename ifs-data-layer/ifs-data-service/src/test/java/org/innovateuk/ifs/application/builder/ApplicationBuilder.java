@@ -112,4 +112,7 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     public ApplicationBuilder withResearchCategory(ResearchCategory... researchCategories) {
         return withArray((researchCategory, application) -> application.setResearchCategory(researchCategory), researchCategories);
     }
+    public ApplicationBuilder withInAssessmentPanel(Boolean... inPanels) {
+        return withArray((inPanel, application) -> application.setInAssessmentPanel(inPanel), inPanels);
+    }
 }

@@ -65,4 +65,4 @@ the blue flag should not be visible
     the user should not see the element  jQuery=li:contains("Project summary") > .action-required
 
 the assign button should say Assigned to you
-    Element Should Contain  jQuery=li:contains("Project summary") > .assign-container.action-required button    you
+    Element Should Contain  jQuery=li:contains("Project summary") > .assign-container.secondary-notification button    you

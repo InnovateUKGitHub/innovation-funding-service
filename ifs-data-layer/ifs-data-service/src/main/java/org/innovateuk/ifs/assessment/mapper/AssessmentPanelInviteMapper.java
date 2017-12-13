@@ -3,7 +3,7 @@ package org.innovateuk.ifs.assessment.mapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.invite.domain.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
 import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

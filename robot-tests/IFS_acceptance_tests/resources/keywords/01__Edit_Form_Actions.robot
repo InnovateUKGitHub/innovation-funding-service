@@ -185,3 +185,14 @@ the user should see the dropdown option selected
     # Header checking    (INFUND-1892)
     Element Should Be Visible    id=global-header
     Element Should Be Visible    jQuery=p:contains("BETA") a:contains("feedback")
+
+Remove previous rows
+    [Arguments]  ${element}
+    :FOR    ${i}    IN RANGE  10
+    # The sleep of 200 ms is actually for speed, originally the test used "should not see the element" however that made it wait for 10 seconds on every loop.
+    \  sleep    200ms
+    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    ${element}
+    \  Log    ${status}
+    \  Exit For Loop If  '${status}'=='FAIL'
+    \  run keyword if  '${status}'=='PASS'  the user clicks the button/link  ${element}
+    \  ${i} =  Set Variable  ${i + 1}

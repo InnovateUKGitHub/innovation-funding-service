@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Your skills',linkClass='link-back',linkUrl=@{/profile/skills}" />
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes</h2>
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
                 <th:block th:insert="fragments/elements :: error-summary-list(form)" />
             </div>
 

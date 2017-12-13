@@ -19,13 +19,29 @@ public class AssessmentPanelController {
     @Autowired
     private AssessmentPanelService assessmentPanelService;
 
-    @PostMapping("/assignApplication/{applicationId}")
+    @PostMapping({
+            "/assignApplication/{applicationId}", // TODO zdd contract
+            "/assign-application/{applicationId}" // TODO zdd migrate
+    })
     public RestResult<Void> assignApplication(@PathVariable long applicationId) {
         return assessmentPanelService.assignApplicationToPanel(applicationId).toPostResponse();
     }
 
-    @PostMapping("/unassignApplication/{applicationId}")
+    @PostMapping({
+            "/unassignApplication/{applicationId}", // TODO zdd contract
+            "/unassign-application/{applicationId}" // TODO zdd migrate
+    })
     public RestResult<Void> unAssignApplication(@PathVariable long applicationId) {
         return assessmentPanelService.unassignApplicationFromPanel(applicationId).toPostResponse();
+    }
+
+    @PostMapping("/notify-assessors/{competitionId}")
+    public RestResult<Void> notifyAssessors(@PathVariable("competitionId") long competitionId) {
+        return assessmentPanelService.createAndNotifyAll(competitionId).toPostResponse();
+    }
+
+    @GetMapping("/notify-assessors/{competitionId}")
+    public RestResult<Boolean> isPendingReviewNotifications(@PathVariable("competitionId") long competitionId) {
+        return assessmentPanelService.isPendingReviewNotifications(competitionId).toGetResponse();
     }
 }

@@ -3,8 +3,7 @@ package org.innovateuk.ifs.registration.controller;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
-import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
@@ -34,17 +33,12 @@ import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGIST
  */
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL)
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationSaveController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationSaveController extends AbstractOrganisationCreationController {
 
     @Autowired
     private OrganisationService organisationService;
-
-    @Autowired
-    private InviteRestService inviteRestService;
-
-    @Autowired
-    private InviteOrganisationRestService inviteOrganisationRestService;
 
     @GetMapping("/" + CONFIRM_ORGANISATION)
     public String confirmOrganisation(@ModelAttribute(name = ORGANISATION_FORM, binding = false) OrganisationCreationForm organisationForm,

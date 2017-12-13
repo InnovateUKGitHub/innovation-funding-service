@@ -22,6 +22,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -69,9 +70,9 @@ public class MonitoringOfficerController {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_MONITORING_OFFICER_SECTION')")
     @GetMapping
-    public String viewMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,
+    public String viewMonitoringOfficer(Model model, @P("projectId")@PathVariable("projectId") final Long projectId,
                                 UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
@@ -81,9 +82,9 @@ public class MonitoringOfficerController {
         return viewMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent(), isInternalAdmin(loggedInUser));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'EDIT_MONITORING_OFFICER_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'EDIT_MONITORING_OFFICER_SECTION')")
     @GetMapping("/edit")
-    public String editMonitoringOfficer(Model model, @PathVariable("projectId") final Long projectId,
+    public String editMonitoringOfficer(Model model, @P("projectId")@PathVariable("projectId") final Long projectId,
                                         UserResource loggedInUser) {
 
         checkInCorrectStateToUseMonitoringOfficerPage(projectId);
@@ -93,10 +94,10 @@ public class MonitoringOfficerController {
         return editMonitoringOfficer(model, projectId, form, existingMonitoringOfficer.isPresent(), isInternalAdmin(loggedInUser));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'EDIT_MONITORING_OFFICER_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'EDIT_MONITORING_OFFICER_SECTION')")
     @PostMapping("/confirm")
     public String confirmMonitoringOfficerDetails(Model model,
-                                                  @PathVariable("projectId") final Long projectId,
+                                                  @P("projectId") @PathVariable("projectId") final Long projectId,
                                                   @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerForm form,
                                                   @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                                   UserResource loggedInUser) {
@@ -111,10 +112,10 @@ public class MonitoringOfficerController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'EDIT_MONITORING_OFFICER_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'EDIT_MONITORING_OFFICER_SECTION')")
     @PostMapping("/assign")
     public String updateMonitoringOfficerDetails(Model model,
-                                                 @PathVariable("projectId") final Long projectId,
+                                                 @P("projectId")@PathVariable("projectId") final Long projectId,
                                                  @Valid @ModelAttribute(FORM_ATTR_NAME) MonitoringOfficerForm form,
                                                  @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                                  UserResource loggedInUser) {

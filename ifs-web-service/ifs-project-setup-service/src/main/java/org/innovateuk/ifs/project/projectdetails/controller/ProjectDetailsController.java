@@ -35,6 +35,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -97,9 +98,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @Autowired
     private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId','ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details")
-    public String viewProjectDetails(@PathVariable("projectId") final Long projectId, Model model,
+    public String viewProjectDetails(@P("projectId") @PathVariable("projectId") final Long projectId, Model model,
                                      UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
@@ -126,9 +127,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/detail";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/readonly")
-    public String viewProjectDetailsInReadOnly(@PathVariable("projectId") final Long projectId, Model model,
+    public String viewProjectDetailsInReadOnly(@P("projectId")@PathVariable("projectId") final Long projectId, Model model,
                                      UserResource loggedInUser) {
 
         ProjectResource projectResource = projectService.getById(projectId);
@@ -152,9 +153,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/detail";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CONTACT_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
     @GetMapping("/{projectId}/details/finance-contact")
-    public String viewFinanceContact(@PathVariable("projectId") final Long projectId,
+    public String viewFinanceContact(@P("projectId")@PathVariable("projectId") final Long projectId,
                                      @RequestParam(value="organisation",required=false) Long organisation,
                                      Model model,
                                      @ModelAttribute(name = FORM_ATTR_NAME, binding = false) FinanceContactForm financeContactForm,
@@ -162,9 +163,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return doViewFinanceContact(model, projectId, organisation, loggedInUser, financeContactForm, true, false);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CONTACT_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
     @PostMapping(value = "/{projectId}/details/finance-contact", params = SAVE_FC)
-    public String updateFinanceContact(@PathVariable("projectId") final Long projectId,
+    public String updateFinanceContact(@P("projectId")@PathVariable("projectId") final Long projectId,
                                        Model model,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
@@ -180,9 +181,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CONTACT_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
     @PostMapping(value = "/{projectId}/details/finance-contact", params = INVITE_FC)
-    public String inviteFinanceContact(Model model, @PathVariable("projectId") final Long projectId,
+    public String inviteFinanceContact(Model model, @P("projectId")@PathVariable("projectId") final Long projectId,
                                        @RequestParam(value="organisation") Long organisation,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) FinanceContactForm financeContactForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
@@ -197,10 +198,10 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 (project, inviteProjectResource) -> projectDetailsService.inviteFinanceContact(project, inviteProjectResource));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_MANAGER_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_MANAGER_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-manager", params = INVITE_PM)
     public String inviteProjectManager(Model model,
-                                       @PathVariable("projectId") final Long projectId,
+                                       @P("projectId")@PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        UserResource loggedInUser) {
@@ -255,9 +256,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 .filter(i -> i.getEmail().equals(invite.getEmail())).findFirst();
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_MANAGER_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_MANAGER_PAGE')")
     @GetMapping("/{projectId}/details/project-manager")
-    public String viewProjectManager(@PathVariable("projectId") final Long projectId, Model model,
+    public String viewProjectManager(@P("projectId")@PathVariable("projectId") final Long projectId, Model model,
                                      @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectManagerForm projectManagerForm,
                                      UserResource loggedInUser) {
 
@@ -265,9 +266,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return doViewProjectManager(model, projectId, loggedInUser, false);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_MANAGER_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_MANAGER_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-manager", params = SAVE_PM)
-    public String updateProjectManager(@PathVariable("projectId") final Long projectId, Model model,
+    public String updateProjectManager(@P("projectId")@PathVariable("projectId") final Long projectId, Model model,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
                                        @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        UserResource loggedInUser) {
@@ -282,9 +283,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_START_DATE_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_START_DATE_PAGE')")
     @GetMapping("/{projectId}/details/start-date")
-    public String viewStartDate(@PathVariable("projectId") final Long projectId, Model model,
+    public String viewStartDate(@P("projectId")@PathVariable("projectId") final Long projectId, Model model,
                                 @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsStartDateForm form,
                                 UserResource loggedInUser) {
 
@@ -295,9 +296,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_START_DATE_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_START_DATE_PAGE')")
     @PostMapping("/{projectId}/details/start-date")
-    public String updateStartDate(@PathVariable("projectId") final Long projectId,
+    public String updateStartDate(@P("projectId")@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsStartDateForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                   Model model,
@@ -313,9 +314,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         });
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @GetMapping("/{projectId}/details/project-address")
-    public String viewAddress(@PathVariable("projectId") final Long projectId,
+    public String viewAddress(@P("projectId")@PathVariable("projectId") final Long projectId,
                               Model model,
                               @ModelAttribute(name = FORM_ATTR_NAME, binding = false) ProjectDetailsAddressForm form) {
 
@@ -331,9 +332,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return "project/details-address";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping("/{projectId}/details/project-address")
-    public String updateAddress(@PathVariable("projectId") final Long projectId,
+    public String updateAddress(@P("projectId")@PathVariable("projectId") final Long projectId,
                                 Model model,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                                 @SuppressWarnings("unused") BindingResult bindingResult,
@@ -387,9 +388,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 success -> redirectToProjectDetails(projectId));
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-address", params = SEARCH_ADDRESS)
-    public String searchAddress(@PathVariable("projectId") Long projectId,
+    public String searchAddress(@P("projectId")@PathVariable("projectId") Long projectId,
                                 Model model,
                                 @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form,
                                 BindingResult bindingResult) {
@@ -403,9 +404,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return viewCurrentAddressForm(model, form, project);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-address", params = SELECT_ADDRESS)
-    public String selectAddress(@PathVariable("projectId") Long projectId,
+    public String selectAddress(@P("projectId")@PathVariable("projectId") Long projectId,
                                 Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
         form.getAddressForm().setSelectedPostcode(null);
@@ -413,9 +414,9 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return viewCurrentAddressForm(model, form, project);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_ADDRESS_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_ADDRESS_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-address", params = MANUAL_ADDRESS)
-    public String manualAddress(@PathVariable("projectId") Long projectId, Model model,
+    public String manualAddress(@P("projectId")@PathVariable("projectId") Long projectId, Model model,
                                 @ModelAttribute(FORM_ATTR_NAME) ProjectDetailsAddressForm form) {
         AddressForm addressForm = form.getAddressForm();
         addressForm.setManualAddress(true);

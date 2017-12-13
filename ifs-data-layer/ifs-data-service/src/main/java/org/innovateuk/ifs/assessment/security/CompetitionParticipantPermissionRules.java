@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -9,7 +10,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.stereotype.Component;
 
 /**
- * Provides the permissions around CRUD operations for {@link org.innovateuk.ifs.invite.domain.CompetitionParticipant} resources.
+ * Provides the permissions around CRUD operations for {@link CompetitionParticipant} resources.
  */
 @Component
 @PermissionRules

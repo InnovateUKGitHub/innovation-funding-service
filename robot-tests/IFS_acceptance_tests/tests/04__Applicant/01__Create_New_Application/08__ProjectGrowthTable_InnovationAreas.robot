@@ -346,7 +346,7 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
 
 *** Keywords ***
 the user should see the dates in full format
-    the user should see the element  jQuery=td:contains("Allocate assessors") ~ td:contains("3 ${monthWord} ${nextyear}")
+    the user should see the element  jQuery=td:contains("Allocate assessors") ~ td:contains("4 ${monthWord} ${nextyear}")
 
 the user should see that the funding depends on the research area
     the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")
@@ -363,13 +363,6 @@ the user decides about the growth table
     the user should see the element   jQuery=dt:contains("Include project growth table") + dd:contains("${read}")
     the user clicks the button/link   link=Application
     the user clicks the button/link   link=Competition setup
-
-The competitions date changes so it is now Open
-    [Arguments]  ${competition}
-    Connect to Database  @{database}
-    Change the open date of the Competition in the database to one day before  ${competition}
-    the user navigates to the page   ${CA_Live}
-    the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${competition}")
 
 the user enters value to field
     [Arguments]  ${field}  ${value}

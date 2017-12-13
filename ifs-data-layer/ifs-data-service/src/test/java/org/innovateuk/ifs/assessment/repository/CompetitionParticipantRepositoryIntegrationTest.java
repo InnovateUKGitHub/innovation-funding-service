@@ -9,6 +9,10 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
@@ -49,10 +53,10 @@ import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInviteWithoutId;
+import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionInviteWithoutId;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
@@ -490,11 +494,11 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEquals(2, participantCount);
     }
 
-    private CompetitionAssessmentParticipant saveNewCompetitionParticipant(CompetitionInvite invite) {
+    private CompetitionAssessmentParticipant saveNewCompetitionParticipant(CompetitionAssessmentInvite invite) {
         return repository.save(new CompetitionAssessmentParticipant(invite));
     }
 
-    private List<CompetitionAssessmentParticipant> saveNewCompetitionParticipants(List<CompetitionInvite> invites) {
+    private List<CompetitionAssessmentParticipant> saveNewCompetitionParticipants(List<CompetitionAssessmentInvite> invites) {
         return invites.stream().map(competitionInvite ->
                 repository.save(new CompetitionAssessmentParticipant(competitionInvite))).collect(toList());
     }
@@ -545,7 +549,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         userRepository.save(acceptedUser);
 
-        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<CompetitionAssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -643,7 +647,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         userRepository.save(users);
 
-        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<CompetitionAssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -687,7 +691,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_innovationArea() throws Exception {
         InnovationArea otherInnovationArea = innovationAreaRepository.findOne(5L);
 
-        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<CompetitionAssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -735,7 +739,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         userRepository.save(acceptedUser);
 
-        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<CompetitionAssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -816,7 +820,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         userRepository.save(users);
 
-        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<CompetitionAssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -893,7 +897,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
         userRepository.save(users);
 
-        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<CompetitionAssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -932,7 +936,7 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
 
     @Test
     public void getAssessorsByCompetitionAndInnovationAreaAndStatusAndCompliant_noFilters() throws Exception {
-        List<CompetitionInvite> newAssessorInvites = newCompetitionInviteWithoutId()
+        List<CompetitionAssessmentInvite> newAssessorInvites = newCompetitionInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)

@@ -320,7 +320,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationInviteRepository applicationInviteRepositoryMock;
 
     @Mock
-    protected CompetitionInviteRepository competitionInviteRepositoryMock;
+    protected CompetitionAssessmentInviteRepository competitionAssessmentInviteRepositoryMock;
 
     @Mock
     protected CompetitionParticipantRepository competitionParticipantRepositoryMock;
