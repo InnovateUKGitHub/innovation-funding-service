@@ -32,9 +32,12 @@ Suite Setup       log in and create new application if there is not one already 
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
+Resource          ../Applicant_Commons.robot
 
 *** Variables ***
 ${application_name}    Invite robot test application
+${newLeadApplicant}  kevin@worth.systems
+${newCollaborator}   jerry@worth.systems
 
 *** Test Cases ***
 Application team page
@@ -156,12 +159,7 @@ Business organisation (partner accepts invitation)
     And the user clicks the button/link                 jQuery=.button:contains("Yes, accept invitation")
     And the user selects the radio button               organisationType    1
     And the user clicks the button/link                 jQuery=.button:contains("Continue")
-    And the user enters text to a text field            id=organisationSearchName    Nomensa
-    And the user clicks the button/link                 id=org-search
-    And the user clicks the button/link                 link=NOMENSA LTD
-    And the user selects the checkbox                   address-same
-    And the user clicks the button/link                 jQuery=.button:contains("Continue")
-    And the user clicks the button/link                 jQuery=.button:contains("Save and continue")
+    And the user selects his organisation in Companys House  Nomensa  NOMENSA LTD
     And the invited user fills the create account form  Adrian  Booth
     And the user reads his email                        ${invite_email}  Please verify your email address  Once verified you can sign into your account
 
@@ -260,6 +258,37 @@ Lead should not see pending status for accepted invite
     And the user clicks the button/link         link=view and manage contributors and collaborators
     And the user clicks the button/link         link=Update and add contributors from ${EMPIRE_LTD_NAME}
     Then the user should see the element         jQuery=.table-overflow td:contains("${test_mailbox_one}+inviteorg2@gmail.com") ~ td:contains("Remove")
+    [Teardown]  logout as user
+
+The guest user applies to a competition and creates account
+    [Documentation]  IFS-2440
+    [Tags]  HappyPath  Email
+    Given the user applies to competition and enters organisation type  ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}  radio-1
+    When the user selects his organisation in Companys House        worth it  WORTH IT LTD
+    Then the user enters the details and clicks the create account  Kevin  FamName  ${newLeadApplicant}  ${correct_password}
+    When the user reads his email and clicks the link               ${newLeadApplicant}  Please verify your email address  You have recently set up an account
+    Then the user should be redirected to the correct page          ${REGISTRATION_VERIFIED}
+    And the user clicks the button/link  jQuery=.button:contains("Sign in")
+
+Lead Applicant invites new user as collaborator on his application
+    [Documentation]  IFS-2440
+    [Tags]  HappyPath  Email
+    [Setup]  logging in and error checking   ${newLeadApplicant}  ${correct_password}
+    Given the user clicks the button/link    link=Untitled application (start here)
+    Then the user clicks the button/link     link=Application overview
+    #On purpose here i am not clicking on the Begin Application to see whether we are able to continue without it.
+    When the user fills in the inviting steps  ${newCollaborator}
+    Then the user logs out if they are logged in
+    When the user reads his email and clicks the link  ${newCollaborator}  Invitation to collaborate in ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS_NAME}  You are invited by  2
+    Then the user clicks the button/link               jQuery=a:contains("Yes, accept invitation")
+    And the user should see the element                jQuery=h1:contains("Choose your organisation type")
+    When the user completes the new account creation   ${newCollaborator}  ${BUSINESS_TYPE_ID}
+    Then the user clicks the button/link               jQuery=.progress-list a:contains("Untitled application (start here)")
+    And the user should not see an error in the page
+    When log in as a different user                    ${newLeadApplicant}  ${correct_password}
+    And the user clicks the button/link                jQuery=.progress-list a:contains("Untitled application (start here)")
+    Then the user should see the element               jQuery=h1:contains("Application overview")
+    # Added the above check, to see that the user doesn't get directed to the team page (since he has not clicked on the Begin application button)
 
 *** Keywords ***
 The lead applicant should have the correct status
@@ -267,6 +296,7 @@ The lead applicant should have the correct status
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(1):contains("Steve Smith")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(2):contains("${lead_applicant}")
     the user should see the element  jQuery=.table-overflow tr:nth-child(1) td:nth-child(3):contains("Lead")
+
 
 the applicant cannot assign to pending invitees
     the user clicks the button/link      jQuery=button:contains("Assign this question to someone else")
