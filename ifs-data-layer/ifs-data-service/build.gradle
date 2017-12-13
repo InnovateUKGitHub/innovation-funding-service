@@ -140,6 +140,14 @@ task dbResetDockerEnv {
             from file("${rootProject.projectDir}/setup-files/scripts/docker/ldap-sync-from-ifs-db.sh")
             into inputDir
         }
+        copy {
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/clean-migrate-db.sh")
+            into inputDir
+        }
+        copy {
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/clean-migrate-db-sync-ldap.sh")
+            into inputDir
+        }
     }
 }
 
