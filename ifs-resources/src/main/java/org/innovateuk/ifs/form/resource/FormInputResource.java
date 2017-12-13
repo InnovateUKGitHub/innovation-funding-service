@@ -20,6 +20,7 @@ public class FormInputResource {
     private List<GuidanceRowResource> guidanceRows;
     private Integer priority;
     private FormInputScope scope;
+    private String allowedFileTypes;
 
     public FormInputResource() {
         inputValidators = new LinkedHashSet<>();
@@ -143,6 +144,14 @@ public class FormInputResource {
 
     public void setScope(FormInputScope scope) {
         this.scope = scope;
+    }
+
+    public String getAllowedFileTypes() {
+        return allowedFileTypes;
+    }
+
+    public void setAllowedFileTypes(String allowedFileTypes) {
+        this.allowedFileTypes = allowedFileTypes;
     }
 }
 
