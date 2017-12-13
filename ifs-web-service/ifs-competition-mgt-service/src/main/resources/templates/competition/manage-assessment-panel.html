@@ -17,20 +17,20 @@
 
         <div class="grid-row">
             <div class="column-quarter">
-                // TODO not sure we actually need to be in a form
-                <form th:action="@{/competition}" method="post">
-                <button class="button width-full" type="submit"
-                        th:disabled="${!model.pendingReviewNotifications}"
-                        th:formaction="@{/assessment/panel/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}">Confirm actions</button>
-                </form>
-            </div>
-            <!--/*
-                <div class="column-quarter">
-                    <div class="highlight-panel highlight-panel--tall">
-                        <span class="heading-large" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
-                    </div>
-                </div>
-                    */-->
+                <!--/* TODO not sure we actually need to be in a form */-->
+               <form th:action="@{/competition}" method="post">
+               <button class="button width-full" type="submit"
+                       th:disabled="${!model.pendingReviewNotifications}"
+                       th:formaction="@{/assessment/panel/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}">Confirm actions</button>
+               </form>
+           </div>
+           <!--/*
+               <div class="column-quarter">
+                   <div class="highlight-panel highlight-panel--tall">
+                       <span class="heading-large" th:text="${param.action != null} ? '5' : '0'">0</span><br /><small>Changes since last confirmation</small>
+                   </div>
+               </div>
+                   */-->
             </div>
 
         <h2 class="heading-medium">Key statistics</h2>
