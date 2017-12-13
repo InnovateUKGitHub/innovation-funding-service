@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
@@ -27,4 +28,5 @@ public interface ApplicationRestService {
     RestResult<Void> markAsIneligible(long applicationId, IneligibleOutcomeResource reason);
     RestResult<Void> informIneligible(long applicationId, ApplicationIneligibleSendResource applicationIneligibleSendResource);
     RestResult<Boolean> showApplicationTeam(Long applicationId, Long userId);
+    RestResult<List<ApplicationResource>> getByCompetitionId(long competitionId);
 }

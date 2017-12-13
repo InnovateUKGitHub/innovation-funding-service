@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationIneligibleSendResource
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.IneligibleOutcomeResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.application.service.Futures.adapt;
 
 /**
@@ -38,6 +40,11 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     @Override
     public RestResult<List<ApplicationResource>> getApplicationsByUserId(Long userId) {
         return getWithRestResult(applicationRestURL + "/findByUser/" + userId, ParameterizedTypeReferences.applicationResourceListType());
+    }
+
+    @Override
+    public RestResult<List<ApplicationResource>> getByCompetitionId(long competitionId) {
+        return getWithRestResult(applicationRestURL + "/competition/" + competitionId, ParameterizedTypeReferences.applicationResourceListType());
     }
 
     @Override
