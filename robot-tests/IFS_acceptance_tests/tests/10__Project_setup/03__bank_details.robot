@@ -316,7 +316,7 @@ Project Finance approves Bank Details through the Bank Details list
     [Tags]
     Given log in as a different user    &{internal_finance_credentials}
     And the user navigates to the page    ${server}/management/dashboard/project-setup
-    And the user clicks the button/link  jQuery=a:contains("Bank details")
+    And the user clicks the button/link  jQuery=a:contains("Review bank details")
     When the user clicks the button/link    jQuery=a:contains("Dreambit")
     And the user clicks the button/link    jQuery=button:contains("Approve bank account details")
     And the user clicks the button/link    jQuery=button:contains("Approve account")
