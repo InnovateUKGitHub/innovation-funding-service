@@ -270,6 +270,7 @@ The guest user applies to a competition and creates account
 New Lead Applicant invites new user as collaborator on his application
     [Documentation]  IFS-2440
     [Tags]  HappyPath  Email
+    # Business organisation type for the collaborator as well.
     Given the lead applicant invites the collaborator
     Then the collaborator accepts the invite and is able to see the application without any errors
     And the lead applicant is no longer directed to the team page
