@@ -12,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -74,7 +75,7 @@ public class ApplicationController {
         }
 
         form.setApplication(application);
-        changeApplicationStatusToOpen(application);
+        changeApplicationStatusToOpen(application, user);
 
         Long userId = user.getId();
         model.addAttribute("form", form);
@@ -82,10 +83,16 @@ public class ApplicationController {
         return "application-details";
     }
 
-    private void changeApplicationStatusToOpen(ApplicationResource applicationResource) {
-        if (ApplicationState.CREATED.equals(applicationResource.getApplicationState())) {
+    private void changeApplicationStatusToOpen(ApplicationResource applicationResource, UserResource userResource) {
+        if (ApplicationState.CREATED.equals(applicationResource.getApplicationState())
+                && userIsLeadApplicant(userResource.getId(), applicationResource.getId())) {
             applicationRestService.updateApplicationState(applicationResource.getId(), OPEN).getSuccessObjectOrThrowException();
         }
+    }
+
+    private boolean userIsLeadApplicant(long userId, long applicationId) {
+        return processRoleService.findProcessRole(userId, applicationId)
+                .getRoleName().equals(UserRoleType.LEADAPPLICANT.getName());
     }
 
     @PostMapping(value = "/{applicationId}")

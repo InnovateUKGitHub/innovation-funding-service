@@ -132,7 +132,7 @@ Project Finance goes through the Generate Spend Profile tab to generate the Spen
     [Documentation]    INFUND-5194, INFUND-5987, IFS-2062, IFS-2016
     [Tags]    HappyPath
     [Setup]  log in as a different user     &{internal_finance_credentials}
-    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_APPLICATION_PROJECT}/status/all
+    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/all
     And the user clicks the button/link     jQuery=a:contains("Generate spend profile")
     And the user clicks the button/link     link=${PS_SP_APPLICATION_TITLE}
     When the user clicks the button/link    css=.generate-spend-profile-main-button
