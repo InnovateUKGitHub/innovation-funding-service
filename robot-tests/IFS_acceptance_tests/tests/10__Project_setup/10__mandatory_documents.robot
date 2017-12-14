@@ -28,6 +28,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               IFS-1864 Sole applicants do not have to provide a collaboration agreement document
 ...
 ...               IFS-1881 Project Setup internal project dashboard navigation
+...
+...               IFS-2371-2258 Prevent submission without both doc
 Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -73,6 +75,12 @@ PM cannot submit when both documents are not uploaded
     And the user should see the element    css=label[for="exploitationPlan"]
     Then the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
 
+PM cannot submit when only 1 document is uploaded
+    [Documentation]  IFS-2371-2258
+    [Tags]
+    When the user uploads to the exploitation plan question    ${valid_pdf}
+    Then the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
+    And the user clicks the button/link    name=removeExploitationPlanClicked
 
 Large pdfs not allowed for either document
     [Documentation]    INFUND-3011
