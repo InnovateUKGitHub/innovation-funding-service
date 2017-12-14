@@ -124,8 +124,8 @@ services:
         aliases:
           - ifs-data-service
 
-  finance-totals-data-service:
-    image: innovateuk/finance-totals-data-service
+  finance-data-service:
+    image: innovateuk/finance-data-service
     healthcheck:
       test: ["CMD", "curl", "-f",  "http://localhost:8080/monitoring/health"]
       interval: 15s
@@ -133,7 +133,7 @@ services:
     networks:
       ifs:
         aliases:
-          - ifs-finance-totals-data-service
+          - ifs-finance-data-service
 
   sil-stub:
       image: innovateuk/sil-stub

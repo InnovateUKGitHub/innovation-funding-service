@@ -5,11 +5,11 @@ items:
   kind: DeploymentConfig
   metadata:
     creationTimestamp: null
-    name: finance-totals-data-service
+    name: finance-data-service
   spec:
     replicas: 1
     selector:
-      deploymentconfig: finance-totals-data-service
+      deploymentconfig: finance-data-service
     strategy:
       type: Rolling
       rollingParams:
@@ -20,11 +20,11 @@ items:
       metadata:
         creationTimestamp: null
         labels:
-          deploymentconfig: finance-totals-data-service
+          deploymentconfig: finance-data-service
       spec:
         containers:
-        - image: innovateuk/finance-totals-data-service:${financeTotalsDataServiceVersion}
-          name: finance-totals-data-service
+        - image: innovateuk/finance-data-service:${financeDataServiceVersion}
+          name: finance-data-service
           livenessProbe:
             httpGet:
               path: /monitoring/health
@@ -48,7 +48,7 @@ items:
           - name: JAVA_OPTS
             value: -Xms750m -Xmx750m -javaagent:/newrelic.jar
           - name: NEW_RELIC_APP_NAME
-            value: "ifs-finance-totals-data-service (<<NEWRELIC-ENVIRONMENT>>)"
+            value: "ifs-finance-data-service (<<NEWRELIC-ENVIRONMENT>>)"
           - name: NEW_RELIC_LICENSE_KEY
             value: "<<NEWRELIC-LICENCE-KEY>>"
           - name: NEW_RELIC_LOG
@@ -71,13 +71,13 @@ items:
   kind: Service
   metadata:
     creationTimestamp: null
-    name: finance-totals-data-service
+    name: finance-data-service
   spec:
     ports:
     - name: 8080-tcp
       port: 8080
       targetPort: 8080
     selector:
-      deploymentconfig: finance-totals-data-service
+      deploymentconfig: finance-data-service
   status:
     loadBalancer: {}

@@ -29,7 +29,7 @@ services:
     links:
       - zipkin
 
-  finance-totals-data-service:
+  finance-data-service:
     links:
       - zipkin
 

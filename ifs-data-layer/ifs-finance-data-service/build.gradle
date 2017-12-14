@@ -9,11 +9,11 @@ configurations {
     providedRuntime
 }
 
-project.version = financeTotalsDataServiceVersion
-tagDocker.tag = financeTotalsDataServiceVersion
-osStageRemote.tag = financeTotalsDataServiceVersion
-tagDockerLocal.tag = financeTotalsDataServiceVersion
-osStageLocal.tag = financeTotalsDataServiceVersion
+project.version = financeDataServiceVersion
+tagDocker.tag = financeDataServiceVersion
+osStageRemote.tag = financeDataServiceVersion
+tagDockerLocal.tag = financeDataServiceVersion
+osStageLocal.tag = financeDataServiceVersion
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 
@@ -37,7 +37,7 @@ bootRun {
 ext['spring-restdocs.version'] = '1.1.2.RELEASE'
 
 jar {
-    baseName = 'ifs-finance-totals-data-service'
+    baseName = 'ifs-finance-data-service'
 }
 
 configurations {

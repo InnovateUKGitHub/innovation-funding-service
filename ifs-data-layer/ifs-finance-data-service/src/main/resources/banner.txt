@@ -14,4 +14,4 @@
 
   Innovation Funding Service
         Beta Release
-  Finance Totals Data Service
+  Finance Data Service
