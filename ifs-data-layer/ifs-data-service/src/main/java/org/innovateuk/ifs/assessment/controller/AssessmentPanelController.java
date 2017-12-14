@@ -37,7 +37,7 @@ public class AssessmentPanelController {
 
     @PostMapping("/notify-assessors/{competitionId}")
     public RestResult<Void> notifyAssessors(@PathVariable("competitionId") long competitionId) {
-        return assessmentPanelService.createAndNotifyAll(competitionId).toPostResponse();
+        return assessmentPanelService.createAndNotifyReviews(competitionId).toPostResponse();
     }
 
     @GetMapping("/notify-assessors/{competitionId}")

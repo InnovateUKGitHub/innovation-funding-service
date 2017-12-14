@@ -40,7 +40,7 @@ public class AssessmentPanelServiceSecurityTest extends BaseServiceSecurityTest<
         }
 
         @Override
-        public ServiceResult<Void> createAndNotifyAll(long competitionId) {
+        public ServiceResult<Void> createAndNotifyReviews(long competitionId) {
             return null;
         }
 

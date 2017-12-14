@@ -79,7 +79,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     }
 
     @Override
-    public ServiceResult<Void> createAndNotifyAll(long competitionId) {
+    public ServiceResult<Void> createAndNotifyReviews(long competitionId) {
         getAllAssessorsOnPanel(competitionId)
                 .forEach(assessor -> getAllApplicationsOnPanel(competitionId)
                         .forEach(application -> createAssessmentPanelApplication(assessor, application)));
@@ -106,7 +106,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     }
 
     private ServiceResult<Void> createAssessmentPanelApplication(AssessmentPanelParticipant assessor, Application application) {
-        if (!assessmentReviewRepository.existsByParticipantUserAndTarget(assessor.getUser(), application)) {
+        if (!assessmentReviewRepository.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor.getUser(), application, State.WITHDRAWN)) {
             final ProcessRole processRole = getOrCreateAssessorProcessRoleForApplication(assessor, application);
             AssessmentReview assessmentReview =  new AssessmentReview(application, processRole);
             assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));

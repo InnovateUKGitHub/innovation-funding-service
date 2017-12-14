@@ -19,11 +19,9 @@ import java.util.List;
  */
 public interface AssessmentReviewRepository extends ProcessRepository<AssessmentReview>, PagingAndSortingRepository<AssessmentReview, Long> {
     List<AssessmentReview> findByTargetCompetitionIdAndActivityStateState(long applicationId, State backingState);
-    boolean existsByParticipantUserAndTarget(User user, Application target);
+    boolean existsByParticipantUserAndTargetAndActivityStateStateNot(User user, Application target, State state);
     boolean existsByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
 //    boolean existsByTargetCompetitionIdAndTargetInAssessmentPanelAndApplicationProcessActivityStateState(long competitionId, boolean inAssessmentPanel, AssessmentReviewState created);
-
-    // no review exists
 
     @Query("SELECT CASE WHEN count(a.id)> 0 THEN TRUE ELSE FALSE END AS foo FROM Application a WHERE a.competition.id = :competitionId AND a.inAssessmentPanel=true AND " +
             "NOT EXISTS (SELECT 1 FROM AssessmentReview r where r.target=a AND r.participant.user = :user) " )
@@ -33,8 +31,15 @@ public interface AssessmentReviewRepository extends ProcessRepository<Assessment
             "FROM Application a " +
             "INNER JOIN CompetitionAssessmentParticipant cap ON cap.competition = a.competition " +
             "WHERE " +
-            "  a.competition.id = :competitionId AND a.inAssessmentPanel=true AND " +
-            "  cap.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND cap.role=org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR AND" +
-            "  NOT EXISTS (SELECT 1 FROM AssessmentReview r WHERE r.target=a AND r.participant.user = cap.user) " )
+            "  a.competition.id = :competitionId AND a.inAssessmentPanel=true " +
+            "AND " +
+            "  cap.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
+            "  cap.role=org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR AND " +
+            "  NOT EXISTS (SELECT 1 FROM AssessmentReview r " +
+            "              WHERE " +
+            "                r.target=a AND " +
+            "                r.participant.user = cap.user AND " +
+            "                r.activityState.state <> org.innovateuk.ifs.workflow.resource.State.WITHDRAWN) "
+    )
     boolean notifiable(@Param("competitionId") long competitionId);
 }

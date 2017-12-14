@@ -72,6 +72,10 @@ public class AssessmentReviewWorkflowHandler extends BaseWorkflowEventHandler<As
         return fireEvent(assessmentPanelApplicationInviteMessage(assessmentReview, UNMARK_CONFLICT_OF_INTEREST), assessmentReview);
     }
 
+    public boolean withdraw(AssessmentReview assessmentReview) {
+        return fireEvent(assessmentPanelApplicationInviteMessage(assessmentReview, WITHDRAW), assessmentReview);
+    }
+
     @Override
     protected ActivityType getActivityType() {
         return ASSESSMENT_PANEL_APPLICATION_INVITE;
