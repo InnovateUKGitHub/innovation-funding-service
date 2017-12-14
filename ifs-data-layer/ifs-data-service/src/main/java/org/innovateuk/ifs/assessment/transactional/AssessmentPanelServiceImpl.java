@@ -82,8 +82,6 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
         INVITE_ASSESSMENT_REVIEW
     }
 
-
-
     @Override
     public ServiceResult<Void> assignApplicationToPanel(long applicationId) {
         return getApplication(applicationId)
@@ -93,7 +91,20 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     @Override
     public ServiceResult<Void> unassignApplicationFromPanel(long applicationId) {
         return getApplication(applicationId)
-                .andOnSuccessReturnVoid(application -> application.setInAssessmentPanel(false));
+                .andOnSuccess(this::unassignApplicationFromPanel)
+                .andOnSuccessReturnVoid(this::withdrawAssessmentReviewsForApplication);
+    }
+
+    private ServiceResult<Application> unassignApplicationFromPanel(Application application) {
+        application.setInAssessmentPanel(false);
+        return serviceSuccess(application);
+    }
+
+    private ServiceResult<Void> withdrawAssessmentReviewsForApplication(Application application) {
+        assessmentReviewRepository
+                .findByTargetIdAndActivityStateStateNot(application.getId(), State.WITHDRAWN)
+                .forEach(workflowHandler::withdraw);
+        return serviceSuccess();
     }
 
     @Override
