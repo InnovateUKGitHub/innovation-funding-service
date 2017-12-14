@@ -367,5 +367,5 @@ the user opens the excel and checks the content
 The project finance user confirms the approved Bank Details
     the user navigates to the page    ${server}/project-setup-management/competitions/status/pending-bank-details-approvals
     the user should not see the element    jQuery=a:contains("Dreambit")
-    the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_APPLICATION_PROJECT}/status/all
+    the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/all
     the user should see the element    jQuery=tr:contains("Complete") td:nth-child(4) a:contains("Complete")
