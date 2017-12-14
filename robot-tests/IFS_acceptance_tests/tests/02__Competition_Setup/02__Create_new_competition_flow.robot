@@ -61,6 +61,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               IFS-1104 Add Stakeholder link to Competition Setup
 ...
 ...               IFS-2192 As a Portfolio manager I am able to create an EOI competition
+...
+...               IFS-2285 APC Competition template: BEIS Value for Money: Pro-forma Spreadsheet
 Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -216,9 +218,7 @@ New application shows in Preparation section with the new name
     Then the user should see the element  jQuery=section:contains("In preparation") li:contains("${competitionTitle}")
 
 Funding information: calculations
-    [Documentation]    INFUND-2985
-    ...
-    ...    INFUND-4894
+    [Documentation]  INFUND-2985 INFUND-4894
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link    link=Funding information
@@ -467,13 +467,17 @@ Application: marking questions as complete
     And the user marks question as complete   Costs and value for money
 
 Adding a new Assessed Application Question
-    [Documentation]  IFS-182
+    [Documentation]  IFS-182    IFS-2285
     [Tags]
+    #TODO Commented lines will be enabled as part of IFS-2425 and retested
     Given the user clicks the button/link  css=p button[type="submit"]  #Add question link
-    When the user clicks the button/link   css=button[type="submit"]
-    Then the user should see the server side validation working
-    When the user is able to configure the new question  ${customQuestion}
-    Then the user should be able to see the read only view of question correctly  ${customQuestion}
+    #And the user selects the radio button  question.appendix  1
+    #Then the user clicks the button/link   css=label[for="allowed-file-types-PDF"]
+    # Unclicking the PDF checkbox in order to trigger server side validation
+    #When the user clicks the button/link   css=button[type="submit"]
+    #Then the user should see the server side validation working
+    Then the user is able to configure the new question  ${customQuestion}
+    And the user should be able to see the read only view of question correctly  ${customQuestion}
 
 Removing an Assessed Application Question
     [Documentation]  IFS-182
@@ -817,7 +821,7 @@ The user should not see the selected option again
 
 the user should see the server side validation working
     #TODO Amend the following to cover error-summary. Cover radio buttons as well - IFS-2304
-    the user should see a field error  This field cannot be left blank.
+    the user should see a field and summary error  This field cannot be left blank.
     the user should see a field error  Please enter a justification.
 
 the user marks question as complete

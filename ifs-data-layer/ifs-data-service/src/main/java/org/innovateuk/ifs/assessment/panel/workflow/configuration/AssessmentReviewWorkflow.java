@@ -37,7 +37,7 @@ public class AssessmentReviewWorkflow extends StateMachineConfigurerAdapter<Asse
     @Override
     public void configure(StateMachineStateConfigurer<AssessmentReviewState, AssessmentReviewEvent> states) throws Exception {
         states.withStates().initial(CREATED)
-                        .states(new LinkedHashSet<>(asList(AssessmentReviewState.values())));
+                .states(new LinkedHashSet<>(asList(AssessmentReviewState.values())));
     }
 
     @Override
@@ -46,6 +46,7 @@ public class AssessmentReviewWorkflow extends StateMachineConfigurerAdapter<Asse
         configureAcceptInvitation(transitions);
         configureRejectInvitation(transitions);
         configureConflictOfInterest(transitions);
+        configureWithdraw(transitions);
     }
 
     private void configureNotifyInvitation(StateMachineTransitionConfigurer<AssessmentReviewState, AssessmentReviewEvent> transitions) throws Exception {
@@ -62,7 +63,7 @@ public class AssessmentReviewWorkflow extends StateMachineConfigurerAdapter<Asse
                 .source(PENDING)
                 .event(ACCEPT)
                 .target(ACCEPTED)
-                    .and()
+                .and()
                 .withExternal()
                 .source(REJECTED)
                 .event(ACCEPT)
@@ -84,10 +85,38 @@ public class AssessmentReviewWorkflow extends StateMachineConfigurerAdapter<Asse
                 .source(ACCEPTED)
                 .event(MARK_CONFLICT_OF_INTEREST)
                 .target(CONFLICT_OF_INTEREST)
-                    .and()
+                .and()
                 .withExternal()
                 .source(CONFLICT_OF_INTEREST)
                 .event(UNMARK_CONFLICT_OF_INTEREST)
                 .target(ACCEPTED);
+    }
+
+    private void configureWithdraw(StateMachineTransitionConfigurer<AssessmentReviewState, AssessmentReviewEvent> transitions) throws Exception {
+        transitions
+                .withExternal()
+                .source(CREATED)
+                .event(WITHDRAW)
+                .target(WITHDRAWN)
+                .and()
+                .withExternal()
+                .source(PENDING)
+                .event(WITHDRAW)
+                .target(WITHDRAWN)
+                .and()
+                .withExternal()
+                .source(REJECTED)
+                .event(WITHDRAW)
+                .target(WITHDRAWN)
+                .and()
+                .withExternal()
+                .source(ACCEPTED)
+                .event(WITHDRAW)
+                .target(WITHDRAWN)
+                .and()
+                .withExternal()
+                .source(CONFLICT_OF_INTEREST)
+                .event(WITHDRAW)
+                .target(WITHDRAWN);
     }
 }
