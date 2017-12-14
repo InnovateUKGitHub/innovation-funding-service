@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.financechecks.controller;
+package org.innovateuk.ifs.project.financechecks.form;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -11,19 +11,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("application/download/overheadfile")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = OverheadFileDownloaderController.class)
-// TODO The previous security rules below and have been replaced with a permit all until the correct values are
-// TODO determined. See IFS-2281
-//@PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
 @PreAuthorize("permitAll")
 public  class OverheadFileDownloaderController {
     @Autowired
