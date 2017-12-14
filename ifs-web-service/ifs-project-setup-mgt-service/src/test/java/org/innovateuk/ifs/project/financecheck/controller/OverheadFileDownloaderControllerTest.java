@@ -38,7 +38,7 @@ public class OverheadFileDownloaderControllerTest extends BaseControllerMockMVCT
         given(overheadFileRestServiceMock.getOverheadFileDetailsUsingProjectFinanceRowId(
                 overheadId)).willReturn(RestResult.restSuccess(fileEntryResource));
 
-        MvcResult result = mockMvc.perform(get("/download/overheadfile/" + overheadId))
+        MvcResult result = mockMvc.perform(get("application/download/overheadfile/" + overheadId))
                 .andExpect(status().isOk())
                 .andReturn();
         verify(overheadFileRestServiceMock).getOverheadFileDetailsUsingProjectFinanceRowId(projectId);
