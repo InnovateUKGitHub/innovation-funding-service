@@ -402,7 +402,7 @@ the user applies to competition and enters organisation type
     the user selects the radio button  organisationTypeId  ${organisationType}
     the user clicks the button/link    css=button[type="submit"]
 
-the user selects his organisation in Companys House
+the user selects his organisation in Companies House
     [Arguments]  ${search}  ${link}
     the user enters text to a text field  id=organisationSearchName  ${search}
     the user clicks the button/link       id=org-search
