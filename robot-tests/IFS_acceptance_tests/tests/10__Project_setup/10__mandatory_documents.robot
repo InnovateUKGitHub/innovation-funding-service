@@ -75,13 +75,6 @@ PM cannot submit when both documents are not uploaded
     And the user should see the element    css=label[for="exploitationPlan"]
     Then the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
 
-PM cannot submit when only 1 document is uploaded
-    [Documentation]  IFS-2371-2258
-    [Tags]
-    When the user uploads to the exploitation plan question    ${valid_pdf}
-    Then the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
-    And the user clicks the button/link    name=removeExploitationPlanClicked
-
 Large pdfs not allowed for either document
     [Documentation]    INFUND-3011
     [Tags]
@@ -105,14 +98,15 @@ Non pdf files not allowed for either document
 
 
 PM can upload both documents
-    [Documentation]    INFUND-3011
+    [Documentation]    INFUND-3011  IFS-2371-2258
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
-    When the user uploads to the collaboration agreement question    ${valid_pdf}
-    Then the user should see the text in the page    ${valid_pdf}
     When the user uploads to the exploitation plan question    ${valid_pdf}
+    And the user should see the element    jQuery=button:disabled:contains(Submit documents)
+    And the user should see the text in the page    ${valid_pdf}
+    And the user uploads to the collaboration agreement question    ${valid_pdf}
     Then the user should not see an error in the page
 
 Lead partner can view both documents
