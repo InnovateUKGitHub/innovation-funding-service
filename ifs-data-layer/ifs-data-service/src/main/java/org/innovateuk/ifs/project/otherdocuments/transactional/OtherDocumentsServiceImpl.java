@@ -24,11 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_HAS_SOLE_PARTNER;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
@@ -82,7 +84,7 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
             ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(project.getId());
             return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
         } else {
-            return aggregate(asList(exploitationPlanFile));
+            return aggregate(singletonList(exploitationPlanFile));
         }
     }
 
