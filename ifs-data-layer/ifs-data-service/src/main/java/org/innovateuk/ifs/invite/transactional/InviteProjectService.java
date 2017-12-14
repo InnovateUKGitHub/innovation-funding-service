@@ -45,4 +45,5 @@ public interface InviteProjectService {
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash);
 
+    ServiceResult<Void> removeById(@P("inviteId") Long inviteId);
 }

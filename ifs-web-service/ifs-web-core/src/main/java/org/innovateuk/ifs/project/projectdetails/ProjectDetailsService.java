@@ -29,4 +29,6 @@ public interface ProjectDetailsService {
     ServiceResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
 
     ServiceResult<List<InviteProjectResource>> getInvitesByProject(Long projectId);
+
+    ServiceResult<Void> removeProjectInvite(Long inviteId);
 }

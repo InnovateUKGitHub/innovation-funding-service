@@ -11,4 +11,5 @@ public abstract class InviteProjectConstants {
     public static final String GET_INVITE_BY_HASH = "/getProjectInviteByHash/";
     public static final String ACCEPT_INVITE = "/acceptInvite/";
     public static final String GET_PROJECT_INVITE_LIST = "/getInvitesByProjectId/";
+    public static final String REMOVE_INVITE = "/removeInvite/";
 }

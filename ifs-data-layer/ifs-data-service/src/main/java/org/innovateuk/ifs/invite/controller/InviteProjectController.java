@@ -58,4 +58,9 @@ public class InviteProjectController {
         return inviteProjectService.getUserByInviteHash(hash).toGetResponse();
     }
 
+    @GetMapping(REMOVE_INVITE + "{inviteId}")
+    public RestResult<Void> removeProjectInvite( @PathVariable("inviteId") Long inviteId) {
+        return inviteProjectService.removeById(inviteId).toGetResponse();
+    }
+
 }

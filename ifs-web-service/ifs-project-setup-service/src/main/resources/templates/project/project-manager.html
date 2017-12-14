@@ -33,7 +33,22 @@
                         <div class="multiple-choice" th:each="user : ${model.invitedUsers}">
                             <input th:id="'invite-'+${user.id}" value="" type="radio" disabled="disabled" />
                             <label th:for="'invite-'+${user.id}" th:text="${user.name}"></label>
+                            <button
+                                th:value="${user.id}"
+                                class="buttonlink"
+                                name="resend_pm_invite"
+                                type="submit">
+                                Resend
+                            </button>
+                            <button
+                                th:value="${user.id}"
+                                class="buttonlink"
+                                name="remove_pm_invite"
+                                type="submit">
+                                Remove invite
+                            </button>
                         </div>
+
 
                         <div class="multiple-choice" data-target="project-manager-table">
                             <input id="new" name="projectManager" th:checked="${model.inviteAction} or *{projectManager == -1}" required="required"  type="radio" value="-1" th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}" />

@@ -14,7 +14,7 @@ public interface ProjectInviteRestService {
     RestResult<Void> acceptInvite(String inviteHash, Long userId);
     RestResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
     RestResult<List<InviteProjectResource>> getInvitesByProject (Long projectId);
-
+    RestResult<Void> removeProjectInvite(Long projectId);
 }
 
 

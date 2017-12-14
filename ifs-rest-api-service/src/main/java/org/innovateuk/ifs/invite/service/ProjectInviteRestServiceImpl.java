@@ -53,4 +53,9 @@ public class ProjectInviteRestServiceImpl extends BaseRestService implements Pro
         return getWithRestResult(url, inviteProjectResourceListType());
     }
 
+    @Override
+    public RestResult<Void> removeProjectInvite(Long inviteId) {
+        String url = PROJECT_INVITE_BASE_URL + REMOVE_INVITE + inviteId;
+        return getWithRestResult(url, Void.class);
+    }
 }

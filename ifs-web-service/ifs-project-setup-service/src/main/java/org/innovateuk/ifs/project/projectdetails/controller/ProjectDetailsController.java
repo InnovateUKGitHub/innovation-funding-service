@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -73,6 +75,10 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     private static final String INVITE_FC = "invite_fc";
     private static final String SAVE_PM = "save_pm";
     private static final String INVITE_PM = "invite_pm";
+    private static final String RESEND_FC_INVITE = "resend_fc_invite";
+    private static final String REMOVE_FC_INVITE = "remove_fc_invite";
+    private static final String RESEND_PM_INVITE = "resend_pm_invite";
+    private static final String REMOVE_PM_INVITE = "remove_pm_invite";
 
 	@Autowired
     private ProjectService projectService;
@@ -97,6 +103,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @Autowired
     private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
+
+    private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId','ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details")
@@ -198,12 +206,52 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 (project, inviteProjectResource) -> projectDetailsService.inviteFinanceContact(project, inviteProjectResource));
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
+    @PostMapping(value = "/{projectId}/details/finance-contact", params = RESEND_FC_INVITE)
+    public String resendFinanceContactInvite(@P("projectId")@PathVariable("projectId") final Long projectId,
+                                             @RequestParam(value="organisation") final Long organisation,
+                                             @RequestParam("resend_fc_invite") Long userId
+    ) {
+        resendInvite(userId, projectId, (project, inviteProjectResource) -> projectDetailsService.inviteFinanceContact(project, inviteProjectResource));
+        return redirectToFinanceContact(projectId, organisation);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
+    @PostMapping(value = "/{projectId}/details/finance-contact", params = REMOVE_FC_INVITE)
+    public String removeFinanceContactInvite(@P("projectId")@PathVariable("projectId") final Long projectId,
+                                             @RequestParam(value="organisation") final Long organisation,
+                                             @RequestParam("remove_fc_invite") Long inviteId
+    ) {
+        projectDetailsService.removeProjectInvite(inviteId);
+        return redirectToFinanceContact(projectId, organisation);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
+    @PostMapping(value = "/{projectId}/details/project-manager", params = RESEND_PM_INVITE)
+    public String resendProjectManagerInvite(@P("projectId")@PathVariable("projectId") final Long projectId,
+                                             @RequestParam("resend_pm_invite") Long userId
+    ) {
+        resendInvite(userId, projectId, (project, inviteProjectResource) -> projectDetailsService.inviteFinanceContact(project, inviteProjectResource));
+        return redirectToProjectManager(projectId);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
+    @PostMapping(value = "/{projectId}/details/project-manager", params = REMOVE_PM_INVITE)
+    public String removeProjectManagerInvite(@P("projectId")@PathVariable("projectId") final Long projectId,
+                                             @RequestParam("remove_pm_invite") Long inviteId
+    ) {
+        LOG.warn("**************************");
+        LOG.warn(inviteId);
+        projectDetailsService.removeProjectInvite(inviteId);
+        return redirectToProjectManager(projectId);
+    }
+
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_MANAGER_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-manager", params = INVITE_PM)
     public String inviteProjectManager(Model model,
                                        @P("projectId")@PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
-                                       @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+                                       ValidationHandler validationHandler,
                                        UserResource loggedInUser) {
         populateOriginalProjectManagerForm(projectId, projectManagerForm);
 
@@ -235,12 +283,25 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
                 if(savedInvite.isPresent()) {
                     ServiceResult<Void> inviteResult = sendInvite.apply(projectId, savedInvite.get());
-                    return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
+                    return validationHandler.failNowOrSucceedWith(failureView, successView);
                 } else {
                     return validationHandler.failNowOrSucceedWith(failureView, successView);
                 }
             });
         });
+    }
+
+    private void resendInvite(Long id, Long projectId, BiFunction<Long, InviteProjectResource, ServiceResult<Void>> sendInvite) {
+
+        Optional<InviteProjectResource> existingInvite = projectDetailsService
+                .getInvitesByProject(projectId)
+                .getSuccessObjectOrThrowException()
+                .stream()
+                .filter(i -> id.equals(i.getId()))
+                .findFirst();
+
+            existingInvite
+                    .ifPresent(i -> sendInvite.apply(projectId, existingInvite.get()));
     }
 
     private void validateIfTryingToInviteSelf(String loggedInUserEmail, String inviteEmail,
@@ -470,7 +531,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
             .collect(toList());
         List<ProjectUserInviteModel> invitedUsers = projectDetailsService.getInvitesByProject(projectId).getSuccessObjectOrThrowException().stream()
             .filter(invite -> leadOrganisation.getId().equals(invite.getOrganisation()) && invite.getStatus() != InviteStatus.OPENED)
-            .map(invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", projectId))
+            .map(invite -> new ProjectUserInviteModel(PENDING, invite.getName() + " (Pending)", invite.getId()))
             .collect(toList());
 
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
