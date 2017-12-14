@@ -104,7 +104,7 @@ PM can upload both documents
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
     When the user uploads to the exploitation plan question    ${valid_pdf}
-    And the user should see the element    jQuery=button:disabled:contains(Submit documents)
+    And the user should see the element    jQuery=button:disabled:contains("Submit documents")
     And the user should see the text in the page    ${valid_pdf}
     And the user uploads to the collaboration agreement question    ${valid_pdf}
     Then the user should not see an error in the page
