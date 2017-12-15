@@ -101,7 +101,14 @@ public class SetupSectionsPermissionRules {
             "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
             "and the Organisation's Bank Details have been approved or queried")
     public boolean partnerCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
-        return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
+        return doSectionCheck(projectCompositeId.id(), user, (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canAccessSpendProfileSection(organisation));
+    }
+
+    @PermissionRule(value = "EDIT_SPEND_PROFILE_SECTION", description = "A partner can edit their own Spend Profile " +
+            "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
+            "and the Organisation's Bank Details have been approved or queried")
+    public boolean partnerCanEditSpendProfileSection(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return doSectionCheck(projectOrganisationCompositeId.getProjectId(), user, (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canEditSpendProfileSection(organisation, projectOrganisationCompositeId.getOrganisationId()));
     }
 
     @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "A partner can access the Other Documents " +
@@ -151,6 +158,13 @@ public class SetupSectionsPermissionRules {
         OrganisationResource organisation = organisationService.getOrganisationForUser(user.getId());
 
         return !organisation.getId().equals(organisationCompositeId.id());
+    }
+
+    @PermissionRule(value = "IS_FROM_OWN_ORGANISATION", description = "A user is from own organisation")
+    public boolean isFromOwnOrganisation(OrganisationCompositeId organisationCompositeId, UserResource user) {
+        OrganisationResource organisation = organisationService.getOrganisationForUser(user.getId());
+
+        return organisation.getId().equals(organisationCompositeId.id());
     }
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> sectionCheckFn) {

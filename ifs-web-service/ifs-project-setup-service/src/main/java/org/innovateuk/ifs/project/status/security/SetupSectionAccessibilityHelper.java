@@ -2,9 +2,12 @@ package org.innovateuk.ifs.project.status.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.commons.security.PermissionRule;
+import org.innovateuk.ifs.organisation.resource.OrganisationCompositeId;
 import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 
 import static org.innovateuk.ifs.project.sections.SectionAccess.*;
 
@@ -191,6 +194,21 @@ public class SetupSectionAccessibilityHelper {
         }
 
         return ACCESSIBLE;
+    }
+
+    public SectionAccess canEditSpendProfileSection(OrganisationResource userOrganisation, Long organisationIdFromUrl) {
+
+        if (canAccessSpendProfileSection(userOrganisation) == ACCESSIBLE && isFromOwnOrganisation(userOrganisation, organisationIdFromUrl)) {
+            return ACCESSIBLE;
+        } else {
+            return fail("Unable to edit Spend Profile section as user does not belong to this organisation");
+        }
+
+    }
+
+    private boolean isFromOwnOrganisation(OrganisationResource userOrganisation, Long organisationIdFromUrl) {
+
+        return userOrganisation.getId().equals(organisationIdFromUrl);
     }
 
     public SectionAccess canAccessOtherDocumentsSection(OrganisationResource organisation) {

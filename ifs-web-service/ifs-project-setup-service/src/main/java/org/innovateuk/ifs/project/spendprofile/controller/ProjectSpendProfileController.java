@@ -101,7 +101,8 @@ public class ProjectSpendProfileController {
     }
 
     //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION') && !hasPermission(#organisationId, 'org.innovateuk.ifs.organisation.resource.OrganisationCompositeId', 'IS_NOT_FROM_OWN_ORGANISATION')")
+    @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId),  'EDIT_SPEND_PROFILE_SECTION')")
+    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#organisationId, 'org.innovateuk.ifs.organisation.resource.OrganisationCompositeId', 'IS_FROM_OWN_ORGANISATION')")
     @GetMapping("/edit")
     public String editSpendProfile(Model model,
                                    HttpServletRequest request,
@@ -109,7 +110,7 @@ public class ProjectSpendProfileController {
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
                                    @P("projectId")@PathVariable("projectId") final Long projectId,
-                                   @PathVariable("organisationId") final Long organisationId,
+                                   @P("organisationId")@PathVariable("organisationId") final Long organisationId,
                                    UserResource loggedInUser) {
 
         String failureView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
