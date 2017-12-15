@@ -3,8 +3,6 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
-import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
-import org.innovateuk.ifs.category.mapper.ResearchCategoryMapperImpl;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -32,9 +30,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.testdata.builders.QuestionResponseDataBuilder.newApplicationQuestionResponseData;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 
 /**
@@ -58,12 +54,12 @@ public class ApplicationDataBuilder extends BaseDataBuilder<ApplicationData, App
                         applicationName, data.getCompetition().getId(), leadApplicant.getId()).
                         getSuccessObjectOrThrowException();
 
-                ResearchCategoryMapper researchCategoryMapper = new ResearchCategoryMapperImpl();
-                ResearchCategory category = researchCategoryRepository.findByName(researchCategory);
-                created.setResearchCategory(researchCategoryMapper.mapToResource(category));
                 created.setResubmission(resubmission);
                 created = applicationService.saveApplicationDetails(created.getId(), created)
                         .getSuccessObjectOrThrowException();
+
+                ResearchCategory category = researchCategoryRepository.findByName(researchCategory);
+                applicationResearchCategoryService.setResearchCategory(created.getId(), category.getId());
 
                 data.setLeadApplicant(leadApplicant);
                 data.setApplication(created);
