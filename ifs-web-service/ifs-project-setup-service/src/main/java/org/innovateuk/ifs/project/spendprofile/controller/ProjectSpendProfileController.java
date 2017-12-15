@@ -100,7 +100,8 @@ public class ProjectSpendProfileController {
         return BASE_DIR + "/spend-profile";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
+    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION') && !hasPermission(#organisationId, 'org.innovateuk.ifs.organisation.resource.OrganisationCompositeId', 'IS_NOT_FROM_OWN_ORGANISATION')")
     @GetMapping("/edit")
     public String editSpendProfile(Model model,
                                    HttpServletRequest request,
