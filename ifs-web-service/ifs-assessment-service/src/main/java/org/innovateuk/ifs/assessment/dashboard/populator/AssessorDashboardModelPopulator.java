@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.assessment.dashboard.populator;
 
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.*;
+import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
-import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
-import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
 import org.innovateuk.ifs.invite.resource.AssessmentPanelParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
@@ -13,7 +12,6 @@ import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -44,7 +42,7 @@ public class AssessorDashboardModelPopulator {
 
         List<AssessmentPanelParticipantResource> assessmentPanelParticipantResourceList = assessmentPanelInviteRestService.getAllInvitesByUser(userId).getSuccessObject();
 
-        List<AssessmentPanelParticipantResource> assessmentPanelAcceptedResourceList = assessmentPanelInviteRestService.getAllPanelsByUser(userId).getSuccessObject();
+  //      List<AssessmentPanelParticipantResource> assessmentPanelAcceptedResourceList = assessmentPanelInviteRestService.getAllPanelsByUser(userId).getSuccessObject();
 
         return new AssessorDashboardViewModel(
                 getProfileStatus(profileStatusResource),
@@ -52,7 +50,7 @@ public class AssessorDashboardModelPopulator {
                 getUpcomingCompetitions(participantResourceList),
                 getPendingParticipations(participantResourceList),
                 getAssessmentPanelInvites(assessmentPanelParticipantResourceList),
-                getAssessmentPanelAccepted(assessmentPanelAcceptedResourceList)
+                getAssessmentPanelAccepted(assessmentPanelParticipantResourceList)
         );
     }
 
@@ -119,6 +117,7 @@ public class AssessorDashboardModelPopulator {
 
     private List<AssessorDashboardAssessmentPanelInviteViewModel> getAssessmentPanelAccepted(List<AssessmentPanelParticipantResource> assessmentPanelAcceptedResourceList) {
         return assessmentPanelAcceptedResourceList.stream()
+                .filter(AssessmentPanelParticipantResource::isAccepted)
                 .map(AssessmentPanelParticipantResource::getInvite)
                 .map(invite -> new AssessorDashboardAssessmentPanelInviteViewModel(
                         invite.getHash(),
@@ -130,6 +129,4 @@ public class AssessorDashboardModelPopulator {
                         ))
                 .collect(toList());
     }
-
-
 }
