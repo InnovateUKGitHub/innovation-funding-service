@@ -73,7 +73,7 @@ Competition is Open to Applications
 
 Create new Application for this Competition
     [Tags]  MySQL
-    Lead Applicant applies to the new created competition  ${compWithoutGrowth}
+    Lead Applicant applies to the new created competition    ${compWithoutGrowth}  &{lead_applicant_credentials}
 
 Applicant visits his Finances
     [Documentation]    INFUND-6393
@@ -127,7 +127,7 @@ Once the project growth table is selected
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
     [Tags]    MySQL
-    Given Lead Applicant applies to the new created competition  ${compWithGrowth}
+    Given Lead Applicant applies to the new created competition  ${compWithGrowth}  &{lead_applicant_credentials}
     When the user clicks the button/link                         link=Your finances
     And the user clicks the button/link                          link=Your organisation
     Then the user should not see the text in the page            Turnover (£)
@@ -442,7 +442,7 @@ Newly invited collaborator can create account and sign in
     the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     the user clicks the button/link               jQuery=a:contains("Yes, accept invitation")
     the user should see the element               jquery=h1:contains("Choose your organisation type")
-    the user completes the new account creation   ${newUsersEmail}
+    the user completes the new account creation   ${newUsersEmail}  ${PUBLIC_SECTOR_TYPE_ID}
 
 the user fills in the Open-All Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}
