@@ -40,8 +40,7 @@ Applicant applies to newly created APC competition
 
 Applicant submits his application
     [Documentation]  IFS-2286
-    [Tags]  HappyPath  Pending
-#    TODO  Pending due to IFS-2439
+    [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${apcApplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     Then the lead applicant fills all the questions and marks as complete(APC)
