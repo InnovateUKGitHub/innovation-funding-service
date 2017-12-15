@@ -71,46 +71,12 @@ the user fills in the CS Eligibility
 the user fills in the CS Milestones
     [Arguments]  ${month}  ${nextyear}
     the user clicks the button/link       link=Milestones
-    the user enters text to a text field  jQuery=th:contains("Open date") ~ td.day input  1
-    the user enters text to a text field  jQuery=th:contains("Open date") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Open date") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input  2
-    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.day input  2
-    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.year input  ${nextyear}
-    # the below dates need to be in a future date
-    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.day input  3
-    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.day input  3
-    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.day input  3
-    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.day input  3
-    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.year input  ${nextyear}
-    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.day input  4
-    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.month input  ${month}
-    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.year input  ${nextyear}
+    ${i} =  Set Variable   1
+     :FOR   ${ELEMENT}   IN    @{milestones}
+      \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.day input  ${i}
+      \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.month input  ${month}
+      \    the user enters text to a text field  jQuery=th:contains("${ELEMENT}") ~ td.year input  ${nextyear}
+      \    ${i} =   Evaluate   ${i} + 1
     the user clicks the button/link       jQuery=button:contains("Done")
     the user clicks the button/link       link=Competition setup
     the user should see the element       jQuery=div:contains("Milestones") ~ .task-status-complete
@@ -157,35 +123,19 @@ the user opts no finances for EOI comp
     the user clicks the button/link    jQuery=.button:contains("Done")
 
 the assessed questions are marked complete except finances(programme type)
-    the user marks each question as complete  Business opportunity
-    the user marks each question as complete  Potential market
-    the user marks each question as complete  Project exploitation
-    the user marks each question as complete  Economic benefit
-    the user marks each question as complete  Technical approach
-    the user marks each question as complete  Innovation
-    the user marks each question as complete  Risks
-    the user marks each question as complete  Project team
-    the user marks each question as complete  Funding
-    the user marks each question as complete  Adding value
+    :FOR   ${ELEMENT}   IN    @{programme_questions}
+     \    the user marks each question as complete    ${ELEMENT}
+     the user should see the element           jQuery=button:contains("Add question")
 
 the assessed questions are marked complete except finances(sector type)
-    the user marks each question as complete  Need or challenge
-    the user marks each question as complete  Approach and innovation
-    the user marks each question as complete  Team and resources
-    the user marks each question as complete  Market awareness
-    the user marks each question as complete  Outcomes and route to market
-    the user marks each question as complete  Wider impacts
-    the user marks each question as complete  Project management
-    the user marks each question as complete  Risks
-    the user marks each question as complete  Additionality
-    the user marks each question as complete  Costs and value for money
+    :FOR   ${ELEMENT}   IN    @{sector_questions}
+     \    the user marks each question as complete    ${ELEMENT}
+     the user should see the element           jQuery=button:contains("Add question")
 
 the assessed questions are marked complete(EOI type)
-    the user marks each question as complete  Business opportunity and potential market
-    the user marks each question as complete  Innovation
-    the user marks each question as complete  Project team
-    the user marks each question as complete  Funding and adding value
-    the user should see the element           jQuery=button:contains("Add question")
+    :FOR   ${ELEMENT}   IN    @{EOI_questions}
+     \    the user marks each question as complete    ${ELEMENT}
+    the user should see the element      jQuery=button:contains("Add question")
 
 the user marks the Application details section as complete
     [Arguments]  ${compType}
@@ -356,6 +306,8 @@ the user is able to configure the new question
     the user enters text to a text field  css=.editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id=question.maxWords  500
     the user selects the radio button     question.appendix  1
+    #the user clicks the button/link       css=label[for="allowed-file-types-PDF"]  #TODO Enable as part of IFS-2425 in another sprint
+    the user clicks the button/link       css=label[for="allowed-file-types-Spreadsheet"]
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10
     the user selects the radio button     question.writtenFeedback  1
@@ -379,7 +331,8 @@ the user should be able to see the read only view of question correctly
     the user should see the element  jQuery=dt:contains("Guidance title") + dd:contains("Innovation is crucial to the continuing success of any organization.")
     the user should see the element  jQuery=dt:contains("Guidance") + dd:contains("Please use Microsoft Word where possible.")
     the user should see the element  jQuery=dt:contains("Max word count") + dd:contains("500")
-    the user should see the element  jQuery=dt:contains("Appendix") + dd:contains("Yes")
+    the user should see the element  jQuery=dt:contains("Appendix") + dd:contains("PDF")
+    the user should see the element  jQuery=dt:contains("Appendix") + dd:contains("Spreadsheet")
     the user should see the element  jQuery=dt:contains("Scored") + dd:contains("Yes")
     the user should see the element  jQuery=dt:contains("Out of") + dd:contains("10")
     the user should see the element  jQuery=dt:contains("Written feedback") + dd:contains("Yes")

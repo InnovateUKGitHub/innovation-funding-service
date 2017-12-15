@@ -57,6 +57,7 @@ bin/
 .gradle
 build/
 out/
+reports/
 
 # Ignore Gradle GUI config
 gradle-app.setting

@@ -1,5 +1,4 @@
 #!/bin/bash
-
 set -e
 
 PROJECT=$1
@@ -44,9 +43,9 @@ function waitForMysqlDumpPodToStart() {
 function takeMysqlDump() {
 
     echo "Taking anonymised data dump..."
-
+    mkdir -p /tmp/anonymised
     oc rsh ${SVC_ACCOUNT_CLAUSE} db-anonymised-data /dump/make-mysqldump.sh > /dev/null;
-    oc rsync ${SVC_ACCOUNT_CLAUSE} db-anonymised-data:/dump/anonymised-dump.sql.gpg /tmp > /dev/null;
+    oc rsync ${SVC_ACCOUNT_CLAUSE} db-anonymised-data:/dump/anonymised-dump.sql.gpg /tmp/anonymised/ > /dev/null;
     echo "Anonymised data dump taken!"
 }
 
@@ -80,20 +79,12 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export DB_PORT=3306
 fi
 
-echo "injectDBVariables"
 injectDBVariables
-echo "useContainerRegistry"
 useContainerRegistry
-
-echo "pushAnonymisedDatabaseDumpImages"
 pushAnonymisedDatabaseDumpImages
-echo "startupMysqlDumpPod"
 startupMysqlDumpPod
-echo "waitForMysqlDumpPodToStart"
 waitForMysqlDumpPodToStart
-echo "takeMysqlDump"
 takeMysqlDump
-echo "shutdownMysqlDumpPodAfterUse"
 shutdownMysqlDumpPodAfterUse
 
-echo "Job complete!  Dump now available at /tmp/anonymised-dump.sql.gpg"
+echo "Job complete!  Dump now available at /tmp/anonymised/anonymised-dump.sql.gpg"
