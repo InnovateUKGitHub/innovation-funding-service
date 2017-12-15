@@ -100,7 +100,7 @@ public class ProjectSpendProfileController {
         return BASE_DIR + "/spend-profile";
     }
 
-    @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId),  'EDIT_SPEND_PROFILE_SECTION')")
+    @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId), 'EDIT_SPEND_PROFILE_SECTION')")
     @GetMapping("/edit")
     public String editSpendProfile(Model model,
                                    HttpServletRequest request,

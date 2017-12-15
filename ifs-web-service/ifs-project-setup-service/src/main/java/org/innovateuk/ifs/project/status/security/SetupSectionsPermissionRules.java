@@ -106,7 +106,7 @@ public class SetupSectionsPermissionRules {
 
     @PermissionRule(value = "EDIT_SPEND_PROFILE_SECTION", description = "A partner can edit their own Spend Profile " +
             "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
-            "and the Organisation's Bank Details have been approved or queried")
+            "and the Organisation's Bank Details have been approved or not required")
     public boolean partnerCanEditSpendProfileSection(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
         return doSectionCheck(projectOrganisationCompositeId.getProjectId(), user, (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canEditSpendProfileSection(organisation, projectOrganisationCompositeId.getOrganisationId()));
     }
