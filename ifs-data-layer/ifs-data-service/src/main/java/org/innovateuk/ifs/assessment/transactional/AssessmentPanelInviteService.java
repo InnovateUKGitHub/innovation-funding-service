@@ -2,15 +2,14 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
-import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.data.domain.Pageable;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import java.util.List;
 
 /**
@@ -110,10 +109,4 @@ public interface AssessmentPanelInviteService {
     @SecuredBySpring(value = "DELETE_ALL_INVITES",
             description = "The Competition Admins and Project Finance users can delete all the assessment panel invites")
     ServiceResult<Void> deleteAllInvites(long competitionId);
-
-    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'READ_ASSESSMENT_PANEL_INVITES')")
-    @SecuredBySpring(value = "READ_ASSESSMENT_PANEL_INVITES",
-            description = "An Assessor can view assessor panels that they have accepted invites provided that the invites belong to them")
-    ServiceResult<List<AssessmentPanelParticipantResource>> getAllPanelsByUser(long userId);
-
 }

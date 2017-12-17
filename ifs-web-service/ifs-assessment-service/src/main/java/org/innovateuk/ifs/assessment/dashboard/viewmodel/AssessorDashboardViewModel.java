@@ -13,7 +13,7 @@ public class AssessorDashboardViewModel {
     private List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions;
     private List<AssessorDashboardPendingInviteViewModel> pendingInvites;
     private List<AssessorDashboardAssessmentPanelInviteViewModel> assessmentPanelInvites;
-    private List<AssessorDashboardAssessmentPanelInviteViewModel> assessmentPanelAccepted;
+    private List<AssessorDashboardAssessmentPanelAcceptedViewModel> assessmentPanelAccepted;
     private AssessorProfileStatusViewModel profileStatus;
 
     public AssessorDashboardViewModel(
@@ -22,7 +22,7 @@ public class AssessorDashboardViewModel {
             List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions,
             List<AssessorDashboardPendingInviteViewModel> pendingInvites,
             List<AssessorDashboardAssessmentPanelInviteViewModel> assessmentPanelInvites,
-            List<AssessorDashboardAssessmentPanelInviteViewModel> assessmentPanelAccepted
+            List<AssessorDashboardAssessmentPanelAcceptedViewModel> assessmentPanelAccepted
     ) {
         this.profileStatus = profileStatus;
         this.activeCompetitions = activeCompetitions;
@@ -56,11 +56,11 @@ public class AssessorDashboardViewModel {
         return assessmentPanelInvites;
     }
 
-    public List<AssessorDashboardAssessmentPanelInviteViewModel> getAssessmentPanelAccepted() {
+    public List<AssessorDashboardAssessmentPanelAcceptedViewModel> getAssessmentPanelAccepted() {
         return assessmentPanelAccepted;
     }
 
-    public void setAssessmentPanelAccepted(List<AssessorDashboardAssessmentPanelInviteViewModel> assessmentPanelAccepted) {
+    public void setAssessmentPanelAccepted(List<AssessorDashboardAssessmentPanelAcceptedViewModel> assessmentPanelAccepted) {
         this.assessmentPanelAccepted = assessmentPanelAccepted;
     }
 

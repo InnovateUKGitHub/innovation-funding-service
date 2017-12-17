@@ -549,20 +549,6 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         return serviceSuccess();
     }
 
-    @Override
-    public ServiceResult<List<AssessmentPanelParticipantResource>> getAllPanelsByUser(long userId) {
-
-        List<AssessmentPanelParticipantResource> assessmentPanelParticipantResources = assessmentPanelParticipantRepository
-                .findByUserIdAndRoleAndStatus(userId, PANEL_ASSESSOR, ACCEPTED)
-                .stream()
-                .map(assessmentPanelParticipantMapper::mapToResource)
-                .collect(toList());
-
-        assessmentPanelParticipantResources.forEach(this::determineStatusOfPanelApplications);
-
-        return serviceSuccess(assessmentPanelParticipantResources);
-    }
-
     private void determineStatusOfPanelApplications(AssessmentPanelParticipantResource assessmentPanelParticipantResource) {
 
         List<AssessmentReview> reviews = assessmentReviewRepository.

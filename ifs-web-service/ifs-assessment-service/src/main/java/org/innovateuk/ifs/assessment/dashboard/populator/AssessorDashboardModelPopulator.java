@@ -31,9 +31,6 @@ public class AssessorDashboardModelPopulator {
     @Autowired
     private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
 
-    @Autowired
-    private AssessmentPanelInviteRestService assessmentPanelRestService;
-
     public AssessorDashboardViewModel populateModel(Long userId) {
         List<CompetitionParticipantResource> participantResourceList = competitionParticipantRestService
                 .getParticipants(userId, CompetitionParticipantRoleResource.ASSESSOR).getSuccessObject();
@@ -105,22 +102,18 @@ public class AssessorDashboardModelPopulator {
                 .filter(AssessmentPanelParticipantResource::isPending)
                 .map(AssessmentPanelParticipantResource::getInvite)
                 .map(invite -> new AssessorDashboardAssessmentPanelInviteViewModel(
-                        invite.getHash(),
                         invite.getCompetitionName(),
                         invite.getCompetitionId(),
-                        invite.getPanelDate().toLocalDate(),
-                        invite.getPanelDaysLeft(),
-                        invite.getAwaitingApplications()
-                ))
+                        invite.getHash()
+                        ))
                 .collect(toList());
     }
 
-    private List<AssessorDashboardAssessmentPanelInviteViewModel> getAssessmentPanelAccepted(List<AssessmentPanelParticipantResource> assessmentPanelAcceptedResourceList) {
+    private List<AssessorDashboardAssessmentPanelAcceptedViewModel> getAssessmentPanelAccepted(List<AssessmentPanelParticipantResource> assessmentPanelAcceptedResourceList) {
         return assessmentPanelAcceptedResourceList.stream()
                 .filter(AssessmentPanelParticipantResource::isAccepted)
                 .map(AssessmentPanelParticipantResource::getInvite)
-                .map(invite -> new AssessorDashboardAssessmentPanelInviteViewModel(
-                        invite.getHash(),
+                .map(invite -> new AssessorDashboardAssessmentPanelAcceptedViewModel(
                         invite.getCompetitionName(),
                         invite.getCompetitionId(),
                         invite.getPanelDate().toLocalDate(),
