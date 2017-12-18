@@ -42,4 +42,6 @@ public interface AssessmentReviewRepository extends ProcessRepository<Assessment
             "                r.activityState.state <> org.innovateuk.ifs.workflow.resource.State.WITHDRAWN) "
     )
     boolean notifiable(@Param("competitionId") long competitionId);
+
+    List<AssessmentReview> findByTargetIdAndActivityStateStateNot(long applicationId, State withdrawnState);
 }

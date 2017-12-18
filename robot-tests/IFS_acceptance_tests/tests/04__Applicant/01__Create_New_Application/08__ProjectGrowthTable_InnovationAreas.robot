@@ -442,7 +442,7 @@ Newly invited collaborator can create account and sign in
     the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     the user clicks the button/link               jQuery=a:contains("Yes, accept invitation")
     the user should see the element               jquery=h1:contains("Choose your organisation type")
-    the user completes the new account creation   ${newUsersEmail}
+    the user completes the new account creation   ${newUsersEmail}  ${PUBLIC_SECTOR_TYPE_ID}
 
 the user fills in the Open-All Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}

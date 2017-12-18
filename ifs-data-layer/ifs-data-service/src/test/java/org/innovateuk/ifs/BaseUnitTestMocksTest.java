@@ -15,6 +15,8 @@ import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.assessment.mapper.*;
+import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
+import org.innovateuk.ifs.assessment.panel.workflow.configuration.AssessmentReviewWorkflowHandler;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import org.innovateuk.ifs.assessment.transactional.*;
@@ -711,6 +713,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected GoogleAnalyticsDataLayerService googleAnalyticsDataLayerServiceMock;
+
+    @Mock
+    protected AssessmentReviewRepository assessmentReviewRepositoryMock;
+
+    @Mock
+    protected AssessmentReviewWorkflowHandler assessmentReviewWorkflowHandler;
 
     @Before
     public void setupMockInjection() {
