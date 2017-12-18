@@ -11,7 +11,7 @@ Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 
-# This suite covers creation of EOI type competition and apply to it
+# This suite covers End to End flow of EOI type competition i.e comp creation, applicaiotn submission , assessmnet submission, release feedback
 *** Variables ***
 ${comp_name}         EOI comp
 ${EOI_application}   EOI Application
@@ -39,69 +39,102 @@ Applicant submits his application
     Then the applicant submits the application
 
 Invite a registered assessor
-    log in as a different user       &{Comp_admin1_credentials}
-    the user clicks the button/link      link=EOI comp
-    the user clicks the button/link      link=Invite assessors to assess the competition
-    the user selects the option from the drop-down menu     Smart infrastructure  id=filterInnovationArea
-    the user clicks the button/link              jQuery=.button:contains("Filter")
-    the user clicks the button/link      jQuery=tr:contains("Paul Plum") label[for^="assessor-row"
-    the user clicks the button/link      jQuery=.button:contains("Add selected to invite list)
-    the user clicks the button/link      link=Invite
-    the user clicks the button/link      link=Review and send invites  # a:contains("Review and send invites")
-    And the user enters text to a text field  id=message    This is custom text
-    And the user clicks the button/link       jQuery=.button:contains("Send invite")
-    Then the user reads his email and clicks the link   paul.plum@gmail.com@  Invitation to assess 'EOI comp'  This is custom text  1
+    log in as a different user                            &{Comp_admin1_credentials}
+    the user clicks the button/link                       link=${comp_name}
+    the user clicks the button/link                       link=Invite assessors to assess the competition
+    the user selects the option from the drop-down menu   Smart infrastructure  id=filterInnovationArea
+    the user clicks the button/link                       jQuery=.button:contains("Filter")
+    the user clicks the button/link                       jQuery=tr:contains("Paul Plum") label[for^="assessor-row"]
+    the user clicks the button/link                       jQuery=.button:contains("Add selected to invite list")
+    the user clicks the button/link                       link=Invite
+    the user clicks the button/link                       link=Review and send invites  # a:contains("Review and send invites")
+    And the user enters text to a text field              id=message    This is custom text
+    And the user clicks the button/link                   jQuery=.button:contains("Send invite")
 
 connectToDb to update milestones
-    log in as a different user       &{Comp_admin1_credentials}
-    The user clicks the button/link  link=Dashboard
-    The user clicks the button/link       link=EOI comp
-     And The user clicks the button/link         jQuery=a:contains("Manage assessments")
-      the user clicks the button/link         jQuery=a:contains("Manage applications")
-     And the user clicks the button/link         jQuery=tr:nth-child(1) a:contains("View progress")
-     When the user clicks the button/link        jQuery=tr:contains("Paul Plum") button:contains("Assign")
-    And the user clicks the button/link         jQuery=a:contains("Manage applications")
-    And the user clicks the button/link         jQuery=tr:nth-child(1) a:contains("View progress")
-     And the user clicks the button/link         jQuery=a:contains("Allocate applications")
-    And the user clicks the button/link         jQuery=a:contains("Manage assessments")
-    And the user clicks the button/link         jQuery=a:contains("Competition")
-    And the user clicks the button/link         jQuery=button:contains("Notify assessors")
-    And the element should be disabled          jQuery=button:contains("Notify assessors")
-    Log in as a different user          paul.plum@gmail.com
-     When The user clicks the button/link                    Link=EOI comp
-    And the user selects the radio button                   assessmentAccept  true
-    And The user clicks the button/link                     jQuery=button:contains("Confirm")
-    Then the user should be redirected to the correct page  ${Assessor_application_dashboard}
-      And the user should see that the element is disabled    id=submit-assessment-button
-#     assesor accepted the invite
+    ${competitionId} =  get comp id from comp title  ${comp_name}
+    Set suite variable  ${competitionId}
+    ${today}=    get time
+    ${yesterday} =    Subtract Time From Date    ${today}    1 day
+    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${competitionId}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ALLOCATE_ASSESSORS','ASSESSOR_BRIEFING');
+    And reload page
 
-the assessor submits the assessment
-     When The user clicks the button/link    link=EOI Comp
-#    And the user should see that the element is disabled    id=submit-assessment-button
-     And the user clicks the button/link    jQuery=.button:contains("Review and complete your assessment")
-    Then the user should see the element    jQuery=h2:contains("Review assessment")
+Allocated assessor accepts invite to assess the competition
+     Log in as a different user                              &{assessor_credentials}
+     When The user clicks the button/link                    Link=${comp_name}
+     And the user selects the radio button                   acceptInvitation  true
+     And The user clicks the button/link                     jQuery=button:contains("Confirm")
+     Then the user should be redirected to the correct page  ${server}/assessment/assessor/dashboard
+
+Comp Admin allocates assessor to application
+    log in as a different user              &{Comp_admin1_credentials}
+    The user clicks the button/link         link=Dashboard
+    The user clicks the button/link         link=EOI comp
+    And The user clicks the button/link     jQuery=a:contains("Manage assessments")
+    the user clicks the button/link         jQuery=a:contains("Allocate applications")
+    the user clicks the button/link         jQuery=tr:contains("${EOI_application}") a:contains("Assign")
+    the user clicks the button/link         jQuery=tr:contains("Paul Plum") button:contains("Assign")
+    the user navigates to the page          ${server}/management/competition/${competitionId}
+    the user clicks the button/link         jQuery=button:contains("Notify assessors")
+
+Allocated assessor assess the application
+    Log in as a different user                         &{assessor_credentials}
+    When The user clicks the button/link               link=EOI comp
+    the user clicks the button/link                    jQuery=li:contains("${EOI_application}") a:contains("Accept or reject")
+    the user selects the radio button                  assessmentAccept  true
+    the user clicks the button/link                    jQuery=.button:contains("Confirm")
+    the user should be redirected to the correct page  ${server}/assessment/assessor/dashboard/competition/${competitionId}
+    the user clicks the button/link                    link=EOI Application
 
 the user adds score and feedback for every question
-    The user clicks the button/link    link=Scope
+    The user clicks the button/link                       link=Scope
     The user selects the index from the drop-down menu    1    css=.research-category
-    The user clicks the button/link    jQuery=label:contains("Yes")
-    The user enters text to a text field    css=.editor    Testing scope feedback text
+    The user clicks the button/link                       jQuery=label:contains("Yes")
+    The user enters text to a text field                  css=.editor    Testing scope feedback text
     mouse out  css=.editor
-    Wait Until Page Contains Without Screenshots    Saved!
-     :FOR  ${ELEMENT}    IN    @{EOI_questions}
-         \     The user clicks the button/link    link= Back to your assessment overview
-         \     the user clicks the button/link    jQuery=h3:contains(${ELEMENT})
-         \     The user selects the option from the drop-down menu    10    css=.assessor-question-score
-         \     The user enters text to a text field    css=.editor    Testing Business opportunity feedback text
-         \     mouse out  css=.editor
-    The user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
+    Wait Until Page Contains Without Screenshots          Saved!
+    The user clicks the button/link                      jquery=button:contains("Save and return to assessment overview")
+    :FOR  ${ELEMENT}    IN    @{EOI_questions}
+         \   the user clicks the button/link                        jQuery=h3:contains(". ${ELEMENT}")
+         \   The user selects the option from the drop-down menu    10    css=.assessor-question-score
+         \   The user enters text to a text field                   css=.editor    Testing feedback text
+         \   mouse out                                              css=.editor
+         \   The user clicks the button/link                        jquery=button:contains("Save and return to assessment overview")
+    the user clicks the button/link               link=Review and complete your assessment
+    the user selects the radio button             fundingConfirmation  true
+    the user enters text to a text field          id=feedback    EOI application assessed
+    the user clicks the button/link               link=Save assessment
+    the user clicks the button/link               jQuery=li:contains("${EOI_application}") label[for^="assessmentIds"]
+    the user clicks the button/link               link=Submit assessments
+    the user clicks the button/link               jQuery=button:contains("Yes I want to submit the assessments")
+    the user should see the element               jQuery=li:contains("EOI Application") strong:contains("Recommended")   # add selector to see its in submmited list
 
-the comp admin closes the asssessment
+the comp admin closes the assessment
+    log in as a different user                   &{Comp_admin1_credentials}
+    the user clicks the button/link             link=${comp_name}
+    the user clicks the button/link             link=Close assessment
 
-the comp admin release feedback
+the comp admin informs the applicants
+    the user clicks the button/link             link=Input and review funding decision
+    the user clicks the button/link             jQuery= tr:contains("${EOI_application}") label[for^="app-row"]
+    the user clicks the button/link             link=Successful
+    the user clicks the button/link             link=Competition
+    the user clicks the button/link             link=Manage funding notifications
+    the user clicks the button/link             jQuery=li:contains("${EOI_application}") label[for^="assessmentIds"]
+    the user clicks the button/link             link=Write and send email
+    the user enters text to a text field        css=.editor  EOI sussessful applicant
+    the user clicks the button/link             link=Send email to all applicants
+    the user clicks the button/link             jQuery=.button:contains("Send email to all applicants")
+    the user clicks the button/link             link=Competition
+    the user clicks the button/link             link=Manage funding notifications
+    the user navigates to the page              ${server}/assessment/assessor/dashboard/competition/${competitionId}
+    the user clicks the button/link             link=Release feedback
 
-the comp appears in Previous tab but not in Project setup
-
+the EOI comp moves to Previous tab
+    the user clicks the button/link             jQuery=a:contains("Previous")
+    the user clicks the button/link             link=${comp_name}
+    the user should see the element             JQuery=h1:contains("${comp_name}")
+#    TODO IFS-2471 Successful applciations in Previous tab. Once implemented please update test to see the application appear in relevant section
 
 *** Keywords ***
 Custom Suite Setup
