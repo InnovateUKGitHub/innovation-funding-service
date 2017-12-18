@@ -45,8 +45,8 @@ import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
-import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.file.transactional.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
@@ -57,6 +57,7 @@ import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.mapper.FormInputResponseMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.mapper.*;
 import org.innovateuk.ifs.invite.repository.*;
@@ -125,6 +126,8 @@ import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.List;
 
 /**
  * This is a convenience subclass for all tests that require Mockito support.  At its simplest this class is simply a
@@ -425,7 +428,10 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SystemNotificationSource systemNotificationSourceMock;
 
     @Mock
-    protected FileHttpHeadersValidator fileValidatorMock;
+    protected FilesizeAndTypeFileValidator<List<String>> fileValidatorWithMediaTypeStringsMock;
+
+    @Mock
+    protected FilesizeAndTypeFileValidator<FormInputResource> fileValidatorWithFormInputMock;
 
     @Mock
     protected FileEntryRepository fileEntryRepositoryMock;

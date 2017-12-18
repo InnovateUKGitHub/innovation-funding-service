@@ -6,13 +6,14 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
+import org.innovateuk.ifs.file.transactional.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,12 +33,18 @@ import static org.innovateuk.ifs.finance.resource.ApplicationFinanceConstants.RE
 @RequestMapping("/applicationfinance")
 public class ApplicationFinanceController {
 
+    @Value("${ifs.data.service.file.storage.applicationfinance.max.filesize.bytes}")
+    private Long maxFilesizeBytesForApplicationFinance;
+
+    @Value("${ifs.data.service.file.storage.applicationfinance.valid.media.types}")
+    private List<String> validMediaTypesForApplicationFinance;
+
     @Autowired
     private FinanceRowService financeRowService;
 
     @Autowired
-    @Qualifier("applicationFinanceFileValidator")
-    private FileHttpHeadersValidator fileValidator;
+    @Qualifier("mediaTypeStringsFileValidator")
+    private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
     @GetMapping("/findByApplicationOrganisation/{applicationId}/{organisationId}")
     public RestResult<ApplicationFinanceResource> findByApplicationOrganisation(
@@ -109,7 +116,7 @@ public class ApplicationFinanceController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForApplicationFinance, maxFilesizeBytesForApplicationFinance, request, (fileAttributes, inputStreamSupplier) ->
                 financeRowService.createFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
@@ -121,7 +128,7 @@ public class ApplicationFinanceController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForApplicationFinance, maxFilesizeBytesForApplicationFinance, request, (fileAttributes, inputStreamSupplier) ->
                 financeRowService.updateFinanceFileEntry(applicationFinanceId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 

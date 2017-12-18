@@ -47,6 +47,7 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
@@ -209,8 +210,6 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
             T serviceToCall,
             BiFunction<T, FileEntryResource, ServiceResult<Void>> updateFileServiceCall) throws Exception {
 
-
-
         FileEntryResource expectedTemporaryFile = newFileEntryResource().
                 with(id(null)).
                 withFilesizeBytes(dummyFileContent.length()).
@@ -219,7 +218,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 build();
 
         FileHeaderAttributes fileAttributes = new FileHeaderAttributes(TEXT_PLAIN, dummyFileContent.length(), "filename.txt");
-        when(fileValidatorMock.validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt")).thenReturn(serviceSuccess(fileAttributes));
+        when(fileValidatorWithMediaTypeStringsMock.validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt", singletonList("application/pdf"))).thenReturn(serviceSuccess(fileAttributes));
 
         when(updateFileServiceCall.apply(serviceToCall, expectedTemporaryFile)).
                 thenReturn(serviceSuccess());
@@ -237,7 +236,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 andExpect(content().string("")).
                 andExpect(status().isOk());
 
-        verify(fileValidatorMock).validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt");
+        verify(fileValidatorWithMediaTypeStringsMock).validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt", singletonList("application/pdf"));
         updateFileServiceCall.apply(verify(serviceToCall), expectedTemporaryFile);
 
         return resultActions;
@@ -270,7 +269,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 build();
 
         FileHeaderAttributes fileAttributes = new FileHeaderAttributes(TEXT_PLAIN, dummyFileContent.length(), "filename.txt");
-        when(fileValidatorMock.validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt")).thenReturn(serviceSuccess(fileAttributes));
+        when(fileValidatorWithMediaTypeStringsMock.validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt", singletonList("application/pdf"))).thenReturn(serviceSuccess(fileAttributes));
 
         FileEntryResource savedFile = newFileEntryResource().
                 with(id(456L)).
@@ -295,7 +294,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 andExpect(content().json(toJson(savedFile))).
                 andExpect(status().isCreated());
 
-        verify(fileValidatorMock).validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt");
+        verify(fileValidatorWithMediaTypeStringsMock).validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt", singletonList("application/pdf"));
         createFileServiceCall.apply(verify(serviceToCall), expectedTemporaryFile);
 
         return resultActions;

@@ -6,6 +6,7 @@ import org.springframework.http.MediaType;
 
 import java.util.List;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.error.CommonErrors.payloadTooLargeError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.unsupportedMediaTypeError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_NO_NAME_PROVIDED;
@@ -13,27 +14,23 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.ParsingFunctions.validLongResult;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 /**
- * A basic implementation of FileHttpHeadersValidator that, given a set of HTTP headers about the file being uploaded will be able to
+ * A basic implementation of FilesizeAndTypeFileValidator that, given a set of HTTP headers about the file being uploaded will be able to
  * validate their format and additionally ensure that the filesize and media type of the file conforms to a set of restrictions
  */
-public class FilesizeAndTypeFileValidator implements FileHttpHeadersValidator {
+public class FilesizeAndTypeFileValidator<T> {
 
-    private long maxFilesizeBytes;
-    private List<MediaType> validMediaTypes;
+    private MediaTypesGenerator<T> validMediaTypesGenerator;
 
-    public FilesizeAndTypeFileValidator(long maxFilesize, List<MediaType> validMediaTypes) {
-        this.maxFilesizeBytes = maxFilesize;
-        this.validMediaTypes = validMediaTypes;
+    public FilesizeAndTypeFileValidator(MediaTypesGenerator<T> validMediaTypesGenerator) {
+        this.validMediaTypesGenerator = validMediaTypesGenerator;
     }
 
-    @Override
-    public ServiceResult<FileHeaderAttributes> validateFileHeaders(String contentTypeHeaderValue, String contentLengthValue, String originalFilenameValue) {
+    public ServiceResult<FileHeaderAttributes> validateFileHeaders(String contentTypeHeaderValue, String contentLengthValue, String originalFilenameValue, T validMediaTypesContext, long maxFilesizeBytes) {
 
-        ServiceResult<Long> contentLengthValidation = validContentLengthHeader(contentLengthValue);
-        ServiceResult<MediaType> contentTypeValidation = validContentTypeHeader(contentTypeHeaderValue);
+        ServiceResult<Long> contentLengthValidation = validContentLengthHeader(contentLengthValue, maxFilesizeBytes);
+        ServiceResult<MediaType> contentTypeValidation = validContentTypeHeader(contentTypeHeaderValue, validMediaTypesContext);
         ServiceResult<String> filenameValidation = validFilename(originalFilenameValue);
 
         return find(contentLengthValidation, contentTypeValidation, filenameValidation).andOnSuccess(
@@ -44,7 +41,7 @@ public class FilesizeAndTypeFileValidator implements FileHttpHeadersValidator {
         return checkParameterIsPresent(filename, new Error(FILES_NO_NAME_PROVIDED));
     }
 
-    private ServiceResult<Long> validContentLengthHeader(String contentLengthHeader) {
+    private ServiceResult<Long> validContentLengthHeader(String contentLengthHeader, long maxFilesizeBytes) {
 
         ServiceResult<Long> validLongValue = validLongResult(contentLengthHeader);
 
@@ -61,7 +58,9 @@ public class FilesizeAndTypeFileValidator implements FileHttpHeadersValidator {
         return serviceSuccess(length);
     }
 
-    private ServiceResult<MediaType> validContentTypeHeader(String contentTypeHeader) {
+    private ServiceResult<MediaType> validContentTypeHeader(String contentTypeHeader, T validMediaTypesContext) {
+
+        List<MediaType> validMediaTypes = validMediaTypesGenerator.apply(validMediaTypesContext);
 
         if (isBlank(contentTypeHeader)) {
             return serviceFailure(unsupportedMediaTypeError(validMediaTypes));
