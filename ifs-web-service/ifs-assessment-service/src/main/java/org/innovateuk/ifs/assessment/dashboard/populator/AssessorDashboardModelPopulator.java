@@ -39,8 +39,6 @@ public class AssessorDashboardModelPopulator {
 
         List<AssessmentPanelParticipantResource> assessmentPanelParticipantResourceList = assessmentPanelInviteRestService.getAllInvitesByUser(userId).getSuccessObject();
 
-  //      List<AssessmentPanelParticipantResource> assessmentPanelAcceptedResourceList = assessmentPanelInviteRestService.getAllPanelsByUser(userId).getSuccessObject();
-
         return new AssessorDashboardViewModel(
                 getProfileStatus(profileStatusResource),
                 getActiveCompetitions(participantResourceList),

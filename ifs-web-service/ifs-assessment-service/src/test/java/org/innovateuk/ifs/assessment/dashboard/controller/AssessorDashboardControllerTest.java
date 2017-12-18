@@ -1,18 +1,15 @@
 package org.innovateuk.ifs.assessment.dashboard.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.dashboard.controller.AssessorDashboardController;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorDashboardModelPopulator;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.*;
-import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
 import org.innovateuk.ifs.assessment.profile.viewmodel.AssessorProfileStatusViewModel;
+import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
 import org.innovateuk.ifs.invite.resource.AssessmentPanelParticipantResource;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
-import org.innovateuk.ifs.profile.service.ProfileRestService;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -131,7 +128,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         );
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
-        AssessorDashboardAssessmentPanelInviteViewModel expectedAssessmentPanelInviteViewModel = new AssessorDashboardAssessmentPanelInviteViewModel("", "Juggling Craziness", 2L);
+        AssessorDashboardAssessmentPanelInviteViewModel expectedAssessmentPanelInviteViewModel = new AssessorDashboardAssessmentPanelInviteViewModel("Juggling Craziness", 2L, "");
 
         assertTrue(model.getPendingInvites().isEmpty());
         assertEquals(expectedActiveCompetitions, model.getActiveCompetitions());
