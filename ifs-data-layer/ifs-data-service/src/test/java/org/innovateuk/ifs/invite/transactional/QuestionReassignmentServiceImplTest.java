@@ -6,17 +6,15 @@ import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
-import org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder;
-import org.innovateuk.ifs.invite.domain.ApplicationInvite;
-import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
-import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
@@ -27,19 +25,19 @@ import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion
 import static org.innovateuk.ifs.application.builder.QuestionStatusBuilder.newQuestionStatus;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
-import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newApplicationInvite;
-import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.mockito.Matchers.anyCollectionOf;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 
 public class QuestionReassignmentServiceImplTest {
-    @Mock
-    private ApplicationInviteMapper applicationInviteMapper;
+
+    private List<ProcessRole> inviteProcessRoles;
+    private ProcessRole leadApplicantProcessRole;
 
     @Mock
     private ProcessRoleRepository processRoleRepositoryMock;
@@ -50,30 +48,32 @@ public class QuestionReassignmentServiceImplTest {
     @Mock
     private QuestionStatusRepository questionStatusRepositoryMock;
 
-    @Mock
-    private InviteOrganisationRepository inviteOrganisationRepositoryMock;
-
     @InjectMocks
-    private QuestionReassignmentService inviteService = new QuestionReassignmentServiceImpl();
+    private QuestionReassignmentService questionReassignmentService = new QuestionReassignmentServiceImpl();
 
-    @Test
-    public void reassignCollaboratorResponsesAndQuestionStatuses_reassignsQuestionsToLeadApplicant() throws Exception {
-        User inviteUser = newUser().build();
-        List<ProcessRole> inviteProcessRoles = newProcessRole()
+    @Before
+    public void setupMockInjection() {
+        MockitoAnnotations.initMocks(this);
+    }
+
+    @Before
+    public void setupLeadAndCollaboratorUserProcessRoles() {
+        inviteProcessRoles = newProcessRole()
                 .withRole(newRole(COLLABORATOR))
-                .withUser(inviteUser)
+                .withUser(newUser().build())
                 .withOrganisationId(1L)
                 .build(1);
 
-        ProcessRole leadApplicantProcessRole = newProcessRole()
+        leadApplicantProcessRole = newProcessRole()
                 .withRole(newRole(LEADAPPLICANT))
                 .withUser(newUser().build())
                 .build();
+    }
 
-        Application application = newApplication()
-                .withProcessRoles(leadApplicantProcessRole, inviteProcessRoles.get(0))
-                .build();
-
+    @Test
+    public void reassignCollaboratorResponsesAndQuestionStatuses_reassignsQuestionsToLeadApplicantWhenLastAssignableUser() throws Exception {
+        User inviteUser = inviteProcessRoles.get(0).getUser();
+        Application application = newApplication().withProcessRoles(leadApplicantProcessRole, inviteProcessRoles.get(0)).build();
         Question question = newQuestion().withMultipleStatuses(false).build();
 
         List<FormInputResponse> inviteResponses = newFormInputResponse()
@@ -92,25 +92,20 @@ public class QuestionReassignmentServiceImplTest {
                 .withMarkedAsComplete(true)
                 .build(2);
 
-        Long inviteProcessRoleId = inviteProcessRoles.get(0).getId();
-
         when(processRoleRepositoryMock.findByUserAndApplicationId(inviteUser, application.getId())).thenReturn(inviteProcessRoles);
         when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), inviteProcessRoles.get(0).getOrganisationId()))
                 .thenReturn(newArrayList(inviteProcessRoles.get(0)));
-
-        when(formInputResponseRepositoryMock.findByUpdatedById(inviteProcessRoleId)).thenReturn(inviteResponses);
-
+        when(formInputResponseRepositoryMock.findByUpdatedById(inviteProcessRoles.get(0).getId())).thenReturn(inviteResponses);
         when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteByIdOrAssigneeIdOrAssignedById(
                 application.getId(),
-                inviteProcessRoleId,
-                inviteProcessRoleId,
-                inviteProcessRoleId
-        ))
-                .thenReturn(questionStatuses);
+                inviteProcessRoles.get(0).getId(),
+                inviteProcessRoles.get(0).getId(),
+                inviteProcessRoles.get(0).getId()
+        )).thenReturn(questionStatuses);
 
-        inviteService.reassignCollaboratorResponsesAndQuestionStatuses(application.getId(), inviteProcessRoles, leadApplicantProcessRole);
+        questionReassignmentService.reassignCollaboratorResponsesAndQuestionStatuses(application.getId(), inviteProcessRoles, leadApplicantProcessRole);
 
-        InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock);
+        InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock);
 
         inOrder.verify(formInputResponseRepositoryMock).save(
                 createLambdaMatcher((List<FormInputResponse> actual) ->
@@ -124,24 +119,14 @@ public class QuestionReassignmentServiceImplTest {
                                 qs.getAssignee().equals(leadApplicantProcessRole))
                 )
         );
-        inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
+        inOrder.verify(questionStatusRepositoryMock).delete(anyCollectionOf(QuestionStatus.class));
 
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void reassignCollaboratorResponsesAndQuestionStatuses_reassignsQuestionsToOtherOrganisationMember() throws Exception {
-        User inviteUser = newUser().build();
-        List<ProcessRole> inviteProcessRoles = newProcessRole()
-                .withRole(COLLABORATOR)
-                .withUser(inviteUser)
-                .withOrganisationId(1L)
-                .build(1);
-
-        ProcessRole leadApplicantProcessRole = newProcessRole()
-                .withRole(LEADAPPLICANT)
-                .withUser(newUser().build())
-                .build();
+    public void reassignCollaboratorResponsesAndQuestionStatuses_reassignsQuestionsToOtherOrganisationMemberWhenAnotherOrganisationMemberIsAssignable() throws Exception {
+        User inviteUser = inviteProcessRoles.get(0).getUser();
 
         List<ProcessRole> organisationProcessRoles = newArrayList(
                 newProcessRole()
@@ -157,15 +142,6 @@ public class QuestionReassignmentServiceImplTest {
 
         Application application = newApplication()
                 .withProcessRoles(leadApplicantProcessRole, inviteProcessRoles.get(0))
-                .build();
-        ApplicationInvite applicationInvite = newApplicationInvite()
-                .withId(12L)
-                .withUser(inviteUser)
-                .withApplication(application)
-                .withInviteOrganisation(
-                        newInviteOrganisation()
-                                .withInvites(ApplicationInviteBuilder.newApplicationInvite().build(2))
-                                .build())
                 .build();
 
         Question question = newQuestion().withMultipleStatuses(true).build();
@@ -188,7 +164,6 @@ public class QuestionReassignmentServiceImplTest {
 
         Long inviteProcessRoleId = inviteProcessRoles.get(0).getId();
 
-        when(applicationInviteMapper.mapIdToDomain(applicationInvite.getId())).thenReturn(applicationInvite);
         when(processRoleRepositoryMock.findByUserAndApplicationId(inviteUser, application.getId())).thenReturn(inviteProcessRoles);
         when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), inviteProcessRoles.get(0).getOrganisationId()))
                 .thenReturn(organisationProcessRoles);
@@ -202,9 +177,9 @@ public class QuestionReassignmentServiceImplTest {
                 inviteProcessRoleId
         )).thenReturn(questionStatuses);
 
-        //ServiceResult<Void> serviceResult = inviteService.removeApplicationInvite(applicationInvite.getId());
+        questionReassignmentService.reassignCollaboratorResponsesAndQuestionStatuses(application.getId(), inviteProcessRoles, leadApplicantProcessRole);
 
-        InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock, processRoleRepositoryMock, inviteOrganisationRepositoryMock);
+        InOrder inOrder = inOrder(formInputResponseRepositoryMock, questionStatusRepositoryMock);
 
         inOrder.verify(formInputResponseRepositoryMock).save(
                 createLambdaMatcher((List<FormInputResponse> actual) ->
@@ -219,8 +194,6 @@ public class QuestionReassignmentServiceImplTest {
                         )
                 )
         );
-        inOrder.verify(processRoleRepositoryMock).delete(inviteProcessRoles);
-        inOrder.verify(inviteOrganisationRepositoryMock).save(applicationInvite.getInviteOrganisation());
 
         inOrder.verifyNoMoreInteractions();
     }

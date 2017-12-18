@@ -98,7 +98,7 @@ public class QuestionReassignmentServiceImpl implements QuestionReassignmentServ
         questionStatusRepository.delete(unassignableQuestionStatuses);
     }
 
-    private QuestionStatus reassignQuestionStatusRoles(QuestionStatus questionStatus, ProcessRole reassignTo, ProcessRole leadApplicantRole) {
+    private static QuestionStatus reassignQuestionStatusRoles(QuestionStatus questionStatus, ProcessRole reassignTo, ProcessRole leadApplicantRole) {
         if (questionStatus.getAssignee() != null && questionStatus.getAssignedBy() != null) {
             ProcessRole assignee =
                     convertToProcessRoleIfOriginalRoleNotForLeadApplicant(questionStatus.getAssignee(), reassignTo, leadApplicantRole);
@@ -118,7 +118,7 @@ public class QuestionReassignmentServiceImpl implements QuestionReassignmentServ
         return questionStatus;
     }
 
-    private ProcessRole convertToProcessRoleIfOriginalRoleNotForLeadApplicant(ProcessRole processRoleFrom,
+    private static ProcessRole convertToProcessRoleIfOriginalRoleNotForLeadApplicant(ProcessRole processRoleFrom,
                                                                               ProcessRole processRoleTo,
                                                                               ProcessRole leadApplicantRole) {
         return Optional.of(processRoleFrom)
