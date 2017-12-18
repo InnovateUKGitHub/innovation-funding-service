@@ -21,11 +21,6 @@ public interface AssessmentReviewRepository extends ProcessRepository<Assessment
     List<AssessmentReview> findByTargetCompetitionIdAndActivityStateState(long applicationId, State backingState);
     boolean existsByParticipantUserAndTargetAndActivityStateStateNot(User user, Application target, State state);
     boolean existsByTargetCompetitionIdAndActivityStateState(long competitionId, State backingState);
-//    boolean existsByTargetCompetitionIdAndTargetInAssessmentPanelAndApplicationProcessActivityStateState(long competitionId, boolean inAssessmentPanel, AssessmentReviewState created);
-
-    @Query("SELECT CASE WHEN count(a.id)> 0 THEN TRUE ELSE FALSE END AS foo FROM Application a WHERE a.competition.id = :competitionId AND a.inAssessmentPanel=true AND " +
-            "NOT EXISTS (SELECT 1 FROM AssessmentReview r where r.target=a AND r.participant.user = :user) " )
-    boolean foo(long competitionId, User user);
 
     @Query("SELECT CASE WHEN count(a.id)>0 THEN TRUE ELSE FALSE END " +
             "FROM Application a " +

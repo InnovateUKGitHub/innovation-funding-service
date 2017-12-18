@@ -142,7 +142,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         List<ProcessRole> processRoles = newProcessRole()
                 .withUser(assessor)
                 .build(1);
-//
+
         AssessmentReview assessmentReview = new AssessmentReview(applications.get(0), processRoles.get(0));
         assessmentReview.setActivityState(acceptedActivityState);
 
@@ -165,7 +165,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
                 .findByTargetCompetitionIdAndActivityStateState(competitionId, CREATED.getBackingState()))
                 .thenReturn(asList(assessmentReview));
 
-        Notification notification = LambdaMatcher.createLambdaMatcher(n -> {
+        Notification expectedNotification = LambdaMatcher.createLambdaMatcher(n -> {
             Map<String, Object> globalArguments = n.getGlobalArguments();
             assertEquals(assessor.getEmail(), n.getTo().get(0).getEmailAddress());
             assertEquals(globalArguments.get("subject"), "Applications ready for review");
@@ -175,7 +175,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
             assertEquals(globalArguments.get("ifsUrl"), webBaseUrl);
         });
 
-        when(notificationSenderMock.sendNotification(notification)).thenReturn(ServiceResult.serviceSuccess(notification));
+        when(notificationSenderMock.sendNotification(expectedNotification)).thenReturn(ServiceResult.serviceSuccess(expectedNotification));
 
 
         service.createAndNotifyReviews(competitionId).getSuccessObjectOrThrowException();
@@ -205,18 +205,25 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         inOrder.verifyNoMoreInteractions();
     }
 
-    // TODO
-//    @Test
-//    public void isPendingReviewNotifications() {
-//
-//        boolean pendingReviews = service.isPendingReviewNotifications(competitionId).getSuccessObjectOrThrowException();
-//
-//    }
-//
-//    @Test
-//    public void isPendingReviewNotifications_none() {
-//
-//        boolean pendingReviews = service.isPendingReviewNotifications(competitionId).getSuccessObjectOrThrowException();
-//
-//    }
+    @Test
+    public void isPendingReviewNotifications() {
+        boolean expectedPendingReviewNotifications = true;
+
+        when(assessmentReviewRepositoryMock.notifiable(competitionId)).thenReturn(expectedPendingReviewNotifications);
+
+        assertEquals(expectedPendingReviewNotifications, service.isPendingReviewNotifications(competitionId).getSuccessObjectOrThrowException());
+
+        verify(assessmentReviewRepositoryMock, only()).notifiable(competitionId);
+    }
+
+    @Test
+    public void isPendingReviewNotifications_none() {
+        boolean expectedPendingReviewNotifications = false;
+
+        when(assessmentReviewRepositoryMock.notifiable(competitionId)).thenReturn(expectedPendingReviewNotifications);
+
+        assertEquals(expectedPendingReviewNotifications, service.isPendingReviewNotifications(competitionId).getSuccessObjectOrThrowException());
+
+        verify(assessmentReviewRepositoryMock, only()).notifiable(competitionId);
+    }
 }

@@ -120,18 +120,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     @Override
     public ServiceResult<Boolean> isPendingReviewNotifications(long competitionId) {
-
         return serviceSuccess(assessmentReviewRepository.notifiable(competitionId));
-        // applications in panel
-//        assessmentReviewRepository.foo(competitionId, true, CREATED);
-//        return serviceSuccess(getAllAssessorsOnPanel(competitionId)
-//                .map(CompetitionParticipant::getUser)
-//                .allMatch(u -> assessmentReviewRepository.foo(competitionId, u))
-//        );
-        // this will be correct, however, right now we don't create an intermediate
-//        return serviceSuccess(
-//                assessmentReviewRepository.existsByTargetCompetitionIdAndActivityStateState(competitionId, State.CREATED)
-//        );
     }
 
     private ServiceResult<Void> createAssessmentReview(AssessmentPanelParticipant assessor, Application application) {
