@@ -2,9 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
-import org.innovateuk.ifs.assessment.service.AssessmentPanelRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.management.model.AssessmentPanelModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.AssessmentPanelViewModel;
 import org.junit.Test;
@@ -12,9 +10,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.RestResult.toGetResponse;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.AssessmentPanelKeyStatisticsResourceBuilder.newAssessmentPanelKeyStatisticsResource;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.only;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -34,13 +36,7 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
     private AssessmentPanelModelPopulator assessmentPanelModelPopulator;
 
     @Mock
-    private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
-
-    @Mock
     private AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource;
-
-    @Mock
-    private AssessmentPanelRestService assessmentPanelRestService;
 
     @Override
     protected CompetitionManagementAssessmentPanelController supplyControllerUnderTest() {
@@ -55,6 +51,7 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
         int applicationsInPanel = 5;
         int assessorsAccepted = 2;
         int assessorsPending = 3;
+        boolean reviewsPending = true;
 
         competitionResource = newCompetitionResource()
                 .with(id(competitionId))
@@ -70,10 +67,10 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
 
 
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
-        when(competitionKeyStatisticsRestService.getAssessmentPanelKeyStatisticsByCompetition(competitionId))
+        when(competitionKeyStatisticsRestServiceMock.getAssessmentPanelKeyStatisticsByCompetition(competitionId))
                 .thenReturn(toGetResponse(assessmentPanelKeyStatisticsResource));
         when(assessmentPanelRestService.isPendingReviewNotifications(competitionId))
-                .thenReturn(toGetResponse(true));
+                .thenReturn(toGetResponse(reviewsPending));
 
         MvcResult result = mockMvc.perform(get("/assessment/panel/competition/{competitionId}", competitionId))
                 .andExpect(status().isOk())
@@ -90,5 +87,20 @@ public class CompetitionManagementAssessmentPanelControllerTest extends BaseCont
         assertEquals(applicationsInPanel, model.getApplicationsInPanel());
         assertEquals(assessorsAccepted, model.getAssessorsAccepted());
         assertEquals(assessorsPending, model.getAssessorsInvited());
+        assertEquals(reviewsPending, model.isPendingReviewNotifications());
+    }
+
+    @Test
+    public void notifyAssessors() throws Exception {
+        long competitionId = 1L;
+
+        when(assessmentPanelRestService.notifyAssessors(competitionId)).thenReturn(restSuccess());
+
+        mockMvc.perform(post("/assessment/panel/competition/{competitionId}/notify-assessors", competitionId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrl(format("/assessment/panel/competition/%d", competitionId)))
+                .andReturn();
+
+        verify(assessmentPanelRestService, only()).notifyAssessors(competitionId);
     }
 }

@@ -42,7 +42,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 @Transactional
 public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
-    private static final DateTimeFormatter INVITE_DATE_FORMAT = ofPattern("d MMMM yyyy");
+    static final DateTimeFormatter INVITE_DATE_FORMAT = ofPattern("d MMMM yyyy");
 
 
     @Autowired
@@ -139,7 +139,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
             final ProcessRole processRole = createProcessRoleForAssessmentReview(assessor, application);
             AssessmentReview assessmentReview =  new AssessmentReview(application, processRole);
             assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
-             assessmentReviewRepository.save(assessmentReview);
+            assessmentReviewRepository.save(assessmentReview);
         }
         return serviceSuccess();
     }
@@ -159,7 +159,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     private List<Application> getAllApplicationsOnPanel(long competitionId) {
         return applicationRepository
-                .findByCompetitionIdAndInAssessmentPanelAndApplicationProcessActivityStateState(competitionId, true, State.SUBMITTED);
+                .findByCompetitionIdAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
     }
 
     private ServiceResult<Void> notifyAllCreated(long competitionId) {
@@ -186,12 +186,11 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
                 asMap(
                         "subject", subject,
                         "name", assessmentReview.getParticipant().getUser().getName(),
-                        "competitionName", assessmentReview.getTarget().getName(),
+                        "competitionName", assessmentReview.getTarget().getCompetition().getName(),
                         "panelDate", assessmentReview.getTarget().getCompetition().getAssessmentPanelDate().format(INVITE_DATE_FORMAT),
-                        "ifsUrl",webBaseUrl
+                        "ifsUrl", webBaseUrl
                 ));
 
         return notificationSender.sendNotification(notification).andOnSuccessReturnVoid();
     }
-
 }

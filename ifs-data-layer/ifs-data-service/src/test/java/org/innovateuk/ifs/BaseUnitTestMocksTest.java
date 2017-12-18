@@ -718,7 +718,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentReviewRepository assessmentReviewRepositoryMock;
 
     @Mock
-    protected AssessmentReviewWorkflowHandler assessmentReviewWorkflowHandler;
+    protected AssessmentReviewWorkflowHandler assessmentReviewWorkflowHandlerMock;
 
     @Before
     public void setupMockInjection() {
