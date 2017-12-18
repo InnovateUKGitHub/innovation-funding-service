@@ -98,11 +98,10 @@ public class AssessorDashboardModelPopulator {
     private List<AssessorDashboardAssessmentPanelInviteViewModel> getAssessmentPanelInvites(List<AssessmentPanelParticipantResource> assessmentPanelParticipantResourceList) {
         return assessmentPanelParticipantResourceList.stream()
                 .filter(AssessmentPanelParticipantResource::isPending)
-                .map(AssessmentPanelParticipantResource::getInvite)
-                .map(invite -> new AssessorDashboardAssessmentPanelInviteViewModel(
-                        invite.getCompetitionName(),
-                        invite.getCompetitionId(),
-                        invite.getHash()
+                .map(appr -> new AssessorDashboardAssessmentPanelInviteViewModel(
+                        appr.getCompetitionName(),
+                        appr.getCompetitionId(),
+                        appr.getInvite().getHash()
                         ))
                 .collect(toList());
     }
@@ -110,13 +109,12 @@ public class AssessorDashboardModelPopulator {
     private List<AssessorDashboardAssessmentPanelAcceptedViewModel> getAssessmentPanelAccepted(List<AssessmentPanelParticipantResource> assessmentPanelAcceptedResourceList) {
         return assessmentPanelAcceptedResourceList.stream()
                 .filter(AssessmentPanelParticipantResource::isAccepted)
-                .map(AssessmentPanelParticipantResource::getInvite)
-                .map(invite -> new AssessorDashboardAssessmentPanelAcceptedViewModel(
-                        invite.getCompetitionName(),
-                        invite.getCompetitionId(),
-                        invite.getPanelDate().toLocalDate(),
-                        invite.getPanelDaysLeft(),
-                        invite.getAwaitingApplications()
+                .map(appr -> new AssessorDashboardAssessmentPanelAcceptedViewModel(
+                        appr.getCompetitionName(),
+                        appr.getCompetitionId(),
+                        appr.getInvite().getPanelDate().toLocalDate(),
+                        appr.getInvite().getPanelDaysLeft(),
+                        appr.getAwaitingApplications()
                         ))
                 .collect(toList());
     }

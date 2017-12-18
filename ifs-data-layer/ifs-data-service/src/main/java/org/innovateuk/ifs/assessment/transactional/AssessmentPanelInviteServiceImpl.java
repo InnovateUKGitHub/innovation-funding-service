@@ -556,7 +556,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                         assessmentPanelParticipantResource.getUserId(),
                         assessmentPanelParticipantResource.getCompetitionId());
 
-        assessmentPanelParticipantResource.getInvite().setAwaitingApplications(getApplicationsPendingForPanelCount(reviews));
+        assessmentPanelParticipantResource.setAwaitingApplications(getApplicationsPendingForPanelCount(reviews));
     }
 
     private Long getApplicationsPendingForPanelCount(List<AssessmentReview> reviews) {

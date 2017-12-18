@@ -22,7 +22,6 @@ public class AssessmentPanelInviteResource extends InviteResource {
     private long userId;
     private String email;
     private ZonedDateTime panelDate;
-    private long awaitingApplications;
 
     private Clock clock = Clock.systemDefaultZone();
 
@@ -32,8 +31,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
                                          InviteStatus status,
                                          long userId,
                                          String email,
-                                         ZonedDateTime panelDate,
-                                         long awaitingApplications
+                                         ZonedDateTime panelDate
     ) {
         this.hash = hash;
         this.competitionId = competitionId;
@@ -42,7 +40,6 @@ public class AssessmentPanelInviteResource extends InviteResource {
         this.userId = userId;
         this.email = email;
         this.panelDate = panelDate;
-        this.awaitingApplications = awaitingApplications;
     }
 
     public AssessmentPanelInviteResource() {
@@ -104,14 +101,6 @@ public class AssessmentPanelInviteResource extends InviteResource {
 
     public void setPanelDate(ZonedDateTime panelDate) {
         this.panelDate = panelDate;
-    }
-
-    public long getAwaitingApplications() {
-        return awaitingApplications;
-    }
-
-    public void setAwaitingApplications(long awaitingApplications) {
-        this.awaitingApplications = awaitingApplications;
     }
 
     @JsonIgnore

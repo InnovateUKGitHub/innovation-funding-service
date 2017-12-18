@@ -6,7 +6,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
@@ -38,7 +38,6 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -184,18 +183,6 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
 
         AssessmentPanelParticipant retrievedParticipant = repository.findOne(id);
         assertEqualParticipants(savedParticipant, retrievedParticipant);
-    }
-
-    @Test
-    public void findByUserIdAndRole() throws Exception {
-        System.out.println(user.getId() + " " + user.getFirstName() + " " + user.getEmail());
-        List<AssessmentPanelParticipant> participantPanels = repository.findByUserId(171);
-
-        for(AssessmentPanelParticipant assessmentPanelParticipant : repository.findAll()){
-            System.out.println("found one" + assessmentPanelParticipant.getUser().getId() + " " + assessmentPanelParticipant.getUser().getEmail());
-        }
-        assertEquals(0,participantPanels.size());
-
     }
 
     @Test

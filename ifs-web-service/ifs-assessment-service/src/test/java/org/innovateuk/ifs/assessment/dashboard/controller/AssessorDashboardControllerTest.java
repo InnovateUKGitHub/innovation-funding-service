@@ -99,6 +99,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .build();
 
         AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource()
+                .withCompetition(2L)
                 .withCompetitionName("Juggling Craziness")
                 .withCompetitionParticipantRole(PANEL_ASSESSOR)
                 .withStatus(PENDING)
