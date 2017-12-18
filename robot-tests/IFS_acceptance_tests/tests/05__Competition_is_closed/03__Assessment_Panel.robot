@@ -26,6 +26,8 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-2039 Assessment panels - Assign and remove applications to panel
 ...
 ...               IFS-2049 Assessment panels - Filter on applications list
+...
+...               IFS-1125 Assessment panels - Send panel applications to assessors for review
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -50,11 +52,18 @@ Assement panel link is deactivated if the assessment panel is not set
     Given The user clicks the button/link  link=${CLOSED_COMPETITION_NAME}
     Then the user should see the element   jQuery=.disabled:contains("Manage assessment panel")
 
-Assessment panel links are active if the assessment panel has been set
-    [Documentation]  IFS-786
-    [Tags]  HappyPath
+Confirm changes button unavailable before sending invite
+    [Documentation]  IFS-1125
+    [Tags]
     [Setup]  enable assessment panel for the competition
     Given the user clicks the button/link  link=Manage assessment panel
+    When the user should see the element   jQuery=span:contains("0") ~ small:contains("Assessors accepted")
+    And the user should see the element    jQuery=span:contains("0") ~ small:contains("Applications assigned to panel")
+    Then the element should be disabled    jQuery=button:contains("Confirm actions")
+
+Assessment panel links are active if the assessment panel has been set
+    [Documentation]  IFS-786
+    [Tags]
     When the user clicks the button/link   link=Invite assessors to attend
     Then the user should see the element   jQuery=h1:contains("Invite assessors to panel")
 
@@ -201,6 +210,17 @@ Manage Assessment Panel Assign and remove button functionality
     And the user clicks the button/link     jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Remove")
     Then the user should see the element    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
     And the user should see the element     jQuery=h2:contains("Assigned applications (0)")
+
+Assign applications to panel
+    [Documentation]  IFS-1125
+    [Tags]
+    When the user clicks the button/link    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    And the user clicks the button/link      jQuery=td:contains("Computer vision and machine learning for transport networks") ~ td:contains("Assign")
+    Then the user should see the element    jQuery=h2:contains("Assigned applications (2)")
+    When the user clicks the button/link    link=Manage assessment panel
+    And the user clicks the button/link     jQuery=button:contains("Confirm actions")
+    Then the user should see the element    jQuery=span:contains("2") ~ small:contains("Applications assigned to panel")
+    And the user reads his email
 
 Filter by application number
     [Documentation]  IFS-2049
