@@ -194,6 +194,7 @@ public class QuestionReassignmentServiceImplTest {
                         )
                 )
         );
+        inOrder.verify(questionStatusRepositoryMock).delete(anyCollectionOf(QuestionStatus.class));
 
         inOrder.verifyNoMoreInteractions();
     }
