@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.file.transactional;
+package org.innovateuk.ifs.file.service;
 
+import org.innovateuk.ifs.file.service.MediaTypesGenerator;
 import org.springframework.http.MediaType;
 
 import java.util.List;

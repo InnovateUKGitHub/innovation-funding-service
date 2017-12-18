@@ -6,7 +6,7 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.file.transactional.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;

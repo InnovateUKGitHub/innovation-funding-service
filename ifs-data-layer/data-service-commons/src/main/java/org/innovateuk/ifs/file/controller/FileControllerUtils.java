@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
-import org.innovateuk.ifs.file.transactional.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;

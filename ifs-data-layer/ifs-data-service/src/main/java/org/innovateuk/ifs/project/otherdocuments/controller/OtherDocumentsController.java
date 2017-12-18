@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.otherdocuments.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.transactional.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;

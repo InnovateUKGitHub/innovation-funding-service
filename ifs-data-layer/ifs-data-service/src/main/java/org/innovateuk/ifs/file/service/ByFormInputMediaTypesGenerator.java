@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.file.transactional;
+package org.innovateuk.ifs.file.service;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.file.resource.FileTypeCategories;
@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class ByFormInputMediaTypesGenerator implements MediaTypesGenerator<Long> {
 
-    private ByMediaTypeStringsMediaTypesGenerator byStringGenerator = new ByMediaTypeStringsMediaTypesGenerator();
+    private org.innovateuk.ifs.file.service.ByMediaTypeStringsMediaTypesGenerator byStringGenerator = new org.innovateuk.ifs.file.service.ByMediaTypeStringsMediaTypesGenerator();
 
     @Autowired
     private FormInputService formInputService;

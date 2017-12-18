@@ -46,7 +46,7 @@ import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.file.transactional.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;

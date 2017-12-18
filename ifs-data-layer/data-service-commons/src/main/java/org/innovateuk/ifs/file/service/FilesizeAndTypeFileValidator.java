@@ -1,7 +1,8 @@
-package org.innovateuk.ifs.file.transactional;
+package org.innovateuk.ifs.file.service;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
 import org.springframework.http.MediaType;
 
 import java.util.List;

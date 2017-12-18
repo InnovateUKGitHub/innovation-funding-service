@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.transactional.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.finance.transactional.OverheadFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

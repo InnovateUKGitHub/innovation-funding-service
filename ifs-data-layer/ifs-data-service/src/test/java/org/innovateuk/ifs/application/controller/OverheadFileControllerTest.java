@@ -9,7 +9,7 @@ import org.innovateuk.ifs.file.controller.FileControllerUtils;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.transactional.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.finance.transactional.OverheadFileService;
 import org.junit.Test;
 import org.junit.runner.RunWith;

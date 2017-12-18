@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.file.transactional;
+package org.innovateuk.ifs.file.service;
 
 import org.springframework.http.MediaType;
 

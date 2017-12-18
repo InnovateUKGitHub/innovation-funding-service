@@ -6,7 +6,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.file.transactional.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.transactional.FilesizeAndTypeFileValidator;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;

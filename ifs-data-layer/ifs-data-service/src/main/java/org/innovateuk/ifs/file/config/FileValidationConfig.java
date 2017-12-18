@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.file.transactional;
+package org.innovateuk.ifs.file.config;
 
+import org.innovateuk.ifs.file.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,6 +21,6 @@ public class FileValidationConfig {
 
     @Bean(name = "mediaTypeStringsFileValidator")
     public FilesizeAndTypeFileValidator<List<String>> mediaTypeStringsFileValidator() {
-        return new FilesizeAndTypeFileValidator<>(new ByMediaTypeStringsMediaTypesGenerator());
+        return new FilesizeAndTypeFileValidator<>(new org.innovateuk.ifs.file.service.ByMediaTypeStringsMediaTypesGenerator());
     }
 }
