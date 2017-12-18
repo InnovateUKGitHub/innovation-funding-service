@@ -22,7 +22,6 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               IFS-1881 Project Setup internal project dashboard navigation
 ...
 ...               IFS-2015 Project Setup task management: Bank details
-
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
