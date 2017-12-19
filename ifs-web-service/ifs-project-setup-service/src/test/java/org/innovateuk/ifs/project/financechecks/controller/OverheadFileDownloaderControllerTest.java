@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.project.financecheck.controller;
+package org.innovateuk.ifs.project.financechecks.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.project.financechecks.controller.OverheadFileDownloaderController;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.mock.web.MockMultipartFile;

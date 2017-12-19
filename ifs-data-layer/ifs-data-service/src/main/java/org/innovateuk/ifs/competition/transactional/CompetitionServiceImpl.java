@@ -109,6 +109,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         put("name", new Sort(ASC, "name", "id"));
     }};
 
+    private static final String EOI = "Expression of interest";
+
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
         return find(competitionRepository.findById(id), notFoundError(Competition.class, id)).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
@@ -207,6 +209,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
             // Only competitions with at least one funded and informed application can be considered as in project setup
             return serviceSuccess(simpleMap(
                     CollectionFunctions.reverse(competitions.stream()
+                            .filter(competition -> !competition.getCompetitionType().getName().equals(EOI))
                             .map(competition -> Pair.of(findMostRecentFundingInformDate(competition), competition))
                             .sorted(Comparator.comparing(Pair::getKey))
                             .map(Pair::getValue)
