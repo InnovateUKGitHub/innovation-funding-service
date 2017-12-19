@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class ByFormInputMediaTypesGenerator implements MediaTypesGenerator<Long> {
 
-    private org.innovateuk.ifs.file.service.ByMediaTypeStringsMediaTypesGenerator byStringGenerator = new org.innovateuk.ifs.file.service.ByMediaTypeStringsMediaTypesGenerator();
+    private ByMediaTypeStringsMediaTypesGenerator byStringGenerator = new ByMediaTypeStringsMediaTypesGenerator();
 
     @Autowired
     private FormInputService formInputService;
@@ -31,7 +31,7 @@ public class ByFormInputMediaTypesGenerator implements MediaTypesGenerator<Long>
         FormInputResource formInput = formInputService.findFormInput(formInputId).getSuccessObjectOrThrowException();
 
         List<FileTypeCategories> fileTypeCategories = !StringUtils.isEmpty(formInput.getAllowedFileTypes()) ?
-                simpleMap(formInput.getAllowedFileTypes().split(","), FileTypeCategories::valueOf) :
+                simpleMap(formInput.getAllowedFileTypes().split(","), FileTypeCategories::fromDisplayName) :
                 emptyList();
 
         List<String> mediaTypesStrings = flattenLists(simpleMap(fileTypeCategories, this::getMediaTypesListFromCategory));

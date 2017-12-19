@@ -12,6 +12,7 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * A Builder for Form Inputs.  By default this builder will assign unique ids and descriptions based upon the ids.
@@ -64,6 +65,6 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
     }
 
     public FormInputResourceBuilder withAllowedFileTypes(List<FileTypeCategories>... fileTypes) {
-        return withArray((types, formInput) -> formInput.setAllowedFileTypes(simpleJoiner(types, ",")), fileTypes);
+        return withArray((types, formInput) -> formInput.setAllowedFileTypes(simpleJoiner(simpleMap(types, FileTypeCategories::getDisplayName), ",")), fileTypes);
     }
 }

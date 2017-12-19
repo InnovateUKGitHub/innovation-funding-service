@@ -21,6 +21,6 @@ public class FileValidationConfig {
 
     @Bean(name = "mediaTypeStringsFileValidator")
     public FilesizeAndTypeFileValidator<List<String>> mediaTypeStringsFileValidator() {
-        return new FilesizeAndTypeFileValidator<>(new org.innovateuk.ifs.file.service.ByMediaTypeStringsMediaTypesGenerator());
+        return new FilesizeAndTypeFileValidator<>(new ByMediaTypeStringsMediaTypesGenerator());
     }
 }
