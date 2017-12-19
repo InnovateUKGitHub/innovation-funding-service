@@ -2,25 +2,26 @@ package org.innovateuk.ifs.application.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.ApplicationFundingDecisionController;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
 import java.util.Map;
 
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.resource.FundingDecision.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.documentation.FundingNotificationResourceDocs.fundingNotificationResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-
-import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
-import static org.innovateuk.ifs.application.resource.FundingDecision.ON_HOLD;
-import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 
 public class ApplicationFundingDecisionControllerDocumentation extends BaseControllerMockMVCTest<ApplicationFundingDecisionController> {
 
@@ -46,7 +47,13 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
     public void sendNotifications() throws Exception {
         Map<Long, FundingDecision> decisions = MapFunctions.asMap(1L, FUNDED, 2L, UNFUNDED, 3L, ON_HOLD);
         FundingNotificationResource notification = new FundingNotificationResource("Body of notification message.", decisions);
+        ApplicationResource application = newApplicationResource().withCompetition(4L).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionTypeName("Programme")
+                .build();
 
+        when(applicationServiceMock.getApplicationById(1L)).thenReturn(serviceSuccess(application));
+        when(competitionServiceMock.getCompetitionById(4L)).thenReturn(serviceSuccess(competition));
         when(projectServiceMock.createProjectsFromFundingDecisions(decisions)).thenReturn(serviceSuccess());
         when(applicationFundingServiceMock.notifyApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
 
