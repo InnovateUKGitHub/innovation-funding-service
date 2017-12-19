@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.assessment.dashboard.viewmodel;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.time.LocalDate;
 
 public class AssessorDashboardAssessmentPanelAcceptedViewModel extends AssessorDashboardAssessmentPanelViewModel{
@@ -25,5 +28,29 @@ public class AssessorDashboardAssessmentPanelAcceptedViewModel extends AssessorD
 
     public long getAwaitingApplications() {
         return awaitingApplications;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssessorDashboardAssessmentPanelAcceptedViewModel that = (AssessorDashboardAssessmentPanelAcceptedViewModel) o;
+
+        return new EqualsBuilder()
+                .append(daysLeft, that.daysLeft)
+                .append(awaitingApplications, that.awaitingApplications)
+                .append(panelDateDeadline, that.panelDateDeadline)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(panelDateDeadline)
+                .append(daysLeft)
+                .append(awaitingApplications)
+                .toHashCode();
     }
 }
