@@ -114,4 +114,16 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
         assertNotNull(response);
         Assert.assertEquals(returnedResponse, response);
     }
+
+    @Test
+    public void countPendingBankDetailsApprovals() {
+
+        Long pendingBankDetailsCount = 8L;
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/count-pending-bank-details-approvals", Long.class, pendingBankDetailsCount);
+
+        Long response = service.countPendingBankDetailsApprovals().getSuccessObject();
+        assertNotNull(response);
+        Assert.assertEquals(pendingBankDetailsCount, response);
+    }
 }
