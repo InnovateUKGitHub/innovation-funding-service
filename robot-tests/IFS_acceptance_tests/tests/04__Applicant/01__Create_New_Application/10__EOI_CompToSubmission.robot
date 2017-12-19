@@ -39,6 +39,8 @@ Applicant submits his application
     Then the applicant submits the application
 
 Invite a registered assessor
+    [Documentation]  IFS-2376
+    [Tags]  HappyPath
     log in as a different user                            &{Comp_admin1_credentials}
     the user clicks the button/link                       link=${comp_name}
     the user clicks the button/link                       link=Invite assessors to assess the competition
@@ -51,7 +53,9 @@ Invite a registered assessor
     And the user enters text to a text field              id=message    This is custom text
     And the user clicks the button/link                   jQuery=.button:contains("Send invite")
 
-connectToDb to update milestones
+Milestones are updated in db to move comp to assessment state
+    [Documentation]  IFS-2376
+    [Tags]  HappyPath  MySQL
     ${competitionId} =  get comp id from comp title  ${comp_name}
     Set suite variable  ${competitionId}
     ${today}=    get time
@@ -60,13 +64,17 @@ connectToDb to update milestones
     And reload page
 
 Allocated assessor accepts invite to assess the competition
-     Log in as a different user                              &{assessor_credentials}
-     When The user clicks the button/link                    Link=${comp_name}
-     And the user selects the radio button                   acceptInvitation  true
-     And The user clicks the button/link                     jQuery=button:contains("Confirm")
-     Then the user should be redirected to the correct page  ${server}/assessment/assessor/dashboard
+    [Documentation]  IFS-2376
+    [Tags]  HappyPath
+    Log in as a different user                              &{assessor_credentials}
+    When The user clicks the button/link                    Link=${comp_name}
+    And the user selects the radio button                   acceptInvitation  true
+    And The user clicks the button/link                     jQuery=button:contains("Confirm")
+    Then the user should be redirected to the correct page  ${server}/assessment/assessor/dashboard
 
 Comp Admin allocates assessor to application
+    [Documentation]  IFS-2376
+    [Tags]  HappyPath
     log in as a different user              &{Comp_admin1_credentials}
     The user clicks the button/link         link=Dashboard
     The user clicks the button/link         link=EOI comp
@@ -78,6 +86,8 @@ Comp Admin allocates assessor to application
     the user clicks the button/link         jQuery=button:contains("Notify assessors")
 
 Allocated assessor assess the application
+    [Documentation]  IFS-2376
+    [Tags]  HappyPath
     Log in as a different user                         &{assessor_credentials}
     When The user clicks the button/link               link=EOI comp
     the user clicks the button/link                    jQuery=li:contains("${EOI_application}") a:contains("Accept or reject")
@@ -86,55 +96,35 @@ Allocated assessor assess the application
     the user should be redirected to the correct page  ${server}/assessment/assessor/dashboard/competition/${competitionId}
     the user clicks the button/link                    link=EOI Application
 
-the user adds score and feedback for every question
-    The user clicks the button/link                       link=Scope
-    The user selects the index from the drop-down menu    1    css=.research-category
-    The user clicks the button/link                       jQuery=label:contains("Yes")
-    The user enters text to a text field                  css=.editor    Testing scope feedback text
-    mouse out  css=.editor
-    Wait Until Page Contains Without Screenshots          Saved!
-    The user clicks the button/link                      jquery=button:contains("Save and return to assessment overview")
-    :FOR  ${ELEMENT}    IN    @{EOI_questions}
-         \   the user clicks the button/link                        jQuery=h3:contains(". ${ELEMENT}")
-         \   The user selects the option from the drop-down menu    10    css=.assessor-question-score
-         \   The user enters text to a text field                   css=.editor    Testing feedback text
-         \   mouse out                                              css=.editor
-         \   The user clicks the button/link                        jquery=button:contains("Save and return to assessment overview")
+the assessor submits the assessment
+    the assessor adds score and feedback for every question
     the user clicks the button/link               link=Review and complete your assessment
     the user selects the radio button             fundingConfirmation  true
     the user enters text to a text field          id=feedback    EOI application assessed
-    the user clicks the button/link               link=Save assessment
+    the user clicks the button/link               jQuery=.button:contains("Save assessment")
     the user clicks the button/link               jQuery=li:contains("${EOI_application}") label[for^="assessmentIds"]
-    the user clicks the button/link               link=Submit assessments
+    the user clicks the button/link               jQuery=.button:contains("Submit assessments")
     the user clicks the button/link               jQuery=button:contains("Yes I want to submit the assessments")
-    the user should see the element               jQuery=li:contains("EOI Application") strong:contains("Recommended")   # add selector to see its in submmited list
+    the user should see the element               jQuery=li:contains("EOI Application") strong:contains("Recommended")   #
 
-the comp admin closes the assessment
+the comp admin closes the assessment and releases feedback
+    [Documentation]  IFS-2376
+    [Tags]  HappyPath
     log in as a different user                   &{Comp_admin1_credentials}
     the user clicks the button/link             link=${comp_name}
-    the user clicks the button/link             link=Close assessment
-
-the comp admin informs the applicants
-    the user clicks the button/link             link=Input and review funding decision
-    the user clicks the button/link             jQuery= tr:contains("${EOI_application}") label[for^="app-row"]
-    the user clicks the button/link             link=Successful
-    the user clicks the button/link             link=Competition
-    the user clicks the button/link             link=Manage funding notifications
-    the user clicks the button/link             jQuery=li:contains("${EOI_application}") label[for^="assessmentIds"]
-    the user clicks the button/link             link=Write and send email
-    the user enters text to a text field        css=.editor  EOI sussessful applicant
-    the user clicks the button/link             link=Send email to all applicants
-    the user clicks the button/link             jQuery=.button:contains("Send email to all applicants")
-    the user clicks the button/link             link=Competition
-    the user clicks the button/link             link=Manage funding notifications
-    the user navigates to the page              ${server}/assessment/assessor/dashboard/competition/${competitionId}
-    the user clicks the button/link             link=Release feedback
+    the user clicks the button/link             jQuery=.button:contains("Close assessment")
+    the comp admin informs the applicants
+    the user clicks the button/link             jQuery=a:contains("Competition")
+    the user clicks the button/link             jQuery=button:contains("Release feedback")
+    the user should not see an error in the page
 
 the EOI comp moves to Previous tab
+    [Documentation]  IFS-2376
+    [Tags]  HappyPath
     the user clicks the button/link             jQuery=a:contains("Previous")
     the user clicks the button/link             link=${comp_name}
     the user should see the element             JQuery=h1:contains("${comp_name}")
-#    TODO IFS-2471 Successful applciations in Previous tab. Once implemented please update test to see the application appear in relevant section
+#    TODO IFS-2471 Once implemented please update test to see the application appear in relevant section in Previous tab.
 
 *** Keywords ***
 Custom Suite Setup
@@ -165,3 +155,30 @@ the lead applicant fills all the questions and marks as complete(EOI comp type)
     :FOR  ${ELEMENT}    IN    @{EOI_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 
+the assessor adds score and feedback for every question
+    The user clicks the button/link                       link=Scope
+    The user selects the index from the drop-down menu    1    css=.research-category
+    The user clicks the button/link                       jQuery=label:contains("Yes")
+    The user enters text to a text field                  css=.editor    Testing scope feedback text
+    mouse out  css=.editor
+    Wait Until Page Contains Without Screenshots          Saved!
+    :FOR  ${INDEX}  IN RANGE  1  5
+      \    the user clicks the button/link    css=.next
+      \    The user selects the option from the drop-down menu    10    css=.assessor-question-score
+      \    The user enters text to a text field    css=.editor    Testing feedback text
+      \    mouse out  css=.editor
+      \    Wait Until Page Contains Without Screenshots    Saved!
+    The user clicks the button/link               jquery=button:contains("Save and return to assessment overview")
+
+the comp admin informs the applicants
+    the user clicks the button/link           jQuery=a:contains("Input and review funding decision")
+    the user clicks the button/link           jQuery=tr:contains("${EOI_application}") label[for^="app-row"]
+    the user clicks the button/link           jQuery=button:contains("Successful")
+    the user clicks the button/link           jQuery=a:contains("Competition")
+    the user clicks the button/link           jQuery=a:contains("Manage funding notifications")
+    the user clicks the button/link           jQuery=tr:contains("${EOI_application}") label
+    the user clicks the button/link           jQuery=button:contains("Write and send email")
+    the user should see the element           jQuery=h1:contains("Funding decision notification")
+    the user enters text to a text field      css=.editor  EOI sussessful applicant
+    the user clicks the button/link           jQuery=button:contains("Send email to all applicants")
+    the user clicks the button/link           jQuery=.send-to-all-applicants-modal button:contains("Send email")
