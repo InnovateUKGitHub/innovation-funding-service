@@ -272,11 +272,7 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     private void whenSpendProfileNotGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
-        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(false);
+        setUpMocking(true, true, true, true, false);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
         Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
@@ -285,11 +281,7 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     private void whenSpendProfileGeneratedAndNotAccessible(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
-        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(true);
+        setUpMocking(true, true, true, true, true);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
         Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
@@ -298,14 +290,20 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
 
     private void whenSpendProfileGeneratedAndAccessible(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
-        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
-        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
-        when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(true);
+        setUpMocking(true, true, true, true, true);
 
         SectionAccess access = methodToCall.apply(helper, organisation);
         Assert.assertTrue(SectionAccess.ACCESSIBLE == access);
 
+    }
+
+    private void setUpMocking(boolean companiesHouseSectionRequired, boolean companiesHouseDetailsComplete,
+                              boolean projectDetailsSubmitted, boolean bankDetailsApproved, boolean spendProfileGenerated) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(companiesHouseSectionRequired);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(companiesHouseDetailsComplete);
+        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(projectDetailsSubmitted);
+        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(bankDetailsApproved);
+        when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(spendProfileGenerated);
     }
 }
