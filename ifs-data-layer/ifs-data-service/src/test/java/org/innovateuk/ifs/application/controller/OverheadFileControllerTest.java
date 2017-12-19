@@ -18,6 +18,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.InputStream;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_EXCEPTION_WHILE_RETRIEVING_FILE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNEXPECTED_ERROR;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -45,15 +47,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @PrepareForTest({FileControllerUtils.class})
 public class OverheadFileControllerTest extends BaseControllerMockMVCTest<OverheadFileController> {
 
-    @Override
-    protected OverheadFileController supplyControllerUnderTest() {
-        return new OverheadFileController();
-    }
+    public static final String OVERHEAD_BASE_URL = "/overheadcalculation";
+
+    private static final long maxFilesize = 1234L;
+    private static final List<String> mediaTypes = singletonList("application/pdf");
+
+    @Mock(name = "fileValidator")
+    private FilesizeAndTypeFileValidator<List<String>> fileValidatorMock;
 
     @Mock
     private OverheadFileService overheadFileService;
 
-    public static final String OVERHEAD_BASE_URL = "/overheadcalculation";
+    @Override
+    protected OverheadFileController supplyControllerUnderTest() {
+        OverheadFileController controller = new OverheadFileController();
+        ReflectionTestUtils.setField(controller, "maxFilesizeBytesForOverheadCalculation", maxFilesize);
+        ReflectionTestUtils.setField(controller, "validMediaTypesForOverheadCalculation", mediaTypes);
+        return controller;
+    }
 
     @Test
     public void getFileDetailsTest() throws Exception {
