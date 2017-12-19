@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-@RequestMapping("application/download/overheadfile")
+@RequestMapping("/application/download/overheadfile")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = OverheadFileDownloaderController.class)
 // TODO The previous security rules below and have been replaced with a permit all until the correct values are
 // TODO determined. See IFS-2281
