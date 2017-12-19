@@ -65,7 +65,6 @@ import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAsse
 import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
 import static org.innovateuk.ifs.testdata.builders.AssessorResponseDataBuilder.newAssessorResponseData;
-import static org.innovateuk.ifs.testdata.builders.BaseDataBuilder.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
 import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
@@ -77,7 +76,7 @@ import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder
 import static org.innovateuk.ifs.testdata.builders.QuestionDataBuilder.newQuestionData;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.isA;
@@ -92,6 +91,9 @@ import static org.mockito.Mockito.when;
 abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseGenerateTestData.class);
+
+    public static final String COMP_ADMIN_EMAIL = "john.doe@innovateuk.test";
+    public static final String PROJECT_FINANCE_EMAIL = "lee.bowman@innovateuk.test";
 
     @Value("${flyway.url}")
     private String databaseUrl;
@@ -274,7 +276,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     @PostConstruct
     public void setupBaseBuilders() {
 
-        ServiceLocator serviceLocator = new ServiceLocator(applicationContext);
+        ServiceLocator serviceLocator = new ServiceLocator(applicationContext, COMP_ADMIN_EMAIL, PROJECT_FINANCE_EMAIL);
 
         competitionDataBuilder = newCompetitionData(serviceLocator);
         competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
@@ -1066,7 +1068,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     protected void setDefaultCompAdmin() {
         setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
         testService.doWithinTransaction(() ->
-                setLoggedInUser(userService.findByEmail(BaseDataBuilder.COMP_ADMIN_EMAIL).getSuccessObjectOrThrowException())
+                setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccessObjectOrThrowException())
         );
     }
 }

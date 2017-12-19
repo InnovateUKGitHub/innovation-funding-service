@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.innovateuk.ifs.file.resource.FileTypeCategories.PDF;
+
 /**
  * Component that creates a Question object containing default values & validators.
  */
@@ -88,6 +90,7 @@ public class DefaultApplicationQuestionCreator {
         input.setGuidanceAnswer("<p>You may include an appendix of additional information to support the technical approach the project will undertake.</p><p>You may include, for example, a Gantt chart or project management structure.</p><p>The appendix should:</p><ul class=\\\"list-bullet\\\"><li>be in a portable document format (.pdf)</li><li>be readable with 100% magnification</li><li>contain your application number and project title at the top</li><li>not be any longer than 6 sides of A4. Longer appendices will only have the first 6 pages assessed</li><li>be less than 1mb in size</li></ul>");
         input.setGuidanceTitle("What should I include in the appendix?");
         input.setDescription("Appendix");
+        input.setAllowedFileTypes(PDF.getDisplayName());
 
         return input;
     }

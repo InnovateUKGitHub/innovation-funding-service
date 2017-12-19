@@ -2,7 +2,7 @@
 <!-- =================== Comp setup section - Assessors (6) ============================== -->
 <th:block th:fragment="section-content">
     <div th:if="${#fields.hasErrors('${competitionSetupForm.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section</h2>
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to save section.</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(competitionSetupForm)" />
     </div>
 

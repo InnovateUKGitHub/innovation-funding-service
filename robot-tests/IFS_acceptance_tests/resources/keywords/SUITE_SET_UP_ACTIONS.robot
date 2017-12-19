@@ -204,12 +204,12 @@ the user follows the flow to register their organisation
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
-    [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}  ${password}
+    [Arguments]   ${first_name}  ${last_name}  ${email}  ${password}
     Wait Until Page Contains Element Without Screenshots    link=terms and conditions
     Input Text                     id=firstName  ${first_name}
     Input Text                     id=lastName  ${last_name}
     Input Text                     id=phoneNumber  23232323
-    Input Text                     id=email  ${REG_EMAIL}
+    Input Text                     id=email  ${email}
     Input Password                 id=password  ${password}
     the user selects the checkbox    termsAndConditions
     the user selects the checkbox    allowMarketingEmails
