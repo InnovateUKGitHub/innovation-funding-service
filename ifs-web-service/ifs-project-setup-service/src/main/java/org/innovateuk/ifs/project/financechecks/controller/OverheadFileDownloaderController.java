@@ -18,6 +18,9 @@ import java.util.concurrent.ExecutionException;
 @RestController
 @RequestMapping("/application/download/overheadfile")
 @SecuredBySpring(value = "Controller", description = "TODO", securedType = OverheadFileDownloaderController.class)
+// TODO The previous security rules below and have been replaced with a permit all until the correct values are
+// TODO determined. See IFS-2281
+//@PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
 @PreAuthorize("permitAll")
 public class OverheadFileDownloaderController {
     @Autowired

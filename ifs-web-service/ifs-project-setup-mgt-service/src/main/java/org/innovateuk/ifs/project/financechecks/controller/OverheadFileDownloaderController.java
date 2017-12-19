@@ -25,7 +25,7 @@ import java.util.concurrent.ExecutionException;
 // TODO determined. See IFS-2281
 //@PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
 @PreAuthorize("permitAll")
-public  class OverheadFileDownloaderController {
+public class OverheadFileDownloaderController {
     @Autowired
     private OverheadFileRestService overheadFileRestService;
 
