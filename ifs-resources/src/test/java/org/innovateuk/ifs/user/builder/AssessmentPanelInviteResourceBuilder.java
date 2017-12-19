@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.invite.builder.AssessmentPanelParticipantResourceBuilder;
+import org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -52,5 +55,9 @@ public class AssessmentPanelInviteResourceBuilder extends BaseBuilder<Assessment
 
     public AssessmentPanelInviteResourceBuilder withUser(Long... userId) {
         return withArraySetFieldByReflection("userId", userId);
+    }
+
+    public AssessmentPanelInviteResourceBuilder withPanelDate(ZonedDateTime... panelDate) {
+        return withArraySetFieldByReflection("panelDate", panelDate);
     }
 }

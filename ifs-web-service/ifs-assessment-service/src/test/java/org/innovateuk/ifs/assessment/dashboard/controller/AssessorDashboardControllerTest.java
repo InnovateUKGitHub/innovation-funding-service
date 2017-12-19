@@ -441,6 +441,75 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Test
+    public void dashboard_acceptedPanels() throws Exception {
+        List<CompetitionInviteResource> inviteResources = newCompetitionInviteResource()
+                .withHash("inviteHash1")
+                .build(1);
+
+        List<CompetitionParticipantResource> participantResources = newCompetitionParticipantResource()
+                .withInvite(inviteResources.get(0))
+                .withCompetitionParticipantRole(PANEL_ASSESSOR)
+                .withStatus(ACCEPTED)
+                .withUser(3L)
+                .withCompetition(1L)
+                .withCompetitionName("Sustainable living models for the future")
+                .withAssessorAcceptsDate(now().plusDays(10))
+                .withAssessorDeadlineDate(now().plusDays(20))
+                .withCompetitionStatus(FUNDERS_PANEL)
+                .build(1);
+
+        UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
+                .withSkillsComplete(true)
+                .withAffliliationsComplete(true)
+                .withAgreementComplete(true)
+                .build();
+
+        AssessmentPanelInviteResource invite = newAssessmentPanelInviteResource()
+                .withInviteHash("")
+                .withCompetitionId(1L)
+                .withCompetitionName("Juggling Craziness")
+                .withPanelDate(now().plusDays(10))
+                .build();
+
+        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource()
+                .withUser(3L)
+                .withCompetition(1L)
+                .withStatus(ACCEPTED)
+                .withCompetitionParticipantRole(PANEL_ASSESSOR)
+                .withAwaitingApplications(1L)
+                .withCompetitionName("Juggling Craziness")
+                .withInvite(invite)
+                .build();
+
+        when(competitionParticipantRestService.getParticipants(3L, ASSESSOR)).thenReturn(restSuccess(participantResources));
+        when(profileRestService.getUserProfileStatus(3L)).thenReturn(restSuccess(profileStatusResource));
+        when(assessmentPanelInviteRestService.getAllInvitesByUser(3L)).thenReturn(restSuccess(singletonList(assessmentPanelParticipantResource)));
+
+        MvcResult result = mockMvc.perform(get("/assessor/dashboard"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessor-dashboard"))
+                .andReturn();
+
+        AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
+
+        List<AssessorDashboardPendingInviteViewModel> expectedPendingInvitesModel = participantResources.stream().map(competitionParticipantResource ->
+                new AssessorDashboardPendingInviteViewModel(
+                        competitionParticipantResource.getInvite().getHash(),
+                        competitionParticipantResource.getCompetitionName(),
+                        competitionParticipantResource.getAssessorAcceptsDate().toLocalDate(),
+                        competitionParticipantResource.getAssessorDeadlineDate().toLocalDate())).collect(Collectors.toList());
+
+        AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
+
+        assertTrue(model.getAssessmentPanelInvites().isEmpty());
+        assertFalse(model.getAssessmentPanelAccepted().isEmpty());
+        assertTrue(model.getActiveCompetitions().isEmpty());
+        assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
+    }
+
+
+    @Test
     public void getTermsAndConditions() throws Exception {
         mockMvc.perform(get("/assessor/terms-and-conditions"))
                 .andExpect(status().isOk())
