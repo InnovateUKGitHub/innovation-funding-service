@@ -62,14 +62,6 @@ the user sees the application he was invited for on his dashboard
     the user navigates to the page   ${dashboard_url}
     the user should see the element  jQuery=.in-progress li:contains("${application}")
 
-the user creates new account and organisation
-    [Arguments]  ${organisationType}  ${compId}
-    the user navigates to the page     ${server}/competition/${compId}/overview
-    the user clicks the button/link    link=Start new application
-    the user clicks the button/link    link=Create account
-    the user selects the radio button  organisationTypeId  ${organisationType}
-    the user clicks the button/link    css=button[type="submit"]
-
 the user inserts the address of his research organisation
     [Arguments]  ${streetOne}  ${city}  ${postcode}
     the user enters text to a text field  organisationSearchName  Warwick
@@ -110,7 +102,7 @@ the user updates his organisation inviting the user
 # I am on purpose not making the following lines one keyword.
 # That is because i want to insert too many custom inputs, that would lead to too many arguments
 New Research user applies to Competition and starts application
-    the user creates new account and organisation  radio-2  ${openCompetitionResearch}
+    the user applies to competition and enters organisation type  ${openCompetitionResearch}  radio-2
     the user inserts the address of his research organisation  p.o. box 42  coventry  cv4 7al
     the user enters text to a text field    email  ${bob}
     the invited user fills the create account form  Bob  Minion
@@ -118,7 +110,7 @@ New Research user applies to Competition and starts application
     logout as user
 
 Another Research user applies to Competition and starts application
-    the user creates new account and organisation  radio-2  ${openCompetitionResearch}
+    the user applies to competition and enters organisation type  ${openCompetitionResearch}  radio-2
     the user inserts the address of his research organisation  P.O. BOX 42  Coventry  CV4 7AL
     the user enters text to a text field    email  ${stuart}
     the invited user fills the create account form  Stuart  Minion

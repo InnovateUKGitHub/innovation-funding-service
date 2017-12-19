@@ -9,11 +9,24 @@ public class ServiceLocator {
 
     private GenericApplicationContext applicationContext;
 
-    public ServiceLocator(GenericApplicationContext applicationContext) {
+    private String compAdminEmail;
+    private String projectFinanceEmail;
+
+    public ServiceLocator(GenericApplicationContext applicationContext, String compAdminEmail, String projectFinanceEmail) {
         this.applicationContext = applicationContext;
+        this.compAdminEmail = compAdminEmail;
+        this.projectFinanceEmail = projectFinanceEmail;
     }
 
     public <T>T getBean(Class<T> clazz) {
         return applicationContext.getBean(clazz);
+    }
+
+    public String getCompAdminEmail() {
+        return compAdminEmail;
+    }
+
+    public String getProjectFinanceEmail() {
+        return projectFinanceEmail;
     }
 }
