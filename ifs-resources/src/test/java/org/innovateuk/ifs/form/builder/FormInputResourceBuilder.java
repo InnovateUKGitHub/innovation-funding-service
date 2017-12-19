@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.form.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.file.resource.FileTypeCategories;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -8,8 +9,9 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 
 /**
  * A Builder for Form Inputs.  By default this builder will assign unique ids and descriptions based upon the ids.
@@ -59,5 +61,9 @@ public class FormInputResourceBuilder extends BaseBuilder<FormInputResource, For
 
     public FormInputResourceBuilder withScope(FormInputScope... scopes) {
         return withArray((scope, formInput) -> setField("scope", scope, formInput), scopes);
+    }
+
+    public FormInputResourceBuilder withAllowedFileTypes(List<FileTypeCategories>... fileTypes) {
+        return withArray((types, formInput) -> formInput.setAllowedFileTypes(simpleJoiner(types, ",")), fileTypes);
     }
 }

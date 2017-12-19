@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -29,7 +30,10 @@ public class ByFormInputMediaTypesGenerator implements MediaTypesGenerator<Long>
 
         FormInputResource formInput = formInputService.findFormInput(formInputId).getSuccessObjectOrThrowException();
 
-        List<FileTypeCategories> fileTypeCategories = simpleMap(formInput.getAllowedFileTypes().split(","), FileTypeCategories::valueOf);
+        List<FileTypeCategories> fileTypeCategories = !StringUtils.isEmpty(formInput.getAllowedFileTypes()) ?
+                simpleMap(formInput.getAllowedFileTypes().split(","), FileTypeCategories::valueOf) :
+                emptyList();
+
         List<String> mediaTypesStrings = flattenLists(simpleMap(fileTypeCategories, this::getMediaTypesListFromCategory));
         return byStringGenerator.apply(mediaTypesStrings);
     }
