@@ -55,7 +55,7 @@
         </ul>
 
         <h3 class="heading-small">Assessed questions</h3>
-        <ul th:class="${model.general.state.preventEdit} ? 'task-list' : 'task-list no-margin-bottom'">
+        <ul class="task-list" th:classappend="${model.general.state.preventEdit} ? '' : 'no-margin-bottom'">
             <li th:each="question : ${model.questions}">
                 <th:block th:if="${model.questionStatuses.get(question.id)}">
                     <div class="task">
@@ -85,9 +85,9 @@
                 </th:block>
             </li>
         </ul>
-        <th:form>
+        <th:form th:unless="${model.general.state.preventEdit}">
             <p>
-                <button type="submit" name="createQuestion" class="buttonlink" th:unless="${model.general.state.preventEdit}">Add question</button>
+                <button type="submit" name="createQuestion" class="buttonlink">Add question</button>
             </p>
         </th:form>
 
