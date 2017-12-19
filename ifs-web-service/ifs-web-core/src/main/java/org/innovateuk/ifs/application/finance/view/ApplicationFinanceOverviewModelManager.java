@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -61,7 +60,7 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
         model.addAttribute("organisationFinances", organisationFinances);
         model.addAttribute("academicFileEntries", organisationFinanceOverview.getAcademicOrganisationFileEntries());
-        model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought() );
+        model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
         model.addAttribute("researchParticipationPercentage", applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException());
@@ -119,16 +118,12 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
         viewModel.setOrganisationFinances(organisationFinances);
         viewModel.setAcademicFileEntries(organisationFinanceOverview.getAcademicOrganisationFileEntries());
-        viewModel.setTotalFundingSought(getDisplayValue(organisationFinanceOverview.getTotalFundingSought()));
+        viewModel.setTotalFundingSought(organisationFinanceOverview.getTotalFundingSought());
         viewModel.setTotalContribution(organisationFinanceOverview.getTotalContribution());
         viewModel.setTotalOtherFunding(organisationFinanceOverview.getTotalOtherFunding());
         viewModel.setResearchParticipationPercentage(applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException());
 
         return viewModel;
-    }
-
-    private BigDecimal getDisplayValue(BigDecimal value) {
-        return value != null ? value : BigDecimal.ZERO;
     }
 
     private void addFinanceSections(Long competitionId, BaseFinanceOverviewViewModel viewModel) {
