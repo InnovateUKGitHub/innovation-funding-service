@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * This class is used for keeping track of the incoming connections.
+ * This class is used for keeping track of incoming connections to the data layer.  With increased use of
+ * parallelisation, the data layer potentially needs to handle a deal more incoming connections than the web
+ * layer accepts.
  */
 @Component
 public class ConnectionCountFilter extends OncePerRequestFilter {
