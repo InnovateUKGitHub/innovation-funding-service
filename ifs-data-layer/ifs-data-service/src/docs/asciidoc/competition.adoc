@@ -245,3 +245,15 @@ include::{snippets}/competition/count-pending-spend-profiles/http-response.adoc[
 
 ==== Curl Example
 include::{snippets}/competition/count-pending-spend-profiles/curl-request.adoc[]
+
+=== Get count of organisations for which Bank Details Approval is pending
+==== Request
+include::{snippets}/competitions/count-pending-bank-details-approvals/http-request.adoc[]
+
+==== Response
+include::{snippets}/competitions/count-pending-bank-details-approvals/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitions/count-pending-bank-details-approvals/curl-request.adoc[]
+
+
