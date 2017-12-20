@@ -6,6 +6,8 @@ import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.exception.UnableToReadUploadedFile;
+import org.innovateuk.ifs.file.controller.FileUploadErrorTranslator;
+import org.innovateuk.ifs.file.controller.MediaTypeMatchingFileUploadErrorTranslator;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.REMOVE_UPLOADED_FILE;
+import static org.innovateuk.ifs.commons.rest.ValidationMessages.fromErrors;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputType.FILEUPLOAD;
@@ -39,7 +42,7 @@ public class ApplicationQuestionFileSaver extends AbstractApplicationSaver {
     @Autowired
     private FormInputRestService formInputRestService;
 
-    private FileUploadErrorHandler fileUploadErrorHandler = new FileUploadErrorHandler();
+    private FileUploadErrorTranslator fileUploadErrorTranslator = new MediaTypeMatchingFileUploadErrorTranslator();
 
     public ValidationMessages saveFileUploadQuestionsIfAny(List<QuestionResource> questions,
                                                            final Map<String, String[]> params,
@@ -81,7 +84,7 @@ public class ApplicationQuestionFileSaver extends AbstractApplicationSaver {
                         file.getBytes());
 
                 return result.handleSuccessOrFailure(
-                    failure -> fileUploadErrorHandler.generateFileUploadError(formInputId, failure),
+                    failure -> fromErrors(fileUploadErrorTranslator.translateFileUploadErrors(e -> getFormInputKey(formInputId), failure.getErrors())),
                     success -> noErrors()
                 );
 
