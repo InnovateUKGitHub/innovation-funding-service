@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static java.util.Collections.singletonMap;
 import static org.innovateuk.ifs.analytics.GoogleAnalyticsDataLayerInterceptor.ANALYTICS_DATA_LAYER_NAME;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -48,7 +51,8 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
     public void setUp() {
         super.setUp();
         mav = new ModelAndView();
-        setAuthenticatedRoleTypes();
+        setAnonymousAuthentication();
+        when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(emptyMap());
     }
 
     @Test
@@ -133,8 +137,6 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
 
     @Test
     public void postHandle_noParam() {
-        when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(emptyMap());
-
         googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
@@ -147,8 +149,6 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
 
     @Test
     public void postHandle_singleRole() {
-        when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(emptyMap());
-
         UserRoleType [] expectedUserRoleTypes = setAuthenticatedRoleTypes(UserRoleType.COMP_ADMIN);
 
         googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
@@ -161,8 +161,6 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
 
     @Test
     public void postHandle_multipleRoles() {
-        when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(emptyMap());
-
         UserRoleType [] expectedUserRoleTypes = setAuthenticatedRoleTypes(UserRoleType.COMP_ADMIN, UserRoleType.IFS_ADMINISTRATOR);
 
         googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
@@ -175,8 +173,6 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
 
     @Test
     public void postHandle_anon() {
-        when(httpServletRequestMock.getAttribute(URI_TEMPLATE_VARIABLES_ATTRIBUTE)).thenReturn(emptyMap());
-
         googleAnalyticsDataLayerInterceptor.postHandle(httpServletRequestMock, httpServletResponseMock, null, mav);
 
         GoogleAnalyticsDataLayer expectedDataLayer = new GoogleAnalyticsDataLayer();
@@ -191,5 +187,9 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
                 .build();
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(user));
         return expectedUserRoleTypes;
+    }
+
+    private void setAnonymousAuthentication() {
+        SecurityContextHolder.getContext().setAuthentication(new AnonymousAuthenticationToken("key", "principal", singletonList(new SimpleGrantedAuthority("anon"))));
     }
 }

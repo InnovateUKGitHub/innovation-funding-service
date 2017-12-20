@@ -4,6 +4,8 @@ import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.HandlerMapping;
@@ -68,14 +70,13 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
     }
 
     private static void setUserRoles(GoogleAnalyticsDataLayer dl) {
-        final UserAuthentication authentication = (UserAuthentication) SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            if (authentication.getAuthorities().isEmpty()) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth instanceof UserAuthentication) {
+            UserAuthentication userAuth = (UserAuthentication) auth;
+            dl.setUserRole(userAuth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(joining(",")));
+        }
+        else if (auth instanceof AnonymousAuthenticationToken) {
                 dl.setUserRole("anonymous");
-            }
-            else {
-                dl.setUserRole(authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(joining(",")));
-            }
         }
     }
 
