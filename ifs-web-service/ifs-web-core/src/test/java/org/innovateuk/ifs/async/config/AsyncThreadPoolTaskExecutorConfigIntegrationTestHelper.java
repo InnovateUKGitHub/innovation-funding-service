@@ -7,10 +7,10 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Test helper for {@link AsyncMechanismIntegrationTest} to allow execution of @Async code blocks
+ * Test helper for {@link AsyncThreadPoolTaskExecutorConfigIntegrationTest} to allow execution of @Async code blocks
  */
 @Component
-class AsyncMechanismIntegrationTestHelper {
+class AsyncThreadPoolTaskExecutorConfigIntegrationTestHelper {
 
     @Async
     <T> CompletableFuture<T> executeAsync(ExceptionThrowingSupplier<T> supplier) {

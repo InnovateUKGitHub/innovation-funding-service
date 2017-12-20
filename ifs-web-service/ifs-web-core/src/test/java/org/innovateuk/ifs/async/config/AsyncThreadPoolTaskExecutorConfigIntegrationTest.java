@@ -17,13 +17,14 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Tests the important concepts of the Async mechanism
+ * Tests for the configuration of our {@link AsyncThreadPoolTaskExecutorConfig} configuration that allows us
+ * to specify our own {@link java.util.concurrent.ThreadPoolExecutor} for the execution of @Async code blocks
  */
 @TestPropertySource(properties = "ifs.web.ajp.connections.max.total=3")
-public class AsyncMechanismIntegrationTest extends BaseIntegrationTest {
+public class AsyncThreadPoolTaskExecutorConfigIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    private AsyncMechanismIntegrationTestHelper helper;
+    private AsyncThreadPoolTaskExecutorConfigIntegrationTestHelper helper;
 
     /**
      * This test asserts that Future code is executed with the Thread Pool configured in
