@@ -23,7 +23,7 @@ import static org.junit.Assert.assertEquals;
 public class AsyncMechanismIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    private AsyncFuturesGenerator asyncGenerator;
+    private AsyncMechanismIntegrationTestHelper helper;
 
     /**
      * This test asserts that Future code is executed with the Thread Pool configured in
@@ -34,7 +34,7 @@ public class AsyncMechanismIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testAsyncJobsAreExecutedByOurAsyncExecutorFactory() throws ExecutionException, InterruptedException {
 
-        CompletableFuture<String> future = asyncGenerator.async(() -> Thread.currentThread().getName());
+        CompletableFuture<String> future = helper.executeAsync(() -> Thread.currentThread().getName());
         String futureThreadName = future.get();
         assertThat(futureThreadName, startsWith("IFS-Async-Executor-"));
     }
@@ -45,9 +45,9 @@ public class AsyncMechanismIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testAsyncJobsAreExecutedByOurAsyncExecutorFactoryAndUseIncrementalConnections() throws ExecutionException, InterruptedException {
 
-        CompletableFuture<List<String>> future = asyncGenerator.async(() -> {
-            CompletableFuture<List<String>> future2 = asyncGenerator.async(() -> {
-                CompletableFuture<String> future3 = asyncGenerator.async(() -> Thread.currentThread().getName());
+        CompletableFuture<List<String>> future = helper.executeAsync(() -> {
+            CompletableFuture<List<String>> future2 = helper.executeAsync(() -> {
+                CompletableFuture<String> future3 = helper.executeAsync(() -> Thread.currentThread().getName());
                 String futureThreadName = future3.get();
                 return asList(Thread.currentThread().getName(), futureThreadName);
             });
