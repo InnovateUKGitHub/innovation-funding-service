@@ -551,6 +551,21 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around a 1-stage filter function, to remove boilerplate from production code
+     *
+     * @param array
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> simpleFilter(T[] array, Predicate<T> filterFn) {
+        if (array == null) {
+            return emptyList();
+        }
+        return simpleFilter(asList(array), filterFn);
+    }
+
+    /**
      * A simple wrapper around a NEGATED 1-stage filter function, to remove boilerplate from production code
      *
      * @param list

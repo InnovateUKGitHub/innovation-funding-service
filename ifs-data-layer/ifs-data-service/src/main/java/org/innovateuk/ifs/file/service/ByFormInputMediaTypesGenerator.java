@@ -34,12 +34,7 @@ public class ByFormInputMediaTypesGenerator implements MediaTypesGenerator<Long>
                 simpleMap(formInput.getAllowedFileTypes().split(","), FileTypeCategories::fromDisplayName) :
                 emptyList();
 
-        List<String> mediaTypesStrings = flattenLists(simpleMap(fileTypeCategories, this::getMediaTypesListFromCategory));
+        List<String> mediaTypesStrings = flattenLists(simpleMap(fileTypeCategories, FileTypeCategories::getMediaTypes));
         return byStringGenerator.apply(mediaTypesStrings);
-    }
-
-    private List<String> getMediaTypesListFromCategory(FileTypeCategories cat) {
-        String[] individualMediaTypes = cat.getMediaTypeString().split(",");
-        return simpleMap(individualMediaTypes, StringUtils::trim);
     }
 }
