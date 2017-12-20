@@ -27,7 +27,8 @@ public enum UserRoleType {
     PROJECT_MANAGER("project_manager", "Project Manager"),
     IFS_ADMINISTRATOR("ifs_administrator", "IFS Administrator"),
     SUPPORT("support", "IFS Support User"),
-    ASSESSOR_PANEL("assessor_panel", "Assessor Panel");
+    PANEL_ASSESSOR("panel_assessor", "Panel Assessor");
+
     private String name;
     private String displayName;
 

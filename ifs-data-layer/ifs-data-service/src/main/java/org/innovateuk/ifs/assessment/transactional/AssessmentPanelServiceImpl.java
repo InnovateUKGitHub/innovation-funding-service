@@ -34,7 +34,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.CREATED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR_PANEL;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -134,7 +134,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     }
 
     private ProcessRole createProcessRoleForAssessmentReview(AssessmentPanelParticipant assessor, Application application) {
-        final Role assessorRole = roleRepository.findOneByName(ASSESSOR_PANEL.getName());
+        final Role assessorRole = roleRepository.findOneByName(PANEL_ASSESSOR.getName());
         return processsRoleRepository.save(new ProcessRole(assessor.getUser(), application.getId(), assessorRole, null));
     }
 
