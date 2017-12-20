@@ -6,6 +6,8 @@ import org.innovateuk.ifs.async.util.CompletableFutureTuple1Handler;
 import org.innovateuk.ifs.async.util.CompletableFutureTuple2Handler;
 import org.innovateuk.ifs.async.util.CompletableFutureTuple3Handler;
 import org.innovateuk.ifs.async.util.CompletableFutureTupleNHandler;
+import org.innovateuk.ifs.util.ExceptionThrowingRunnable;
+import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
@@ -55,11 +57,11 @@ public class AsyncFuturesGenerator {
         this.self = self;
     }
 
-    public <T> CompletableFuture<T> async(Supplier<T> supplier) {
+    public <T> CompletableFuture<T> async(ExceptionThrowingSupplier<T> supplier) {
         return async(UUID.randomUUID().toString(), supplier);
     }
 
-    public <T> CompletableFuture<T> async(String futureName, Supplier<T> supplier) {
+    public <T> CompletableFuture<T> async(String futureName, ExceptionThrowingSupplier<T> supplier) {
 
         AsyncFutureDetails currentlyExecutingFuture = AsyncFuturesHolder.getCurrentlyExecutingFutureDetails() != null ?
                 AsyncFuturesHolder.getCurrentlyExecutingFutureDetails() :
@@ -71,6 +73,8 @@ public class AsyncFuturesGenerator {
 
             try {
                 return supplier.get();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             } finally {
                 AsyncFuturesHolder.clearCurrentFutureBeingProcessed();
             }
@@ -80,14 +84,18 @@ public class AsyncFuturesGenerator {
         return AsyncFuturesHolder.registerFuture(futureName, asyncBlock);
     }
 
-    public CompletableFuture<Void> async(Runnable runnable) {
+    public CompletableFuture<Void> async(ExceptionThrowingRunnable runnable) {
         return async(UUID.randomUUID().toString(), runnable);
     }
 
-    public CompletableFuture<Void> async(String futureName, Runnable runnable) {
+    public CompletableFuture<Void> async(String futureName, ExceptionThrowingRunnable runnable) {
 
-        Supplier<Void> dummySupplier = () -> {
-            runnable.run();
+        ExceptionThrowingSupplier<Void> dummySupplier = () -> {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             return null;
         };
 

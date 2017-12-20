@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.async.util;
 
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
+import org.innovateuk.ifs.util.ExceptionThrowingRunnable;
+import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 
 /**
  * A convenience subclass that provides delegate methods through to {@link AsyncFuturesGenerator}, for more concise writing of async
@@ -15,19 +16,19 @@ public abstract class AsyncAdaptor {
     @Autowired
     private AsyncFuturesGenerator asyncFuturesGenerator;
 
-    public <T> CompletableFuture<T> async(Supplier<T> supplier) {
+    public <T> CompletableFuture<T> async(ExceptionThrowingSupplier<T> supplier) {
         return asyncFuturesGenerator.async(supplier);
     }
 
-    public <T> CompletableFuture<T> async(String futureName, Supplier<T> supplier) {
+    public <T> CompletableFuture<T> async(String futureName, ExceptionThrowingSupplier<T> supplier) {
         return asyncFuturesGenerator.async(futureName, supplier);
     }
 
-    public CompletableFuture<Void> async(Runnable runnable) {
+    public CompletableFuture<Void> async(ExceptionThrowingRunnable runnable) {
         return asyncFuturesGenerator.async(runnable);
     }
 
-    public CompletableFuture<Void> async(String futureName, Runnable runnable) {
+    public CompletableFuture<Void> async(String futureName, ExceptionThrowingRunnable runnable) {
         return asyncFuturesGenerator.async(futureName, runnable);
     }
 
