@@ -11,7 +11,7 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.junit.Assert.assertArrayEquals;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
-public class MediaTypeMatchingFileUploadErrorTranslatorTest {
+public class ValidMediaTypesFileUploadErrorTranslatorTest {
 
     private Error pdfOnlyErrorFromDataLayer = fieldError(null, "application/madeup", UNSUPPORTED_MEDIA_TYPE.name(),
             singletonList(FileTypeCategories.PDF.getMediaTypeString()));
@@ -28,17 +28,17 @@ public class MediaTypeMatchingFileUploadErrorTranslatorTest {
 
     @Test
     public void testPdfOnlyMessage() {
-        assertSpecialisedMessageProduced(pdfOnlyErrorFromDataLayer, MediaTypeMatchingFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY);
+        assertSpecialisedMessageProduced(pdfOnlyErrorFromDataLayer, ValidMediaTypesFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY);
     }
 
     @Test
     public void testSpreadsheetOnlyMessage() {
-        assertSpecialisedMessageProduced(spreadsheetOnlyErrorFromDataLayer, MediaTypeMatchingFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY);
+        assertSpecialisedMessageProduced(spreadsheetOnlyErrorFromDataLayer, ValidMediaTypesFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY);
     }
 
     @Test
     public void testPdfAndSpreadsheetOnlyMessage() {
-        assertSpecialisedMessageProduced(pdfOrSpreadsheetOnlyErrorFromDataLayer, MediaTypeMatchingFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY);
+        assertSpecialisedMessageProduced(pdfOrSpreadsheetOnlyErrorFromDataLayer, ValidMediaTypesFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class MediaTypeMatchingFileUploadErrorTranslatorTest {
 
     private void assertSpecialisedMessageProduced(Error errorFromDataLayer, String expectedErrorKey) {
 
-        List<Error> errors = new MediaTypeMatchingFileUploadErrorTranslator().translateFileUploadErrors(e -> "formInput[123]", singletonList(errorFromDataLayer));
+        List<Error> errors = new ValidMediaTypesFileUploadErrorTranslator().translateFileUploadErrors(e -> "formInput[123]", singletonList(errorFromDataLayer));
 
         Error expectedSpecialisedError = fieldError("formInput[123]", "application/madeup", expectedErrorKey);
 

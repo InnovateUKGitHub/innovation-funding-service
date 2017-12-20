@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.exception.UnableToReadUploadedFile;
 import org.innovateuk.ifs.file.controller.FileUploadErrorTranslator;
-import org.innovateuk.ifs.file.controller.MediaTypeMatchingFileUploadErrorTranslator;
+import org.innovateuk.ifs.file.controller.ValidMediaTypesFileUploadErrorTranslator;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
@@ -42,7 +42,7 @@ public class ApplicationQuestionFileSaver extends AbstractApplicationSaver {
     @Autowired
     private FormInputRestService formInputRestService;
 
-    private FileUploadErrorTranslator fileUploadErrorTranslator = new MediaTypeMatchingFileUploadErrorTranslator();
+    private FileUploadErrorTranslator fileUploadErrorTranslator = new ValidMediaTypesFileUploadErrorTranslator();
 
     public ValidationMessages saveFileUploadQuestionsIfAny(List<QuestionResource> questions,
                                                            final Map<String, String[]> params,

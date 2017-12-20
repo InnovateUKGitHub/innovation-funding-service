@@ -17,10 +17,10 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 /**
- * A helper class to handle some of the intricacies of translating file upload errors from the data layer into
- * appropriate errors for the user
+ * An implementation of {@link FileUploadErrorTranslator} that can translate file upload errors from the data layer into
+ * specific web layer data messages depending on the media types that are valid to be uploaded.
  */
-public class MediaTypeMatchingFileUploadErrorTranslator implements FileUploadErrorTranslator {
+public class ValidMediaTypesFileUploadErrorTranslator implements FileUploadErrorTranslator {
 
     public static final String UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_PDF_ONLY";
     public static final String UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY = "UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY";

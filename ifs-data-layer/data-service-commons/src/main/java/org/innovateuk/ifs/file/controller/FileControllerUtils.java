@@ -68,7 +68,10 @@ public class FileControllerUtils {
 
     /**
      * A convenience method to process a file upload request given a standard pattern of header validation and processing,
-     * given a function that can perform the actual file upload
+     * given a function that can perform the actual file upload.
+     *
+     * The {@link MediaTypesContext} generic type refers to a context from which a valid set of Media Types can be established,
+     * as used by the supplied {@link FilesizeAndTypeFileValidator}.
      */
     public static <T, MediaTypesContext> RestResult<T> handleFileUpload(String contentType, String contentLength, String originalFilename,
                                                                         FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator, MediaTypesContext mediaTypeContext, long maxFileSizeBytes,

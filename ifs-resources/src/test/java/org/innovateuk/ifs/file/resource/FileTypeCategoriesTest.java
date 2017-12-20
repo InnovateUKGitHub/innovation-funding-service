@@ -20,7 +20,6 @@ public class FileTypeCategoriesTest {
 
         List<String> expectedTypes = asList("application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/vnd.oasis.opendocument.spreadsheet");
 
-        assertEquals(FileTypeCategories.SPREADSHEET.getMediaTypes(),
-                expectedTypes);
+        assertEquals(FileTypeCategories.SPREADSHEET.getMediaTypes(), expectedTypes);
     }
 }
