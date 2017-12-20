@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static java.time.ZoneId.systemDefault;
 import static java.time.ZonedDateTime.now;
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -493,12 +494,13 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
-        List<AssessorDashboardPendingInviteViewModel> expectedPendingInvitesModel = participantResources.stream().map(competitionParticipantResource ->
-                new AssessorDashboardPendingInviteViewModel(
-                        competitionParticipantResource.getInvite().getHash(),
-                        competitionParticipantResource.getCompetitionName(),
-                        competitionParticipantResource.getAssessorAcceptsDate().toLocalDate(),
-                        competitionParticipantResource.getAssessorDeadlineDate().toLocalDate())).collect(Collectors.toList());
+        List<AssessorDashboardAssessmentPanelAcceptedViewModel> expectedPanelAcceptedModel =
+                asList(new AssessorDashboardAssessmentPanelAcceptedViewModel(
+                        assessmentPanelParticipantResource.getCompetitionName(),
+                        assessmentPanelParticipantResource.getCompetitionId(),
+                        assessmentPanelParticipantResource.getInvite().getPanelDate().toLocalDate(),
+                        assessmentPanelParticipantResource.getInvite().getPanelDaysLeft(),
+                        assessmentPanelParticipantResource.getAwaitingApplications()));
 
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
@@ -506,8 +508,8 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         assertFalse(model.getAssessmentPanelAccepted().isEmpty());
         assertTrue(model.getActiveCompetitions().isEmpty());
         assertEquals(expectedAssessorProfileStatusViewModel, model.getProfileStatus());
+        assertEquals(expectedPanelAcceptedModel, model.getAssessmentPanelAccepted());
     }
-
 
     @Test
     public void getTermsAndConditions() throws Exception {
