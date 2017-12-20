@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 /**
- * Spring Configuration that is able to supply a number of FileValidators for the use of various Controllers in order
- * to ensure that files being uploaded for particular contexts (e.g. a file upload for an Application Form question)
- * are valid for those contexts
+ * Spring Configuration that is able to supply a number of {@link FilesizeAndTypeFileValidator} for the use of various
+ * Controllers in order to ensure that files being uploaded for particular contexts (e.g. a file upload for an
+ * Application Form question) are valid for those contexts
  */
 @Configuration
 public class FileValidationConfig {

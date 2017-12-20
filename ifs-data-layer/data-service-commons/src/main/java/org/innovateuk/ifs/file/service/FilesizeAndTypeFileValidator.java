@@ -17,18 +17,21 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.ParsingFunctions.validLongResult;
 
 /**
- * A basic implementation of FilesizeAndTypeFileValidator that, given a set of HTTP headers about the file being uploaded will be able to
- * validate their format and additionally ensure that the filesize and media type of the file conforms to a set of restrictions
+ * Given a set of HTTP headers about the file being uploaded and a set of size and filetype limitations, this will be able to
+ * ensure that the filesize and media type of the file conforms to the set of limitations
+ *
+ * @param <MediaTypeContext> - a generic type from which a valid set of media type restrictions can be established.  Examples are
+ *                             a list of MediaType Strings, a FormInput (or the id thereof), etc
  */
-public class FilesizeAndTypeFileValidator<T> {
+public class FilesizeAndTypeFileValidator<MediaTypeContext> {
 
-    private MediaTypesGenerator<T> validMediaTypesGenerator;
+    private MediaTypesGenerator<MediaTypeContext> validMediaTypesGenerator;
 
-    public FilesizeAndTypeFileValidator(MediaTypesGenerator<T> validMediaTypesGenerator) {
+    public FilesizeAndTypeFileValidator(MediaTypesGenerator<MediaTypeContext> validMediaTypesGenerator) {
         this.validMediaTypesGenerator = validMediaTypesGenerator;
     }
 
-    public ServiceResult<FileHeaderAttributes> validateFileHeaders(String contentTypeHeaderValue, String contentLengthValue, String originalFilenameValue, T validMediaTypesContext, long maxFilesizeBytes) {
+    public ServiceResult<FileHeaderAttributes> validateFileHeaders(String contentTypeHeaderValue, String contentLengthValue, String originalFilenameValue, MediaTypeContext validMediaTypesContext, long maxFilesizeBytes) {
 
         ServiceResult<Long> contentLengthValidation = validContentLengthHeader(contentLengthValue, maxFilesizeBytes);
         ServiceResult<MediaType> contentTypeValidation = validContentTypeHeader(contentTypeHeaderValue, validMediaTypesContext);
@@ -59,7 +62,7 @@ public class FilesizeAndTypeFileValidator<T> {
         return serviceSuccess(length);
     }
 
-    private ServiceResult<MediaType> validContentTypeHeader(String contentTypeHeader, T validMediaTypesContext) {
+    private ServiceResult<MediaType> validContentTypeHeader(String contentTypeHeader, MediaTypeContext validMediaTypesContext) {
 
         List<MediaType> validMediaTypes = validMediaTypesGenerator.apply(validMediaTypesContext);
 

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.file.resource.FileTypeCategories;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
@@ -15,12 +16,15 @@ import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * Generates a set of MediaTypes based on a FormInput (and its "allowedFileTypes" field)
+ * Generates a set of MediaTypes based on a {@link org.innovateuk.ifs.form.domain.FormInput} id (and its
+ * "allowedFileTypes" field)
  */
 @Component
 public class ByFormInputMediaTypesGenerator implements MediaTypesGenerator<Long> {
 
-    private ByMediaTypeStringsMediaTypesGenerator byStringGenerator = new ByMediaTypeStringsMediaTypesGenerator();
+    @Autowired
+    @Qualifier("mediaTypeStringsFileValidator")
+    private ByMediaTypeStringsMediaTypesGenerator byStringGenerator;
 
     @Autowired
     private FormInputService formInputService;

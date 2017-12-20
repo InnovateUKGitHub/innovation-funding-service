@@ -5,6 +5,7 @@ import org.innovateuk.ifs.file.resource.FileTypeCategories;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.springframework.http.MediaType;
 
 import java.util.List;
@@ -23,6 +24,10 @@ public class ByFormInputMediaTypesGeneratorTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
     private ByFormInputMediaTypesGenerator generator;
+
+    @Spy
+    @SuppressWarnings("unused")
+    private ByMediaTypeStringsMediaTypesGenerator internalGenerator = new ByMediaTypeStringsMediaTypesGenerator();
 
     @Test
     public void testPdf() {
