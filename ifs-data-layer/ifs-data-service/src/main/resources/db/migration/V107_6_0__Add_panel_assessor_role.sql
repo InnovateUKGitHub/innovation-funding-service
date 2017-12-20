@@ -1,1 +1,1 @@
-INSERT INTO role (name) VALUES ('assessor_panel');
+INSERT INTO role (name) VALUES ('panel_assessor');

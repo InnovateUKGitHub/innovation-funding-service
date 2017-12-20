@@ -278,7 +278,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .with(id(null))
                 .withUser(user)
                 .withApplication(application)
-                .withRole(UserRoleType.ASSESSOR_PANEL)
+                .withRole(UserRoleType.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 
@@ -348,7 +348,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .with(id(null))
                 .withUser(user)
                 .withApplication(application)
-                .withRole(UserRoleType.ASSESSOR_PANEL)
+                .withRole(UserRoleType.PANEL_ASSESSOR)
                 .build();
         processRoleRepository.save(processRole);
 
