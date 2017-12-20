@@ -22,7 +22,8 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               IFS-1881 Project Setup internal project dashboard navigation
 ...
 ...               IFS-2015 Project Setup task management: Bank details
-
+...
+...               IFS-2398 - 2164 Add count of outstanding bank details checks to the task management link
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -312,11 +313,11 @@ Project Finance user can export bank details
     [Teardown]  remove the file from the operating system  bank_details.csv
 
 Project Finance approves Bank Details through the Bank Details list
-    [Documentation]    IFS-2015
+    [Documentation]    IFS-2015 IFS-2398/2164
     [Tags]
     Given log in as a different user    &{internal_finance_credentials}
     And the user navigates to the page    ${server}/management/dashboard/project-setup
-    And the user clicks the button/link  jQuery=a:contains("Bank details")
+    And the user clicks the button/link  jQuery=a:contains("Review bank details")
     When the user clicks the button/link    jQuery=a:contains("Dreambit")
     And the user clicks the button/link    jQuery=button:contains("Approve bank account details")
     And the user clicks the button/link    jQuery=button:contains("Approve account")
@@ -367,5 +368,5 @@ the user opens the excel and checks the content
 The project finance user confirms the approved Bank Details
     the user navigates to the page    ${server}/project-setup-management/competitions/status/pending-bank-details-approvals
     the user should not see the element    jQuery=a:contains("Dreambit")
-    the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_APPLICATION_PROJECT}/status/all
+    the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/all
     the user should see the element    jQuery=tr:contains("Complete") td:nth-child(4) a:contains("Complete")

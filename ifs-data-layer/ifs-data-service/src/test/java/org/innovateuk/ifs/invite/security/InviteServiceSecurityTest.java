@@ -76,17 +76,6 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
     }
 
     @Test
-    public void testFindOne() {
-        final long inviteId = 1L;
-        assertAccessDenied(
-                () -> classUnderTest.findOne(inviteId),
-                () -> {
-                    verify(invitePermissionRules).collaboratorCanReadInviteForTheirApplicationForTheirOrganisation(any(ApplicationInvite.class), any(UserResource.class));
-                    verify(invitePermissionRules).leadApplicantReadInviteToTheApplication(any(ApplicationInvite.class), any(UserResource.class));
-                });
-    }
-
-    @Test
     public void testGetInvitesByApplication() {
         long applicationId = 1L;
         final ServiceResult<List<InviteOrganisationResource>> results = classUnderTest.getInvitesByApplication(applicationId);
@@ -120,11 +109,6 @@ public class InviteServiceSecurityTest extends BaseServiceSecurityTest<InviteSer
         @Override
         public ServiceResult<Void> inviteCollaboratorToApplication(String baseUrl, ApplicationInvite invite) {
             return null;
-        }
-
-        @Override
-        public ServiceResult<ApplicationInvite> findOne(Long id) {
-            return serviceSuccess(newApplicationInvite().build());
         }
 
         @Override

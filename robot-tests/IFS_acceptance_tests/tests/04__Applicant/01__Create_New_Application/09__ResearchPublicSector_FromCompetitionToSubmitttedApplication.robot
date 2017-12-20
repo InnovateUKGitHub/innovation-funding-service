@@ -65,7 +65,7 @@ Applicant Applies to Public content leading Competition
     Then the user fills in the Application details        ${publicLeadApp}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
     And the user marks every section but one as complete  ${publicLeadApp}
     When the user navigates to Your-finances page         ${publicLeadApp}
-    Then the user marks the finances as complete          ${publicLeadApp}  Calculate  52,214
+    Then the user marks the finances as complete          ${publicLeadApp}  Calculate  52,214  no
     And collaborating is required to submit the application if Research participation is not 100pc  ${openCompetitionPublicSector_name}  ${publicLeadApp}  becky.mason@gmail.com
 
 Project Finance is able to see the Overheads costs file
@@ -117,7 +117,7 @@ the collaborator accepts and fills in his part in the application
     the user reads his email and clicks the link  ${collaborator}  Invitation to collaborate in ${competition}  You are invited by  2
     the user is able to confirm the invite        ${collaborator}  ${short_password}
     the user navigates to Your-finances page      ${application}
-    the user marks the finances as complete       ${application}  Calculate  52,214
+    the user marks the finances as complete       ${application}  Calculate  52,214  no
 
 the lead is able to submit the application
     [Arguments]  ${user}  ${application}
