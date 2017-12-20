@@ -5,8 +5,6 @@ import org.innovateuk.ifs.file.resource.FileTypeCategories;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
@@ -23,10 +21,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class ByFormInputMediaTypesGenerator implements MediaTypesGenerator<Long> {
 
-    @Autowired
-    @Qualifier("mediaTypeStringsFileValidator")
-    @Lazy
-    private ByMediaTypeStringsMediaTypesGenerator byStringGenerator;
+    private ByMediaTypeStringsMediaTypesGenerator byStringGenerator = new ByMediaTypeStringsMediaTypesGenerator();
 
     @Autowired
     private FormInputService formInputService;
