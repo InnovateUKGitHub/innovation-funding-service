@@ -17,10 +17,20 @@ public interface BankDetailsRepository extends PagingAndSortingRepository<BankDe
             + " AND bd.project.id = p.id"
             + " AND bd.manualApproval = FALSE";
 
+    //TODO - This query will need to be modified once IFS-468 is completed. IFS-468 is about having a workflow in place for the Bank Details process.
+    String COUNT_PENDING_BANK_DETAILS_APPROVALS_QUERY = " SELECT COUNT(DISTINCT bd.organisation.id)"
+            + " FROM Competition c, Project p, BankDetails bd"
+            + " WHERE p.application.competition.id = c.id"
+            + " AND bd.project.id = p.id"
+            + " AND bd.manualApproval = FALSE";
+
     BankDetails findByProjectIdAndOrganisationId(Long projectId, Long organisationId);
     List<BankDetails> findByProjectId(Long projectId);
     List<BankDetails> findByProjectApplicationCompetitionId(Long competitionId);
 
     @Query(PENDING_BANK_DETAILS_APPROVALS_QUERY)
     List<BankDetailsReviewResource> getPendingBankDetailsApprovals();
+
+    @Query(COUNT_PENDING_BANK_DETAILS_APPROVALS_QUERY)
+    Long countPendingBankDetailsApprovals();
 }
