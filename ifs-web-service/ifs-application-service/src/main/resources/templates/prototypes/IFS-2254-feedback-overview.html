@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="app-summary">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${(param.status != null ? '/prototypes/IFS-2254-apps-for-interview?status=' + param.status[0]:'/prototypes/IFS-2254-apps-for-interview')})" />
+
+    <!-- HARDCODED PROTOTYPE HTML -->
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${(param.status != null ? param.status[0] : 'noStatus')}, ${'Feedback overview'})" />
+
+    <!-- <div class="success-alert">
+        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
+        <p>Scores and written feedback from each assessor can be found below.</p>
+    </div>
+
+    <h2 class="heading-medium no-margin-bottom">Application details</h2>
+    <p class="form-hint">Assessors do not provide scores on these sections of the application.</p> -->
+
+    <div class="grid-row">
+        <div class="column-half">
+            <h3 class="heading-small">Project title</h3>
+            <p>Magic material</p>
+
+            <h3 class="heading-small">Application number</h3>
+            <p>112</p>
+
+            <h3 class="heading-small">Lead organisation</h3>
+            <p>Empire Ltd</p>
+
+            <h3 class="heading-small">Partners</h3>
+            <ul class="list list-bullet">
+
+                <li>Ludlow</li>
+                <li>EGGS</li>
+            </ul>
+        </div>
+
+        <div class="column-half">
+            <h3 class="heading-small">Project timescales</h3>
+            <p>Project start date: <br>1 March 2016</p>
+            <p>Duration: <br>36 months</p>
+
+            <h3 class="heading-small extra-margin">Total project cost</h3>
+            <p>&pound;58,793</p>
+        </div>
+    </div>
+
+    <th:block th:if="${param.status == null or param.status != null and param.status[0] == 'noFeedback'}">
+        <div class="message-alert">
+            <h2 class="heading-small">The lead applicant has responded to feedback</h2>
+            <p>Download and review all attachments before the interview panel</p>
+        </div>
+    </th:block>
+
+    <th:block th:if="${param.status != null and param.status[0] == 'noResponse'}">
+        <div class="message-alert">
+            <h2 class="heading-small">No reponse to feedback has been provided by lead applicant</h2>
+        </div>
+    </th:block>
+
+    <th:block th:if="${param.status == null}">
+
+        <h2 class="heading-medium">Attachments</h2>
+
+        <div class="form-group download">
+            <h3 class="heading-small no-margin">Applicant feedback repsonse</h3>
+            <a target="_blank" href="#">feedback-document.pdf, 8 KB (opens in a new window)</a>
+        </div>
+
+        <div class="form-group download">
+            <h3 class="heading-small no-margin">Innovation Lead feedback</h3>
+            <a target="_blank" href="#">innovation-lead-feedback.pdf, 6 KB (opens in a new window)</a>
+        </div>
+
+        <div class="form-group download">
+            <h3 class="heading-small no-margin">Panel assessment feedback</h3>
+            <a target="_blank" href="#">panel-assessment-feedback.pdf, 7 KB (opens in a new window)</a>
+        </div>
+
+    </th:block>
+    <!-- <ul class="list-overview extra-margin">
+
+        <li class="section-status">
+            <div class="grid-row">
+                <div class="column-two-thirds">
+                    <h3 class="heading-small"><a href="/prototypes/IFS-2437-project-summary">Project summary</a></h3>
+                </div>
+                <div class="column-third">
+                    <p class="form-hint no-margin">No feedback provided</p>
+                </div>
+            </div>
+        </li>
+
+        <li class="section-status">
+            <div class="grid-row">
+                <div class="column-two-thirds">
+                    <h3 class="heading-small"><a href="/prototypes/IFS-2437-public-description">Public description</a></h3>
+                </div>
+                <div class="column-third">
+                    <p class="form-hint no-margin">No feedback provided</p>
+                </div>
+            </div>
+        </li>
+
+        <li class="section-status">
+            <div class="grid-row">
+                <div class="column-two-thirds">
+                    <h3 class="heading-small"><a href="/prototypes/IFS-2437-scope">Scope</a></h3>
+                </div>
+                <div class="column-third">
+                    <p class="form-hint no-margin">No feedback provided</p>
+                </div>
+            </div>
+        </li>
+    </ul> -->
+
+    <section>
+        <h2 class="heading-medium no-margin-bottom">Assessor feedback</h2>
+        <p class="form-hint">Each question has been assessed by several independent assessors. They have given a score and feedback for each.</p>
+
+        <ul class="list-overview">
+            <li class="section-status">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a href="#">1. Business opportunity</a>
+                        </h3>
+                    </div>
+                    <div class="column-third">
+                        <p class="no-margin">Average score 5 / 10</p>
+                    </div>
+                </div>
+            </li>
+            <li class="section-status">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a href="#">2. Potential market</a>
+                        </h3>
+                    </div>
+                    <div class="column-third">
+                        <p class="no-margin">Average score 5 / 10</p>
+                    </div>
+                </div>
+            </li>
+            <li class="section-status">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a href="#">3. Project exploitation</a>
+                        </h3>
+                    </div>
+                    <div class="column-third">
+                        <p class="no-margin">Average score 5 / 10</p>
+                    </div>
+                </div>
+            </li>
+            <li class="section-status">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a href="#">4. Economic benefit</a>
+                        </h3>
+                    </div>
+                    <div class="column-third">
+                        <p class="no-margin">Average score 5 / 10</p>
+                    </div>
+                </div>
+            </li>
+            <li class="section-status">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a href="#">5. Technical approach</a>
+                        </h3>
+                    </div>
+                    <div class="column-third">
+                        <p class="no-margin">Average score 5 / 10</p>
+                    </div>
+                </div>
+            </li>
+            <li class="section-status">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a href="#">6. Innovation</a>
+                        </h3>
+                    </div>
+                    <div class="column-third">
+                        <p class="no-margin">Average score 5 / 10</p>
+                    </div>
+                </div>
+            </li>
+            <li class="section-status">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a href="#">7. Risks</a>
+                        </h3>
+                    </div>
+                    <div>
+                        <div class="column-third">
+                            <p class="no-margin">Average score 5 / 10</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="section-status">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a href="#">8. Project team</a>
+                        </h3>
+                    </div>
+                    <div class="column-third">
+                        <p class="no-margin">Average score 5 / 10</p>
+                    </div>
+                </div>
+            </li>
+            <li class="section-status">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a href="#">9. Funding</a>
+                        </h3>
+                    </div>
+                    <div class="column-third">
+                        <p class="no-margin">Average score 5 / 10</p>
+                    </div>
+                </div>
+            </li>
+            <li class="section-status">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a href="#">10. Adding value</a>
+                        </h3>
+                    </div>
+                    <div class="column-third">
+                        <p class="no-margin">Average score 5 / 10</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+        <div class="list-overview">
+            <div class="grid-row extra-margin">
+                <div class="column-two-thirds">
+                    &nbsp;
+                </div>
+                <div class="column-third">
+                    <p class="no-margin">Average overall: <strong class="heading-small">50%</strong></p>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+    <section>
+        <h2 class="heading-medium">Finance</h2>
+        <div class="collapsible">
+            <h3>Finances summary</h3>
+            <div class="collapsible-content"><div class="question">
+                <div class="form-group finance-summary" style="overflow:auto;">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>
+                            </th><th scope="col" class="numeric">Total costs</th>
+                            <th scope="col" class="numeric width-small">% Grant</th>
+                            <th scope="col" class="numeric width-small-medium">Funding sought (£)</th>
+                            <th scope="col" class="numeric width-medium">Other public sector funding (£)</th>
+                            <th scope="col" class="numeric width-small-medium">Contribution to project (£)</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <th scope="row">
+                                <div>
+                                    <div>Empire Ltd</div>
+                                    <div>
+                                        <small>Lead organisation</small>
+                                    </div>
+                                    <a href="/application/112/form/section/127/" style="font-weight: normal;">
+                                        View finances
+                                    </a>
+                                </div>
+                            </th>
+                            <td class="numeric">
+                                <strong>£200,903</strong>
+                            </td>
+                            <td class="numeric">30%</td>
+                            <td class="numeric">57,803</td>
+                            <td class="numeric">2,468</td>
+                            <td class="numeric">140,632</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <div>
+                                    <div>Ludlow</div>
+                                    <div>
+                                        <small>Partner</small>
+                                    </div>
+                                </div>
+                            </th>
+
+                            <td class="numeric">
+                                <strong>£200,903</strong>
+                            </td>
+                            <td class="numeric">0%</td>
+                            <td class="numeric">0</td>
+                            <td class="numeric">2,468</td>
+                            <td class="numeric">198,435</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">
+                                <div>
+                                    <div>EGGS</div>
+                                    <div>
+                                        <small>Partner</small>
+                                    </div>
+                                </div>
+                            </th>
+                            <td class="numeric">
+                                <strong>£990</strong>
+                            </td>
+                            <td class="numeric">100%</td>
+                            <td class="numeric">990</td>
+                            <td class="numeric">0</td>
+                            <td class="numeric">0</td>
+                        </tr>
+
+                        <tr>
+                            <th scope="row">Total</th>
+                            <td class="numeric">
+                                <strong>£402,797</strong>
+                            </td>
+                            <td></td>
+                            <td class="numeric">58,793</td>
+                            <td class="numeric">4,936</td>
+                            <td class="numeric">339,068</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <h2 class="heading-medium">Funding breakdown</h2>
+
+                <div class="project-cost-breakdown">
+                    <div style="overflow: auto;">
+
+                        <table>
+                            <thead>
+                            <tr>
+                                <td></td>
+                                <th scope="col" class="numeric">Total</th>
+                                <th scope="col" class="numeric">
+                                    Labour (£)
+                                </th>
+                                <th scope="col" class="numeric">
+                                    Overhead costs (£)
+                                </th>
+                                <th scope="col" class="numeric">
+                                    Materials (£)
+                                </th>
+                                <th scope="col" class="numeric  width-small">
+                                    Capital usage (£)
+                                </th>
+                                <th scope="col" class="numeric  width-small">
+                                    Subcontracting costs (£)
+                                </th>
+                                <th scope="col" class="numeric  width-small">
+                                    Travel and subsistence (£)
+                                </th>
+                                <th scope="col" class="numeric  width-small">
+                                    Other costs (£)
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+
+                                <th scope="row">
+                                    <div>Empire Ltd</div>
+                                    <div><small>Lead organisation</small></div>
+                                </th>
+                                <td class="numeric bold">
+                                    <span>£200,903</span>
+                                </td>
+                                <td class="numeric">3,081</td>
+                                <td class="numeric">0</td>
+                                <td class="numeric">100,200</td>
+                                <td class="numeric">552</td>
+                                <td class="numeric">90,000</td>
+                                <td class="numeric">5,970</td>
+                                <td class="numeric">1,100</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <div>Ludlow</div>
+
+                                    <div><small>Partner</small></div>
+                                </th>
+                                <td class="numeric bold">
+                                    <span>£200,903</span>
+                                </td>
+                                <td class="numeric">3,081</td>
+                                <td class="numeric">0</td>
+                                <td class="numeric">100,200</td>
+                                <td class="numeric">552</td>
+                                <td class="numeric">90,000</td>
+                                <td class="numeric">5,970</td>
+                                <td class="numeric">1,100</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">
+                                    <div>EGGS</div>
+
+                                    <div><small>Partner</small></div>
+                                </th>
+                                <td class="numeric bold">
+                                    <span>£990</span>
+                                </td>
+                                <td class="numeric">286</td>
+                                <td class="numeric">154</td>
+                                <td class="numeric">66</td>
+                                <td class="numeric">0</td>
+                                <td class="numeric">0</td>
+                                <td class="numeric">44</td>
+                                <td class="numeric">440</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Total</th>
+                                <td class="numeric bold">
+                                    <span>£402,797</span>
+                                </td>
+
+                                <td class="numeric">6,449</td>
+
+                                <td class="numeric">154</td>
+
+                                <td class="numeric">200,466</td>
+
+                                <td class="numeric">1,104</td>
+
+                                <td class="numeric">180,000</td>
+
+                                <td class="numeric">11,984</td>
+
+                                <td class="numeric">2,640</td>
+
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+<script type="text/javascript">
+
+	jQuery('input#agree-terms').on('click',function(e){
+		//e.preventDefault();
+		if ( jQuery(this).is(':checked') ) {
+			jQuery("#confirm-submit").removeClass('disabled');
+		}else{
+			jQuery("#confirm-submit").addClass('disabled');
+		}
+
+	});
+
+</script>
+</body>
+</html>
