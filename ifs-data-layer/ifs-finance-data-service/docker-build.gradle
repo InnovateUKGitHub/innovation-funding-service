@@ -3,3 +3,13 @@ ext.ifsWebBaseURL="https://ifs.local-dev"
 
 ext.serverPort=8080
 ext.activeProfile="local"
+
+project.ext['flyway.url']='jdbc:mysql://ifs-database:3306?characterEncoding=utf8'
+project.ext['flyway.schemas']='ifs_finance'
+project.ext['flyway.user']='root'
+project.ext['flyway.password']="password"
+project.ext['flyway.placeholderPrefix']='_${'
+project.ext['flyway.placeholderSuffix']='}'
+
+def flywayPatchesPath = "filesystem:" + project.buildDir.path + "/resources/main/db"
+project.ext['flyway.locations']=flywayPatchesPath + "/migration"

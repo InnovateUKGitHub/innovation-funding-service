@@ -2,7 +2,7 @@ def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
 
 apply plugin: 'base'
-
+apply plugin: 'org.flywaydb.flyway'
 
 configurations {
     providedRuntime
@@ -39,4 +39,19 @@ jar {
 
 configurations {
     mapstruct
+}
+
+dependencies {
+    compile "mysql:mysql-connector-java"
+    compile "org.flywaydb:flyway-core:5.0.2"
+}
+
+flywayMigrate.dependsOn processResources
+flywayClean.dependsOn processResources
+
+task resetDB() {
+    flywayMigrate.mustRunAfter flywayClean
+
+    dependsOn flywayClean
+    dependsOn flywayMigrate
 }

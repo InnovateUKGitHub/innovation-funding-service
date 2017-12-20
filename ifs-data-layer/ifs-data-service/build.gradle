@@ -228,26 +228,19 @@ task generateMainMapperClasses(type: JavaCompile) {
     }
 }
 
+task resetDB() {
+    flywayMigrate.mustRunAfter flywayClean
+
+    dependsOn flywayClean
+    dependsOn flywayMigrate
+}
+
 
 compileJava.dependsOn generateMainMapperClasses
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
 
 
-task initDB() {
-
-    flywayClean.mustRunAfter startMySql
-    createTestSchema.mustRunAfter startMySql
-    createSchema.mustRunAfter startMySql
-    flywayMigrate.mustRunAfter flywayClean
-
-    dependsOn startMySql
-    dependsOn createTestSchema
-    dependsOn createSchema
-    dependsOn flywayClean
-    dependsOn flywayMigrate
-
-}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '3.0'

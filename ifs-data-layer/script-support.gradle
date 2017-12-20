@@ -1,0 +1,14 @@
+task startMySql(type:Exec) {
+    workingDir '../'
+    println "*************"
+    println workingDir
+    commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'docker-compose-dev.yml', 'up', '-d', 'mysql'
+    doLast {
+        exec {
+            //wait for sql container to start.
+            //TODO need better method of waiting for startup.
+            workingDir '.'
+            commandLine 'sleep', '10'
+        }
+    }
+}

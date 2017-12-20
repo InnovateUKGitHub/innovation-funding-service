@@ -2,6 +2,8 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
+apply from: "script-support.gradle"
+
 // This is necessary because the java plugin is also applied to
 // the ifs-data-layer project, which does _not_ build a jar.
 bootRepackage.enabled = false
@@ -13,6 +15,7 @@ subprojects {
 
     // data-service-commons is not a docker project.
     if (it.name != 'data-service-commons') {
+
 
         task getNewRelicAgent {
             if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() || 
@@ -142,7 +145,14 @@ subprojects {
         }
     }
 
+
 }
+
+task initDB {
+    dependsOn startMySql
+}
+subprojects { pr -> initDB.dependsOn(project.path + ":resetDB") }
+
 
 ext {
     snippetsDir = file('build/generated-snippets')
