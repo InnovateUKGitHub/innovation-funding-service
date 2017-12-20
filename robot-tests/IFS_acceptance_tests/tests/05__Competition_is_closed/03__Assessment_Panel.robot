@@ -211,16 +211,6 @@ Manage Assessment Panel Assign and remove button functionality
     Then the user should see the element    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
     And the user should see the element     jQuery=h2:contains("Assigned applications (0)")
 
-Assign applications to panel
-    [Documentation]  IFS-1125
-    [Tags]
-    When the user clicks the button/link    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
-    And the user clicks the button/link      jQuery=td:contains("Computer vision and machine learning for transport networks") ~ td:contains("Assign")
-    Then the user should see the element    jQuery=h2:contains("Assigned applications (2)")
-    When the user clicks the button/link    link=Manage assessment panel
-    And the user clicks the button/link     jQuery=button:contains("Confirm actions")
-    Then the user should see the element    jQuery=span:contains("2") ~ small:contains("Applications assigned to panel")
-    And the user reads his email
 
 Filter by application number
     [Documentation]  IFS-2049
@@ -229,6 +219,17 @@ Filter by application number
     When the user clicks the button/link           jQuery=.button:contains("Filter")
     Then the user should see the element           jQuery=td:contains("Neural networks to optimise freight train routing")
     #TODO IFS-2069 need to add more checks once the webtest data is ready.
+
+Assign applications to panel
+    [Documentation]  IFS-1125
+    [Tags]
+    When the user clicks the button/link    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    And the user clicks the button/link     jQuery=td:contains("Computer vision and machine learning for transport networks") ~ td:contains("Assign")
+    Then the user should see the element    jQuery=h2:contains("Assigned applications (2)")
+    When the user clicks the button/link    link=Manage assessment panel
+    And the user clicks the button/link     jQuery=button:contains("Confirm actions")
+    And the user reads his email            ${assessor_ben}  Applications ready for review  2
+
 
 *** Keywords ***
 
