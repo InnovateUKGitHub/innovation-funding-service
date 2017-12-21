@@ -1,0 +1,16 @@
+<#import "layout/default.html" as layout>
+<@layout.defaultPlainText>
+Dear ${name},
+
+You have been allocated applications to review within the competition ${competitionName}.
+Please sign into the Innovation Funding Service to review these applications before the panel
+assessment: ${ifsUrl}
+
+If you have any questions around assessments, please contact the Portfolio Managers.
+
+Assessment panel date: ${panelDate}
+
+Yours sincerely,
+
+<@layout.senderPlainText />
+</@layout.defaultPlainText>t>

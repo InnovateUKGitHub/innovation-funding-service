@@ -3,17 +3,17 @@ package org.innovateuk.ifs.assessment.panel.domain;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelApplicationInviteState;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.Process;
 
 import javax.persistence.*;
 
 /**
- * An invitation for an assessor to an assessment panel.
+ * An invitation for an assessor to review an application on an assessment panel.
  */
 @Entity
-public class AssessmentPanelApplicationInvite extends Process<ProcessRole, Application, AssessmentPanelApplicationInviteState> {
+public class AssessmentReview extends Process<ProcessRole, Application, AssessmentReviewState> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "participant_id", referencedColumnName = "id")
@@ -24,22 +24,22 @@ public class AssessmentPanelApplicationInvite extends Process<ProcessRole, Appli
     private Application target;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
-    private AssessmentPanelApplicationInviteRejectOutcome rejection;
+    private AssessmentReviewRejectOutcome rejection;
 
-    public AssessmentPanelApplicationInvite() {
+    public AssessmentReview() {
         super();
     }
 
-    public AssessmentPanelApplicationInvite(Application application, ProcessRole processRole) {
+    public AssessmentReview(Application application, ProcessRole processRole) {
         this.participant = processRole;
         this.target = application;
     }
 
-    public AssessmentPanelApplicationInviteRejectOutcome getRejection() {
+    public AssessmentReviewRejectOutcome getRejection() {
         return rejection;
     }
 
-    public void setRejection(AssessmentPanelApplicationInviteRejectOutcome rejection) {
+    public void setRejection(AssessmentReviewRejectOutcome rejection) {
         if (rejection != null) {
             rejection.setAssessmentPanelApplicationInvite(this);
         }
@@ -66,8 +66,8 @@ public class AssessmentPanelApplicationInvite extends Process<ProcessRole, Appli
         this.target = target;
     }
 
-    public AssessmentPanelApplicationInviteState getActivityState() {
-        return AssessmentPanelApplicationInviteState.fromState(activityState.getState());
+    public AssessmentReviewState getActivityState() {
+        return AssessmentReviewState.fromState(activityState.getState());
     }
 
     @Override
@@ -80,7 +80,7 @@ public class AssessmentPanelApplicationInvite extends Process<ProcessRole, Appli
             return false;
         }
 
-        AssessmentPanelApplicationInvite that = (AssessmentPanelApplicationInvite) o;
+        AssessmentReview that = (AssessmentReview) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

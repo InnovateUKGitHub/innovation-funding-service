@@ -7,14 +7,14 @@ import javax.persistence.Entity;
 
 
 /**
- * Process outcome for the {@code }AssessmentPanelApplicationInvite}s {@code REJECT} event.
+ * Process outcome for the {@code }AssessmentReview}s {@code REJECT} event.
  */
 @Entity
 @DiscriminatorValue(value = "assessment-panel-application-invite-reject")
-public class AssessmentPanelApplicationInviteRejectOutcome extends ProcessOutcome<AssessmentPanelApplicationInvite> {
+public class AssessmentReviewRejectOutcome extends ProcessOutcome<AssessmentReview> {
 
-    public void setAssessmentPanelApplicationInvite(AssessmentPanelApplicationInvite assessmentPanelApplicationInvite) {
-        setProcess(assessmentPanelApplicationInvite);
+    public void setAssessmentPanelApplicationInvite(AssessmentReview assessmentReview) {
+        setProcess(assessmentReview);
     }
 
     public String getRejectionComment() {
