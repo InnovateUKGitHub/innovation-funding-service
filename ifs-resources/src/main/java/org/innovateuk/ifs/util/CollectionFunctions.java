@@ -593,7 +593,8 @@ public final class CollectionFunctions {
     }
 
     /**
-     * A simple wrapper around a 1-stage find-first function, to remove boilerplate from production code
+     * A simple wrapper around a 1-stage find-first function that takes an array rather than a Collection, to remove
+     * boilerplate from production code
      *
      * @param array
      * @param filterFn

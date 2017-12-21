@@ -31,11 +31,18 @@ public class ByFormInputMediaTypesGenerator implements MediaTypesGenerator<Long>
 
         FormInputResource formInput = formInputService.findFormInput(formInputId).getSuccessObjectOrThrowException();
 
-        List<FileTypeCategories> fileTypeCategories = !StringUtils.isEmpty(formInput.getAllowedFileTypes()) ?
-                simpleMap(formInput.getAllowedFileTypes().split(","), FileTypeCategories::fromDisplayName) :
-                emptyList();
+        List<FileTypeCategories> fileTypeCategories = getAllowableFileTypeCategoriesFromFormInput(formInput);
 
         List<String> mediaTypesStrings = flattenLists(simpleMap(fileTypeCategories, FileTypeCategories::getMediaTypes));
         return byStringGenerator.apply(mediaTypesStrings);
+    }
+
+    private List<FileTypeCategories> getAllowableFileTypeCategoriesFromFormInput(FormInputResource formInput) {
+
+        if (StringUtils.isEmpty(formInput.getAllowedFileTypes())) {
+            return emptyList();
+        } else {
+            return simpleMap(formInput.getAllowedFileTypes().split(","), FileTypeCategories::fromDisplayName);
+        }
     }
 }
