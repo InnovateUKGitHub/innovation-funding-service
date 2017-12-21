@@ -71,7 +71,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         if(innovationAreaId.isPresent() && searchString.isPresent()) {
             List<Long> competitionsIdsInInnovationArea = getFilteredCompetitionIds(innovationAreaId);
             Set<Long> keywordsFound = getFilteredPublicContentIds(searchString.get());
-            if (!keywordsFound.isEmpty()) {
+            if (!keywordsFound.isEmpty() && !competitionsIdsInInnovationArea.isEmpty()) {
                 return publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(keywordsFound, competitionsIdsInInnovationArea, getPageable(pageNumber, pageSize));
             }
         }
