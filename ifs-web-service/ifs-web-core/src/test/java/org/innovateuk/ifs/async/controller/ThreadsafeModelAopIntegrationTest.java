@@ -5,8 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.validation.support.BindingAwareModelMap;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import java.util.function.Consumer;
 
@@ -35,39 +37,88 @@ public class ThreadsafeModelAopIntegrationTest extends BaseIntegrationTest {
         controller.setModelConsumer(modelConsumerMock);
     }
 
+    /**
+     * Test that a Model can be swapped out for a Threadsafe model on a @GetMapping method that requires a Model method
+     * parameter.
+     */
     @Test
     public void testModelSwappedOutOnGetMethod() {
         assertModelSwappedOutForThreadsafeModel(model -> controller.get(model));
     }
 
+    /**
+     * Test that a Model can be swapped out for a Threadsafe model on a @PostMapping method that requires a Model method
+     * parameter.
+     */
     @Test
     public void testModelSwappedOutOnPostMethod() {
         assertModelSwappedOutForThreadsafeModel(model -> controller.post(model));
     }
 
+    /**
+     * Test that a Model is not currently being swapped out for a Threadsafe model on a @PutMapping methods (but we could
+     * allow this in the future)
+     */
     @Test
     public void testModelNotSwappedOutOnPutMethod() {
         assertModelNotSwappedOut(model -> controller.put(model));
     }
 
+    /**
+     * Test that a Model is not currently being swapped out for a Threadsafe model on a @DeleteMapping methods (but we could
+     * allow this in the future)
+     */
     @Test
     public void testModelNotSwappedOutOnDeleteMethod() {
         assertModelNotSwappedOut(model -> controller.delete(model));
     }
 
+    /**
+     * Test that a Model can be swapped out for a Threadsafe model on a @GetMapping method that requires a Model method
+     * parameter in an arbitrary position in the method parameter order.
+     */
     @Test
     public void testModelSwappedOutOnGetMethodArbitraryParameterIndex() {
         assertModelSwappedOutForThreadsafeModel(model -> controller.getWithOtherParameters(0, 1, model, 3));
     }
 
+    /**
+     * Test that a Model cannot currently be swapped out for a Threadsafe model on a @GetMapping method that requires an
+     * ExtendedModelMap.
+     *
+     * This is because we don't currently have a Threadsafe wrapper that subclasses ExtendedModelMap (but we could create
+     * one for the future)
+     */
+    @Test
+    public void testModelNotSwappedOutWithExtendedModelMap() {
+        assertModelNotSwappedOut(new ExtendedModelMap(), model -> controller.getWithExtendedModelMap(0, 1, model, 3));
+    }
+
+    /**
+     * Test that a Model cannot currently be swapped out for a Threadsafe model on a @GetMapping method that requires a
+     * RedirectAttributes.
+     *
+     * This is because we don't currently have a Threadsafe wrapper that subclasses RedirectAttributes (but we could
+     * create one for the future)
+     */
+    @Test
+    public void testModelNotSwappedOutWithRedirectAttributes() {
+        assertModelNotSwappedOut(new RedirectAttributesModelMap(), model -> controller.getWithRedirectAttributes(0, 1, model, 3));
+    }
+
+    /**
+     * Test that non-RequestHandler methods are ignored for Threadsafe model replacement.
+     */
     @Test
     public void testModelNotSwappedOutOnNonRequestHandlingMethod() {
         assertModelNotSwappedOut(model -> controller.nonRequestHandling(model));
     }
 
     private void assertModelSwappedOutForThreadsafeModel(Consumer<Model> controllerCall) {
+        assertModelSwappedOutForThreadsafeModel(new BindingAwareModelMap(), controllerCall);
+    }
 
-        BindingAwareModelMap normalModel = new BindingAwareModelMap();
+    private <T extends Model> void assertModelSwappedOutForThreadsafeModel(T normalModel, Consumer<T> controllerCall) {
 
         doAnswer(invocation -> {
 
@@ -85,8 +136,10 @@ public class ThreadsafeModelAopIntegrationTest extends BaseIntegrationTest {
     }
 
     private void assertModelNotSwappedOut(Consumer<Model> controllerCall) {
+        assertModelNotSwappedOut(new BindingAwareModelMap(), controllerCall);
+    }
 
-        BindingAwareModelMap normalModel = new BindingAwareModelMap();
+    private <T extends Model> void assertModelNotSwappedOut(T normalModel, Consumer<T> controllerCall) {
 
         doAnswer(invocation -> {
 

@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.async.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.function.Consumer;
 
@@ -25,6 +27,18 @@ public class ThreadsafeModelAopIntegrationTestHelper {
     @GetMapping("/get2")
     @SuppressWarnings("unused")
     public void getWithOtherParameters(int i, int i1, Model model, int i2) {
+        modelConsumer.accept(model);
+    }
+
+    @GetMapping("/get3")
+    @SuppressWarnings("unused")
+    public void getWithExtendedModelMap(int i, int i1, ExtendedModelMap model, int i2) {
+        modelConsumer.accept(model);
+    }
+
+    @GetMapping("/get4")
+    @SuppressWarnings("unused")
+    public void getWithRedirectAttributes(int i, int i1, RedirectAttributes model, int i2) {
         modelConsumer.accept(model);
     }
 

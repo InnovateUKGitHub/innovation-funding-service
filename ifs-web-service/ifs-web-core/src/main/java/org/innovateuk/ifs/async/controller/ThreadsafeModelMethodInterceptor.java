@@ -18,7 +18,8 @@ public class ThreadsafeModelMethodInterceptor implements MethodInterceptor {
 
         for (int i = 0; i < invocation.getArguments().length; i++) {
 
-            if (invocation.getArguments()[i] instanceof Model) {
+            if (invocation.getArguments()[i] instanceof Model &&
+                    invocation.getMethod().getParameters()[i].getType().equals(Model.class)) {
                 invocation.getArguments()[i] = new ThreadsafeModel((Model) invocation.getArguments()[i]);
             }
         }
