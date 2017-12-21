@@ -4,10 +4,12 @@ import org.junit.Test;
 import org.springframework.ui.Model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -40,6 +42,14 @@ public class ThreadsafeModelTest {
         assertReadOperationBlocksWriteOperation(
                 model -> model.containsAttribute("read1"),
                 model -> model.addAttribute("write2"));
+
+        assertReadOperationBlocksWriteOperation(
+                Model::asMap,
+                model -> model.addAllAttributes(Collections.singleton("write2")));
+
+        assertReadOperationBlocksWriteOperation(
+                Model::asMap,
+                model -> model.mergeAttributes(asMap(1, 2)));
     }
 
     /**
