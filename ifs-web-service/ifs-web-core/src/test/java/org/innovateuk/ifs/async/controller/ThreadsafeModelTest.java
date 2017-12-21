@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -26,30 +27,82 @@ public class ThreadsafeModelTest {
                 model -> model.containsAttribute("read2"));
 
         assertFirstReadOperationDoesNotBlockSecondReadOperation(
-                model -> model.containsAttribute("read1"), Model::asMap);
+                model -> model.containsAttribute("read"), Model::asMap);
     }
 
     @Test
     public void testCallsToAsMapDoNotLockOtherReadOperations() throws ExecutionException, InterruptedException {
 
         assertFirstReadOperationDoesNotBlockSecondReadOperation(
-                Model::asMap, model -> model.containsAttribute("read2"));
+                Model::asMap, model -> model.containsAttribute("read"));
     }
 
     @Test
     public void testCallsToContainsAttributeLocksWriteAccessUntilComplete() throws ExecutionException, InterruptedException {
 
-        assertReadOperationBlocksWriteOperation(
-                model -> model.containsAttribute("read1"),
-                model -> model.addAttribute("write2"));
+        assertFirstOperationBlocksSecondOperationUntilComplete(
+                model -> model.containsAttribute("read"),
+                model -> model.addAttribute("write"));
+    }
 
-        assertReadOperationBlocksWriteOperation(
+    @Test
+    public void testCallsToAsMapLocksWriteAccessUntilComplete() throws ExecutionException, InterruptedException {
+
+        assertFirstOperationBlocksSecondOperationUntilComplete(
                 Model::asMap,
-                model -> model.addAllAttributes(Collections.singleton("write2")));
+                model -> model.addAllAttributes(Collections.singleton("write")));
 
-        assertReadOperationBlocksWriteOperation(
+        assertFirstOperationBlocksSecondOperationUntilComplete(
                 Model::asMap,
                 model -> model.mergeAttributes(asMap(1, 2)));
+    }
+
+    @Test
+    public void testCallsToAddAttributeLocksReadAccessUntilComplete() throws ExecutionException, InterruptedException {
+
+        assertFirstOperationBlocksSecondOperationUntilComplete(
+                model -> model.addAttribute("write"),
+                model -> model.containsAttribute("read"));
+    }
+
+    @Test
+    public void testCallsToAddAllAttributesLocksReadAccessUntilComplete() throws ExecutionException, InterruptedException {
+
+        assertFirstOperationBlocksSecondOperationUntilComplete(
+                model -> model.addAllAttributes(singletonList("write")),
+                Model::asMap);
+    }
+
+    @Test
+    public void testCallsToMergeAttributesLocksReadAccessUntilComplete() throws ExecutionException, InterruptedException {
+
+        assertFirstOperationBlocksSecondOperationUntilComplete(
+                model -> model.mergeAttributes(asMap(1, 2)),
+                Model::asMap);
+    }
+
+    @Test
+    public void testCallsToAddAttributeLocksWriteAccessUntilComplete() throws ExecutionException, InterruptedException {
+
+        assertFirstOperationBlocksSecondOperationUntilComplete(
+                model -> model.addAttribute("write1"),
+                model -> model.addAttribute("write2"));
+    }
+
+    @Test
+    public void testCallsToAddAllAttributesLocksWriteAccessUntilComplete() throws ExecutionException, InterruptedException {
+
+        assertFirstOperationBlocksSecondOperationUntilComplete(
+                model -> model.addAllAttributes(singletonList("write")),
+                model -> model.mergeAttributes(asMap(1, 2)));
+    }
+
+    @Test
+    public void testCallsToMergeAttributesLocksWriteAccessUntilComplete() throws ExecutionException, InterruptedException {
+
+        assertFirstOperationBlocksSecondOperationUntilComplete(
+                model -> model.mergeAttributes(asMap(1, 2)),
+                model -> model.addAllAttributes(singletonList("write")));
     }
 
     /**
@@ -108,20 +161,21 @@ public class ThreadsafeModelTest {
     }
 
     /**
-     * This test tests that a read operation will block access to the wrapped {@link Model} write methods until they have finished.
+     * This test tests that a locking operation will block access to the wrapped {@link Model} methods until operation1 has finished.
      *
-     * The test initiates both a read operation and a write operation at the same time, but ensures that the read operation will
-     * make it into the locking boundary of {@link ThreadsafeModel} before the write operation is allowed to properly begin (by
-     * use of the writeCountDownLatch).
+     * The test initiates 2 mutually exclusive operations at the same time, but ensures that the operation1 will
+     * make it into the locking boundary of {@link ThreadsafeModel} before operation2 is allowed to properly begin (by
+     * use of the operation2CountDownLatch).
      *
-     * The read operation will then wait 100ms before writing its value to the "operationValues" list.  This should be the first
-     * item of the list every time because the write operation cannot write its own value to the list until the read operation is
-     * complete.  Therefore it has been successfully blocked for the 100ms wait time of the read operation.
+     * The operation1 will then wait 100ms before writing its value to the "operationValues" list.  This should be the first
+     * item of the list every time because operation2 cannot write its own value to the list until operation2 is
+     * complete.  Therefore it has been successfully blocked for the 100ms wait time where operation1 had control of
+     * the lock.
      */
-    private void assertReadOperationBlocksWriteOperation(Consumer<Model> readOperation, Consumer<Model> writeOperation) throws InterruptedException, ExecutionException {
+    private void assertFirstOperationBlocksSecondOperationUntilComplete(Consumer<Model> operation1, Consumer<Model> operation2) throws InterruptedException, ExecutionException {
 
-        CountDownLatch readCountDownLatch = new CountDownLatch(1);
-        CountDownLatch writeCountDownLatch = new CountDownLatch(1);
+        CountDownLatch operation1CountDownLatch = new CountDownLatch(1);
+        CountDownLatch operation2CountDownLatch = new CountDownLatch(1);
 
         Model wrappedModel = mock(Model.class);
 
@@ -129,42 +183,42 @@ public class ThreadsafeModelTest {
 
         List<String> operationValues = new ArrayList<>();
 
-        Model readWhenAnswer = doAnswer(invocation -> {
-            writeCountDownLatch.countDown();
-            readCountDownLatch.await(200, TimeUnit.MILLISECONDS);
-            operationValues.add("read operation");
+        Model operation1Answer = doAnswer(invocation -> {
+            operation2CountDownLatch.countDown();
+            operation1CountDownLatch.await(200, TimeUnit.MILLISECONDS);
+            operationValues.add("operation 1");
             return null;
         }).when(wrappedModel);
 
-        readOperation.accept(readWhenAnswer);
+        operation1.accept(operation1Answer);
 
-        Model writeWhenAnswer = doAnswer(invocation -> {
-            operationValues.add("write operation");
+        Model operation2Answer = doAnswer(invocation -> {
+            operationValues.add("operation 2");
             return null;
         }).when(wrappedModel);
 
-        writeOperation.accept(writeWhenAnswer);
+        operation2.accept(operation2Answer);
 
         ExecutorService executor = Executors.newFixedThreadPool(2);
 
-        Future<?> readFuture = executor.submit(() -> readOperation.accept(threadsafeModel));
+        Future<?> operation1Future = executor.submit(() -> operation1.accept(threadsafeModel));
 
-        Future<?> writeFuture = executor.submit(() -> {
-            writeCountDownLatch.await();
-            writeOperation.accept(threadsafeModel);
+        Future<?> operation2Future = executor.submit(() -> {
+            operation2CountDownLatch.await();
+            operation2.accept(threadsafeModel);
             return null;
         });
 
-        readFuture.get();
-        writeFuture.get();
+        operation1Future.get();
+        operation2Future.get();
 
-        Model readVerification = verify(wrappedModel);
-        readOperation.accept(readVerification);
+        Model operation1Verification = verify(wrappedModel);
+        operation1.accept(operation1Verification);
 
-        Model writeVerification = verify(wrappedModel);
-        writeOperation.accept(writeVerification);
+        Model operation2Verification = verify(wrappedModel);
+        operation2.accept(operation2Verification);
 
-        assertEquals("read operation", operationValues.get(0));
-        assertEquals("write operation", operationValues.get(1));
+        assertEquals("operation 1", operationValues.get(0));
+        assertEquals("operation 2", operationValues.get(1));
     }
 }
