@@ -97,6 +97,17 @@ public class ThreadsafeModelTest {
         assertEquals("read1 operation", operationValues.get(1));
     }
 
+    /**
+     * This test tests that a read operation will block access to the wrapped {@link Model} write methods until they have finished.
+     *
+     * The test initiates both a read operation and a write operation at the same time, but ensures that the read operation will
+     * make it into the locking boundary of {@link ThreadsafeModel} before the write operation is allowed to properly begin (by
+     * use of the writeCountDownLatch).
+     *
+     * The read operation will then wait 100ms before writing its value to the "operationValues" list.  This should be the first
+     * item of the list every time because the write operation cannot write its own value to the list until the read operation is
+     * complete.  Therefore it has been successfully blocked for the 100ms wait time of the read operation.
+     */
     private void assertReadOperationBlocksWriteOperation(Consumer<Model> readOperation, Consumer<Model> writeOperation) throws InterruptedException, ExecutionException {
 
         CountDownLatch readCountDownLatch = new CountDownLatch(1);
