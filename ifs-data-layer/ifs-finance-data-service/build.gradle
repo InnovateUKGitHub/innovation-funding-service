@@ -49,7 +49,7 @@ dependencies {
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
 
-task resetDB() {
+task initDB() {
     flywayMigrate.mustRunAfter flywayClean
 
     dependsOn flywayClean

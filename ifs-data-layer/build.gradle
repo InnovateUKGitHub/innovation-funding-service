@@ -151,8 +151,6 @@ subprojects {
 task initDB {
     dependsOn startMySql
 }
-subprojects { pr -> initDB.dependsOn(project.path + ":resetDB") }
-
 
 ext {
     snippetsDir = file('build/generated-snippets')

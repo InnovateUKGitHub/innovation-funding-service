@@ -228,7 +228,7 @@ task generateMainMapperClasses(type: JavaCompile) {
     }
 }
 
-task resetDB() {
+task initDB() {
     flywayMigrate.mustRunAfter flywayClean
 
     dependsOn flywayClean
