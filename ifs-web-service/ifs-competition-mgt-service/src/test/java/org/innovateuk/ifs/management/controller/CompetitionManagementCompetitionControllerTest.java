@@ -205,13 +205,41 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     public void releaseFeedback() throws Exception {
         long competitionId = 1L;
 
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionTypeName("Programme")
+                .build();
+
         when(competitionPostSubmissionRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
+        when(competitionService.getById(competitionId)).thenReturn(competition);
 
         mockMvc.perform(post("/competition/{competitionId}/release-feedback", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dashboard/project-setup"));
 
-        verify(competitionPostSubmissionRestService).releaseFeedback(competitionId);
-        verifyNoMoreInteractions(competitionService);
+        InOrder inOrder = inOrder(competitionPostSubmissionRestService, competitionService);
+        inOrder.verify(competitionPostSubmissionRestService).releaseFeedback(competitionId);
+        inOrder.verify(competitionService).getById(competitionId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void releaseFeedbackEOICompetition() throws Exception {
+        long competitionId = 1L;
+
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionTypeName("Expression of interest")
+                .build();
+
+        when(competitionPostSubmissionRestService.releaseFeedback(competitionId)).thenReturn(restSuccess());
+        when(competitionService.getById(competitionId)).thenReturn(competition);
+
+        mockMvc.perform(post("/competition/{competitionId}/release-feedback", competitionId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/dashboard/previous"));
+
+        InOrder inOrder = inOrder(competitionPostSubmissionRestService, competitionService);
+        inOrder.verify(competitionPostSubmissionRestService).releaseFeedback(competitionId);
+        inOrder.verify(competitionService).getById(competitionId);
+        inOrder.verifyNoMoreInteractions();
     }
 }

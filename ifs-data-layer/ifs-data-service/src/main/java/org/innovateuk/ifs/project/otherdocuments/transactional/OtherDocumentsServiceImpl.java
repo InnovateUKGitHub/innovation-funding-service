@@ -24,11 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_HAS_SOLE_PARTNER;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
@@ -67,23 +69,23 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
     public ServiceResult<Void> saveDocumentsSubmitDateTime(Long projectId, ZonedDateTime date) {
 
         return getProject(projectId).andOnSuccess(project ->
-                retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
+                retrieveUploadedDocuments(project).handleSuccessOrFailure(
                         failure -> serviceFailure(PROJECT_SETUP_OTHER_DOCUMENTS_MUST_BE_UPLOADED_BEFORE_SUBMIT),
                         success -> setDocumentsSubmittedDate(project, date)));
     }
 
-    private ServiceResult<List<FileEntryResource>> retrieveUploadedDocuments(Long projectId) {
+    private ServiceResult<List<FileEntryResource>> retrieveUploadedDocuments(Project project) {
 
-        ServiceResult<FileEntryResource> exploitationPlanFile = getExploitationPlanFileEntryDetails(projectId);
-        return getProject(projectId).
-                andOnSuccess(project -> {
-                    return validateProjectNeedsCollaborationAgreement(project).
-                            andOnSuccess(() -> {
-                                ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(projectId);
-                                return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
-                            }).
-                    andOnFailure(() -> aggregate(asList(exploitationPlanFile)));
-                });
+        ServiceResult<FileEntryResource> exploitationPlanFile = getExploitationPlanFileEntryDetails(project.getId());
+
+        ServiceResult<Project> needsCollaborationAgreement = validateProjectNeedsCollaborationAgreement(project);
+
+        if (needsCollaborationAgreement.isSuccess()) {
+            ServiceResult<FileEntryResource> collaborationAgreementFile = getCollaborationAgreementFileEntryDetails(project.getId());
+            return aggregate(asList(collaborationAgreementFile, exploitationPlanFile));
+        } else {
+            return aggregate(singletonList(exploitationPlanFile));
+        }
     }
 
     @Override
@@ -126,19 +128,13 @@ public class OtherDocumentsServiceImpl extends AbstractProjectServiceImpl implem
 
         return getProject(projectId).andOnSuccess(project -> {
             Optional<ProjectUser> projectManager = getExistingProjectManager(project);
-            if (project.getPartnerOrganisations().size() > 1) {
 
-                return retrieveUploadedDocuments(projectId).handleSuccessOrFailure(
-                        failure -> serviceSuccess(false),
-                        success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getDocumentsSubmittedDate() == null ?
-                                serviceSuccess(true) :
-                                serviceSuccess(false));
-            } else {
-                return getExploitationPlan(project).handleSuccessOrFailure(
-                        failure -> serviceSuccess(false),
-                        success -> serviceSuccess(true));
-            }
-        }).andOnFailure(() -> serviceSuccess(false));
+            return retrieveUploadedDocuments(project).handleSuccessOrFailure(
+                    failure -> serviceSuccess(false),
+                    success -> projectManager.isPresent() && projectManager.get().getUser().getId().equals(userId) && project.getDocumentsSubmittedDate() == null ?
+                            serviceSuccess(true) :
+                            serviceSuccess(false));
+        });
     }
 
     private Optional<ProjectUser> getExistingProjectManager(Project project) {

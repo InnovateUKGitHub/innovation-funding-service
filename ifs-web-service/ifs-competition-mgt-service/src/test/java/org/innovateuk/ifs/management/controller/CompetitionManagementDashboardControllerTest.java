@@ -41,6 +41,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 /**
  * Class for testing public functions of {@link CompetitionManagementDashboardController}
@@ -104,7 +105,10 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
     }
 
     @Test
-    public void projectSetupDashboard() throws Exception {
+    public void projectSetupDashboardWithNonProjectFinanceUser() throws Exception {
+
+        Long countBankDetails = 0L;
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
 
         Mockito.when(competitionDashboardSearchService.getProjectSetupCompetitions()).thenReturn(competitions);
 
@@ -119,6 +123,36 @@ public class CompetitionManagementDashboardControllerTest extends BaseController
         ProjectSetupDashboardViewModel viewModel = (ProjectSetupDashboardViewModel) model;
         assertEquals(competitions.get(INNOVATION_AREA_NAME_ONE), viewModel.getCompetitions().get(PROJECT_SETUP));
         assertEquals(counts, viewModel.getCounts());
+        assertEquals(countBankDetails, viewModel.getCountBankDetails());
+        assertEquals(false, viewModel.isProjectFinanceUser());
+
+        verify(bankDetailsRestService, never()).countPendingBankDetailsApprovals();
+    }
+
+    @Test
+    public void projectSetupDashboardWithProjectFinanceUser() throws Exception {
+
+        Long countBankDetails = 8L;
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build());
+
+        Mockito.when(competitionDashboardSearchService.getProjectSetupCompetitions()).thenReturn(competitions);
+        when(bankDetailsRestService.countPendingBankDetailsApprovals()).thenReturn(restSuccess(countBankDetails));
+
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/project-setup"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("dashboard/projectSetup"))
+                .andReturn();
+
+        Object model = result.getModelAndView().getModelMap().get("model");
+        assertTrue(model.getClass().equals(ProjectSetupDashboardViewModel.class));
+
+        ProjectSetupDashboardViewModel viewModel = (ProjectSetupDashboardViewModel) model;
+        assertEquals(competitions.get(INNOVATION_AREA_NAME_ONE), viewModel.getCompetitions().get(PROJECT_SETUP));
+        assertEquals(counts, viewModel.getCounts());
+        assertEquals(countBankDetails, viewModel.getCountBankDetails());
+        assertEquals(true, viewModel.isProjectFinanceUser());
+
+        verify(bankDetailsRestService, only()).countPendingBankDetailsApprovals();
     }
 
     private void addInnovationAreaNamesToCompetitions(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions ) {
