@@ -193,6 +193,22 @@ public class SetupSectionAccessibilityHelper {
         return ACCESSIBLE;
     }
 
+    public SectionAccess canEditSpendProfileSection(OrganisationResource userOrganisation, Long organisationIdFromUrl) {
+
+        if (canAccessSpendProfileSection(userOrganisation) == NOT_ACCESSIBLE) {
+            return NOT_ACCESSIBLE;
+        } else if (isFromOwnOrganisation(userOrganisation, organisationIdFromUrl)) {
+            return ACCESSIBLE;
+        } else {
+            return fail("Unable to edit Spend Profile section as user does not belong to this organisation");
+        }
+    }
+
+    private boolean isFromOwnOrganisation(OrganisationResource userOrganisation, Long organisationIdFromUrl) {
+
+        return userOrganisation.getId().equals(organisationIdFromUrl);
+    }
+
     public SectionAccess canAccessOtherDocumentsSection(OrganisationResource organisation) {
 
         if (setupProgressChecker.isLeadPartnerOrganisation(organisation)) {

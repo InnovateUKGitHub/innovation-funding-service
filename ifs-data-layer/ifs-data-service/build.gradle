@@ -240,7 +240,3 @@ compileJava.dependsOn generateMainMapperClasses
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
 
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
-}
