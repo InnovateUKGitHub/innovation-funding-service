@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.*;
 
 /**
@@ -103,6 +104,26 @@ public class ThreadsafeModelTest {
         assertFirstOperationBlocksSecondOperationUntilComplete(
                 model -> model.mergeAttributes(asMap(1, 2)),
                 model -> model.addAllAttributes(singletonList("write")));
+    }
+
+    /**
+     * A non-standard thing to test, but as the mechanics of this test are quite tricky to implement, we want to
+     * ensure that it is not providing false-positives
+     */
+    @Test
+    public void testThatTheTestMechanismWorks() throws ExecutionException, InterruptedException {
+
+        try {
+            assertFirstOperationBlocksSecondOperationUntilComplete(
+                    model -> model.containsAttribute("read1"),
+                    model -> model.containsAttribute("read2"));
+
+            fail("2 read operations should not block each other and therefore there must be a problem with the test mechanism");
+
+        } catch (AssertionError e) {
+
+            // expected behaviour
+        }
     }
 
     /**
