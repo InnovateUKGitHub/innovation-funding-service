@@ -4,6 +4,11 @@ ext.ifsWebBaseURL="http://localhost:8080"
 ext.serverPort=""
 ext.activeProfile="environment"
 
+ext.ifsDatasourceUrl=""
+ext.ifsDatasourceUsername=""
+ext.ifsDatasourcePassword=""
+ext.ifsFlywayLocations=""
+
 project.ext['flyway.url']='jdbc:mysql://127.0.0.1:3306?characterEncoding=utf8'
 project.ext['flyway.schemas']='ifs_finance'
 project.ext['flyway.user']="ifs"

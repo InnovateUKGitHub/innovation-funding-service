@@ -42,8 +42,9 @@ configurations {
 }
 
 dependencies {
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "mysql:mysql-connector-java"
-    compile "org.flywaydb:flyway-core:5.0.2"
+    compile "org.flywaydb:flyway-core:4.1.2"
 }
 
 flywayMigrate.dependsOn processResources
