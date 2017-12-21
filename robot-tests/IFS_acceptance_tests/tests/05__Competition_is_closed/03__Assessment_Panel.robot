@@ -54,7 +54,7 @@ Assement panel link is deactivated if the assessment panel is not set
 
 Confirm changes button unavailable before sending invite
     [Documentation]  IFS-1125
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  enable assessment panel for the competition
     Given the user clicks the button/link  link=Manage assessment panel
     When the user should see the element   jQuery=span:contains("0") ~ small:contains("Assessors accepted")
@@ -211,7 +211,6 @@ Manage Assessment Panel Assign and remove button functionality
     Then the user should see the element    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
     And the user should see the element     jQuery=h2:contains("Assigned applications (0)")
 
-
 Filter by application number
     [Documentation]  IFS-2049
     [Tags]
@@ -228,7 +227,7 @@ Assign applications to panel
     Then the user should see the element    jQuery=h2:contains("Assigned applications (2)")
     When the user clicks the button/link    link=Manage assessment panel
     And the user clicks the button/link     jQuery=button:contains("Confirm actions")
-    And the user reads his email            ${assessor_ben}  Applications ready for review  2
+    And the user reads his email            ${assessor_ben}  Applications ready for review   You have been allocated applications to review within the competition Machine learning for transport infrastructure.
 
 
 *** Keywords ***
