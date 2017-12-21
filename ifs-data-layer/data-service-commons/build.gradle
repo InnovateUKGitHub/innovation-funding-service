@@ -58,9 +58,6 @@ sourceSets {
     }
 }
 
-task resetDB() {
-}
-
 task generateMainMapperClasses(type: JavaCompile) {
     ext.aptDumpDir = file( "build/tmp/apt/mapstruct" )
     destinationDir = aptDumpDir
