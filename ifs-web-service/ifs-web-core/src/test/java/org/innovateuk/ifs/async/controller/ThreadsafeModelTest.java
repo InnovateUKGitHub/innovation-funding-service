@@ -99,7 +99,8 @@ public class ThreadsafeModelTest {
 
     private void assertReadOperationBlocksWriteOperation(Consumer<Model> readOperation, Consumer<Model> writeOperation) throws InterruptedException, ExecutionException {
 
-        CountDownLatch countDownLatch = new CountDownLatch(1);
+        CountDownLatch readCountDownLatch = new CountDownLatch(1);
+        CountDownLatch writeCountDownLatch = new CountDownLatch(1);
 
         Model wrappedModel = mock(Model.class);
 
@@ -108,7 +109,8 @@ public class ThreadsafeModelTest {
         List<String> operationValues = new ArrayList<>();
 
         Model readWhenAnswer = doAnswer(invocation -> {
-            countDownLatch.await(200, TimeUnit.MILLISECONDS);
+            writeCountDownLatch.countDown();
+            readCountDownLatch.await(200, TimeUnit.MILLISECONDS);
             operationValues.add("read operation");
             return null;
         }).when(wrappedModel);
@@ -123,17 +125,23 @@ public class ThreadsafeModelTest {
         writeOperation.accept(writeWhenAnswer);
 
         ExecutorService executor = Executors.newFixedThreadPool(2);
+
         Future<?> readFuture = executor.submit(() -> readOperation.accept(threadsafeModel));
-        Future<?> writeFuture = executor.submit(() -> writeOperation.accept(threadsafeModel));
+
+        Future<?> writeFuture = executor.submit(() -> {
+            writeCountDownLatch.await();
+            writeOperation.accept(threadsafeModel);
+            return null;
+        });
 
         readFuture.get();
         writeFuture.get();
 
-        Model read1Verification = verify(wrappedModel, atLeastOnce());
-        readOperation.accept(read1Verification);
+        Model readVerification = verify(wrappedModel);
+        readOperation.accept(readVerification);
 
-        Model read2Verification = verify(wrappedModel, atLeastOnce());
-        writeOperation.accept(read2Verification);
+        Model writeVerification = verify(wrappedModel);
+        writeOperation.accept(writeVerification);
 
         assertEquals("read operation", operationValues.get(0));
         assertEquals("write operation", operationValues.get(1));
