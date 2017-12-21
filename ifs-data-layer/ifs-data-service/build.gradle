@@ -248,7 +248,3 @@ task initDB() {
     dependsOn flywayMigrate
 
 }
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
-}
