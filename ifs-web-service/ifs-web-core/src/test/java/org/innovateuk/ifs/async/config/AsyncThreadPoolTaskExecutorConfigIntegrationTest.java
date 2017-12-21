@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.async.config;
 
+import org.innovateuk.ifs.async.executor.AsyncTaskDecorator;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -15,6 +18,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests for the configuration of our {@link AsyncThreadPoolTaskExecutorConfig} configuration that allows us
@@ -25,6 +29,18 @@ public class AsyncThreadPoolTaskExecutorConfigIntegrationTest extends BaseIntegr
 
     @Autowired
     private AsyncThreadPoolTaskExecutorConfigIntegrationTestHelper helper;
+
+    @Autowired
+    private ThreadPoolTaskExecutor threadPoolTaskExecutor;
+
+    /**
+     * This test is just a sanity check that we have autowired the correct task executor
+     */
+    @Test
+    public void testThreadPoolTaskExecutorIsCorrectOne() {
+        assertEquals("IFS-Async-Executor-", threadPoolTaskExecutor.getThreadNamePrefix());
+        assertTrue(ReflectionTestUtils.getField(threadPoolTaskExecutor, "taskDecorator") instanceof AsyncTaskDecorator);
+    }
 
     /**
      * This test asserts that Future code is executed with the Thread Pool configured in
