@@ -16,7 +16,6 @@ subprojects {
     // data-service-commons is not a docker project.
     if (it.name != 'data-service-commons') {
 
-
         task getNewRelicAgent {
             if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() || 
                  !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists() ) {
@@ -144,7 +143,6 @@ subprojects {
             expand project.properties
         }
     }
-
 
 }
 

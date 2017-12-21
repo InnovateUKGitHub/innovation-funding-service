@@ -228,6 +228,7 @@ task generateMainMapperClasses(type: JavaCompile) {
     }
 }
 
+
 task initDB() {
     flywayMigrate.mustRunAfter flywayClean
 
@@ -235,11 +236,9 @@ task initDB() {
     dependsOn flywayMigrate
 }
 
-
 compileJava.dependsOn generateMainMapperClasses
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
-
 
 
 task wrapper(type: Wrapper) {
