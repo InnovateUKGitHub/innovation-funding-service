@@ -34,13 +34,21 @@ public class ThreadsafeModelTest {
                 Model::asMap, model -> model.containsAttribute("read2"));
     }
 
+    @Test
+    public void testCallsToContainsAttributeLocksWriteAccessUntilComplete() throws ExecutionException, InterruptedException {
+
+        assertReadOperationBlocksWriteOperation(
+                model -> model.containsAttribute("read1"),
+                model -> model.addAttribute("write2"));
+    }
+
     /**
      * This test tests that we can have as many concurrent reads as we like whilst maintaing thread safety.
      *
      * This test issues 2 calls to {@link ThreadsafeModel#containsAttribute(String)}, the first of which blocks *within*
      * the bounds of the threadsafe locking mechanism inside ThreadsafeModel until the 2nd call is executed, upon which
      * the first call is unblocked.  The test performs this sequence in such a way so as to allow the 2nd call to write
-     * its value to the "readValues" list before the 1st call does, and we can assert that the 2nd value always makes it
+     * its value to the "operationValues" list before the 1st call does, and we can assert that the 2nd value always makes it
      * into the list before the first does.
      *
      * This test proves therefore that a 2nd "read" operation can occur whilst a first "read" operation is in progress
@@ -54,19 +62,19 @@ public class ThreadsafeModelTest {
 
         ThreadsafeModel threadsafeModel = new ThreadsafeModel(wrappedModel);
 
-        List<String> readValues = new ArrayList<>();
+        List<String> operationValues = new ArrayList<>();
 
         Model read1WhenAnswer = doAnswer(invocation -> {
-            blockUntilRead2IsSuccessful(countDownLatch);
-            readValues.add("read1 answer");
+            countDownLatch.await();
+            operationValues.add("read1 operation");
             return null;
         }).when(wrappedModel);
 
         read1Operation.accept(read1WhenAnswer);
 
         Model read2WhenAnswer = doAnswer(invocation -> {
-            readValues.add("read2 answer");
-            unblockRead1(countDownLatch);
+            operationValues.add("read2 operation");
+            countDownLatch.countDown();
             return null;
         }).when(wrappedModel);
 
@@ -85,15 +93,49 @@ public class ThreadsafeModelTest {
         Model read2Verification = verify(wrappedModel, atLeastOnce());
         read2Operation.accept(read2Verification);
 
-        assertEquals("read2 answer", readValues.get(0));
-        assertEquals("read1 answer", readValues.get(1));
+        assertEquals("read2 operation", operationValues.get(0));
+        assertEquals("read1 operation", operationValues.get(1));
     }
 
-    private void blockUntilRead2IsSuccessful(CountDownLatch countDownLatch) throws InterruptedException {
-        countDownLatch.await();
-    }
+    private void assertReadOperationBlocksWriteOperation(Consumer<Model> readOperation, Consumer<Model> writeOperation) throws InterruptedException, ExecutionException {
 
-    private void unblockRead1(CountDownLatch countDownLatch) {
-        countDownLatch.countDown();
+        CountDownLatch countDownLatch = new CountDownLatch(1);
+
+        Model wrappedModel = mock(Model.class);
+
+        ThreadsafeModel threadsafeModel = new ThreadsafeModel(wrappedModel);
+
+        List<String> operationValues = new ArrayList<>();
+
+        Model readWhenAnswer = doAnswer(invocation -> {
+            countDownLatch.await(200, TimeUnit.MILLISECONDS);
+            operationValues.add("read operation");
+            return null;
+        }).when(wrappedModel);
+
+        readOperation.accept(readWhenAnswer);
+
+        Model writeWhenAnswer = doAnswer(invocation -> {
+            operationValues.add("write operation");
+            return null;
+        }).when(wrappedModel);
+
+        writeOperation.accept(writeWhenAnswer);
+
+        ExecutorService executor = Executors.newFixedThreadPool(2);
+        Future<?> readFuture = executor.submit(() -> readOperation.accept(threadsafeModel));
+        Future<?> writeFuture = executor.submit(() -> writeOperation.accept(threadsafeModel));
+
+        readFuture.get();
+        writeFuture.get();
+
+        Model read1Verification = verify(wrappedModel, atLeastOnce());
+        readOperation.accept(read1Verification);
+
+        Model read2Verification = verify(wrappedModel, atLeastOnce());
+        writeOperation.accept(read2Verification);
+
+        assertEquals("read operation", operationValues.get(0));
+        assertEquals("write operation", operationValues.get(1));
     }
 }
