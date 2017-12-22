@@ -74,6 +74,7 @@ public class AsyncFuturesGenerator {
             try {
                 return supplier.get();
             } catch (Exception e) {
+                LOG.error("Error whilst processing Supplier Future", e);
                 throw new RuntimeException(e);
             } finally {
                 AsyncFuturesHolder.clearCurrentFutureBeingProcessed();
@@ -94,6 +95,7 @@ public class AsyncFuturesGenerator {
             try {
                 runnable.run();
             } catch (Exception e) {
+                LOG.error("Error whilst processing Runnable Future", e);
                 throw new RuntimeException(e);
             }
             return null;
@@ -102,6 +104,9 @@ public class AsyncFuturesGenerator {
         return async(futureName, dummySupplier);
     }
 
+    /**
+     * Package-private to allow Spring to proxy this method
+     */
     @Async
     <T> CompletableFuture<T> asyncInternal(Supplier<T> supplier) {
         return CompletableFuture.completedFuture(supplier.get());
