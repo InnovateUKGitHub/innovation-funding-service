@@ -54,12 +54,12 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class AssessmentServiceImpl extends BaseTransactionalService implements AssessmentService {
-    public static final Set<ApplicationState> SUBMITTED_APPLICATION_STATES = asLinkedSet(
+    protected static final Set<ApplicationState> SUBMITTED_APPLICATION_STATES = asLinkedSet(
             ApplicationState.APPROVED,
             ApplicationState.REJECTED,
             ApplicationState.SUBMITTED);
 
-    public static final Set<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
+    protected static final Set<State> SUBMITTED_STATES = SUBMITTED_APPLICATION_STATES
             .stream().map(ApplicationState::getBackingState).collect(toSet());
 
 
