@@ -23,8 +23,9 @@ public class AsyncExecutionTestHelper {
     }
 
     @Async
-    public CompletableFuture<Void> executeAsync(ExceptionThrowingRunnable supplier) {
+    public CompletableFuture<Void> executeAsync(ExceptionThrowingRunnable runnable) {
         try {
+            runnable.run();
             return CompletableFuture.completedFuture(null);
         } catch (Exception e) {
             throw new RuntimeException(e);
