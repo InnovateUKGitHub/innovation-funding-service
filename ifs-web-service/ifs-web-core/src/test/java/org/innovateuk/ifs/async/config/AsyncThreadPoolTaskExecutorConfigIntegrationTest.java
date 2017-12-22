@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.async.config;
 
+import org.innovateuk.ifs.async.AsyncExecutionTestHelper;
 import org.innovateuk.ifs.async.executor.AsyncTaskDecorator;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
@@ -28,7 +29,7 @@ import static org.junit.Assert.assertTrue;
 public class AsyncThreadPoolTaskExecutorConfigIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    private AsyncThreadPoolTaskExecutorConfigIntegrationTestHelper helper;
+    private AsyncExecutionTestHelper helper;
 
     @Autowired
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
