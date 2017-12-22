@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.assessment.controller;
 
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.transactional.AssessmentPanelService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Controller for managing applications on an assessment panel.
@@ -39,5 +42,10 @@ public class AssessmentPanelController {
     @GetMapping("/notify-assessors/{competitionId}")
     public RestResult<Boolean> isPendingReviewNotifications(@PathVariable("competitionId") long competitionId) {
         return assessmentPanelService.isPendingReviewNotifications(competitionId).toGetResponse();
+    }
+
+    @GetMapping("/get-assessment-reviews/{competitionId}")
+    public RestResult<List<AssessmentReviewResource>> getAssessmentReviews(@PathVariable("competitionId") long competitionId) {
+        return assessmentPanelService.getAssessmentReviews(competitionId).toGetResponse();
     }
 }
