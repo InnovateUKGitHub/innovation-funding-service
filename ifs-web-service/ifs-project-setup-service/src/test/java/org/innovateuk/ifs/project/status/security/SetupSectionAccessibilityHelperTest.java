@@ -99,6 +99,61 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
         whenCompaniesHouseDetailsCompleteAndGolNotGenerated((helper, organisation) -> helper.canAccessFinanceContactPage(organisation));
     }
 
+    @Test
+    public void testCanAccessSpendProfileSectionWhenCompaniesHouseDetailsNotComplete() {
+        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.canAccessSpendProfileSection(organisation));
+    }
+
+    @Test
+    public void testCanAccessSpendProfileSectionWhenProjectDetailsNotSubmitted() {
+        whenProjectDetailsNotSubmitted((helper, organisation) -> helper.canAccessSpendProfileSection(organisation));
+    }
+
+    @Test
+    public void testCanAccessSpendProfileSectionWhenBankDetailsNotApproved() {
+        whenBankDetailsNotApproved((helper, organisation) -> helper.canAccessSpendProfileSection(organisation));
+    }
+
+    @Test
+    public void testCanAccessSpendProfileSectionWhenSpendProfileNotGenerated() {
+        whenSpendProfileNotGenerated((helper, organisation) -> helper.canAccessSpendProfileSection(organisation));
+    }
+
+    @Test
+    public void testCanAccessSpendProfileSectionWhenSpendProfileGenerated() {
+        whenSpendProfileGeneratedAndAccessible((helper, organisation) -> helper.canAccessSpendProfileSection(organisation));
+    }
+
+    @Test
+    public void testCanEditSpendProfileSectionWhenCompaniesHouseDetailsNotComplete() {
+        whenCompaniesHouseDetailsNotComplete((helper, organisation) -> helper.canEditSpendProfileSection(organisation, organisation.getId()));
+    }
+
+    @Test
+    public void testCanEditSpendProfileSectionWhenProjectDetailsNotSubmitted() {
+        whenProjectDetailsNotSubmitted((helper, organisation) -> helper.canEditSpendProfileSection(organisation, organisation.getId()));
+    }
+
+    @Test
+    public void testCanEditSpendProfileSectionWhenBankDetailsNotApproved() {
+        whenBankDetailsNotApproved((helper, organisation) -> helper.canEditSpendProfileSection(organisation, organisation.getId()));
+    }
+
+    @Test
+    public void testCanEditSpendProfileSectionWhenSpendProfileNotGenerated() {
+        whenSpendProfileNotGenerated((helper, organisation) -> helper.canEditSpendProfileSection(organisation, organisation.getId()));
+    }
+
+    @Test
+    public void testCanEditSpendProfileSectionWhenUserNotFromCurrentOrganisation() {
+        whenSpendProfileGeneratedAndNotAccessible((helper, organisation) -> helper.canEditSpendProfileSection(organisation, 22L));
+    }
+
+    @Test
+    public void testCanEditSpendProfileSectionWhenUserFromCurrentOrganisation() {
+        whenSpendProfileGeneratedAndAccessible((helper, organisation) -> helper.canEditSpendProfileSection(organisation, organisation.getId()));
+    }
+
     private void whenCompaniesHouseDetailsNotComplete(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
 
         when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
@@ -190,5 +245,65 @@ public class SetupSectionAccessibilityHelperTest extends BaseUnitTest {
         SectionAccess access = methodToCall.apply(helper, organisation);
         Assert.assertTrue(SectionAccess.ACCESSIBLE == access);
 
+    }
+
+    private void whenProjectDetailsNotSubmitted(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(false);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+
+    }
+
+    private void whenBankDetailsNotApproved(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
+        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(false);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+
+    }
+
+    private void whenSpendProfileNotGenerated(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        setUpMocking(true, true, true, true, false);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+
+    }
+
+    private void whenSpendProfileGeneratedAndNotAccessible(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        setUpMocking(true, true, true, true, true);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.NOT_ACCESSIBLE == access);
+
+    }
+
+    private void whenSpendProfileGeneratedAndAccessible(BiFunction<SetupSectionAccessibilityHelper, OrganisationResource, SectionAccess> methodToCall) {
+
+        setUpMocking(true, true, true, true, true);
+
+        SectionAccess access = methodToCall.apply(helper, organisation);
+        Assert.assertTrue(SectionAccess.ACCESSIBLE == access);
+
+    }
+
+    private void setUpMocking(boolean companiesHouseSectionRequired, boolean companiesHouseDetailsComplete,
+                              boolean projectDetailsSubmitted, boolean bankDetailsApproved, boolean spendProfileGenerated) {
+
+        when(setupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(companiesHouseSectionRequired);
+        when(setupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(companiesHouseDetailsComplete);
+        when(setupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(projectDetailsSubmitted);
+        when(setupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(bankDetailsApproved);
+        when(setupProgressCheckerMock.isSpendProfileGenerated()).thenReturn(spendProfileGenerated);
     }
 }

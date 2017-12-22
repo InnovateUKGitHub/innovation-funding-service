@@ -37,7 +37,7 @@ import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.transactional.FormInputService;
 import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
-import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
+import org.innovateuk.ifs.invite.repository.CompetitionAssessmentInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.transactional.InviteService;
 import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
@@ -138,7 +138,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected ApplicationInviteRepository applicationInviteRepository;
     protected EthnicityRepository ethnicityRepository;
     protected RoleService roleService;
-    protected CompetitionInviteRepository competitionInviteRepository;
+    protected CompetitionAssessmentInviteRepository competitionAssessmentInviteRepository;
     protected CompetitionRepository competitionRepository;
     protected CompetitionFunderRepository competitionFunderRepository;
     protected AssessorService assessorService;
@@ -218,7 +218,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         applicationInviteRepository = serviceLocator.getBean(ApplicationInviteRepository.class);
         ethnicityRepository = serviceLocator.getBean(EthnicityRepository.class);
         roleService = serviceLocator.getBean(RoleService.class);
-        competitionInviteRepository = serviceLocator.getBean(CompetitionInviteRepository.class);
+        competitionAssessmentInviteRepository = serviceLocator.getBean(CompetitionAssessmentInviteRepository.class);
         competitionRepository = serviceLocator.getBean(CompetitionRepository.class);
         assessorService = serviceLocator.getBean(AssessorService.class);
         competitionParticipantRepository = serviceLocator.getBean(CompetitionParticipantRepository.class);
