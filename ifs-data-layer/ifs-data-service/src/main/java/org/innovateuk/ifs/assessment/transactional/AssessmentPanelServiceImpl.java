@@ -6,13 +6,14 @@ import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
 import org.innovateuk.ifs.assessment.panel.workflow.configuration.AssessmentReviewWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.mapper.AssessmentPanelParticipantMapper;
-import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
-import org.innovateuk.ifs.invite.resource.AssessmentPanelParticipantResource;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
+import org.innovateuk.ifs.invite.mapper.AssessmentPanelParticipantMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
-import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -27,19 +28,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
-import static java.util.stream.Collectors.toList;
-
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.CREATED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -65,9 +60,6 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     @Autowired
     private AssessmentReviewRepository assessmentReviewRepository;
-
-    @Autowired
-    private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
 
     @Autowired
     private RoleRepository roleRepository;
