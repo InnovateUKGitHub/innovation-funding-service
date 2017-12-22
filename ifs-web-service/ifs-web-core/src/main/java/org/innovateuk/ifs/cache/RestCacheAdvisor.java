@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.cache;
 
 import org.innovateuk.ifs.commons.service.RestCacheResult;
-import org.innovateuk.ifs.parallel.CallFuturesInModelAdvisor;
+import org.innovateuk.ifs.parallel.AwaitAllFuturesCompletionMethodAdvisor;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
@@ -17,7 +17,7 @@ public class RestCacheAdvisor extends AbstractPointcutAdvisor {
     private static final long serialVersionUID = 1L;
 
 
-    public static final int REST_CACHE = CallFuturesInModelAdvisor.CALL_FUTURES_ORDER - 1;
+    public static final int REST_CACHE = AwaitAllFuturesCompletionMethodAdvisor.CALL_FUTURES_ORDER - 1;
 
     public RestCacheAdvisor(){
         setOrder(REST_CACHE);

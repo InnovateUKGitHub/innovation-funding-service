@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.async.executor;
 
 import org.innovateuk.ifs.async.AsyncExecutionTestHelper;
+import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
@@ -73,6 +75,38 @@ public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
         testThreadLocalTransferredToChildThread(setNewThreadLocalValueFn, RequestContextHolder::getRequestAttributes);
     }
 
+    /**
+     * This test case asserts that the ThreadLocal value in {@link AsyncFuturesHolder} is transferred from the top-level
+     * Thread to its child Threads (and their children).
+     *
+     * This transfers a List in which we keep a track of all Futures and children of those Futures that were spawned
+     * from the main Thread, so that we can keep a track of every Future that has (or will be) launched from the main
+     * Thread, so that we can choose to wait for all to complete before letting the main Thread continue, as we do in
+     * {@link org.innovateuk.ifs.parallel.AwaitAllFuturesCompletionMethodInterceptor} to ensure that all Futures have
+     * completed populating the Spring Model before passing to Thymeleaf to render.
+     */
+    @Test
+    public void testFuturesListTransferredToChildThreads() throws ExecutionException, InterruptedException {
+
+        Runnable setNewThreadLocalValueFn = () -> AsyncFuturesHolder.setFutures(new ConcurrentLinkedQueue<>());
+
+        testThreadLocalTransferredToChildThread(setNewThreadLocalValueFn, AsyncFuturesHolder::getFuturesOrInitialise);
+    }
+
+    /**
+     * This test case asserts that we are selectively choosing ThreadLocals to copy across rather than moving them all.
+     */
+    @Test
+    public void testArbitraryThreadLocalsNotTransferredToChildThreads() throws ExecutionException, InterruptedException {
+
+        ThreadLocal<Integer> arbitraryThreadLocal = new ThreadLocal<>();
+        arbitraryThreadLocal.set(123);
+
+        CompletableFuture<Integer> futureAssertion = helper.executeAsync(() -> arbitraryThreadLocal.get());
+        Integer childValue = futureAssertion.get();
+        assertNull(childValue);
+    }
+
     // this test method runs the ThreadLocal assertion test twice to test the reuse of the Threads in the Thread Pool
     private <T> void testThreadLocalTransferredToChildThread(Runnable setupNewThreadLocalValueFn, Supplier<T> threadLocalGetter) throws InterruptedException, ExecutionException {
 
@@ -91,6 +125,8 @@ public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
         setupNewThreadLocalValueFn.run();
 
         T threadLocalValueOnTopThread = threadLocalGetter.get();
+
+        assertNotNull(threadLocalValueOnTopThread);
 
         Thread topThread = Thread.currentThread();
 

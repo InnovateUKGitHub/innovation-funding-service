@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.lang.reflect.Method;
 
 @Component
-public class CallFuturesInModelAdvisor extends AbstractPointcutAdvisor {
+public class AwaitAllFuturesCompletionMethodAdvisor extends AbstractPointcutAdvisor {
 
     private static final long serialVersionUID = 1L;
 
     public static final int CALL_FUTURES_ORDER = Ordered.LOWEST_PRECEDENCE - 1;
 
-    public CallFuturesInModelAdvisor(){
+    public AwaitAllFuturesCompletionMethodAdvisor(){
         setOrder(CALL_FUTURES_ORDER);
     }
 
@@ -35,7 +35,7 @@ public class CallFuturesInModelAdvisor extends AbstractPointcutAdvisor {
             };
 
     @Autowired
-    private transient CallFuturesInModelMethodInterceptor interceptor;
+    private transient AwaitAllFuturesCompletionMethodInterceptor interceptor;
 
     @Override
     public Pointcut getPointcut() {

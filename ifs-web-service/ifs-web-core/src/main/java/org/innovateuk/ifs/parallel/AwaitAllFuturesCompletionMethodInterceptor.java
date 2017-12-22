@@ -10,7 +10,7 @@ import org.springframework.ui.Model;
 import static org.innovateuk.ifs.application.service.Futures.callAllFutures;
 
 @Component
-public class CallFuturesInModelMethodInterceptor implements MethodInterceptor {
+public class AwaitAllFuturesCompletionMethodInterceptor implements MethodInterceptor {
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
