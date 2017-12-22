@@ -45,7 +45,6 @@ public class AssessmentPanelInviteResource extends InviteResource {
     public AssessmentPanelInviteResource() {
     }
 
-
     public String getHash() {
         return hash;
     }
@@ -53,7 +52,6 @@ public class AssessmentPanelInviteResource extends InviteResource {
     public void setHash(String hash) {
         this.hash = hash;
     }
-
 
     public long getCompetitionId() {
         return competitionId;
@@ -146,5 +144,4 @@ public class AssessmentPanelInviteResource extends InviteResource {
                 .append(clock)
                 .toHashCode();
     }
-
 }

@@ -8,7 +8,6 @@ import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -476,11 +475,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         Collection<State> states = applicationStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
         List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, states);
         return serviceSuccess(applicationResults);
-    }
-
-    @Override
-    public ServiceResult<List<ApplicationResource>> findByCompetitionId(long competitionId) {
-        return serviceSuccess(simpleMap(applicationRepository.findByCompetitionId(competitionId), applicationMapper::mapToResource));
     }
 
     @Override

@@ -392,11 +392,6 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<List<ApplicationResource>> findByCompetitionId(long competitionId) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<ApplicationResource> saveApplicationDetails(Long id, ApplicationResource application) {
             return null;
         }

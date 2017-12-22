@@ -30,8 +30,8 @@ import java.util.stream.Collectors;
 
 import static java.time.ZoneId.systemDefault;
 import static java.time.ZonedDateTime.now;
-import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.assessment.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
@@ -41,7 +41,6 @@ import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResou
 import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
-import static org.innovateuk.ifs.user.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
@@ -495,7 +494,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         AssessorDashboardViewModel model = (AssessorDashboardViewModel) result.getModelAndView().getModel().get("model");
 
         List<AssessorDashboardAssessmentPanelAcceptedViewModel> expectedPanelAcceptedModel =
-                asList(new AssessorDashboardAssessmentPanelAcceptedViewModel(
+                singletonList(new AssessorDashboardAssessmentPanelAcceptedViewModel(
                         assessmentPanelParticipantResource.getCompetitionName(),
                         assessmentPanelParticipantResource.getCompetitionId(),
                         assessmentPanelParticipantResource.getInvite().getPanelDate().toLocalDate(),
