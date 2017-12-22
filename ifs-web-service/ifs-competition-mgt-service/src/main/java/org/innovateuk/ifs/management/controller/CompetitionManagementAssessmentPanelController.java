@@ -37,7 +37,7 @@ public class CompetitionManagementAssessmentPanelController {
     }
 
     @PostMapping("/notify-assessors")
-    public String notify(@PathVariable("competitionId") long competitionId) {
+    public String notifyAssessors(@PathVariable("competitionId") long competitionId) {
         assessmentPanelRestService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
         return format("redirect:/assessment/panel/competition/%d", competitionId);
     }

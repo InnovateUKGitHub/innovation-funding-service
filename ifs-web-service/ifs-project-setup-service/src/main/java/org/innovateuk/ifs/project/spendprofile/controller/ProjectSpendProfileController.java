@@ -100,7 +100,7 @@ public class ProjectSpendProfileController {
         return BASE_DIR + "/spend-profile";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SPEND_PROFILE_SECTION')")
+    @PreAuthorize("hasPermission(new org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId(#projectId, #organisationId), 'EDIT_SPEND_PROFILE_SECTION')")
     @GetMapping("/edit")
     public String editSpendProfile(Model model,
                                    HttpServletRequest request,
@@ -108,7 +108,7 @@ public class ProjectSpendProfileController {
                                    @SuppressWarnings("unused") BindingResult bindingResult,
                                    ValidationHandler validationHandler,
                                    @P("projectId")@PathVariable("projectId") final Long projectId,
-                                   @PathVariable("organisationId") final Long organisationId,
+                                   @P("organisationId")@PathVariable("organisationId") final Long organisationId,
                                    UserResource loggedInUser) {
 
         String failureView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";

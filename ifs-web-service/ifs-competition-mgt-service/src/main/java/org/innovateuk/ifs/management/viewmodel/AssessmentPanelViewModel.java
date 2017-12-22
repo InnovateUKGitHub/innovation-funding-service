@@ -20,7 +20,8 @@ public class AssessmentPanelViewModel {
                                     CompetitionStatus competitionStatus,
                                     int applicationsInPanel,
                                     int assessorsInvited,
-                                    int assessorsAccepted, boolean pendingReviewNotifications) {
+                                    int assessorsAccepted,
+                                    boolean pendingReviewNotifications) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.competitionStatus = competitionStatus;
