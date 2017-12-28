@@ -59,7 +59,7 @@
 			<a th:href="@{'?tab=invite'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Invite</a>
 		</li>
 		<li th:class="${(param.tab != null and param.tab[0] == 'overview' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'overview' ? 'Item selected' : 'Item not selected' )}">
-			<a th:href="@{'?tab=overview'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Pending and rejected</a>
+			<a th:href="@{'?tab=overview'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Pending and declined</a>
 		</li>
         <li th:class="${(param.tab != null and param.tab[0] == 'accepted' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'accepted' ? 'Item selected' : 'Item not selected' )}">
             <a th:href="@{'?tab=accepted'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Accepted</a>
@@ -132,7 +132,7 @@
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'overview'}">
         <h2 class="heading-medium">
-            View assessors who have not yet responded or have been rejected.
+            View assessors who have not yet responded or have declined the invite.
         </h2>
 
         <p th:unless="${param.status != null and param.status[0] == 'invitesPending'}">There are no assessors invited to this panel.</p>
