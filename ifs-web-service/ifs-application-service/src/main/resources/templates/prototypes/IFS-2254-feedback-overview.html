@@ -8,12 +8,13 @@
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-assessor-header" th:with="status='loggedIn'" />
+
 
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${(param.status != null ? '/prototypes/IFS-2254-apps-for-interview?status=' + param.status[0]:'/prototypes/IFS-2254-apps-for-interview')})" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Interviews you have agreed to attend'}, ${(param.status != null ? '/prototypes/IFS-2254-apps-for-interview?status=' + param.status[0]:'/prototypes/IFS-2254-apps-for-interview')})" />
 
     <!-- HARDCODED PROTOTYPE HTML -->
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${(param.status != null ? param.status[0] : 'noStatus')}, ${'Feedback overview'})" />
@@ -57,14 +58,14 @@
 
     <th:block th:if="${param.status == null or param.status != null and param.status[0] == 'noFeedback'}">
         <div class="message-alert">
-            <h2 class="heading-small">The lead applicant has responded to feedback</h2>
-            <p>Download and review all attachments before the interview panel</p>
+            <h2 class="heading-small">The lead applicant has responded to feedback.</h2>
+            <p>Download and review all attachments before the interview panel.</p>
         </div>
     </th:block>
 
     <th:block th:if="${param.status != null and param.status[0] == 'noResponse'}">
         <div class="message-alert">
-            <h2 class="heading-small">No reponse to feedback has been provided by lead applicant</h2>
+            <h2 class="heading-small">The lead applicant has not responded to feedback.</h2>
         </div>
     </th:block>
 
