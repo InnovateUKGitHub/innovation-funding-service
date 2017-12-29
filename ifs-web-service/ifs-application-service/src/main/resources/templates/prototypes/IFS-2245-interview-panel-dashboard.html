@@ -55,7 +55,7 @@
         <ul class="link-list" th:classappend="${param.status != null and param.status[0] == 'noResponse'} ? form-hint">
             <li>
                 <th:block th:if="${param.status != null and param.status[0] == 'noResponse'}"><a>Allocate applications to assessors</a></th:block>
-                <th:block th:if="${param.status == null or param.status[0] != 'noResponse'}"><a href="/prototypes/IFS-2246-assign-applications">Allocate applications to assessors</a></th:block>
+                <th:block th:if="${param.status == null or param.status[0] != 'noResponse'}"><a href="/prototypes/IFS-2248-allocate-assessors">Allocate applications to assessors</a></th:block>
             </li>
         </ul>
 
