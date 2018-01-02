@@ -47,12 +47,12 @@ dependencies {
     compile "org.flywaydb:flyway-core:4.1.2"
 }
 
-flywayMigrate.dependsOn processResources
-flywayClean.dependsOn processResources
-
 task initDB() {
     flywayMigrate.mustRunAfter flywayClean
 
     dependsOn flywayClean
     dependsOn flywayMigrate
 }
+
+flywayMigrate.dependsOn processResources
+flywayClean.dependsOn processResources
