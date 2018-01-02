@@ -22,6 +22,7 @@ import java.util.function.BiConsumer;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuilder> {
 
@@ -52,11 +53,21 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     }
 
     public ApplicationBuilder withApplicationState(ApplicationState... applicationStates) {
-        return withArray((applicationState, application)
+        return withActivityState(
+                simpleMap(
+                        applicationStates,
+                        applicationState -> new ActivityState(ActivityType.APPLICATION, applicationState.getBackingState())
+                )
+                        .toArray(new ActivityState[applicationStates.length])
+        );
+    }
+
+    public ApplicationBuilder withActivityState(ActivityState... activityStates) {
+        return withArray((activityState, application)
                         -> setField("applicationProcess",
-                                new ApplicationProcess(application, null, new ActivityState(ActivityType.APPLICATION, applicationState.getBackingState())), application
+                            new ApplicationProcess(application, null, activityState), application
                 ),
-                applicationStates
+                activityStates
         );
     }
 
@@ -111,5 +122,8 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
 
     public ApplicationBuilder withResearchCategory(ResearchCategory... researchCategories) {
         return withArray((researchCategory, application) -> application.setResearchCategory(researchCategory), researchCategories);
+    }
+    public ApplicationBuilder withInAssessmentPanel(Boolean... inPanels) {
+        return withArray((inPanel, application) -> application.setInAssessmentPanel(inPanel), inPanels);
     }
 }

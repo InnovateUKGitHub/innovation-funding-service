@@ -1,0 +1,18 @@
+<#ftl output_format="HTML" auto_esc=true>
+<#import "layout/default.html" as layout>
+<@layout.default>
+
+<p>Dear ${name},</p>
+
+<p>You have been allocated applications to review within the competition <b>${competitionName}</b>.
+    <a href="{$ifsUrl}">Please sign into the Innovation Funding Service</a> to review these applications
+    before the panel assessment. If you have any questions around assessments, please contact
+    the Portfolio Managers.
+</p>
+
+<p>Assessment panel date: ${panelDate}</p>
+
+<p>Yours sincerely,</p>
+
+<@layout.senderHTML />
+</@layout.default>
