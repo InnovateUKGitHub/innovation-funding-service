@@ -14,16 +14,6 @@
     <th:block th:unless="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type',linkClass='link-back',linkUrl='/organisation/create/new-account-organisation-type',currentApplication=${currentApplication}" />
     <th:block th:if="${isLeadApplicant}" th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to choose your organisation type ',linkClass='link-back',linkUrl='/organisation/create/lead-organisation-type'" />
 
-    <!-- todo: add error summaries list when we have a better hasFormErrors -->
-     <!--<div th:if="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">-->
-        <!--<h2 class="heading-medium error-summary-heading"  id="error-summary-heading">Please check this page.</h2>-->
-        <!--<ul class="error-summary-list">-->
-            <!--<li th:each="err : ${#fields.errors('*{organisationSearchName}')}">-->
-                <!--<a href="#organisationSearchName" th:text="${err}">The error message</a>-->
-            <!--</li>-->
-        <!--</ul>-->
-    <!--</div>-->
-
     <th:block th:with="orgTitle=${organisationType.name}">
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${orgTitle},subTitle='Create your account',size='heading-xlarge'" />
     </th:block>
