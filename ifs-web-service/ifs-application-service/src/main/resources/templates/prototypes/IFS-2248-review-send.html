@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body class="wide-page">
+<body class="wide-page" th:with="name=${param.name != null ? param.name[0] : 'John Smith'}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -14,13 +14,13 @@
 <main id="content">
   <th:block th:insert="fragments/layout :: main-content-start" />
 
-  <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Applications allocated for interview'}, ${'/prototypes/IFS-2248-assign-application-assessor?name='} + ${param.name != null ? param.name[0] : 'John Smith'})" />
+  <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Applications allocated for interview'}, ${'/prototypes/IFS-2248-assign-application-assessor?name='} + ${name})" />
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${'Allocate applications to this assessor'}, ${null})" />
 
-    <h2 class="heading-large" th:text="${param.name != null ? param.name[0] : 'John Smith'}">ASSESSOR NAME</h2>
+    <h2 class="heading-large" th:text="${name}">ASSESSOR NAME</h2>
 
     <p>Review the allocated applications, edit the email and click notify. Feedback will then be released to the assessor. </p>
 
@@ -140,8 +140,8 @@ Please visit our online Innovation Funding Service to respond to this request: [
             </p>
 
             <div class="extra-margin">
-                <a href="/prototypes/IFS-2248-assign-application-assessor?tab=assigned" class="button">Notify and release feedback</a>
-                <a href="/prototypes/IFS-2248-assign-application-assessor?tab=assigned" class="button button-clear">Cancel</a>
+                <a th:href="${'/prototypes/IFS-2248-assign-application-assessor?tab=assigned&#38;name='} + ${name}" class="button">Notify and release feedback</a>
+                <a th:href="${'/prototypes/IFS-2248-assign-application-assessor?tab=assignedd&#38;name='} + ${name}" class="button button-clear">Cancel</a>
             </div>
 
         </fieldset>

@@ -6,7 +6,7 @@
 
 </head>
 
-<body class="competition-management">
+<body class="competition-management" th:with="name=${param.name != null ? param.name[0] : 'John Smith'}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -54,14 +54,16 @@
         </div>
     </div>
 
+
     <ul class="inline-nav extra-margin-top">
         <li th:class="${(param.tab == null or param.tab[0] == 'applications' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab == null or param.tab[0] == 'applications' ? 'Item selected' : 'Item not selected' )}">
-            <a th:href="@{'?tab=applications'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Applications (14)</a>
+            <a th:href="@{'?tab=applications&#38;name='} + ${name}">Applications (14)</a>
         </li>
         <li th:class="${(param.tab != null and param.tab[0] == 'assigned' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'assigned' ? 'Item selected' : 'Item not selected' )}">
-            <a th:href="@{'?tab=assigned'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Assigned (14)</a>
+            <a th:href="@{'?tab=assigned&#38;name='} + ${name}">Assigned (14)</a>
         </li>
     </ul>
+
 
     <th:block th:if="${param.tab == null or param.tab[0] == 'applications'}">
 
@@ -108,7 +110,7 @@
             </div>
             <div class="column-half select-all alignright">
                 <form method="get">
-                    <input type="hidden" name="name" th:value="${(param.name != null ? param.name[0] : 'John Smith')}">
+                    <input type="hidden" name="name" th:value="${name}">
                     <button class="button" name="addSelected" data-submit-el="" disabled="disabled" formaction="/prototypes/IFS-2248-review-send">
                         Allocate
                     </button>
