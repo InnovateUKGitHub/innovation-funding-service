@@ -143,7 +143,3 @@ bootRepackage {
     mainClass = 'org.innovateuk.ifs.Application'
     //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
 }
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
-}

@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
-import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
+import org.innovateuk.ifs.invite.repository.CompetitionAssessmentInviteRepository;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.domain.Role;
@@ -35,7 +35,7 @@ import static java.util.Collections.singleton;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
+import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -45,7 +45,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionInviteRepository> {
+public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionAssessmentInviteRepository> {
 
     private final long INNOVATION_AREA_ID = 5L;
 
@@ -73,7 +73,7 @@ public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRe
 
     @Autowired
     @Override
-    protected void setRepository(CompetitionInviteRepository repository) {
+    protected void setRepository(CompetitionAssessmentInviteRepository repository) {
         this.repository = repository;
     }
 
@@ -111,7 +111,7 @@ public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRe
 
     @Test
     public void getByInviteIds() {
-        List<CompetitionAssessmentInvite> invites = newCompetitionInvite()
+        List<CompetitionAssessmentInvite> invites = newCompetitionAssessmentInvite()
                 .withName("fred", "jake")
                 .withEmail("fred@test.com", "jake@test.com")
                 .withHash("hash1", "hash2")
@@ -153,7 +153,7 @@ public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRe
     public void getByCompetitionIdAndStatus() {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newCompetitionInvite()
+        repository.save(newCompetitionAssessmentInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")
@@ -182,7 +182,7 @@ public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRe
     public void getByCompetitionIdAndStatus_asList() throws Exception {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newCompetitionInvite()
+        repository.save(newCompetitionAssessmentInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")
@@ -207,7 +207,7 @@ public class CompetitionAssessmentInviteRepositoryIntegrationTest extends BaseRe
     public void countByCompetitionIdAndStatus() {
         Competition otherCompetition = newCompetition().build();
 
-        repository.save(newCompetitionInvite()
+        repository.save(newCompetitionAssessmentInvite()
                 .with(id(null))
                 .withCompetition(competition, otherCompetition, competition, otherCompetition, competition, otherCompetition)
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com", "michael@example.com", "rachel@example.com")

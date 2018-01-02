@@ -36,4 +36,18 @@ public class CompetitionsBankDetailsControllerTest extends BaseControllerMockMVC
         verify(bankDetailsServiceMock, only()).getPendingBankDetailsApprovals();
 
     }
+
+    @Test
+    public void countPendingBankDetailsApprovals() throws Exception {
+
+        Long pendingBankDetailsCount = 8L;
+        when(bankDetailsServiceMock.countPendingBankDetailsApprovals()).thenReturn(serviceSuccess(pendingBankDetailsCount));
+
+        mockMvc.perform(get("/competitions/count-pending-bank-details-approvals"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(pendingBankDetailsCount)));
+
+        verify(bankDetailsServiceMock, only()).countPendingBankDetailsApprovals();
+
+    }
 }
