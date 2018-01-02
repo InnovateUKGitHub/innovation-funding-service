@@ -33,6 +33,8 @@ osStageLocal.tag = dataServiceVersion
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 ext.companyHouseKey = ext.get('ifs.company-house.key')
 
+project.ext['flyway.placeholderPrefix']='_${'
+project.ext['flyway.placeholderSuffix']='}'
 
 sourceSets {
     client {
