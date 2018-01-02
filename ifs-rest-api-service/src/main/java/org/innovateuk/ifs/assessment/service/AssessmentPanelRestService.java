@@ -11,4 +11,6 @@ import java.util.List;
 public interface AssessmentPanelRestService {
     RestResult<Void> assignToPanel(long applicationId);
     RestResult<Void> unassignFromPanel(long applicationId);
+    RestResult<Void> notifyAssessors(long competitionId);
+    RestResult<Boolean> isPendingReviewNotifications(long competitionId);
 }
