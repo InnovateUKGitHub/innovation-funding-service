@@ -1,4 +1,0 @@
-task syncShib(type:Exec) {
-    workingDir '../'
-    commandLine 'docker-compose', 'exec', '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh', 'mysql'
-}

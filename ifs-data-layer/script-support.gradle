@@ -1,6 +1,5 @@
 task startMySql(type:Exec) {
     workingDir '../'
-    println "*************"
     println workingDir
     commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'docker-compose-dev.yml', 'up', '-d', 'mysql'
     doLast {
