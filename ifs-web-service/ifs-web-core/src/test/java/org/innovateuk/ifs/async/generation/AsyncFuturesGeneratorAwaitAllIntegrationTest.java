@@ -4,14 +4,21 @@ import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import static java.lang.Thread.currentThread;
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 
 /**
  * Tests for the {@link AsyncFuturesGenerator#awaitAll} methods.  These methods allow us to await the completion of other
@@ -143,5 +150,41 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
         assertEquals(future4, registeredFutures.get(3).getFuture());
         assertEquals(future5, registeredFutures.get(4).getFuture());
         assertEquals(awaitingFuture, registeredFutures.get(5).getFuture());
+    }
+
+    /**
+     * Test that the Futures created via {@link AsyncFuturesGenerator#awaitAll} methods are executed in one of the
+     * original Threads that it is awaiting the completion of.
+     *
+     * This is important because it requires access to the same ThreadLocal values that are copied from the main Thread
+     * by the {@link org.innovateuk.ifs.async.executor.AsyncTaskDecorator} in order to perform actions like identifying
+     * the current User on the Thread.
+     */
+    @Test
+    public void testAwaitingFutureExecutesInSameThreadAsOneOfTheDependentThreads() throws ExecutionException, InterruptedException {
+
+        SecurityContext context = new SecurityContextImpl();
+        SecurityContextHolder.setContext(context);
+
+        CompletableFuture<Thread> future1 = generator.async(() -> {
+            assertThat(SecurityContextHolder.getContext(), sameInstance(context));
+            return currentThread();
+        });
+
+        CompletableFuture<Thread> future2 = generator.async(() -> {
+            assertThat(SecurityContextHolder.getContext(), sameInstance(context));
+            return currentThread();
+        });
+
+        CompletableFuture<Thread> awaitingFuture = generator.awaitAll(future1, future2).thenApply((r1, r2) -> {
+            assertThat(SecurityContextHolder.getContext(), sameInstance(context));
+            return currentThread();
+        });
+
+        Thread awaitingFutureThread = awaitingFuture.get();
+        Thread future1Thread = future1.get();
+        Thread future2Thread = future2.get();
+
+        assertThat(asList(future1Thread, future2Thread), hasItem(awaitingFutureThread));
     }
 }
