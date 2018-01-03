@@ -91,7 +91,7 @@
                         <span class="form-label-bold">Research participation</span>
                         <span class="hint">This indicates the maximum level of research participation allowed.</span>
                         <th:block th:if="${#fields.hasErrors('researchParticipationAmountId')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}"></span>
+                            <span class="error-message" th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
                     <select class="form-control width-large"
@@ -99,7 +99,12 @@
                             id="researchParticipation"
                             required="required"
                             th:attr="data-required-errormessage=#{validation.eligibilityform.researchparticipationamountId.required}">
-                        <option th:each="researchParticipationAmount : ${model.researchParticipationAmounts}" th:text="${researchParticipationAmount.name}" th:value="${researchParticipationAmount.id}" th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">Research participation</option>
+                        <option th:each="researchParticipationAmount : ${model.researchParticipationAmounts}"
+                                th:text="${researchParticipationAmount.name}"
+                                th:value="${researchParticipationAmount.id}"
+                                th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">
+                            Research participation
+                        </option>
                     </select>
                 </fieldset>
             </div>
