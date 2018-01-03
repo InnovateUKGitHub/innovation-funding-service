@@ -63,8 +63,4 @@ public abstract class AsyncAdaptor {
     public CompletableFutureTupleNHandler awaitAll(String futureName, CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?>... moreFutures) {
         return asyncFuturesGenerator.awaitAll(futureName, future1, future2, future3, moreFutures);
     }
-
-    public <T> T futureResult(CompletableFuture<T> future) {
-        return asyncFuturesGenerator.futureResult(future);
-    }
 }

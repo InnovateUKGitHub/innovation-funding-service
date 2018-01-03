@@ -2,6 +2,8 @@ package org.innovateuk.ifs.async.util;
 
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
+import org.innovateuk.ifs.util.ExceptionThrowingRunnable;
+import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,13 +41,13 @@ public class CompletableFutureTupleNHandler extends BaseCompletableFutureTupleHa
         super(futureName, futures.toArray(new CompletableFuture[] {}));
     }
 
-    public <R> CompletableFuture<R> thenApply(Supplier<R> supplier) {
+    public <R> CompletableFuture<R> thenApply(ExceptionThrowingSupplier<R> supplier) {
         return thenApplyInternal(supplier::get);
     }
 
-    public <R> CompletableFuture<Void> thenAccept(Runnable runnable) {
+    public <R> CompletableFuture<Void> thenAccept(ExceptionThrowingRunnable runnable) {
 
-        Supplier<Void> dummySupplier = () -> {
+        ExceptionThrowingSupplier<Void> dummySupplier = () -> {
             runnable.run();
             return null;
         };

@@ -18,7 +18,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.junit.Assert.*;
 
 /**
- * Tests for the {@link AsyncFuturesGenerator}, the entrypoint and control gate for all the parallelisation to take
+ * Tests for the {@link AsyncFuturesGenerator#async} methods, the main entrypoint for all the parallelisation to take
  * place on the IFS platform.  All Futures and awaits() need to be generated via this class in order for us to be able
  * to make use of the control mechanisms it gives us (for example, the ability to wait for the completion of all
  * child Futures and their child Futures before proceeding on the main Thread).

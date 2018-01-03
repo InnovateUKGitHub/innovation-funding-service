@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
@@ -58,7 +57,7 @@ public class AsyncFuturesGenerator {
     }
 
     public <T> CompletableFuture<T> async(ExceptionThrowingSupplier<T> supplier) {
-        return async(UUID.randomUUID().toString(), supplier);
+        return async(randomName(), supplier);
     }
 
     public <T> CompletableFuture<T> async(String futureName, ExceptionThrowingSupplier<T> supplier) {
@@ -86,7 +85,7 @@ public class AsyncFuturesGenerator {
     }
 
     public CompletableFuture<Void> async(ExceptionThrowingRunnable runnable) {
-        return async(UUID.randomUUID().toString(), runnable);
+        return async(randomName(), runnable);
     }
 
     public CompletableFuture<Void> async(String futureName, ExceptionThrowingRunnable runnable) {
@@ -113,19 +112,19 @@ public class AsyncFuturesGenerator {
     }
 
     public <R1> CompletableFutureTuple1Handler<R1> awaitAll(CompletableFuture<R1> future1) {
-        return awaitAll(UUID.randomUUID().toString(), future1);
+        return awaitAll(randomName(), future1);
     }
 
     public <R1, R2> CompletableFutureTuple2Handler<R1, R2> awaitAll(CompletableFuture<R1> future1, CompletableFuture<R2> future2) {
-        return awaitAll(UUID.randomUUID().toString(), future1, future2);
+        return awaitAll(randomName(), future1, future2);
     }
 
     public <R1, R2, R3> CompletableFutureTuple3Handler<R1, R2, R3> awaitAll(CompletableFuture<R1> future1, CompletableFuture<R2> future2, CompletableFuture<R3> future3) {
-        return awaitAll(UUID.randomUUID().toString(), future1, future2, future3);
+        return awaitAll(randomName(), future1, future2, future3);
     }
 
     public CompletableFutureTupleNHandler awaitAll(CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?>... moreFutures) {
-        return awaitAll(UUID.randomUUID().toString(), future1, future2, future3, moreFutures);
+        return awaitAll(randomName(), future1, future2, future3, moreFutures);
     }
 
     public <R1> CompletableFutureTuple1Handler<R1> awaitAll(String futureName, CompletableFuture<R1> future1) {
@@ -145,16 +144,7 @@ public class AsyncFuturesGenerator {
         return new CompletableFutureTupleNHandler(futureName, allFutures);
     }
 
-    public <T> T futureResult(CompletableFuture<T> future) {
-        return getQuietly(future);
-    }
-
-    private <T> T getQuietly(CompletableFuture<T> future) {
-        try {
-            return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            LOG.error("Exception caught whilst awaiting a Future - rethrowing", e);
-            throw new RuntimeException(e);
-        }
+    private String randomName() {
+        return UUID.randomUUID().toString();
     }
 }

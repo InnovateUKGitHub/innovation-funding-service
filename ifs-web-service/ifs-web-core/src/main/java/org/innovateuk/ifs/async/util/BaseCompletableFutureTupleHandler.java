@@ -3,10 +3,10 @@ package org.innovateuk.ifs.async.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
+import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 
@@ -66,14 +66,19 @@ abstract class BaseCompletableFutureTupleHandler {
         this.futures = futures;
     }
 
-    protected <R> CompletableFuture<R> thenApplyInternal(Supplier<R> supplier) {
+    protected <R> CompletableFuture<R> thenApplyInternal(ExceptionThrowingSupplier<R> supplier) {
 
         CompletableFuture<R> blockingFuture = CompletableFuture.allOf(futures).thenApply(done -> {
 
             // this ensures that all of the top-level Futures' descendant Futures are fully completed prior to
             // executing the next Future
             waitForFuturesAndDescendantsToFullyComplete();
-            return supplier.get();
+            try {
+                return supplier.get();
+            } catch (Exception e) {
+                LOG.error("Error whilst executing Supplier Future", e);
+                throw new RuntimeException(e);
+            }
         });
 
         return AsyncFuturesHolder.registerFuture(futureName, blockingFuture);
