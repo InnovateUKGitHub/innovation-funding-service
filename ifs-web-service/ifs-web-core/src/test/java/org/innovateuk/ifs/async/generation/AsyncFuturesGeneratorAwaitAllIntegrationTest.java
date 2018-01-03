@@ -234,7 +234,9 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
 
         CountDownLatch unrelatedFutureLatch = new CountDownLatch(1);
 
-        // this is an unrelated Future that awaitingFuture should not be dependent on
+        // this is an unrelated Future that awaitingFuture should not be dependent on.  It immediately locks and stays
+        // locked until awaitingFuture executes, proving that awaitingFuture doesn't have to wait for it to complete
+        // before itself executing
         generator.async(() -> unrelatedFutureLatch.await());
 
         // assert that the future1ChildChild Future, future2ChildChild and future1ChildChildAwaiting have all completed
