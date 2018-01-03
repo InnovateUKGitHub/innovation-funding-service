@@ -9,8 +9,7 @@ import java.time.LocalDate;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder.newAssessmentReviewResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
-import static org.innovateuk.ifs.assessment.documentation.AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceBuilder;
-import static org.innovateuk.ifs.assessment.documentation.AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceBuilder;
+import static org.innovateuk.ifs.assessment.documentation.AssessmentReviewRejectOutcomeDocs.assessmentReviewRejectOutcomeResourceBuilder;
 import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.PENDING;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -34,8 +33,7 @@ public class AssessmentReviewDocs {
             .withId(1L)
             .withStartDate(LocalDate.now())
             .withEndDate(LocalDate.now().plusDays(14))
-            .withFundingDecision(assessmentFundingDecisionOutcomeResourceBuilder)
-            .withRejection(assessmentRejectOutcomeResourceBuilder)
+            .withRejection(assessmentReviewRejectOutcomeResourceBuilder)
             .withActivityState(PENDING)
             .withProcessRole(1L)
             .withApplication(2L);

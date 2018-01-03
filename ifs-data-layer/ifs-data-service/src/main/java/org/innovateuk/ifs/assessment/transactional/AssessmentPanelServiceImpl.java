@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.mapper.AssessmentReviewMapper;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
@@ -37,6 +38,7 @@ import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -76,6 +78,9 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private AssessmentReviewMapper assessmentReviewMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -125,8 +130,9 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     }
 
     @Override
-    public ServiceResult<List<AssessmentReviewResource>> getAssessmentReviews(long competitionId) {
-        return null;
+    public ServiceResult<List<AssessmentReviewResource>> getAssessmentReviews(long userId, long competitionId) {
+        List<AssessmentReview> assessmentReviews = assessmentReviewRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
+        return serviceSuccess(simpleMap(assessmentReviews, assessmentReviewMapper::mapToResource));
     }
 
     private ServiceResult<Void> createAssessmentReview(AssessmentPanelParticipant assessor, Application application) {

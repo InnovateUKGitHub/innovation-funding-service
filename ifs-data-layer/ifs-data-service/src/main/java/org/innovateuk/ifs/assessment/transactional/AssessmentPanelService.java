@@ -24,7 +24,6 @@ public interface AssessmentPanelService {
             description = "Comp admins and execs can unassign applications from an assessment panel")
     ServiceResult<Void> unassignApplicationFromPanel(long applicationId);
 
-
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(
             value = "CREATE_AND_NOTIFY_ASSESSMENT_REVIEWS",
@@ -41,6 +40,5 @@ public interface AssessmentPanelService {
     @SecuredBySpring(
             value = "READ_ASSESSMENT_REVIEWS",
             description = "Comp admins and execs can read assessment reviews")
-    ServiceResult<List<AssessmentReviewResource>> getAssessmentReviews(long competitionId);
-
+    ServiceResult<List<AssessmentReviewResource>> getAssessmentReviews(long userId, long competitionId);
 }

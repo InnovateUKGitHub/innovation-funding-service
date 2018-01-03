@@ -2,10 +2,10 @@ package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState;
 import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeResource;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -50,15 +50,11 @@ public class AssessmentReviewResourceBuilder extends BaseBuilder<AssessmentRevie
         return withArraySetFieldByReflection("fundingDecision", value);
     }
 
-    public AssessmentReviewResourceBuilder withFundingDecision(Builder<AssessmentFundingDecisionOutcomeResource, ?> value) {
-        return withFundingDecision(value.build());
-    }
-
-    public AssessmentReviewResourceBuilder withRejection(AssessmentRejectOutcomeResource... value) {
+    public AssessmentReviewResourceBuilder withRejection(AssessmentReviewRejectOutcomeResource... value) {
         return withArraySetFieldByReflection("rejection", value);
     }
 
-    public AssessmentReviewResourceBuilder withRejection(Builder<AssessmentRejectOutcomeResource, ?> value) {
+    public AssessmentReviewResourceBuilder withRejection(Builder<AssessmentReviewRejectOutcomeResource, ?> value) {
         return withRejection(value.build());
     }
 
@@ -79,6 +75,6 @@ public class AssessmentReviewResourceBuilder extends BaseBuilder<AssessmentRevie
     }
 
     public AssessmentReviewResourceBuilder withActivityState(AssessmentReviewState... value) {
-        return withArraySetFieldByReflection("assessmentState", value);
+        return withArraySetFieldByReflection("assessmentReviewState", value);
     }
 }

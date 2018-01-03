@@ -2,8 +2,6 @@ package org.innovateuk.ifs.assessment.panel.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeResource;
 
 import java.time.LocalDate;
 
@@ -13,8 +11,7 @@ public class AssessmentReviewResource {
     private AssessmentReviewState assessmentReviewState;
     private LocalDate startDate;
     private LocalDate endDate;
-    private AssessmentFundingDecisionOutcomeResource fundingDecision;
-    private AssessmentRejectOutcomeResource rejection;
+    private AssessmentReviewRejectOutcomeResource rejection;
     private Long processRole;
     private Long internalParticipant;
     private Long application;
@@ -37,11 +34,11 @@ public class AssessmentReviewResource {
         this.event = event;
     }
 
-    public AssessmentReviewState getAssessmentState() {
+    public AssessmentReviewState getAssessmentReviewState() {
         return assessmentReviewState;
     }
 
-    public void setAssessmentState(AssessmentReviewState assessmentReviewState) {
+    public void setAssessmentReviewState(AssessmentReviewState assessmentReviewState) {
         this.assessmentReviewState = assessmentReviewState;
     }
 
@@ -61,19 +58,11 @@ public class AssessmentReviewResource {
         this.endDate = endDate;
     }
 
-    public AssessmentFundingDecisionOutcomeResource getFundingDecision() {
-        return fundingDecision;
-    }
-
-    public void setFundingDecision(AssessmentFundingDecisionOutcomeResource fundingDecision) {
-        this.fundingDecision = fundingDecision;
-    }
-
-    public AssessmentRejectOutcomeResource getRejection() {
+    public AssessmentReviewRejectOutcomeResource getRejection() {
         return rejection;
     }
 
-    public void setRejection(AssessmentRejectOutcomeResource rejection) {
+    public void setRejection(AssessmentReviewRejectOutcomeResource rejection) {
         this.rejection = rejection;
     }
 
@@ -119,13 +108,9 @@ public class AssessmentReviewResource {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         AssessmentReviewResource that = (AssessmentReviewResource) o;
 
@@ -135,7 +120,6 @@ public class AssessmentReviewResource {
                 .append(assessmentReviewState, that.assessmentReviewState)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
-                .append(fundingDecision, that.fundingDecision)
                 .append(rejection, that.rejection)
                 .append(processRole, that.processRole)
                 .append(internalParticipant, that.internalParticipant)
@@ -153,7 +137,6 @@ public class AssessmentReviewResource {
                 .append(assessmentReviewState)
                 .append(startDate)
                 .append(endDate)
-                .append(fundingDecision)
                 .append(rejection)
                 .append(processRole)
                 .append(internalParticipant)

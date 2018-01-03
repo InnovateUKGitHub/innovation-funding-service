@@ -25,7 +25,7 @@ import org.mapstruct.NullValueMappingStrategy;
                 UserMapper.class,
                 CompetitionMapper.class,
                 AssessmentFundingDecisionOutcomeMapper.class,
-                AssessmentRejectOutcomeMapper.class
+                AssessmentReviewRejectOutcomeMapper.class
         },
         nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL
 )
@@ -47,7 +47,6 @@ public abstract class AssessmentReviewMapper extends BaseMapper<AssessmentReview
             @Mapping(target = "participant", source = "processRole"),
             @Mapping(target = "target", source = "application"),
             @Mapping(target = "activityState", source = "assessmentReviewState", ignore = true),
-            @Mapping(target = "responses", ignore = true),
             @Mapping(target = "processOutcomes", ignore = true),
             @Mapping(target = "lastModified", ignore = true)
     })

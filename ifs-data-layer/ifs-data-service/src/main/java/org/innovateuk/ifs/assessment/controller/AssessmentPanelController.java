@@ -44,8 +44,10 @@ public class AssessmentPanelController {
         return assessmentPanelService.isPendingReviewNotifications(competitionId).toGetResponse();
     }
 
-    @GetMapping("/get-assessment-reviews/{competitionId}")
-    public RestResult<List<AssessmentReviewResource>> getAssessmentReviews(@PathVariable("competitionId") long competitionId) {
-        return assessmentPanelService.getAssessmentReviews(competitionId).toGetResponse();
+    @GetMapping("/user/{userId}/competition/{competitionId}")
+    public RestResult<List<AssessmentReviewResource>> getAssessmentReviews(
+            @PathVariable("userId") long userId,
+            @PathVariable("competitionId") long competitionId) {
+        return assessmentPanelService.getAssessmentReviews(userId, competitionId).toGetResponse();
     }
 }

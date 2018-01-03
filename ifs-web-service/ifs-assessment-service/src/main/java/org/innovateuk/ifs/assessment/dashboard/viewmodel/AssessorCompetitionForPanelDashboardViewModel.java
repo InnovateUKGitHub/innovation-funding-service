@@ -4,7 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
- * Holder of model attributes for the Assessor Competition Dashboard.
+ * Holder of model attributes for the Assessor Competition for Panel Dashboard.
  */
 public class AssessorCompetitionForPanelDashboardViewModel {
 
@@ -12,18 +12,18 @@ public class AssessorCompetitionForPanelDashboardViewModel {
     private String competitionTitle;
     private String leadTechnologist;
     private ZonedDateTime panelDate;
-    private List<AssessorCompetitionDashboardApplicationViewModel> submitted;
-    private List<AssessorCompetitionDashboardApplicationViewModel> outstanding;
-    private boolean submitVisible;
+    private List<AssessorCompetitionForPanelDashboardApplicationViewModel> applications;
 
-    public AssessorCompetitionForPanelDashboardViewModel(long competitionId, String competitionTitle, String leadTechnologist, ZonedDateTime panelDate, List<AssessorCompetitionDashboardApplicationViewModel> submitted, List<AssessorCompetitionDashboardApplicationViewModel> outstanding, boolean submitVisible) {
+    public AssessorCompetitionForPanelDashboardViewModel(long competitionId,
+                                                         String competitionTitle,
+                                                         String leadTechnologist,
+                                                         ZonedDateTime panelDate,
+                                                         List<AssessorCompetitionForPanelDashboardApplicationViewModel> applications) {
         this.competitionId = competitionId;
         this.competitionTitle = competitionTitle;
         this.leadTechnologist = leadTechnologist;
         this.panelDate = panelDate;
-        this.submitted = submitted;
-        this.outstanding = outstanding;
-        this.submitVisible = submitVisible;
+        this.applications = applications;
     }
 
     public long getCompetitionId() {
@@ -42,15 +42,7 @@ public class AssessorCompetitionForPanelDashboardViewModel {
         return panelDate;
     }
 
-    public List<AssessorCompetitionDashboardApplicationViewModel> getSubmitted() {
-        return submitted;
-    }
-
-    public List<AssessorCompetitionDashboardApplicationViewModel> getOutstanding() {
-        return outstanding;
-    }
-
-    public boolean isSubmitVisible() {
-        return submitVisible;
+    public List<AssessorCompetitionForPanelDashboardApplicationViewModel> getApplications() {
+        return applications;
     }
 }
