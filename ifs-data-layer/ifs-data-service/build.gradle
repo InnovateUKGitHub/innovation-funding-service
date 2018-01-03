@@ -3,7 +3,6 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
 
-apply from: "script-support.gradle"
 apply plugin: 'base'
 
 apply plugin: 'org.flywaydb.flyway'
