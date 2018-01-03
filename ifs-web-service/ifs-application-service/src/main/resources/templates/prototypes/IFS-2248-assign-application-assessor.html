@@ -242,7 +242,50 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'assigned'}">
-        <h2 class="heading-medium">ASSIGNED TAB</h2>
+        <div class="table-overflow">
+            <table>
+                <thead>
+                <tr>
+                    <th>Application</th>
+                    <th>Project title</th>
+                    <th>Lead organisation</th>
+                    <th class="numeric">Assessors</th>
+                    <th><span class="visuallyhidden">Remove</span></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><a href="#">114</a></td>
+                    <td>Electronics, sensors &#38; photonics, Materials</td>
+                    <td>Ooba</td>
+                    <td class="numeric">1</td>
+                    <td><a href="#">Remove</a></td>
+
+                </tr>
+                <tr>
+                    <td><a href="#">269</a></td>
+                    <td>Healthcare, Regentative medicine, Stratified medicine</td>
+                    <td>Empire Ltd</td>
+                    <td class="numeric">1</td>
+                    <td><a href="#">Remove</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#">171</a></td>
+                    <td>Healthcare, Analytical science</td>
+                    <td>Ideas</td>
+                    <td class="numeric">1</td>
+                    <td><a href="#">Remove</a></td>
+                </tr>
+                <tr>
+                    <td><a href="#">265</a></td>
+                    <td>Architectures and operating systems</td>
+                    <td>Wordpedia</td>
+                    <td class="numeric">1</td>
+                    <td><a href="#">Remove</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </th:block>
 
 
