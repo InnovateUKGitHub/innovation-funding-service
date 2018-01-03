@@ -2,6 +2,7 @@ package org.innovateuk.ifs.async.controller;
 
 import org.innovateuk.ifs.async.util.AsyncAdaptor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -41,6 +42,21 @@ public class AwaitAllFuturesCompletionIntegrationTestHelper extends AsyncAdaptor
             });
 
         });
+
+        return null;
+    }
+
+    @GetMapping("/2")
+    public String getMethodWithFutureAddedToModel(Model model) {
+
+        model.addAttribute("futureResult", CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(20);
+                return "theResult";
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }));
 
         return null;
     }
