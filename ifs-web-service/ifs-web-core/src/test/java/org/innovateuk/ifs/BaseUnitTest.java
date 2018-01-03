@@ -260,6 +260,8 @@ public class BaseUnitTest {
     public GrantOfferLetterService grantOfferLetterService;
     @Mock
     public ApplicationFundingDecisionService applicationFundingDecisionService;
+    @Mock
+    protected AssessmentPanelRestService assessmentPanelRestService;
 
     @Spy
     @InjectMocks
