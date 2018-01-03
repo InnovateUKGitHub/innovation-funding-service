@@ -4,7 +4,6 @@ import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +24,6 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
 
     @Autowired
     private AsyncFuturesGenerator generator;
-
-    @Autowired
-    private ThreadPoolTaskExecutor taskExecutor;
 
     @Before
     public void clearRegisteredFutures() {
@@ -60,7 +56,7 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
         CompletableFuture<Integer> awaitingFuture = generator.awaitAll(future).thenApply(result -> result * 3);
 
         List<RegisteredAsyncFutureDetails> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
-        assertEquals(2, registeredFutures.size());
+            assertEquals(2, registeredFutures.size());
         assertEquals(future, registeredFutures.get(0).getFuture());
         assertEquals(awaitingFuture, registeredFutures.get(1).getFuture());
     }
