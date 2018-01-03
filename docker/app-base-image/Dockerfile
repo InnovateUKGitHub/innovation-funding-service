@@ -1,12 +1,16 @@
 FROM innovateuk/oracle-jre
 
-# - Add service user for the application
-RUN useradd --home /opt/app --system app
-RUN mkdir -p /opt/app
+ENV APP_ROOT=/opt/app
+ENV TOMCAT_LOGS=/var/log/tomcat
+
+RUN mkdir -p ${APP_ROOT}
+RUN chmod -R u+x ${APP_ROOT} && \
+    chgrp -R 0 ${APP_ROOT}
+
 
 # - Logs for Tomcat. These are required for CoScale.
-RUN mkdir -p /var/log/tomcat
-RUN chown app /var/log/tomcat
+RUN mkdir -p ${TOMCAT_LOGS}
+RUN chmod -R u+x ${TOMCAT_LOGS} && \
+    chgrp -R 0 ${TOMCAT_LOGS}
 
-WORKDIR /opt/app
-USER app
+WORKDIR ${APP_ROOT}
