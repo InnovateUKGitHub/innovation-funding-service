@@ -1,6 +1,7 @@
 *** Settings ***
 Documentation     INFUND-832
 ...               INFUND-409
+...               IFS-2327
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Upload    Applicant    Email
@@ -46,14 +47,14 @@ Non pdf uploads not allowed
     The user should see an error          ${wrong_filetype_validation_error}
 
 Lead applicant can upload a pdf file
-    [Documentation]    INFUND-832
+    [Documentation]    INFUND-832  IFS-2327
     [Tags]    HappyPath    SmokeTest
     [Setup]
     Given the user navigates to the page          ${DASHBOARD_URL}
     And the user clicks the button/link           link=Academic robot test application
     And the user clicks the button/link           link=5. Technical approach
     Then the user uploads the file                css=.inputfile    ${valid_pdf}
-    And the user should see the text in the page  ${valid_pdf}
+    And the user should see the element    jQuery=a:contains(${valid_pdf})
 
 Lead applicant can view a file
     [Documentation]    INFUND-2720

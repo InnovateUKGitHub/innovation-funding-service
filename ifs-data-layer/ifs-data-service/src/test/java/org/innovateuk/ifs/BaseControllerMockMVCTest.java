@@ -11,6 +11,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
 import org.innovateuk.ifs.rest.ErrorControllerAdvice;
 import org.innovateuk.ifs.rest.RestResultHandlingHttpMessageConverter;
@@ -172,22 +173,26 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
      * 5) Verifies the fileValidator was called as expected
      * 6) Verifies the "create file" service method was called as expected
      */
-    protected <T> ResultActions assertFileUploadProcess(
+    protected <T, MediaTypesContext> ResultActions assertFileUploadProcess(
             String url,
+            FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator,
+            MediaTypesContext mediaTypesContext,
             T serviceToCall,
             BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> createFileServiceCall)
             throws Exception {
 
-        return assertFileUploadProcess(url, new Object[] {}, emptyMap(), serviceToCall, createFileServiceCall);
+        return assertFileUploadProcess(url, new Object[] {}, emptyMap(), fileValidator, mediaTypesContext, serviceToCall, createFileServiceCall);
     }
 
-    protected <T> ResultActions assertFileUpdateProcess(
+    protected <T, MediaTypesContext> ResultActions assertFileUpdateProcess(
             String url,
+            FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator,
+            MediaTypesContext mediaTypesContext,
             T serviceToCall,
             BiFunction<T, FileEntryResource, ServiceResult<Void>> createFileServiceCall)
             throws Exception {
 
-        return assertFileUpdateProcess(url, new Object[] {}, emptyMap(), serviceToCall, createFileServiceCall);
+        return assertFileUpdateProcess(url, new Object[] {}, emptyMap(), fileValidator, mediaTypesContext, serviceToCall, createFileServiceCall);
     }
 
     /**
@@ -202,14 +207,14 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
      * 5) Verifies the fileValidator was called as expected
      * 6) Verifies the "create file" service method was called as expected
      */
-    protected <T> ResultActions assertFileUpdateProcess(
+    protected <T, MediaTypesContext> ResultActions assertFileUpdateProcess(
             String url,
             Object[] urlParams,
             Map<String, String> requestParams,
+            FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator,
+            MediaTypesContext mediaTypesContext,
             T serviceToCall,
             BiFunction<T, FileEntryResource, ServiceResult<Void>> updateFileServiceCall) throws Exception {
-
-
 
         FileEntryResource expectedTemporaryFile = newFileEntryResource().
                 with(id(null)).
@@ -219,7 +224,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 build();
 
         FileHeaderAttributes fileAttributes = new FileHeaderAttributes(TEXT_PLAIN, dummyFileContent.length(), "filename.txt");
-        when(fileValidatorMock.validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt")).thenReturn(serviceSuccess(fileAttributes));
+        when(fileValidator.validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt", mediaTypesContext, 1234L)).thenReturn(serviceSuccess(fileAttributes));
 
         when(updateFileServiceCall.apply(serviceToCall, expectedTemporaryFile)).
                 thenReturn(serviceSuccess());
@@ -237,7 +242,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 andExpect(content().string("")).
                 andExpect(status().isOk());
 
-        verify(fileValidatorMock).validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt");
+        verify(fileValidator).validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt", mediaTypesContext, 1234L);
         updateFileServiceCall.apply(verify(serviceToCall), expectedTemporaryFile);
 
         return resultActions;
@@ -255,10 +260,12 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
      * 5) Verifies the fileValidator was called as expected
      * 6) Verifies the "create file" service method was called as expected
      */
-    protected <T> ResultActions assertFileUploadProcess(
+    protected <T, MediaTypesContext> ResultActions assertFileUploadProcess(
         String url,
         Object[] urlParams,
         Map<String, String> requestParams,
+        FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator,
+        MediaTypesContext mediaTypesContext,
         T serviceToCall,
         BiFunction<T, FileEntryResource, ServiceResult<FileEntryResource>> createFileServiceCall) throws Exception {
 
@@ -270,7 +277,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 build();
 
         FileHeaderAttributes fileAttributes = new FileHeaderAttributes(TEXT_PLAIN, dummyFileContent.length(), "filename.txt");
-        when(fileValidatorMock.validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt")).thenReturn(serviceSuccess(fileAttributes));
+        when(fileValidator.validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt", mediaTypesContext, 1234L)).thenReturn(serviceSuccess(fileAttributes));
 
         FileEntryResource savedFile = newFileEntryResource().
                 with(id(456L)).
@@ -295,7 +302,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
                 andExpect(content().json(toJson(savedFile))).
                 andExpect(status().isCreated());
 
-        verify(fileValidatorMock).validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt");
+        verify(fileValidator).validateFileHeaders("text/plain", dummyFileContent.length() + "", "filename.txt", mediaTypesContext, 1234L);
         createFileServiceCall.apply(verify(serviceToCall), expectedTemporaryFile);
 
         return resultActions;
