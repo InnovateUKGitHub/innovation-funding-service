@@ -1,6 +1,4 @@
 FROM innovateuk/app-base-image
-#needs root for now
-USER root
 EXPOSE 8080
 EXPOSE 8090
 EXPOSE 8081
@@ -11,6 +9,12 @@ ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=
 
 WORKDIR /
 VOLUME /tmp
+
+ENV IFS_STORAGE=/mnt/ifs_storage
+
+RUN mkdir -p ${IFS_STORAGE}
+RUN chmod -R u+x ${IFS_STORAGE} && \
+    chgrp -R 0 ${IFS_STORAGE}
 
 ADD newrelic.jar /
 ADD newrelic.yml /
