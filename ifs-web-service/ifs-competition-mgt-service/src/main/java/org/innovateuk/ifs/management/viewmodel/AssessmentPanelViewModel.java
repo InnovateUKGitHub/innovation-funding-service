@@ -7,28 +7,31 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
  * Holder of model attributes for the Competition Assessment Panel dashboard
  */
 public class AssessmentPanelViewModel {
-    private Long competitionId;
-    private String competitionName;
-    private CompetitionStatus competitionStatus;
-    private int applicationsInPanel;
-    private int assessorsInvited;
-    private int assessorsAccepted;
+    private final long competitionId;
+    private final String competitionName;
+    private final CompetitionStatus competitionStatus;
+    private final int applicationsInPanel;
+    private final int assessorsInvited;
+    private final int assessorsAccepted;
+    private final boolean pendingReviewNotifications;
 
-    public AssessmentPanelViewModel(Long competitionId,
+    public AssessmentPanelViewModel(long competitionId,
                                     String competitionName,
                                     CompetitionStatus competitionStatus,
                                     int applicationsInPanel,
                                     int assessorsInvited,
-                                    int assessorsAccepted) {
+                                    int assessorsAccepted,
+                                    boolean pendingReviewNotifications) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.competitionStatus = competitionStatus;
         this.applicationsInPanel = applicationsInPanel;
         this.assessorsInvited = assessorsInvited;
         this.assessorsAccepted = assessorsAccepted;
+        this.pendingReviewNotifications = pendingReviewNotifications;
     }
 
-    public Long getCompetitionId() {
+    public long getCompetitionId() {
         return competitionId;
     }
 
@@ -44,5 +47,9 @@ public class AssessmentPanelViewModel {
 
     public CompetitionStatus getCompetitionStatus() {
         return competitionStatus;
+    }
+
+    public boolean isPendingReviewNotifications() {
+        return pendingReviewNotifications;
     }
 }

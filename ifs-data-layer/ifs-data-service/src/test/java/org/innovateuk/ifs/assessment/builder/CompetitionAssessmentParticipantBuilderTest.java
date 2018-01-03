@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
+import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
@@ -29,7 +29,7 @@ public class CompetitionAssessmentParticipantBuilderTest {
         Competition expectedCompetition = newCompetition().withName("Juggling Craziness").build();
         RejectionReason expectedRejectionReason = newRejectionReason().withReason("Unavailable").build();
         String expectedRejectionComment = "Too busy";
-        CompetitionAssessmentInvite expectedInvite = newCompetitionInvite().build();
+        CompetitionAssessmentInvite expectedInvite = newCompetitionAssessmentInvite().build();
 
         CompetitionAssessmentParticipant participant = newCompetitionAssessmentParticipant()
                 .withId(expectedId)
@@ -59,7 +59,7 @@ public class CompetitionAssessmentParticipantBuilderTest {
         User[] expectedUsers = newUser().withId(5L, 11L).buildArray(2, User.class);
         CompetitionParticipantRole[] expectedRoles = { ASSESSOR, ASSESSOR };
         Competition[] expectedCompetitions = newCompetition().withName("Juggling Craziness", "Intermediate Juggling").buildArray(2, Competition.class);
-        CompetitionAssessmentInvite[] expectedCompetitionAssessmentInvites = newCompetitionInvite().buildArray(2, CompetitionAssessmentInvite.class);
+        CompetitionAssessmentInvite[] expectedCompetitionAssessmentInvites = newCompetitionAssessmentInvite().buildArray(2, CompetitionAssessmentInvite.class);
         RejectionReason[] expectedRejectionReasons = { newRejectionReason().withReason("Unavailable").build(), null };
         String[] expectedRejectionComment = { "Too busy", null };
 
