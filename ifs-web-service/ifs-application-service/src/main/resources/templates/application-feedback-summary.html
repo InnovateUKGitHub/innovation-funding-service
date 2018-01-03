@@ -231,7 +231,7 @@
                 <ul class="boxed-list">
                     <li th:each="item, iterStat : ${feedback}">
                         <h3 class="heading-small" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
-                        <p th:text="${item}">Feedback text</p>
+                        <div th:text="${item}"  class="wysiwyg-styles" style="white-space: pre-wrap">Feedback text</div>
                     </li>
                 </ul>
             </div>

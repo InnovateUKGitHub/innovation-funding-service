@@ -37,7 +37,7 @@
     <ul class="boxed-list">
         <li th:each="item, iterStat : ${model.aggregateResource.feedback}">
             <h4 class="heading-small" th:text="|Assessor ${iterStat.count}|">Assessor 1</h4>
-            <div th:text="${item}" data-md-to-html="" class="wysiwyg-styles">Feedback text</div>
+            <div th:text="${item}" data-md-to-html="" class="wysiwyg-styles" style="white-space: pre-wrap">Feedback text</div>
         </li>
     </ul>
 
