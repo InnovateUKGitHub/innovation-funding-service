@@ -35,7 +35,7 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
     public void clearRegisteredFutures() {
         AsyncFuturesHolder.clearFutures();
     }
-    
+
     /**
      * This test asserts that blocks of code executed via {@link AsyncFuturesGenerator#async(org.innovateuk.ifs.util.ExceptionThrowingSupplier)}
      * are executed with our own TaskExecutor.
@@ -131,25 +131,25 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testAllDescendantFuturesAreRegisteredWithMainThread() throws ExecutionException, InterruptedException {
 
-        CompletableFuture<List<Thread>> childThread = generator.async(() -> {
+        CompletableFuture<List<Thread>> future = generator.async(() -> {
 
             assertEquals(1, AsyncFuturesHolder.getFuturesOrInitialise().size());
 
-            CompletableFuture<Thread> childThreadChild1 = generator.async(Thread::currentThread);
+            CompletableFuture<Thread> childFuture1 = generator.async(Thread::currentThread);
 
             assertEquals(2, AsyncFuturesHolder.getFuturesOrInitialise().size());
 
-            CompletableFuture<Thread> childThreadChild2 = generator.async(Thread::currentThread);
+            CompletableFuture<Thread> childFuture2 = generator.async(Thread::currentThread);
 
             assertEquals(3, AsyncFuturesHolder.getFuturesOrInitialise().size());
 
-            Thread childThreadChild1Thread = childThreadChild1.get();
-            Thread childThreadChild2Thread = childThreadChild2.get();
+            Thread childFuture1Thread = childFuture1.get();
+            Thread childFuture2Thread = childFuture2.get();
 
-            return asList(Thread.currentThread(), childThreadChild1Thread, childThreadChild2Thread);
+            return asList(Thread.currentThread(), childFuture1Thread, childFuture2Thread);
         });
 
-        List<Thread> futureThreads = childThread.get();
+        List<Thread> futureThreads = future.get();
 
         // assert that the 3 futures were executed by 3 distinct Threads
         assertEquals(3, removeDuplicates(futureThreads).size());
@@ -160,14 +160,52 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
         List<RegisteredAsyncFutureDetails> registeredFuturesAsList = new ArrayList<>(futuresNowList);
         assertEquals(3, registeredFuturesAsList.size());
 
-        RegisteredAsyncFutureDetails childThreadDetails = registeredFuturesAsList.get(0);
-        RegisteredAsyncFutureDetails childThreadChild1Details = registeredFuturesAsList.get(1);
-        RegisteredAsyncFutureDetails childThreadChild2Details = registeredFuturesAsList.get(2);
+        RegisteredAsyncFutureDetails futureDetails = registeredFuturesAsList.get(0);
+        RegisteredAsyncFutureDetails childFuture1Details = registeredFuturesAsList.get(1);
+        RegisteredAsyncFutureDetails childFuture2Details = registeredFuturesAsList.get(2);
 
         // assert that the child Future's own child Futures retain a full ancestry of the Threads that initiated them,
         // back to the main "Top level" Thread
-        List<String> childFutureNameAndTopLevel = asList(childThreadDetails.getFutureName(), "Top level");
-        assertEquals(childFutureNameAndTopLevel, childThreadChild1Details.getFutureAncestry());
-        assertEquals(childFutureNameAndTopLevel, childThreadChild2Details.getFutureAncestry());
+        List<String> childFutureNameAndTopLevel = asList(futureDetails.getFutureName(), "Top level");
+        assertEquals(childFutureNameAndTopLevel, childFuture1Details.getFutureAncestry());
+        assertEquals(childFutureNameAndTopLevel, childFuture2Details.getFutureAncestry());
+    }
+
+    /**
+     * Test that we can explicitly name Futures, which is useful during debugging
+     */
+    @Test
+    public void testExplicitlyNamingFuturesWorks() throws ExecutionException, InterruptedException {
+
+        CompletableFuture<List<Thread>> future = generator.async("Future", () -> {
+
+            CompletableFuture<Thread> childFuture1 = generator.async("Child Future 1", Thread::currentThread);
+            CompletableFuture<Thread> childFuture2 = generator.async("Child Future 2", Thread::currentThread);
+
+            Thread childFuture1Thread = childFuture1.get();
+            Thread childFuture2Thread = childFuture2.get();
+
+            return asList(Thread.currentThread(), childFuture1Thread, childFuture2Thread);
+        });
+
+        future.get();
+
+        ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> futuresList = AsyncFuturesHolder.getFuturesOrInitialise();
+
+        // assert that the child Futures and its child Futures were all registered
+        List<RegisteredAsyncFutureDetails> registeredFuturesAsList = new ArrayList<>(futuresList);
+
+        RegisteredAsyncFutureDetails futureDetails = registeredFuturesAsList.get(0);
+        RegisteredAsyncFutureDetails childFuture1Details = registeredFuturesAsList.get(1);
+        RegisteredAsyncFutureDetails childFuture2Details = registeredFuturesAsList.get(2);
+
+        // assert that the explicit names were used when registering our Futures
+        assertEquals("Future", futureDetails.getFutureName());
+        assertEquals("Child Future 1", childFuture1Details.getFutureName());
+        assertEquals("Child Future 2", childFuture2Details.getFutureName());
+
+        // assert that these explicit names are reflected in the Future ancestry
+        assertEquals(asList("Future", "Top level"), childFuture1Details.getFutureAncestry());
+        assertEquals(asList("Future", "Top level"), childFuture2Details.getFutureAncestry());
     }
 }
