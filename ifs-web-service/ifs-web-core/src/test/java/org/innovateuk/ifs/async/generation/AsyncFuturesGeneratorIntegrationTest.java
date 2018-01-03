@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
+import static java.lang.Thread.currentThread;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.startsWith;
@@ -46,7 +47,7 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
         CompletableFuture<Thread> childThreadFuture = generator.async(Thread::currentThread);
         Thread childThread = childThreadFuture.get();
 
-        assertNotSame(Thread.currentThread(), childThread);
+        assertNotSame(currentThread(), childThread);
         assertThat(childThread.getName(), startsWith("IFS-Async-Executor-"));
     }
 
@@ -58,11 +59,11 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
     public void testAsyncWithRunnableExecutedByThreadExecutor() throws ExecutionException, InterruptedException {
 
         List<Thread> childThreadList = new ArrayList<>();
-        CompletableFuture<Void> childThreadFuture = generator.async(() -> {childThreadList.add(Thread.currentThread());});
+        CompletableFuture<Void> childThreadFuture = generator.async(() -> {childThreadList.add(currentThread());});
         childThreadFuture.get();
 
         Thread childThread = childThreadList.get(0);
-        assertNotSame(Thread.currentThread(), childThread);
+        assertNotSame(currentThread(), childThread);
         assertThat(childThread.getName(), startsWith("IFS-Async-Executor-"));
     }
 
@@ -73,7 +74,7 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testFutureIsRegisteredWithMainThread() throws ExecutionException, InterruptedException {
 
-        Thread mainThread = Thread.currentThread();
+        Thread mainThread = currentThread();
 
         CountDownLatch childThreadLatch = new CountDownLatch(1);
         CountDownLatch controlLatch = new CountDownLatch(1);
@@ -83,7 +84,7 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
             controlLatch.countDown();
             childThreadLatch.await();
 
-            return Thread.currentThread();
+            return currentThread();
         });
 
         Future<ConcurrentLinkedQueue<RegisteredAsyncFutureDetails>> controlThread = taskExecutor.submit(() -> {
@@ -131,22 +132,32 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testAllDescendantFuturesAreRegisteredWithMainThread() throws ExecutionException, InterruptedException {
 
+        // this latch is used to ensure that childFuture1 and childFuture2 are executed in 2 distinct Threads (it's
+        // perfectly possible for them to both execute after each other in the same Thread)
+        CountDownLatch childFuture1Latch = new CountDownLatch(1);
+
         CompletableFuture<List<Thread>> future = generator.async(() -> {
 
             assertEquals(1, AsyncFuturesHolder.getFuturesOrInitialise().size());
 
-            CompletableFuture<Thread> childFuture1 = generator.async(Thread::currentThread);
+            CompletableFuture<Thread> childFuture1 = generator.async(() -> {
+                childFuture1Latch.await();
+                return currentThread();
+            });
 
             assertEquals(2, AsyncFuturesHolder.getFuturesOrInitialise().size());
 
-            CompletableFuture<Thread> childFuture2 = generator.async(Thread::currentThread);
+            CompletableFuture<Thread> childFuture2 = generator.async(() -> {
+                childFuture1Latch.countDown();
+                return currentThread();
+            });
 
             assertEquals(3, AsyncFuturesHolder.getFuturesOrInitialise().size());
 
             Thread childFuture1Thread = childFuture1.get();
             Thread childFuture2Thread = childFuture2.get();
 
-            return asList(Thread.currentThread(), childFuture1Thread, childFuture2Thread);
+            return asList(currentThread(), childFuture1Thread, childFuture2Thread);
         });
 
         List<Thread> futureThreads = future.get();
@@ -185,7 +196,7 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
             Thread childFuture1Thread = childFuture1.get();
             Thread childFuture2Thread = childFuture2.get();
 
-            return asList(Thread.currentThread(), childFuture1Thread, childFuture2Thread);
+            return asList(currentThread(), childFuture1Thread, childFuture2Thread);
         });
 
         future.get();

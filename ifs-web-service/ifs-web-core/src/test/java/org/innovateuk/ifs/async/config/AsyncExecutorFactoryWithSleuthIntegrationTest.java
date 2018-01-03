@@ -3,6 +3,7 @@ package org.innovateuk.ifs.async.config;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.Assert.assertFalse;
@@ -15,14 +16,15 @@ import static org.junit.Assert.assertTrue;
  * This allows Sleuth to link parent threads and child threads within its Spans, so that this relationship can be
  * visualised.
  */
-@TestPropertySource(properties = "spring.sleuth.enabled=true")
+@TestPropertySource(properties = {"spring.sleuth.enabled=true", "tomcat.ajp.port=8010", "server.port=8081"})
+@DirtiesContext
 public class AsyncExecutorFactoryWithSleuthIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
     private AsyncExecutorFactory asyncExecutorFactory;
 
     @Test
-    public void testSleuthAsyncExecutorFactorySelectedWhenSleuthDisabled() {
+    public void testSleuthAsyncExecutorFactorySelectedWhenSleuthEnabled() {
         assertTrue(SleuthExecutorFactory.class.isAssignableFrom(asyncExecutorFactory.getClass()));
         assertFalse(DefaultExecutorFactory.class.isAssignableFrom(asyncExecutorFactory.getClass()));
     }

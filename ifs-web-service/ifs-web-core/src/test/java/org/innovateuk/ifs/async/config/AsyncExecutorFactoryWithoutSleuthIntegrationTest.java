@@ -3,7 +3,6 @@ package org.innovateuk.ifs.async.config;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -12,7 +11,6 @@ import static org.junit.Assert.assertTrue;
  * Tests that a {@link DefaultExecutorFactory} is created for the generation of a
  * vanilla {@link org.springframework.core.task.TaskExecutor} without the need for Sleuth support
  */
-@TestPropertySource(properties = "spring.sleuth.enabled=false")
 public class AsyncExecutorFactoryWithoutSleuthIntegrationTest extends BaseIntegrationTest {
 
     @Autowired

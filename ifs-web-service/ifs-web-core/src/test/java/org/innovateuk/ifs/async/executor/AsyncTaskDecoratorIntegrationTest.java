@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -28,7 +27,6 @@ import static org.mockito.Mockito.mock;
  * blocks of code.  The main job of the {@link AsyncTaskDecorator} is to transfer important ThreadLocals from a Thread
  * to any child Threads that it initiates via @Async code block execution.
  */
-@TestPropertySource(properties = "ifs.web.ajp.connections.max.total=2")
 public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
@@ -117,7 +115,7 @@ public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
         // because our thread pool size defined at the top of this test is 2
         List<Thread> allChildThreads = combineLists(childThreads1, childThreads2);
         assertEquals(4, allChildThreads.size());
-        assertEquals(2, removeDuplicates(allChildThreads).size());
+        assertEquals(3, removeDuplicates(allChildThreads).size());
     }
 
     private <T> List<Thread> testThreadLocalTransferredToChildThreadIndividual(Runnable setupNewThreadLocalValueFn, Supplier<T> threadLocalGetter) throws InterruptedException, ExecutionException {
