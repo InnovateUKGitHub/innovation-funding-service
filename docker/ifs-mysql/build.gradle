@@ -40,6 +40,7 @@ task tagDockerLocal(type: DockerTagImage) {
 
 task osStageLocal(type: DockerPushImage) {
     dependsOn tagDockerLocal
+    imageName = "dummy"
     doFirst {
         registryCredentials = getLocalOCCredentials()
         imageName = registryCredentials.url + "/" + openshiftEnv + "/ifs-mysql"
