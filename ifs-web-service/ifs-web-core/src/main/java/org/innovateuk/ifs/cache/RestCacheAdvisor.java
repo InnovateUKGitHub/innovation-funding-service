@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.cache;
 
 import org.innovateuk.ifs.commons.service.RestCacheResult;
-import org.innovateuk.ifs.parallel.AwaitAllFuturesCompletionMethodAdvisor;
+import org.innovateuk.ifs.async.controller.AwaitAllFuturesCompletionMethodAdvisor;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;

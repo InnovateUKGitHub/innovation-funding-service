@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.async.executor;
 
 import org.innovateuk.ifs.async.AsyncExecutionTestHelper;
+import org.innovateuk.ifs.async.controller.AwaitAllFuturesCompletionMethodInterceptor;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Test;
@@ -82,7 +83,7 @@ public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
      * This transfers a List in which we keep a track of all Futures and children of those Futures that were spawned
      * from the main Thread, so that we can keep a track of every Future that has (or will be) launched from the main
      * Thread, so that we can choose to wait for all to complete before letting the main Thread continue, as we do in
-     * {@link org.innovateuk.ifs.parallel.AwaitAllFuturesCompletionMethodInterceptor} to ensure that all Futures have
+     * {@link AwaitAllFuturesCompletionMethodInterceptor} to ensure that all Futures have
      * completed populating the Spring Model before passing to Thymeleaf to render.
      */
     @Test

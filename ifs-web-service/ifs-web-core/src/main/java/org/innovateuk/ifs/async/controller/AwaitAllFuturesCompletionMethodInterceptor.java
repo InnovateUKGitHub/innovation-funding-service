@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.parallel;
+package org.innovateuk.ifs.async.controller;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

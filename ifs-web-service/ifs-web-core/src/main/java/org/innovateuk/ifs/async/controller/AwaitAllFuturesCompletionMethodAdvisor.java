@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.parallel;
+package org.innovateuk.ifs.async.controller;
 
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.Pointcut;

@@ -3,10 +3,7 @@ package org.innovateuk.ifs.async.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.function.Consumer;
@@ -14,7 +11,8 @@ import java.util.function.Consumer;
 /**
  * Helper class to help {@link ThreadsafeModelAopIntegrationTest} to prove the AOP mechanisms that it is testing.
  */
-@Controller("/ThreadsafeModelAopIntegrationTestHelper")
+@Controller
+@RequestMapping("/ThreadsafeModelAopIntegrationTestHelper")
 public class ThreadsafeModelAopIntegrationTestHelper {
 
     private Consumer<Model> modelConsumer;
