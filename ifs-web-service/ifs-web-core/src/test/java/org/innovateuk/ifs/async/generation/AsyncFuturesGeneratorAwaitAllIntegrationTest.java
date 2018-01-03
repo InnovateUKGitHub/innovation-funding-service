@@ -11,12 +11,12 @@ import org.springframework.security.core.context.SecurityContextImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 
 import static java.lang.Thread.currentThread;
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -154,11 +154,13 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
 
     /**
      * Test that the Futures created via {@link AsyncFuturesGenerator#awaitAll} methods are executed in one of the
-     * original Threads that it is awaiting the completion of.
+     * original Threads that it is awaiting the completion of, or the main Thread.
      *
      * This is important because it requires access to the same ThreadLocal values that are copied from the main Thread
      * by the {@link org.innovateuk.ifs.async.executor.AsyncTaskDecorator} in order to perform actions like identifying
      * the current User on the Thread.
+     *
+     * This is the normal behaviour of {@link CompletableFuture#allOf(CompletableFuture[])}.
      */
     @Test
     public void testAwaitingFutureExecutesInSameThreadAsOneOfTheDependentThreads() throws ExecutionException, InterruptedException {
@@ -185,6 +187,69 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
         Thread future1Thread = future1.get();
         Thread future2Thread = future2.get();
 
-        assertThat(asList(future1Thread, future2Thread), hasItem(awaitingFutureThread));
+        // check that the awaitingFutureThread was either the same one used to execute future1, future2, or the main
+        // Thread
+        assertThat(asList(future1Thread, future2Thread, currentThread()), hasItem(awaitingFutureThread));
+    }
+
+    /**
+     * This test asserts that {@link AsyncFuturesGenerator#awaitAll} methods wait for not only their directly dependent
+     * futures to complete, but also for their dependents' descendants too.
+     *
+     * This test uses a mix of descendant Futures generated via {@link AsyncFuturesGenerator#async} and
+     * {@link AsyncFuturesGenerator#awaitAll} to test that awaitingFuture will wait for the completion of all of them
+     * before
+     */
+    @Test
+    public void testAwaitAllFutureWaitsForCompletionOfAllDependentsDescendantFuturesBeforeContinuing() throws ExecutionException, InterruptedException {
+
+        List<String> completedFutures = new ArrayList<>();
+
+        // future1 creates a child Future which in turn creates 2 child Futures of its own
+        CompletableFuture<Void> future1 = generator.async(() -> {
+
+            generator.async(() -> {
+
+                CompletableFuture<Void> future1ChildChild = generator.async(() -> {
+                    Thread.sleep(40);
+                    completedFutures.add("future1ChildChild");
+                });
+
+                generator.awaitAll(future1ChildChild).thenAccept(f1 ->
+                        completedFutures.add("future1ChildChildAwaiting"));
+            });
+        });
+
+        // future2 creates a child Future which in turn creates another child Future of its own
+        CompletableFuture<Void> future2 = generator.async(() -> {
+
+            generator.async(() ->
+
+                generator.async(() -> {
+                    Thread.sleep(10);
+                    completedFutures.add("future2ChildChild");
+                })
+            );
+        });
+
+        CountDownLatch unrelatedFutureLatch = new CountDownLatch(1);
+
+        // this is an unrelated Future that awaitingFuture should not be dependent on
+        generator.async(() -> unrelatedFutureLatch.await());
+
+        // assert that the future1ChildChild Future, future2ChildChild and future1ChildChildAwaiting have all completed
+        // prior to this Future executing.  The delays in completing these other Futures show that this one waits for
+        // their completion.  The fact that this Future executes also shows that it awaited only on specific Futures
+        // rather than all in-flight Futures, as the "unrelatedFuture" which is sat awaiting its latch to be unlocked
+        // has of course not completed by the time this Future executes (as this Future unlocks it)
+        CompletableFuture<List<String>> awaitingFuture = generator.awaitAll(future1, future2).thenApply((r1, r2) -> {
+            List<String> futuresCompletedAtThisPoint = new ArrayList<>(completedFutures);
+            unrelatedFutureLatch.countDown();
+            return futuresCompletedAtThisPoint;
+        });
+
+        // assert that the correct Futures have completed before awaitingFuture was executed.
+        List<String> completedFuturesWhenAwaitingFuturesRan = awaitingFuture.get();
+        assertThat(completedFuturesWhenAwaitingFuturesRan, contains("future2ChildChild","future1ChildChild", "future1ChildChildAwaiting"));
     }
 }

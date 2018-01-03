@@ -2,10 +2,10 @@ package org.innovateuk.ifs.async.util;
 
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
+import org.innovateuk.ifs.util.ExceptionThrowingConsumer;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -39,7 +39,7 @@ public class CompletableFutureTuple1Handler<T1> extends BaseCompletableFutureTup
         return thenApplyInternal(() -> handler.apply(getResult(0)));
     }
 
-    public <R> CompletableFuture<Void> thenAccept(Consumer<T1> handler) {
+    public <R> CompletableFuture<Void> thenAccept(ExceptionThrowingConsumer<T1> handler) {
 
         return thenApplyInternal(() -> {
             handler.accept(getResult(0));

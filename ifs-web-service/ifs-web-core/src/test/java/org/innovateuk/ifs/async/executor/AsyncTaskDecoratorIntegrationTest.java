@@ -17,7 +17,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.IntStream.range;
+import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -105,20 +107,19 @@ public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
         assertNull(childValue);
     }
 
-    // this test method runs the ThreadLocal assertion test twice to test the reuse of the Threads in the Thread Pool
+    // this test method runs the ThreadLocal assertion test multiple times to test the reuse of the Threads in the Thread Pool
     private <T> void testThreadLocalTransferredToChildThread(Runnable setupNewThreadLocalValueFn, Supplier<T> threadLocalGetter) throws InterruptedException, ExecutionException {
 
-        List<Thread> childThreads1 = testThreadLocalTransferredToChildThreadIndividual(setupNewThreadLocalValueFn, threadLocalGetter);
-        List<Thread> childThreads2 = testThreadLocalTransferredToChildThreadIndividual(setupNewThreadLocalValueFn, threadLocalGetter);
+        List<List<Thread>> childThreads = range(0, 20).mapToObj(i -> testThreadLocalTransferredToChildThreadIndividual(setupNewThreadLocalValueFn, threadLocalGetter)).collect(toList());
 
         // assert that each assertion test used 2 child threads each, but that overall only 2 Threads were actually used
         // because our thread pool size defined at the top of this test is 2
-        List<Thread> allChildThreads = combineLists(childThreads1, childThreads2);
-        assertEquals(4, allChildThreads.size());
-        assertEquals(3, removeDuplicates(allChildThreads).size());
+        List<Thread> allChildThreads = flattenLists(childThreads);
+        assertEquals(40, allChildThreads.size());
+        assertEquals(10, removeDuplicates(allChildThreads).size());
     }
 
-    private <T> List<Thread> testThreadLocalTransferredToChildThreadIndividual(Runnable setupNewThreadLocalValueFn, Supplier<T> threadLocalGetter) throws InterruptedException, ExecutionException {
+    private <T> List<Thread> testThreadLocalTransferredToChildThreadIndividual(Runnable setupNewThreadLocalValueFn, Supplier<T> threadLocalGetter) {
 
         setupNewThreadLocalValueFn.run();
 
@@ -145,7 +146,11 @@ public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
             return asList(Thread.currentThread(), childChildThread);
         });
 
-        return futureAssertion.get();
+        try {
+            return futureAssertion.get();
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

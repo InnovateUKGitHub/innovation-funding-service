@@ -8,7 +8,6 @@ import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 
 /**
  * A convenience subclass of {@link BaseCompletableFutureTupleHandler} that allows a developer to more concisely handle
@@ -28,8 +27,8 @@ import java.util.function.Supplier;
  *
  * This subclass is slightly less generous than other {@link BaseCompletableFutureTupleHandler} subclasses in that it
  * does not supply the results of the futures explicitly to the handler methods passed to
- * {@link CompletableFutureTupleNHandler#thenAccept(Runnable)} or
- * {@link CompletableFutureTupleNHandler#thenApply(Supplier)}
+ * {@link CompletableFutureTupleNHandler#thenAccept(ExceptionThrowingRunnable)} or
+ * {@link CompletableFutureTupleNHandler#thenApply(ExceptionThrowingSupplier)}
  */
 public class CompletableFutureTupleNHandler extends BaseCompletableFutureTupleHandler {
 
