@@ -57,7 +57,7 @@ function getHost() {
     elif [[ ${TARGET} == "production" ]]; then
       echo "apply-for-innovation-funding.service.gov.uk"
     else
-      echo "prod.ifs-test-clusters.com"
+      echo $(getClusterAddress)
     fi
 }
 
@@ -78,7 +78,7 @@ function getRegistry() {
     if [[ (${TARGET} == "local") ]]; then
         echo "$(getLocalRegistryUrl)"
     else
-        echo "docker-registry-default.apps.prod.ifs-test-clusters.com"
+        echo "docker-registry-default.apps."$(getClusterAddress)
     fi
 }
 
@@ -384,4 +384,8 @@ function createProjectIfNecessaryForNonNamedEnvs() {
     if ! $(isNamedEnvironment $TARGET); then
         createProject
     fi
+}
+
+function getClusterAddress() {
+    echo "prod.ifs-test-clusters.com"
 }
