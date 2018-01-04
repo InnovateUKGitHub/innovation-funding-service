@@ -8,4 +8,4 @@ RUN chmod 755 /usr/local/bin/docker-entrypoint.sh
 RUN chgrp -R 0 /var/run/mysqld/ && chmod -R g=u /var/run/mysqld/
 RUN chgrp -R 0 /var/lib/mysql && chmod -R g=u /var/lib/mysql
 
-COPY init.sql /docker-entrypoint-initdb.d
+COPY create_ifs_finance_db.sql /docker-entrypoint-initdb.d
