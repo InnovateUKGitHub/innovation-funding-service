@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.invite.repository;
 
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;

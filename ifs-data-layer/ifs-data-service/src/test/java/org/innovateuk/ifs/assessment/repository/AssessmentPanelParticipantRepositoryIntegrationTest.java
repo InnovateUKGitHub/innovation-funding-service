@@ -269,7 +269,7 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
     }
 
     @Test
-    public void getByUserRoleStatus() {
+    public void findByUserIdAndRole() {
 
         Competition competition = newCompetition()
                 .with(id(null))

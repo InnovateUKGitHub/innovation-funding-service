@@ -39,6 +39,6 @@ public interface AssessmentReviewRepository extends ProcessRepository<Assessment
 
     List<AssessmentReview> findByTargetIdAndActivityStateStateNot(long applicationId, State withdrawnState);
 
-    List<AssessmentReview> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
+    List<AssessmentReview> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(long userId, long competitionId);
 
 }

@@ -35,7 +35,6 @@ public abstract class AssessmentPanelParticipantMapper extends BaseMapper<Assess
             @Mapping(target = "pendingAssessments", ignore = true),
             @Mapping(source = "process.competitionStatus", target = "competitionStatus"),
             @Mapping(target = "awaitingApplications", ignore = true),
-
     })
     @Override
     public abstract AssessmentPanelParticipantResource mapToResource(AssessmentPanelParticipant domain);

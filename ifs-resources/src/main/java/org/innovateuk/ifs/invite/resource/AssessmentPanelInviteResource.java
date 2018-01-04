@@ -5,7 +5,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 
-import java.time.Clock;
 import java.time.ZonedDateTime;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -22,8 +21,6 @@ public class AssessmentPanelInviteResource extends InviteResource {
     private long userId;
     private String email;
     private ZonedDateTime panelDate;
-
-    private Clock clock = Clock.systemDefaultZone();
 
     public AssessmentPanelInviteResource(String hash,
                                          long competitionId,
@@ -103,7 +100,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
 
     @JsonIgnore
     public long getPanelDaysLeft() {
-        return DAYS.between(ZonedDateTime.now(clock), panelDate);
+        return DAYS.between(ZonedDateTime.now(), panelDate);
     }
 
     @JsonIgnore
@@ -127,7 +124,6 @@ public class AssessmentPanelInviteResource extends InviteResource {
                 .append(competitionName, that.competitionName)
                 .append(email, that.email)
                 .append(panelDate, that.panelDate)
-                .append(clock, that.clock)
                 .isEquals();
     }
 
@@ -141,7 +137,6 @@ public class AssessmentPanelInviteResource extends InviteResource {
                 .append(competitionName)
                 .append(email)
                 .append(panelDate)
-                .append(clock)
                 .toHashCode();
     }
 }
