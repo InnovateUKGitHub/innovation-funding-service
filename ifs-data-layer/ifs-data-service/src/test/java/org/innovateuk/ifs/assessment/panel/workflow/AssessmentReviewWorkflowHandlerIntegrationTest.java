@@ -64,7 +64,7 @@ public class AssessmentReviewWorkflowHandlerIntegrationTest
     @Test
     public void rejectInvitation() {
         assertStateChangeOnWorkflowHandlerCall(PENDING, REJECTED, invite -> workflowHandler.rejectInvitation(invite, createRejection()),
-                assessmentPanelApplicationInvite -> assertEquals("reason", assessmentPanelApplicationInvite.getRejection().getRejectionComment())
+                assessmentPanelApplicationInvite -> assertEquals("reason", assessmentPanelApplicationInvite.getRejection().getRejectReason())
         );
     }
 

@@ -34,6 +34,6 @@ public class AssessmentReviewRejectOutcomeBuilder extends BaseBuilder<Assessment
     }
 
     public AssessmentReviewRejectOutcomeBuilder withRejectionComment(String... rejectionComments) {
-        return withArray((rejectionComment, assessmentRejectOutcome) -> assessmentRejectOutcome.setRejectionComment(rejectionComment), rejectionComments);
+        return withArray((rejectionComment, assessmentRejectOutcome) -> assessmentRejectOutcome.setRejectReason(rejectionComment), rejectionComments);
     }
 }

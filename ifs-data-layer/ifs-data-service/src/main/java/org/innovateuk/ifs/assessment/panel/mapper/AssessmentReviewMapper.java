@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.panel.mapper;
 
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
+import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
-import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
@@ -16,7 +16,7 @@ import org.mapstruct.Mappings;
 import org.mapstruct.NullValueMappingStrategy;
 
 /**
- * Maps between domain and resource DTO for {@link AssessmentReview}.
+ * Maps between domain and resource DTO for {@link Assessment}.
  */
 @Mapper(
         config = GlobalMapperConfig.class,
@@ -26,7 +26,7 @@ import org.mapstruct.NullValueMappingStrategy;
                 UserMapper.class,
                 CompetitionMapper.class,
                 AssessmentFundingDecisionOutcomeMapper.class,
-                AssessmentRejectOutcomeMapper.class
+                AssessmentReviewRejectOutcomeMapper.class
         },
         nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL
 )
@@ -35,10 +35,10 @@ public abstract class AssessmentReviewMapper extends BaseMapper<AssessmentReview
     @Mappings({
             @Mapping(source = "processEvent", target = "event"),
             @Mapping(source = "participant", target = "processRole"),
-//            @Mapping(source = "target", target = "application"),
-//            @Mapping(source = "target.name", target = "applicationName"),
-//            @Mapping(source = "target.competition", target = "competition"),
-//            @Mapping(source = "activityState", target = "assessmentState")
+            @Mapping(source = "target", target = "application"),
+            @Mapping(source = "target.name", target = "applicationName"),
+            @Mapping(source = "target.competition", target = "competition"),
+            @Mapping(source = "activityState", target = "assessmentReviewState")
     })
     @Override
     public abstract AssessmentReviewResource mapToResource(AssessmentReview domain);
@@ -46,20 +46,15 @@ public abstract class AssessmentReviewMapper extends BaseMapper<AssessmentReview
     @Mappings({
             @Mapping(target = "processEvent", source = "event"),
             @Mapping(target = "participant", source = "processRole"),
-            @Mapping(target = "target", ignore=true),
+            @Mapping(target = "target", source = "application"),
+            @Mapping(target = "activityState", source = "assessmentReviewState", ignore = true),
             @Mapping(target = "processOutcomes", ignore = true),
-
-            @Mapping(target = "startDate", ignore = true),
-            @Mapping(target = "endDate", ignore = true),
-            @Mapping(target = "activityState", ignore = true),
-            @Mapping(target = "internalParticipant", ignore = true),
-            @Mapping(target = "lastModified", ignore = true),
-            @Mapping(target = "rejection", ignore = true),
+            @Mapping(target = "lastModified", ignore = true)
     })
     @Override
     public abstract AssessmentReview mapToDomain(AssessmentReviewResource resource);
 
-    public Long mapAssessmentReviewToId(AssessmentReview object) {
+    public Long mapAssessmentToId(Assessment object) {
         if (object == null) {
             return null;
         }

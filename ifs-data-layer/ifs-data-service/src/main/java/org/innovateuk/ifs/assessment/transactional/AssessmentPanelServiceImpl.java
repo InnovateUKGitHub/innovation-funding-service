@@ -2,17 +2,22 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewMapper;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReviewRejectOutcome;
 import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewRejectOutcomeMapper;
 import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.panel.workflow.configuration.AssessmentReviewWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
-import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -27,7 +32,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
@@ -40,6 +44,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REVI
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -79,6 +84,9 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private AssessmentReviewMapper assessmentReviewMapper;
 
     @Autowired
     private AssessmentReviewRejectOutcomeMapper assessmentReviewRejectOutcomeMapper;
@@ -125,10 +133,15 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
         return notifyAllCreated(competitionId);
     }
 
-
     @Override
     public ServiceResult<Boolean> isPendingReviewNotifications(long competitionId) {
         return serviceSuccess(assessmentReviewRepository.notifiable(competitionId));
+    }
+
+    @Override
+    public ServiceResult<List<AssessmentReviewResource>> getAssessmentReviews(long userId, long competitionId) {
+        List<AssessmentReview> assessmentReviews = assessmentReviewRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
+        return serviceSuccess(simpleMap(assessmentReviews, assessmentReviewMapper::mapToResource));
     }
 
     @Override

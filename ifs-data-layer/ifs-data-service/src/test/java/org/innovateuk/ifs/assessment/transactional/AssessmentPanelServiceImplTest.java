@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -29,7 +30,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-
+import static org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder.newAssessmentReviewResource;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelParticipantBuilder.newAssessmentPanelParticipant;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentReviewBuilder.newAssessmentReview;
 import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.CREATED;
@@ -47,6 +48,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
     private static final long applicationId = 1L;
     private static final long competitionId = 1L;
+    private static final long userId = 2L;
     private Application application;
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -225,5 +227,23 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         assertEquals(expectedPendingReviewNotifications, service.isPendingReviewNotifications(competitionId).getSuccessObjectOrThrowException());
 
         verify(assessmentReviewRepositoryMock, only()).notifiable(competitionId);
+    }
+
+    @Test
+    public void getAssessmentReviews() {
+        List<AssessmentReview> assessmentReviews = newAssessmentReview().build(2);
+
+        List<AssessmentReviewResource> assessmentReviewResources = newAssessmentReviewResource().build(2);
+
+        when(assessmentReviewRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId)).thenReturn(assessmentReviews);
+        when(assessmentReviewMapperMock.mapToResource(same(assessmentReviews.get(0)))).thenReturn(assessmentReviewResources.get(0));
+        when(assessmentReviewMapperMock.mapToResource(same(assessmentReviews.get(1)))).thenReturn(assessmentReviewResources.get(1));
+
+        assertEquals(assessmentReviewResources, service.getAssessmentReviews(userId, competitionId).getSuccessObjectOrThrowException());
+
+        InOrder inOrder = inOrder(assessmentReviewRepositoryMock, assessmentReviewMapperMock);
+        inOrder.verify(assessmentReviewRepositoryMock).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
+        inOrder.verify(assessmentReviewMapperMock).mapToResource(same(assessmentReviews.get(0)));
+        inOrder.verify(assessmentReviewMapperMock).mapToResource(same(assessmentReviews.get(1)));
     }
 }

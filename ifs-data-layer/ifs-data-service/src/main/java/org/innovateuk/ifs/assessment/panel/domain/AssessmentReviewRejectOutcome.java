@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.panel.domain;
 
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
 
 import javax.persistence.DiscriminatorValue;
@@ -17,11 +18,11 @@ public class AssessmentReviewRejectOutcome extends ProcessOutcome<AssessmentRevi
         setProcess(assessmentReview);
     }
 
-    public String getRejectionComment() {
+    public String getRejectReason() {
         return comment;
     }
 
-    public void setRejectionComment(String rejectComment) {
+    public void setRejectReason(String rejectComment) {
         this.comment = rejectComment;
     }
 }
