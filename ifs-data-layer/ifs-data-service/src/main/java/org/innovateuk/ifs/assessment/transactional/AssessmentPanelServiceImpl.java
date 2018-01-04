@@ -154,7 +154,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
                                                       AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcome) {
         return getAssessmentReview(assessmentReviewId)
                 .andOnSuccess(
-                        r ->rejectAssessmentReview(r, assessmentReviewRejectOutcomeMapper.mapToDomain(assessmentReviewRejectOutcome)));
+                        r -> rejectAssessmentReview(r, assessmentReviewRejectOutcomeMapper.mapToDomain(assessmentReviewRejectOutcome)));
     }
 
     private ServiceResult<AssessmentReview> getAssessmentReview(long assessmentReviewId) {

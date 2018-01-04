@@ -15,7 +15,7 @@ public class AssessmentReviewRejectOutcomeBuilder extends BaseBuilder<Assessment
         super(multiActions);
     }
 
-    public static AssessmentReviewRejectOutcomeBuilder newAssessmentPanelApplicationInviteRejectOutcome() {
+    public static AssessmentReviewRejectOutcomeBuilder newAssessmentReviewRejectOutcome() {
         return new AssessmentReviewRejectOutcomeBuilder(emptyList());
     }
 
