@@ -69,7 +69,8 @@ public class ApplicationFinanceSectionSaverTest {
 
         CompetitionResource competition = newCompetitionResource().with(id(competitionId)).build();
 
-        when(competitionSetupFinanceService.isNoFinanceCompetition(competition)).thenReturn(false);
+        assertTrue(competition.isFinanceType());
+
         when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.OVERVIEW_FINANCES))
                 .thenReturn(asList(overviewFinanceSection));
         when(questionService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL))
@@ -100,9 +101,12 @@ public class ApplicationFinanceSectionSaverTest {
         final ApplicationFinanceType applicationFinanceType = ApplicationFinanceType.NONE;
         final Long competitionId = 1L;
 
-        CompetitionResource competition = newCompetitionResource().with(id(competitionId)).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
+                .build();
 
-        when(competitionSetupFinanceService.isNoFinanceCompetition(competition)).thenReturn(true);
+        assertTrue(competition.isNonFinanceType());
 
         ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
         competitionSetupForm.setApplicationFinanceType(applicationFinanceType);

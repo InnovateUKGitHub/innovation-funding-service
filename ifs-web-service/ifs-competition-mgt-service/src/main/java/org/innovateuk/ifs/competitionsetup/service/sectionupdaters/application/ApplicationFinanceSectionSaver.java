@@ -55,7 +55,7 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
             CompetitionResource competition,
             CompetitionSetupForm competitionSetupForm
     ) {
-        if (competitionSetupFinanceService.isNoFinanceCompetition(competition)) {
+        if (competition.isNonFinanceType()) {
             return serviceSuccess();
         } else {
             ApplicationFinanceForm form = (ApplicationFinanceForm) competitionSetupForm;

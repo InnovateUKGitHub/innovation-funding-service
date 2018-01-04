@@ -682,6 +682,8 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
                 .build();
 
+        assertTrue(competition.isFinanceType());
+
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
         MvcResult result = mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility")
@@ -713,8 +715,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-                .withCompetitionTypeName("Expression of interest")
+                .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
                 .build();
+
+        assertTrue(competition.isNonFinanceType());
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSection(

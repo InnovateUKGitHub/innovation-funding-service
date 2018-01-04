@@ -17,46 +17,46 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationFinanceModelPopulatorTest {
 
-	@InjectMocks
-	private ApplicationFinanceModelPopulator populator;
+    @InjectMocks
+    private ApplicationFinanceModelPopulator populator;
 
-	@Mock
-	private CompetitionSetupFinanceService competitionSetupFinanceService;
+    @Mock
+    private CompetitionSetupFinanceService competitionSetupFinanceService;
 
-	@Mock
-	private CompetitionService competitionService;
+    @Mock
+    private CompetitionService competitionService;
 
-	@Mock
-	private SectionService sectionService;
-	
-	@Test
-	public void testSectionToPopulateModel() {
-		CompetitionSetupSubsection result = populator.sectionToPopulateModel();
-		assertEquals(CompetitionSetupSubsection.FINANCES, result);
-	}
-	
-	@Test
-	public void testPopulateModel() {
-	    long competitionId = 8L;
-		CompetitionResource cr = newCompetitionResource()
-				.withCompetitionCode("code")
-				.withName("name")
-				.withId(competitionId)
-				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
-				.withCompetitionTypeName("programme")
-				.build();
+    @Mock
+    private SectionService sectionService;
 
-		when(competitionSetupFinanceService.isNoFinanceCompetition(cr)).thenReturn(true);
+    @Test
+    public void testSectionToPopulateModel() {
+        CompetitionSetupSubsection result = populator.sectionToPopulateModel();
+        assertEquals(CompetitionSetupSubsection.FINANCES, result);
+    }
 
-		ApplicationFinanceViewModel viewModel = (ApplicationFinanceViewModel) populator.populateModel(cr, Optional.empty());
+    @Test
+    public void testPopulateModel() {
+        long competitionId = 8L;
+        CompetitionResource competition = newCompetitionResource()
+                .withCompetitionCode("code")
+                .withName("name")
+                .withId(competitionId)
+                .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+                .withCompetitionTypeName("programme")
+                .build();
 
-		assertEquals(ApplicationFinanceViewModel.class, viewModel.getClass());
-		assertEquals(false, viewModel.isSectorCompetition());
-		assertEquals(true, viewModel.isNoneFinanceCompetition());
-	}
+        assertTrue(competition.isNonFinanceType());
+
+        ApplicationFinanceViewModel viewModel = (ApplicationFinanceViewModel) populator.populateModel(competition, Optional.empty());
+
+        assertEquals(ApplicationFinanceViewModel.class, viewModel.getClass());
+        assertEquals(false, viewModel.isSectorCompetition());
+        assertEquals(true, viewModel.isNoneFinanceCompetition());
+    }
 }
