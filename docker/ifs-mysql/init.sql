@@ -1,0 +1,2 @@
+CREATE DATABASE ifs_finance;
+GRANT ALL PRIVILEGES ON DATABASE ifs_finance TO ifs;
