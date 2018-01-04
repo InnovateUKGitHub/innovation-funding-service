@@ -70,16 +70,20 @@ public class ApplicationFinanceSectionSaverTest {
         CompetitionResource competition = newCompetitionResource().with(id(competitionId)).build();
 
         when(competitionSetupFinanceService.isNoFinanceCompetition(competition)).thenReturn(false);
-        when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.OVERVIEW_FINANCES)).thenReturn(asList(overviewFinanceSection));
-        when(questionService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL)).thenReturn(newQuestionResource()
-                .withName("FINANCE_OVERVIEW", null)
-                .withDescription("", fundingRules)
-                .build(2));
+        when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.OVERVIEW_FINANCES))
+                .thenReturn(asList(overviewFinanceSection));
+        when(questionService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL))
+                .thenReturn(
+                        newQuestionResource()
+                                .withName("FINANCE_OVERVIEW", null)
+                                .withDescription("", fundingRules)
+                                .build(2)
+                );
 
         ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
         competitionSetupForm.setIncludeGrowthTable(isIncludeGrowthTable);
         competitionSetupForm.setApplicationFinanceType(applicationFinanceType);
-        
+
         CompetitionSetupFinanceResource csfr = newCompetitionSetupFinanceResource().
                 withCompetitionId(competitionId).
                 withFullApplicationFinance(isFullApplicationFinance).
