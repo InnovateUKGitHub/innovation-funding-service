@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.resource;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -13,7 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-import static com.google.common.collect.Sets.newHashSet;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class CompetitionResource {
@@ -23,7 +23,7 @@ public class CompetitionResource {
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
-    private static final Set<String> nonFinanceTypes = newHashSet("Expression of interest");
+    public static final ImmutableSet<String> NON_FINANCE_TYPES = ImmutableSet.of("Expression of interest");
 
     private Long id;
     private List<Long> milestones = new ArrayList<>();
@@ -541,7 +541,7 @@ public class CompetitionResource {
     }
 
     public boolean isNonFinanceType() {
-        return nonFinanceTypes.contains(competitionTypeName);
+        return NON_FINANCE_TYPES.contains(competitionTypeName);
     }
 
     public boolean isFinanceType() {
