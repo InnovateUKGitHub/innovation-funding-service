@@ -3,11 +3,11 @@ package org.innovateuk.ifs.async.controller;
 import org.innovateuk.ifs.async.util.AsyncAdaptor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Test Controller to aid in testing with {@link AwaitAllFuturesCompletionIntegrationTest}.
@@ -18,7 +18,11 @@ public class AwaitAllFuturesCompletionIntegrationTestHelper extends AsyncAdaptor
 
     @GetMapping
     public String getMethod(List<String> futuresCompleted) {
+        createFutures(futuresCompleted);
+        return null;
+    }
 
+    private void createFutures(List<String> futuresCompleted) {
         CompletableFuture<Void> future1 = async(() -> {
             Thread.sleep(20);
             futuresCompleted.add("future1");
@@ -42,8 +46,6 @@ public class AwaitAllFuturesCompletionIntegrationTestHelper extends AsyncAdaptor
             });
 
         });
-
-        return null;
     }
 
     @GetMapping("/2")
@@ -59,5 +61,20 @@ public class AwaitAllFuturesCompletionIntegrationTestHelper extends AsyncAdaptor
         }));
 
         return null;
+    }
+
+    @PostMapping
+    public void post(List<String> futuresCompleted) {
+        createFutures(futuresCompleted);
+    }
+
+    @PutMapping
+    public void put(CountDownLatch latch) {
+        async(() -> latch.await());
+    }
+
+    @DeleteMapping
+    public void delete(CountDownLatch latch) {
+        async(() -> latch.await());
     }
 }

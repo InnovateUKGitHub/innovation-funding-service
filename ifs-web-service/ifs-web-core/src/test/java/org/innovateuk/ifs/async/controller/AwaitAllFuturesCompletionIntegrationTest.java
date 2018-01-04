@@ -8,11 +8,11 @@ import org.springframework.validation.support.BindingAwareModelMap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 
 /**
  * This test tests the Future blocking mechanism that is applied to request-handing Controller methods as applied by
@@ -31,20 +31,8 @@ public class AwaitAllFuturesCompletionIntegrationTest extends BaseIntegrationTes
      * Controller from completing until they themselves have completed.
      */
     @Test
-    public void testGetMethodBlocksUntilAllGeneratedFuturesComplete() {
-
-        List<String> futuresCompleted = new ArrayList<>();
-
-        // call the method under test
-        controller.getMethod(futuresCompleted);
-
-        // assert that all Futures have completed following the completion of the Controller method
-        assertThat(futuresCompleted, containsInAnyOrder("future1", "future2", "awaitingFuture",
-                "awaitingFutureChildFuture", "awaitingFutureChildFutureChild"));
-
-        // assert that the list of registered Futures is cleared down from this Thread following
-        // the completion of the Controller method
-        assertThat(AsyncFuturesHolder.getFuturesOrInitialise(), empty());
+    public void testGetMappingsBlockUntilAllGeneratedFuturesComplete() {
+        assertFuturesAreWaitedOnBeforeControllerCompletes(futuresCompleted -> controller.getMethod(futuresCompleted));
     }
 
     @Test
@@ -58,5 +46,49 @@ public class AwaitAllFuturesCompletionIntegrationTest extends BaseIntegrationTes
         // the Future result should be available on the Model immediately after the Controller
         // call finishes, despite its delay
         assertThat(model.get("futureResult"), equalTo("theResult"));
+    }
+
+    @Test
+    public void testPostMappingsBlock() {
+        assertFuturesAreWaitedOnBeforeControllerCompletes(futuresCompleted -> controller.post(futuresCompleted));
+    }
+
+    @Test
+    public void testPutMappingsDontCurrentlyBlock() {
+        assertFuturesNotWaitedOnBeforeControllerCompletes(latch -> controller.put(latch));
+    }
+
+    @Test
+    public void testDeleteMappingsDontCurrentlyBlock() {
+        assertFuturesNotWaitedOnBeforeControllerCompletes(latch -> controller.delete(latch));
+    }
+
+    private void assertFuturesAreWaitedOnBeforeControllerCompletes(Consumer<List<String>> methodUnderTest) {
+
+        List<String> futuresCompleted = new ArrayList<>();
+
+        // call the method under test
+        methodUnderTest.accept(futuresCompleted);
+
+        // assert that all Futures have completed following the completion of the Controller method
+        assertThat(futuresCompleted, containsInAnyOrder("future1", "future2", "awaitingFuture",
+                "awaitingFutureChildFuture", "awaitingFutureChildFutureChild"));
+
+        // assert that the list of registered Futures is cleared down from this Thread following
+        // the completion of the Controller method
+        assertThat(AsyncFuturesHolder.getFuturesOrInitialise(), empty());
+    }
+
+    private void assertFuturesNotWaitedOnBeforeControllerCompletes(Consumer<CountDownLatch> methodUnderTest) {
+
+        CountDownLatch latch = new CountDownLatch(1);
+
+        // call the method under test, which should use the latch to create a Future that blocks until the
+        // latch is released
+        methodUnderTest.accept(latch);
+
+        // and if we've reached this point in the test, the Controller method was NOT blocked by the non-completing
+        // Future
+        latch.countDown();
     }
 }
