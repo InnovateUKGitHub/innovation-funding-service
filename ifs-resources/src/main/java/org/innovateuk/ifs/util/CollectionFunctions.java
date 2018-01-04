@@ -551,6 +551,21 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around a 1-stage filter function, to remove boilerplate from production code
+     *
+     * @param array
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> simpleFilter(T[] array, Predicate<T> filterFn) {
+        if (array == null) {
+            return emptyList();
+        }
+        return simpleFilter(asList(array), filterFn);
+    }
+
+    /**
      * A simple wrapper around a NEGATED 1-stage filter function, to remove boilerplate from production code
      *
      * @param list
@@ -563,7 +578,7 @@ public final class CollectionFunctions {
     }
 
     /**
-     * A simple wrapper around a 1-stage filter function, to remove boilerplate from production code
+     * A simple wrapper around a 1-stage find-first function, to remove boilerplate from production code
      *
      * @param list
      * @param filterFn
@@ -575,6 +590,22 @@ public final class CollectionFunctions {
             return empty();
         }
         return list.stream().filter(filterFn).findFirst();
+    }
+
+    /**
+     * A simple wrapper around a 1-stage find-first function that takes an array rather than a Collection, to remove
+     * boilerplate from production code
+     *
+     * @param array
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> Optional<T> simpleFindFirst(T[] array, Predicate<T> filterFn) {
+        if (array == null) {
+            return empty();
+        }
+        return simpleFindFirst(asList(array), filterFn);
     }
 
     /**

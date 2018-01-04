@@ -1,27 +1,26 @@
 package org.innovateuk.ifs.commons.rest;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorConverter;
 import org.innovateuk.ifs.commons.error.ErrorHolder;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ObjectError;
-import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 
 import java.io.Serializable;
 import java.util.*;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.error.ErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.commons.error.ErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 
 /**
  * Resource object to return validation messages on rest calls.
@@ -146,6 +145,10 @@ public class ValidationMessages implements ErrorHolder, Serializable {
 
     public static ValidationMessages noErrors(Long objectId) {
         return new ValidationMessages(objectId);
+    }
+
+    public static ValidationMessages fromErrors(List<Error> errors) {
+        return new ValidationMessages(errors);
     }
 
     public static ValidationMessages fromBindingResult(BindingResult bindingResult) {
