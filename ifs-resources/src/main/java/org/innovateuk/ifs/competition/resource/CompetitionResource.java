@@ -13,13 +13,17 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class CompetitionResource {
+
     public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
     public static final int CLOSING_SOON_AMOUNT = 3;
-    private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+
+    private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
+    private static final Set<String> nonFinanceTypes = newHashSet("Expression of interest");
 
     private Long id;
     private List<Long> milestones = new ArrayList<>();
@@ -83,7 +87,11 @@ public class CompetitionResource {
         // no-arg constructor
     }
 
-    public CompetitionResource(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate) {
+    public CompetitionResource(long id,
+            String name,
+            ZonedDateTime startDate,
+            ZonedDateTime endDate,
+            ZonedDateTime registrationDate) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
@@ -108,7 +116,8 @@ public class CompetitionResource {
 
     @JsonIgnore
     public boolean isSetupAndAfterNotifications() {
-        return Boolean.TRUE.equals(setupComplete) && (fundersPanelDate != null && fundersPanelDate.isBefore(ZonedDateTime.now()));
+        return Boolean.TRUE.equals(setupComplete) && (fundersPanelDate != null && fundersPanelDate.isBefore(
+                ZonedDateTime.now()));
     }
 
     public CompetitionStatus getCompetitionStatus() {
@@ -466,7 +475,7 @@ public class CompetitionResource {
     public void setFunders(List<CompetitionFunderResource> funders) {
         this.funders = funders;
     }
-    
+
     public boolean isUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
@@ -523,12 +532,20 @@ public class CompetitionResource {
         this.hasAssessmentPanel = hasAssessmentPanel;
     }
 
-    public Boolean isHasInterviewStage(){
+    public Boolean isHasInterviewStage() {
         return hasInterviewStage;
     }
 
-    public void setHasInterviewStage(Boolean hasInterviewStage){
+    public void setHasInterviewStage(Boolean hasInterviewStage) {
         this.hasInterviewStage = hasInterviewStage;
+    }
+
+    public boolean isNonFinanceType() {
+        return nonFinanceTypes.contains(competitionTypeName);
+    }
+
+    public boolean isFinanceType() {
+        return !isNonFinanceType();
     }
 
     @Override
