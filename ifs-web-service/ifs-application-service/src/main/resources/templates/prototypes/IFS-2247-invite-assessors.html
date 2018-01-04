@@ -4,7 +4,7 @@
 	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
 	<link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body class="competition-management">
+<body class="competition-management" th:with="status=${param.status != null ? param.status[0] : ''}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -53,16 +53,16 @@
 
 	<ul class="inline-nav extra-margin-top">
 		<li th:class="${(param.tab == null or param.tab[0] == 'find' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab == null or param.tab[0] == 'find' ? 'Item selected' : 'Item not selected' )}">
-			<a th:href="@{'?tab=find'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Find</a>
+			<a th:href="@{'?tab=find'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')} + ${('&#38;status=') + status}">Find</a>
 		</li>
 		<li th:class="${(param.tab != null and param.tab[0] == 'invite' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'invite' ? 'Item selected' : 'Item not selected' )}">
-			<a th:href="@{'?tab=invite'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Invite</a>
+			<a th:href="@{'?tab=invite'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')} + ${('&#38;status=') + status}">Invite</a>
 		</li>
 		<li th:class="${(param.tab != null and param.tab[0] == 'overview' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'overview' ? 'Item selected' : 'Item not selected' )}">
-			<a th:href="@{'?tab=overview'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Pending and declined</a>
+			<a th:href="@{'?tab=overview'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')} + ${('&#38;status=') + status}">Pending and declined</a>
 		</li>
         <li th:class="${(param.tab != null and param.tab[0] == 'accepted' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'accepted' ? 'Item selected' : 'Item not selected' )}">
-            <a th:href="@{'?tab=accepted'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')}">Accepted</a>
+            <a th:href="@{'?tab=accepted'} + ${(param.comp != null ? '&#38;comp=' + param.comp[0] : '')} + ${('&#38;status=') + status}">Accepted</a>
         </li>
 	</ul>
 
