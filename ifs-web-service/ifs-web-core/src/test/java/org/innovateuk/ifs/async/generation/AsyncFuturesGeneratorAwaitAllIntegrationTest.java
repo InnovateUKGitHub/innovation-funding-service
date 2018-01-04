@@ -17,6 +17,7 @@ import java.util.concurrent.ExecutionException;
 import static java.lang.Thread.currentThread;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
@@ -254,4 +255,28 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
         List<String> completedFuturesWhenAwaitingFuturesRan = awaitingFuture.get();
         assertThat(completedFuturesWhenAwaitingFuturesRan, contains("future2ChildChild","future1ChildChild", "future1ChildChildAwaiting"));
     }
+
+    /**
+     * This method tests that awaitAlls can be given explicit Future names as well as async()-created Futures, which is
+     * useful for debugging purposes.
+     */
+    @Test
+    public void testNamedAwaitAlls() throws ExecutionException, InterruptedException {
+
+        CompletableFuture<Integer> future = generator.async("future", () -> 1);
+
+        CompletableFuture<Void> awaitAll = generator.awaitAll("Waiting for future", future).thenAccept(f1 -> {
+
+            CompletableFuture<Integer> childFuture = generator.async("childFuture", () -> 1);
+
+            generator.awaitAll("Waiting for childFuture", childFuture).thenApply(f2 -> null);
+        });
+
+        awaitAll.get();
+
+        List<RegisteredAsyncFutureDetails> registeredFutures = new ArrayList<>(AsyncFuturesHolder.getFuturesOrInitialise());
+        List<String> futureNames = simpleMap(registeredFutures, RegisteredAsyncFutureDetails::getFutureName);
+        assertThat(futureNames, contains("future", "Waiting for future", "childFuture", "Waiting for childFuture"));
+    }
+
 }
