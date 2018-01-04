@@ -5,7 +5,6 @@ import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
-import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.project.util.FinanceUtil;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
@@ -49,9 +48,6 @@ public abstract class RootUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected UserMapper userMapperMock;
-
-    @Mock
-    protected FileHttpHeadersValidator fileValidatorMock;
 
     @Mock
     protected FileEntryRepository fileEntryRepositoryMock;

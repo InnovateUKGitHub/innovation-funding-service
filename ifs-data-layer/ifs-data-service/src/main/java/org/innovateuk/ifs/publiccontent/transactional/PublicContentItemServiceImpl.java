@@ -68,35 +68,31 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
 
     private Page<Competition> getPublicContentPage(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) {
-        Page<Competition> publicContentPage;
-
         if(innovationAreaId.isPresent() && searchString.isPresent()) {
             List<Long> competitionsIdsInInnovationArea = getFilteredCompetitionIds(innovationAreaId);
             Set<Long> keywordsFound = getFilteredPublicContentIds(searchString.get());
-            if (!keywordsFound.isEmpty()) {
-                publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(keywordsFound, competitionsIdsInInnovationArea, getPageable(pageNumber, pageSize));
-            } else {
-                publicContentPage = new PageImpl<Competition>(emptyList());
+            if (!keywordsFound.isEmpty() && !competitionsIdsInInnovationArea.isEmpty()) {
+                return publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(keywordsFound, competitionsIdsInInnovationArea, getPageable(pageNumber, pageSize));
             }
         }
         else if(innovationAreaId.isPresent()) {
             List<Long> competitionsIdsInInnovationArea = getFilteredCompetitionIds(innovationAreaId);
-            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByInnovationId(competitionsIdsInInnovationArea,getPageable(pageNumber, pageSize));
+            if (!competitionsIdsInInnovationArea.isEmpty()){
+                return publicContentRepository.findAllPublishedForOpenCompetitionByInnovationId(competitionsIdsInInnovationArea,getPageable(pageNumber, pageSize));
+            }
         }
         else if(searchString.isPresent())
         {
             Set<Long> keywordsFound = getFilteredPublicContentIds(searchString.get());
             if (!keywordsFound.isEmpty()) {
-                publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByKeywords(keywordsFound, getPageable(pageNumber, pageSize));
-            } else {
-                publicContentPage = new PageImpl<Competition>(emptyList());
+                return publicContentRepository.findAllPublishedForOpenCompetitionByKeywords(keywordsFound, getPageable(pageNumber, pageSize));
             }
         }
         else {
-            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetition(getPageable(pageNumber, pageSize));
+            return publicContentRepository.findAllPublishedForOpenCompetition(getPageable(pageNumber, pageSize));
         }
 
-        return publicContentPage;
+        return new PageImpl<>(emptyList());
     }
 
     @Override
