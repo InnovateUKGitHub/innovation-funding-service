@@ -88,7 +88,7 @@ function getInternalRegistry() {
         echo "$(getLocalRegistryUrl)"
     else
 #        echo "172.30.80.28:5000"
-        echo "docker-registry-default.apps.dev-nige-1.dev.ifs-test-clusters.com"
+        echo "172.30.114.178:5000"
     fi
 }
 

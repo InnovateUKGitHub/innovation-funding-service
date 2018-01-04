@@ -3,11 +3,25 @@ kind: Endpoints
 metadata:
   name: glusterfs-cluster
 subsets:
+#Addresses for the old cluster
   - addresses:
       - ip: 10.0.0.64
     ports:
       - port: 1
   - addresses:
       - ip: 10.0.0.31
+    ports:
+      - port: 1
+#Addresses for the new cluster
+  - addresses:
+      - ip: 10.0.0.151
+    ports:
+      - port: 1
+  - addresses:
+      - ip: 10.0.0.168
+    ports:
+      - port: 1
+  - addresses:
+      - ip: 10.0.0.71
     ports:
       - port: 1
