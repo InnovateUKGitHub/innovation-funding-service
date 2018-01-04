@@ -31,7 +31,7 @@
                 <dt>Phone number</dt>
                 <dd>01234 567891</dd>
                 <dt>Email address</dt>
-                <dd th:text="${(param.name != null ? #strings.replace(param.name[0],' ','.') : 'John.Smith') + '@gmail.com'}"></dd>
+                <dd th:text="${(#strings.replace(name,' ','.')) + '@gmail.com'}"></dd>
             </dl>
         </div>
 
@@ -57,10 +57,10 @@
 
     <ul class="inline-nav extra-margin-top">
         <li th:class="${(param.tab == null or param.tab[0] == 'applications' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab == null or param.tab[0] == 'applications' ? 'Item selected' : 'Item not selected' )}">
-            <a th:href="@{'?tab=applications&#38;name='} + ${name}">Applications (14)</a>
+            <a th:href="@{'?tab=applications&#38;name='} + ${name}">Applications (5)</a>
         </li>
         <li th:class="${(param.tab != null and param.tab[0] == 'assigned' ? 'selected' : 'not-selected' )}" th:attr="aria-label=${(param.tab != null and param.tab[0] == 'assigned' ? 'Item selected' : 'Item not selected' )}">
-            <a th:href="@{'?tab=assigned&#38;name='} + ${name}">Assigned (14)</a>
+            <a th:href="@{'?tab=assigned&#38;name='} + ${name}">Allocated (4)</a>
         </li>
     </ul>
 
@@ -90,7 +90,7 @@
         <div class="grid-row sorting">
             <div class="column-two-thirds">
                 <h2>
-                    <span class="heading-xlarge">14</span>
+                    <span class="heading-xlarge">5</span>
                     <span class="heading-small">applications</span>
                 </h2>
             </div>
@@ -125,7 +125,7 @@
                     <th:block th:if="${param.tab == null or param.tab[0] == 'applications'}">
                         <th class="width-small">Select</th>
                     </th:block>
-                    <th>Application number</th>
+                    <th class="width-small">Application number</th>
                     <th>Project title</th>
                     <th>Lead organisation</th>
                     <th class="numeric">Assessors</th>
@@ -242,15 +242,23 @@
     </th:block>
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'assigned'}">
+        <div class="grid-row sorting">
+            <div class="column-two-thirds">
+                <h2>
+                    <span class="heading-xlarge">4</span>
+                    <span class="heading-small">applications assigned to this assessor</span>
+                </h2>
+            </div>
+        </div>
         <div class="table-overflow">
             <table>
                 <thead>
                 <tr>
-                    <th>Application</th>
+                    <th class="width-small">Application number</th>
                     <th>Project title</th>
                     <th>Lead organisation</th>
                     <th class="numeric">Assessors</th>
-                    <th><span class="visuallyhidden">Remove</span></th>
+                    <th class="alignright"><span class="visuallyhidden">Remove</span></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -259,7 +267,7 @@
                     <td>Electronics, sensors &#38; photonics, Materials</td>
                     <td>Ooba</td>
                     <td class="numeric">1</td>
-                    <td><a href="#">Remove</a></td>
+                    <td class="alignright"><a href="#">Remove</a></td>
 
                 </tr>
                 <tr>
@@ -267,21 +275,21 @@
                     <td>Healthcare, Regentative medicine, Stratified medicine</td>
                     <td>Empire Ltd</td>
                     <td class="numeric">1</td>
-                    <td><a href="#">Remove</a></td>
+                    <td class="alignright"><a href="#">Remove</a></td>
                 </tr>
                 <tr>
                     <td><a href="#">171</a></td>
                     <td>Healthcare, Analytical science</td>
                     <td>Ideas</td>
                     <td class="numeric">1</td>
-                    <td><a href="#">Remove</a></td>
+                    <td class="alignright"><a href="#">Remove</a></td>
                 </tr>
                 <tr>
                     <td><a href="#">265</a></td>
                     <td>Architectures and operating systems</td>
                     <td>Wordpedia</td>
                     <td class="numeric">1</td>
-                    <td><a href="#">Remove</a></td>
+                    <td class="alignright"><a href="#">Remove</a></td>
                 </tr>
                 </tbody>
             </table>
