@@ -540,10 +540,12 @@ public class CompetitionResource {
         this.hasInterviewStage = hasInterviewStage;
     }
 
+    @JsonIgnore
     public boolean isNonFinanceType() {
         return NON_FINANCE_TYPES.contains(competitionTypeName);
     }
 
+    @JsonIgnore
     public boolean isFinanceType() {
         return !isNonFinanceType();
     }
