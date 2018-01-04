@@ -2,17 +2,19 @@ package org.innovateuk.ifs.project.grantofferletter.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
-import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
 
@@ -23,13 +25,18 @@ import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
 @RequestMapping("/project")
 public class GrantOfferLetterController {
 
+    @Value("${ifs.data.service.file.storage.projectsetupgrantofferletter.max.filesize.bytes}")
+    private Long maxFilesizeBytesForProjectSetupGrantOfferLetter;
+
+    @Value("${ifs.data.service.file.storage.projectsetupgrantofferletter.valid.media.types}")
+    private List<String> validMediaTypesForProjectSetupGrantOfferLetter;
+
     @Autowired
     private GrantOfferLetterService grantOfferLetterService;
 
     @Autowired
-    @Qualifier("projectSetupGrantOfferLetterFileValidator")
-    private FileHttpHeadersValidator fileValidator;
-
+    @Qualifier("mediaTypeStringsFileValidator")
+    private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
     @GetMapping("/{projectId}/signed-grant-offer")
     public @ResponseBody ResponseEntity<Object> getGrantOfferLetterFileContents(
@@ -82,7 +89,7 @@ public class GrantOfferLetterController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectSetupGrantOfferLetter, maxFilesizeBytesForProjectSetupGrantOfferLetter, request, (fileAttributes, inputStreamSupplier) ->
                 grantOfferLetterService.createSignedGrantOfferLetterFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
         );
     }
@@ -95,7 +102,7 @@ public class GrantOfferLetterController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectSetupGrantOfferLetter, maxFilesizeBytesForProjectSetupGrantOfferLetter, request, (fileAttributes, inputStreamSupplier) ->
                 grantOfferLetterService.createGrantOfferLetterFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
         );
     }
@@ -120,7 +127,7 @@ public class GrantOfferLetterController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectSetupGrantOfferLetter, maxFilesizeBytesForProjectSetupGrantOfferLetter, request, (fileAttributes, inputStreamSupplier) ->
                 grantOfferLetterService.createAdditionalContractFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
         );
     }
@@ -133,7 +140,7 @@ public class GrantOfferLetterController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectSetupGrantOfferLetter, maxFilesizeBytesForProjectSetupGrantOfferLetter, request, (fileAttributes, inputStreamSupplier) ->
                 grantOfferLetterService.updateSignedGrantOfferLetterFile(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
