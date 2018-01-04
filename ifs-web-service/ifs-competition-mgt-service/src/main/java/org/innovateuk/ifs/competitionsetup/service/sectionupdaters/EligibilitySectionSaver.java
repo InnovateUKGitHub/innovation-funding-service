@@ -38,7 +38,7 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 		EligibilityForm eligibilityForm = (EligibilityForm) competitionSetupForm;
 		
 		competition.setResearchCategories(eligibilityForm.getResearchCategoryId());
-		
+
 		ResearchParticipationAmount amount = ResearchParticipationAmount.fromId(eligibilityForm.getResearchParticipationAmountId());
 		if(amount != null) {
 			competition.setMaxResearchRatio(amount.getAmount());

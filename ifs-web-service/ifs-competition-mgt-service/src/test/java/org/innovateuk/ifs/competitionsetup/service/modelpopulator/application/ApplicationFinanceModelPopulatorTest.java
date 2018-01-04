@@ -1,16 +1,12 @@
 package org.innovateuk.ifs.competitionsetup.service.modelpopulator.application;
 
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.competitionsetup.viewmodel.application.ApplicationFinanceViewModel;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Optional;
@@ -24,15 +20,6 @@ public class ApplicationFinanceModelPopulatorTest {
 
     @InjectMocks
     private ApplicationFinanceModelPopulator populator;
-
-    @Mock
-    private CompetitionSetupFinanceService competitionSetupFinanceService;
-
-    @Mock
-    private CompetitionService competitionService;
-
-    @Mock
-    private SectionService sectionService;
 
     @Test
     public void testSectionToPopulateModel() {
@@ -48,7 +35,7 @@ public class ApplicationFinanceModelPopulatorTest {
                 .withName("name")
                 .withId(competitionId)
                 .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
-                .withCompetitionTypeName("programme")
+                .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
                 .build();
 
         assertTrue(competition.isNonFinanceType());

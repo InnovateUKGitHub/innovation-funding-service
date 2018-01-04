@@ -666,9 +666,10 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("researchParticipationAmountId", "1")
                 .param("resubmission", "yes"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("competition/setup"));
+                .andExpect(view().name("competition/setup"))
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "streamName"));
 
-        verify(competitionSetupService).saveCompetitionSetupSection(
+        verify(competitionSetupService, never()).saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
                 eq(competition),
                 eq(CompetitionSetupSection.ELIGIBILITY)
@@ -686,7 +687,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
-        MvcResult result = mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility")
+        mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility")
                 .param("multipleStream", "yes")
                 .param("streamName", "stream")
                 .param("researchCategoryId", "1", "2", "3")
@@ -696,12 +697,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("resubmission", "no"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/setup"))
-                .andExpect(model().attributeHasFieldErrorCode(
-                        "competitionSetupForm",
-                        "researchParticipationAmountId",
-                        "{validation.eligibilityform.researchparticipationamountId.required}"
-                ))
-                .andReturn();
+                .andExpect(model().attributeHasFieldErrors("competitionSetupForm", "researchParticipationAmountId"));
 
         verify(competitionSetupService, never()).saveCompetitionSetupSection(
                 isA(CompetitionSetupForm.class),
