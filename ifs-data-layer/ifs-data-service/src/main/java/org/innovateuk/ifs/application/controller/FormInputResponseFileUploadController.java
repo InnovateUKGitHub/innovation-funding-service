@@ -8,10 +8,11 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
-import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,12 +28,15 @@ import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
 @RequestMapping("/forminputresponse")
 public class FormInputResponseFileUploadController {
 
+    @Value("${ifs.data.service.file.storage.forminputresponse.max.filesize.bytes}")
+    private Long maxFilesizeBytesForFormInputResponses;
+
     @Autowired
     private ApplicationService applicationService;
 
     @Autowired
-    @Qualifier("formInputResponseFileValidator")
-    private FileHttpHeadersValidator fileValidator;
+    @Qualifier("formInputFileValidator")
+    private FilesizeAndTypeFileValidator<Long> fileValidator;
 
     @PostMapping(value = "/file", produces = "application/json")
     public RestResult<FormInputResponseFileEntryCreatedResponse> createFile(
@@ -44,7 +48,7 @@ public class FormInputResponseFileUploadController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) throws IOException {
 
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) -> {
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, formInputId, maxFilesizeBytesForFormInputResponses, request, (fileAttributes, inputStreamSupplier) -> {
             FormInputResponseFileEntryResource formInputResponseFile = createFormInputResponseFileEntry(fileAttributes, formInputId, applicationId, processRoleId);
             ServiceResult<FormInputResponseFileEntryResource> uploadResult = applicationService.createFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier);
             return uploadResult.andOnSuccessReturn(file -> new FormInputResponseFileEntryCreatedResponse(file.getFileEntryResource().getId()));
@@ -61,7 +65,7 @@ public class FormInputResponseFileUploadController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) throws IOException {
 
-        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) -> {
+        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, formInputId, maxFilesizeBytesForFormInputResponses, request, (fileAttributes, inputStreamSupplier) -> {
             FormInputResponseFileEntryResource formInputResponseFile = createFormInputResponseFileEntry(fileAttributes, formInputId, applicationId, processRoleId);
             return applicationService.updateFormInputResponseFileUpload(formInputResponseFile, inputStreamSupplier);
         });

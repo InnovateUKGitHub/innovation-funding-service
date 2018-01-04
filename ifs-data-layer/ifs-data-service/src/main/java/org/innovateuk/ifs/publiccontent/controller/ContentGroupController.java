@@ -2,15 +2,16 @@ package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.publiccontent.transactional.ContentGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileDownload;
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileUpload;
@@ -22,12 +23,17 @@ import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileU
 @RequestMapping("/content-group")
 public class ContentGroupController {
 
+    @Value("${ifs.data.service.file.storage.publiccontentattachment.max.filesize.bytes}")
+    private Long maxFilesizeBytesForPublicContentAttachment;
+
+    @Value("${ifs.data.service.file.storage.publiccontentattachment.valid.media.types}")
+    private List<String> validMediaTypesForPublicContentAttachment;
+
     @Autowired
     private ContentGroupService contentGroupService;
 
     @Autowired
-    @Qualifier("publicContentAttachmentValidator")
-    private FileHttpHeadersValidator fileValidator;
+    private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
     @PostMapping(value = "upload-file", produces = "application/json")
     public RestResult<Void> uploadFile(@RequestHeader(value = "Content-Type", required = false) String contentType,
@@ -36,7 +42,7 @@ public class ContentGroupController {
                                                  @RequestParam(value = "filename", required = false) String originalFilename,
                                                  HttpServletRequest request) {
 
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForPublicContentAttachment, maxFilesizeBytesForPublicContentAttachment, request, (fileAttributes, inputStreamSupplier) ->
                 contentGroupService.uploadFile(contentGroupId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 

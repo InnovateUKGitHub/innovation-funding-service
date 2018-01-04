@@ -23,7 +23,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
-import static org.innovateuk.ifs.invite.builder.CompetitionInviteBuilder.newCompetitionInvite;
+import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionAssessmentInvite;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
@@ -215,7 +215,7 @@ public class CompetitionParticipantControllerIntegrationTest extends BaseControl
                         .withId(3L)
                         .withFirstName("Professor")
                 )
-                .withInvite(newCompetitionInvite()
+                .withInvite(newCompetitionAssessmentInvite()
                         .with(id(null))
                         .withName("name")
                         .withEmail("joe@test.com")
