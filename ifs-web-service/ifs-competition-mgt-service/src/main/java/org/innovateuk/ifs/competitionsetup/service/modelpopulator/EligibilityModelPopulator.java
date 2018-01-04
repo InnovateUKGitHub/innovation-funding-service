@@ -66,12 +66,20 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
 
         return new EligibilityViewModel(
                 generalViewModel,
-                ResearchParticipationAmount.values(),
+                getResearchParticipationAmounts(competitionResource),
                 CollaborationLevel.values(),
                 leadApplicantTypes,
                 leadApplicantTypesText,
                 researchCategories,
                 researchCategoriesFormatted
         );
+    }
+
+    private ResearchParticipationAmount[] getResearchParticipationAmounts(CompetitionResource competitionResource) {
+        if (competitionResource.isFinanceType()) {
+            return ResearchParticipationAmount.values();
+        }
+
+        return new ResearchParticipationAmount[]{};
     }
 }
