@@ -47,7 +47,6 @@ import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
-import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
@@ -425,9 +424,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected SystemNotificationSource systemNotificationSourceMock;
-
-    @Mock
-    protected FileHttpHeadersValidator fileValidatorMock;
 
     @Mock
     protected FileEntryRepository fileEntryRepositoryMock;

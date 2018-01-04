@@ -5,8 +5,8 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
-import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
@@ -14,10 +14,12 @@ import org.innovateuk.ifs.threads.attachments.repository.AttachmentRepository;
 import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 import static java.time.ZonedDateTime.now;
 import static java.util.Optional.ofNullable;
@@ -33,6 +35,12 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 @Transactional(readOnly = true)
 public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttachmentService {
 
+    @Value("${ifs.data.service.file.storage.projectfinance.threadsattachments.max.filesize.bytes}")
+    private Long maxFilesizeBytesForProjectFinanceThreadsAttachments;
+
+    @Value("${ifs.data.service.file.storage.projectfinance.threadsattachments.valid.media.types}")
+    private List<String> validMediaTypesForProjectFinanceThreadsAttachments;
+
     @Autowired
     private FileService fileService;
 
@@ -43,8 +51,8 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     private AttachmentRepository attachmentsRepository;
 
     @Autowired
-    @Qualifier("postAttachmentValidator")
-    private FileHttpHeadersValidator fileValidator;
+    @Qualifier("mediaTypeStringsFileValidator")
+    private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
     @Autowired
     private AttachmentMapper mapper;
@@ -62,7 +70,8 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     @Transactional
     public ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename,
                                                     Long projectId, HttpServletRequest request) {
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request,
+
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectFinanceThreadsAttachments, maxFilesizeBytesForProjectFinanceThreadsAttachments, request,
                 (fileAttributes, inputStreamSupplier) -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
                         .andOnSuccess(created -> save(new Attachment(loggedInUserSupplier.get(), created.getRight(), now()))
                                 .andOnSuccessReturn(mapper::mapToResource))).toServiceResult();
