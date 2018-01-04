@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.transactional.AssessmentPanelService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Test;
@@ -46,6 +47,16 @@ public class AssessmentPanelServiceSecurityTest extends BaseServiceSecurityTest<
 
         @Override
         public ServiceResult<Boolean> isPendingReviewNotifications(long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> acceptAssessmentReview(long assessmentReviewId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> rejectAssessmentReview(long assessmentReviewId, AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcomeResource) {
             return null;
         }
     }
