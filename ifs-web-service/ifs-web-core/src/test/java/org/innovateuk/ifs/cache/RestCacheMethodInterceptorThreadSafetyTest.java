@@ -19,6 +19,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isReadLocked;
+import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isWriteLocked;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
@@ -64,9 +66,6 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         ReadWriteLock lockFromInterceptor =
                 (ReadWriteLock) ReflectionTestUtils.getField(interceptor, "lock");
 
-        Object readLockSync = ReflectionTestUtils.getField(lockFromInterceptor.readLock(), "sync");
-        Object writeLockSync = ReflectionTestUtils.getField(lockFromInterceptor.writeLock(), "sync");
-
         when(methodInvocationMock.getArguments()).thenReturn(new Object[] {"id", 123});
 
         when(uidSupplierMock.get()).thenReturn("http-request-1");
@@ -81,7 +80,7 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
             // their initial "gets".  cache.get() is called during a read operation after the result has been read
             // and now needs to be stored for caching.  We're not interested in these interactions with the cache, only
             // the original reads
-            if (!isWriteLockEnabled(writeLockSync)) {
+            if (!isWriteLocked(lockFromInterceptor)) {
 
                 String operationName = namedCallsThreadLocal.get();
 
@@ -92,12 +91,12 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
                 // that the second could make it this far shows that it was able to get through the read lock in
                 // {@link RestCacheMethodInterceptor#get}.
                 if ("Read Operation 1".equals(operationName) && !successfulCalls.contains("Read Operation 1")) {
-                    successfulCalls.add(Pair.of(operationName, isReadLockEnabled(readLockSync)));
+                    successfulCalls.add(Pair.of(operationName, isReadLocked(lockFromInterceptor)));
                     readOperation2Latch.countDown();
                     readOperation1Latch.await();
                 } else {
                     readOperation1Latch.countDown();
-                    successfulCalls.add(Pair.of(namedCallsThreadLocal.get(), isReadLockEnabled(readLockSync)));
+                    successfulCalls.add(Pair.of(namedCallsThreadLocal.get(), isReadLocked(lockFromInterceptor)));
                 }
             }
 
@@ -135,15 +134,6 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         List<Boolean> successfulOperationLockStates = simpleMap(successfulCalls, Pair::getRight);
         assertTrue(successfulOperationLockStates.stream().allMatch(state -> state));
     }
-
-    private boolean isWriteLockEnabled(Object sync) {
-        return (Boolean) ReflectionTestUtils.invokeMethod(sync, "isWriteLocked");
-    }
-
-    private boolean isReadLockEnabled(Object sync) {
-        return ((Integer) ReflectionTestUtils.invokeGetterMethod(sync, "readLockCount")) > 0;
-    }
-
 
 //    @Test
 //    public void testReadOperationDoesntBlockOtherReadOperations() throws Throwable {
