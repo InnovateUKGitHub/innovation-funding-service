@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -43,14 +44,14 @@ public class EligibilitySectionSaverTest {
 	private CompetitionSetupRestService competitionSetupRestService;
 	
 	@Test
-	public void testSaveCompetitionSetupSection() {
+	public void saveSection() {
 		EligibilityForm competitionSetupForm = new EligibilityForm();
 		competitionSetupForm.setLeadApplicantTypes(asList(1L, 2L));
 		competitionSetupForm.setMultipleStream("yes");
 		competitionSetupForm.setStreamName("streamname");
 		competitionSetupForm.setResubmission("yes");
 		competitionSetupForm.setResearchCategoryId(CollectionFunctions.asLinkedSet(1L, 2L, 3L));
-		competitionSetupForm.setResearchParticipationAmountId(1);
+		competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.THIRTY.getId());
 		competitionSetupForm.setSingleOrCollaborative("collaborative");
 		
 		CompetitionResource competition = newCompetitionResource().build();
@@ -62,20 +63,34 @@ public class EligibilitySectionSaverTest {
 		assertTrue(competition.isMultiStream());
 		assertEquals("streamname", competition.getStreamName());
 		assertEquals(CollectionFunctions.asLinkedSet(1L, 2L, 3L), competition.getResearchCategories());
-		assertEquals(Integer.valueOf(30), competition.getMaxResearchRatio());
+		assertEquals(ResearchParticipationAmount.THIRTY.getAmount(), competition.getMaxResearchRatio());
 		assertEquals(CollaborationLevel.COLLABORATIVE, competition.getCollaborationLevel());
 
 		verify(competitionSetupRestService).update(competition);
 	}
 
-	@Test
-	public void testAutoSaveResearchCategoryCheck() {
+    @Test
+    public void saveSectionWithoutResearchParticipationAmountIdDefaultsToNone() {
+	    EligibilityForm  competitionSetupForm = new EligibilityForm();
+	    competitionSetupForm.setResearchParticipationAmountId(null);
+
+        CompetitionResource competition = newCompetitionResource().build();
+        when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
+
+        service.saveSection(competition, competitionSetupForm);
+
+        assertEquals(ResearchParticipationAmount.NONE.getAmount(), competition.getMaxResearchRatio());
+
+        verify(competitionSetupRestService).update(competition);
+	}
+
+    @Test
+	public void autoSaveResearchCategoryCheck() {
 		when(milestoneRestService.getAllMilestonesByCompetitionId(1L)).thenReturn(restSuccess(singletonList(getMilestone())));
 		EligibilityForm form = new EligibilityForm();
 		Set<Long> researchCategories = new HashSet<>();
 		researchCategories.add(33L);
 		researchCategories.add(34L);
-
 
 		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
 		competition.setMilestones(singletonList(10L));
@@ -90,7 +105,7 @@ public class EligibilitySectionSaverTest {
 	}
 
 	@Test
-	public void testAutoSaveResearchCategoryUncheck() {
+	public void autoSaveResearchCategoryUncheck() {
 		when(milestoneRestService.getAllMilestonesByCompetitionId(1L)).thenReturn(restSuccess(singletonList(getMilestone())));
 		EligibilityForm form = new EligibilityForm();
 		Set<Long> researchCategories = new HashSet<>();
@@ -120,9 +135,8 @@ public class EligibilitySectionSaverTest {
 	}
 
 	@Test
-	public void testsSupportsForm() {
+	public void supportsForm() {
 		assertTrue(service.supportsForm(EligibilityForm.class));
 		assertFalse(service.supportsForm(CompetitionSetupForm.class));
 	}
-
 }

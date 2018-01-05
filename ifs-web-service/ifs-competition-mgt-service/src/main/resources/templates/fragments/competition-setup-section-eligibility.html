@@ -171,15 +171,14 @@
                 <dt>Lead applicant</dt>
                 <dd th:text="${model.leadApplicantTypesText}"></dd>
 
-                <dt>Research participation</dt>
-                <dd th:each="(researchParticipationAmount : ${model.researchParticipationAmounts})"
-                    th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}"
-                    th:text="${researchParticipationAmount.name}">
-                    Research participation amount
-                </dd>
-                <dd th:if="${#arrays.isEmpty(model.researchParticipationAmounts)}">
-                    None
-                </dd>
+                <th:block th:if="${!#arrays.isEmpty(model.researchParticipationAmounts)}">
+                    <dt>Research participation</dt>
+                    <dd th:each="(researchParticipationAmount : ${model.researchParticipationAmounts})"
+                        th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}"
+                        th:text="${researchParticipationAmount.name}">
+                        Research participation amount
+                    </dd>
+                </th:block>
 
                 <dt>Are resubmissions allowed?</dt>
                 <dd th:text="${#strings.capitalize(competitionSetupForm.resubmission)}"></dd>
