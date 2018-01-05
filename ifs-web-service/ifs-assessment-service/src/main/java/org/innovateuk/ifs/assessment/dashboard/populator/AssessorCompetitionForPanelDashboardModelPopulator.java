@@ -21,6 +21,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -74,7 +75,7 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
         return new AssessorCompetitionForPanelDashboardApplicationViewModel(application.getId(),
                 assessmentReview.getId(),
                 application.getName(),
-                leadOrganisation.get().getName(),
+                leadOrganisation.map(OrganisationResource::getName).orElse(EMPTY),
                 assessmentReview.getAssessmentReviewState());
     }
 

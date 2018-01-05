@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.dashboard.controller;
 
 import org.innovateuk.ifs.assessment.common.service.AssessmentService;
+import org.innovateuk.ifs.assessment.dashboard.form.AssessorCompetitionDashboardAssessmentForm;
 import org.innovateuk.ifs.assessment.dashboard.populator.AssessorCompetitionForPanelDashboardModelPopulator;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -9,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -32,7 +34,8 @@ public class AssessorCompetitionForPanelDashboardController {
     @GetMapping("/dashboard/competition/{competitionId}/panel")
     public String competitionDashboard(final Model model,
                                        UserResource loggedInUser,
-                                       @PathVariable("competitionId") final Long competitionId) {
+                                       @PathVariable("competitionId") final Long competitionId,
+                                       @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorCompetitionDashboardAssessmentForm form) {
 
         model.addAttribute("model", assessorCompetitionForPanelDashboardModelPopulator.populateModel(competitionId, loggedInUser.getId()));
         return "assessor-competition-for-panel-dashboard";
