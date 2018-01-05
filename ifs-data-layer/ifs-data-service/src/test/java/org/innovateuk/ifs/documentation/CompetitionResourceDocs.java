@@ -52,6 +52,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("useResubmissionQuestion").description("should applications include the default resubmission question"),
             fieldWithPath("assessorCount").description("How many assessors are required to assess each application"),
             fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess"),
+            fieldWithPath("fullApplicationFinance").description("The level of finances required for applications"),
             fieldWithPath("setupComplete").description("Has the setup been completed and will move to open once past the open date"),
             fieldWithPath("nonIfs").description("Is this competition a non-ifs competition (not managed via IFS)"),
             fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition"),

@@ -74,6 +74,7 @@ public class CompetitionResource {
 
     private String activityCode;
 
+    private Boolean fullApplicationFinance = true;
     private boolean setupComplete = false;
 
     private boolean useResubmissionQuestion;
@@ -498,6 +499,14 @@ public class CompetitionResource {
 
     public void setAssessorPay(BigDecimal assessorPay) {
         this.assessorPay = assessorPay;
+    }
+
+    public Boolean isFullApplicationFinance() {
+        return fullApplicationFinance;
+    }
+
+    public void setFullApplicationFinance(Boolean fullApplicationFinance) {
+        this.fullApplicationFinance = fullApplicationFinance;
     }
 
     public boolean getSetupComplete() {
