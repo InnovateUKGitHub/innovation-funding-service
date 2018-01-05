@@ -2,12 +2,10 @@ package org.innovateuk.ifs.async.controller.endtoend;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.service.DefaultRestTemplateAdaptor;
-import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.RoleResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.support.BindingAwareModelMap;
 import org.springframework.web.client.RestTemplate;
@@ -28,8 +27,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
@@ -42,6 +40,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
 
 /**
  * An end-to-end test scenario for using the async mechanism provided in the {@link org.innovateuk.ifs.async} package.
@@ -57,6 +56,10 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
     private RestTemplate originalRestTemplate;
 
     private RestTemplate restTemplateMock;
+
+    private UserResource loggedInUser = newUserResource().build();
+
+    private String requestCachingUuid = "1234567890";
 
     @Before
     public void swapOutRestTemplateForMock() {
@@ -76,8 +79,10 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
 
     @Before
     public void setupHttpFilterThreadLocals() {
-        setLoggedInUser(newUserResource().build());
-        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
+        setLoggedInUser(loggedInUser);
+        ServletRequestAttributes requestAttributes = new ServletRequestAttributes(new MockHttpServletRequest());
+        RequestContextHolder.setRequestAttributes(requestAttributes);
+        requestAttributes.setAttribute("REQUEST_UUID_KEY", requestCachingUuid, SCOPE_REQUEST);
     }
 
     @Test
@@ -101,7 +106,7 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
                 eq(ApplicationResource.class))).thenAnswer(invocation -> delayedResponse(entity(application)));
 
         when(restTemplateMock.exchange(eq("/competition/456"), eq(HttpMethod.GET), isA(HttpEntity.class),
-                eq(CompetitionResource.class))).thenReturn(delayedResponse(entity(competition)));
+                eq(CompetitionResource.class))).thenAnswer(invocation -> delayedResponse(entity(competition)));
 
         // set up expectations for the retrieval of the Lead Organisation
         List<Long> leadOrganisationUserIds = setupLeadOrganisationRetrievalExpectations();
@@ -139,6 +144,7 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
     }
 
     private List<Long> setupLeadOrganisationRetrievalExpectations() {
+
         RoleResource leadApplicantRole = newRoleResource().withType(UserRoleType.LEADAPPLICANT).build();
         RoleResource collaboratorRole = newRoleResource().withType(UserRoleType.COLLABORATOR).build();
 
@@ -149,13 +155,13 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
                 build(3);
 
         when(restTemplateMock.exchange(eq("/processrole/findByApplicationId/123"), eq(HttpMethod.GET), isA(HttpEntity.class),
-                eq(processRoleResourceListType()))).thenReturn(delayedResponse(entity(applicationProcessRoles)));
+                eq(processRoleResourceListType()))).thenAnswer(invocation -> delayedResponse(entity(applicationProcessRoles)));
 
         List<Long> leadOrganisationUserIds = asList(2L, 4L, 6L);
         OrganisationResource leadOrganisation = newOrganisationResource().withUsers(leadOrganisationUserIds).build();
 
         when(restTemplateMock.exchange(eq("/organisation/findById/444"), eq(HttpMethod.GET), isA(HttpEntity.class),
-                eq(OrganisationResource.class))).thenReturn(delayedResponse(entity(leadOrganisation)));
+                eq(OrganisationResource.class))).thenAnswer(invocation -> delayedResponse(entity(leadOrganisation)));
         return leadOrganisationUserIds;
     }
 
@@ -163,10 +169,27 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    /**
+     * This method asserts that our async work is being done on the expected task executor Threads, and that the
+     * expected ThreadLocal values to support the RestTemplateAdaptors are present.
+     *
+     * This then simulates a random time for responses to return from the data layer to ensure that our Futures execute
+     * in different orders, as in real life.
+     */
     private <T> T delayedResponse(T response) {
+
+        assertThat(Thread.currentThread().getName(), startsWith("IFS-Async-Executor-"));
+        assertThat(((UserAuthentication) SecurityContextHolder.getContext().getAuthentication()).getDetails(), sameInstance(loggedInUser));
+        assertThat(RequestContextHolder.getRequestAttributes().getAttribute("REQUEST_UUID_KEY", SCOPE_REQUEST),
+                equalTo(requestCachingUuid));
+
+        sleepQuietlyForRandomInterval();
+        return response;
+    }
+
+    static void sleepQuietlyForRandomInterval() {
         try {
             Thread.sleep((int) (Math.random() * 50));
-            return response;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }

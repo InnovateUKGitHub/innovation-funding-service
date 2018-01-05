@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import static org.innovateuk.ifs.async.controller.endtoend.EndToEndAsyncControllerIntegrationTest.sleepQuietlyForRandomInterval;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -23,7 +24,10 @@ public class EndToEndAsyncControllerTestService extends AsyncAdaptor {
      * to prove that the Controller calls will block until any Futures here have completed.
      */
     public void doSomeHiddenAsyncActivities(Model model, List<Long> users) {
-        users.forEach(userId -> async(() -> model.addAttribute("doSomeHiddenAsyncActivitiesUser" + userId, userId)));
+        users.forEach(userId -> async(() -> {
+            sleepQuietlyForRandomInterval();
+            model.addAttribute("doSomeHiddenAsyncActivitiesUser" + userId, userId);
+        }));
     }
 
     /**
@@ -39,8 +43,10 @@ public class EndToEndAsyncControllerTestService extends AsyncAdaptor {
      */
     public void doSomeHiddenButSafeBlockingAsyncActivities(Model model, List<Long> users) {
 
-        List<CompletableFuture<Model>> futuresList = simpleMap(users, userId -> async(() ->
-                model.addAttribute("doSomeHiddenButSafeBlockingAsyncActivitiesUser" + userId, userId)));
+        List<CompletableFuture<Model>> futuresList = simpleMap(users, userId -> async(() -> {
+            sleepQuietlyForRandomInterval();
+            return model.addAttribute("doSomeHiddenButSafeBlockingAsyncActivitiesUser" + userId, userId);
+        }));
 
         waitForFuturesAndChildFuturesToCompleteFrom(futuresList);
     }
@@ -52,9 +58,13 @@ public class EndToEndAsyncControllerTestService extends AsyncAdaptor {
      */
     public CompletableFuture<List<String>> doExplicitAsyncActivities(List<Long> users) {
 
-        List<CompletableFuture<String>> createNewStringsFuture = simpleMap(users, user -> async(() -> "doExplicitAsyncActivities" + user));
+        List<CompletableFuture<String>> createNewStringsFuture = simpleMap(users, user -> async(() -> {
+            sleepQuietlyForRandomInterval();
+            return "doExplicitAsyncActivities" + user;
+        }));
 
         return awaitAll(createNewStringsFuture).thenApply(futureResults -> {
+            sleepQuietlyForRandomInterval();
             List<String> newStrings = (List<String>) futureResults;
             return simpleMap(newStrings, string -> string + "ThenAmended");
         });
