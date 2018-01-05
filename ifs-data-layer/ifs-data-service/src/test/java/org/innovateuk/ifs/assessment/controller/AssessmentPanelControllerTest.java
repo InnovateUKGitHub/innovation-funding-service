@@ -1,17 +1,22 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.Collections.nCopies;
+import static org.innovateuk.ifs.assessment.builder.AssessmentReviewRejectOutcomeResourceBuilder.newAssessmentReviewRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder.newAssessmentReviewResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,5 +82,35 @@ public class AssessmentPanelControllerTest extends BaseControllerMockMVCTest<Ass
                 .andExpect(content().json(toJson(assessmentReviews)));
 
         verify(assessmentPanelServiceMock, only()).getAssessmentReviews(userId, competitionId);
+    }
+
+    @Test
+    public void acceptInvitation() throws Exception {
+        long assessmentReviewId = 1L;
+
+        when(assessmentPanelServiceMock.acceptAssessmentReview(assessmentReviewId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessmentpanel/review/{id}/accept", assessmentReviewId))
+                .andExpect(status().isOk());
+
+        verify(assessmentPanelServiceMock, only()).acceptAssessmentReview(assessmentReviewId);
+    }
+
+    @Test
+    public void rejectInvitation() throws Exception {
+        long assessmentReviewId = 1L;
+        String rejectComment = String.join(" ", nCopies(100, "comment"));
+        AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcomeResource = newAssessmentReviewRejectOutcomeResource()
+                .withRejectComment(rejectComment)
+                .build();
+
+        when(assessmentPanelServiceMock.rejectAssessmentReview(assessmentReviewId, assessmentReviewRejectOutcomeResource)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(put("/assessmentpanel/review/{id}/reject", assessmentReviewId)
+                .contentType(APPLICATION_JSON)
+                .content(toJson(assessmentReviewRejectOutcomeResource)))
+                .andExpect(status().isOk());
+
+        verify(assessmentPanelServiceMock, only()).rejectAssessmentReview(assessmentReviewId, assessmentReviewRejectOutcomeResource);
     }
 }

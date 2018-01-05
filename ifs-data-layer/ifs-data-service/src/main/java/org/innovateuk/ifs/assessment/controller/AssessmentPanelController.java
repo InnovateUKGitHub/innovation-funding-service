@@ -1,11 +1,13 @@
 package org.innovateuk.ifs.assessment.controller;
 
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.transactional.AssessmentPanelService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -49,5 +51,16 @@ public class AssessmentPanelController {
             @PathVariable("userId") long userId,
             @PathVariable("competitionId") long competitionId) {
         return assessmentPanelService.getAssessmentReviews(userId, competitionId).toGetResponse();
+    }
+
+    @PutMapping("/review/{id}/accept")
+    public RestResult<Void> acceptInvitation(@PathVariable("id") long id) {
+        return assessmentPanelService.acceptAssessmentReview(id).toPutResponse();
+    }
+
+    @PutMapping("/review/{id}/reject")
+    public RestResult<Void> rejectInvitation(@PathVariable("id") long id,
+                                             @RequestBody @Valid AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcomeResource) {
+        return assessmentPanelService.rejectAssessmentReview(id, assessmentReviewRejectOutcomeResource).toPutResponse();
     }
 }
