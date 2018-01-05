@@ -263,14 +263,26 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
     @Test
     public void testNamedAwaitAlls() throws ExecutionException, InterruptedException {
 
-        CompletableFuture<Integer> future = generator.async("future", () -> 1);
+        // these latches are just used to provide a bit of predicability to the test execution order.  They allow the
+        // awaitAll()-generated Futures to register before any Futures contained within their "thenAccept()" bodies -
+        // this can happen if the futures they're waiting on are already completed before they register themselves,
+        // because the taskExecutor will choose to execute their bodies immediately in the same Thread (standard
+        // behaviour of {@link CompletableFuture#thenApply} and CompletableFuture#thenAccept}
+        CountDownLatch futureLatch = new CountDownLatch(1);
+        CountDownLatch childFutureLatch = new CountDownLatch(1);
+
+        CompletableFuture<Void> future = generator.async("future", () -> futureLatch.await());
 
         CompletableFuture<Void> awaitAll = generator.awaitAll("Waiting for future", future).thenAccept(f1 -> {
 
-            CompletableFuture<Integer> childFuture = generator.async("childFuture", () -> 1);
+            CompletableFuture<Void> childFuture = generator.async("childFuture", () -> childFutureLatch.await());
 
             generator.awaitAll("Waiting for childFuture", childFuture).thenApply(f2 -> null);
+
+            childFutureLatch.countDown();
         });
+
+        futureLatch.countDown();
 
         awaitAll.get();
 
