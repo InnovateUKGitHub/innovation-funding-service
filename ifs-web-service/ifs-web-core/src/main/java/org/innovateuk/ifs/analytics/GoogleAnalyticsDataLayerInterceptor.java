@@ -3,7 +3,6 @@ package org.innovateuk.ifs.analytics;
 import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -72,11 +71,7 @@ public class GoogleAnalyticsDataLayerInterceptor extends HandlerInterceptorAdapt
 
     private static void setUserRoles(GoogleAnalyticsDataLayer dl) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println(Thread.currentThread());
-        System.out.println(auth);
-        System.out.println(auth.getDetails());
         if (auth instanceof UserAuthentication) {
-            System.out.println(((UserResource)auth.getDetails()).getEmail());
             UserAuthentication userAuth = (UserAuthentication) auth;
             dl.setUserRole(userAuth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(joining(",")));
         }
