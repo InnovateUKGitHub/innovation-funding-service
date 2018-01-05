@@ -2,6 +2,7 @@ package org.innovateuk.ifs.security;
 
 import org.innovateuk.ifs.async.controller.AwaitAllFuturesCompletionIntegrationTestHelper;
 import org.innovateuk.ifs.async.controller.ThreadsafeModelAopIntegrationTestHelper;
+import org.innovateuk.ifs.async.controller.endtoend.EndToEndAsyncControllerTestController;
 import org.innovateuk.ifs.commons.AbstractServiceSecurityAnnotationsTest;
 import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.evaluator.RootCustomPermissionEvaluator;
@@ -28,7 +29,8 @@ public abstract class AbstractWebServiceSecurityAnnotationsTest extends Abstract
     public static final List<Class<?>> GLOBAL_EXCLUDED_CLASSES = asList(
             IfsErrorController.class,
             ThreadsafeModelAopIntegrationTestHelper.class,
-            AwaitAllFuturesCompletionIntegrationTestHelper.class);
+            AwaitAllFuturesCompletionIntegrationTestHelper.class,
+            EndToEndAsyncControllerTestController.class);
 
     @Override
     protected final List<Class<? extends Annotation>> classLevelSecurityAnnotations() {
