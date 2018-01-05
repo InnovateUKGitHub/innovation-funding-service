@@ -1,18 +1,22 @@
 package org.innovateuk.ifs.async.controller;
 
+import org.innovateuk.ifs.async.ReadWriteLockTestHelper;
 import org.junit.Test;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.ReadWriteLock;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.async.ReadWriteLockTestHelper.isReadLocked;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
@@ -43,7 +47,9 @@ public class ThreadsafeModelTest {
 
         assertFirstOperationBlocksSecondOperationUntilComplete(
                 model -> model.containsAttribute("read"),
-                model -> model.addAttribute("write"));
+                model -> model.addAttribute("write"),
+                ReadWriteLockTestHelper::isReadLocked,
+                ReadWriteLockTestHelper::isWriteLocked);
     }
 
     @Test
@@ -51,11 +57,15 @@ public class ThreadsafeModelTest {
 
         assertFirstOperationBlocksSecondOperationUntilComplete(
                 Model::asMap,
-                model -> model.addAllAttributes(Collections.singleton("write")));
+                model -> model.addAllAttributes(Collections.singleton("write")),
+                ReadWriteLockTestHelper::isReadLocked,
+                ReadWriteLockTestHelper::isWriteLocked);
 
         assertFirstOperationBlocksSecondOperationUntilComplete(
                 Model::asMap,
-                model -> model.mergeAttributes(asMap(1, 2)));
+                model -> model.mergeAttributes(asMap(1, 2)),
+                ReadWriteLockTestHelper::isReadLocked,
+                ReadWriteLockTestHelper::isWriteLocked);
     }
 
     @Test
@@ -63,7 +73,9 @@ public class ThreadsafeModelTest {
 
         assertFirstOperationBlocksSecondOperationUntilComplete(
                 model -> model.addAttribute("write"),
-                model -> model.containsAttribute("read"));
+                model -> model.containsAttribute("read"),
+                ReadWriteLockTestHelper::isWriteLocked,
+                ReadWriteLockTestHelper::isReadLocked);
     }
 
     @Test
@@ -71,7 +83,9 @@ public class ThreadsafeModelTest {
 
         assertFirstOperationBlocksSecondOperationUntilComplete(
                 model -> model.addAllAttributes(singletonList("write")),
-                Model::asMap);
+                Model::asMap,
+                ReadWriteLockTestHelper::isWriteLocked,
+                ReadWriteLockTestHelper::isReadLocked);
     }
 
     @Test
@@ -79,7 +93,9 @@ public class ThreadsafeModelTest {
 
         assertFirstOperationBlocksSecondOperationUntilComplete(
                 model -> model.mergeAttributes(asMap(1, 2)),
-                Model::asMap);
+                Model::asMap,
+                ReadWriteLockTestHelper::isWriteLocked,
+                ReadWriteLockTestHelper::isReadLocked);
     }
 
     @Test
@@ -87,7 +103,9 @@ public class ThreadsafeModelTest {
 
         assertFirstOperationBlocksSecondOperationUntilComplete(
                 model -> model.addAttribute("write1"),
-                model -> model.addAttribute("write2"));
+                model -> model.addAttribute("write2"),
+                ReadWriteLockTestHelper::isWriteLocked,
+                ReadWriteLockTestHelper::isWriteLocked);
     }
 
     @Test
@@ -95,7 +113,9 @@ public class ThreadsafeModelTest {
 
         assertFirstOperationBlocksSecondOperationUntilComplete(
                 model -> model.addAllAttributes(singletonList("write")),
-                model -> model.mergeAttributes(asMap(1, 2)));
+                model -> model.mergeAttributes(asMap(1, 2)),
+                ReadWriteLockTestHelper::isWriteLocked,
+                ReadWriteLockTestHelper::isWriteLocked);
     }
 
     @Test
@@ -103,7 +123,9 @@ public class ThreadsafeModelTest {
 
         assertFirstOperationBlocksSecondOperationUntilComplete(
                 model -> model.mergeAttributes(asMap(1, 2)),
-                model -> model.addAllAttributes(singletonList("write")));
+                model -> model.addAllAttributes(singletonList("write")),
+                ReadWriteLockTestHelper::isWriteLocked,
+                ReadWriteLockTestHelper::isWriteLocked);
     }
 
     /**
@@ -116,7 +138,9 @@ public class ThreadsafeModelTest {
         try {
             assertFirstOperationBlocksSecondOperationUntilComplete(
                     model -> model.containsAttribute("read1"),
-                    model -> model.containsAttribute("read2"));
+                    model -> model.containsAttribute("read2"),
+                    ReadWriteLockTestHelper::isReadLocked,
+                    ReadWriteLockTestHelper::isReadLocked);
 
             fail("2 read operations should not block each other and therefore there must be a problem with the test mechanism");
 
@@ -127,7 +151,7 @@ public class ThreadsafeModelTest {
     }
 
     /**
-     * This test tests that we can have as many concurrent reads as we like whilst maintaing thread safety.
+     * This test tests that we can have as many concurrent reads as we like whilst maintaining thread safety.
      *
      * This test issues 2 calls to {@link ThreadsafeModel#containsAttribute(String)}, the first of which blocks *within*
      * the bounds of the threadsafe locking mechanism inside ThreadsafeModel until the 2nd call is executed, upon which
@@ -146,9 +170,12 @@ public class ThreadsafeModelTest {
 
         ThreadsafeModel threadsafeModel = new ThreadsafeModel(wrappedModel);
 
+        ReadWriteLock lockFromModel = (ReadWriteLock) ReflectionTestUtils.getField(threadsafeModel, "lock");
+
         List<String> operationValues = new ArrayList<>();
 
         Model read1WhenAnswer = doAnswer(invocation -> {
+            assertTrue(isReadLocked(lockFromModel));
             countDownLatch.await();
             operationValues.add("read1 operation");
             return null;
@@ -157,6 +184,7 @@ public class ThreadsafeModelTest {
         read1Operation.accept(read1WhenAnswer);
 
         Model read2WhenAnswer = doAnswer(invocation -> {
+            assertTrue(isReadLocked(lockFromModel));
             operationValues.add("read2 operation");
             countDownLatch.countDown();
             return null;
@@ -193,7 +221,11 @@ public class ThreadsafeModelTest {
      * complete.  Therefore it has been successfully blocked for the 100ms wait time where operation1 had control of
      * the lock.
      */
-    private void assertFirstOperationBlocksSecondOperationUntilComplete(Consumer<Model> operation1, Consumer<Model> operation2) throws InterruptedException, ExecutionException {
+    private void assertFirstOperationBlocksSecondOperationUntilComplete(
+            Consumer<Model> operation1, Consumer<Model> operation2,
+            Function<ReadWriteLock, Boolean> expectedLockStateDuringOperation1Test,
+            Function<ReadWriteLock, Boolean> expectedLockStateDuringOperation2Test)
+            throws InterruptedException, ExecutionException {
 
         CountDownLatch operation1CountDownLatch = new CountDownLatch(1);
         CountDownLatch operation2CountDownLatch = new CountDownLatch(1);
@@ -202,9 +234,12 @@ public class ThreadsafeModelTest {
 
         ThreadsafeModel threadsafeModel = new ThreadsafeModel(wrappedModel);
 
+        ReadWriteLock lockFromModel = (ReadWriteLock) ReflectionTestUtils.getField(threadsafeModel, "lock");
+
         List<String> operationValues = new ArrayList<>();
 
         Model operation1Answer = doAnswer(invocation -> {
+            assertTrue(expectedLockStateDuringOperation1Test.apply(lockFromModel));
             operation2CountDownLatch.countDown();
             operation1CountDownLatch.await(200, TimeUnit.MILLISECONDS);
             operationValues.add("operation 1");
@@ -214,6 +249,7 @@ public class ThreadsafeModelTest {
         operation1.accept(operation1Answer);
 
         Model operation2Answer = doAnswer(invocation -> {
+            assertTrue(expectedLockStateDuringOperation2Test.apply(lockFromModel));
             operationValues.add("operation 2");
             return null;
         }).when(wrappedModel);

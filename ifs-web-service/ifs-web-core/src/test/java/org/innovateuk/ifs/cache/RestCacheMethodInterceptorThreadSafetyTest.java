@@ -134,23 +134,4 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         List<Boolean> successfulOperationLockStates = simpleMap(successfulCalls, Pair::getRight);
         assertTrue(successfulOperationLockStates.stream().allMatch(state -> state));
     }
-
-//    @Test
-//    public void testReadOperationDoesntBlockOtherReadOperations() throws Throwable {
-//
-//        CountDownLatch blockingLatch = new CountDownLatch(1);
-//
-//        when(methodInvocationMock.getArguments()).thenReturn(new Object[] {"id", 123});
-//
-//        when(uidSupplierMock.get()).thenReturn("http-request-1");
-//
-//        when(cacheMock.get(eq("http-request-1"), isA(Callable.class))).thenReturn(new HashMap<>());
-//
-//        doAnswer(invocation -> {
-//            blockingLatch.await();
-//            return null;
-//        }).when(cacheMock).put("", null);
-//
-//        interceptor.invoke(methodInvocationMock);
-//    }
 }
