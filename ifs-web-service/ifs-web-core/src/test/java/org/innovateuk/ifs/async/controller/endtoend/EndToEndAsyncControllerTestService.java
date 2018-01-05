@@ -40,7 +40,7 @@ public class EndToEndAsyncControllerTestService extends AsyncAdaptor {
     public void doSomeHiddenButSafeBlockingAsyncActivities(Model model, List<Long> users) {
 
         List<CompletableFuture<Model>> futuresList = simpleMap(users, userId -> async(() ->
-                model.addAttribute("doSomeHiddenButSafeBlockingAsyncActivitiesUser" + userId, "safely blocked " + userId)));
+                model.addAttribute("doSomeHiddenButSafeBlockingAsyncActivitiesUser" + userId, userId)));
 
         waitForFuturesAndChildFuturesToCompleteFrom(futuresList);
     }

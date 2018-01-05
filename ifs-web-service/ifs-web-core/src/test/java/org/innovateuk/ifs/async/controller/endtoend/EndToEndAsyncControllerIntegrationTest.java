@@ -28,6 +28,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -102,6 +103,42 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
         when(restTemplateMock.exchange(eq("/competition/456"), eq(HttpMethod.GET), isA(HttpEntity.class),
                 eq(CompetitionResource.class))).thenReturn(delayedResponse(entity(competition)));
 
+        // set up expectations for the retrieval of the Lead Organisation
+        List<Long> leadOrganisationUserIds = setupLeadOrganisationRetrievalExpectations();
+
+        String result = controller.getMethod(application.getId(), model);
+        assertThat(result, equalTo("/application/My Application"));
+
+        //
+        // assert that the values added directly to the model in the Controller itself are present
+        //
+        assertThat(model.get("applicationSectorAndCompetitionCode"), equalTo("The Sector-The Activity Code"));
+        assertThat(model.get("leadOrganisationUsers"), equalTo(leadOrganisationUserIds));
+
+        // and assert that the values added as a Future directly to the model in the Controller have resolved correctly
+        assertThat((List<String>) model.get("explicitlyAsyncResultsAddedAsAFutureToTheModel"), contains(
+                "doExplicitAsyncActivities2ThenAmended",
+                "doExplicitAsyncActivities4ThenAmended",
+                "doExplicitAsyncActivities6ThenAmended"));
+
+        //
+        // assert that the values added by the hidden async activities in
+        // {@link EndToEndAsyncControllerTestService#doSomeHiddenAsyncActivities} have resolved
+        //
+        assertThat(model.get("doSomeHiddenAsyncActivitiesUser2"), equalTo(2L));
+        assertThat(model.get("doSomeHiddenAsyncActivitiesUser4"), equalTo(4L));
+        assertThat(model.get("doSomeHiddenAsyncActivitiesUser6"), equalTo(6L));
+
+        //
+        // assert that the values added by the hidden async activities in
+        // {@link EndToEndAsyncControllerTestService#doSomeHiddenButSafeBlockingAsyncActivities} have resolved
+        //
+        assertThat(model.get("doSomeHiddenButSafeBlockingAsyncActivitiesUser2"), equalTo(2L));
+        assertThat(model.get("doSomeHiddenButSafeBlockingAsyncActivitiesUser4"), equalTo(4L));
+        assertThat(model.get("doSomeHiddenButSafeBlockingAsyncActivitiesUser6"), equalTo(6L));
+    }
+
+    private List<Long> setupLeadOrganisationRetrievalExpectations() {
         RoleResource leadApplicantRole = newRoleResource().withType(UserRoleType.LEADAPPLICANT).build();
         RoleResource collaboratorRole = newRoleResource().withType(UserRoleType.COLLABORATOR).build();
 
@@ -119,12 +156,7 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
 
         when(restTemplateMock.exchange(eq("/organisation/findById/444"), eq(HttpMethod.GET), isA(HttpEntity.class),
                 eq(OrganisationResource.class))).thenReturn(delayedResponse(entity(leadOrganisation)));
-
-        String result = controller.getMethod(application.getId(), model);
-        assertThat(result, equalTo("/application/My Application"));
-
-        assertThat(model.get("applicationSectorAndCompetitionCode"), equalTo("The Sector-The Activity Code"));
-        assertThat(model.get("leadOrganisationUsers"), equalTo(leadOrganisationUserIds));
+        return leadOrganisationUserIds;
     }
 
     private <T> ResponseEntity<T> entity(T result) {
