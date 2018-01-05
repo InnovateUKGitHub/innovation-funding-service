@@ -192,6 +192,8 @@ public class GoogleAnalyticsDataLayerInterceptorTest extends BaseUnitTestMocksTe
     }
 
     private void setAnonymousAuthentication() {
-        SecurityContextHolder.getContext().setAuthentication(new AnonymousAuthenticationToken("key", "principal", singletonList(new SimpleGrantedAuthority("anon"))));
+        AnonymousAuthenticationToken authentication = new AnonymousAuthenticationToken("key", "principal", singletonList(new SimpleGrantedAuthority("anon")));
+        System.out.println(">>>>>>>>>>>>>>>>>" + authentication + " " + Thread.currentThread());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
