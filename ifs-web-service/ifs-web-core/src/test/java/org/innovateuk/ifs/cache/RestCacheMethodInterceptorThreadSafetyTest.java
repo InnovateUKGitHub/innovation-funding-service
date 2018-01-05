@@ -51,7 +51,7 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
     private MethodInvocation methodInvocationMock;
 
     @Mock
-    private UidSupplier uidSupplierMock;
+    private RestCacheUuidSupplier uidSupplierMock;
 
     /**
      * This test sets in motion 2 parallel read operations on the cache and shows that the first doesn't block the

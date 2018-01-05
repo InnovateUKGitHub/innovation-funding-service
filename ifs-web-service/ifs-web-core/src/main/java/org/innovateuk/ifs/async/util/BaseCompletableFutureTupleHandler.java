@@ -5,10 +5,12 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Base class for convenient handling of multiple CompletableFutures.
@@ -98,5 +100,17 @@ abstract class BaseCompletableFutureTupleHandler {
             LOG.error("Error whilst attempting to get future result", e);
             throw new RuntimeException("Error whilst attempting to get future result", e);
         }
+    }
+
+    protected List<?> getResultsAsList()  {
+        return simpleMap(futures, future -> {
+            try {
+                return future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                LOG.error("Error whilst attempting to get future result", e);
+                throw new RuntimeException("Error whilst attempting to get future result", e);
+            }
+        });
+
     }
 }

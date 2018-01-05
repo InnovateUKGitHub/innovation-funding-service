@@ -2,8 +2,8 @@ package org.innovateuk.ifs.async.util;
 
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
-import org.innovateuk.ifs.util.ExceptionThrowingRunnable;
-import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
+import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
+import org.innovateuk.ifs.util.ExceptionThrowingConsumer;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,8 +27,8 @@ import java.util.concurrent.CompletableFuture;
  *
  * This subclass is slightly less generous than other {@link BaseCompletableFutureTupleHandler} subclasses in that it
  * does not supply the results of the futures explicitly to the handler methods passed to
- * {@link CompletableFutureTupleNHandler#thenAccept(ExceptionThrowingRunnable)} or
- * {@link CompletableFutureTupleNHandler#thenApply(ExceptionThrowingSupplier)}
+ * {@link CompletableFutureTupleNHandler#thenAccept(ExceptionThrowingConsumer)} or
+ * {@link CompletableFutureTupleNHandler#thenApply(ExceptionThrowingFunction)}
  */
 public class CompletableFutureTupleNHandler extends BaseCompletableFutureTupleHandler {
 
@@ -36,22 +36,28 @@ public class CompletableFutureTupleNHandler extends BaseCompletableFutureTupleHa
         this(UUID.randomUUID().toString(), futures);
     }
 
-    public CompletableFutureTupleNHandler(String futureName, List<CompletableFuture<?>> futures) {
+    public CompletableFutureTupleNHandler(String futureName, List<? extends CompletableFuture<?>> futures) {
         super(futureName, futures.toArray(new CompletableFuture[] {}));
     }
 
-    public <R> CompletableFuture<R> thenApply(ExceptionThrowingSupplier<R> supplier) {
-        return thenApplyInternal(supplier::get);
+    public <R> CompletableFuture<R> thenApply(ExceptionThrowingFunction<List<?>, R> handler) {
+        return thenApplyInternal(() -> {
+            try {
+                return handler.apply(getResultsAsList());
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
-    public <R> CompletableFuture<Void> thenAccept(ExceptionThrowingRunnable runnable) {
+    public <R> CompletableFuture<Void> thenAccept(ExceptionThrowingConsumer<List<?>> runnable) {
 
-        ExceptionThrowingSupplier<Void> dummySupplier = () -> {
-            runnable.run();
+        ExceptionThrowingFunction<List<?>, Void> dummyFunction = futureResults -> {
+            runnable.accept(futureResults);
             return null;
         };
 
-        return thenApply(dummySupplier);
+        return thenApply(dummyFunction);
     }
 
     public void thenReturn() {

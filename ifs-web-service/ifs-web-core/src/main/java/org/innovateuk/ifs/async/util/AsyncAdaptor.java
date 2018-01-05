@@ -1,10 +1,14 @@
 package org.innovateuk.ifs.async.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
+import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.util.ExceptionThrowingRunnable;
 import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -12,6 +16,8 @@ import java.util.concurrent.CompletableFuture;
  * handling code.
  */
 public abstract class AsyncAdaptor {
+
+    private static final Log LOG = LogFactory.getLog(AsyncAdaptor.class);
 
     @Autowired
     private AsyncFuturesGenerator asyncFuturesGenerator;
@@ -48,6 +54,10 @@ public abstract class AsyncAdaptor {
         return asyncFuturesGenerator.awaitAll(future1, future2, future3, moreFutures);
     }
 
+    protected CompletableFutureTupleNHandler awaitAll(List<? extends CompletableFuture<?>> futures) {
+        return asyncFuturesGenerator.awaitAll(futures);
+    }
+
     protected <R1> CompletableFutureTuple1Handler<R1> awaitAll(String futureName, CompletableFuture<R1> future1) {
         return asyncFuturesGenerator.awaitAll(futureName, future1);
     }
@@ -62,5 +72,9 @@ public abstract class AsyncAdaptor {
 
     protected CompletableFutureTupleNHandler awaitAll(String futureName, CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?>... moreFutures) {
         return asyncFuturesGenerator.awaitAll(futureName, future1, future2, future3, moreFutures);
+    }
+
+    protected void waitForFuturesAndChildFuturesToCompleteFrom(List<? extends CompletableFuture<?>> futures) {
+        AsyncFuturesHolder.waitForFuturesAndChildFuturesToCompleteFrom(futures);
     }
 }

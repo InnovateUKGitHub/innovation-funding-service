@@ -128,7 +128,7 @@ public class AsyncFuturesHolder {
      * these CompletableFutures and the descendant Futures have been registered via
      * {@link AsyncFuturesHolder#registerFuture(String, CompletableFuture)}
      */
-    public static void waitForFuturesAndChildFuturesToCompleteFrom(List<CompletableFuture<?>> futuresToBlockOn) {
+    public static void waitForFuturesAndChildFuturesToCompleteFrom(List<? extends CompletableFuture<?>> futuresToBlockOn) {
 
         ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> futures = ASYNC_FUTURES.get();
 

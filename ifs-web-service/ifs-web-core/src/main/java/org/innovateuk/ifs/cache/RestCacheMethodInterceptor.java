@@ -34,7 +34,7 @@ public class RestCacheMethodInterceptor implements MethodInterceptor {
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
     @Autowired
-    private UidSupplier uidSupplier;
+    private RestCacheUuidSupplier uidSupplier;
 
     protected static void put(Object value, String uid, Method method, List<Object> parameters, Cache<String, Map<Method, Map<List<Object>, Object>>> cache, ReadWriteLock lock) throws ExecutionException {
 
@@ -65,11 +65,11 @@ public class RestCacheMethodInterceptor implements MethodInterceptor {
         });
     }
 
-    public UidSupplier getUidSupplier() {
+    public RestCacheUuidSupplier getUidSupplier() {
         return uidSupplier;
     }
 
-    public RestCacheMethodInterceptor setUidSupplier(UidSupplier uidSupplier) {
+    public RestCacheMethodInterceptor setUidSupplier(RestCacheUuidSupplier uidSupplier) {
         this.uidSupplier = uidSupplier;
         return this;
     }

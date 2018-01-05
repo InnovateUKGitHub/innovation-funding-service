@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutionException;
 
 import static java.lang.Thread.currentThread;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
@@ -131,12 +132,13 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
         List<Integer> results = new ArrayList<>();
 
         CompletableFuture<Void> awaitingFuture =
-                generator.awaitAll(future1, future2, future3, future4, future5).thenApply(() -> {
-                    results.addAll(asList(future1.get()));
-                    results.addAll(asList(future2.get()));
-                    results.addAll(asList(future3.get()));
-                    results.addAll(asList(future4.get()));
-                    results.addAll(asList(future5.get()));
+                generator.awaitAll(future1, future2, future3, future4, future5).thenApply(futureResults -> {
+                    List<Integer> futureResultIntegers = (List<Integer>) futureResults;
+                    results.addAll(singletonList(futureResultIntegers.get(0)));
+                    results.addAll(singletonList(futureResultIntegers.get(1)));
+                    results.addAll(singletonList(futureResultIntegers.get(2)));
+                    results.addAll(singletonList(futureResultIntegers.get(3)));
+                    results.addAll(singletonList(futureResultIntegers.get(4)));
                     return null;
                 });
 

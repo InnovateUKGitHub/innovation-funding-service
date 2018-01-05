@@ -59,7 +59,7 @@ public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
      * Thread to its child Threads (and their children).
      *
      * This brings over some useful values that are stored for the life of the currently running HTTP Request.  Of
-     * particular interest is the UUID generated per-request by {@link org.innovateuk.ifs.cache.RequestUidSupplier}
+     * particular interest is the UUID generated per-request by {@link org.innovateuk.ifs.cache.RestCachePerRequestUuidSupplier}
      * which enables any REST calls from child Threads (and their children) to be able to reuse, and feed back into, the
      * Rest Result caching that takes part in {@link org.innovateuk.ifs.cache.RestCacheMethodInterceptor}, effectively
      * letting the main Thread and its descendant Threads all share each other's cached results for the duration of the

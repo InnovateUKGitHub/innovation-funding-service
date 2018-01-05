@@ -127,6 +127,10 @@ public class AsyncFuturesGenerator {
         return awaitAll(randomName(), future1, future2, future3, moreFutures);
     }
 
+    public CompletableFutureTupleNHandler awaitAll(List<? extends CompletableFuture<?>> futures) {
+        return awaitAll(randomName(), futures);
+    }
+
     public <R1> CompletableFutureTuple1Handler<R1> awaitAll(String futureName, CompletableFuture<R1> future1) {
         return new CompletableFutureTuple1Handler<>(futureName, future1);
     }
@@ -142,6 +146,10 @@ public class AsyncFuturesGenerator {
     public CompletableFutureTupleNHandler awaitAll(String futureName, CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?>... moreFutures) {
         List<CompletableFuture<?>> allFutures = combineLists(asList(future1, future2, future3), moreFutures);
         return new CompletableFutureTupleNHandler(futureName, allFutures);
+    }
+
+    public CompletableFutureTupleNHandler awaitAll(String futureName, List<? extends CompletableFuture<?>> futures) {
+        return new CompletableFutureTupleNHandler(futureName, futures);
     }
 
     private String randomName() {
