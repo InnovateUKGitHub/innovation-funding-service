@@ -92,8 +92,8 @@ public class EligibilityModelPopulatorTest {
                 .withName("name")
                 .withId(8L)
                 .withLeadApplicantType(asList(1L, 2L))
-                .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
                 .withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+                .withFullApplicationFinance(null)
                 .build();
 
         List<ResearchCategoryResource> researchCategories = emptyList();
