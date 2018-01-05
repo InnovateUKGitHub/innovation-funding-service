@@ -10,6 +10,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -63,6 +64,9 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
 
     @Autowired
     private GenericApplicationContext applicationContext;
+
+    @Value("${ifs.data.service.rest.baseURL}")
+    private String baseRestUrl;
 
     private RestTemplate originalRestTemplate;
 
@@ -123,10 +127,10 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
                 withInnovationArea(newInnovationAreaResource().withSectorName("The Sector").build()).
                 build();
 
-        when(restTemplateMock.exchange(eq("/application/123"), eq(HttpMethod.GET), isA(HttpEntity.class),
+        when(restTemplateMock.exchange(eq(baseRestUrl + "/application/123"), eq(HttpMethod.GET), isA(HttpEntity.class),
                 eq(ApplicationResource.class))).thenAnswer(invocation -> delayedResponse(entity(application)));
 
-        when(restTemplateMock.exchange(eq("/competition/456"), eq(HttpMethod.GET), isA(HttpEntity.class),
+        when(restTemplateMock.exchange(eq(baseRestUrl + "/competition/456"), eq(HttpMethod.GET), isA(HttpEntity.class),
                 eq(CompetitionResource.class))).thenAnswer(invocation -> delayedResponse(entity(competition)));
 
         // set up expectations for the retrieval of the Lead Organisation
@@ -175,13 +179,13 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
                 withOrganisation(333L, 444L, 555L).
                 build(3);
 
-        when(restTemplateMock.exchange(eq("/processrole/findByApplicationId/123"), eq(HttpMethod.GET), isA(HttpEntity.class),
+        when(restTemplateMock.exchange(eq(baseRestUrl + "/processrole/findByApplicationId/123"), eq(HttpMethod.GET), isA(HttpEntity.class),
                 eq(processRoleResourceListType()))).thenAnswer(invocation -> delayedResponse(entity(applicationProcessRoles)));
 
         List<Long> leadOrganisationUserIds = asList(2L, 4L, 6L);
         OrganisationResource leadOrganisation = newOrganisationResource().withUsers(leadOrganisationUserIds).build();
 
-        when(restTemplateMock.exchange(eq("/organisation/findById/444"), eq(HttpMethod.GET), isA(HttpEntity.class),
+        when(restTemplateMock.exchange(eq(baseRestUrl + "/organisation/findById/444"), eq(HttpMethod.GET), isA(HttpEntity.class),
                 eq(OrganisationResource.class))).thenAnswer(invocation -> delayedResponse(entity(leadOrganisation)));
         return leadOrganisationUserIds;
     }
