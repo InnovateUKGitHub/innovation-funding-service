@@ -72,7 +72,6 @@ public class EligibilitySectionSaverTest {
     @Test
     public void saveSectionWithoutResearchParticipationAmountIdDefaultsToNone() {
 	    EligibilityForm  competitionSetupForm = new EligibilityForm();
-	    competitionSetupForm.setResearchParticipationAmountId(null);
 
         CompetitionResource competition = newCompetitionResource().build();
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());

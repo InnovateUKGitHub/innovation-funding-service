@@ -41,11 +41,7 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 
         competition.setResearchCategories(eligibilityForm.getResearchCategoryId());
 
-        ResearchParticipationAmount amount = Optional.ofNullable(
-                ResearchParticipationAmount.fromId(eligibilityForm.getResearchParticipationAmountId())
-        )
-                .orElse(ResearchParticipationAmount.NONE);
-
+        ResearchParticipationAmount amount = ResearchParticipationAmount.fromId(eligibilityForm.getResearchParticipationAmountId());
         competition.setMaxResearchRatio(amount.getAmount());
 
         boolean multiStream = "yes".equals(eligibilityForm.getMultipleStream());

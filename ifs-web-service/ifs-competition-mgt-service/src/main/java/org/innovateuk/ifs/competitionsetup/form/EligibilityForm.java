@@ -2,7 +2,9 @@ package org.innovateuk.ifs.competitionsetup.form;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 import java.util.Set;
@@ -22,7 +24,8 @@ public class EligibilityForm extends CompetitionSetupForm {
     private String singleOrCollaborative;
     @NotEmpty(message = "{validation.eligibilityform.leadApplicantTypes.required}")
     private List<Long> leadApplicantTypes;
-    private Integer researchParticipationAmountId;
+    @NotNull(message = "{validation.eligibilityform.researchparticipationamountId.required}")
+    private int researchParticipationAmountId = ResearchParticipationAmount.NONE.getId();
     @NotBlank(message = "{validation.eligibilityform.resubmission.required}")
     private String resubmission;
 
@@ -74,11 +77,11 @@ public class EligibilityForm extends CompetitionSetupForm {
         this.leadApplicantTypes = leadApplicantTypes;
     }
 
-    public Integer getResearchParticipationAmountId() {
+    public int getResearchParticipationAmountId() {
         return researchParticipationAmountId;
     }
 
-    public void setResearchParticipationAmountId(Integer researchParticipationAmountId) {
+    public void setResearchParticipationAmountId(int researchParticipationAmountId) {
         this.researchParticipationAmountId = researchParticipationAmountId;
     }
 

@@ -677,13 +677,12 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void submitSectionEligibilityFailsWithoutResearchParticipationIfCompetitionIsFinance() throws Exception {
+    public void submitSectionEligibilityFailsWithoutResearchParticipationIfCompetitionHasFullApplicationFinance() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .withFullApplicationFinance(true)
                 .build();
-
-        assertTrue(competition.isFinanceType());
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
@@ -707,14 +706,12 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     }
 
     @Test
-    public void submitSectionEligibilitySucceedsWithoutResearchParticipationIfCompetitionIsNonFinance() throws Exception {
+    public void submitSectionEligibilitySucceedsWithoutResearchParticipationIfCompetitionHasNoApplicationFinance() throws Exception {
         CompetitionResource competition = newCompetitionResource()
                 .withId(COMPETITION_ID)
                 .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
-                .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
+                .withFullApplicationFinance(null)
                 .build();
-
-        assertTrue(competition.isNonFinanceType());
 
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSection(
@@ -730,7 +727,6 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
                 .param("researchCategoryId", "1", "2", "3")
                 .param("singleOrCollaborative", "collaborative")
                 .param("leadApplicantTypes", "1", "2", "3")
-                .param("researchParticipationAmountId", "")
                 .param("resubmission", "no"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(URL_PREFIX + "/" + COMPETITION_ID + "/section/eligibility"));
