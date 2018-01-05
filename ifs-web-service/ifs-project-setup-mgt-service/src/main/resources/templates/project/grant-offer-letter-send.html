@@ -107,9 +107,31 @@
         </div>
     </th:block>
     <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}">
-        <h2 class="heading-medium">Confirm receipt of signed grant offer letter</h2>
-        <p>Do the documents supplied meet the requirements for the grant offer letter?</p>
-        <button data-js-modal="modal-accept-signed-gol" class="button">Accept signed grant offer letter</button>
+        <h2 class="heading-medium">Confirm signed grant offer letter</h2>
+        <form novalidate="novalidate">
+            <div class="form-group">
+                <fieldset>
+                    <legend id="decisionGOL" class="extra-margin-bottom">
+                        Please review that these documents meet the requirements for the grant offer letter
+                    </legend>
+                    <div class="multiple-choice">
+                        <input id="acceptGOL" value="true" type="radio" name="decisionGOL" required="required"/>
+                        <label for="acceptGOL">
+                            Accept documents
+                        </label>
+                    </div>
+                    <div class="multiple-choice">
+                        <input id="rejectGOL" value="false" type="radio" name="decisionGOL" required="required"/>
+                        <label for="rejectGOL">
+                            Reject documents
+                        </label>
+                    </div>
+                </fieldset>
+            </div>
+            <button class="button" type="submit">Submit</button>
+            <a th:href="@{'?action=cancel'}" class="button button-clear">Cancel</a>
+        </form>
+
     </th:block>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
