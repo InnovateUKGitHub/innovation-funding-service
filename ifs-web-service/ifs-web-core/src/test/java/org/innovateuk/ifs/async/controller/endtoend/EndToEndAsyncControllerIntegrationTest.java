@@ -76,6 +76,8 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
 
     private String requestCachingUuid = "1234567890";
 
+    private UserResource previousUser;
+
     /**
      * Swap out the real RestTemplate temporarily for a mock one so that we can mock out communication with the data
      * layer
@@ -104,10 +106,19 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
      */
     @Before
     public void setupHttpFilterThreadLocals() {
-        setLoggedInUser(loggedInUser);
+        previousUser = setLoggedInUser(loggedInUser);
         ServletRequestAttributes requestAttributes = new ServletRequestAttributes(new MockHttpServletRequest());
         RequestContextHolder.setRequestAttributes(requestAttributes);
         requestAttributes.setAttribute("REQUEST_UUID_KEY", requestCachingUuid, SCOPE_REQUEST);
+    }
+
+    /**
+     * Cleanup ThreadLocals that we would expect to have set on the main Thread prior to the Controller being called
+     */
+    @After
+    public void cleanupHttpFilterThreadLocals() {
+        setLoggedInUser(previousUser);
+        RequestContextHolder.setRequestAttributes(null);
     }
 
     @Test
