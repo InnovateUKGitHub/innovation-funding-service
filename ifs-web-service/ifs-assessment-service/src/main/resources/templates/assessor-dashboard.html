@@ -158,8 +158,8 @@
                                            th:text="${assessmentPanelAccept.competitionName}"/>
                                     </h3>
 
-                                    <div th:if="${assessmentPanelAccept.awaitingApplications == 0}" class="action-required">
-                                        <strong>0 applications awaiting review | applications to be added soon</strong>
+                                    <div th:if="${assessmentPanelAccept.awaitingApplications == 0}">
+                                        Applications awaiting review will be added here.
                                     </div>
 
                                     <div th:if="${assessmentPanelAccept.awaitingApplications > 0}" class="action-required">
