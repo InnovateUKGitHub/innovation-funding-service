@@ -257,10 +257,7 @@ $wide-page-width: 1400px;
   @extend %contain-floats;
   padding: 30px 0;
   border-top: 1px solid $border-colour;
-
-  &:first-child{
-    border-top: none;
-  }
+  clear:both;
 
   &:last-child{
     margin-bottom: 30px;
