@@ -108,20 +108,20 @@
     </th:block>
     <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}">
         <h2 class="heading-medium">Confirm signed grant offer letter</h2>
-        <form novalidate="novalidate">
+        <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" method="GET" novalidate="novalidate">
             <div class="form-group">
                 <fieldset>
                     <legend id="decisionGOL" class="extra-margin-bottom">
                         Please review that these documents meet the requirements for the grant offer letter
                     </legend>
                     <div class="multiple-choice">
-                        <input id="acceptGOL" value="true" type="radio" name="decisionGOL" required="required"/>
+                        <input id="acceptGOL" value="APPROVED" type="radio" name="approvalType" required="required"/>
                         <label for="acceptGOL">
                             Accept documents
                         </label>
                     </div>
                     <div class="multiple-choice">
-                        <input id="rejectGOL" value="false" type="radio" name="decisionGOL" required="required"/>
+                        <input id="rejectGOL" value="REJECTED" type="radio" name="approvalType" required="required"/>
                         <label for="rejectGOL">
                             Reject documents
                         </label>
