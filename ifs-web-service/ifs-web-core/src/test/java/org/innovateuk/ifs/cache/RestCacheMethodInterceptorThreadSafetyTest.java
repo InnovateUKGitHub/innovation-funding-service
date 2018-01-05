@@ -248,15 +248,15 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
 
     /**
      * This test asserts that an operation holding the write lock in the {@link RestCacheMethodInterceptor#put} method
-     * will block a second operation from being able to write its results to the cache.
+     * will block a second operation from being able to read its results from the cache.
      */
     @Test
-    public void testWriteOperationBlocksWriteOperations() throws Throwable {
+    public void testWriteOperationBlocksReadOperations() throws Throwable {
 
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
-        CountDownLatch writeOperation1Latch = new CountDownLatch(1);
-        CountDownLatch writeOperation2Latch = new CountDownLatch(1);
+        CountDownLatch writeOperationLatch = new CountDownLatch(1);
+        CountDownLatch readOperationLatch = new CountDownLatch(1);
         CountDownLatch completeTestLatch = new CountDownLatch(2);
 
         ReadWriteLock lockFromInterceptor =
@@ -276,12 +276,128 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
 
             successfulCalls.add(Triple.of(operationName, isReadLocked(lockFromInterceptor), isWriteLocked(lockFromInterceptor)));
 
-            // when "Write Operation 1" is writing its results to the cache, block and hold the write lock and allow
-            // "Write Operation 2" to execute (and subsequently become blocked due to the write lock having been
+            // when "Write Operation" is writing its results to the cache, block and hold the write lock and allow
+            // "Read Operation" to execute (and subsequently become blocked due to the write lock having been
             // aquired already
             if (isWriteLocked(lockFromInterceptor)) {
-                writeOperation2Latch.countDown();
-                writeOperation1Latch.await();
+                readOperationLatch.countDown();
+                writeOperationLatch.await();
+            }
+
+            return new HashMap<>();
+        });
+
+        @SuppressWarnings("unused")
+        Future<Object> writeOperationFuture = executorService.submit(() -> {
+            try {
+                namedCallsThreadLocal.set("Write Operation");
+                Object result = interceptor.invoke(methodInvocationMock);
+                completeTestLatch.countDown();
+                return result;
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        Future<Object> readOperationFuture = executorService.submit(() -> {
+            try {
+                readOperationLatch.await();
+                namedCallsThreadLocal.set("Read Operation");
+                Object result = interceptor.invoke(methodInvocationMock);
+                completeTestLatch.countDown();
+                return result;
+            } catch (Throwable e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        try {
+            readOperationFuture.get(50, TimeUnit.MILLISECONDS);
+            fail("This read operation should have timed out because it was blocked by the write lock");
+        } catch (TimeoutException e) {
+            // expected behaviour - the write operation was successfully blocked from writing to the cache.  Now allow
+            // the writeOperation to complete (which in turn allows the readOperation to proceed) and wait on the
+            // completeTestLatch until both writes are fully finished.
+
+            // sanity check that the write lock is indeed on and blocking progress at the moment
+            assertTrue(isWriteLocked(lockFromInterceptor));
+            assertFalse(isReadLocked(lockFromInterceptor));
+
+            // assert that current progress has "Write Operation" having successfully read from the cache and is now
+            // in the process of writing to it (at which point it has blocked to keep the write lock aquired).
+            //
+            // The "Read Operation" is blocked because it is blocked from reading from the cache until "Write Operation"
+            // has finished writing
+            List<String> successfulOperationsSoFar = simpleMap(successfulCalls, Triple::getLeft);
+            assertThat(successfulOperationsSoFar, contains("Write Operation", "Write Operation"));
+
+            // now release the operations and await their successful completion
+            writeOperationLatch.countDown();
+            completeTestLatch.await();
+        }
+
+        // assert that all operations were successful (both reads and both writes of the cache results)
+        List<String> successfulOperationNames = simpleMap(successfulCalls, Triple::getLeft);
+        assertThat(successfulOperationNames, contains("Write Operation", "Write Operation", "Read Operation", "Read Operation"));
+
+        // Assert that "Write Operation" successfully read its results and then stored its results, before then
+        // letting "Read Operation" do the same
+        List<Boolean> successfulOperationReadLockStates = simpleMap(successfulCalls, Triple::getMiddle);
+        List<Boolean> successfulOperationWriteLockStates = simpleMap(successfulCalls, Triple::getRight);
+        assertThat(successfulOperationReadLockStates, contains(true, false, true, false));
+        assertThat(successfulOperationWriteLockStates, contains(false, true, false, true));
+    }
+
+    /**
+     * This test asserts that an operation holding the write lock in the {@link RestCacheMethodInterceptor#put} method
+     * will block a second operation from being able to write to the cache.
+     */
+    @Test
+    public void testWriteOperationBlocksWriteOperations() throws Throwable {
+
+        ExecutorService executorService = Executors.newFixedThreadPool(2);
+
+        CountDownLatch writeOperation1LatchWhenReadingFromCache = new CountDownLatch(1);
+        CountDownLatch writeOperation1LatchWhenWritingToCache = new CountDownLatch(1);
+        CountDownLatch writeOperation2LatchForInitialBlocking = new CountDownLatch(1);
+        CountDownLatch writeOperation2LatchForBlockingUntilWriteOperationIsWritingToCache = new CountDownLatch(1);
+        CountDownLatch completeTestLatch = new CountDownLatch(2);
+
+        ReadWriteLock lockFromInterceptor =
+                (ReadWriteLock) ReflectionTestUtils.getField(interceptor, "lock");
+
+        when(methodInvocationMock.getArguments()).thenReturn(new Object[] {"id", 123});
+
+        when(uidSupplierMock.get()).thenReturn("http-request-1");
+
+        Queue<Triple<String, Boolean, Boolean>> successfulCalls = new ConcurrentLinkedQueue<>();
+
+        ThreadLocal<String> namedCallsThreadLocal = new ThreadLocal<>();
+
+        when(cacheMock.get(eq("http-request-1"), isA(Callable.class))).thenAnswer(invocation -> {
+
+            String operationName = namedCallsThreadLocal.get();
+
+            successfulCalls.add(Triple.of(operationName, isReadLocked(lockFromInterceptor), isWriteLocked(lockFromInterceptor)));
+
+            // when "Write Operation 1" has successfully read its results from the cache, kick off "Write Operation 2" to
+            // allow it to also read its results from the cache, and wait for it to successfully read from the cache
+            if ("Write Operation 1".equals(operationName) && !isWriteLocked(lockFromInterceptor)) {
+                writeOperation2LatchForInitialBlocking.countDown();
+                writeOperation1LatchWhenReadingFromCache.await();
+            }
+
+            // when "Write Operation 2" has successfully read its results from the cache, unblock "Write Operation 1" to go
+            // ahead and write its results to the cache (and block to aquire the write lock)
+            if ("Write Operation 2".equals(operationName) && !isWriteLocked(lockFromInterceptor)) {
+                writeOperation1LatchWhenReadingFromCache.countDown();
+            }
+
+            // We have ensured now that both Write Operations have had a chance to read their results from the cache.
+            // Now they're both freed up to continue to write their results to the cache, and we can't guarantee which
+            // one will get here first, but we can test that one will block the other.
+            if (isWriteLocked(lockFromInterceptor)) {
+                writeOperation1LatchWhenWritingToCache.await();
             }
 
             return new HashMap<>();
@@ -301,7 +417,7 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
 
         Future<Object> writeOperation2Future = executorService.submit(() -> {
             try {
-                writeOperation2Latch.await();
+                writeOperation2LatchForInitialBlocking.await();
                 namedCallsThreadLocal.set("Write Operation 2");
                 Object result = interceptor.invoke(methodInvocationMock);
                 completeTestLatch.countDown();
@@ -312,36 +428,47 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
         });
 
         try {
+            writeOperation1Future.get(50, TimeUnit.MILLISECONDS);
             writeOperation2Future.get(50, TimeUnit.MILLISECONDS);
-            fail("This write operation should have timed out because it was blocked by the write lock");
+            fail("One of these write operations should have timed out because it was blocked by the write lock " +
+                    "aquired by the other");
         } catch (TimeoutException e) {
-            // expected behaviour - the write operation was successfully blocked from writing to the cache.  Now allow
-            // the writeOperation1 to complete (which in turn allows the writeOperation2 to proceed) and wait on the
-            // completeTestLatch until both writes are fully finished.
+
+            // expected behaviour - one of the write operations was successfully blocked from writing to the cache.
+            // Now allow the blocking write operation to complete (which in turn allows the other operation to proceed)
+            // and wait on the completeTestLatch until both writes are fully finished.
 
             // sanity check that the write lock is indeed on and blocking progress at the moment
             assertTrue(isWriteLocked(lockFromInterceptor));
             assertFalse(isReadLocked(lockFromInterceptor));
 
-            // assert that current progress has both operations having successfully read from the cache and the first
-            // operation is currently in the process of writing its result to the cache
+            // assert that current progress has both operations having successfully read from the cache and one of the
+            // operations is currently in the process of writing its result to the cache
             List<String> successfulOperationsSoFar = simpleMap(successfulCalls, Triple::getLeft);
-            assertThat(successfulOperationsSoFar, contains("Write Operation 1", "Write Operation 1"));
+            assertThat(successfulOperationsSoFar, hasSize(3));
+
+            // the first 2 entries are the 2 successful reads.  The 3rd entry is whichever write operation successfully
+            // started to write to the cache first
+            List<String> successfulReadOperationsSoFar = successfulOperationsSoFar.subList(0, 2);
+            assertThat(successfulReadOperationsSoFar, contains("Write Operation 1", "Write Operation 2"));
 
             // now release the operations and await their successful completion
-            writeOperation1Latch.countDown();
+            writeOperation1LatchWhenWritingToCache.countDown();
             completeTestLatch.await();
         }
 
         // assert that all operations were successful (both reads and both writes of the cache results)
         List<String> successfulOperationNames = simpleMap(successfulCalls, Triple::getLeft);
-        assertThat(successfulOperationNames, contains("Write Operation 1", "Write Operation 1", "Write Operation 2", "Write Operation 2"));
+        List<String> successfulReadOperations = successfulOperationNames.subList(0, 2);
+        assertThat(successfulReadOperations, contains("Write Operation 1", "Write Operation 2"));
+        List<String> successfulWriteOperations = successfulOperationNames.subList(2, 4);
+        assertThat(successfulWriteOperations, containsInAnyOrder("Write Operation 1", "Write Operation 2"));
 
-        // Assert that "Write Operation 1" successfully read its results and then stored its results, before then
-        // letting "Write Operation 2" do the same
+        // Assert that "Write Operation 1" successfully read its results, then "Write Operation 2" read its results,
+        // and then finally they both wrote their results
         List<Boolean> successfulOperationReadLockStates = simpleMap(successfulCalls, Triple::getMiddle);
         List<Boolean> successfulOperationWriteLockStates = simpleMap(successfulCalls, Triple::getRight);
-        assertThat(successfulOperationReadLockStates, contains(true, false, true, false));
-        assertThat(successfulOperationWriteLockStates, contains(false, true, false, true));
+        assertThat(successfulOperationReadLockStates, contains(true, true, false, false));
+        assertThat(successfulOperationWriteLockStates, contains(false, false, true, true));
     }
 }
