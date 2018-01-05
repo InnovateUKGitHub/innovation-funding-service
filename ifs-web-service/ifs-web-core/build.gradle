@@ -63,11 +63,3 @@ processTestResources {
         expand project.properties
     }
 }
-
-test {
-    testLogging {
-        showStandardStreams = true
-//        showExceptions
-//        showStackTraces
-    }
-}
