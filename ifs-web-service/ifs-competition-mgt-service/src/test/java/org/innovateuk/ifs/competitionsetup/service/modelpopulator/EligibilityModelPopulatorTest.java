@@ -52,7 +52,7 @@ public class EligibilityModelPopulatorTest {
     }
 
     @Test
-    public void populateModelWith() {
+    public void populateModelWithResearchParticipationAmounts() {
         CompetitionResource competition = newCompetitionResource()
                 .withCompetitionCode("code")
                 .withName("name")
