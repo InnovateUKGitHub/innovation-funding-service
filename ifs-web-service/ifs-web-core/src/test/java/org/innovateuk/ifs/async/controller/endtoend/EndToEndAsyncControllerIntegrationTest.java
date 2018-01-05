@@ -30,6 +30,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
+import static org.innovateuk.ifs.commons.ProxyUtils.unwrapProxy;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -78,7 +79,7 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
     @Before
     public void swapOutRestTemplateForMock() {
 
-        DefaultRestTemplateAdaptor restTemplateAdaptor = applicationContext.getBean(DefaultRestTemplateAdaptor.class);
+        DefaultRestTemplateAdaptor restTemplateAdaptor = getRestTemplateAdaptorFromApplicationContext();
         originalRestTemplate = (RestTemplate) ReflectionTestUtils.getField(restTemplateAdaptor, "restTemplate");
 
         restTemplateMock = mock(RestTemplate.class);
@@ -213,5 +214,9 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private DefaultRestTemplateAdaptor getRestTemplateAdaptorFromApplicationContext() {
+        return (DefaultRestTemplateAdaptor) unwrapProxy(applicationContext.getBean(DefaultRestTemplateAdaptor.class));
     }
 }

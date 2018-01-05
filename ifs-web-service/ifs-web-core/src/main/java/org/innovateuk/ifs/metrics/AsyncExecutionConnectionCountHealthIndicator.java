@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 /**
  * Health indicator for keeping track of the executor thread pool size as used by @Async execution blocks
  */
-
 @Component
 public class AsyncExecutionConnectionCountHealthIndicator implements HealthIndicator {
 
