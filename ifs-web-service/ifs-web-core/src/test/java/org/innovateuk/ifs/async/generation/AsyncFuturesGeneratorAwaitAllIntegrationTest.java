@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.async.generation;
 
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,7 @@ import static java.lang.Thread.currentThread;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.*;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -168,21 +169,21 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
     @Test
     public void testAwaitingFutureExecutesInSameThreadAsOneOfTheDependentThreads() throws ExecutionException, InterruptedException {
 
-        SecurityContext context = new SecurityContextImpl();
-        SecurityContextHolder.setContext(context);
+        Authentication authentication = new UserAuthentication(newUserResource().build());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         CompletableFuture<Thread> future1 = generator.async(() -> {
-            assertThat(SecurityContextHolder.getContext(), sameInstance(context));
+            assertThat(SecurityContextHolder.getContext().getAuthentication(), sameInstance(authentication));
             return currentThread();
         });
 
         CompletableFuture<Thread> future2 = generator.async(() -> {
-            assertThat(SecurityContextHolder.getContext(), sameInstance(context));
+            assertThat(SecurityContextHolder.getContext().getAuthentication(), sameInstance(authentication));
             return currentThread();
         });
 
         CompletableFuture<Thread> awaitingFuture = generator.awaitAll(future1, future2).thenApply((r1, r2) -> {
-            assertThat(SecurityContextHolder.getContext(), sameInstance(context));
+            assertThat(SecurityContextHolder.getContext().getAuthentication(), sameInstance(authentication));
             return currentThread();
         });
 

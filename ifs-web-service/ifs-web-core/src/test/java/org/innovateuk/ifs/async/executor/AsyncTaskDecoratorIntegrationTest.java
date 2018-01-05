@@ -6,6 +6,7 @@ import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.context.request.RequestAttributes;
@@ -47,11 +48,12 @@ public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
     public void testSpringSecurityContextTransferredToChildThreads() throws ExecutionException, InterruptedException {
 
         Runnable setNewThreadLocalValueFn = () -> {
-            SecurityContext context = mock(SecurityContext.class);
-            SecurityContextHolder.setContext(context);
+            Authentication authentication = mock(Authentication.class);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
         };
 
-        testThreadLocalTransferredToChildThread(setNewThreadLocalValueFn, SecurityContextHolder::getContext);
+        testThreadLocalTransferredToChildThread(setNewThreadLocalValueFn,
+                () -> SecurityContextHolder.getContext().getAuthentication());
     }
 
     /**
