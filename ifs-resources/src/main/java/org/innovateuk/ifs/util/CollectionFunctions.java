@@ -642,6 +642,22 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around a 1-stage find-first function that takes an array rather than a Collection, to remove
+     * boilerplate from production code
+     *
+     * @param array
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> Optional<T> simpleFindFirst(T[] array, Predicate<T> filterFn) {
+        if (array == null) {
+            return empty();
+        }
+        return simpleFindFirst(asList(array), filterFn);
+    }
+
+    /**
      * A simple wrapper around a 1-stage filter function, to remove boilerplate from production code
      *
      * @param list
