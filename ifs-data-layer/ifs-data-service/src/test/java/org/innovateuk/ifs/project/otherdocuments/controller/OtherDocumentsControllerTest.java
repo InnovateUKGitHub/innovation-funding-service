@@ -4,22 +4,24 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -29,39 +31,43 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<OtherDocumentsController> {
 
+    private static final long projectId = 123L;
+    private static final long maxFilesize = 1234L;
+    private static final List<String> mediaTypes = singletonList("application/pdf");
+
+    @Mock(name = "fileValidator")
+    private FilesizeAndTypeFileValidator<List<String>> fileValidatorMock;
+
     @Override
     protected OtherDocumentsController supplyControllerUnderTest() {
-        return new OtherDocumentsController();
+        OtherDocumentsController controller = new OtherDocumentsController();
+        ReflectionTestUtils.setField(controller, "maxFilesizeBytesForProjectSetupOtherDocuments", maxFilesize);
+        ReflectionTestUtils.setField(controller, "validMediaTypesForProjectSetupOtherDocuments", mediaTypes);
+        return controller;
     }
 
     @Test
     public void addCollaborationAgreement() throws Exception {
 
-        Long projectId = 123L;
-
         BiFunction<OtherDocumentsService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/collaboration-agreement", otherDocumentsServiceMock, serviceCallToUpload).
+        assertFileUploadProcess("/project/" + projectId + "/collaboration-agreement", fileValidatorMock, mediaTypes, otherDocumentsServiceMock, serviceCallToUpload).
                 andDo(documentFileUploadMethod("project/{method-name}"));
     }
 
     @Test
     public void updateCollaborationAgreement() throws Exception {
 
-        Long projectId = 123L;
-
         BiFunction<OtherDocumentsService, FileEntryResource, ServiceResult<Void>> serviceCallToUpload =
                 (service, fileToUpload) -> service.updateCollaborationAgreementFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUpdateProcess("/project/" + projectId + "/collaboration-agreement", otherDocumentsServiceMock, serviceCallToUpload).
+        assertFileUpdateProcess("/project/" + projectId + "/collaboration-agreement", fileValidatorMock, mediaTypes, otherDocumentsServiceMock, serviceCallToUpload).
                 andDo(documentFileUpdateMethod("project/{method-name}"));
     }
 
     @Test
     public void getCollaborationAgreementFileDetails() throws Exception {
-
-        Long projectId = 123L;
 
         Function<OtherDocumentsService, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service) -> service.getCollaborationAgreementFileEntryDetails(projectId);
@@ -74,8 +80,6 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
     @Test
     public void getCollaborationAgreementFileContent() throws Exception {
 
-        Long projectId = 123L;
-
         Function<OtherDocumentsService, ServiceResult<FileAndContents>> serviceCallToUpload =
                 (service) -> service.getCollaborationAgreementFileContents(projectId);
 
@@ -86,8 +90,6 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
     @Test
     public void deleteCollaborationAgreement() throws Exception {
-
-        Long projectId = 123L;
 
         Function<OtherDocumentsService, ServiceResult<Void>> serviceCallToDelete =
                 service -> service.deleteCollaborationAgreementFile(projectId);
@@ -100,31 +102,25 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
     @Test
     public void addExploitationPlan() throws Exception {
 
-        Long projectId = 123L;
-
         BiFunction<OtherDocumentsService, FileEntryResource, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service, fileToUpload) -> service.createExploitationPlanFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUploadProcess("/project/" + projectId + "/exploitation-plan", otherDocumentsServiceMock, serviceCallToUpload).
+        assertFileUploadProcess("/project/" + projectId + "/exploitation-plan", fileValidatorMock, mediaTypes, otherDocumentsServiceMock, serviceCallToUpload).
                 andDo(documentFileUploadMethod("project/{method-name}"));
     }
 
     @Test
     public void updateExploitationPlan() throws Exception {
 
-        Long projectId = 123L;
-
         BiFunction<OtherDocumentsService, FileEntryResource, ServiceResult<Void>> serviceCallToUpload =
                 (service, fileToUpload) -> service.updateExploitationPlanFileEntry(eq(projectId), eq(fileToUpload), fileUploadInputStreamExpectations());
 
-        assertFileUpdateProcess("/project/" + projectId + "/exploitation-plan", otherDocumentsServiceMock, serviceCallToUpload).
+        assertFileUpdateProcess("/project/" + projectId + "/exploitation-plan", fileValidatorMock, mediaTypes, otherDocumentsServiceMock, serviceCallToUpload).
                 andDo(documentFileUpdateMethod("project/{method-name}"));
     }
 
     @Test
     public void getExploitationPlanFileDetails() throws Exception {
-
-        Long projectId = 123L;
 
         Function<OtherDocumentsService, ServiceResult<FileEntryResource>> serviceCallToUpload =
                 (service) -> service.getExploitationPlanFileEntryDetails(projectId);
@@ -137,8 +133,6 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
     @Test
     public void getExploitationPlanFileContent() throws Exception {
 
-        Long projectId = 123L;
-
         Function<OtherDocumentsService, ServiceResult<FileAndContents>> serviceCallToUpload =
                 (service) -> service.getExploitationPlanFileContents(projectId);
 
@@ -149,8 +143,6 @@ public class OtherDocumentsControllerTest extends BaseControllerMockMVCTest<Othe
 
     @Test
     public void deleteExploitationPlan() throws Exception {
-
-        Long projectId = 123L;
 
         Function<OtherDocumentsService, ServiceResult<Void>> serviceCallToDelete =
                 service -> service.deleteExploitationPlanFile(projectId);
