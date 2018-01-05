@@ -15,10 +15,10 @@ import java.util.concurrent.ExecutionException;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.removeDuplicates;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -73,8 +73,12 @@ public class AsyncThreadPoolTaskExecutorConfigIntegrationTest extends BaseIntegr
             return combineLists(Thread.currentThread().getName(), futureThreadNames);
         });
 
+        // assert the thread executor threads were used
         List<String> threadNames = future.get();
+        threadNames.forEach(threadName -> assertThat(threadName, startsWith("IFS-Async-Executor-")));
+
+        // and assert that it was 3 unique threads from the pool
         assertThat(threadNames, hasSize(3));
-        assertThat(threadNames, containsInAnyOrder("IFS-Async-Executor-1", "IFS-Async-Executor-2", "IFS-Async-Executor-3"));
+        assertThat(removeDuplicates(threadNames), hasSize(3));
     }
 }
