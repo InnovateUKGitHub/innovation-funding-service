@@ -18,7 +18,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.contains;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
@@ -46,6 +46,13 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
     @Mock
     private UidSupplier uidSupplierMock;
 
+    /**
+     * This test sets in motion 2 parallel read operations on the cache and shows that the first doesn't block the
+     * second.  This is achieved by blocking the first operation within the boundaries of the read lock so that it is
+     * holding a read lock open and then allowing the second operation to continue on into the read lock boundary itself.
+     * That will prove that 2 read operations can be within the bounds of the read lock at the same time.  The second
+     * operation can then unblock the first read operation.
+     */
     @Test
     public void testReadOperationDoesntBlockOtherReadOperations() throws Throwable {
 
@@ -121,7 +128,7 @@ public class RestCacheMethodInterceptorThreadSafetyTest extends BaseUnitTestMock
 
         // assert that both operations were successful
         List<String> successfulOperationNames = simpleMap(successfulCalls, Pair::getLeft);
-        assertThat(successfulOperationNames, containsInAnyOrder("Read Operation 1", "Read Operation 2"));
+        assertThat(successfulOperationNames, contains("Read Operation 1", "Read Operation 2"));
 
         // assert that the read lock was always on when the 2 calls were inside the bounds of
         // {@link RestCacheMethodInterceptor#get}
