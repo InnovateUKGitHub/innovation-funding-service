@@ -44,6 +44,16 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_RE
 
 /**
  * An end-to-end test scenario for using the async mechanism provided in the {@link org.innovateuk.ifs.async} package.
+ *
+ * This test simulates a Controller performing async work itself, and in addition working with Services that
+ * perform a variety of async behaviours (some better practice than others).
+ *
+ * This test proves that when a variety of Futures are generated inside the Controller, they are all allowed to
+ * resolve successfully before the Controller method is allowed to finish.
+ *
+ * This test mocks out contact with the data layer by swapping the RestTemplate for a mock one.  Results from the mocked
+ * out data layer return after a randomised delay to simulate real latency, and thus this allows our Futures to execute
+ * in a realistic, less predictable order of execution.
  */
 public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest {
 
@@ -61,6 +71,10 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
 
     private String requestCachingUuid = "1234567890";
 
+    /**
+     * Swap out the real RestTemplate temporarily for a mock one so that we can mock out communication with the data
+     * layer
+     */
     @Before
     public void swapOutRestTemplateForMock() {
 
@@ -71,12 +85,18 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
         ReflectionTestUtils.setField(restTemplateAdaptor, "restTemplate", restTemplateMock);
     }
 
+    /**
+     * Swap back in the real RestTemplate for other tests
+     */
     @After
     public void restoreOriginalRestTemplate() {
         DefaultRestTemplateAdaptor restTemplateAdaptor = applicationContext.getBean(DefaultRestTemplateAdaptor.class);
         ReflectionTestUtils.setField(restTemplateAdaptor, "restTemplate", originalRestTemplate);
     }
 
+    /**
+     * Setup ThreadLocals that we would expect to have set on the main Thread prior to the Controller being called
+     */
     @Before
     public void setupHttpFilterThreadLocals() {
         setLoggedInUser(loggedInUser);
@@ -86,7 +106,7 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
     }
 
     @Test
-    public void testControllerAsyncBehaviour() {
+    public void testEndToEndControllerAsyncBehaviour() {
 
         BindingAwareModelMap model = new BindingAwareModelMap();
 
