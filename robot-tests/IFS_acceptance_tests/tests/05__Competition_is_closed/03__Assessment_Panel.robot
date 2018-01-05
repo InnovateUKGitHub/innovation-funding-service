@@ -28,6 +28,8 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-2049 Assessment panels - Filter on applications list
 ...
 ...               IFS-1125 Assessment panels - Send panel applications to assessors for review
+...
+...               IFS-1566 Assessment panels - Assessor dashboard 'Attend panel' box
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -144,13 +146,14 @@ CompAdmin resend invites to multiple assessors
     And the user should see the element       jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite sent: ${today}")
 
 Assesor is able to accept the invitation from dashboard
-    [Documentation]  IFS-37  IFS-1135
+    [Documentation]  IFS-37  IFS-1135  IFS-1566
     [Tags]  HappyPath
     [Setup]  Log in as a different user       ${panel_assessor_ben}  ${short_password}
     Given the user clicks the button/link     jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button    acceptInvitation  true
     And The user clicks the button/link       jQuery=button:contains("Confirm")
     Then the user should not see the element  jQuery=h2:contains("Invitations to attend panel")
+    Then the user should see the element      jQuery=h3:contains("${CLOSED_COMPETITION_NAME}")
 
 Assesor is able to reject the invitation from email
     [Documentation]  IFS-37
