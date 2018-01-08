@@ -65,7 +65,7 @@ public class AsyncTaskDecorator implements TaskDecorator {
         threadLocalCopiers.forEach(copier -> {
             try {
                 copier.clearCopiedValueFromAsyncThread();
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 LOG.error("Error whilst clearing ThreadLocal from async Thread - continuing to next clearance", e);
             }
         });

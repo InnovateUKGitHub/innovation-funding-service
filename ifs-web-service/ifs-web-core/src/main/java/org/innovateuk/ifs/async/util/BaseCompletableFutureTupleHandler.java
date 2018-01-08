@@ -77,7 +77,7 @@ abstract class BaseCompletableFutureTupleHandler {
             waitForFuturesAndDescendantsToFullyComplete();
             try {
                 return supplier.get();
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 LOG.error("Error whilst executing Supplier Future", e);
                 throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst executing Supplier Future");
             }
@@ -96,7 +96,7 @@ abstract class BaseCompletableFutureTupleHandler {
     protected <R> R getResult(int index)  {
         try {
             return (R) futures[index].get();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             LOG.error("Error whilst attempting to get future result", e);
             throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst attempting to get future result");
         }
@@ -106,7 +106,7 @@ abstract class BaseCompletableFutureTupleHandler {
         return simpleMap(futures, future -> {
             try {
                 return future.get();
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 LOG.error("Error whilst attempting to get future result", e);
                 throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst attempting to get future result");
             }

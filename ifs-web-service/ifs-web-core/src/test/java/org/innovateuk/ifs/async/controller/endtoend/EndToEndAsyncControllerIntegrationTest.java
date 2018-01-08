@@ -186,20 +186,6 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
     }
 
     @Test
-    public void testHandlingThrowablesWithinAsyncBlocks() {
-
-        try {
-            controller.methodThatThrowsThrowableWithinNestedFuture();
-            fail("Controller should have thrown an AssertionError");
-
-        } catch (AssertionError e) {
-
-            // expected behaviour - Now assert that any ongoing Futures were cleared after an exception was thrown
-            assertThat(AsyncFuturesHolder.getFuturesOrInitialise(), empty());
-        }
-    }
-
-    @Test
     public void testHandlingAsyncExceptionWithinAsyncBlocks() {
 
         try {

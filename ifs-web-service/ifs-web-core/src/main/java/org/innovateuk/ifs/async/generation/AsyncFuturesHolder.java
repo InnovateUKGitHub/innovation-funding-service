@@ -104,7 +104,7 @@ public class AsyncFuturesHolder {
         currentlyRegisteredFutures.forEach(future -> {
             try {
                 future.getFuture().cancel(true);
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 LOG.warn("Exception caught whilst cancelling a Future - continuing to cancel other Futures", e);
             }
         });
@@ -197,7 +197,7 @@ public class AsyncFuturesHolder {
                 try {
                     // TODO DW - add configuration for this
                     futureBatch.get(600, TimeUnit.SECONDS);
-                } catch (Throwable e) {
+                } catch (Exception e) {
                     LOG.error("Exception caught whilst waiting for all futures to complete on main thread", e);
 
                     throw getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Exception caught whilst waiting for all futures " +

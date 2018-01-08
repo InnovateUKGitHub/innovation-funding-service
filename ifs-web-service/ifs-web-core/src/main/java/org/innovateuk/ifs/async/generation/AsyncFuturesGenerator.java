@@ -91,7 +91,7 @@ public class AsyncFuturesGenerator {
             try {
                 runnable.run();
                 return null;
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 LOG.error("Error whilst processing Runnable Future", e);
                 throw getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst processing Runnable Future");
             }
@@ -108,7 +108,7 @@ public class AsyncFuturesGenerator {
         try {
             T value = supplier.get();
             return CompletableFuture.completedFuture(value);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             LOG.error("Error whilst processing Supplier Future", e);
             throw getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst processing Supplier Future");
         }

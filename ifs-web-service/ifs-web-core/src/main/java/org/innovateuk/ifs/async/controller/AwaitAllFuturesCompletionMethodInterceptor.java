@@ -10,6 +10,10 @@ import org.springframework.ui.Model;
 import static org.innovateuk.ifs.application.service.Futures.callAllFutures;
 import static org.innovateuk.ifs.async.exceptions.AsyncException.unwrapOriginalExceptionFromAsyncException;
 
+/**
+ * This method interceptor targets request-handling Controller methods and ensures that any Futures created via
+ * {@link AsyncFuturesGenerator} (and any descendant Futures) are completed before the Controller completes.
+ */
 @Component
 public class AwaitAllFuturesCompletionMethodInterceptor implements MethodInterceptor {
 
@@ -38,7 +42,7 @@ public class AwaitAllFuturesCompletionMethodInterceptor implements MethodInterce
 
             return returnValue;
 
-        } catch (Throwable e) {
+        } catch (Exception e) {
 
             // upon an exception occurring, cancel and clear out all currently executing Futures for this Thread
             AsyncFuturesHolder.cancelAndClearFutures();
