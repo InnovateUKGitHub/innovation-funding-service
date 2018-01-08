@@ -489,7 +489,7 @@ the user can add and remove multiple content groups
     And the user enters text to a text field   id=contentGroups[2].heading    Heading 3
     And the user enters text to a text field   jQuery=.editor:eq(2)     Content 3
     When the user uploads the file             id=contentGroups-2.attachment  ${text_file}
-    Then the user should see the element       jQuery=.error-summary-list:contains("Please upload a file in .pdf format only.")
+    Then the user should see the element       jQuery=.error-summary-list:contains("${wrong_filetype_validation_error}")
     And the user uploads the file              id=contentGroups-2.attachment  ${too_large_pdf}
     Then the user should see the element       jQuery=h1:contains("Attempt to upload a large file")
     And the user goes back to the previous page

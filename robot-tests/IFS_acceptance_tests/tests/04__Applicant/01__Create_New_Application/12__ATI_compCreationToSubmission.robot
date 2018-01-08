@@ -20,7 +20,7 @@ Comp Admin creates an ATI competition
     When the user clicks the button/link           link=Create competition
     Then the user fills in the CS Initial details  ${ATIcompetitionTitle}  ${month}  ${nextyear}  Aerospace Technology Institute
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${RTO_TYPE_ID}
+    And the user fills in the CS Eligibility       ${business_type_id}
     And the user fills in the CS Milestones        ${month}  ${nextyear}
     And the user marks the application as done     yes  ${compType_Programme}
     And the user fills in the CS Assessors
@@ -35,12 +35,11 @@ Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
     [Tags]  HappyPath  MySQL
     When the competition is open                                 ${ATIcompetitionTitle}
-    Then Lead Applicant applies to the new created competition   ${ATIcompetitionTitle}  &{RTO_lead_applicant_credentials}
+    Then Lead Applicant applies to the new created competition   ${ATIcompetitionTitle}  &{lead_applicant_credentials}
 
 Applicant submits his application
     [Documentation]  IFS-2286
-    [Tags]  HappyPath  Pending
-#    TODO  Pending due to IFS-2447
+    [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${ATIapplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     Then the lead applicant fills all the questions and marks as complete(Programme)
