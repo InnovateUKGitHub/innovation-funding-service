@@ -393,7 +393,6 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
-    @Ignore
     public void submitSectionApplicationQuestionWithAppendixWithoutTypeResultsInErrors() throws Exception {
         Long questionId = 4L;
         CompetitionResource competition = newCompetitionResource()
