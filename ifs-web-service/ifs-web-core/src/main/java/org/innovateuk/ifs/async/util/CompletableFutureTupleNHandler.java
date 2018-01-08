@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.async.util;
 
+import org.innovateuk.ifs.async.exceptions.AsyncException;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
@@ -45,7 +46,7 @@ public class CompletableFutureTupleNHandler extends BaseCompletableFutureTupleHa
             try {
                 return handler.apply(getResultsAsList());
             } catch (Throwable e) {
-                throw new RuntimeException(e);
+                throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst applying Future handler");
             }
         });
     }

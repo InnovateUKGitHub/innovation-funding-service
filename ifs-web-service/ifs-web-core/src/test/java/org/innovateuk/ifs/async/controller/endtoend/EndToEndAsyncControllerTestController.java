@@ -3,6 +3,7 @@ package org.innovateuk.ifs.async.controller.endtoend;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.async.exceptions.AsyncException;
 import org.innovateuk.ifs.async.util.AsyncAdaptor;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -13,6 +14,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+
+import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 
 /**
  * Controller to use in {@link EndToEndAsyncControllerTestController}
@@ -68,5 +72,60 @@ public class EndToEndAsyncControllerTestController extends AsyncAdaptor {
 
         CompletableFuture<String> pageResult = awaitAll(applicationResult).thenApply(application -> "/application/" + application.getName());
         return awaitAll(pageResult).thenReturn();
+    }
+
+    @GetMapping("/2")
+    public String methodThatThrowsExceptionWithinNestedFuture() {
+
+        async(() -> {
+
+            CompletableFuture<Void> childFuture = async(() -> {});
+
+            @SuppressWarnings("unused")
+            CompletableFuture<Void> aChildFutureToBeCancelled = async(() -> Thread.sleep(100L));
+
+            awaitAll(childFuture).thenAccept(done ->
+                    async(() -> restFailure(forbiddenError()).getSuccessObjectOrThrowException()));
+        });
+
+        return null;
+    }
+
+    @GetMapping("/3")
+    public String methodThatThrowsThrowableWithinNestedFuture() {
+
+        async(() -> {
+
+            CompletableFuture<Void> childFuture = async(() -> {});
+
+            @SuppressWarnings("unused")
+            CompletableFuture<Void> aChildFutureToBeCancelled = async(() -> Thread.sleep(100L));
+
+            awaitAll(childFuture).thenAccept(done ->
+                    async(() -> {
+                        assert false;
+                    }));
+        });
+
+        return null;
+    }
+
+    @GetMapping("/4")
+    public String methodThatThrowsAsyncExceptionWithinNestedFuture() {
+
+        async(() -> {
+
+            CompletableFuture<Void> childFuture = async(() -> {});
+
+            @SuppressWarnings("unused")
+            CompletableFuture<Void> aChildFutureToBeCancelled = async(() -> Thread.sleep(100L));
+
+            awaitAll(childFuture).thenAccept(done ->
+                    async(() -> {
+                        throw new AsyncException("Root cause is an AsyncException!", null);
+                    }));
+        });
+
+        return null;
     }
 }

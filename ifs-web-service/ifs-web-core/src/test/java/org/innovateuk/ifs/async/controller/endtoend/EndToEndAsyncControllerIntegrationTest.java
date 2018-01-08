@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.async.controller.endtoend;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.async.exceptions.AsyncException;
+import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.service.DefaultRestTemplateAdaptor;
@@ -38,6 +41,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrg
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
@@ -177,6 +181,48 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
         assertThat(model.get("doSomeHiddenButSafeBlockingAsyncActivitiesUser2"), equalTo(2L));
         assertThat(model.get("doSomeHiddenButSafeBlockingAsyncActivitiesUser4"), equalTo(4L));
         assertThat(model.get("doSomeHiddenButSafeBlockingAsyncActivitiesUser6"), equalTo(6L));
+    }
+
+    @Test
+    public void testHandlingExceptionsWithinAsyncBlocks() {
+
+        try {
+            controller.methodThatThrowsExceptionWithinNestedFuture();
+            fail("Controller should have thrown a ForbiddenActionException");
+
+        } catch (ForbiddenActionException e) {
+
+            // expected behaviour.  Now assert that any ongoing Futures were cleared after an exception was thrown
+            assertThat(AsyncFuturesHolder.getFuturesOrInitialise(), empty());
+        }
+    }
+
+    @Test
+    public void testHandlingThrowablesWithinAsyncBlocks() {
+
+        try {
+            controller.methodThatThrowsThrowableWithinNestedFuture();
+            fail("Controller should have thrown an AssertionError");
+
+        } catch (AssertionError e) {
+
+            // expected behaviour - Now assert that any ongoing Futures were cleared after an exception was thrown
+            assertThat(AsyncFuturesHolder.getFuturesOrInitialise(), empty());
+        }
+    }
+
+    @Test
+    public void testHandlingAsyncExceptionWithinAsyncBlocks() {
+
+        try {
+            controller.methodThatThrowsAsyncExceptionWithinNestedFuture();
+            fail("Controller should have thrown an AsyncException");
+
+        } catch (AsyncException e) {
+
+            // expected behaviour - Now assert that any ongoing Futures were cleared after an exception was thrown
+            assertThat(AsyncFuturesHolder.getFuturesOrInitialise(), empty());
+        }
     }
 
     private List<Long> setupLeadOrganisationRetrievalExpectations() {

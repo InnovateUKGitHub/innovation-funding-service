@@ -16,9 +16,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.async.exceptions.AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
@@ -66,15 +66,12 @@ public class AsyncFuturesGenerator {
                 AsyncFuturesHolder.getCurrentlyExecutingFutureDetails() :
                 AsyncFutureDetails.topLevelThread();
 
-        Supplier<T> decoratedSupplier = () -> {
+        ExceptionThrowingSupplier<T> decoratedSupplier = () -> {
 
             AsyncFuturesHolder.addCurrentFutureBeingProcessed(futureName, currentlyExecutingFuture);
 
             try {
                 return supplier.get();
-            } catch (Exception e) {
-                LOG.error("Error whilst processing Supplier Future", e);
-                throw new RuntimeException(e);
             } finally {
                 AsyncFuturesHolder.clearCurrentFutureBeingProcessed();
             }
@@ -93,11 +90,11 @@ public class AsyncFuturesGenerator {
         ExceptionThrowingSupplier<Void> dummySupplier = () -> {
             try {
                 runnable.run();
-            } catch (Exception e) {
+                return null;
+            } catch (Throwable e) {
                 LOG.error("Error whilst processing Runnable Future", e);
-                throw new RuntimeException(e);
+                throw getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst processing Runnable Future");
             }
-            return null;
         };
 
         return async(futureName, dummySupplier);
@@ -107,8 +104,14 @@ public class AsyncFuturesGenerator {
      * Package-private to allow Spring to proxy this method
      */
     @Async
-    <T> CompletableFuture<T> asyncInternal(Supplier<T> supplier) {
-        return CompletableFuture.completedFuture(supplier.get());
+    <T> CompletableFuture<T> asyncInternal(ExceptionThrowingSupplier<T> supplier) {
+        try {
+            T value = supplier.get();
+            return CompletableFuture.completedFuture(value);
+        } catch (Throwable e) {
+            LOG.error("Error whilst processing Supplier Future", e);
+            throw getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst processing Supplier Future");
+        }
     }
 
     public <R1> CompletableFutureTuple1Handler<R1> awaitAll(CompletableFuture<R1> future1) {

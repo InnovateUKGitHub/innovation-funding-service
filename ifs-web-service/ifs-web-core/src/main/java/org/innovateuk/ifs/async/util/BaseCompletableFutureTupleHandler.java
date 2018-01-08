@@ -2,12 +2,12 @@ package org.innovateuk.ifs.async.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.async.exceptions.AsyncException;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -77,9 +77,9 @@ abstract class BaseCompletableFutureTupleHandler {
             waitForFuturesAndDescendantsToFullyComplete();
             try {
                 return supplier.get();
-            } catch (Exception e) {
+            } catch (Throwable e) {
                 LOG.error("Error whilst executing Supplier Future", e);
-                throw new RuntimeException(e);
+                throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst executing Supplier Future");
             }
         });
 
@@ -96,9 +96,9 @@ abstract class BaseCompletableFutureTupleHandler {
     protected <R> R getResult(int index)  {
         try {
             return (R) futures[index].get();
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (Throwable e) {
             LOG.error("Error whilst attempting to get future result", e);
-            throw new RuntimeException("Error whilst attempting to get future result", e);
+            throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst attempting to get future result");
         }
     }
 
@@ -106,11 +106,10 @@ abstract class BaseCompletableFutureTupleHandler {
         return simpleMap(futures, future -> {
             try {
                 return future.get();
-            } catch (InterruptedException | ExecutionException e) {
+            } catch (Throwable e) {
                 LOG.error("Error whilst attempting to get future result", e);
-                throw new RuntimeException("Error whilst attempting to get future result", e);
+                throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst attempting to get future result");
             }
         });
-
     }
 }

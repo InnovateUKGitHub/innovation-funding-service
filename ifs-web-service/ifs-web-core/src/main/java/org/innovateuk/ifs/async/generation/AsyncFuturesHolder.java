@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.*;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.async.exceptions.AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -67,18 +68,18 @@ public class AsyncFuturesHolder {
         return future;
     }
 
-    public static void addCurrentFutureBeingProcessed(String futureName, AsyncFutureDetails parentFuture) {
+    static void addCurrentFutureBeingProcessed(String futureName, AsyncFutureDetails parentFuture) {
         List<String> newThreadAncestry = combineLists(parentFuture.getThreadAncestry(), parentFuture.getThreadName());
         List<String> newFutureAncestry = combineLists(parentFuture.getFutureAncestry(), parentFuture.getFutureName());
         AsyncFutureDetails thisFutureInformation = new AsyncFutureDetails(futureName, Thread.currentThread().getName(), newThreadAncestry, newFutureAncestry);
         CURRENTLY_EXECUTING_ASYNC_FUTURE.set(thisFutureInformation);
     }
 
-    public static AsyncFutureDetails getCurrentlyExecutingFutureDetails() {
+    static AsyncFutureDetails getCurrentlyExecutingFutureDetails() {
         return CURRENTLY_EXECUTING_ASYNC_FUTURE.get();
     }
 
-    public static void clearCurrentFutureBeingProcessed() {
+    static void clearCurrentFutureBeingProcessed() {
         CURRENTLY_EXECUTING_ASYNC_FUTURE.remove();
     }
 
@@ -90,6 +91,25 @@ public class AsyncFuturesHolder {
             ASYNC_FUTURES.set(new ConcurrentLinkedQueue<>());
         }
         return ASYNC_FUTURES.get();
+    }
+
+    public static void cancelAndClearFutures() {
+
+        ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> currentlyRegisteredFutures = ASYNC_FUTURES.get();
+
+        if (currentlyRegisteredFutures == null) {
+            return;
+        }
+
+        currentlyRegisteredFutures.forEach(future -> {
+            try {
+                future.getFuture().cancel(true);
+            } catch (Throwable e) {
+                LOG.warn("Exception caught whilst cancelling a Future - continuing to cancel other Futures", e);
+            }
+        });
+
+        clearFutures();
     }
 
     /**
@@ -168,16 +188,20 @@ public class AsyncFuturesHolder {
 
             if (!futuresSpawnedFromTheseProcesses.isEmpty()) {
 
-                List<CompletableFuture<?>> actualFutures = simpleMap(futuresSpawnedFromTheseProcesses, RegisteredAsyncFutureDetails::getFuture);
+                List<CompletableFuture<?>> actualFutures =
+                        simpleMap(futuresSpawnedFromTheseProcesses, RegisteredAsyncFutureDetails::getFuture);
 
-                CompletableFuture<Void> futureBatch = CompletableFuture.allOf(actualFutures.toArray(new CompletableFuture<?>[futuresSpawnedFromTheseProcesses.size()]));
+                CompletableFuture<Void> futureBatch =
+                        CompletableFuture.allOf(actualFutures.toArray(new CompletableFuture<?>[futuresSpawnedFromTheseProcesses.size()]));
 
                 try {
                     // TODO DW - add configuration for this
                     futureBatch.get(600, TimeUnit.SECONDS);
-                } catch (InterruptedException | ExecutionException | TimeoutException e) {
+                } catch (Throwable e) {
                     LOG.error("Exception caught whilst waiting for all futures to complete on main thread", e);
-                    throw new RuntimeException(e);
+
+                    throw getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Exception caught whilst waiting for all futures " +
+                            "to complete on main thread - wrapping in AsyncException");
                 }
 
                 completedFutures.addAll(futuresSpawnedFromTheseProcesses);
