@@ -115,5 +115,5 @@ items:
           valueFrom:
             configMapKeyRef:
             name: flyway-config
-            key: $FLYWAY_PLACEHOLDERS_NAME
+            key: FLYWAY_PLACEHOLDERS_NAME
     restartPolicy: Never
