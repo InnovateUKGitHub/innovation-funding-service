@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.service;
 import org.apache.catalina.util.ParameterMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.resource.FundingNotificationResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -50,12 +51,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	}
 
 	private boolean isAllowedFundingDecision(FundingDecision fundingDecision) {
-		if(fundingDecision.equals(FundingDecision.UNDECIDED)) {
-			return false;
-		}
-		else {
-			return true;
-		}
+		return !fundingDecision.equals(FundingDecision.UNDECIDED);
 	}
 
 	public Optional<FundingDecision> getFundingDecisionForString(String val) {
@@ -72,8 +68,12 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	}
 
 	private List<Long> submittedApplicationIdsForCompetition(Long competitionId) {
-		return applicationSummaryRestService.getSubmittedApplications(competitionId, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty()).getSuccessObjectOrThrowException().getContent()
-				.stream().map(summaryResource -> summaryResource.getId()).collect(Collectors.toList());
+		return applicationSummaryRestService.getSubmittedApplications(competitionId, null, 0, Integer.MAX_VALUE, Optional.empty(), Optional.empty())
+				.getSuccessObjectOrThrowException()
+				.getContent()
+				.stream()
+				.map(ApplicationSummaryResource::getId)
+				.collect(Collectors.toList());
 	}
 
 	private Map<Long, FundingDecision> createSubmittedApplicationFundingDecisionMap(List<Long> applicationIds, Long competitionId, FundingDecision fundingDecision) {
@@ -86,7 +86,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 
 		List<Long> ids = submittedApplicationIdsForCompetition(competitionId);
 		applicationIds.stream()
-				.filter(id -> ids.contains(id))
+				.filter(ids::contains)
 				.forEach(id -> applicationIdToFundingDecision.put(id, fundingDecision));
 
 		return applicationIdToFundingDecision;

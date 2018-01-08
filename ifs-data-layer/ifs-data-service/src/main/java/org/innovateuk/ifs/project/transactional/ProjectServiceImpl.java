@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.project.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FundingDecision;;
+import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
@@ -60,6 +63,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private ProjectUserRepository projectUserRepository;
 
     @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
     private ProjectUserMapper projectUserMapper;
 
     @Autowired
@@ -95,6 +101,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Autowired
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
 
+    @Autowired
+    private ApplicationWorkflowHandler applicationWorkflowHandler;
+
     @Override
     public ServiceResult<ProjectResource> getProjectById(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(projectMapper::mapToResource);
@@ -108,13 +117,17 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     @Transactional
     public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
-        List<ServiceResult<ProjectResource>> projectCreationResults = applicationFundingDecisions.keySet().stream().filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED)).map(this::createSingletonProjectFromApplicationId).collect(toList());
-        long failedProjectCreationCount = projectCreationResults.stream().filter(r -> r.isFailure()).count();
-        if (failedProjectCreationCount > 0) {
-            return serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS);
-        } else {
-            return serviceSuccess();
-        }
+        List<ServiceResult<ProjectResource>> projectCreationResults = applicationFundingDecisions
+                .keySet()
+                .stream()
+                .filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED))
+                .map(this::createSingletonProjectFromApplicationId)
+                .collect(toList());
+        boolean anyProjectCreationFailed = projectCreationResults
+                .stream()
+                .anyMatch(BaseEitherBackedResult::isFailure);
+        return  anyProjectCreationFailed ?
+                serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS) : serviceSuccess();
     }
 
     @Override
@@ -188,6 +201,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     @Transactional
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
+        applicationWorkflowHandler.approve(applicationRepository.findOne(applicationId));
         return createSingletonProjectFromApplicationId(applicationId);
     }
 
@@ -195,7 +209,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
                 failure -> createProjectFromApplicationId(applicationId),
-                success -> serviceSuccess(success)
+                ServiceResult::serviceSuccess
         );
     }
 

@@ -126,4 +126,9 @@ public class ProjectServiceImpl implements ProjectService {
     public PartnerOrganisationResource getPartnerOrganisation(Long projectId, Long organisationId) {
         return projectRestService.getPartnerOrganisation(projectId, organisationId).getSuccessObjectOrThrowException();
     }
+
+    @Override
+    public void createProjectFromApplicationId(Long applicationId) {
+        projectRestService.createProjectFromApplicationId(applicationId);
+    }
 }

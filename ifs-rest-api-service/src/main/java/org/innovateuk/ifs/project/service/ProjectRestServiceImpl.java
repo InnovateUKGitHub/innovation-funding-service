@@ -57,4 +57,9 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
         return getWithRestResult(projectRestURL + "/" + projectId + "/partner/" + organisationId, PartnerOrganisationResource.class);
     }
 
+    @Override
+    public RestResult<Void> createProjectFromApplicationId(Long applicationId) {
+        return getWithRestResult(projectRestURL + "/create-project/application/" + applicationId, Void.class);
+    }
+
 }

@@ -39,4 +39,6 @@ public interface ProjectService {
     Boolean isProjectManager(Long userId, Long projectId);
 
     PartnerOrganisationResource getPartnerOrganisation(Long projectId, Long organisationId);
+
+    void createProjectFromApplicationId(Long applicationId);
 }

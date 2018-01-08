@@ -38,6 +38,11 @@
                 <td th:text="${row.name}">Automated Project Title generator</td>
                 <td th:text="${row.leadOrganisationName}">B.Systems</td>
                 <td th:text="${#messages.msg('ifs.application.unsuccessful.' + row.applicationState.getStateName())}">Not funded</td>
+                <td>
+                    <a
+                        th:href="@{/competition/{cid}/applications/mark-successful/application/{aid}(cid=${row.competition}, aid=${row.id})}"
+                        th:text="'Mark application ' + ${row.id} +  ' as successful'">link text</a>
+                </td>
             </tr>
             </tbody>
         </table>
