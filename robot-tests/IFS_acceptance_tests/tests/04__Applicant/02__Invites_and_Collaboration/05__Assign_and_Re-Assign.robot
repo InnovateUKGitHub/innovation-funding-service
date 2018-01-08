@@ -87,6 +87,7 @@ Collaborator should be able to edit the assigned question
     [Tags]  Email  HappyPath
     When the user clicks the button/link  jQuery=button:contains("Public description")
     And the user should see the element   jQuery=button:contains("Assign to lead for review")
+    then the user clicks the button/link  link=Return and edit
 
 Last update message is correctly updating
     [Documentation]  INFUND-280
