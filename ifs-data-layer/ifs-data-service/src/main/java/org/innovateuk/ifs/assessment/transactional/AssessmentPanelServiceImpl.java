@@ -13,6 +13,7 @@ import org.innovateuk.ifs.assessment.panel.workflow.configuration.AssessmentRevi
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
+import org.innovateuk.ifs.invite.mapper.AssessmentPanelParticipantMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -54,18 +55,20 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     static final DateTimeFormatter INVITE_DATE_FORMAT = ofPattern("d MMMM yyyy");
 
-
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
+
+    @Autowired
+    private AssessmentPanelParticipantMapper assessmentPanelParticipantMapper;
 
     @Autowired
     private AssessmentReviewWorkflowHandler workflowHandler;
 
     @Autowired
     private AssessmentReviewRepository assessmentReviewRepository;
-
-    @Autowired
-    private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -195,8 +198,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     }
 
     private List<AssessmentPanelParticipant> getAllAssessorsOnPanel(long competitionId) {
-        return assessmentPanelParticipantRepository.getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));
-    }
+        return assessmentPanelParticipantRepository.getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));}
 
     private List<Application> getAllApplicationsOnPanel(long competitionId) {
         return applicationRepository
