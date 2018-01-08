@@ -112,8 +112,8 @@ items:
             name: flyway-config
             key: FLYWAY_LOCATIONS
       - name: FLYWAY_PLACEHOLDERS_NAME
-          valueFrom:
-            configMapKeyRef:
+        valueFrom:
+          configMapKeyRef:
             name: flyway-config
             key: FLYWAY_PLACEHOLDERS_NAME
     restartPolicy: Never
