@@ -4,6 +4,7 @@ import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -37,10 +38,7 @@ public interface AssessmentPanelService {
             description = "Comp admins and execs can determine if there are pending assessment reviews")
     ServiceResult<Boolean> isPendingReviewNotifications(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(
-            value = "READ_ASSESSMENT_REVIEWS",
-            description = "Comp admins and execs can read assessment reviews")
+    @PostFilter("hasPermission(filterObject, 'READ_PANEL_DASHBOARD')")
     ServiceResult<List<AssessmentReviewResource>> getAssessmentReviews(long userId, long competitionId);
 
     @PreAuthorize("hasPermission(#assessmentReviewId, 'org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource', 'UPDATE')")
