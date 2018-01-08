@@ -15,16 +15,12 @@ public class AssessmentPanelController {
     @Autowired
     private AssessmentPanelService assessmentPanelService;
 
-    @PostMapping({
-            "/assign-application/{applicationId}",
-    })
+    @PostMapping({"/assign-application/{applicationId}"})
     public RestResult<Void> assignApplication(@PathVariable long applicationId) {
         return assessmentPanelService.assignApplicationToPanel(applicationId).toPostResponse();
     }
 
-    @PostMapping({
-            "/unassign-application/{applicationId}",
-    })
+    @PostMapping({"/unassign-application/{applicationId}"})
     public RestResult<Void> unAssignApplication(@PathVariable long applicationId) {
         return assessmentPanelService.unassignApplicationFromPanel(applicationId).toPostResponse();
     }
