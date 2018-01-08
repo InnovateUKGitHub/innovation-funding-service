@@ -14,7 +14,7 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'#'})" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/IFS-2249-dashboard'})" />
 
     <!-- HARDCODED PROTOTYPE HTML -->
     <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Technology inspired'}, ${'Feedback overview'}, ${null})" />
@@ -57,39 +57,29 @@
         </div>
     </div>
 
-    <th:block th:if="${param.status == null or param.status != null and param.status[0] == 'noFeedback'}">
-        <div class="message-alert">
-            <h2 class="heading-small">The lead applicant has responded to feedback.</h2>
-            <p>Download and review all attachments before the interview panel.</p>
+    <div class="message-alert">
+        <h2 class="heading-small">As the lead applicant, you are required to upload a response to feedback.</h2>
+    </div>
+
+    <h2 class="heading-medium">Your response</h2>
+
+    <div class="upload-section">
+        <details>
+            <summary><span class="summary">What should I include in the response?</span></summary>
+            <div class="panel">
+                <p>You may submit a written response to this feedback. You can upload up to 3 A4 pages in a single PDF document,
+                    including charts and diagrams. The maximum file upload size is 2MB.</p>
+            </div>
+        </details>
+
+        <div>
+            <p class="uploaded-file">No file currently uploaded</p>
+            <input type="file" id="collaborationAgreement" name="collaborationAgreement" class="inputfile">
+            <label for="collaborationAgreement" class="button-secondary extra-margin">+ Upload</label>
+            <button name="uploadCollaborationAgreementClicked" class="button-secondary" type="submit" data-for-file-upload="collaborationAgreement">Save</button>
         </div>
-    </th:block>
+    </div>
 
-    <th:block th:if="${param.status != null and param.status[0] == 'noResponse'}">
-        <div class="message-alert">
-            <h2 class="heading-small">The lead applicant has not responded to feedback.</h2>
-        </div>
-    </th:block>
-
-    <th:block th:if="${param.status == null}">
-
-        <h2 class="heading-medium">Attachments</h2>
-
-        <div class="form-group download">
-            <h3 class="heading-small no-margin">Applicant feedback repsonse</h3>
-            <a target="_blank" href="#">feedback-document.pdf, 8 KB (opens in a new window)</a>
-        </div>
-
-        <div class="form-group download">
-            <h3 class="heading-small no-margin">Innovation Lead feedback</h3>
-            <a target="_blank" href="#">innovation-lead-feedback.pdf, 6 KB (opens in a new window)</a>
-        </div>
-
-        <div class="form-group download">
-            <h3 class="heading-small no-margin">Panel assessment feedback</h3>
-            <a target="_blank" href="#">panel-assessment-feedback.pdf, 7 KB (opens in a new window)</a>
-        </div>
-
-    </th:block>
     <!-- <ul class="list-overview extra-margin">
 
         <li class="section-status">
@@ -125,6 +115,51 @@
             </div>
         </li>
     </ul> -->
+
+    <section>
+        <h2 class="heading-medium no-margin-bottom">Application details</h2>
+        <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
+
+        <ul class="list-overview">
+            <li class="section-status">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a href="#">Project summary</a>
+                        </h3>
+                    </div>
+                    <div class="column-third">
+                        <p class="form-hint no-margin">No feedback required</p>
+                    </div>
+                </div>
+            </li>
+            <li class="section-status">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a href="#">Public description</a>
+                        </h3>
+                    </div>
+                    <div class="column-third">
+                        <p class="form-hint no-margin">No feedback required</p>
+                    </div>
+                </div>
+            </li>
+            <li class="section-status">
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <h3 class="heading-small">
+                            <a href="#">Scope</a>
+                        </h3>
+                    </div>
+                    <div class="column-third">
+                        <p class="form-hint no-margin">No feedback required</p>
+                    </div>
+                </div>
+            </li>
+        </ul>
+
+    </section>
 
     <section>
         <h2 class="heading-medium no-margin-bottom">Assessor feedback</h2>
@@ -267,6 +302,19 @@
         </div>
 
     </section>
+
+    <!-- <h2 class="heading-medium">Attachments</h2> -->
+
+    <div class="form-group download">
+        <h3 class="heading-small no-margin">Innovation lead response</h3>
+        <a target="_blank" href="#">innovation-lead-response.pdf, 8 KB (opens in a new window)</a>
+    </div>
+
+    <div class="form-group download">
+        <h3 class="heading-small no-margin">Panel assessment feedback</h3>
+        <a target="_blank" href="#">panel-assessment-feedback.pdf, 6 KB (opens in a new window)</a>
+    </div>
+
 
     <section>
         <h2 class="heading-medium">Finance</h2>
