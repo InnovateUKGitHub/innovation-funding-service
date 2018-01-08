@@ -20,12 +20,15 @@ public class AsyncThreadPoolTaskExecutorConfig {
     @Value("${ifs.web.ajp.connections.max.total}")
     private int maxConnections;
 
+    @Value("${ifs.web.max.async.threads}")
+    private int maxAsyncThreads;
+
     @Bean
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setTaskDecorator(asyncTaskDecorator);
         executor.setCorePoolSize(maxConnections);
-        executor.setMaxPoolSize(maxConnections * 10);
+        executor.setMaxPoolSize(maxAsyncThreads);
         executor.setQueueCapacity(Integer.MAX_VALUE);
         executor.setKeepAliveSeconds(1);
         executor.setAllowCoreThreadTimeOut(true);
