@@ -135,6 +135,9 @@ function injectDBVariables() {
 function injectFlywayVariables() {
     [ -z "$FLYWAY_LOCATIONS" ] && { echo "Set FLYWAY_LOCATIONS environment variable"; exit -1; }
     sed -i.bak "s#<<FLYWAY-LOCATIONS>>#${FLYWAY_LOCATIONS}#g" $(getBuildLocation)/db-reset/*.yml
+
+    [ -z "FLYWAY_PLACEHOLDERS_NAME" ] && { echo "Set FLYWAY_PLACEHOLDERS_NAME environment variable"; exit -1; }
+    sed -i.bak "s#<<FLYWAY-PLACEHOLDERS-NAME>>#${FLYWAY_PLACEHOLDERS_NAME}#g" $(getBuildLocation)/db-reset/*.yml
 }
 
 function injectLDAPVariables() {
