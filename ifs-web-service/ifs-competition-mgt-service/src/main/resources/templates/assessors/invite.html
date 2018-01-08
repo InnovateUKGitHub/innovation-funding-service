@@ -101,7 +101,7 @@
                                     aria-labelledby="innovation-area"
                                     id="grouped-innovation-area">
                                 <option th:selected="*{selectedInnovationArea} == null" value="">Please select an innovation area</option>
-                                <optgroup th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
+                                <optgroup th:if="${innovationSector.name != 'Open'}" th:each="innovationSector : ${model.innovationSectorOptions}" th:label="${innovationSector.name}">
                                     <option th:each="innovationArea : ${innovationSector.children}"
                                             th:value="${innovationArea.id}"
                                             th:text="${innovationArea.name}"
