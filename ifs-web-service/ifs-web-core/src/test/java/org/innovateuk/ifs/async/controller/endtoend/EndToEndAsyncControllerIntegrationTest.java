@@ -21,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.validation.support.BindingAwareModelMap;
 import org.springframework.web.client.RestTemplate;
@@ -61,6 +62,7 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_RE
  * out data layer return after a randomised delay to simulate real latency, and thus this allows our Futures to execute
  * in a realistic, less predictable order of execution.
  */
+@DirtiesContext
 public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
@@ -72,15 +74,11 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
     @Value("${ifs.data.service.rest.baseURL}")
     private String baseRestUrl;
 
-    private RestTemplate originalRestTemplate;
-
     private RestTemplate restTemplateMock;
 
     private UserResource loggedInUser = newUserResource().build();
 
     private String requestCachingUuid = "1234567890";
-
-    private UserResource previousUser;
 
     /**
      * Swap out the real RestTemplate temporarily for a mock one so that we can mock out communication with the data
@@ -90,19 +88,9 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
     public void swapOutRestTemplateForMock() {
 
         DefaultRestTemplateAdaptor restTemplateAdaptor = getRestTemplateAdaptorFromApplicationContext();
-        originalRestTemplate = (RestTemplate) ReflectionTestUtils.getField(restTemplateAdaptor, "restTemplate");
 
         restTemplateMock = mock(RestTemplate.class);
         ReflectionTestUtils.setField(restTemplateAdaptor, "restTemplate", restTemplateMock);
-    }
-
-    /**
-     * Swap back in the real RestTemplate for other tests
-     */
-    @After
-    public void restoreOriginalRestTemplate() {
-        DefaultRestTemplateAdaptor restTemplateAdaptor = applicationContext.getBean(DefaultRestTemplateAdaptor.class);
-        ReflectionTestUtils.setField(restTemplateAdaptor, "restTemplate", originalRestTemplate);
     }
 
     /**
@@ -110,7 +98,7 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
      */
     @Before
     public void setupHttpFilterThreadLocals() {
-        previousUser = setLoggedInUser(loggedInUser);
+        setLoggedInUser(loggedInUser);
         ServletRequestAttributes requestAttributes = new ServletRequestAttributes(new MockHttpServletRequest());
         RequestContextHolder.setRequestAttributes(requestAttributes);
         requestAttributes.setAttribute("REQUEST_UUID_KEY", requestCachingUuid, SCOPE_REQUEST);
@@ -121,7 +109,7 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
      */
     @After
     public void cleanupHttpFilterThreadLocals() {
-        setLoggedInUser(previousUser);
+        setLoggedInUser(null);
         RequestContextHolder.setRequestAttributes(null);
     }
 
