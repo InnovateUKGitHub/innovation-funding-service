@@ -7,14 +7,11 @@ EXPOSE 12345
 ENV JAVA_OPTS -Xmx300m
 ENV JMX_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false
 
-WORKDIR /
 VOLUME /tmp
 
-ENV IFS_STORAGE=/mnt/ifs_storage
+RUN mkdir -p /mnt/ifs_storage
+RUN chgrp -R 0 /mnt/ifs_storage && chmod -R g=u /mnt/ifs_storage
 
-RUN mkdir -p ${IFS_STORAGE}
-RUN chmod -R u+x ${IFS_STORAGE} && \
-    chgrp -R 0 ${IFS_STORAGE}
 
 ADD newrelic.jar /
 ADD newrelic.yml /

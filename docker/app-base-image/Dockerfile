@@ -1,16 +1,12 @@
 FROM innovateuk/oracle-jre
 
-ENV APP_ROOT=/opt/app
-ENV TOMCAT_LOGS=/var/log/tomcat
 
-RUN mkdir -p ${APP_ROOT}
-RUN chmod -R u+x ${APP_ROOT} && \
-    chgrp -R 0 ${APP_ROOT}
-
+RUN mkdir -p /opt/app
+RUN chgrp -R 0 /opt/app && chmod -R g=u /opt/app
 
 # - Logs for Tomcat. These are required for CoScale.
-RUN mkdir -p ${TOMCAT_LOGS}
-RUN chmod -R u+x ${TOMCAT_LOGS} && \
-    chgrp -R 0 ${TOMCAT_LOGS}
+RUN mkdir -p /var/log/tomcat
+RUN chgrp -R 0 /var/log/tomcat && chmod -R g=u /var/log/tomcat
 
-WORKDIR ${APP_ROOT}
+
+WORKDIR /opt/app

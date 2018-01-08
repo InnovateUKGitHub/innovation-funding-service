@@ -28,7 +28,7 @@ function deploy() {
         oc create -f $(getBuildLocation)/gluster/named-envs/12-${TARGET}-file-upload-claim.yml ${SVC_ACCOUNT_CLAUSE}
     else
         oc create -f $(getBuildLocation)/shib/55-ldap.yml ${SVC_ACCOUNT_CLAUSE}
-        oc create -f $(getBuildLocation)/mail/ ${SVC_ACCOUNT_CLAUSE}
+#        oc create -f $(getBuildLocation)/mail/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/mysql/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/gluster/ ${SVC_ACCOUNT_CLAUSE}
         oc create -f $(getBuildLocation)/spring-admin/ ${SVC_ACCOUNT_CLAUSE}
