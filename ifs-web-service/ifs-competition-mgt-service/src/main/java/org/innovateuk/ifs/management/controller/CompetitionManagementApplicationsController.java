@@ -134,7 +134,7 @@ public class CompetitionManagementApplicationsController {
                                            UserResource loggedInUser) {
 
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.UNSUCCESSFUL_APPLICATIONS, queryParams);
-        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, originQuery));
+        model.addAttribute("model", unsuccessfulApplicationsModelPopulator.populateModel(competitionId, page, size, sortBy, loggedInUser, originQuery));
         model.addAttribute("originQuery", originQuery);
 
         return "competition/unsuccessful-applications";
