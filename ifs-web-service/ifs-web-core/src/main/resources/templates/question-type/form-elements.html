@@ -197,7 +197,9 @@
         <div class="form-footer">
 
             <div class="form-footer__actions">
-                <th:block th:insert="question-type/form-elements :: ready-for-review" th:unless="${model.assignButtonsViewModel.currentUserIsLead}" th:with="displayBlock=${true}, model=${model.assignButtonsViewModel}" />
+                <th:block th:insert="question-type/form-elements :: ready-for-review"
+                          th:unless="${model.assignButtonsViewModel.currentUserIsLead}"
+                          th:with="displayBlock=${true}, model=${model.assignButtonsViewModel}" />
 
                 <th:block th:unless="${model.closed and !model.summary}">
 
