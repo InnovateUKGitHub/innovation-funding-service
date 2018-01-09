@@ -31,6 +31,7 @@ public class AssessmentPanelParticipantResource {
     private long submittedAssessments;
     private long totalAssessments;
     private CompetitionStatus competitionStatus;
+    private long awaitingApplications;
 
     private Clock clock = Clock.systemDefaultZone();
 
@@ -154,6 +155,14 @@ public class AssessmentPanelParticipantResource {
         this.competitionStatus = competitionStatus;
     }
 
+    public long getAwaitingApplications() {
+        return awaitingApplications;
+    }
+
+    public void setAwaitingApplications(long awaitingApplications) {
+        this.awaitingApplications = awaitingApplications;
+    }
+
     @JsonIgnore
     public boolean isAccepted() {
         return status == ParticipantStatusResource.ACCEPTED;
@@ -228,6 +237,7 @@ public class AssessmentPanelParticipantResource {
                 .append(assessorDeadlineDate, that.assessorDeadlineDate)
                 .append(competitionStatus, that.competitionStatus)
                 .append(clock, that.clock)
+                .append(awaitingApplications, that.awaitingApplications)
                 .isEquals();
     }
 
@@ -250,6 +260,7 @@ public class AssessmentPanelParticipantResource {
                 .append(totalAssessments)
                 .append(competitionStatus)
                 .append(clock)
+                .append(awaitingApplications)
                 .toHashCode();
     }
 }
