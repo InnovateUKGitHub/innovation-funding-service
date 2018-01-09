@@ -6,7 +6,6 @@ import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.util.TriConsumer;
 import org.innovateuk.ifs.util.TriFunction;
 
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -28,10 +27,6 @@ import java.util.concurrent.CompletableFuture;
  */
 public class CompletableFutureTuple3Handler<T1, T2, T3> extends BaseCompletableFutureTupleHandler {
 
-    public CompletableFutureTuple3Handler(CompletableFuture<T1> future1, CompletableFuture<T2> future2, CompletableFuture<T3> future3) {
-        this(UUID.randomUUID().toString(), future1, future2, future3);
-    }
-
     public CompletableFutureTuple3Handler(String futureName, CompletableFuture<T1> future1, CompletableFuture<T2> future2, CompletableFuture<T3> future3) {
         super(futureName, future1, future2, future3);
     }
@@ -40,7 +35,7 @@ public class CompletableFutureTuple3Handler<T1, T2, T3> extends BaseCompletableF
         return thenApplyInternal(() -> handler.apply(getResult(0), getResult(1), getResult(2)));
     }
 
-    public <R> CompletableFuture<Void> thenAccept(TriConsumer<T1, T2, T3> handler) {
+    public CompletableFuture<Void> thenAccept(TriConsumer<T1, T2, T3> handler) {
 
         return thenApplyInternal(() -> {
             handler.accept(getResult(0), getResult(1), getResult(2));

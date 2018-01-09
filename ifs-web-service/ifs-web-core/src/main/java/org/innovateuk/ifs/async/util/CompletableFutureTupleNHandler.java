@@ -7,7 +7,6 @@ import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
 import org.innovateuk.ifs.util.ExceptionThrowingConsumer;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -33,12 +32,8 @@ import java.util.concurrent.CompletableFuture;
  */
 public class CompletableFutureTupleNHandler extends BaseCompletableFutureTupleHandler {
 
-    public CompletableFutureTupleNHandler(List<CompletableFuture<?>> futures) {
-        this(UUID.randomUUID().toString(), futures);
-    }
-
     public CompletableFutureTupleNHandler(String futureName, List<? extends CompletableFuture<?>> futures) {
-        super(futureName, futures.toArray(new CompletableFuture[] {}));
+        super(futureName, futures.toArray(new CompletableFuture<?>[] {}));
     }
 
     public <R> CompletableFuture<R> thenApply(ExceptionThrowingFunction<List<?>, R> handler) {
@@ -51,7 +46,7 @@ public class CompletableFutureTupleNHandler extends BaseCompletableFutureTupleHa
         });
     }
 
-    public <R> CompletableFuture<Void> thenAccept(ExceptionThrowingConsumer<List<?>> runnable) {
+    public CompletableFuture<Void> thenAccept(ExceptionThrowingConsumer<List<?>> runnable) {
 
         ExceptionThrowingFunction<List<?>, Void> dummyFunction = futureResults -> {
             runnable.accept(futureResults);

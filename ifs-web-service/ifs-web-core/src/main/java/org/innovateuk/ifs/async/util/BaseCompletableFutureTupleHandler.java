@@ -97,7 +97,8 @@ abstract class BaseCompletableFutureTupleHandler {
         return getResult(futures[index]);
     }
 
-    <R> R getResult(CompletableFuture<?> future)  {
+    @SuppressWarnings("unchecked")
+    private <R> R getResult(CompletableFuture<?> future)  {
         try {
             return (R) future.get();
         } catch (Exception e) {
@@ -106,7 +107,7 @@ abstract class BaseCompletableFutureTupleHandler {
         }
     }
 
-    protected List<?> getResultsAsList()  {
+    List<?> getResultsAsList()  {
         return simpleMap(futures, this::getResult);
     }
 }

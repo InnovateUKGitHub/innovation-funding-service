@@ -19,7 +19,7 @@ public class ThreadsafeModel implements Model {
     private Model model;
     private ReadWriteLock lock = new ReentrantReadWriteLock();
 
-    public ThreadsafeModel(Model model) {
+    ThreadsafeModel(Model model) {
         this.model = model;
     }
 

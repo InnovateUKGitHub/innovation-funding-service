@@ -39,7 +39,7 @@ public class AwaitAllFuturesCompletionMethodAdvisor extends AbstractPointcutAdvi
         setOrder(CALL_FUTURES_ORDER);
     }
 
-     @Override
+    @Override
     public Pointcut getPointcut() {
         return this.pointcut;
     }

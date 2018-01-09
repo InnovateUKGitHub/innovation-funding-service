@@ -71,6 +71,7 @@ public class AsyncTaskDecorator implements TaskDecorator {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private static <T> void setOriginalValue(AsyncThreadLocalCopier<T> copier, Object originalValue) {
         copier.setCopyOfOriginalValueOnAsyncThread((T) originalValue);
     }

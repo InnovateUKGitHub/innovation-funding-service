@@ -4,7 +4,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -28,10 +27,6 @@ import java.util.function.BiFunction;
  */
 public class CompletableFutureTuple2Handler<T1, T2> extends BaseCompletableFutureTupleHandler {
 
-    public CompletableFutureTuple2Handler(CompletableFuture<T1> future1, CompletableFuture<T2> future2) {
-        this(UUID.randomUUID().toString(), future1, future2);
-    }
-
     public CompletableFutureTuple2Handler(String futureName, CompletableFuture<T1> future1, CompletableFuture<T2> future2) {
         super(futureName, future1, future2);
     }
@@ -40,7 +35,7 @@ public class CompletableFutureTuple2Handler<T1, T2> extends BaseCompletableFutur
         return thenApplyInternal(() -> handler.apply(getResult(0), getResult(1)));
     }
 
-    public <R> CompletableFuture<Void> thenAccept(BiConsumer<T1, T2> handler) {
+    public CompletableFuture<Void> thenAccept(BiConsumer<T1, T2> handler) {
 
         return thenApplyInternal(() -> {
             handler.accept(getResult(0), getResult(1));

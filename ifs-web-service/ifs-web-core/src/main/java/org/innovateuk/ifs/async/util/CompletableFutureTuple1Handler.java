@@ -4,7 +4,6 @@ import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.util.ExceptionThrowingConsumer;
 
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
@@ -27,10 +26,6 @@ import java.util.function.Function;
  */
 public class CompletableFutureTuple1Handler<T1> extends BaseCompletableFutureTupleHandler {
 
-    public CompletableFutureTuple1Handler(CompletableFuture<T1> future1) {
-        this(UUID.randomUUID().toString(), future1);
-    }
-
     public CompletableFutureTuple1Handler(String futureName, CompletableFuture<T1> future1) {
         super(futureName, future1);
     }
@@ -39,7 +34,7 @@ public class CompletableFutureTuple1Handler<T1> extends BaseCompletableFutureTup
         return thenApplyInternal(() -> handler.apply(getResult(0)));
     }
 
-    public <R> CompletableFuture<Void> thenAccept(ExceptionThrowingConsumer<T1> handler) {
+    public CompletableFuture<Void> thenAccept(ExceptionThrowingConsumer<T1> handler) {
 
         return thenApplyInternal(() -> {
             handler.accept(getResult(0));

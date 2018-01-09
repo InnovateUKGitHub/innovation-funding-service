@@ -24,7 +24,7 @@ public class ThreadsafeModelAdvisor extends AbstractPointcutAdvisor {
 
     private static final long serialVersionUID = 1L;
 
-    public static final int ORDER = Ordered.HIGHEST_PRECEDENCE;
+    private static final int ORDER = Ordered.HIGHEST_PRECEDENCE;
 
     private final transient StaticMethodMatcherPointcut pointcut = new
             StaticMethodMatcherPointcut() {

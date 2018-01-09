@@ -25,15 +25,15 @@ public class AwaitAllFuturesCompletionMethodInterceptor implements MethodInterce
             // call the Controller method
             Object returnValue = invocation.proceed();
 
-            /**
-             * Wait for all CompletableFutures generated via {@link AsyncFuturesGenerator} or manually registered with
-             * {@link AsyncFuturesHolder} in some other way to complete before allowing the Controller to return
-             */
+            //
+            // Wait for all CompletableFutures generated via {@link AsyncFuturesGenerator} or manually registered with
+            // {@link AsyncFuturesHolder} in some other way to complete before allowing the Controller to return
+            //
             AsyncFuturesHolder.waitForAllFuturesToComplete();
 
-            /**
-             * Wait for any Futures added directly to the Spring Model to complete before allowing the Controller to return
-             */
+            //
+            // Wait for any Futures added directly to the Spring Model to complete before allowing the Controller to return
+            //
             for (Object argument : invocation.getArguments()) {
                 if (argument instanceof Model) {
                     callAllFutures((Model) argument);
