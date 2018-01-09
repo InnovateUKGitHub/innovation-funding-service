@@ -122,11 +122,9 @@ public class GrantOfferLetterController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
-    //@PostMapping("/signed/{approvalType}")
     @PostMapping("/signed")
     public String signedGrantOfferLetterApproval(
             @P("projectId")@PathVariable("projectId") final Long projectId,
-            //@PathVariable("approvalType") final ApprovalType approvalType,
             @RequestParam(value = "approvalType") ApprovalType approvalType,
             @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
