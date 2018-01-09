@@ -1,5 +1,6 @@
 *** Settings ***
 Resource          ../defaultResources.robot
+Resource          ../variables/GLOBAL_VARIABLES.robot
 
 *** Keywords ***
 The user clicks the button/link
@@ -195,18 +196,14 @@ the internal sends the descision notification email to all applicants
     the user clicks the button/link       css=.button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link       css=button[name="send-emails"]
 
-the competition is now in Project Setup
-    moving competition to Closed
-    the user navigates to the page    ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}
-    making the application a successful project
-    moving competition to Project Setup
-
 moving competition to Closed
+    [Arguments]  ${compID}
     Connect to Database  @{database}
-    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2017-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${ATIcompetitionTitle}';
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2017-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${compID}';
 
 making the application a successful project
-    #the user navigates to the page   ${compPublicPage}
+    [Arguments]  ${compID}  ${appTitle}
+    the user navigates to the page      ${server}/management/competition/${compID}
     the user clicks the button/link  css=button[type="submit"][formaction$="notify-assessors"]
     ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=button[type="submit"][formaction$="close-assessment"]
     Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=button[type="submit"][formaction$="close-assessment"]
@@ -214,19 +211,32 @@ making the application a successful project
     ...    AND  the user clicks the button/link    css=button[type="submit"][formaction$="close-assessment"]
     run keyword and ignore error     the user clicks the button/link    css=button[type="submit"][formaction$="close-assessment"]
     the user clicks the button/link  link=Input and review funding decision
-    the user clicks the button/link  jQuery=tr:contains("${ATIapplicationTitle}") label
+    the user clicks the button/link  jQuery=tr:contains("${appTitle}") label
     the user clicks the button/link  css=[type="submit"][value="FUNDED"]
-    the user navigates to the page   ${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/manage-funding-applications
-    the user clicks the button/link  jQuery=tr:contains("${ATIapplicationTitle}") label
+    the user navigates to the page   ${server}/management/competition/${compID}/manage-funding-applications
+    the user clicks the button/link  jQuery=tr:contains("${appTitle}") label
     the user clicks the button/link  css=[name="write-and-send-email"]
     the internal sends the descision notification email to all applicants  Successful!
 
 moving competition to Project Setup
-    the user navigates to the page   ${openCompetitionBusinessRTO}
+    [Arguments]   ${compID}
+    the user navigates to the page   ${server}/management/competition/${compID}
     the user clicks the button/link  css=button[type="submit"][formaction$="release-feedback"]
 
-the project finance is able to download the Overheads file
-    ${projectId} =  get project id by name  ${ATIapplicationTitle}
-    ${organisationId} =  get organisation id by name  Dreambit
-    the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${projectId}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
-    remove the file from the operating system  ${excel_file}
+#ATI - project lead submits project details
+#    [Arguments]  ${atiProjectID}
+#    the user navigates to the page     ${server}/project-setup/project/${atiProjectID}/details/project-address
+#    the user selects the radio button  addressType  address-use-org
+#    the user clicks the button/link    jQuery=.button:contains("Save")
+#    the user navigates to the page     ${server}/project-setup/project/${atiProjectID}/details/project-manager
+#    the user selects the radio button  projectManager  Steve Smith
+#    the user clicks the button/link    jQuery=.button:contains("Save")
+#    the user navigates to the page     ${server}/project-setup/project/${atiProjectID}/details
+
+The project finance user is able to download the Overheads file
+    the user should see the element                       jQuery=a:contains("${excel_file}")
+    the user downloads the file                           ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${atiProjectID}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
+    remove the file from the operating system             ${excel_file}
+
+
+
