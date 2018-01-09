@@ -20,7 +20,7 @@ import java.util.concurrent.ExecutionException;
 
 @RestController
 @RequestMapping("/application/download/overheadfile")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = OverheadFileDownloaderController.class)
+@SecuredBySpring(value = "Controller", description = "IFS Admin and Project Finance can download uploaded overhead spreadsheet", securedType = OverheadFileDownloaderController.class)
 @PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance')")
 public class OverheadFileDownloaderController {
     @Autowired
