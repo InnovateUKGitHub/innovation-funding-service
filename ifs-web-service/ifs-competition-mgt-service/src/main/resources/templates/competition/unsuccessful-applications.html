@@ -22,7 +22,6 @@
         </div>
     </div>
     <div class="table-overflow">
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
         <table id="application-list">
             <thead>
             <tr>
@@ -53,7 +52,6 @@
             </tr>
             </tbody>
         </table>
-        </form>
     </div>
     <th:block th:insert="fragments/competition-setup :: comp-setup-mark-as-successful-modal" />
 

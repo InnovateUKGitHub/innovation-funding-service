@@ -128,9 +128,11 @@
             <li>IFS will not inform the applicants, so you must contact them</li>
         </ul>
         <hr />
-        <div>
-            <button name="mark-as-successful" class="button">I'm sure</button>
-            <button type="button" class="js-close buttonlink">Cancel</button>
-        </div>
+        <form class="js-modal-url-target" method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <div>
+                <button name="mark-as-successful" class="button">I'm sure</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
+            </div>
+        </form>
     </div>
 </div>
