@@ -40,5 +40,5 @@ public interface ProjectService {
 
     PartnerOrganisationResource getPartnerOrganisation(Long projectId, Long organisationId);
 
-    void createProjectFromApplicationId(Long applicationId);
+    ServiceResult<Void> createProjectFromApplicationId(Long applicationId);
 }

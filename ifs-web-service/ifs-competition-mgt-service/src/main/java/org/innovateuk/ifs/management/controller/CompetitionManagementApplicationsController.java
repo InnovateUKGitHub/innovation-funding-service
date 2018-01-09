@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Collections;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
@@ -150,11 +149,10 @@ public class CompetitionManagementApplicationsController {
         return "competition/navigate-applications";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_admin')")
-    @GetMapping("/mark-successful/application/{applicationId}")
-    public String markApplicationAsSuccessful(Model model,
-                                              @PathVariable("competitionId") long competitionId,
+    @SecuredBySpring(value = "UPDATE", description = "Only the IFS admin is able to mark an application as successful after funding decisions have been made")
+    @PreAuthorize("hasAuthority('ifs_admin')")
+    @PostMapping("/mark-successful/application/{applicationId}")
+    public String markApplicationAsSuccessful(@PathVariable("competitionId") long competitionId,
                                               @PathVariable("applicationId") long applicationId) {
         applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId));
         projectService.createProjectFromApplicationId(applicationId);

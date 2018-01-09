@@ -128,7 +128,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void createProjectFromApplicationId(Long applicationId) {
-        projectRestService.createProjectFromApplicationId(applicationId);
+    public ServiceResult<Void> createProjectFromApplicationId(Long applicationId) {
+        return projectRestService.createProjectFromApplicationId(applicationId).toServiceResult();
     }
 }

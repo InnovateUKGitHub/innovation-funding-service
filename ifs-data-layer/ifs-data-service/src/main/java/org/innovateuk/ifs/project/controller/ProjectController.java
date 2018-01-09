@@ -56,9 +56,8 @@ public class ProjectController {
         return projectService.getProjectManager(projectId).toGetResponse();
     }
 
-    @GetMapping("/create-project/application/{applicationId}")
-    public RestResult<ProjectResource> createProjectFromApplication(@PathVariable("applicationId") final Long applicationId) {
-        return projectService.createProjectFromApplication(applicationId).toGetResponse();
+    @PostMapping("/create-project/application/{applicationId}")
+    public RestResult<Void> createProjectFromApplication(@PathVariable("applicationId") final Long applicationId) {
+        return projectService.createProjectFromApplication(applicationId).toPostResponse();
     }
-
 }

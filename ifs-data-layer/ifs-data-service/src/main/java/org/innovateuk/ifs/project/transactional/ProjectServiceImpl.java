@@ -209,7 +209,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         return checkForExistingProjectWithApplicationId(applicationId).handleSuccessOrFailure(
                 failure -> createProjectFromApplicationId(applicationId),
-                ServiceResult::serviceSuccess
+                success -> serviceSuccess(success)
         );
     }
 
