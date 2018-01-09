@@ -62,7 +62,7 @@ public class GrantOfferLetterWorkflow extends StateMachineConfigurerAdapter<Gran
                 .withExternal()
                     .source(READY_TO_APPROVE)
                     .event(GOL_REJECTED)
-                    .target(PENDING)
+                    .target(SENT)
                     .and()
                 .withExternal()
                     .source(READY_TO_APPROVE)
