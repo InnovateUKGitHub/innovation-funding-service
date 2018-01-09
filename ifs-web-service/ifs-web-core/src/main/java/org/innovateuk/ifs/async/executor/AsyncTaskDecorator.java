@@ -58,7 +58,7 @@ public class AsyncTaskDecorator implements TaskDecorator {
     }
 
     private void copyParentThreadLocalsToChildThread(List<?> originalThreadLocalValues) {
-        zip(threadLocalCopiers, originalThreadLocalValues, this::setOriginalValue);
+        zip(threadLocalCopiers, originalThreadLocalValues, AsyncTaskDecorator::setOriginalValue);
     }
 
     private void clearThreadLocalsFromChildThread() {
@@ -71,7 +71,7 @@ public class AsyncTaskDecorator implements TaskDecorator {
         });
     }
 
-    private <T> void setOriginalValue(AsyncThreadLocalCopier<T> copier, Object originalValue) {
+    private static <T> void setOriginalValue(AsyncThreadLocalCopier<T> copier, Object originalValue) {
         copier.setCopyOfOriginalValueOnAsyncThread((T) originalValue);
     }
 }

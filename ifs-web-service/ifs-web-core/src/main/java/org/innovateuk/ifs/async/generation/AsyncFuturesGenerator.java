@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.async.exceptions.AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException;
@@ -77,8 +79,12 @@ public class AsyncFuturesGenerator {
             }
         };
 
-        CompletableFuture<T> asyncBlock = self.asyncInternal(decoratedSupplier);
-        return AsyncFuturesHolder.registerFuture(futureName, asyncBlock);
+        // create and register the Future.  Once registered, release the Future to run
+        CountDownLatch waitForRegistrationLatch = new CountDownLatch(1);
+        CompletableFuture<T> asyncBlock = self.asyncInternal(decoratedSupplier, waitForRegistrationLatch);
+        CompletableFuture<T> registeredFuture = AsyncFuturesHolder.registerFuture(futureName, asyncBlock);
+        waitForRegistrationLatch.countDown();
+        return registeredFuture;
     }
 
     public CompletableFuture<Void> async(ExceptionThrowingRunnable runnable) {
@@ -104,8 +110,9 @@ public class AsyncFuturesGenerator {
      * Package-private to allow Spring to proxy this method
      */
     @Async
-    <T> CompletableFuture<T> asyncInternal(ExceptionThrowingSupplier<T> supplier) {
+    <T> CompletableFuture<T> asyncInternal(ExceptionThrowingSupplier<T> supplier, CountDownLatch waitForRegistrationLatch) {
         try {
+            waitForRegistrationLatch.await(1, TimeUnit.SECONDS);
             T value = supplier.get();
             return CompletableFuture.completedFuture(value);
         } catch (Exception e) {

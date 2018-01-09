@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.async.controller;
 
 import org.aopalliance.aop.Advice;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
@@ -20,10 +22,6 @@ public class AwaitAllFuturesCompletionMethodAdvisor extends AbstractPointcutAdvi
 
     public static final int CALL_FUTURES_ORDER = Ordered.LOWEST_PRECEDENCE - 1;
 
-    public AwaitAllFuturesCompletionMethodAdvisor(){
-        setOrder(CALL_FUTURES_ORDER);
-    }
-
     private final transient StaticMethodMatcherPointcut pointcut = new
             StaticMethodMatcherPointcut() {
                 @Override
@@ -37,7 +35,11 @@ public class AwaitAllFuturesCompletionMethodAdvisor extends AbstractPointcutAdvi
     @Autowired
     private transient AwaitAllFuturesCompletionMethodInterceptor interceptor;
 
-    @Override
+    public AwaitAllFuturesCompletionMethodAdvisor(){
+        setOrder(CALL_FUTURES_ORDER);
+    }
+
+     @Override
     public Pointcut getPointcut() {
         return this.pointcut;
     }
@@ -45,5 +47,29 @@ public class AwaitAllFuturesCompletionMethodAdvisor extends AbstractPointcutAdvi
     @Override
     public Advice getAdvice() {
         return this.interceptor;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AwaitAllFuturesCompletionMethodAdvisor that = (AwaitAllFuturesCompletionMethodAdvisor) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(pointcut, that.pointcut)
+                .append(interceptor, that.interceptor)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(pointcut)
+                .append(interceptor)
+                .toHashCode();
     }
 }

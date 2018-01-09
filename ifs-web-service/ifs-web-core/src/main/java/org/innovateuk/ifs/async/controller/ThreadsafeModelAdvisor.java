@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.async.controller;
 
 import org.aopalliance.aop.Advice;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
@@ -24,10 +26,6 @@ public class ThreadsafeModelAdvisor extends AbstractPointcutAdvisor {
 
     public static final int ORDER = Ordered.HIGHEST_PRECEDENCE;
 
-    public ThreadsafeModelAdvisor(){
-        setOrder(ORDER);
-    }
-
     private final transient StaticMethodMatcherPointcut pointcut = new
             StaticMethodMatcherPointcut() {
                 @Override
@@ -41,6 +39,10 @@ public class ThreadsafeModelAdvisor extends AbstractPointcutAdvisor {
     @Autowired
     private transient ThreadsafeModelMethodInterceptor interceptor;
 
+    public ThreadsafeModelAdvisor(){
+        setOrder(ORDER);
+    }
+
     @Override
     public Pointcut getPointcut() {
         return this.pointcut;
@@ -49,5 +51,29 @@ public class ThreadsafeModelAdvisor extends AbstractPointcutAdvisor {
     @Override
     public Advice getAdvice() {
         return this.interceptor;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ThreadsafeModelAdvisor that = (ThreadsafeModelAdvisor) o;
+
+        return new EqualsBuilder()
+                .appendSuper(super.equals(o))
+                .append(pointcut, that.pointcut)
+                .append(interceptor, that.interceptor)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
+                .append(pointcut)
+                .append(interceptor)
+                .toHashCode();
     }
 }
