@@ -1,11 +1,13 @@
 *** Settings ***
 Documentation   IFS-2396  ATI Competition type template
 ...
+...             IFS-2332  Project Finance user is not able to download the overheads file
 Suite Setup     Custom Suite Setup
 Suite Teardown  Close browser and delete emails
 Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
+Resource        ../../../resources/keywords/User_actions.robot
 
 *** Variables ***
 ${ATIcompetitionTitle}  ATI Competition
@@ -38,14 +40,21 @@ Applicant applies to newly created ATI competition
     Then Lead Applicant applies to the new created competition   ${ATIcompetitionTitle}  &{lead_applicant_credentials}
 
 Applicant submits his application
-    [Documentation]  IFS-2286
+    [Documentation]  IFS-2286  IFS-2332
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${ATIapplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     Then the lead applicant fills all the questions and marks as complete(Programme)
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
-    And the user marks the finances as complete         ${ATIapplicationTitle}   labour costs  54,000  yes
+    And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
     Then the applicant submits the application
+
+Project Finance is able to see the Overheads costs file
+    [Documentation]  IFS-2332
+    [Tags]  CompAdmin
+    [Setup]  log in as a different user  &{internal_finance_credentials}
+    Given the competition is now in Project Setup
+    Then the project finance is able to download the Overheads file
 
 *** Keywords ***
 Custom Suite Setup
