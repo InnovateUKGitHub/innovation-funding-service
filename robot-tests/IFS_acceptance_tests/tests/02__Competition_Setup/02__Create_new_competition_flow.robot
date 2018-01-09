@@ -111,7 +111,7 @@ Initial details - User enters valid values and marks as done
     And the user moves focus and waits for autosave
     When the user clicks the button/link             jQuery=button:contains("Done")
     Then the user should see the text in the page    John Doe
-    And the user should see the text in the page     1/12/${nextyear}
+    And the user should see the text in the page     10/1/${nextyear}
     And the user should see the text in the page     Ian Cooper
     And the user should see the text in the page     Competition title
     And the user should see the text in the page     Emerging and enabling
@@ -169,7 +169,7 @@ Initial details - Comp Type and Date should not be editable
     And The element should be disabled        css=#competitionTypeId
     And The element should be disabled        css=#openingDateDay
     And the user clicks the button/link       jQuery=button:contains("Done")
-    Then the user should see the text in the page   1/12/${nextyear}
+    Then the user should see the text in the page   10/1/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    ${competitionTitle}
     And the user should see the text in the page    Open
@@ -247,7 +247,7 @@ Funding information: can be saved
     And the user should see the text in the page    2016
     And the user should see the text in the page    2004
     And the user should see the text in the page    4242
-    And the user should see the text in the page    1812-1
+    And the user should see the text in the page    1901-1
     And the user should see the element    jQuery=button:contains("Edit")
 
 Funding information: can be edited
@@ -469,13 +469,12 @@ Application: marking questions as complete
 Adding a new Assessed Application Question
     [Documentation]  IFS-182    IFS-2285
     [Tags]
-    #TODO Commented lines will be enabled as part of IFS-2425 and retested
     Given the user clicks the button/link  css=p button[type="submit"]  #Add question link
-    #And the user selects the radio button  question.appendix  1
-    #Then the user clicks the button/link   css=label[for="allowed-file-types-PDF"]
+    And the user selects the radio button  question.appendix  1
+    Then the user clicks the button/link   css=label[for="allowed-file-types-PDF"]
     # Unclicking the PDF checkbox in order to trigger server side validation
-    #When the user clicks the button/link   css=button[type="submit"]
-    #Then the user should see the server side validation working
+    When the user clicks the button/link   css=button[type="submit"]
+    Then the user should see the server side validation working
     Then the user is able to configure the new question  ${customQuestion}
     And the user should be able to see the read only view of question correctly  ${customQuestion}
 
@@ -730,13 +729,13 @@ the weekdays should be correct
     element should contain    css=tr:nth-child(13) td:nth-child(3)    Tue
 
 the pre-field date should be correct
-    Element Should Contain    css=#milestone-OPEN_DATE~ .js-addWeekDay    Sat
+    Element Should Contain    css=#milestone-OPEN_DATE~ .js-addWeekDay    Thu
     ${YEAR} =    Get Value    css=.date-group:nth-child(1) .year .width-small
     Should Be Equal As Strings    ${YEAR}  ${nextyear}
     ${MONTH} =    Get Value    css=.date-group:nth-child(1) .month .width-small
-    Should Be Equal As Strings    ${MONTH}    12
+    Should Be Equal As Strings    ${MONTH}    1
     ${DAY} =    Get Value    css=.date-group:nth-child(1) .day .width-small
-    Should Be Equal As Strings    ${DAY}    1
+    Should Be Equal As Strings    ${DAY}    10
 
 the resubmission should not have a default selection
     the user should see the element  css=[name="resubmission"]:not(:checked) ~ label
@@ -751,8 +750,8 @@ The user enters valid data in the initial details
     And the user selects the option from the drop-down menu   Emerging and enabling  id=innovationSectorCategoryId
     And the user selects the option from the drop-down menu   Satellite applications  css=[id="innovationAreaCategoryIds[0]"]
     And the user selects the option from the drop-down menu   Space technology  css=[id="innovationAreaCategoryIds[1]"]
-    And the user enters text to a text field    id=openingDateDay    01
-    And the user enters text to a text field    Id=openingDateMonth    12
+    And the user enters text to a text field    id=openingDateDay    10
+    And the user enters text to a text field    Id=openingDateMonth    1
     And the user enters text to a text field    id=openingDateYear  ${nextyear}
     And the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     And the user selects the option from the drop-down menu    John Doe   id=executiveUserId
