@@ -33,9 +33,8 @@ public class AssessmentPanelInviteController {
     }
 
     @GetMapping("/getAllInvitesToResend/{competitionId}")
-    public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(
-            @PathVariable long competitionId,
-            @RequestParam List<Long> inviteIds) {
+    public RestResult<AssessorInvitesToSendResource> getAllInvitesToResend(@PathVariable long competitionId,
+                                                                           @RequestParam List<Long> inviteIds) {
         return assessmentPanelInviteService.getAllInvitesToResend(competitionId, inviteIds).toGetResponse();
     }
 
@@ -46,7 +45,8 @@ public class AssessmentPanelInviteController {
     }
 
     @PostMapping("/resendInvites")
-    public RestResult<Void> resendInvites(@RequestParam List<Long> inviteIds, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
+    public RestResult<Void> resendInvites(@RequestParam List<Long> inviteIds,
+                                          @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
         return assessmentPanelInviteService.resendInvites(inviteIds, assessorInviteSendResource).toPostWithBodyResponse();
     }
 
@@ -71,20 +71,17 @@ public class AssessmentPanelInviteController {
     }
 
     @GetMapping(value = "/getAvailableAssessorIds/{competitionId}")
-    public RestResult<List<Long>> getAvailableAssessorIds(
-            @PathVariable long competitionId) {
+    public RestResult<List<Long>> getAvailableAssessorIds(@PathVariable long competitionId) {
         return assessmentPanelInviteService.getAvailableAssessorIds(competitionId).toGetResponse();
     }
 
     @GetMapping("/getAllInvitesByUser/{userId}")
-    public RestResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(
-            @PathVariable long userId) {
+    public RestResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(@PathVariable long userId) {
         return assessmentPanelInviteService.getAllInvitesByUser(userId).toGetResponse();
     }
 
     @GetMapping(value = "/getNonAcceptedAssessorInviteIds/{competitionId}")
-    public RestResult<List<Long>> getNonAcceptedAssessorInviteIds(
-            @PathVariable long competitionId) {
+    public RestResult<List<Long>> getNonAcceptedAssessorInviteIds(@PathVariable long competitionId) {
         return assessmentPanelInviteService.getNonAcceptedAssessorInviteIds(competitionId).toGetResponse();
     }
 
