@@ -24,6 +24,11 @@
             <h2 class="heading-small no-margin-top">The grant offer letter has been received and accepted.</h2>
         </div>
     </th:block>
+
+    <div class="warning-alert" th:if="${model.getSignedGrantOfferLetterRejected()}">
+        <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+    </div>
+
     <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
         <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
             <p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and that the project is ready to begin.</p>
@@ -34,8 +39,6 @@
             </th:block>
         </th:block>
     </th:block>
-
-    <h2 th:text="${model.projectName}">Project Title</h2>
 
     <h2 class="heading-medium">Grant offer letter</h2>
 
@@ -108,7 +111,7 @@
     </th:block>
     <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable() and model.getSignedGrantOfferLetterApproved() != true}">
         <h2 class="heading-medium">Confirm signed grant offer letter</h2>
-        <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" method="GET" novalidate="novalidate">
+        <form th:action="@{/project/{id}/grant-offer-letter/signed(id=${model.projectId})}" method="post" novalidate="novalidate">
             <div class="form-group">
                 <fieldset>
                     <legend id="decisionGOL" class="extra-margin-bottom">
