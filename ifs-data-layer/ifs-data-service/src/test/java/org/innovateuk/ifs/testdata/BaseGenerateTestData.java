@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.testdata;
 
+import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.flywaydb.core.Flyway;
@@ -106,6 +107,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     @Value("${flyway.locations}")
     private String locations;
+
+    @Value("${flyway.placeholders.ifs.system.user.uuid}")
+    private String systemUserUUID;
 
     @Autowired
     private GenericApplicationContext applicationContext;
@@ -869,9 +873,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void cleanAndMigrateDatabaseWithPatches(String[] patchLocations) {
+        Map<String, String> placeholders = ImmutableMap.of("ifs.system.user.uuid", systemUserUUID);
         Flyway f = new Flyway();
         f.setDataSource(databaseUrl, databaseUser, databasePassword);
         f.setLocations(patchLocations);
+        f.setPlaceholders(placeholders);
         f.clean();
         f.migrate();
     }
