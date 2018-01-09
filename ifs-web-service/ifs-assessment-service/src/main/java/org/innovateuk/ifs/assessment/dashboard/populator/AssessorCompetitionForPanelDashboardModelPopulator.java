@@ -72,6 +72,7 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
         ApplicationResource application = applicationService.getById(assessmentReview.getApplication());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
         Optional<OrganisationResource> leadOrganisation = getApplicationLeadOrganisation(userApplicationRoles);
+
         return new AssessorCompetitionForPanelDashboardApplicationViewModel(application.getId(),
                 assessmentReview.getId(),
                 application.getName(),

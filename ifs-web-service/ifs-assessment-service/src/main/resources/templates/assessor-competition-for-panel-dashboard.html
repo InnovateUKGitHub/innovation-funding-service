@@ -63,7 +63,7 @@
 
                     <ul>
                         <li th:each="app,iterStat : ${model.applications}"
-                            th:with="assignmentUrl=@{/{assessmentId}/assignment(assessmentId=${app.assessmentId})}"
+                            th:with="reviewUrl=@{/{reviewId}/review(reviewId=${app.reviewId})}"
                             th:class="${(app.pending ? 'status-2-col' : '')}">
 
                             <th:block>
