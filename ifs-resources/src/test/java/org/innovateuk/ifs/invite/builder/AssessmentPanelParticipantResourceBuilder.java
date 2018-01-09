@@ -96,6 +96,10 @@ public class AssessmentPanelParticipantResourceBuilder extends BaseBuilder<Asses
         return withArraySetFieldByReflection("competitionStatus", competitionStatuses);
     }
 
+    public AssessmentPanelParticipantResourceBuilder withAwaitingApplications(Long... awaitingApplications) {
+        return withArraySetFieldByReflection("awaitingApplications", awaitingApplications);
+    }
+
     @Override
     protected void postProcess(int index, AssessmentPanelParticipantResource instance) {
         super.postProcess(index, instance);
