@@ -6,6 +6,7 @@ import org.innovateuk.ifs.async.controller.AwaitAllFuturesCompletionMethodInterc
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.*;
 
 import static java.util.Collections.singletonList;
@@ -34,7 +35,7 @@ public class AsyncFuturesHolder {
 
     private static final Log LOG = LogFactory.getLog(AsyncFuturesGenerator.class);
 
-    private static final ThreadLocal<ConcurrentLinkedQueue<RegisteredAsyncFutureDetails>> ASYNC_FUTURES = new ThreadLocal<>();
+    private static final ThreadLocal<Queue<RegisteredAsyncFutureDetails>> ASYNC_FUTURES = new ThreadLocal<>();
     private static final ThreadLocal<AsyncFutureDetails> CURRENTLY_EXECUTING_ASYNC_FUTURE = new ThreadLocal<>();
 
     /**
@@ -86,7 +87,7 @@ public class AsyncFuturesHolder {
     /**
      * @return the current set of ongoing Futures registered against this Thread
      */
-    public static ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> getFuturesOrInitialise() {
+    public static Queue<RegisteredAsyncFutureDetails> getFuturesOrInitialise() {
         if (ASYNC_FUTURES.get() == null) {
             ASYNC_FUTURES.set(new ConcurrentLinkedQueue<>());
         }
@@ -95,7 +96,7 @@ public class AsyncFuturesHolder {
 
     public static void cancelAndClearFutures() {
 
-        ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> currentlyRegisteredFutures = ASYNC_FUTURES.get();
+        Queue<RegisteredAsyncFutureDetails> currentlyRegisteredFutures = ASYNC_FUTURES.get();
 
         if (currentlyRegisteredFutures == null) {
             return;
@@ -115,7 +116,7 @@ public class AsyncFuturesHolder {
     /**
      * @param futures - a set of ongoing Futures to set on this Thread
      */
-    public static void setFutures(ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> futures) {
+    public static void setFutures(Queue<RegisteredAsyncFutureDetails> futures) {
         ASYNC_FUTURES.set(futures);
     }
 
@@ -150,7 +151,7 @@ public class AsyncFuturesHolder {
      */
     public static void waitForFuturesAndChildFuturesToCompleteFrom(List<? extends CompletableFuture<?>> futuresToBlockOn) {
 
-        ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> futures = ASYNC_FUTURES.get();
+        Queue<RegisteredAsyncFutureDetails> futures = ASYNC_FUTURES.get();
 
         List<RegisteredAsyncFutureDetails> futureDetails = simpleFilter(futures, f -> futuresToBlockOn.contains(f.getFuture()));
 
@@ -170,7 +171,7 @@ public class AsyncFuturesHolder {
      */
     private static void waitForFuturesAndChildFuturesToCompleteByFutureName(List<String> futureNames) {
 
-        ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> futures = ASYNC_FUTURES.get();
+        Queue<RegisteredAsyncFutureDetails> futures = ASYNC_FUTURES.get();
 
         if (futures == null || futures.isEmpty()) {
             return;

@@ -8,6 +8,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.*;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
@@ -113,7 +114,7 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
 
         // Assert that the list of Futures recorded mid-flight is the same as the list of Futures recorded on the main Thread
         // after the Futures have completed.
-        ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> futuresNowList = AsyncFuturesHolder.getFuturesOrInitialise();
+        Queue<RegisteredAsyncFutureDetails> futuresNowList = AsyncFuturesHolder.getFuturesOrInitialise();
         RegisteredAsyncFutureDetails futureNowItem = getOnlyElement(futuresNowList);
 
         // assert that the registered Future retains the Thread ancestry back to the thread that initiated it
@@ -165,7 +166,7 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
         // assert that the 3 futures were executed by 3 distinct Threads
         assertEquals(3, removeDuplicates(futureThreads).size());
 
-        ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> futuresNowList = AsyncFuturesHolder.getFuturesOrInitialise();
+        Queue<RegisteredAsyncFutureDetails> futuresNowList = AsyncFuturesHolder.getFuturesOrInitialise();
 
         // assert that the child Futures and its child Futures were all registered
         List<RegisteredAsyncFutureDetails> registeredFuturesAsList = new ArrayList<>(futuresNowList);
@@ -201,7 +202,7 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
 
         future.get();
 
-        ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> futuresList = AsyncFuturesHolder.getFuturesOrInitialise();
+        Queue<RegisteredAsyncFutureDetails> futuresList = AsyncFuturesHolder.getFuturesOrInitialise();
 
         // assert that the child Futures and its child Futures were all registered
         List<RegisteredAsyncFutureDetails> registeredFuturesAsList = new ArrayList<>(futuresList);

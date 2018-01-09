@@ -4,7 +4,7 @@ import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.async.generation.RegisteredAsyncFutureDetails;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Queue;
 
 /**
  * This {@link AsyncThreadLocalCopier} implementation is responsible for making available the ConcurrentLinkedQueue of
@@ -13,10 +13,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  * execution blocks to complete and add any information they have to the Model prior to attempting to render the page).
  */
 @Component
-public class MainThreadFuturesCopier implements AsyncThreadLocalCopier<ConcurrentLinkedQueue<RegisteredAsyncFutureDetails>> {
+public class MainThreadFuturesCopier implements AsyncThreadLocalCopier<Queue<RegisteredAsyncFutureDetails>> {
 
     @Override
-    public ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> getOriginalValueFromOriginalThread() {
+    public Queue<RegisteredAsyncFutureDetails> getOriginalValueFromOriginalThread() {
         return AsyncFuturesHolder.getFuturesOrInitialise();
     }
 
@@ -26,7 +26,7 @@ public class MainThreadFuturesCopier implements AsyncThreadLocalCopier<Concurren
     }
 
     @Override
-    public void setCopyOfOriginalValueOnAsyncThread(ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> originalValue) {
+    public void setCopyOfOriginalValueOnAsyncThread(Queue<RegisteredAsyncFutureDetails> originalValue) {
         AsyncFuturesHolder.setFutures(originalValue);
     }
 }
