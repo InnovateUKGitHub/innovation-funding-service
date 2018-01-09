@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+
 import java.time.ZonedDateTime;
+
+import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
  * DTO for {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite}s.
@@ -18,7 +21,6 @@ public class AssessmentPanelInviteResource extends InviteResource {
     private long userId;
     private String email;
     private ZonedDateTime panelDate;
-
 
     public AssessmentPanelInviteResource(String hash,
                                          long competitionId,
@@ -40,7 +42,6 @@ public class AssessmentPanelInviteResource extends InviteResource {
     public AssessmentPanelInviteResource() {
     }
 
-
     public String getHash() {
         return hash;
     }
@@ -48,7 +49,6 @@ public class AssessmentPanelInviteResource extends InviteResource {
     public void setHash(String hash) {
         this.hash = hash;
     }
-
 
     public long getCompetitionId() {
         return competitionId;
@@ -98,6 +98,10 @@ public class AssessmentPanelInviteResource extends InviteResource {
         this.panelDate = panelDate;
     }
 
+    @JsonIgnore
+    public long getPanelDaysLeft() {
+        return DAYS.between(ZonedDateTime.now(), panelDate);
+    }
 
     @JsonIgnore
     public boolean isPending() {
