@@ -88,7 +88,7 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
             return currentThread();
         });
 
-        Future<ConcurrentLinkedQueue<RegisteredAsyncFutureDetails>> controlThread = taskExecutor.submit(() -> {
+        Future<ConcurrentLinkedQueue<RegisteredAsyncFutureDetails<?>>> controlThread = taskExecutor.submit(() -> {
 
             try {
                 // wait for the other Future to be executing before continuing
@@ -96,7 +96,7 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
 
                 // now that the other Future is executing but not yet complete, check to see that it is registered with
                 // AsyncFuturesHolder
-                ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> futuresList = new ConcurrentLinkedQueue<>(AsyncFuturesHolder.getFuturesOrInitialise());
+                ConcurrentLinkedQueue<RegisteredAsyncFutureDetails<?>> futuresList = new ConcurrentLinkedQueue<>(AsyncFuturesHolder.getFuturesOrInitialise());
 
                 childThreadLatch.countDown();
 
@@ -109,13 +109,13 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
         // Assert that whilst childThread has been executing, it is registered with AsyncFuturesHolder as a Future to track.
         // This is done by virtue of using AsyncFuturesGenerator.async() which immediately registers any Futures that are
         // kicked off via its async() and awaitAll() mechanisms.
-        ConcurrentLinkedQueue<RegisteredAsyncFutureDetails> futuresWhilstChildThreadIsInFlight = controlThread.get();
+        ConcurrentLinkedQueue<RegisteredAsyncFutureDetails<?>> futuresWhilstChildThreadIsInFlight = controlThread.get();
         assertEquals(1, futuresWhilstChildThreadIsInFlight.size());
 
         // Assert that the list of Futures recorded mid-flight is the same as the list of Futures recorded on the main Thread
         // after the Futures have completed.
-        Queue<RegisteredAsyncFutureDetails> futuresNowList = AsyncFuturesHolder.getFuturesOrInitialise();
-        RegisteredAsyncFutureDetails futureNowItem = getOnlyElement(futuresNowList);
+        Queue<RegisteredAsyncFutureDetails<?>> futuresNowList = AsyncFuturesHolder.getFuturesOrInitialise();
+        RegisteredAsyncFutureDetails<?> futureNowItem = getOnlyElement(futuresNowList);
 
         // assert that the registered Future retains the Thread ancestry back to the thread that initiated it
         assertEquals(futuresWhilstChildThreadIsInFlight.iterator().next(), futureNowItem);
@@ -166,10 +166,10 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
         // assert that the 3 futures were executed by 3 distinct Threads
         assertEquals(3, removeDuplicates(futureThreads).size());
 
-        Queue<RegisteredAsyncFutureDetails> futuresNowList = AsyncFuturesHolder.getFuturesOrInitialise();
+        Queue<RegisteredAsyncFutureDetails<?>> futuresNowList = AsyncFuturesHolder.getFuturesOrInitialise();
 
         // assert that the child Futures and its child Futures were all registered
-        List<RegisteredAsyncFutureDetails> registeredFuturesAsList = new ArrayList<>(futuresNowList);
+        List<RegisteredAsyncFutureDetails<?>> registeredFuturesAsList = new ArrayList<>(futuresNowList);
         assertEquals(3, registeredFuturesAsList.size());
 
         RegisteredAsyncFutureDetails futureDetails = registeredFuturesAsList.get(0);
@@ -202,14 +202,14 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
 
         future.get();
 
-        Queue<RegisteredAsyncFutureDetails> futuresList = AsyncFuturesHolder.getFuturesOrInitialise();
+        Queue<RegisteredAsyncFutureDetails<?>> futuresList = AsyncFuturesHolder.getFuturesOrInitialise();
 
         // assert that the child Futures and its child Futures were all registered
-        List<RegisteredAsyncFutureDetails> registeredFuturesAsList = new ArrayList<>(futuresList);
+        List<RegisteredAsyncFutureDetails<?>> registeredFuturesAsList = new ArrayList<>(futuresList);
 
-        RegisteredAsyncFutureDetails futureDetails = registeredFuturesAsList.get(0);
-        RegisteredAsyncFutureDetails childFuture1Details = registeredFuturesAsList.get(1);
-        RegisteredAsyncFutureDetails childFuture2Details = registeredFuturesAsList.get(2);
+        RegisteredAsyncFutureDetails<?> futureDetails = registeredFuturesAsList.get(0);
+        RegisteredAsyncFutureDetails<?> childFuture1Details = registeredFuturesAsList.get(1);
+        RegisteredAsyncFutureDetails<?> childFuture2Details = registeredFuturesAsList.get(2);
 
         // assert that the explicit names were used when registering our Futures
         assertEquals("Future", futureDetails.getFutureName());

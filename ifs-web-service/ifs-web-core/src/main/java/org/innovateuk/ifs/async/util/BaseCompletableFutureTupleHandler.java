@@ -63,12 +63,12 @@ abstract class BaseCompletableFutureTupleHandler {
     private String futureName;
     private CompletableFuture<?>[] futures;
 
-    protected BaseCompletableFutureTupleHandler(String futureName, CompletableFuture<?>... futures) {
+    BaseCompletableFutureTupleHandler(String futureName, CompletableFuture<?>... futures) {
         this.futureName = futureName;
         this.futures = futures;
     }
 
-    protected <R> CompletableFuture<R> thenApplyInternal(ExceptionThrowingSupplier<R> supplier) {
+    <R> CompletableFuture<R> thenApplyInternal(ExceptionThrowingSupplier<R> supplier) {
 
         CompletableFuture<R> blockingFuture = CompletableFuture.allOf(futures).thenApply(done -> {
 
@@ -79,37 +79,34 @@ abstract class BaseCompletableFutureTupleHandler {
                 return supplier.get();
             } catch (Exception e) {
                 LOG.error("Error whilst executing Supplier Future", e);
-                throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst executing Supplier Future");
+                throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst executing Supplier Future - wrapping in AsyncException");
             }
         });
 
         return AsyncFuturesHolder.registerFuture(futureName, blockingFuture);
     }
 
-    public void waitForFuturesAndDescendantsToFullyComplete() {
+    void waitForFuturesAndDescendantsToFullyComplete() {
 
         // this ensures that all of the top-level Futures and their descendant Futures are fully completed prior to
         // executing the next Future
         AsyncFuturesHolder.waitForFuturesAndChildFuturesToCompleteFrom(asList(futures));
     }
 
-    protected <R> R getResult(int index)  {
+    <R> R getResult(int index)  {
+        return getResult(futures[index]);
+    }
+
+    <R> R getResult(CompletableFuture<?> future)  {
         try {
-            return (R) futures[index].get();
+            return (R) future.get();
         } catch (Exception e) {
             LOG.error("Error whilst attempting to get future result", e);
-            throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst attempting to get future result");
+            throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst attempting to get future result - wrapping in AsyncException");
         }
     }
 
     protected List<?> getResultsAsList()  {
-        return simpleMap(futures, future -> {
-            try {
-                return future.get();
-            } catch (Exception e) {
-                LOG.error("Error whilst attempting to get future result", e);
-                throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst attempting to get future result");
-            }
-        });
+        return simpleMap(futures, this::getResult);
     }
 }

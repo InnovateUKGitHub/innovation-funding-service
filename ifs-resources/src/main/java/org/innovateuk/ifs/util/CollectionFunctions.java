@@ -278,6 +278,21 @@ public final class CollectionFunctions {
         return simpleMap(asList(list), mappingFn);
     }
 
+    /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
+     *
+     * Unlike {@link CollectionFunctions#simpleMap}, this method also provides the index of the item being mapped.
+     *
+     * @param list
+     * @param mappingFn
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> List<R> simpleMapWithIndex(T[] list, BiFunction<T, Integer, R> mappingFn) {
+        return simpleMapWithIndex(asList(list), mappingFn);
+    }
+
     public static <T, R> Map<T, R> simpleFilter(Map<T, R> map, Predicate<T> filterFn) {
         return  simpleFilter(map, (k,v) -> filterFn.test(k));
     }
@@ -396,6 +411,30 @@ public final class CollectionFunctions {
             return emptyList();
         }
         return collection.stream().map(mappingFn).collect(toList());
+    }
+
+    /**
+     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code.
+     *
+     * Unlike {@link CollectionFunctions#simpleMap}, this method also provides the index of the item being
+     * mapped.
+     *
+     * @param collection
+     * @param mappingFn
+     * @param <T>
+     * @param <R>
+     * @return
+     */
+    public static <T, R> List<R> simpleMapWithIndex(Collection<T> collection, BiFunction<T, Integer, R> mappingFn) {
+        if (collection == null || collection.isEmpty()) {
+            return emptyList();
+        }
+
+        List<T> asList = new ArrayList<>(collection);
+
+        return IntStream.range(0, collection.size()).
+                mapToObj(i -> mappingFn.apply(asList.get(i), i)).
+                collect(toList());
     }
 
     /**

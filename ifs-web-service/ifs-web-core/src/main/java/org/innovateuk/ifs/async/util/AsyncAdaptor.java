@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.async.util;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.util.ExceptionThrowingRunnable;
@@ -16,8 +14,6 @@ import java.util.concurrent.CompletableFuture;
  * handling code.
  */
 public abstract class AsyncAdaptor {
-
-    private static final Log LOG = LogFactory.getLog(AsyncAdaptor.class);
 
     @Autowired
     private AsyncFuturesGenerator asyncFuturesGenerator;

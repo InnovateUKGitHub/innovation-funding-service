@@ -17,7 +17,7 @@ public class RegisteredAsyncFutureDetails<T> {
     private String futureName;
     private AsyncFutureDetails parentFutureDetails;
 
-    public RegisteredAsyncFutureDetails(CompletableFuture<T> future, String futureName, AsyncFutureDetails asyncFutureDetails) {
+    RegisteredAsyncFutureDetails(CompletableFuture<T> future, String futureName, AsyncFutureDetails asyncFutureDetails) {
         this.future = future;
         this.futureName = futureName;
         this.parentFutureDetails = asyncFutureDetails;

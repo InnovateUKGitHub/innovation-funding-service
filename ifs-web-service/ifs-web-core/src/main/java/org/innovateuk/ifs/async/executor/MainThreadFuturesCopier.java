@@ -13,10 +13,10 @@ import java.util.Queue;
  * execution blocks to complete and add any information they have to the Model prior to attempting to render the page).
  */
 @Component
-public class MainThreadFuturesCopier implements AsyncThreadLocalCopier<Queue<RegisteredAsyncFutureDetails>> {
+public class MainThreadFuturesCopier implements AsyncThreadLocalCopier<Queue<RegisteredAsyncFutureDetails<?>>> {
 
     @Override
-    public Queue<RegisteredAsyncFutureDetails> getOriginalValueFromOriginalThread() {
+    public Queue<RegisteredAsyncFutureDetails<?>> getOriginalValueFromOriginalThread() {
         return AsyncFuturesHolder.getFuturesOrInitialise();
     }
 
@@ -26,7 +26,7 @@ public class MainThreadFuturesCopier implements AsyncThreadLocalCopier<Queue<Reg
     }
 
     @Override
-    public void setCopyOfOriginalValueOnAsyncThread(Queue<RegisteredAsyncFutureDetails> originalValue) {
+    public void setCopyOfOriginalValueOnAsyncThread(Queue<RegisteredAsyncFutureDetails<?>> originalValue) {
         AsyncFuturesHolder.setFutures(originalValue);
     }
 }
