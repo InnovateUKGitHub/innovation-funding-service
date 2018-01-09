@@ -150,10 +150,11 @@ public class CompetitionManagementApplicationsController {
     }
 
     @SecuredBySpring(value = "UPDATE", description = "Only the IFS admin is able to mark an application as successful after funding decisions have been made")
-    @PreAuthorize("hasAuthority('ifs_admin')")
+    @PreAuthorize("hasAuthority('ifs_administrator')")
     @PostMapping("/mark-successful/application/{applicationId}")
-    public String markApplicationAsSuccessful(@PathVariable("competitionId") long competitionId,
-                                              @PathVariable("applicationId") long applicationId) {
+    public String markApplicationAsSuccessful(
+                                              @PathVariable("competitionId") long competitionId,
+                                              @PathVariable("applicationId") long applicationId)  {
         applicationFundingDecisionService.saveApplicationFundingDecisionData(competitionId, FundingDecision.FUNDED, singletonList(applicationId));
         projectService.createProjectFromApplicationId(applicationId);
 
