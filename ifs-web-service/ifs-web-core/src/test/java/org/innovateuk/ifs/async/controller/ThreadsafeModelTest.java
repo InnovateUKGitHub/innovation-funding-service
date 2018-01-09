@@ -216,9 +216,9 @@ public class ThreadsafeModelTest {
      * make it into the locking boundary of {@link ThreadsafeModel} before operation2 is allowed to properly begin (by
      * use of the operation2CountDownLatch).
      *
-     * The operation1 will then wait 100ms before writing its value to the "operationValues" list.  This should be the first
+     * The operation1 will then wait 50ms before writing its value to the "operationValues" list.  This should be the first
      * item of the list every time because operation2 cannot write its own value to the list until operation2 is
-     * complete.  Therefore it has been successfully blocked for the 100ms wait time where operation1 had control of
+     * complete.  Therefore it has been successfully blocked for the 50ms wait time where operation1 had control of
      * the lock.
      */
     private void assertFirstOperationBlocksSecondOperationUntilComplete(
@@ -241,7 +241,7 @@ public class ThreadsafeModelTest {
         Model operation1Answer = doAnswer(invocation -> {
             assertTrue(expectedLockStateDuringOperation1Test.apply(lockFromModel));
             operation2CountDownLatch.countDown();
-            operation1CountDownLatch.await(200, TimeUnit.MILLISECONDS);
+            operation1CountDownLatch.await(50, TimeUnit.MILLISECONDS);
             operationValues.add("operation 1");
             return null;
         }).when(wrappedModel);
