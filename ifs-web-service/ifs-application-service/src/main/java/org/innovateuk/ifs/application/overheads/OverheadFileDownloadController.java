@@ -32,7 +32,7 @@ public class OverheadFileDownloadController {
     @GetMapping("/{overheadId}")
     public @ResponseBody
     ResponseEntity<ByteArrayResource> downloadQuestionFile(
-            @PathVariable("overheadId") final Long overheadId) throws ExecutionException, InterruptedException {
+            @PathVariable("overheadId") final Long overheadId) throws ExecutionException {
 
         final ByteArrayResource resource = overheadFileRestService.getOverheadFile(overheadId).getSuccessObjectOrThrowException();
         final FileEntryResource fileEntryResource = overheadFileRestService.getOverheadFileDetails(overheadId).getSuccessObjectOrThrowException();
