@@ -33,7 +33,6 @@ osStageLocal.tag = dataServiceVersion
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 ext.companyHouseKey = ext.get('ifs.company-house.key')
 
-
 sourceSets {
     client {
         java {
@@ -247,8 +246,4 @@ task initDB() {
     dependsOn flywayClean
     dependsOn flywayMigrate
 
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
 }

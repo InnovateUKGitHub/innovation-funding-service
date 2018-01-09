@@ -26,6 +26,10 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-2039 Assessment panels - Assign and remove applications to panel
 ...
 ...               IFS-2049 Assessment panels - Filter on applications list
+...
+...               IFS-1125 Assessment panels - Send panel applications to assessors for review
+...
+...               IFS-1566 Assessment panels - Assessor dashboard 'Attend panel' box
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -50,11 +54,18 @@ Assement panel link is deactivated if the assessment panel is not set
     Given The user clicks the button/link  link=${CLOSED_COMPETITION_NAME}
     Then the user should see the element   jQuery=.disabled:contains("Manage assessment panel")
 
-Assessment panel links are active if the assessment panel has been set
-    [Documentation]  IFS-786
+Confirm changes button unavailable before sending invite
+    [Documentation]  IFS-1125
     [Tags]  HappyPath
     [Setup]  enable assessment panel for the competition
     Given the user clicks the button/link  link=Manage assessment panel
+    When the user should see the element   jQuery=span:contains("0") ~ small:contains("Assessors accepted")
+    And the user should see the element    jQuery=span:contains("0") ~ small:contains("Applications assigned to panel")
+    Then the element should be disabled    jQuery=button:contains("Confirm actions")
+
+Assessment panel links are active if the assessment panel has been set
+    [Documentation]  IFS-786
+    [Tags]
     When the user clicks the button/link   link=Invite assessors to attend
     Then the user should see the element   jQuery=h1:contains("Invite assessors to panel")
 
@@ -135,13 +146,14 @@ CompAdmin resend invites to multiple assessors
     And the user should see the element       jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite sent: ${today}")
 
 Assesor is able to accept the invitation from dashboard
-    [Documentation]  IFS-37  IFS-1135
+    [Documentation]  IFS-37  IFS-1135  IFS-1566
     [Tags]  HappyPath
     [Setup]  Log in as a different user       ${panel_assessor_ben}  ${short_password}
     Given the user clicks the button/link     jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button    acceptInvitation  true
-    And The user clicks the button/link       jQuery=button:contains("Confirm")
+    And The user clicks the button/link       css=button[type="submit"]  # Confirm
     Then the user should not see the element  jQuery=h2:contains("Invitations to attend panel")
+    And the user should see the element       jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
 
 Assesor is able to reject the invitation from email
     [Documentation]  IFS-37
@@ -209,6 +221,17 @@ Filter by application number
     When the user clicks the button/link           jQuery=.button:contains("Filter")
     Then the user should see the element           jQuery=td:contains("Neural networks to optimise freight train routing")
     #TODO IFS-2069 need to add more checks once the webtest data is ready.
+
+Assign applications to panel
+    [Documentation]  IFS-1125
+    [Tags]
+    When the user clicks the button/link    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    And the user clicks the button/link     jQuery=td:contains("Computer vision and machine learning for transport networks") ~ td:contains("Assign")
+    Then the user should see the element    jQuery=h2:contains("Assigned applications (2)")
+    When the user clicks the button/link    link=Manage assessment panel
+    And the user clicks the button/link     jQuery=button:contains("Confirm actions")
+    And the user reads his email            ${assessor_ben}  Applications ready for review   You have been allocated applications to review within the competition Machine learning for transport infrastructure.
+
 
 *** Keywords ***
 

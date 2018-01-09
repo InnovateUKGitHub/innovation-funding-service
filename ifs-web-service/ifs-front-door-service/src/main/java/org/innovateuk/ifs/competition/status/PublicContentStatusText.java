@@ -35,16 +35,16 @@ public enum PublicContentStatusText {
         return openTense;
     }
 
-    public static Predicate<PublicContentItemResource> openingDateIsInFuture() {
+    private static Predicate<PublicContentItemResource> openingDateIsInFuture() {
         return content -> content.getCompetitionOpenDate().isAfter(ZonedDateTime.now());
     }
 
-    public static Predicate<PublicContentItemResource> openingDateIsInPastAndClosingDateIsAtLeastTwoWeeksAway() {
+    private static Predicate<PublicContentItemResource> openingDateIsInPastAndClosingDateIsAtLeastTwoWeeksAway() {
         return content -> content.getCompetitionOpenDate().isBefore(ZonedDateTime.now()) &&
                 content.getCompetitionCloseDate().isAfter(ZonedDateTime.now().plusDays(14));
     }
 
-    public static Predicate<PublicContentItemResource> openingDateIsInPastAndClosingDateIsLessThanTwoWeeksAway() {
+    private static Predicate<PublicContentItemResource> openingDateIsInPastAndClosingDateIsLessThanTwoWeeksAway() {
         return content -> content.getCompetitionOpenDate().isBefore(ZonedDateTime.now()) &&
                 (content.getCompetitionCloseDate().isBefore(ZonedDateTime.now().plusDays(14)) || content.getCompetitionCloseDate().equals(ZonedDateTime.now().plusDays(14)));
     }

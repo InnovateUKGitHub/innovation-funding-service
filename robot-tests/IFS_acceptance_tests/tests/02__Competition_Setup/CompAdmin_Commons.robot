@@ -49,7 +49,7 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id=activityCode  133t
     the user clicks the button/link       jQuery=button:contains("Generate code")
     sleep  2s  #This sleeps is intended as the competition Code needs some time
-    textfield should contain              css=input[name="competitionCode"]  18
+    textfield should contain              css=input[name="competitionCode"]  19
     the user clicks the button/link       jQuery=button:contains("Done")
     the user clicks the button/link       link=Competition setup
     the user should see the element       jQuery=div:contains("Funding information") ~ .task-status-complete
@@ -165,8 +165,7 @@ the user fills in the CS Assessors
     the user selects the radio button  hasAssessmentPanel  0
     the user selects the radio button  hasInterviewStage  0
     the user clicks the button/link   jQuery=button:contains("Done")
-#    the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
-#    Plz uncomment this line TODO due to IFS-1527
+    the user should see the element   jQuery=dt:contains("How many") + dd:contains("3")
     the user clicks the button/link   link=Competition setup
     the user should see the element   jQuery=div:contains("Assessors") ~ .task-status-complete
 
@@ -306,7 +305,8 @@ the user is able to configure the new question
     the user enters text to a text field  css=.editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id=question.maxWords  500
     the user selects the radio button     question.appendix  1
-    #the user clicks the button/link       css=label[for="allowed-file-types-PDF"]  #TODO Enable as part of IFS-2425 in another sprint
+    ${status} =  Run Keyword And Return status   the user should see that the checkbox is selected    allowed-file-types-PDF
+    Run Keyword If  '${status}' == 'False'  the user clicks the button/link       css=label[for="allowed-file-types-PDF"]
     the user clicks the button/link       css=label[for="allowed-file-types-Spreadsheet"]
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10

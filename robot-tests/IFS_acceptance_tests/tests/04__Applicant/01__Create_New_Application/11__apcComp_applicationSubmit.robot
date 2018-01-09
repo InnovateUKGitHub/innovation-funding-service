@@ -36,12 +36,11 @@ Applicant applies to newly created APC competition
     [Documentation]  IFS-2286
     [Tags]  HappyPath  MySQL
     When the competition is open                                 ${apcCompetitionTitle}
-    Then Lead Applicant applies to the new created competition   ${apcCompetitionTitle}
+    Then Lead Applicant applies to the new created competition   ${apcCompetitionTitle}  &{lead_applicant_credentials}
 
 Applicant submits his application
     [Documentation]  IFS-2286
-    [Tags]  HappyPath  Pending
-#    TODO  Pending due to IFS-2439
+    [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${apcApplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     Then the lead applicant fills all the questions and marks as complete(APC)

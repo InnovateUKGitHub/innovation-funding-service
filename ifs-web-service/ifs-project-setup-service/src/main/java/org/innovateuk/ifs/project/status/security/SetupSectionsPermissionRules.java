@@ -104,6 +104,13 @@ public class SetupSectionsPermissionRules {
         return doSectionCheck(projectCompositeId.id(), user, SetupSectionAccessibilityHelper::canAccessSpendProfileSection);
     }
 
+    @PermissionRule(value = "EDIT_SPEND_PROFILE_SECTION", description = "A partner can edit their own Spend Profile " +
+            "section when their Companies House details are complete or not required, the Project Details have been submitted, " +
+            "and the Organisation's Bank Details have been approved or not required")
+    public boolean partnerCanEditSpendProfileSection(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+        return doSectionCheck(projectOrganisationCompositeId.getProjectId(), user, (setupSectionAccessibilityHelper, organisation) -> setupSectionAccessibilityHelper.canEditSpendProfileSection(organisation, projectOrganisationCompositeId.getOrganisationId()));
+    }
+
     @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "A partner can access the Other Documents " +
             "section if their Organisation is a business type (i.e. if Companies House details are required)")
     public boolean partnerCanAccessOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {

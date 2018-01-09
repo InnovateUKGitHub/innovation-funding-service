@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
-import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -20,11 +20,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_EXCEPTION_WHILE_RETRIEVING_FILE;
 import static org.hibernate.jpa.internal.QueryImpl.LOG;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_EXCEPTION_WHILE_RETRIEVING_FILE;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -69,38 +68,36 @@ public class FileControllerUtils {
 
     /**
      * A convenience method to process a file upload request given a standard pattern of header validation and processing,
-     * given a function that can perform the actual file upload
+     * given a function that can perform the actual file upload.
+     *
+     * The {@link MediaTypesContext} generic type refers to a context from which a valid set of Media Types can be established,
+     * as used by the supplied {@link FilesizeAndTypeFileValidator}.
      */
-    public static <T> RestResult<T> handleFileUpload(String contentType, String contentLength, String originalFilename,
-                                                 FileHttpHeadersValidator fileValidator, HttpServletRequest request,
-                                                 BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
+    public static <T, MediaTypesContext> RestResult<T> handleFileUpload(String contentType, String contentLength, String originalFilename,
+                                                                        FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator, MediaTypesContext mediaTypeContext, long maxFileSizeBytes,
+                                                                        HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
 
-        return handleFileUploadWithServiceCall(contentType, contentLength, originalFilename, fileValidator, request, uploadFileActionFn).toPostCreateResponse();
+        return handleFileUploadWithServiceCall(contentType, contentLength, originalFilename, fileValidator, mediaTypeContext, maxFileSizeBytes, request, uploadFileActionFn).toPostCreateResponse();
     }
 
     /**
      * A convenience method to process a file upload (as an update) request given a standard pattern of header
      * validation and processing, given a function that can perform the actual file upload
      */
-    public static RestResult<Void> handleFileUpdate(String contentType, String contentLength, String originalFilename,
-                                                                 FileHttpHeadersValidator fileValidator, HttpServletRequest request,
-                                                                 BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<?>> uploadFileActionFn) {
+    public static <MediaTypesContext> RestResult<Void> handleFileUpdate(String contentType, String contentLength, String originalFilename,
+                                                        FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator, MediaTypesContext mediaTypesContext, long maxFileSizeBytes,
+                                                        HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<?>> uploadFileActionFn) {
 
         BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<Void>> voidReturner = (fileAttributes, inputStreamSupplier) ->
             uploadFileActionFn.apply(fileAttributes, inputStreamSupplier).andOnSuccessReturnVoid();
 
-        return handleFileUploadWithServiceCall(contentType, contentLength, originalFilename, fileValidator, request, voidReturner).toPutResponse();
+        return handleFileUploadWithServiceCall(contentType, contentLength, originalFilename, fileValidator, mediaTypesContext, maxFileSizeBytes, request, voidReturner).toPutResponse();
     }
 
-    private static <T> ServiceResult<T> handleFileUploadWithServiceCall(String contentType, String contentLength, String originalFilename, FileHttpHeadersValidator fileValidator, HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
-        return fileValidator.validateFileHeaders(contentType, contentLength, originalFilename).andOnSuccess(
+    private static <T, MediaTypesContext> ServiceResult<T> handleFileUploadWithServiceCall(String contentType, String contentLength, String originalFilename, FilesizeAndTypeFileValidator<MediaTypesContext> fileValidator, MediaTypesContext mediaTypesContext, long maxFileSizeBytes, HttpServletRequest request, BiFunction<FileHeaderAttributes, Supplier<InputStream>, ServiceResult<T>> uploadFileActionFn) {
+        return fileValidator.validateFileHeaders(contentType, contentLength, originalFilename, mediaTypesContext, maxFileSizeBytes).andOnSuccess(
                 fileAttributes -> uploadFileActionFn.apply(fileAttributes, inputStreamSupplier(request)));
     }
-
-    private static <T> ServiceResult<T> handleFileConversionWithServiceCall( HttpServletResponse response, Function<Supplier<OutputStream>, ServiceResult<T>> convertFileActionFn) {
-        return convertFileActionFn.apply(outputStreamSupplier(response));
-    }
-
 
     private static Supplier<InputStream> inputStreamSupplier(HttpServletRequest request) {
         return () -> {

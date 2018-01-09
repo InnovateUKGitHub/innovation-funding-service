@@ -46,6 +46,11 @@ public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<Bank
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getPendingBankDetailsApprovals(), PROJECT_FINANCE);
     }
 
+    @Test
+    public void countPendingBankDetailsApprovals() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countPendingBankDetailsApprovals(), PROJECT_FINANCE);
+    }
+
     public static class TestBankDetailsService implements BankDetailsService {
 
         @Override
@@ -75,6 +80,11 @@ public class BankDetailsServiceSecurityTest extends BaseServiceSecurityTest<Bank
 
         @Override
         public ServiceResult<List<BankDetailsReviewResource>> getPendingBankDetailsApprovals() {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Long> countPendingBankDetailsApprovals() {
             return null;
         }
     }

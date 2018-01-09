@@ -63,6 +63,15 @@ public class CompetitionManagementCompetitionController {
     @PostMapping("/{competitionId}/release-feedback")
     public String releaseFeedback(@PathVariable("competitionId") Long competitionId) {
         competitionPostSubmissionRestService.releaseFeedback(competitionId);
-        return "redirect:/dashboard/project-setup";
+
+        if (isCompetitionTypeEOI(competitionId)) {
+            return "redirect:/dashboard/previous";
+        } else {
+            return "redirect:/dashboard/project-setup";
+        }
+    }
+
+    private boolean isCompetitionTypeEOI(Long competitionId) {
+            return competitionService.getById(competitionId).getCompetitionTypeName().equals("Expression of interest");
     }
 }
