@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.async.controller.endtoend;
 
+import com.jayway.awaitility.core.ConditionTimeoutException;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.async.exceptions.AsyncException;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
@@ -29,7 +30,9 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import static com.jayway.awaitility.Awaitility.await;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -243,11 +246,17 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
         return response;
     }
 
+    // a SonarQube-compliant way to sleep the Thread for an interval
     static void sleepQuietlyForRandomInterval() {
         try {
-            Thread.sleep((int) (Math.random() * 50));
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            int randomMillis = (int) (Math.random() * 20) + 20;
+
+            await().pollDelay(randomMillis, TimeUnit.MILLISECONDS).
+                    timeout(randomMillis + 1, TimeUnit.MILLISECONDS).
+                    until(() -> false);
+
+        } catch (ConditionTimeoutException e) {
+            // expected behaviour when our delay is over
         }
     }
 

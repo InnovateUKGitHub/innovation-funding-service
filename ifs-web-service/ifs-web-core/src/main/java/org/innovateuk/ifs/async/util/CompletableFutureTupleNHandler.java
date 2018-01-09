@@ -40,7 +40,7 @@ public class CompletableFutureTupleNHandler extends BaseCompletableFutureTupleHa
         return thenApplyInternal(() -> {
             try {
                 return handler.apply(getResultsAsList());
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst applying Future handler");
             }
         });

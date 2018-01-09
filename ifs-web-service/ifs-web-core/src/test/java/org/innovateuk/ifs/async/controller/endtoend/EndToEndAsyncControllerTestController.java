@@ -82,7 +82,7 @@ public class EndToEndAsyncControllerTestController extends AsyncAdaptor {
             CompletableFuture<Void> childFuture = async(() -> {});
 
             @SuppressWarnings("unused")
-            CompletableFuture<Void> aChildFutureToBeCancelled = async(() -> Thread.sleep(100L));
+            CompletableFuture<Void> aChildFutureToBeCancelled = async(EndToEndAsyncControllerIntegrationTest::sleepQuietlyForRandomInterval);
 
             awaitAll(childFuture).thenAccept(done ->
                     async(() -> restFailure(forbiddenError()).getSuccessObjectOrThrowException()));
@@ -99,7 +99,7 @@ public class EndToEndAsyncControllerTestController extends AsyncAdaptor {
             CompletableFuture<Void> childFuture = async(() -> {});
 
             @SuppressWarnings("unused")
-            CompletableFuture<Void> aChildFutureToBeCancelled = async(() -> Thread.sleep(100L));
+            CompletableFuture<Void> aChildFutureToBeCancelled = async(EndToEndAsyncControllerIntegrationTest::sleepQuietlyForRandomInterval);
 
             awaitAll(childFuture).thenAccept(done ->
                     async(() -> {
@@ -118,7 +118,7 @@ public class EndToEndAsyncControllerTestController extends AsyncAdaptor {
             CompletableFuture<Void> childFuture = async(() -> {});
 
             @SuppressWarnings("unused")
-            CompletableFuture<Void> aChildFutureToBeCancelled = async(() -> Thread.sleep(100L));
+            CompletableFuture<Void> aChildFutureToBeCancelled = async(EndToEndAsyncControllerIntegrationTest::sleepQuietlyForRandomInterval);
 
             awaitAll(childFuture).thenAccept(done ->
                     async(() -> {
