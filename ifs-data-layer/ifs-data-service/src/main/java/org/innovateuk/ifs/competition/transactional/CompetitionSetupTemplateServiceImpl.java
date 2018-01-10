@@ -91,10 +91,16 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
 
         competitionTemplatePersistor.cleanByEntityId(competitionId);
 
-        List<Section> sectionList = new ArrayList<>(template.getSections());
-        competition.setSections(sectionList);
+        competition = copyTemplatePropertiesToCompetition(template, competition);
 
         return serviceSuccess(competitionTemplatePersistor.persistByEntity(competition));
+    }
+
+    private Competition copyTemplatePropertiesToCompetition(Competition template, Competition competition) {
+        competition.setSections(new ArrayList<>(template.getSections()));
+        competition.setFullApplicationFinance(template.isFullApplicationFinance());
+
+        return competition;
     }
 
     @Override

@@ -182,6 +182,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return with(competition -> competition.setSetupComplete(setupComplete));
     }
 
+    public CompetitionResourceBuilder withFullApplicationFinance(Boolean fullApplicationFinance) {
+        return with(competitionResource -> competitionResource.setFullApplicationFinance(fullApplicationFinance));
+    }
+
     public CompetitionResourceBuilder withAssessorCount(Integer... assessorCount) {
         return withArraySetFieldByReflection("assessorCount", assessorCount);
     }
