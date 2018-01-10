@@ -121,51 +121,65 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
     @Test
     public void testInitializeCompetitionByCompetitionTemplate_competitionShouldBeCleanedAndPersistedWithTemplateSections() throws Exception {
         List<Section> templateSections = newSection().withId(1L, 2L, 3L).build(3);
-        Competition competitionTemplate = newCompetition().withId(2L).withSections(templateSections).build();
-        CompetitionType competitionType = newCompetitionType().withTemplate(competitionTemplate).withId(1L).build();
-        Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withId(3L).build();
+        Competition competitionTemplate = newCompetition()
+                .withId(2L)
+                .withSections(templateSections)
+                .build();
+        CompetitionType competitionType = newCompetitionType()
+                .withId(1L)
+                .withTemplate(competitionTemplate)
+                .build();
+        Competition competition = newCompetition()
+                .withId(3L)
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .build();
         Competition expectedResult = newCompetition().withId(4L).build();
 
         when(competitionTypeRepositoryMock.findOne(competitionType.getId())).thenReturn(competitionType);
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
         when(competitionTemplatePersistorMock.persistByEntity(competition)).thenReturn(expectedResult);
-        when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId())).thenReturn(Optional.empty());
+        when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
+                .thenReturn(Optional.empty());
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
 
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccessObject().getId(), expectedResult.getId());
-
-        Competition competitionWithTemplateSectionsAttached = competition;
+        assertEquals(expectedResult, result.getSuccessObject());
 
         InOrder inOrder = inOrder(competitionTemplatePersistorMock);
         inOrder.verify(competitionTemplatePersistorMock).cleanByEntityId(competition.getId());
-        inOrder.verify(competitionTemplatePersistorMock).persistByEntity(refEq(competitionWithTemplateSectionsAttached));
+        inOrder.verify(competitionTemplatePersistorMock).persistByEntity(refEq(competition));
     }
 
     @Test
-    public void testInitializeCompetitionByCompetitionTemplate_defaultAssessorPayAndCountShouldBeSetOnCompetition() throws Exception {
+    public void testInitializeCompetitionByCompetitionTemplate_templatePropertiesAreCopied() throws Exception {
         List<Section> templateSections = newSection().withId(1L, 2L, 3L).build(3);
-        Competition competitionTemplate = newCompetition().withId(2L).withSections(templateSections).build();
-        CompetitionType competitionType = newCompetitionType().withTemplate(competitionTemplate).withId(1L).build();
-        Competition competition = newCompetition().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).withId(3L).build();
-        Competition expectedResult = newCompetition().withId(4L).build();
+        Competition competitionTemplate = newCompetition()
+                .withId(2L)
+                .withSections(templateSections)
+                .withFullApplicationFinance(false)
+                .build();
+        CompetitionType competitionType = newCompetitionType()
+                .withId(1L)
+                .withTemplate(competitionTemplate)
+                .build();
+        Competition competition = newCompetition()
+                .withId(3L)
+                .withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP)
+                .build();
 
         when(competitionTypeRepositoryMock.findOne(competitionType.getId())).thenReturn(competitionType);
         when(competitionRepositoryMock.findById(competition.getId())).thenReturn(competition);
-        when(competitionTemplatePersistorMock.persistByEntity(competition)).thenReturn(expectedResult);
-        when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId())).thenReturn(Optional.empty());
+        when(competitionTemplatePersistorMock.persistByEntity(competition))
+                .thenReturn(newCompetition().withId(4L).build());
+        when(assessorCountOptionRepositoryMock.findByCompetitionTypeIdAndDefaultOptionTrue(competitionType.getId()))
+                .thenReturn(Optional.empty());
 
         ServiceResult<Competition> result = service.initializeCompetitionByCompetitionTemplate(competition.getId(), competitionType.getId());
 
         assertTrue(result.isSuccess());
-        assertEquals(result.getSuccessObject().getId(), expectedResult.getId());
 
-        Competition competitionWithTemplateSectionsAttached = competition;
-
-        InOrder inOrder = inOrder(competitionTemplatePersistorMock);
-        inOrder.verify(competitionTemplatePersistorMock).cleanByEntityId(competition.getId());
-        inOrder.verify(competitionTemplatePersistorMock).persistByEntity(refEq(competitionWithTemplateSectionsAttached));
+        assertEquals(false, competition.isFullApplicationFinance());
     }
 
     @Test
