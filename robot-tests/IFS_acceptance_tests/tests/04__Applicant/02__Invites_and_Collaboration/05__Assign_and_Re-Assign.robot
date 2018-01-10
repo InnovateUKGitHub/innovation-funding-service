@@ -89,9 +89,11 @@ Collaborator should be able to edit the assigned question
     [Documentation]  INFUND-2302
     ...  This test depends on the previous test suite to run first
     [Tags]  Email  HappyPath
+    # TODO this is already covered above . Can be removed once we have green in this suite
     When the user clicks the button/link  jQuery=button:contains("Public description")
     then the user should see the element   jQuery=button:contains("Assign to lead for review")
-#    then the user clicks the button/link  link=Return and edit
+    And the user clicks the button/link  jQuery=button:contains("Return and edit")
+
 
 Last update message is correctly updating
     [Documentation]  INFUND-280
