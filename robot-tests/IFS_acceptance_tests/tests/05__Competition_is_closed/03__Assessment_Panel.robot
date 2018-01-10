@@ -244,12 +244,12 @@ Assessor view to panel competition dashboard
     When the user clicks the button/link     jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
     Then the user should see the element    jQuery=h2:contains("Applications for Panel") + ul li h3:contains("Neural networks to optimise freight train routing")
 
-#Assessor cannot see applcations after panel date
-  #  [Documentation]  IFS-1138
-  #  [Tags]
-   # Given the funder panel period changes in the db  2017-06-27 00:00:00
-   # Then the user should not see the element         jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
-   # [Teardown]  the funder panel period changes in the db   2068-06-27 00:00:00
+Assessor cannot see applcations after panel date
+    [Documentation]  IFS-1138
+    [Tags]
+    Given the funder panel period changes in the db  2017-06-27 00:00:00
+    Then the user should not see the element         jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
+    [Teardown]  the funder panel period changes in the db   2068-06-27 00:00:00
 
 *** Keywords ***
 
@@ -263,10 +263,10 @@ the assessment panel period changes in the db
     Connect to Database    @{database}
     Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='ASSESSMENT_PANEL' AND competition_id=${competition_ids["${CLOSED_COMPETITION_NAME}"]};
 
-#the funder panel period changes in the db
-   # [Arguments]  ${Date}
-   # Connect to Database    @{database}
-   # Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='FUNDERS_PANEL' AND competition_id=${competition_ids["${CLOSED_COMPETITION_NAME}"]};
+the funder panel period changes in the db
+    [Arguments]  ${Date}
+    Connect to Database    @{database}
+    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='FUNDERS_PANEL' AND competition_id=${competition_ids["${CLOSED_COMPETITION_NAME}"]};
 
 the user move the closed competition to in panel
     the user clicks the button/link     link=Competition
