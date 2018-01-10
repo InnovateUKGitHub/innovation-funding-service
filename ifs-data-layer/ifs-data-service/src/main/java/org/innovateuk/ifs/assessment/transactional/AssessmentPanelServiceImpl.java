@@ -8,8 +8,12 @@ import org.innovateuk.ifs.assessment.panel.workflow.configuration.AssessmentRevi
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
+import org.innovateuk.ifs.invite.mapper.AssessmentPanelParticipantMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
-import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -24,11 +28,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static java.lang.String.format;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.CREATED;
@@ -44,18 +46,20 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     static final DateTimeFormatter INVITE_DATE_FORMAT = ofPattern("d MMMM yyyy");
 
-
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
+
+    @Autowired
+    private AssessmentPanelParticipantMapper assessmentPanelParticipantMapper;
 
     @Autowired
     private AssessmentReviewWorkflowHandler workflowHandler;
 
     @Autowired
     private AssessmentReviewRepository assessmentReviewRepository;
-
-    @Autowired
-    private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
 
     @Autowired
     private RoleRepository roleRepository;
@@ -143,8 +147,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     }
 
     private List<AssessmentPanelParticipant> getAllAssessorsOnPanel(long competitionId) {
-        return assessmentPanelParticipantRepository.getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));
-    }
+        return assessmentPanelParticipantRepository.getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));}
 
     private List<Application> getAllApplicationsOnPanel(long competitionId) {
         return applicationRepository
