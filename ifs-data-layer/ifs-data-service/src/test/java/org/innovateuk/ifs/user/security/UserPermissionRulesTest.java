@@ -284,6 +284,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Role leadRole = newRole().withType(LEADAPPLICANT).build();
         Role collaboratorRole = newRole().withType(COLLABORATOR).build();
         Role assessorRole = newRole().withType(ASSESSOR).build();
+        Role panelAssessorRole = newRole().withType(PANEL_ASSESSOR).build();
 
         Application application1 = newApplication().build();
         Application application2 = newApplication().build();
@@ -297,6 +298,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         User application2Collaborator = newUser().build();
         User application3Lead = newUser().build();
         User assessorForApplications1And2 = newUser().build();
+        User panelAssessorForApplication1 = newUser().build();
 
         ProcessRole application1LeadProcessRole = newProcessRole().
                 withApplication(application1).
@@ -320,6 +322,12 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 withUser(assessorForApplications1And2, assessorForApplications1And2).
                 build(2);
 
+        List<ProcessRole> panelAssessorProcessRole = newProcessRole()
+                .withApplication(application1)
+                .withRole(panelAssessorRole)
+                .withUser(panelAssessorForApplication1)
+                .build(1);
+
         when(processRoleRepositoryMock.findByUserId(application1Lead.getId())).
                 thenReturn(singletonList(application1LeadProcessRole));
         when(processRoleRepositoryMock.findByUserId(application2Collaborator.getId())).
@@ -328,15 +336,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
                 thenReturn(singletonList(application3LeadProcessRole));
         when(processRoleRepositoryMock.findByUserId(assessorForApplications1And2.getId())).
                 thenReturn(assessorProcessRoles);
+        when(processRoleRepositoryMock.findByUserId(panelAssessorForApplication1.getId())).
+                thenReturn(panelAssessorProcessRole);
 
         UserResource application1LeadResource = userResourceForUser().apply(application1Lead);
         UserResource application2CollaboratorResource = userResourceForUser().apply(application2Collaborator);
         UserResource application3LeadResource = userResourceForUser().apply(application3Lead);
         UserResource assessorForApplications1And2Resource = userResourceForUser().apply(assessorForApplications1And2);
+        UserResource panelAssessorForApplications1Resource = userResourceForUser().apply(panelAssessorForApplication1);
 
         // assert that the assessor can see users from application1 and application2
         assertTrue(rules.assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(application1LeadResource, assessorForApplications1And2Resource));
         assertTrue(rules.assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(application2CollaboratorResource, assessorForApplications1And2Resource));
+
+        assertTrue(rules.assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(application1LeadResource, panelAssessorForApplications1Resource));
 
         // assert that they can't see users from application 3 because they are not assessing it
         assertFalse(rules.assessorsCanViewConsortiumUsersOnApplicationsTheyAreAssessing(application3LeadResource, assessorForApplications1And2Resource));
