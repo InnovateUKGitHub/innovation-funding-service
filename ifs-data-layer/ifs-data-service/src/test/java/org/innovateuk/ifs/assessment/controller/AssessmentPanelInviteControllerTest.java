@@ -15,6 +15,7 @@ import java.util.List;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.assessment.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.builder.AssessmentPanelParticipantResourceBuilder.newAssessmentPanelParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
@@ -27,9 +28,8 @@ import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBui
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListResourceBuilder.newExistingUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
-import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.*;
-import static org.innovateuk.ifs.user.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;

@@ -1,14 +1,18 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.mapper.AssessmentPanelInviteMapper;
+import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
+import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.*;
 import org.innovateuk.ifs.invite.mapper.AssessmentPanelParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
@@ -52,9 +56,9 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -93,6 +97,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
     @Autowired
     private AssessmentPanelInviteMapper assessmentPanelInviteMapper;
+
     @Autowired
     private ParticipantStatusMapper participantStatusMapper;
 
@@ -117,6 +122,11 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
 
+    @Autowired
+    private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private AssessmentReviewRepository assessmentReviewRepository;
 
     enum Notifications {
         INVITE_ASSESSOR_TO_PANEL,
@@ -350,13 +360,17 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
     @Override
     public ServiceResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId) {
-        return serviceSuccess(
+        List<AssessmentPanelParticipantResource> assessmentPanelParticipantResources =
                 assessmentPanelParticipantRepository
                 .findByUserIdAndRole(userId, PANEL_ASSESSOR)
                 .stream()
                 .filter(participant -> now().isBefore(participant.getInvite().getTarget().getAssessmentPanelDate()))
                 .map(assessmentPanelParticipantMapper::mapToResource)
-                .collect(toList()));
+                .collect(toList());
+
+        assessmentPanelParticipantResources.forEach(this::determineStatusOfPanelApplications);
+
+        return serviceSuccess(assessmentPanelParticipantResources);
     }
 
     private ServiceResult<Competition> getCompetition(long competitionId) {
@@ -533,5 +547,19 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
         assessmentPanelInviteRepository.delete(invite);
         return serviceSuccess();
+    }
+
+    private void determineStatusOfPanelApplications(AssessmentPanelParticipantResource assessmentPanelParticipantResource) {
+
+        List<AssessmentReview> reviews = assessmentReviewRepository.
+                findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(
+                        assessmentPanelParticipantResource.getUserId(),
+                        assessmentPanelParticipantResource.getCompetitionId());
+
+        assessmentPanelParticipantResource.setAwaitingApplications(getApplicationsPendingForPanelCount(reviews));
+    }
+
+    private Long getApplicationsPendingForPanelCount(List<AssessmentReview> reviews) {
+        return reviews.stream().filter(review -> review.getActivityState().equals(AssessmentReviewState.PENDING)).count();
     }
 }

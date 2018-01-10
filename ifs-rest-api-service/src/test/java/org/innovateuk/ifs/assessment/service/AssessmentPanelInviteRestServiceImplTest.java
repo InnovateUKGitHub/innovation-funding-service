@@ -5,12 +5,15 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.List;
+
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.assessment.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessmentPanelParticipantResourceBuilder.newAssessmentPanelParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
@@ -24,8 +27,6 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResource
 import static org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.user.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;

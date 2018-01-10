@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -9,7 +11,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.competition.*;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -27,6 +29,7 @@ import org.mockito.InOrder;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
+
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -44,6 +47,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentPanelInviteResourc
 import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelParticipantBuilder.newAssessmentPanelParticipant;
+import static org.innovateuk.ifs.assessment.panel.builder.AssessmentReviewBuilder.newAssessmentReview;
 import static org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -63,8 +67,8 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResource
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.notifications.builders.NotificationBuilder.newNotification;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
@@ -753,9 +757,14 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withUser(1L)
                 .build(2);
 
+        List<AssessmentReview> assessmentReviews = newAssessmentReview()
+                .withState(AssessmentReviewState.PENDING)
+                .build(2);
+
         when(assessmentPanelParticipantRepositoryMock.findByUserIdAndRole(1L, PANEL_ASSESSOR)).thenReturn(assessmentPanelParticipants);
         when(assessmentPanelParticipantMapperMock.mapToResource(assessmentPanelParticipants.get(0))).thenReturn(expected.get(0));
         when(assessmentPanelParticipantMapperMock.mapToResource(assessmentPanelParticipants.get(1))).thenReturn(expected.get(1));
+        when(assessmentReviewRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(1L, competition.getId())).thenReturn(assessmentReviews);
 
         List<AssessmentPanelParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccessObject();
         assertEquals(actual.get(0), expected.get(0));
