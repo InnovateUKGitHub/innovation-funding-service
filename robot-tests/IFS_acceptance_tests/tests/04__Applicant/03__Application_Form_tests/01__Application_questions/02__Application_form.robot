@@ -14,7 +14,7 @@ Documentation     INFUND-184: As an applicant and on the over view of the applic
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
 ...
 ...               INFUND-9154 Update 'Application details' > 'Innovation area' options to those set in 'Initial details' > 'Innovation area'
-Suite Setup       Log in and create a new application for the Aerospace competition
+Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
@@ -135,7 +135,8 @@ Incomplete sections contain mark as complete link
     Then the user should see the element   jQuery=.collapsible:contains("Application details") button:contains("Mark as complete")
     And the user should see the element    jQuery=.collapsible:contains("Application details") button:contains("Return and edit")
     When the user clicks the button/link   jQuery=.collapsible:contains("Application details") button:contains("Mark as complete")
-    And the user fills in the application details
+    capture large screenshot
+    And the user fills in the Application details  ${aeroApplication}  Industrial research  ${tomorrowday}  ${month}  ${nextyear}
     Then the user should no longer see the Mark-as-complete-link
 
 Collaborator: read only view of Application details
@@ -149,6 +150,10 @@ Collaborator: read only view of Application details
     and the user should see the element    jQuery=a:contains("Return to application overview")
 
 *** Keywords ***
+Custom Suite Setup
+    Set predefined date variables
+    Log in and create a new application for the Aerospace competition
+
 the text should be visible
     Wait Until Element Contains Without Screenshots    css=.editor    I am a robot
 
@@ -192,19 +197,19 @@ the finance summary page should show a warning
     the user should see the element    jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")
 
 Log in and create a new application for the Aerospace competition
-    Given the user logs-in in new browser  &{lead_applicant_credentials}
-    When the user navigates to the page    ${SERVER}/competition/${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/overview/
-    the user clicks the button/link             jQuery=a:contains("Start new application")
+    The user logs-in in new browser  &{lead_applicant_credentials}
+    The user navigates to the page   ${SERVER}/competition/${COMPETITION_WITH_MORE_THAN_ONE_INNOVATION_AREAS}/overview/
+    the user clicks the button/link  link=Start new application
 
     #The following two lines are failing if we don't have any other application for the same competition
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    You have an application in progress
             Run Keyword If    '${status}' == 'PASS'    Run keywords    And the user clicks the button/link    jQuery=Label:contains("Yes, I want to create a new application.")
             ...    AND    And the user clicks the button/link    jQuery=.button:contains("Continue")
 
-    And the user clicks the button/link    jQuery=a:contains("Begin application")
-    And the user clicks the button/link    link=Application details
-    And the user enters text to a text field    id=application_details-title  ${aeroApplication}
-    And the user clicks the button/link    jQuery=button:contains("Save and return")
+    The user clicks the button/link    link=Begin application
+    The user clicks the button/link    link=Application details
+    The user enters text to a text field  id=application.name  ${aeroApplication}
+    The user clicks the button/link       id=application-question-save
 
 the user should no longer see the Mark-as-complete-link
     ${appId} =  get application id by name  ${aeroApplication}
