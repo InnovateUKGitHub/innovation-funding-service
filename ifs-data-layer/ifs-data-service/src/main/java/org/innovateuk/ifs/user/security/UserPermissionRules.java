@@ -43,7 +43,9 @@ public class UserPermissionRules {
 
     private static Predicate<ProcessRole> consortiumProcessRoleFilter = role -> CONSORTIUM_ROLES.contains(role.getRole().getName());
 
-    private static Predicate<ProcessRole> assessorProcessRoleFilter = role -> role.getRole().getName().equals(ASSESSOR.getName());
+    private static List<String> ASSESSOR_ROLES = asList(ASSESSOR.getName(), PANEL_ASSESSOR.getName());
+
+    private static Predicate<ProcessRole> assessorProcessRoleFilter = role -> ASSESSOR_ROLES.contains(role.getRole().getName());
 
     private static List<String> PROJECT_ROLES = asList(ProjectParticipantRole.PROJECT_MANAGER.getName(), ProjectParticipantRole.PROJECT_FINANCE_CONTACT.getName(), ProjectParticipantRole.PROJECT_PARTNER.getName());
 

@@ -16,7 +16,7 @@ import org.mapstruct.Mappings;
 import org.mapstruct.NullValueMappingStrategy;
 
 /**
- * Maps between domain and resource DTO for {@link Assessment}.
+ * Maps between domain and resource DTO for {@link AssessmentMapper}.
  */
 @Mapper(
         config = GlobalMapperConfig.class,
