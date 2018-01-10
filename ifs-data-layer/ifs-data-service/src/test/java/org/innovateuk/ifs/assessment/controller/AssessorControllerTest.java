@@ -6,7 +6,7 @@ import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentInvite;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
@@ -392,7 +392,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
                         .build())
                 .build();
 
-        Error notFoundError = notFoundError(CompetitionInvite.class, hash);
+        Error notFoundError = notFoundError(CompetitionAssessmentInvite.class, hash);
 
         when(assessorServiceMock.registerAssessorByHash(hash, userRegistrationResource)).thenReturn(serviceFailure(notFoundError));
 

@@ -26,7 +26,9 @@ public enum UserRoleType {
     PARTNER("partner", "Partner"),
     PROJECT_MANAGER("project_manager", "Project Manager"),
     IFS_ADMINISTRATOR("ifs_administrator", "IFS Administrator"),
-    SUPPORT("support", "IFS Support User");
+    SUPPORT("support", "IFS Support User"),
+    PANEL_ASSESSOR("panel_assessor", "Panel Assessor");
+
     private String name;
     private String displayName;
 
@@ -67,5 +69,9 @@ public enum UserRoleType {
 
     public static Set<UserRoleType> internalRoles(){
         return new HashSet<>(Arrays.asList(IFS_ADMINISTRATOR, PROJECT_FINANCE, COMP_ADMIN, SUPPORT, INNOVATION_LEAD));
+    }
+
+    public static Set<UserRoleType> externalApplicantRoles(){
+        return new HashSet<>(Arrays.asList(APPLICANT, COLLABORATOR, FINANCE_CONTACT, PARTNER, PROJECT_MANAGER));
     }
 }

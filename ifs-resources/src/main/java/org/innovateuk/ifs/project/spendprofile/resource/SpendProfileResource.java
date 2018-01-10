@@ -103,14 +103,6 @@ public class SpendProfileResource {
         this.markedAsComplete = markedAsComplete;
     }
 
-    public ApprovalType getApproval() {
-        return approval;
-    }
-
-    public void setApproval(ApprovalType approval) {
-        this.approval = approval;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

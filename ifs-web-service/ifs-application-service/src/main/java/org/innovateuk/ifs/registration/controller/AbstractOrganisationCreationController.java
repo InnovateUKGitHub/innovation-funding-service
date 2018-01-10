@@ -12,7 +12,6 @@ import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.BindingResult;
@@ -29,8 +28,7 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 /**
  * Provides a base class for each of the organisation registration controllers.
  */
-@Controller
-public class AbstractOrganisationCreationController {
+public abstract class AbstractOrganisationCreationController {
 
     protected static final String BASE_URL = "/organisation/create";
     protected static final String LEAD_ORGANISATION_TYPE = "lead-organisation-type";
@@ -62,7 +60,7 @@ public class AbstractOrganisationCreationController {
 
     @Autowired
     @Qualifier("mvcValidator")
-    public void setValidator(Validator validator) {
+    protected void setValidator(Validator validator) {
         this.validator = validator;
     }
 

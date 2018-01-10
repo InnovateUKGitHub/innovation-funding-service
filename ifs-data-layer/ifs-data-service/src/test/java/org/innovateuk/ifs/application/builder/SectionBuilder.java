@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.BuilderAmendFunctions.getCompetition;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
-import static java.util.Collections.emptyList;
 import static org.springframework.test.util.ReflectionTestUtils.getField;
 
 public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
@@ -90,6 +90,10 @@ public class SectionBuilder extends BaseBuilder<Section, SectionBuilder> {
 
     public SectionBuilder withDescription(String description) {
         return with(section -> setField("description", description, section));
+    }
+
+    public SectionBuilder withCompetition(Competition... competitions) {
+        return withArray((competition, object) -> setField("competition", competition, object), competitions);
     }
 
     public SectionBuilder withParentSection(Section parentSection) {

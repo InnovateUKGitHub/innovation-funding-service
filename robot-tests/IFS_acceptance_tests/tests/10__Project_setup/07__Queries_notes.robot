@@ -13,6 +13,8 @@ Documentation
 ...               INFUND-7753 Partner receives an email alerting them to a further response to an earlier query
 ...
 ...               INFUND-7756 Project finance can post an update to an existing note
+...
+...               IFS-1882 Project Setup internal project dashboard: Query responses
 
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    Close browser and delete emails
@@ -140,7 +142,8 @@ Post new query server side validations
 Post new query client side validations
     [Documentation]    INFUND-4840
     [Tags]
-    When the user enters text to a text field    id=queryTitle    an eligibility query's title
+    When the user moves focus to the element    link=Sign out
+    And the user enters text to a text field    id=queryTitle    an eligibility query's title
     Then the user should not see the element    jQuery=label[for="queryTitle"] .error-message:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some query text
     Then the user should not see the element    jQuery=label[for="query] .error-message:contains(This field cannot be left blank.)
@@ -369,6 +372,16 @@ IFS Admin can see queries raised column updates to 'view'
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Awaiting response")
 
+IFS Admin can see applicant's response flagged in Query responses tab
+    [Documentation]    IFS-1882
+    [Tags]
+    Given the user navigates to the page  ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status/all
+    When the user clicks the button/link  link=Query responses (1)
+    Then the user should see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_NUMBER}")~td:contains("${EMPIRE_LTD_NAME}")
+    When the user clicks the button/link  link=${EMPIRE_LTD_NAME}
+    Then the user should see the element  jQuery=h1:contains("${EMPIRE_LTD_NAME}")
+    And the user should see the element   link=Post a new query
+
 Project finance user can view the response
     [Documentation]    INFUND-4843
     [Tags]
@@ -502,7 +515,8 @@ Create new note server side validations
 Create new note client side validations
     [Documentation]    INFUND-4845
     [Tags]
-    When the user enters text to a text field    id=noteTitle    an eligibility query's title
+    When the user moves focus to the element    link=Sign out
+    And the user enters text to a text field    id=noteTitle    an eligibility query's title
     Then the user should not see the element    jQuery=label[for="noteTitle"] .error-message:contains(This field cannot be left blank.)
     When the user enters text to a text field    css=.editor    this is some note text
     Then the user should not see the element    jQuery=label[for="note"] .error-message:contains(This field cannot be left blank.)

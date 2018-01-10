@@ -6,8 +6,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_UNABLE_TO_PARSE_LONG;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
  * A utility class providing handy methods around parsing.

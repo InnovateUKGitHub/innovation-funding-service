@@ -18,17 +18,20 @@
             <p>Provide key figures from the Je-S form here to allow your partners to see the overall project costs and contribution required from Innovate
                 UK</p>
             <p>Enter the figures from the following fields on the Je-S form:</p>
-            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +']}')} ? 'form-group-error'">
-                <label class="form-label" for="tsb-ref">
+            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-' + academicFinance.tsbReference?.id + '-item]}')} ? 'form-group-error'">
+                <label class="form-label" th:for="|formInput[cost-${academicFinance.tsbReference?.id}-item]|">
           		    		<span class="form-label-bold">TSB reference</span>
                       <span class="form-hint">This number is found at the top of your Je-S form</span>
-                      <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+academicFinance.tsbReference?.id})" />
+                      <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-' + academicFinance.tsbReference?.id + '-item'})" />
                 </label>
-                <input class="form-control" id="tsb-ref" type="text" th:name="cost- + ${academicFinance.tsbReference?.id} + -tsb_reference"
+                <input type="text"
+                       class="form-control"
+                       th:name="${'cost-' + academicFinance.tsbReference?.id + '-tsb_reference'}"
+                       th:id="|formInput[cost-${academicFinance.tsbReference?.id}-item]|"
                        th:value="${academicFinance.tsbReference?.value}"
                        th:readonly="${readonly}"
                        required="required"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +']}')} ? 'form-control-error'" />
+                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ academicFinance.tsbReference?.id +'item]}')} ? 'form-control-error'" />
             </div>
         </fieldset>
         <fieldset class="academic">
@@ -106,7 +109,7 @@
                     <div class="column-two-thirds">
                         <input class="form-control width-full" id="subtotal-resources" data-calculation-fields="#incurred-staff,#travel,#other"
                                data-calculation-operations="+" type="text" readonly="readonly"
-                               th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalIncurred(),0, 'COMMA', 0, 'POINT')}"/>
+                               th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalIncurred(),0, 'DEFAULT')}"/>
                     </div>
                 </div>
             </div>
@@ -179,7 +182,7 @@
                     <div class="column-two-thirds">
                         <input class="form-control width-full" data-calculation-fields="#investigators,#estates,#other-direct" data-calculation-operations="+"
                                readonly="readonly" id="subtotal-directly-allocated"
-                               th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalAllocated(),0, 'COMMA', 0, 'POINT')}"/>
+                               th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalAllocated(),0, 'DEFAULT')}"/>
                     </div>
                 </div>
             </div>
@@ -257,7 +260,7 @@
                     <div class="column-two-thirds">
                         <input id="subtotal-exceptions" class="form-control width-full" data-calculation-fields="#exceptions-staff,#exceptions-other-direct"
                                data-calculation-operations="+" readonly="readonly"
-                               th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotalExceptions(),0, 'COMMA', 0, 'POINT')}"/>
+                               th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotalExceptions(),0, 'DEFAULT')}"/>
                     </div>
                 </div>
             </div>
@@ -270,7 +273,7 @@
                         <input class="form-control width-full"
                                data-calculation-fields="#subtotal-resources,#indirect,#subtotal-directly-allocated,#subtotal-exceptions"
                                data-calculation-operations="+" id="total" readonly="readonly"
-                               th:value="'£ ' + ${#numbers.formatDecimal(academicFinance.getTotal(),0, 'COMMA', 0, 'POINT')}"/>
+                               th:value="'£' + ${#numbers.formatInteger(academicFinance.getTotal(),0, 'DEFAULT')}"/>
                     </div>
                 </div>
             </div>

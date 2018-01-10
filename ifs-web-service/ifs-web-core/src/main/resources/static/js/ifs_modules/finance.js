@@ -62,7 +62,7 @@ IFS.core.finance = (function () {
       } else {
         if ((typeof (jQuery(element).val()) !== 'undefined') && (jQuery(element).val().length)) {
           var displayValue = jQuery(element).val().replace(',', '')
-          var parsed = displayValue.indexOf('£ ') === 0 ? displayValue.substring(2) : displayValue
+          var parsed = displayValue.indexOf('£') === 0 ? displayValue.substring(1) : displayValue
           return parseFloat(parsed)
         }
       }
@@ -85,7 +85,6 @@ IFS.core.finance = (function () {
           values.push(IFS.core.finance.getElementValue(field))
         }
       })
-
       var calculatedValue
       if (values.length === 1) {
         calculatedValue = values[0]
@@ -126,7 +125,7 @@ IFS.core.finance = (function () {
     formatCurrency: function (total) {
       total = total.toFixed()
       total = total.replace(/(\d)(?=(\d{3})+\b)/g, '$1,')
-      return '£ ' + total
+      return '£' + total
     },
     formatPercentage: function (total) {
       total = total.toFixed()

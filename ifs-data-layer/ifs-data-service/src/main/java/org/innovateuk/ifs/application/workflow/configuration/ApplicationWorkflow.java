@@ -81,6 +81,11 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
                 .withExternal()
                     .source(ApplicationState.SUBMITTED)
                     .event(ApplicationEvent.REJECTED)
-                    .target(ApplicationState.REJECTED);
+                    .target(ApplicationState.REJECTED)
+                .and()
+                .withExternal()
+                    .source(ApplicationState.REJECTED)
+                    .event(ApplicationEvent.APPROVED)
+                    .target(ApplicationState.APPROVED);
     }
 }

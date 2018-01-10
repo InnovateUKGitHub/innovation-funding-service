@@ -1,7 +1,8 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
 description = """"""
-
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 tasks.withType(JavaCompile) {
@@ -9,19 +10,19 @@ tasks.withType(JavaCompile) {
 }
 
 repositories {
-     maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url "http://repo.maven.apache.org/maven2" }
 }
 
 dependencies {
-    compile group: 'org.hibernate', name: 'hibernate-validator', version:'5.2.2.Final'
-    compile group: 'org.springframework.ldap', name: 'spring-ldap-core', version:'2.0.4.RELEASE'
-    compile group: 'org.springframework.ldap', name: 'spring-ldap-odm', version:'2.0.4.RELEASE'
-    compile group: 'org.springframework.data', name: 'spring-data-commons', version:'1.11.2.RELEASE'
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: '5.2.2.Final'
+    compile group: 'org.springframework.ldap', name: 'spring-ldap-core', version: '2.0.4.RELEASE'
+    compile group: 'org.springframework.ldap', name: 'spring-ldap-odm', version: '2.0.4.RELEASE'
+    compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.11.2.RELEASE'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-security'
     compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor'
-    testCompile group: 'com.jayway.jsonpath', name: 'json-path', version:'2.0.0'
-    testCompile group: 'org.springframework.ldap', name: 'spring-ldap-test', version:'2.0.4.RELEASE'
-    testCompile group: 'com.jayway.restassured', name: 'rest-assured', version:'2.8.0'
+    testCompile group: 'com.jayway.jsonpath', name: 'json-path', version: '2.0.0'
+    testCompile group: 'org.springframework.ldap', name: 'spring-ldap-test', version: '2.0.4.RELEASE'
+    testCompile group: 'com.jayway.restassured', name: 'rest-assured', version: '2.8.0'
 }
 
 /**
@@ -43,16 +44,12 @@ jar {
  * END OF.... CONFIGURATION FROM ifs-application-service/build.gradle
  */
 
-
-
-
-
 /**
  * CONFIGURATION FROM ifs-web-service/build.gradle
  */
 task getNewRelicAgent {
-    if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
-            !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists() ) {
+    if (!file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
+            !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists()) {
         exec {
             executable = 'curl'
             args = ['--connect-timeout', '30',
@@ -109,10 +106,49 @@ task prepareDockerInput {
 
 task buildDocker(type: DockerBuildImage) {
     dependsOn prepareDockerInput
-    tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+    tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
     inputDir = project.file("$project.buildDir/docker")
 }
 
+task tagDocker(type: DockerTagImage) {
+    dependsOn buildDocker
+    imageId = buildDocker.getTag()
+    repository = project.dockerRegistry + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+    tag = project.version
+}
+
+task osStageRemote(type: DockerPushImage) {
+    dependsOn tagDocker
+    registryCredentials=getRemoteOCCredentials()
+    imageName = project.dockerRegistry + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+    tag = project.version
+}
+
+task tagDockerLocal(type: DockerTagImage) {
+    dependsOn buildDocker
+    imageId = buildDocker.getTag()
+    repository = "dummy"
+    doFirst {
+        repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        tag = project.version
+    }
+}
+
+task osStageLocal(type: DockerPushImage) {
+    dependsOn tagDockerLocal
+    imageName = "dummy"
+    doFirst {
+        registryCredentials = getLocalOCCredentials()
+        imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        tag = project.version
+    }
+}
+
+project.version = registrationServiceVersion
+tagDocker.tag = registrationServiceVersion
+osStageRemote.tag = registrationServiceVersion
+tagDockerLocal.tag = registrationServiceVersion
+osStageLocal.tag = registrationServiceVersion
 
 // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
 // Can reinstate excludeDevtools in the bootRepackage task in next release

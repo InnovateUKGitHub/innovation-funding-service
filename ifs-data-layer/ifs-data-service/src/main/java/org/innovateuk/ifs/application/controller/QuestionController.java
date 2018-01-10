@@ -100,10 +100,10 @@ public class QuestionController {
     
     @GetMapping("/getQuestionsBySectionIdAndType/{sectionId}/{type}")
     public RestResult<List<QuestionResource>> getQuestionsBySectionIdAndType(@PathVariable("sectionId") final Long sectionId, @PathVariable("type") QuestionType type) {
-    	return questionService.getQuestionsBySectionIdAndType(sectionId, type).toGetResponse();
+        return questionService.getQuestionsBySectionIdAndType(sectionId, type).toGetResponse();
     }
-	
-	@PutMapping("/")
+
+    @PutMapping("/")
     public RestResult<QuestionResource> save(@RequestBody final QuestionResource questionResource) {
         return questionService.save(questionResource).toGetResponse();
     }

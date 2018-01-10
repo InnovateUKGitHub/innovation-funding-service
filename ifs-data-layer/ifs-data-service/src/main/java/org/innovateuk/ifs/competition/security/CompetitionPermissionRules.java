@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
@@ -29,7 +28,7 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return isInternal(user) && !isInnovationLead(user);
     }
 
-    @PermissionRule(value = "READ", description = "Innovation leads can see all competitions assigned to them")
+    @PermissionRule(value = "READ", description = "Innovation leads can view competitions that are assigned to them")
     public boolean innovationLeadCanViewCompetitionAssignedToThem(CompetitionResource competition, UserResource user) {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
@@ -39,8 +38,8 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return isInternal(user) && !isInnovationLead(user);
     }
 
-    @PermissionRule(value = "READ", description = "Innovation lead users can only see competitions they are assigned in search results")
-    public boolean innovationLeadCanViewCompetitionAssignedToThemInSearchResults(CompetitionSearchResultItem competition, UserResource user) {
+    @PermissionRule(value = "READ", description = "Innovation lead users can see competitions that are assigned to them")
+    public boolean innovationLeadCanViewCompetitionAssignedToThem(CompetitionSearchResultItem competition, UserResource user) {
         return userIsInnovationLeadOnCompetition(competition.getId(), user.getId());
     }
 

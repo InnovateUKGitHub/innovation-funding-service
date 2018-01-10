@@ -159,9 +159,16 @@
                     </h2>
 
                     <!-- TODO: INFUND - 6376 Prototype mentions Project manager should submit. Needs verification -->
-                    <p>Your Project Manager will need to upload the following:</p>
+                    <th:block th:if="${model.projectManager}">
+                        <p>You need to upload the following:</p>
+                    </th:block>
+                    <th:block th:unless="${model.projectManager}">
+                        <p>Your Project Manager needs to upload the following:</p>
+                    </th:block>
                     <ul class="list list-bullet">
-                        <li>a collaboration agreement</li>
+                        <th:block th:if="${model.collaborationAgreementRequired}">
+                            <li>a collaboration agreement</li>
+                        </th:block>
                         <li>exploitation plan</li>
                     </ul>
                 </div>

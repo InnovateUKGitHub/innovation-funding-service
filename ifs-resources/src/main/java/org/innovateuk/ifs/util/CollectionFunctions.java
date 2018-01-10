@@ -31,18 +31,20 @@ public final class CollectionFunctions {
     @SuppressWarnings("unused")
     private static final Log log = LogFactory.getLog(CollectionFunctions.class);
 
+
     /**
-     * Flatten the given 2-dimensional List into a 1-dimensional List
+     * Flatten the given 2-dimensional {@link Collection} into a 1-dimensional List
      *
-     * @param lists
+     * @param toFlatten
      * @param <T>
      * @return 1-dimensional list
      */
-    public static <T> List<T> flattenLists(List<List<T>> lists) {
-        return lists.stream()
-                .filter(l -> l != null)
-                .flatMap(Collection::stream)
-                .collect(toList());
+    public static <T> List<T> flattenLists(Collection<? extends Collection<T>> toFlatten){
+        return flattenLists(toFlatten, Function.identity());
+    }
+
+    public static <S, T> List<T> flattenLists(Collection<S> toFlatten, Function<S, ? extends Collection<T>> mapper) {
+        return toFlatten.stream().filter(Objects::nonNull).map(mapper).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     /**
@@ -69,15 +71,7 @@ public final class CollectionFunctions {
     }
 
     private static <T> List<T> doCombineLists(List<T>... lists) {
-        List<T> combinedList = new ArrayList<>();
-
-        for (List<T> list : lists) {
-            if (list != null && !list.isEmpty()) {
-                combinedList.addAll(list);
-            }
-        }
-
-        return combinedList;
+        return flattenLists(Arrays.asList(lists));
     }
 
     /**
@@ -235,22 +229,6 @@ public final class CollectionFunctions {
         return Optional.of(list.get(0));
     }
 
-    /**
-     * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
-     *
-     * @param list
-     * @param mappingFn
-     * @param <T>
-     * @param <R>
-     * @return
-     */
-    public static <T, R> List<R> simpleMap(List<T> list, Function<T, R> mappingFn) {
-        if (list == null || list.isEmpty()) {
-            return emptyList();
-        }
-        return list.stream().map(mappingFn).collect(toList());
-    }
-
     public static <T, R> R[] simpleMapArray(T[] array, Function<T, R> mappingFn, Class<R> clazz) {
         if (array == null || array.length == 0){
             return (R[]) Array.newInstance(clazz, 0);
@@ -287,6 +265,10 @@ public final class CollectionFunctions {
 
     public static <T, R> Map<T, R> simpleFilter(Map<T, R> map, Predicate<T> filterFn) {
         return  simpleFilter(map, (k,v) -> filterFn.test(k));
+    }
+
+    public static <T, R> Map<T, R> simpleFilterNot(Map<T, R> map, Predicate<T> filterFn) {
+        return  simpleFilter(map, filterFn.negate());
     }
 
     public static <T, R, S> Map<S, Map<T,R>> simpleGroupBy(Map<T, R> map, Function<T, S> filterFn) {
@@ -388,17 +370,17 @@ public final class CollectionFunctions {
     /**
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
      *
-     * @param set
+     * @param collection
      * @param mappingFn
      * @param <T>
      * @param <R>
      * @return
      */
-    public static <T, R> List<R> simpleMap(Set<T> set, Function<T, R> mappingFn) {
-        if (set == null || set.isEmpty()) {
+    public static <T, R> List<R> simpleMap(Collection<T> collection, Function<T, R> mappingFn) {
+        if (collection == null || collection.isEmpty()) {
             return emptyList();
         }
-        return set.stream().map(mappingFn).collect(toList());
+        return collection.stream().map(mappingFn).collect(toList());
     }
 
     /**
@@ -569,6 +551,21 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around a 1-stage filter function, to remove boilerplate from production code
+     *
+     * @param array
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> simpleFilter(T[] array, Predicate<T> filterFn) {
+        if (array == null) {
+            return emptyList();
+        }
+        return simpleFilter(asList(array), filterFn);
+    }
+
+    /**
      * A simple wrapper around a NEGATED 1-stage filter function, to remove boilerplate from production code
      *
      * @param list
@@ -581,7 +578,7 @@ public final class CollectionFunctions {
     }
 
     /**
-     * A simple wrapper around a 1-stage filter function, to remove boilerplate from production code
+     * A simple wrapper around a 1-stage find-first function, to remove boilerplate from production code
      *
      * @param list
      * @param filterFn
@@ -593,6 +590,22 @@ public final class CollectionFunctions {
             return empty();
         }
         return list.stream().filter(filterFn).findFirst();
+    }
+
+    /**
+     * A simple wrapper around a 1-stage find-first function that takes an array rather than a Collection, to remove
+     * boilerplate from production code
+     *
+     * @param array
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> Optional<T> simpleFindFirst(T[] array, Predicate<T> filterFn) {
+        if (array == null) {
+            return empty();
+        }
+        return simpleFindFirst(asList(array), filterFn);
     }
 
     /**
@@ -851,11 +864,22 @@ public final class CollectionFunctions {
 
     /**
      * A method that a list of length n with t the value of every element.
-     * @param int n - times to replicate t
+     * @param n - times to replicate t
      * @param <T>
      * @return
      */
     public static <T> List<T> nOf(int n, T t) {
         return range(0, n).mapToObj(x -> t).collect(Collectors.toList());
+    }
+
+    public static <T> List<T> union(List<? extends T> one, List<? extends T> two){
+        List<T> union = new ArrayList<>();
+        union.addAll(one);
+        union.addAll(two);
+        return union;
+    }
+
+    public static <T> List<T> flattenOptional(Collection<Optional<T>> toFlatten){
+        return  simpleMap(simpleFilter(toFlatten, Optional::isPresent), Optional::get);
     }
 }

@@ -8,7 +8,10 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.management.form.*;
+import org.innovateuk.ifs.management.form.AssessorSelectionForm;
+import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
+import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
+import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
 import org.innovateuk.ifs.management.model.*;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.innovateuk.ifs.util.JsonUtil;
@@ -26,7 +29,6 @@ import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.Cookie;
 import java.net.URLDecoder;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -79,19 +81,19 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     @Spy
     @InjectMocks
-    private InviteAssessorsFindModelPopulator inviteAssessorsFindModelPopulator;
+    private CompetitionInviteAssessorsFindModelPopulator inviteAssessorsFindModelPopulator;
 
     @Spy
     @InjectMocks
-    private InviteAssessorsInviteModelPopulator inviteAssessorsInviteModelPopulator;
+    private CompetitionInviteAssessorsInviteModelPopulator inviteAssessorsInviteModelPopulator;
 
     @Spy
     @InjectMocks
-    private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
+    private CompetitionInviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
     @Spy
     @InjectMocks
-    private InviteAssessorsAcceptedModelPopulator inviteAssessorsAcceptedModelPopulator;
+    private CompetitionInviteAssessorsAcceptedModelPopulator inviteAssessorsAcceptedModelPopulator;
 
     @Spy
     @InjectMocks
@@ -574,7 +576,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .withInvites(
                         newNewUserStagedInviteResource()
                                 .withEmail("test1@test.com", "test2@test.com")
-                                .withName("Tester 1", "Tester 2")
+                                .withName("Tester One", "Tester Two")
                                 .withInnovationAreaId(1L)
                                 .withCompetitionId(competition.getId())
                                 .build(2)
@@ -588,9 +590,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .param("inviteNewUsers", "")
                 .param("selectedInnovationArea", "1")
                 .param("invites[0].email", "test1@test.com")
-                .param("invites[0].name", "Tester 1")
+                .param("invites[0].name", "Tester One")
                 .param("invites[1].email", "test2@test.com")
-                .param("invites[1].name", "Tester 2")
+                .param("invites[1].name", "Tester Two")
                 .param("page", "5"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s/assessors/invite?page=5", competition.getId())));
@@ -604,7 +606,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .withInvites(
                         newNewUserStagedInviteResource()
                                 .withEmail("test1@test.com")
-                                .withName("Tester 1")
+                                .withName("Tester One")
                                 .withInnovationAreaId(1L)
                                 .withCompetitionId(competition.getId())
                                 .build(1)
@@ -618,7 +620,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .param("inviteNewUsers", "")
                 .param("selectedInnovationArea", "1")
                 .param("invites[0].email", "test1@test.com")
-                .param("invites[0].name", "Tester 1"))
+                .param("invites[0].name", "Tester One"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/competition/%s/assessors/invite?page=0", competition.getId())));
 
@@ -707,8 +709,51 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
         BindingResult bindingResult = returnedForm.getBindingResult();
 
-        assertEquals("Please enter a name.", bindingResult.getFieldError("invites[0].name").getDefaultMessage());
-        assertEquals("Please enter an email address.", bindingResult.getFieldError("invites[0].email").getDefaultMessage());
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(0, bindingResult.getGlobalErrorCount());
+        assertEquals(3, bindingResult.getFieldErrorCount());
+
+        assertEquals(2, bindingResult.getFieldErrorCount("invites[0].name"));
+        assertEquals(1, bindingResult.getFieldErrorCount("invites[0].email"));
+
+        assertTrue(bindingResult.getFieldErrors("invites[0].name").stream()
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("The name should have at least {2} characters.")));
+        assertTrue(bindingResult.getFieldErrors("invites[0].name").stream()
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a name.")));
+        assertTrue(bindingResult.getFieldErrors("invites[0].email").stream()
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter an email address.")));
+
+        InOrder inOrder = inOrder(competitionInviteRestService, categoryRestServiceMock);
+        inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
+        inOrder.verify(categoryRestServiceMock).getInnovationSectors();
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void inviteNewUsersFromInviteView_invalidNameAndEmail() throws Exception {
+        int page = 0;
+
+        AssessorCreatedInvitePageResource expectedPageResource = newAssessorCreatedInvitePageResource()
+                .withContent(emptyList())
+                .build();
+
+        when(competitionInviteRestService.getCreatedInvites(competition.getId(), page)).thenReturn(restSuccess(expectedPageResource));
+        when(categoryRestServiceMock.getInnovationSectors()).thenReturn(restSuccess(emptyList()));
+
+        MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/invite", competition.getId())
+                .param("inviteNewUsers", "")
+                .param("selectedInnovationArea", "1")
+                .param("invites[0].email", "invalid")
+                .param("invites[0].name", "1234"))
+                .andExpect(model().hasErrors())
+                .andExpect(view().name("assessors/invite"))
+                .andReturn();
+
+        InviteNewAssessorsForm returnedForm = (InviteNewAssessorsForm) result.getModelAndView().getModel().get("form");
+        BindingResult bindingResult = returnedForm.getBindingResult();
+
+        assertEquals("Please enter a valid name.", bindingResult.getFieldError("invites[0].name").getDefaultMessage());
+        assertEquals("Please enter a valid email address.", bindingResult.getFieldError("invites[0].email").getDefaultMessage());
 
         InOrder inOrder = inOrder(competitionInviteRestService, categoryRestServiceMock);
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId(), page);
@@ -748,6 +793,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {
         return newAvailableAssessorResource()
+                .withId(1L, 2L)
                 .withName("Dave Smith", "John Barnes")
                 .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
@@ -760,6 +806,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     private List<AssessorCreatedInviteResource> setUpAssessorCreatedInviteResources() {
         return newAssessorCreatedInviteResource()
+                .withId(1L, 2L)
                 .withName("Dave Smith", "John Barnes")
                 .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
@@ -771,6 +818,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     private List<AssessorInviteOverviewResource> setUpAssessorInviteOverviewResources() {
         return newAssessorInviteOverviewResource()
+                .withId(1L, 2L)
+                .withInviteId(3L, 4L)
                 .withName("Dave Smith", "John Barnes")
                 .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
@@ -804,13 +853,13 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     }
 
     private void assertAvailableAssessors(List<AvailableAssessorResource> expectedAvailableAssessors, MvcResult result) {
-        assertTrue(result.getModelAndView().getModel().get("model") instanceof InviteAssessorsFindViewModel);
-        InviteAssessorsFindViewModel model = (InviteAssessorsFindViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof CompetitionInviteAssessorsFindViewModel);
+        CompetitionInviteAssessorsFindViewModel model = (CompetitionInviteAssessorsFindViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedAvailableAssessors.size(), model.getAssessors().size());
 
         forEachWithIndex(expectedAvailableAssessors, (i, availableAssessorResource) -> {
-            AvailableAssessorRowViewModel availableAssessorRowViewModel = model.getAssessors().get(i);
+            CompetitionAvailableAssessorRowViewModel availableAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(availableAssessorResource.getName(), availableAssessorRowViewModel.getName());
             assertEquals(formatInnovationAreas(availableAssessorResource.getInnovationAreas()), availableAssessorRowViewModel.getInnovationAreas());
             assertEquals(availableAssessorResource.isCompliant(), availableAssessorRowViewModel.isCompliant());
@@ -826,8 +875,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     }
 
     private void assertInvitedAssessors(List<AssessorCreatedInviteResource> expectedCreatedInvites, MvcResult result) {
-        assertTrue(result.getModelAndView().getModel().get("model") instanceof InviteAssessorsInviteViewModel);
-        InviteAssessorsInviteViewModel model = (InviteAssessorsInviteViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof CompetitionInviteAssessorsInviteViewModel);
+        CompetitionInviteAssessorsInviteViewModel model = (CompetitionInviteAssessorsInviteViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedCreatedInvites.size(), model.getAssessors().size());
 
@@ -841,14 +890,14 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     }
 
     private void assertFindFilterOptionsAreCorrect(List<InnovationSectorResource> expectedInnovationSectorOptions, MvcResult result) {
-        InviteAssessorsFindViewModel viewModel = (InviteAssessorsFindViewModel) result.getModelAndView().getModel().get("model");
+        CompetitionInviteAssessorsFindViewModel viewModel = (CompetitionInviteAssessorsFindViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedInnovationSectorOptions, viewModel.getInnovationSectorOptions());
     }
 
     private void assertInviteOverviews(List<AssessorInviteOverviewResource> expectedInviteOverviews, MvcResult result) {
-        assertTrue(result.getModelAndView().getModel().get("model") instanceof InviteAssessorsOverviewViewModel);
-        InviteAssessorsOverviewViewModel model = (InviteAssessorsOverviewViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof CompetitionInviteAssessorsOverviewViewModel);
+        CompetitionInviteAssessorsOverviewViewModel model = (CompetitionInviteAssessorsOverviewViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedInviteOverviews.size(), model.getAssessors().size());
 
@@ -915,5 +964,4 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
             return Optional.empty();
         }
     }
-
 }

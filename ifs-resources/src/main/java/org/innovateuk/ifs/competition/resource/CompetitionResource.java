@@ -28,6 +28,7 @@ public class CompetitionResource {
     private String name;
     private ZonedDateTime startDate;
     private ZonedDateTime endDate;
+    private ZonedDateTime registrationDate;
     private ZonedDateTime assessorAcceptsDate;
     private ZonedDateTime assessorDeadlineDate;
     private ZonedDateTime releaseFeedbackDate;
@@ -67,9 +68,6 @@ public class CompetitionResource {
     private Integer assessorCount;
     private BigDecimal assessorPay;
 
-
-    private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
-
     private String activityCode;
 
     private boolean setupComplete = false;
@@ -85,11 +83,12 @@ public class CompetitionResource {
         // no-arg constructor
     }
 
-    public CompetitionResource(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public CompetitionResource(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.registrationDate = registrationDate;
     }
 
     @JsonIgnore
@@ -110,11 +109,6 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean isSetupAndAfterNotifications() {
         return Boolean.TRUE.equals(setupComplete) && (fundersPanelDate != null && fundersPanelDate.isBefore(ZonedDateTime.now()));
-    }
-
-    @JsonIgnore
-    public boolean isInitialDetailsComplete() {
-        return sectionSetupStatus.containsKey(CompetitionSetupSection.INITIAL_DETAILS) || setupComplete;
     }
 
     public CompetitionStatus getCompetitionStatus() {
@@ -147,6 +141,14 @@ public class CompetitionResource {
 
     public void setEndDate(ZonedDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public ZonedDateTime getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(ZonedDateTime registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     public ZonedDateTime getStartDate() {
@@ -449,14 +451,6 @@ public class CompetitionResource {
         this.leadApplicantTypes = leadApplicantTypes;
     }
 
-    public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
-        return sectionSetupStatus;
-    }
-
-    public void setSectionSetupStatus(Map<CompetitionSetupSection, Boolean> sectionSetupStatus) {
-        this.sectionSetupStatus = sectionSetupStatus;
-    }
-
     public String getActivityCode() {
         return activityCode;
     }
@@ -555,6 +549,7 @@ public class CompetitionResource {
                 .append(name, that.name)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
+                .append(registrationDate, that.registrationDate)
                 .append(assessorAcceptsDate, that.assessorAcceptsDate)
                 .append(assessorDeadlineDate, that.assessorDeadlineDate)
                 .append(releaseFeedbackDate, that.releaseFeedbackDate)
@@ -586,7 +581,6 @@ public class CompetitionResource {
                 .append(researchCategories, that.researchCategories)
                 .append(assessorCount, that.assessorCount)
                 .append(assessorPay, that.assessorPay)
-                .append(sectionSetupStatus, that.sectionSetupStatus)
                 .append(activityCode, that.activityCode)
                 .append(hasAssessmentPanel, that.hasAssessmentPanel)
                 .append(hasInterviewStage, that.hasInterviewStage)
@@ -603,6 +597,7 @@ public class CompetitionResource {
                 .append(name)
                 .append(startDate)
                 .append(endDate)
+                .append(registrationDate)
                 .append(assessorAcceptsDate)
                 .append(assessorDeadlineDate)
                 .append(releaseFeedbackDate)
@@ -634,7 +629,6 @@ public class CompetitionResource {
                 .append(researchCategories)
                 .append(assessorCount)
                 .append(assessorPay)
-                .append(sectionSetupStatus)
                 .append(activityCode)
                 .append(setupComplete)
                 .append(useResubmissionQuestion)

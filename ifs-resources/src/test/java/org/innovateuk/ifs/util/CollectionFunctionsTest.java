@@ -369,7 +369,7 @@ public class CollectionFunctionsTest {
 
     @Test
     public void test_simpleFilterNot_nullList() {
-        assertEquals(asList(), CollectionFunctions.simpleFilterNot(null, i -> false));
+        assertEquals(asList(), CollectionFunctions.simpleFilterNot((List<?>)null, i -> false));
     }
 
     @Test

@@ -109,6 +109,10 @@ include::affiliation.adoc[]
 == Alert
 include::alert.adoc[]
 
+[[analytics]]
+== Analytics
+include::analytics.adoc[]
+
 [[application]]
 == Application
 include::application.adoc[]
@@ -129,6 +133,10 @@ include::assessor-count-options.adoc[]
 [[question]]
 == Question
 include::question.adoc[]
+
+[[questionSetup]]
+== Question setup
+include::questionSetup.adoc[]
 
 [[section]]
 == Section
@@ -175,6 +183,10 @@ include::publicContent.adoc[]
 include::assessment.adoc[]
 
 [[assessment]]
+== Assessment Panel
+include::assessmentPanel.adoc[]
+
+[[assessment]]
 == Assessment Panel Invite
 include::assessmentPanelInvite.adoc[]
 
@@ -201,10 +213,6 @@ include::formInput.adoc[]
 [[formInputResponse]]
 == FormInputResponse
 include::formInputResponse.adoc[]
-
-[[silstub]]
-== SIL stubbing endpoints
-include::silstub.adoc[]
 
 [[project]]
 == Project

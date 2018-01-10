@@ -151,4 +151,13 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         assertEquals(getPaulPlum().getId(), users.get(0).getId());
         assertEquals(getFelixWilson().getId(), users.get(1).getId());
     }
+
+    @Test
+    public void findByRolesNameOrderByFirstNameAscLastNameAsc() throws Exception {
+        List<User> users = repository.findByRolesNameOrderByFirstNameAscLastNameAsc(ASSESSOR.getName());
+
+        assertEquals(2, users.size());
+        assertEquals(getFelixWilson().getId(), users.get(0).getId());
+        assertEquals(getPaulPlum().getId(), users.get(1).getId());
+    }
 }

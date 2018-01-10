@@ -7,6 +7,7 @@ tfoot {
       &:nth-child(2) {
         border-left: 1px solid $border-colour;
         border-right: 1px solid $border-colour;
+        border-bottom: 1px solid $border-colour;
         padding:5px;
       }
     }

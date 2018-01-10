@@ -13,7 +13,6 @@ import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseFo
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.util.InternalUserOrganisationUtil;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -27,7 +26,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Mock;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -67,9 +65,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTest<FinanceChecksQueriesController> {
 
-    @Mock
-    public InternalUserOrganisationUtil internalUserOrganisationUtil;
-
     private Long projectId = 3L;
     private Long financeTeamUserId = 18L;
     private Long applicantFinanceContactUserId = 55L;
@@ -86,6 +81,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     private OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(applicantOrganisationId).build();
 
     private ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.FINANCE_CONTACT).build();
+    private ProjectUserResource projectApplicantFinanceContactUser = newProjectUserResource().withUser(applicantFinanceContactUserId).build();
 
     private RoleResource financeTeamRole = newRoleResource().withType(PROJECT_FINANCE).build();
     private UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withId(financeTeamUserId).withRolesGlobal(singletonList(financeTeamRole)).build();
@@ -114,7 +110,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         when(projectService.getById(projectId)).thenReturn(projectResource);
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(singletonList(projectUser));
+        when(projectService.getProjectUsersForProject(projectId)).thenReturn(asList(projectUser, projectApplicantFinanceContactUser));
 
         UserResource user1 = new UserResource();
         user1.setId(18L);
@@ -133,13 +129,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         thread3 = new QueryResource(5L, projectFinanceId, asList(firstPost1, firstResponse1), FinanceChecksSectionType.ELIGIBILITY, "Query title3", false, ZonedDateTime.now());
 
         queries = asList(thread2, thread, thread3);
-
-        //TODO - Getting the organisation name this way is just a workaround till IFS-651 is fixed.
-        when(internalUserOrganisationUtil.getOrganisationName(financeTeamUser, firstPost)).thenReturn(innovateOrganisationResource.getName());
-        when(internalUserOrganisationUtil.getOrganisationName(financeTeamUser, firstPost2)).thenReturn(innovateOrganisationResource.getName());
-        when(internalUserOrganisationUtil.getOrganisationName(financeTeamUser, firstPost1)).thenReturn(innovateOrganisationResource.getName());
-        when(internalUserOrganisationUtil.getOrganisationName(projectManagerUser, firstResponse)).thenReturn(leadOrganisationResource.getName());
-        when(internalUserOrganisationUtil.getOrganisationName(projectManagerUser, firstResponse1)).thenReturn(leadOrganisationResource.getName());
     }
 
     @Test
@@ -175,7 +164,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(2, queryViewModel.getQueries().get(0).getViewModelPosts().size());
         assertEquals("Question", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).body);
         assertEquals(financeTeamUserId, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).author.getId());
-        assertEquals("A Z - Innovate (Finance team)", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getUsername());
+        assertEquals("A Z - Innovate UK (Finance team)", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(0).getViewModelPosts().get(0).createdOn));
         assertEquals(1, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).attachments.size());
         assertEquals(23L, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).attachments.get(0).id.longValue());
@@ -194,7 +183,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(1, queryViewModel.getQueries().get(1).getViewModelPosts().size());
         assertEquals("Question2", queryViewModel.getQueries().get(1).getViewModelPosts().get(0).body);
         assertEquals(financeTeamUserId, queryViewModel.getQueries().get(1).getViewModelPosts().get(0).author.getId());
-        assertEquals("A Z - Innovate (Finance team)", queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getUsername());
+        assertEquals("A Z - Innovate UK (Finance team)", queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getUsername());
         assertTrue(ZonedDateTime.now().plusMinutes(15L).isAfter(queryViewModel.getQueries().get(1).getViewModelPosts().get(0).createdOn));
         assertEquals(0, queryViewModel.getQueries().get(1).getViewModelPosts().get(0).attachments.size());
 
@@ -207,7 +196,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(2, queryViewModel.getQueries().get(2).getViewModelPosts().size());
         assertEquals("Question3", queryViewModel.getQueries().get(2).getViewModelPosts().get(0).body);
         assertEquals(financeTeamUserId, queryViewModel.getQueries().get(2).getViewModelPosts().get(0).author.getId());
-        assertEquals("A Z - Innovate (Finance team)", queryViewModel.getQueries().get(2).getViewModelPosts().get(0).getUsername());
+        assertEquals("A Z - Innovate UK (Finance team)", queryViewModel.getQueries().get(2).getViewModelPosts().get(0).getUsername());
         assertTrue(ZonedDateTime.now().isAfter(queryViewModel.getQueries().get(2).getViewModelPosts().get(0).createdOn));
         assertEquals(0, queryViewModel.getQueries().get(2).getViewModelPosts().get(0).attachments.size());
         assertEquals("Response3", queryViewModel.getQueries().get(2).getViewModelPosts().get(1).body);

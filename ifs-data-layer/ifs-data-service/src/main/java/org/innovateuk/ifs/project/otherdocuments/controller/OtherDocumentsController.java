@@ -3,17 +3,19 @@ package org.innovateuk.ifs.project.otherdocuments.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
+import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.project.otherdocuments.transactional.OtherDocumentsService;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
 
@@ -24,12 +26,18 @@ import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
 @RequestMapping("/project")
 public class OtherDocumentsController {
 
+    @Value("${ifs.data.service.file.storage.projectsetupotherdocuments.max.filesize.bytes}")
+    private Long maxFilesizeBytesForProjectSetupOtherDocuments;
+
+    @Value("${ifs.data.service.file.storage.projectsetupotherdocuments.valid.media.types}")
+    private List<String> validMediaTypesForProjectSetupOtherDocuments;
+
     @Autowired
     private OtherDocumentsService otherDocumentsService;
 
     @Autowired
-    @Qualifier("projectSetupOtherDocumentsFileValidator")
-    private FileHttpHeadersValidator fileValidator;
+    @Qualifier("mediaTypeStringsFileValidator")
+    private FilesizeAndTypeFileValidator<List<String>> fileValidator;
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -42,7 +50,7 @@ public class OtherDocumentsController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectSetupOtherDocuments, maxFilesizeBytesForProjectSetupOtherDocuments, request, (fileAttributes, inputStreamSupplier) ->
                 otherDocumentsService.createCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier)
         );
     }
@@ -62,7 +70,6 @@ public class OtherDocumentsController {
         return otherDocumentsService.getCollaborationAgreementFileEntryDetails(projectId).toGetResponse();
     }
 
-
     @PutMapping(value = "/{projectId}/collaboration-agreement", produces = "application/json")
     public RestResult<Void> updateCollaborationAgreementDocument(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
@@ -71,7 +78,7 @@ public class OtherDocumentsController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectSetupOtherDocuments, maxFilesizeBytesForProjectSetupOtherDocuments, request, (fileAttributes, inputStreamSupplier) ->
                 otherDocumentsService.updateCollaborationAgreementFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
@@ -90,7 +97,7 @@ public class OtherDocumentsController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectSetupOtherDocuments, maxFilesizeBytesForProjectSetupOtherDocuments, request, (fileAttributes, inputStreamSupplier) ->
                 otherDocumentsService.createExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
@@ -117,7 +124,7 @@ public class OtherDocumentsController {
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
 
-        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
+        return handleFileUpdate(contentType, contentLength, originalFilename, fileValidator, validMediaTypesForProjectSetupOtherDocuments, maxFilesizeBytesForProjectSetupOtherDocuments, request, (fileAttributes, inputStreamSupplier) ->
                 otherDocumentsService.updateExploitationPlanFileEntry(projectId, fileAttributes.toFileEntryResource(), inputStreamSupplier));
     }
 
@@ -130,9 +137,8 @@ public class OtherDocumentsController {
 
     @PostMapping("/{projectId}/partner/documents/approved/{approved}")
     public RestResult<Void> acceptOrRejectOtherDocuments(@PathVariable("projectId") long projectId, @PathVariable("approved") Boolean approved) {
-        //TODO INFUND-7493
+        //TODO IFS-471 use workflow for approving other documents
         return otherDocumentsService.acceptOrRejectOtherDocuments(projectId, approved).toPostResponse();
-
     }
 
     @GetMapping("/{projectId}/partner/documents/ready")

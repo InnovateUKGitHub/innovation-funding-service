@@ -8,11 +8,12 @@ import java.util.Map;
  * It is used when recording which sections are marked as complete during the competition setup process.
  */
 public enum CompetitionSetupSubsection {
-	PROJECT_DETAILS("project", "Project Details"),
-	QUESTIONS("question", "Questions"),
-	FINANCES("finance", "Finances"),
-	APPLICATION_DETAILS("detail", "Application Details");
+	PROJECT_DETAILS(1L, "project", "Project Details"),
+	QUESTIONS(2L, "question", "Questions"),
+	FINANCES(3L, "finance", "Finances"),
+	APPLICATION_DETAILS(4L, "detail", "Application Details");
 
+	private Long id;
 	private String path;
 	private String name;
 
@@ -25,12 +26,17 @@ public enum CompetitionSetupSubsection {
 		}
 	};
 
-	CompetitionSetupSubsection(String path, String name) {
+	CompetitionSetupSubsection(Long id, String path, String name) {
+		this.id = id;
 		this.path = path;
 		this.name = name;
 	}
-	
-	public String getName() {
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
 		return name;
 	}
 	

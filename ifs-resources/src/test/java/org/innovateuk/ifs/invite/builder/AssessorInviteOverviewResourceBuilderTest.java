@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.invite.builder;
 
-import com.google.common.collect.Sets;
-import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
@@ -9,7 +7,6 @@ import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Set;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -31,6 +28,7 @@ public class AssessorInviteOverviewResourceBuilderTest {
         BusinessType expectedBusinessType = ACADEMIC;
         ParticipantStatusResource expectedStatus = ACCEPTED;
         String expectedDetails = "details";
+        Long expectedInviteId = 1L;
 
         AssessorInviteOverviewResource assessorInviteOverviewResource = newAssessorInviteOverviewResource()
                 .withName(expectedName)
@@ -39,6 +37,7 @@ public class AssessorInviteOverviewResourceBuilderTest {
                 .withBusinessType(expectedBusinessType)
                 .withStatus(expectedStatus)
                 .withDetails(expectedDetails)
+                .withInviteId(expectedInviteId)
                 .build();
 
         assertEquals(expectedName, assessorInviteOverviewResource.getName());
@@ -47,6 +46,7 @@ public class AssessorInviteOverviewResourceBuilderTest {
         assertEquals(expectedBusinessType, assessorInviteOverviewResource.getBusinessType());
         assertEquals(expectedStatus, assessorInviteOverviewResource.getStatus());
         assertEquals(expectedDetails, assessorInviteOverviewResource.getDetails());
+        assertEquals(expectedInviteId, assessorInviteOverviewResource.getInviteId());
     }
 
     @Test
@@ -64,6 +64,7 @@ public class AssessorInviteOverviewResourceBuilderTest {
         BusinessType[] expectedBusinessTypes = {ACADEMIC, BUSINESS};
         ParticipantStatusResource[] expectedStatuses = {PENDING, ACCEPTED};
         String[] expectedDetails = {"details1", "details2"};
+        Long[] expectedInviteIds = {1L, 2L};
 
         List<AssessorInviteOverviewResource> assessorCreatedInviteResources = newAssessorInviteOverviewResource()
                 .withName(expectedNames)
@@ -72,6 +73,7 @@ public class AssessorInviteOverviewResourceBuilderTest {
                 .withBusinessType(expectedBusinessTypes)
                 .withStatus(expectedStatuses)
                 .withDetails(expectedDetails)
+                .withInviteId(expectedInviteIds)
                 .build(2);
 
         AssessorInviteOverviewResource first = assessorCreatedInviteResources.get(0);
@@ -81,6 +83,7 @@ public class AssessorInviteOverviewResourceBuilderTest {
         assertEquals(expectedBusinessTypes[0], first.getBusinessType());
         assertEquals(expectedStatuses[0], first.getStatus());
         assertEquals(expectedDetails[0], first.getDetails());
+        assertEquals(expectedInviteIds[0], first.getInviteId());
 
         AssessorInviteOverviewResource second = assessorCreatedInviteResources.get(1);
         assertEquals(expectedNames[1], second.getName());
@@ -89,5 +92,6 @@ public class AssessorInviteOverviewResourceBuilderTest {
         assertEquals(expectedBusinessTypes[1], second.getBusinessType());
         assertEquals(expectedStatuses[1], second.getStatus());
         assertEquals(expectedDetails[1], second.getDetails());
+        assertEquals(expectedInviteIds[1], second.getInviteId());
     }
 }

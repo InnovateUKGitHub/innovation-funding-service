@@ -37,7 +37,7 @@
                 <div class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
                         <span class="heading-large" th:text="${model.assessorsStaged}">6</span><br/>
-                        <small>Pending</small>
+                        <small>Assessors on invite list</small>
                     </div>
                 </div>
             </div>
@@ -59,18 +59,21 @@
                 <li class="selected">
                     <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
                 </li>
-                <!--<li class="not-selected">-->
-                    <!--<a th:href="@{/assessment/panel/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Overview</a>-->
-                <!--</li>-->
+                <li class="not-selected">
+                    <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Pending and rejected</a>
+                </li>
+                <li class="not-selected">
+                    <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
+                </li>
             </ul>
 
             <div class="grid-row">
                 <div class="column-three-quarters">
-                    <h2 class="heading-small no-margin-top extra-margin-bottom">Invite assessors for this competition.</h2>
+                    <h2 class="heading-small no-margin-top extra-margin-bottom">Invite assessors to this panel.</h2>
                 </div>
             </div>
 
-            <form method="POST" th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
+            <form method="POST" th:action="@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
 
                 <div class="grid-row sorting">
                     <div class="column-half">
@@ -90,11 +93,11 @@
                             <th scope="col">Email address</th>
                             <th scope="col">Innovation area</th>
                             <th scope="col">Contract and DOI</th>
-                            <td scope="col">
-                                <!--<button name="removeAll" class="buttonlink alignright"-->
-                                        <!--th:if="${!#lists.isEmpty(model.assessors)}">-->
-                                    <!--Remove all-->
-                                <!--</button>-->
+                            <td scope="col" class="alignright">
+                                <button name="removeAll" class="buttonlink alignright"
+                                        th:if="${!#lists.isEmpty(model.assessors)}">
+                                    Remove all
+                                </button>
                             </td>
                         </tr>
                         </thead>
@@ -114,13 +117,13 @@
                                 <span class="no" th:unless="${assessor.compliant}">No</span>
                             </td>
                             <td class="alignright">
-                                <!--<button class="buttonlink alignright" name="remove" th:value="${assessor.email}">-->
-                                    <!--<span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove-->
-                                <!--</button>-->
+                                <button class="buttonlink alignright" name="remove" th:value="${assessor.email}">
+                                    <span class="hidden" th:text="${assessor.name}">John Barnes </span>Remove
+                                </button>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.assessors)}">
-                            <td colspan="5">There are no assessors to be invited to this competition.</td>
+                            <td colspan="5">There are no assessors to be invited to this panel.</td>
                         </tr>
                         </tbody>
                     </table>

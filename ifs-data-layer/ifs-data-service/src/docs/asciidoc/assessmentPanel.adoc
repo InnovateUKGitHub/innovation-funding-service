@@ -1,0 +1,15 @@
+=== Assign an application to assessment panel
+==== Request
+include::{snippets}/assessmentpanel/assign-application/http-request.adoc[]
+include::{snippets}/assessmentpanel/assign-application/path-parameters.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanel/assign-application/curl-request.adoc[]
+
+=== Unassign an application from assessment panel
+==== Request
+include::{snippets}/assessmentpanel/unassign-application/http-request.adoc[]
+include::{snippets}/assessmentpanel/unassign-application/path-parameters.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanel/unassign-application/curl-request.adoc[]

@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Holder of model attributes for the available assessors shown in the 'Find' tab of the Assessment Panel Invite Assessors view.
  */
-public class PanelAvailableAssessorRowViewModel extends PanelInviteAssessorsRowViewModel {
+public class PanelAvailableAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
     private BusinessType businessType;
 

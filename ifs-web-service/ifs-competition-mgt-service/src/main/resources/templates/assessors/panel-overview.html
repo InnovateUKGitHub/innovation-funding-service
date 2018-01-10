@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Invite assessors'" />
+    </head>
+
+    <body th:with="context='comp-management'" class="competition-management competition-overview">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
+
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='heading-xlarge'" />
+
+
+            <h2 class="heading-medium">Key statistics</h2>
+
+            <div class="grid-row">
+                <div class="column-quarter">
+                    <div class="highlight-panel highlight-panel-padded">
+                        <span class="heading-large" th:text="${model.assessorsInvited}">60</span><br/>
+                        <small>Invited</small>
+                    </div>
+                </div>
+                <div class="column-quarter">
+                    <div class="highlight-panel highlight-panel-padded">
+                        <span class="heading-large" th:text="${model.assessorsAccepted}">23</span><br/>
+                        <small>Accepted</small>
+                    </div>
+                </div>
+                <div class="column-quarter">
+                    <div class="highlight-panel highlight-panel-padded">
+                        <span class="heading-large" th:text="${model.assessorsDeclined}">3</span><br/>
+                        <small>Declined</small>
+                    </div>
+                </div>
+                <div class="column-quarter">
+                    <div class="highlight-panel highlight-panel-padded">
+                        <span class="heading-large" th:text="${model.assessorsStaged}">6</span><br/>
+                        <small>Assessors on invite list</small>
+                    </div>
+                </div>
+            </div>
+
+            <dl class="standard-definition-list extra-margin">
+                <dt>Innovation sector</dt>
+                <dd th:text="${model.innovationSector}">Health and life sciences</dd>
+
+                <dt>Innovation area</dt>
+                <dd th:text="${model.innovationArea}">Agriculture and food</dd>
+            </dl>
+
+            <div><br></div>
+
+            <ul class="inline-nav">
+                <li class="not-selected">
+                    <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">Find</a>
+                </li>
+                <li class="not-selected">
+                    <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
+                </li>
+                <li class="selected">
+                    <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Pending and rejected</a>
+                </li>
+                <li class="not-selected">
+                    <a th:href="@{/assessment/panel/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>
+                </li>
+            </ul>
+
+            <div class="grid-row">
+                <div class="column-three-quarters">
+                    <h2 class="heading-small no-margin-top">View assessors who have not yet responded or have been rejected.</h2>
+                </div>
+            </div>
+
+
+            <div class="warning-alert extra-margin-bottom" th:if="${model.selectAllDisabled}">
+                <p th:text="#{competition.management.limit.warning}"></p>
+            </div>
+            <div data-selection-limit-exceeded-block=""></div>
+
+            <div class="grid-row sorting">
+                <div class="column-half">
+                    <span class="heading-large" th:text="${model.pagination.totalCount}">20</span> assessors
+                </div>
+            </div>
+
+            <form method="POST"
+                  th:action="@{/panel/competition/{competitionId}/assessors/invite/reviewResend(competitionId=${model.competitionId})}"
+                  th:object="${assessorPanelOverviewSelectionForm}"
+                  data-multipage-select=""
+                  th:attr="data-total-checkboxes=${model.pagination.totalCount}">
+
+                <div class="grid-row sorting">
+                    <div class="column-half select-all">
+                        <div class="multiple-choice">
+                            <input type="checkbox"
+                                   data-select-all=""
+                                   id="select-all-check"
+                                   th:checked="${assessorPanelOverviewSelectionForm.getAllSelected()}"
+                                   th:disabled="${model.selectAllDisabled || model.pagination.totalCount == 0}"/>
+                            <label for="select-all-check">
+                                Select all assessors
+                            </label>
+                        </div>
+                        <span class="form-hint">
+                        <span data-count-selected="" th:text="${#lists.size(assessorPanelOverviewSelectionForm.selectedInviteIds)}"></span> assessors selected</span>
+                    </div>
+                    <div class="column-half select-all alignright">
+                        <button class="button" name="resendInvites" data-submit-el="" th:attr="disabled=${#lists.isEmpty(assessorPanelOverviewSelectionForm.selectedInviteIds)}">
+                            Resend invites
+                        </button>
+                    </div>
+                </div>
+
+                <div class="table-overflow">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th scope="col">Select assessor</th>
+                            <th scope="col">Assessor name</th>
+                            <th scope="col">Type</th>
+                            <th scope="col">Innovation area</th>
+                            <th scope="col">Contract and DOI</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Details</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="assessor, index : ${model.assessors}">
+                            <td>
+                                <div class="multiple-choice">
+                                    <input type="checkbox"
+                                           th:id="|assessor-row-${index.count}|"
+                                           th:field="*{selectedInviteIds}"
+                                           th:value="${assessor.inviteId}"/>
+                                    <label th:for="|assessor-row-${index.count}|">
+                                        <span class="invisible">Add</span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${model.originQuery}" th:if="${assessor.id}"
+                                   th:text="${assessor.name}">John Barnes
+                                </a>
+                                <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
+                            </td>
+                            <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Business</td>
+                            <td th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
+                            <td>
+                                <span class="yes" th:if="${assessor.compliant}">Yes</span>
+                                <span class="no" th:unless="${assessor.compliant}">No</span>
+                            </td>
+                            <td th:text="${assessor.status.displayName}">Invite accepted</td>
+                            <td th:text="${assessor.details}">assessor details</td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(model.assessors)}">
+                            <td colspan="7">There are no assessors invited to this assessment panel.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+            <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.pagination})" />
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

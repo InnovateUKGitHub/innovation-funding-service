@@ -21,25 +21,25 @@
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="heading-large" th:text="${model.assessorsInvited}">60</span><br/>
-                <small>invited</small>
+                <small>Invited</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="heading-large" th:text="${model.assessorsAccepted}">23</span><br/>
-                <small>accepted</small>
+                <small>Accepted</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="heading-large" th:text="${model.assessorsDeclined}">3</span><br/>
-                <small>declined</small>
+                <small>Declined</small>
             </div>
         </div>
         <div class="column-quarter">
             <div class="highlight-panel highlight-panel-padded">
                 <span class="heading-large" th:text="${model.assessorsStaged}">6</span><br/>
-                <small>assessors on invite list</small>
+                <small>Assessors on invite list</small>
             </div>
         </div>
     </div>
@@ -62,7 +62,7 @@
             <a th:href="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">Invite</a>
         </li>
         <li class="not-selected">
-            <a th:href="@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Overview</a>
+            <a th:href="@{/competition/{competitionId}/assessors/overview(competitionId=${model.competitionId})}">Pending and rejected</a>
         </li>
         <li class="selected">
             <a th:href="@{/competition/{competitionId}/assessors/accepted(competitionId=${model.competitionId})}">Accepted</a>

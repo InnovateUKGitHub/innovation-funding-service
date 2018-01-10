@@ -57,7 +57,7 @@ The question is enabled for the assignee
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=Assign test  #Application Title
     Then the user should see the browser notification  Stuart ANDERSON has assigned a question to you
-    And the user should see the element   jQuery=li:contains("Public description") .action-required
+    And the user should see the element   jQuery=li:contains("Public description") .task-status-incomplete
     And the user clicks the button/link   link= Public description
     And the user should see the element   css=.textarea-wrapped .editor
 
@@ -96,7 +96,7 @@ Last update message is correctly updating
     And the user clicks the button/link   link= Assign test
     And the user clicks the button/link   link= Public description
     When the collaborator edits the 'public description' question
-    Then the user should see the element  jQuery=.form-footer .form-footer__info:contains("Today"):contains("by you")
+    Then the user should see the element  jQuery=.form-footer .form-footer__info:contains("today"):contains("by you")
 
 Collaborators cannot assign a question
     [Documentation]  INFUND-839
@@ -128,7 +128,7 @@ Collaborators should not be able to edit application details
     Given the user navigates to the page      ${DASHBOARD_URL}
     And the user clicks the button/link       link= Assign test
     And the user clicks the button/link       link=Application details
-    Then the user should not see the element  css=input#application_details-title
+    Then the user should not see the element  css=[id="application.name"]
     And the user should not see the element   css=input#application_details-startdate_day
     And the user should not see the element   jQuery=button:contains("Mark as complete")
 
@@ -143,6 +143,7 @@ The question should be reassigned to the lead applicant
     And the user should see the element      jQuery=.assign-container:contains("you")
     And the user clicks the button/link      link= Public description
     And the user should see the element      css=.textarea-wrapped .editor
+    And the user should see the element      jQuery=.form-footer .form-footer__info:contains("today"):contains("by Dennis Bergkamp")
     And the user should not see the element  css=.textarea-wrapped .readonly
 
 Appendices are assigned along with the question
@@ -213,11 +214,12 @@ The question is disabled for other collaborators
     [Documentation]  INFUND-275
     ...    This test case is still using the old application
     [Tags]
-    [Setup]  log in as a different user   &{lead_applicant_credentials}
+    [Setup]  log in as a different user    &{lead_applicant_credentials}
     Given Steve smith assigns a question to the collaborator
-    Given log in as a different user      &{collaborator2_credentials}
-    When the user navigates to the page   ${PUBLIC_DESCRIPTION_URL}
-    Then The user should see the element  css=.textarea-wrapped .readonly
+    Given log in as a different user       &{collaborator2_credentials}
+    And the user navigates to the page     ${APPLICATION_OVERVIEW_URL}
+    When the user clicks the button/link   jQuery=a:contains("Public description")
+    Then The user should see the element   css=.textarea-wrapped .readonly
 
 The question is disabled on the summary page for other collaborators
     [Documentation]  INFUND-2302
@@ -260,11 +262,12 @@ the collaborator is able to edit the finances
 the applicant changes the name of the application
     Given the user clicks the button/link     link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     And the user clicks the button/link       link=Application details
-    And the user enters text to a text field  id=application_details-title  Assign test
+    And the user enters text to a text field  css=[id="application.name"]  Assign test
     And The user clicks the button/link       jQuery=button:contains("Save and return")
 
 Steve smith assigns a question to the collaborator
-    the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
+    the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
+    the user clicks the button/link   jQuery=a:contains("Public description")
     When the applicant assigns the question to the collaborator  Jessica Doe
 
 the user fills out the research category

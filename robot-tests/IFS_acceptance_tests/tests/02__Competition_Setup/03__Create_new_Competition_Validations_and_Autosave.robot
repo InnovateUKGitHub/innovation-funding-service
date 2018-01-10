@@ -24,7 +24,7 @@ Documentation     INFUND-2982: Create a Competition: Step 1: Initial details
 ...               IFS-380 As a comp executive I am able to confirm if an assessment panel is required in competition setup
 ...
 ...               IFS-631 As a comp executive I am able to confirm if an interview stage is required in competition setup
-Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
+Suite Setup       Custom suite setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
@@ -42,9 +42,7 @@ Initial details: server-side validations
     And the user should see an error    Please select a competition type.
     And the user should see an error    Please select an innovation sector.
     And the user should see an error    Please select an innovation area.
-    And the user should see an error    Please enter an opening year.
-    And the user should see an error    Please enter an opening day.
-    And the user should see an error    Please enter an opening month.
+    And the user should see an error    Please enter a valid date.
     And the user should see an error    Please select an Innovation Lead.
     And the user should see an error    Please select a Portfolio Manager.
 
@@ -57,18 +55,19 @@ Initial details: client-side validations
     Then the user should not see the error any more    Please select a competition type.
     When the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
     Then the user should not see the error any more    Please select an innovation sector.
-    When the user selects the option from the drop-down menu    Advanced therapies    id=innovationAreaCategoryId-0
+    When the user selects the option from the drop-down menu    Advanced therapies    css=[id="innovationAreaCategoryIds[0]"]
     Then the user should not see the error any more    Please select an innovation area.
     When the user enters text to a text field    id=openingDateDay    01
     #Then the user should not see the error any more    Please enter an opening day.
     When the user enters text to a text field    Id=openingDateMonth    12
     #Then the user should not see the error any more    Please enter an opening month.
-    When the user enters text to a text field    id=openingDateYear    2017
+    When the user enters text to a text field    id=openingDateYear  ${nextYear}
     #Then the user should not see the error any more    Please enter an opening year.
     When the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     Then the user should not see the error any more    Please select an Innovation Lead.
     When the user selects the option from the drop-down menu    John Doe     id=executiveUserId
     Then The user should not see the text in the page    Please select a Portfolio manager.    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
+    [Teardown]  wait for autosave
 
 Initial details: Autosave
     [Documentation]    INFUND-3001
@@ -111,9 +110,9 @@ Funding information client-side validations
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=.button:contains("Generate code")
     Then the user should not see the error any more    Please generate a competition code.
-    When the user enters text to a text field    id=funders0.funder    FunderName
+    When the user enters text to a text field    id=funders[0].funder    FunderName
     Then the user should not see the error any more    Please enter a funder name.
-    And the user enters text to a text field    id=0-funderBudget    20000
+    And the user enters text to a text field    id=funders[0].funderBudget    20000
     And the user enters text to a text field    id=pafNumber    2016
     And the user enters text to a text field    id=budgetCode    2004
     And the user enters text to a text field    id=activityCode    4242
@@ -175,20 +174,17 @@ Milestones: Server side validations, submission time is default
     And the user clicks the button/link               jQuery=button:contains(Done)
     Then Validation summary should be visible
     Then the user should see the text in the element  jQuery=tr:nth-of-type(3) td:nth-of-type(1) option:selected  12:00 pm
+    [Teardown]  the user clicks the button/link       link=Competition setup
 
 Milestones: Client side validations, submission time is non-default
     [Documentation]  INFUND-2993, INFUND-7632
     [Tags]  HappyPath
-    When the user fills the milestones with valid data
-    Then The user should not see the text in the page  Please enter a future date that is after the previous milestone.
-    Then The user should not see the text in the page  Please enter a valid date.
-    Then the user should see the text in the element   jQuery=tr:nth-of-type(3) td:nth-of-type(1) option:selected  10:00 am
+    The user fills in the CS Milestones  ${month}  ${nextYear}
 
 Milestones: Autosave
     [Documentation]  INFUND-2993 INFUND-7632
     [Tags]
-    When the user clicks the button/link    link=Competition setup
-    And the user clicks the button/link    link=Milestones
+    When the user clicks the button/link    link=Milestones
     Then the user should see the correct inputs in the Milestones form
 
 Application finances: validation empty
@@ -197,13 +193,11 @@ Application finances: validation empty
     [Setup]    The user navigates to the Validation competition
     Given the user clicks the button/link     link=Application
     And the user clicks the button/link       link=Finances
-    And the user clicks the button/link       jQuery=a:contains("Edit this question")
     And the user enters text to a text field  css=.editor  ${EMPTY}
-    When the user moves focus to the element  jQuery=button:contains("Save and close")
+    When the user moves focus to the element  jQuery=button:contains("Done")
     Then the user should see an error         This field cannot be left blank.
     And the user enters text to a text field  css=.editor  Funding rules for this competition added
-    And the user clicks the button/link       jQuery=button:contains("Save and close")
-
+    And the user clicks the button/link       jQuery=button:contains("Done")
 
 Application finances: able to edit the field
     [Documentation]  IFS-630
@@ -211,10 +205,8 @@ Application finances: able to edit the field
     [Setup]  The user navigates to the Validation competition
     Given the user clicks the button/link      link=Application
     And the user clicks the button/link        link=Finances
-    And the user should see the element        jQuery=.button:contains("Edit this question")
     When the user clicks the button/link       link=Edit this question
     Then the user enters text to a text field  css=.editor  Funding rules for this competition updated
-    And the user clicks the button/link        jQuery=button:contains("Save and close")
     And the user clicks the button/link        jQuery=button:contains("Done")
     And the user should not see an error in the page
 
@@ -241,6 +233,15 @@ Assessor: Client-side validation
     Then The user should not see the text in the page  This field can only accept whole numbers
 
 *** Keywords ***
+Custom suite setup
+    The user logs-in in new browser  &{Comp_admin1_credentials}
+    ${month} =  get tomorrow month
+    set suite variable  ${month}
+    ${nextYear} =  get next year
+    Set suite variable  ${nextYear}
+    ${monthWord} =  get month as word
+    set suite variable  ${monthWord}
+
 the user moves focus and waits for autosave
     focus    link=Sign out
     Wait For Autosave
@@ -314,18 +315,18 @@ the user fills the milestones with invalid data
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2018
 
 Validation summary should be visible
-    Then The user should see the text in the page    2. Briefing event: Please enter a future date that is after the previous milestone.
-    And the user should see the text in the page    3. Submission date: Please enter a future date that is after the previous milestone.
-    And the user should see the text in the page    4. Allocate assessors: Please enter a future date that is after the previous milestone.
-    And the user should see the text in the page    5. Assessor briefing: Please enter a future date that is after the previous milestone.
-    And the user should see the text in the page    6. Assessor accepts: Please enter a future date that is after the previous milestone.
-    And the user should see the text in the page    7. Assessor deadline: Please enter a future date that is after the previous milestone.
-    And the user should see the text in the page    8. Line draw: Please enter a future date that is after the previous milestone.
-    And the user should see the text in the page    9. Assessment panel: Please enter a future date that is after the previous milestone.
-    And the user should see the text in the page    10. Panel date: Please enter a future date that is after the previous milestone.
-    And the user should see the text in the page    11. Funders panel: Please enter a future date that is after the previous milestone.
-    And the user should see the text in the page    12. Notifications: Please enter a future date that is after the previous milestone.
-    And the user should see the text in the page    13. Release feedback: Please enter a future date that is after the previous milestone.
+    the user should see a summary error  2. Briefing event: Please enter a future date that is after the previous milestone.
+    the user should see a summary error  3. Submission date: Please enter a future date that is after the previous milestone.
+    the user should see a summary error  4. Allocate assessors: Please enter a future date that is after the previous milestone.
+    the user should see a summary error  5. Assessor briefing: Please enter a future date that is after the previous milestone.
+    the user should see a summary error  6. Assessor accepts: Please enter a future date that is after the previous milestone.
+    the user should see a summary error  7. Assessor deadline: Please enter a future date that is after the previous milestone.
+    the user should see a summary error  8. Line draw: Please enter a future date that is after the previous milestone.
+    the user should see a summary error  9. Assessment panel: Please enter a future date that is after the previous milestone.
+    the user should see a summary error  10. Panel date: Please enter a future date that is after the previous milestone.
+    the user should see a summary error  11. Funders panel: Please enter a future date that is after the previous milestone.
+    the user should see a summary error  12. Notifications: Please enter a future date that is after the previous milestone.
+    the user should see a summary error  13. Release feedback: Please enter a future date that is after the previous milestone.
 
 the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10
@@ -372,24 +373,20 @@ the user fills the milestones with valid data
     wait for autosave
 
 the user should see the correct values in the initial details form
-    ${input_value} =    Get Value    id=title
-    Should Be Equal    ${input_value}    Validations Test
-    Page Should Contain    Programme
-    Page Should Contain    Health and life sciences
-    Page Should Contain    Advanced therapies
-    ${input_value} =    Get Value    id=openingDateDay
-    Should Be Equal As Strings    ${input_value}    1
-    ${input_value} =    Get Value    Id=openingDateMonth
-    Should Be Equal As Strings    ${input_value}    12
-    ${input_value} =    Get Value    id=openingDateYear
-    Should Be Equal As Strings    ${input_value}    2017
-    Page Should Contain    Ian Cooper
-    page should contain    John Doe
+    the user should see the element  css=#title[value="Validations Test"]
+    the user should see the element  jQuery=#competitionTypeId option[selected]:contains("Programme")
+    the user should see the element  jQuery=#innovationSectorCategoryId option[selected]:contains("life sciences")
+    the user should see the element  jQuery=[name^="innovationAreaCategoryIds"]:contains("Advanced therapies")
+    the user should see the element  css=#openingDateDay[value="1"]
+    the user should see the element  css=#openingDateMonth[value="12"]
+    the user should see the element  css=#openingDateYear[value="${nextYear}"]
+    the user should see the element  jQuery=#innovationLeadUserId option[selected]:contains("Ian Cooper")
+    the user should see the element  jQuery=#executiveUserId option[selected]:contains("John Doe")
 
 the user should see the correct details in the funding information form
-    ${input_value} =    Get Value    id=funders0.funder
+    ${input_value} =    Get Value    id=funders[0].funder
     Should Be Equal    ${input_value}    FunderName
-    ${input_value} =    Get Value    id=0-funderBudget
+    ${input_value} =    Get Value    id=funders[0].funderBudget
     Should Be Equal As Strings    ${input_value}    20000
     ${input_value} =    Get Value    id=pafNumber
     Should Be Equal As Strings    ${input_value}    2016
@@ -418,19 +415,10 @@ the users waits until the page is autosaved
     Wait For Autosave
 
 the user should see the correct inputs in the Milestones form
-    Element Should Contain    css=tr:nth-of-type(1) td:nth-of-type(2)    Thu
-    Element Should Contain    css=tr:nth-of-type(2) td:nth-of-type(2)    Fri
-    Element Should Contain    css=tr:nth-of-type(3) td:nth-of-type(2)    Sat
-    Element Should Contain    css=tr:nth-of-type(4) td:nth-of-type(2)    Sun
-    Element Should Contain    css=tr:nth-of-type(5) td:nth-of-type(2)    Mon
-    Element Should Contain    css=tr:nth-of-type(6) td:nth-of-type(2)    Tue
-    Element Should Contain    css=tr:nth-of-type(7) td:nth-of-type(2)    Wed
-    Element Should Contain    css=tr:nth-of-type(8) td:nth-of-type(2)    Thu
-    Element Should Contain    css=tr:nth-of-type(9) td:nth-of-type(2)    Fri
-    Element Should Contain    css=tr:nth-of-type(10) td:nth-of-type(2)    Sat
-    Element Should Contain    css=tr:nth-of-type(11) td:nth-of-type(2)    Sun
-    Element Should Contain    css=tr:nth-of-type(12) td:nth-of-type(2)    Mon
-    Element Should Contain    css=tr:nth-of-type(13) td:nth-of-type(2)    Tue
+    the user should see the element  jQuery=tr:contains("Open date") td:contains("${monthWord} ${nextyear}")
+    the user should see the element  jQuery=tr:contains("Briefing event") td:contains("${monthWord} ${nextyear}")
+    the user should see the element  jQuery=tr:contains("Submission date") td:contains("12:00 pm") ~ td:contains("${monthWord} ${nextyear}")
+    the user should see the element  jQuery=button:contains("Edit")
 
 the user should see the correct inputs in the Applications questions form
     ${input_value} =    Get Value    id=question.title
@@ -448,15 +436,15 @@ The user enters valid data in the initial details
     Given the user enters text to a text field    id=title    Validations Test
     And the user selects the option from the drop-down menu    Programme    id=competitionTypeId
     And the user selects the option from the drop-down menu    Health and life sciences    id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu    Advanced therapies    id=innovationAreaCategoryId-0
+    And the user selects the option from the drop-down menu    Advanced therapies    css=[id="innovationAreaCategoryIds[0]"]
     And the user enters text to a text field    id=openingDateDay    01
     And the user enters text to a text field    Id=openingDateMonth    12
-    And the user enters text to a text field    id=openingDateYear    2017
+    And the user enters text to a text field    id=openingDateYear  ${nextYear}
     And the user selects the option from the drop-down menu    Ian Cooper    id=innovationLeadUserId
     And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
 
 The user navigates to the Validation competition
-    The user navigates to the page    ${SERVER}/management/dashboard/upcoming
+    The user navigates to the page     ${CA_UpcomingComp}
     The user clicks the button/link    link=Validations Test
 
 the user should not see the error any more

@@ -41,7 +41,7 @@ IFS.core.editor = (function () {
       if (editorType !== '') {
         var labelledby = ''
         if (jQuery('[for="' + el.prop('id') + '"]').length) {
-          labelledby = 'labelledby="' + el.prop('id') + '"'
+          labelledby = 'aria-labelledby="' + el.prop('id') + '"'
         }
 
         if (el.attr('readonly')) {

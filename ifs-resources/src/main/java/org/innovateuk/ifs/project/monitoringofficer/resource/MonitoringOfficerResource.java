@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.project.monitoringofficer.resource;
 
-import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.innovateuk.ifs.commons.validation.ValidationConstants;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -32,7 +32,7 @@ public class MonitoringOfficerResource {
 
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     @NotEmpty(message = "{validation.standard.email.required}")
-    @Size(max = 256, message = "{validation.standard.email.length.max}")
+    @Size(max = 254, message = "{validation.standard.email.length.max}")
     private String email;
 
     @NotEmpty(message = "{validation.standard.phonenumber.required}")

@@ -96,7 +96,7 @@ public class ByProjectFinanceCostCategorySummaryStrategy implements SpendProfile
     private Map<FinanceRowType, FinanceRowCostCategory> getSpendProfileCostCategories(ProjectFinanceResource finances) {
 
         Map<FinanceRowType, FinanceRowCostCategory> financeOrganisationDetails = finances.getFinanceOrganisationDetails();
-        return simpleFilter(financeOrganisationDetails, (category, costs) -> category.isSpendCostCategory());
+        return simpleFilter(financeOrganisationDetails, (category, costs) -> category.isIncludedInSpendProfile());
     }
 
     private Map<CostCategory, BigDecimal> getIndustrialTotalsPerCostCategory(CostCategoryType costCategoryType, Map<FinanceRowType, FinanceRowCostCategory> spendRows) {

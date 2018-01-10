@@ -1,4 +1,17 @@
-addRow(document).ready(function(){
+jQuery(document).ready(function(){
+
+    jQuery('body').on('click','input[name="innovation-area"]',function(e){
+
+        jQuery('.collapsible-content').each(function () {
+            var count = jQuery(this).find('input[name="innovation-area"]:checked').length;
+            var targetCounter = jQuery(this).parent().prev().find('.input-counter');
+
+            targetCounter.html(count + ' selected');
+            //console.log(count);
+        });
+
+    });
+
 
 	jQuery('body').on('click','.js-add-partner',function(e){
 		e.preventDefault();

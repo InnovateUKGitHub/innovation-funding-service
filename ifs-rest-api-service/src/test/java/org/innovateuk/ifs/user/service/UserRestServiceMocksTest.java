@@ -17,9 +17,11 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.BaseRestService.buildPaginationUri;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.processRoleResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userOrganisationListType;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Title.*;
 import static org.junit.Assert.assertEquals;
@@ -342,5 +344,22 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         RestResult<Void> result = service.reactivateUser(123L);
         assertTrue(result.isSuccess());
         assertEquals(OK, result.getStatusCode());
+    }
+
+    @Test
+    public void findExternalUsers() throws Exception {
+
+        String searchString = "%aar%";
+        SearchCategory searchCategory = SearchCategory.NAME;
+        String url = usersUrl + "/findExternalUsers?searchString=" + searchString + "&searchCategory=" + searchCategory.name();
+
+        List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
+        setupGetWithRestResultExpectations(url, userOrganisationListType(), userOrganisationResources);
+
+        RestResult<List<UserOrganisationResource>> result = service.findExternalUsers(searchString, searchCategory);
+
+        assertTrue(result.isSuccess());
+        assertEquals(OK, result.getStatusCode());
+        assertEquals(userOrganisationResources, result.getSuccessObject());
     }
 }

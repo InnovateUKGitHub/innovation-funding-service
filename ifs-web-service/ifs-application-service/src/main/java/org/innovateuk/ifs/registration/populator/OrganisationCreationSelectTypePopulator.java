@@ -18,7 +18,7 @@ public class OrganisationCreationSelectTypePopulator {
 
     @Autowired
     private OrganisationTypeRestService organisationTypeRestService;
-
+    
     public OrganisationCreationSelectTypeViewModel populate() {
         List<OrganisationTypeResource> orgTypes = organisationTypeRestService.getAll().getSuccessObject()
                 .stream()

@@ -1,0 +1,11 @@
+FROM innovateuk/app-base-image
+MAINTAINER Richard Popple <richard@hiveit.co.uk>
+EXPOSE 8080
+ENV JAVA_OPTS -Xmx300m
+
+WORKDIR /
+VOLUME /tmp
+
+ADD ifs-sil-stub-@version@.jar app.jar
+
+ENTRYPOINT exec java $JAVA_OPTS -jar app.jar

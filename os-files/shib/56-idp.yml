@@ -21,7 +21,7 @@ items:
           deploymentconfig: idp
       spec:
         containers:
-        - image: innovateuk/idp-service:1.0-SNAPSHOT
+        - image: innovateuk/idp-service:${idpVersion}
           name: idp
           livenessProbe:
             httpGet:
@@ -86,7 +86,7 @@ items:
           - name: LDAP_USERFILTER
             value: "(&(mail={user})(!(employeeType=inactive)))"
           - name: LDAP_ATTRIBUTE_SEARCHFILTER
-            value: "(mail=$resolutionContext.principal)"
+            value: "(mail=\$resolutionContext.principal)"
           - name: LDAP_RETURNATTRIBUTES
             value: "mail,uid"
           - name: LDAP_AUTHENTICATOR
@@ -123,7 +123,7 @@ items:
   metadata:
     name: idp
     annotations:
-      haproxy.router.openshift.io/balance: roundrobin
+      haproxy.router.openshift.io/balance: source
   spec:
     host: <<SHIB-IDP-ADDRESS>>
     port:

@@ -14,7 +14,6 @@ import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.core.io.ByteArrayResource;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface FinanceCheckService {
 

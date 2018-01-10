@@ -1,7 +1,12 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
+<head th:with="pageTitle='Competition Management Dashboard'">
+  <th:block th:if="${competitionSetupForm != null}">
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle},hasFormErrors=${#fields.hasErrors('${competitionSetupForm.*}')}" />
+  </th:block>
+  <th:block th:if="${competitionSetupForm == null}">
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${pageTitle}" />
+  </th:block>
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 

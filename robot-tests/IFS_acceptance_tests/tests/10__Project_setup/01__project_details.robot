@@ -325,7 +325,7 @@ Lead partner can change the project address
     Given the user navigates to the page    ${project_in_setup_details_page}
     And the user clicks the button/link    link=Project address
     When the user clicks the button/link    jQuery=.button:contains("Save")
-    Then the user should see the text in the page    You need to select a project address before you can continue.
+    Then the user should see the text in the page    You need to select an address before you can continue.
     When the user selects the radio button    addressType    ADD_NEW
     And the user enters text to a text field    id=addressForm.postcodeInput    BS14NT
     And the user clicks the button/link    jQuery=.button:contains("Find UK address")
@@ -363,13 +363,13 @@ Non lead partner invites finance contact
     When the user clicks the button/link       jQuery=button:contains("Invite to project")
     Then the user should see the element       jQuery=label[for="financeContact3"]:contains("Pending")
     And the user clicks the button/link    jQuery=.button:contains("Save finance contact")
-    [Teardown]  Logout as user
+    [Teardown]    Logout as user
 
 Invited Fin Contact for non lead partner
     [Documentation]    INFUND-2620, INFUND-5368, INFUND-5827, INFUND-5979, INFUND-4428 IFS-285
     [Tags]  HappyPath
-    Then the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
-    Given log in as a different user     &{collaborator1_credentials}
+    Given the invitee is able to assign himself as Finance Contact  ${test_mailbox_one}+ludlowfincont@gmail.com  Finance contact invitation  providing finance details  Ludlow's  FinContact
+    When log in as a different user     &{collaborator1_credentials}
     Then the user navigates to the page  ${project_in_setup_page}/details
     And the matching status checkbox is updated  project-details-finance  3  yes
     When the user navigates to the page    ${project_in_setup_page}
@@ -382,7 +382,8 @@ Invited Fin Contact for non lead partner
 Non lead partner not eligible for funding
     [Documentation]    INFUND-7090, INFUND-7174
     [Tags]  HappyPath
-    Given the user navigates to the page    ${project_in_setup_page}
+    Given log in as a different user  &{collaborator1_credentials}
+    When the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    css=ul li.complete:nth-child(2)
     Then the user should not see the element    css=ul li.require-action:nth-child(4)
     When The user navigates to the page and gets a custom error message     ${project_in_setup_page}/bank-details    ${403_error_message}

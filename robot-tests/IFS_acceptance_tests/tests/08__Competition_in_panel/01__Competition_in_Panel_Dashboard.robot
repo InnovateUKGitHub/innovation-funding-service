@@ -7,6 +7,8 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Test Cases ***
 In Panel Dashboard
+    [Documentation]
+    [Tags]  MySQL
     Given the user navigates to the page      ${CA_Live}
     Then the user should see the element      jQuery=section:contains("Panel") > ul:contains("${FUNDERS_PANEL_COMPETITION_NAME}")
     And the user should see the element       jQuery=div:Contains("Internet of Things") + div:contains("Programme")

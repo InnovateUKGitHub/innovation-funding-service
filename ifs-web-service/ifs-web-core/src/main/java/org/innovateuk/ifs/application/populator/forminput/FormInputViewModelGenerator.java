@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.populator.forminput;
 
+import org.innovateuk.ifs.applicant.resource.ApplicantFormInputResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantQuestionResource;
 import org.innovateuk.ifs.applicant.resource.ApplicantSectionResource;
 import org.innovateuk.ifs.application.form.ApplicationForm;
@@ -28,7 +29,7 @@ public class FormInputViewModelGenerator {
     }
 
     public List<AbstractFormInputViewModel> fromQuestion(ApplicantQuestionResource question, ApplicationForm form) {
-        List<AbstractFormInputViewModel> viewModels =  question.getApplicantFormInputs().stream()
+        List<AbstractFormInputViewModel> viewModels = question.getApplicantFormInputs().stream()
                 .filter(applicantFormInput -> applicantFormInput.getFormInput().getType().isDisplayableQuestionType())
                 .map(applicantFormInput -> getPopulator(applicantFormInput.getFormInput().getType()).populate(question, null, question, applicantFormInput, applicantFormInput.responseForApplicant(question.getCurrentApplicant(), question)))
                 .collect(Collectors.toList());
@@ -44,11 +45,24 @@ public class FormInputViewModelGenerator {
     public List<AbstractFormInputViewModel> fromSection(ApplicantSectionResource applicantResource, ApplicantSectionResource childSection, ApplicationForm form, Boolean readOnly) {
         List<AbstractFormInputViewModel> viewModels =  childSection.getApplicantQuestions().stream()
                 .map(applicantQuestion -> applicantQuestion.getApplicantFormInputs().stream()
-                    .map(applicantFormInputResource -> getPopulator(applicantFormInputResource.getFormInput().getType()).populate(applicantResource, childSection, applicantQuestion, applicantFormInputResource, applicantFormInputResource.responseForApplicant(applicantResource.getCurrentApplicant(), applicantQuestion), readOnly))
+                        .map(applicantFormInputResource ->
+                                populateApplicationFormInput(applicantFormInputResource, applicantResource, childSection, applicantQuestion, readOnly))
                 .collect(Collectors.toList()))
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
+
         viewModels.forEach(viewModel -> getPopulator(viewModel.getFormInput().getType()).addToForm(form, viewModel));
+
         return viewModels;
+    }
+
+    private AbstractFormInputViewModel populateApplicationFormInput(ApplicantFormInputResource applicantFormInputResource, ApplicantSectionResource applicantResource, ApplicantSectionResource childSection, ApplicantQuestionResource applicantQuestion, Boolean readOnly) {
+        return getPopulator(applicantFormInputResource.getFormInput().getType())
+                        .populate(applicantResource,
+                                childSection,
+                                applicantQuestion,
+                                applicantFormInputResource,
+                                applicantFormInputResource.responseForApplicant(applicantResource.getCurrentApplicant(), applicantQuestion),
+                                readOnly);
     }
 }

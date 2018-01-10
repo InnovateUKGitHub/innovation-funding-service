@@ -81,12 +81,12 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
         when(questionService.markAsInComplete(new QuestionApplicationCompositeId(questionId, applicationId), markedAsCompleteById)).thenReturn(serviceSuccess(null));
 
 
-        mockMvc.perform(get("/question/markAsInComplete/{questionId}/{applicationId}/{markedAsInCompleteById}", questionId, applicationId, markedAsCompleteById))
+        mockMvc.perform(get("/question/markAsIncomplete/{questionId}/{applicationId}/{markedAsIncompleteById}", questionId, applicationId, markedAsCompleteById))
                 .andDo(document("question/{method-name}",
                         pathParameters(
                                 parameterWithName("questionId").description("Id of the question to be marked as incomplete"),
                                 parameterWithName("applicationId").description("Id of the application for which the question should be marked as incomplete"),
-                                parameterWithName("markedAsInCompleteById").description("Id of the user that marked the application as incomplete")
+                                parameterWithName("markedAsIncompleteById").description("Id of the user that marked the application as incomplete")
                         )
                 ));
     }

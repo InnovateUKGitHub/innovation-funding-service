@@ -29,7 +29,7 @@ create new account for submitting
     the user clicks the button/link                   link=Untitled application (start here)
     the user clicks the button/link                   jQuery=a:contains("Begin application")
     the user clicks the button/link                   link=Application details
-    the user enters text to a text field              id=application_details-title    ${application_name}
+    the user enters text to a text field              css=[id="application.name"]    ${application_name}
     the user clicks the button/link                   jQuery=button:contains("Save and return")
     the user marks every section but one as complete  ${application_name}
 
@@ -37,44 +37,27 @@ the user marks every section but one as complete
     [Arguments]  ${application_name}
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
-    the user clicks the button/link    link=Project summary
+    the lead applicant fills all the questions and marks as complete(programme)
+
+the lead applicant fills all the questions and marks as complete(programme)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{programme_questions}
+     \     the lead applicant marks every question as complete     ${ELEMENT}
+
+the lead applicant fills all the questions and marks as complete(sector)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{sector_questions}
+     \     the lead applicant marks every question as complete     ${ELEMENT}
+
+the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{project_details}
+     \     the lead applicant marks every question as complete     ${ELEMENT}
+
+the lead applicant marks every question as complete
+    [Arguments]  ${question_link}
+    the user clicks the button/link             jQuery=h3 a:contains("${question_link}")
     the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=Public description
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=Scope
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=1. Business opportunity
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=2. Potential market
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=3. Project exploitation
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=4. Economic benefit
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=5. Technical approach
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=6. Innovation
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=7. Risks
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=8. Project team
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=9. Funding
-    the user marks the section as complete
-    the user clicks the button/link    link=Application overview
-    the user clicks the button/link    link=10. Adding value
-    the user marks the section as complete
+    the user clicks the button/link             link=Application overview
 
 the user marks the section as complete
     Wait Until Element Is Visible Without Screenshots    css=.textarea-wrapped .editor
@@ -91,7 +74,7 @@ Create new application with the same user
     check if there is an existing application in progress for this competition
     the user clicks the button/link       jQuery=a:contains("Begin application")
     the user clicks the button/link       link=Application details
-    the user enters text to a text field  id=application_details-title  ${Application_title}
+    the user enters text to a text field  css=[id="application.name"]  ${Application_title}
     the user clicks the button/link       jQuery=button:contains("Save and return")
 
 check if there is an existing application in progress for this competition
@@ -106,7 +89,7 @@ create new submit application
     And the guest user clicks the log-in button
     And the user clicks the button/link                 jQuery=a:contains("Begin application")
     And the user clicks the button/link                 link=Application details
-    And the user enters text to a text field            id=application_details-title    ${application_name}
+    And the user enters text to a text field            css=[id="application.name"]    ${application_name}
     And the user clicks the button/link                 jQuery=button:contains("Save and return")
 
 Invite and accept the invitation
@@ -130,8 +113,8 @@ the user fills in the inviting steps
     the user clicks the button/link       link=view and manage contributors and collaborators
     the user clicks the button/link       link=Add a collaborator organisation
     the user enters text to a text field  css=#organisationName  New Organisation's Name
-    the user enters text to a text field  css=input[id="applicants0.name"]  Partner's name
-    the user enters text to a text field  css=input[id="applicants0.email"]  ${email}
+    the user enters text to a text field  css=[id="applicants[0].name"]  Partner's name
+    the user enters text to a text field  css=[id="applicants[0].email"]  ${email}
     the user clicks the button/link       jQuery=button:contains("Add organisation and invite applicants")
 
 # The search results are specific to Research Organisation type
@@ -182,8 +165,8 @@ invite a registered user
     the user clicks the button/link                            link=${UNTITLED_APPLICATION_DASHBOARD_LINK}
     the user clicks the button/link                            link=Add a collaborator organisation
     the user enters text to a text field                       css=#organisationName  New Organisation's Name
-    the user enters text to a text field                       css=input[id="applicants0.name"]  Partner's name
-    the user enters text to a text field                       css=input[id="applicants0.email"]  ${EMAIL_INVITED}
+    the user enters text to a text field                       css=[id="applicants[0].name"]  Partner's name
+    the user enters text to a text field                       css=[id="applicants[0].email"]  ${EMAIL_INVITED}
     the user clicks the button/link                            jQuery=button:contains("Add organisation and invite applicants")
     the user clicks the button/link                            jQuery=a:contains("Begin application")
     the user should see the text in the page                   Application overview
@@ -221,12 +204,12 @@ the user follows the flow to register their organisation
     the user clicks the button/link         jQuery=.button:contains("Save and continue")
 
 the user enters the details and clicks the create account
-    [Arguments]   ${first_name}  ${last_name}  ${REG_EMAIL}  ${password}
+    [Arguments]   ${first_name}  ${last_name}  ${email}  ${password}
     Wait Until Page Contains Element Without Screenshots    link=terms and conditions
     Input Text                     id=firstName  ${first_name}
     Input Text                     id=lastName  ${last_name}
     Input Text                     id=phoneNumber  23232323
-    Input Text                     id=email  ${REG_EMAIL}
+    Input Text                     id=email  ${email}
     Input Password                 id=password  ${password}
     the user selects the checkbox    termsAndConditions
     the user selects the checkbox    allowMarketingEmails
@@ -240,7 +223,7 @@ the invited user fills the create account form
     Input Password    id=password    ${correct_password}
     the user selects the checkbox    termsAndConditions
     the user selects the checkbox    allowMarketing
-    the user clicks the button/link    jQuery=.button:contains("Create account")
+    the user clicks the button/link  css=button[type="submit"][name="create-account"]
 
 the user clicks the forgot psw link
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element    link=forgot your password?

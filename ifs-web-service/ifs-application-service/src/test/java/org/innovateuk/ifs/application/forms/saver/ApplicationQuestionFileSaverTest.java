@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.application.forms.saver;
 
 import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.file.resource.FileTypeCategories;
+import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseRestService;
 import org.innovateuk.ifs.form.service.FormInputRestService;
@@ -14,22 +17,29 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.innovateuk.ifs.commons.error.Error;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.emptyMap;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.forms.ApplicationFormUtil.REMOVE_UPLOADED_FILE;
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static org.innovateuk.ifs.file.controller.ValidMediaTypesFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY;
+import static org.innovateuk.ifs.file.controller.ValidMediaTypesFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY;
+import static org.innovateuk.ifs.file.controller.ValidMediaTypesFileUploadErrorTranslator.UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 
 /**
  * Tests {@link ApplicationQuestionFileSaver}
@@ -46,17 +56,18 @@ public class ApplicationQuestionFileSaverTest {
     @Mock
     private FormInputRestService formInputRestService;
 
-    private final Long applicationId = 509230L;
-    private final Long processRoleId = 232425L;
+    private Long applicationId = 509230L;
+    private Long processRoleId = 232425L;
+    private Long questionId = 92912L;
+    private List<QuestionResource> questions = newQuestionResource().withId(questionId).build(1);
 
     @Test
     public void saveFileUploadQuestionsIfAny_notFileUpload() {
-        final Long questionId = 92912L;
-        final List<QuestionResource> questions = newQuestionResource().withId(questionId).build(1);
-        final Map<String, String[]> params = asMap();
+        
+        final Map<String, String[]> params = emptyMap();
         final HttpServletRequest normalRequest = mock(HttpServletRequest.class);
 
-        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(RestResult.restSuccess(newFormInputResource().withType(FormInputType.FILEUPLOAD).build(1)));
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(newFormInputResource().withType(FormInputType.FILEUPLOAD).build(1)));
 
         ValidationMessages result = fileSaver.saveFileUploadQuestionsIfAny(questions, params, normalRequest, applicationId, processRoleId);
 
@@ -65,17 +76,16 @@ public class ApplicationQuestionFileSaverTest {
 
     @Test
     public void saveFileUploadQuestionsIfAny_UploadFile() {
-        final Long questionId = 92912L;
-        final List<QuestionResource> questions = newQuestionResource().withId(questionId).build(1);
-        final Map<String, String[]> params = asMap();
+        
+        final Map<String, String[]> params = emptyMap();
         final MultipartHttpServletRequest uploadRequest = mock(MultipartHttpServletRequest.class);
         when(uploadRequest.getFileMap()).thenReturn(asMap("formInput[1000]", new MockMultipartFile("upload.pdf", new byte[]{1})));
 
-        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(RestResult.restSuccess(newFormInputResource()
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(newFormInputResource()
                 .withId(1000L)
                 .withType(FormInputType.FILEUPLOAD)
                 .build(1)));
-        when(formInputResponseRestService.createFileEntry(anyLong(), anyLong(), anyLong(), anyString(), anyLong(), anyString(), any(byte[].class))).thenReturn(RestResult.restSuccess(newFileEntryResource().build()));
+        when(formInputResponseRestService.createFileEntry(anyLong(), anyLong(), anyLong(), anyString(), anyLong(), anyString(), any(byte[].class))).thenReturn(restSuccess(newFileEntryResource().build()));
 
         ValidationMessages result = fileSaver.saveFileUploadQuestionsIfAny(questions, params, uploadRequest, applicationId, processRoleId);
 
@@ -85,13 +95,12 @@ public class ApplicationQuestionFileSaverTest {
 
     @Test
     public void saveFileUploadQuestionsIfAny_UploadFileWithFailure() {
-        final Long questionId = 92912L;
-        final List<QuestionResource> questions = newQuestionResource().withId(questionId).build(1);
-        final Map<String, String[]> params = asMap();
+        
+        final Map<String, String[]> params = emptyMap();
         final MultipartHttpServletRequest uploadRequest = mock(MultipartHttpServletRequest.class);
         when(uploadRequest.getFileMap()).thenReturn(asMap("formInput[1000]", new MockMultipartFile("upload.pdf", new byte[]{1})));
 
-        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(RestResult.restSuccess(newFormInputResource()
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(newFormInputResource()
                 .withId(1000L)
                 .withType(FormInputType.FILEUPLOAD)
                 .build(1)));
@@ -105,14 +114,29 @@ public class ApplicationQuestionFileSaverTest {
     }
 
     @Test
-    public void saveFileUploadQuestionsIfAny_UploadFileNotProvided() {
-        final Long questionId = 92912L;
-        final List<QuestionResource> questions = newQuestionResource().withId(questionId).build(1);
-        final Map<String, String[]> params = asMap();
-        final MultipartHttpServletRequest uploadRequest = mock(MultipartHttpServletRequest.class);
-        when(uploadRequest.getFileMap()).thenReturn(Collections.emptyMap());
+    public void saveFileUploadQuestionsIfAny_UploadFileWithMediaTypeSpecificFailurePdfsOnly() {
+        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_PDF_ONLY_MESSAGE_KEY, FileTypeCategories.PDF.getMediaTypes());
+    }
 
-        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(RestResult.restSuccess(newFormInputResource()
+    @Test
+    public void saveFileUploadQuestionsIfAny_UploadFileWithMediaTypeSpecificFailureSpreadsheetsOnly() {
+        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_SPREADSHEET_ONLY_MESSAGE_KEY, FileTypeCategories.SPREADSHEET.getMediaTypes());
+    }
+
+    @Test
+    public void saveFileUploadQuestionsIfAny_UploadFileWithMediaTypeSpecificFailurePdfsOrSpreadsheetsOnly() {
+        List<String> pdfAndSPreadsheetMediaTypes = combineLists(FileTypeCategories.PDF.getMediaTypes(), FileTypeCategories.SPREADSHEET.getMediaTypes());
+        assertMediaTypeSpecificFileUploadMessage(UNSUPPORTED_MEDIA_TYPE_PDF_OR_SPREADSHEET_ONLY_MESSAGE_KEY, pdfAndSPreadsheetMediaTypes);
+    }
+
+    @Test
+    public void saveFileUploadQuestionsIfAny_UploadFileNotProvided() {
+        
+        final Map<String, String[]> params = emptyMap();
+        final MultipartHttpServletRequest uploadRequest = mock(MultipartHttpServletRequest.class);
+        when(uploadRequest.getFileMap()).thenReturn(emptyMap());
+
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(newFormInputResource()
                 .withId(1000L)
                 .withType(FormInputType.FILEUPLOAD)
                 .build(1)));
@@ -125,20 +149,45 @@ public class ApplicationQuestionFileSaverTest {
 
     @Test
     public void saveFileUploadQuestionsIfAny_RemoveFile() {
-        final Long questionId = 92912L;
-        final List<QuestionResource> questions = newQuestionResource().withId(questionId).build(1);
+        
         final Map<String, String[]> params = asMap(REMOVE_UPLOADED_FILE, new String[]{"something"});
         final MultipartHttpServletRequest uploadRequest = mock(MultipartHttpServletRequest.class);
 
-        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(RestResult.restSuccess(newFormInputResource()
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(newFormInputResource()
                 .withId(1000L)
                 .withType(FormInputType.FILEUPLOAD)
                 .build(1)));
-        when(formInputResponseRestService.removeFileEntry(1000L, applicationId, processRoleId)).thenReturn(RestResult.restSuccess());
+        when(formInputResponseRestService.removeFileEntry(1000L, applicationId, processRoleId)).thenReturn(restSuccess());
 
         ValidationMessages result = fileSaver.saveFileUploadQuestionsIfAny(questions, params, uploadRequest, applicationId, processRoleId);
 
         assertFalse(result.hasErrors());
         verify(formInputResponseRestService, times(1)).removeFileEntry(1000L, applicationId, processRoleId);
+    }
+
+    private void assertMediaTypeSpecificFileUploadMessage(String expectedErrorKey, List<String> validMediaTypesFromDataLayer) {
+
+        final Map<String, String[]> params = emptyMap();
+        final MultipartHttpServletRequest uploadRequest = mock(MultipartHttpServletRequest.class);
+        when(uploadRequest.getFileMap()).thenReturn(asMap("formInput[1000]", new MockMultipartFile("upload.json", new byte[]{1})));
+
+        FormInputResource formInput = newFormInputResource()
+                .withId(1000L)
+                .withType(FormInputType.FILEUPLOAD)
+                .build();
+
+        when(formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION)).thenReturn(restSuccess(singletonList(formInput)));
+
+        when(formInputResponseRestService.createFileEntry(anyLong(), anyLong(), anyLong(), anyString(), anyLong(), anyString(), any(byte[].class)))
+                .thenReturn(RestResult.restFailure(fieldError("fileField", "application/json", UNSUPPORTED_MEDIA_TYPE.name(), simpleJoiner(validMediaTypesFromDataLayer, ", "))));
+
+        ValidationMessages result = fileSaver.saveFileUploadQuestionsIfAny(questions, params, uploadRequest, applicationId, processRoleId);
+
+        assertEquals(1, result.getErrors().size());
+        assertTrue(result.hasFieldErrors("formInput[1000]"));
+
+        Error fieldError = result.getFieldErrors("formInput[1000]").get(0);
+        Error expectedError = fieldError("formInput[1000]", "application/json", expectedErrorKey);
+        assertEquals(expectedError, fieldError);
     }
 }

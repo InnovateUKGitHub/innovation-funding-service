@@ -28,7 +28,7 @@
     </dl>
 
     <th:block th:if="${model.user.status.equals(T(org.innovateuk.ifs.user.resource.UserStatus).INACTIVE)}">
-        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST">
+        <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="POST" novalidate="novalidate">
             <div class="form-footer">
                 <div class="form-footer__actions">
                     <button class="buttonlink" data-js-modal="modal-confirm-reactivate-user" type="button">Reactivate user</button>

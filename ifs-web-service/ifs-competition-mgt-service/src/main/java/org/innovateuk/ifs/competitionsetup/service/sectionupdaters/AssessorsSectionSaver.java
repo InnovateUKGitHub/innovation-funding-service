@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.AssessorsForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
 
 	@Autowired
 	private CompetitionService competitionService;
+
+	@Autowired
+	private CompetitionSetupRestService competitionSetupRestService;
 	
 	@Override
 	public CompetitionSetupSection sectionToSave() {
@@ -39,7 +43,7 @@ public class AssessorsSectionSaver extends AbstractSectionSaver implements Compe
                 setFieldsDisallowedFromChangeAfterSetupAndLive(competition, assessorsForm);
                 setFieldsAllowedFromChangeAfterSetupAndLive(competition, assessorsForm);
 
-                return competitionService.update(competition);
+                return competitionSetupRestService.update(competition).toServiceResult();
             } else {
 			    return serviceFailure(fieldError("assessorCount",
                         assessorsForm.getAssessorCount(),

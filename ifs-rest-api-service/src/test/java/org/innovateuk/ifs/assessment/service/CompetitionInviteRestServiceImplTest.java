@@ -6,7 +6,10 @@ import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
 import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
@@ -26,9 +29,7 @@ import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteListReso
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
-import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
-import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.PENDING;
-import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
+import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -377,5 +378,4 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
 
         assertTrue(service.resendInvites(inviteIds, assessorInviteSendResource).isSuccess());
     }
-
 }

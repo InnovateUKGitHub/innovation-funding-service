@@ -13,6 +13,8 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 ...               INFUND-7109 Bank Details Status - Internal user
 ...
 ...               INFUND-5899 As an internal user I want to be able to use the breadcrumb navigation consistently throughout Project Setup so I can return to the previous page as appropriate
+...
+...               IFS-1881 Project Setup internal project dashboard navigation
 Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -30,12 +32,12 @@ Project Finance user can see the internal project summary page
     And the user should not see the element   css=#table-project-status tr:nth-child(2) td:nth-child(6) a  #SP element is not seen
 
 Project Finance has a dashboard and can see projects in PS
-    [Documentation]    INFUND-5300
+    [Documentation]    INFUND-5300, IFS-1881
     [Tags]
     [Setup]  Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page  ${COMP_MANAGEMENT_PROJECT_SETUP}
     When the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element    jQuery=.column-third.alignright.extra-margin h2:contains("Projects in setup")
+    Then the user should see the element    link=All projects
     And the user should see the element     jQuery=tr:nth-child(2) th:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And the user should see the element     jQuery=tr:nth-child(2) th a:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
     And the user should see the element     jQuery=tr:nth-child(2) th:contains("3 partners")
@@ -66,13 +68,13 @@ Project Finance can see the status of projects in PS
 
 # Project Finance can see Bank Details - testcase moved to 04__experian_feedback.robot
 Other internal users cannot see Bank details or Finance checks
-    [Documentation]    INFUND-4903, INFUND-5720
+    [Documentation]    INFUND-4903, INFUND-5720, IFS-1881
     [Tags]    Experian    HappyPath
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     # This is added to HappyPath because CompAdmin should NOT have access to Bank details
     Given the user navigates to the page          ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link           link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element          jQuery=h2:contains("Projects in setup")
+    Then the user should see the element          link=All projects
     And the user should not see the element       css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3) a
     And the user should not see the element       css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(4) a
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details    ${403_error_message}

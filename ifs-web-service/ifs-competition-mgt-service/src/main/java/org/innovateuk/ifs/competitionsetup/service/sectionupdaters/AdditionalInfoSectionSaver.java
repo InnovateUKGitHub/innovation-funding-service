@@ -2,12 +2,12 @@ package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.AdditionalInfoForm;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 	private static final Log LOG = LogFactory.getLog(AdditionalInfoSectionSaver.class);
 
 	@Autowired
-	private CompetitionService competitionService;
+	private CompetitionSetupRestService competitionSetupRestService;
 
 	@Override
 	public CompetitionSetupSection sectionToSave() {
@@ -46,7 +46,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 		setFieldsAllowedFromChangeAfterSetupAndLive(competition, additionalInfoForm);
 
 		try {
-			competitionService.update(competition).getSuccessObjectOrThrowException();
+			competitionSetupRestService.update(competition).getSuccessObjectOrThrowException();
 		} catch (RuntimeException e) {
 			LOG.error("Competition object not available");
 			return serviceFailure(asList(new Error("competition.setup.autosave.should.be.completed", HttpStatus.BAD_REQUEST)));
@@ -94,7 +94,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 		}
 		if (index > 0) {
 			competitionResource.getFunders().remove(index);
-			return competitionService.update(competitionResource);
+			return competitionSetupRestService.update(competitionResource).toServiceResult();
 	    } else {
 			//Not allowed to remove 0th index.
 			return serviceFailure(new Error("competition.setup.autosave.funder.could.not.be.removed", HttpStatus.BAD_REQUEST));
@@ -121,7 +121,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 
 		competitionResource.getFunders().set(index, funder);
 
-		return competitionService.update(competitionResource);
+		return competitionSetupRestService.update(competitionResource).toServiceResult();
 	}
 
 	private Integer getFunderIndex(String fieldName) {

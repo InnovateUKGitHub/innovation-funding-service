@@ -88,24 +88,19 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
     }
 
     @Test
-    public void testSupportUserCanReadQuestionStatus() {
+    public void testInternalUserCanReadQuestionStatus() {
         QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource().build();
 
+        UserResource compAdminUser = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build();
         UserResource supportUser = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.SUPPORT).build())).build();
-        UserResource nonSupportUser = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build();
-
-        assertTrue(rules.supportCanReadQuestionStatus(questionStatusResource, supportUser));
-        assertFalse(rules.supportCanReadQuestionStatus(questionStatusResource, nonSupportUser));
-    }
-
-    @Test
-    public void testInnovationLeadUserCanReadQuestionStatus() {
-        QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource().build();
-
+        UserResource projectFinanceUser = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build();
         UserResource innovationLeadUser = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.INNOVATION_LEAD).build())).build();
-        UserResource nonInnovationLeadUser = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build();
+        UserResource nonInternalUser = newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.ASSESSOR).build())).build();
 
-        assertTrue(rules.innovationLeadCanReadQuestionStatus(questionStatusResource, innovationLeadUser));
-        assertFalse(rules.innovationLeadCanReadQuestionStatus(questionStatusResource, nonInnovationLeadUser));
+        assertTrue(rules.internalUserCanReadQuestionStatus(questionStatusResource, innovationLeadUser));
+        assertTrue(rules.internalUserCanReadQuestionStatus(questionStatusResource, compAdminUser));
+        assertTrue(rules.internalUserCanReadQuestionStatus(questionStatusResource, supportUser));
+        assertTrue(rules.internalUserCanReadQuestionStatus(questionStatusResource, projectFinanceUser));
+        assertFalse(rules.internalUserCanReadQuestionStatus(questionStatusResource, nonInternalUser));
     }
 }

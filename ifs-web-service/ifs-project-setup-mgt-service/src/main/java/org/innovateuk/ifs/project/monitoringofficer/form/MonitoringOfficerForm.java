@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.project.monitoringofficer.form;
 
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.commons.validation.ValidationConstants;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -16,7 +16,7 @@ import java.util.Optional;
 public class MonitoringOfficerForm extends BaseBindingResultTarget {
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
-    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.required}")
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.firstname.invalid}")
     @Size.List ({
             @Size(min=2, message="{validation.standard.firstname.length.min}"),
             @Size(max=70, message="{validation.standard.firstname.length.max}"),
@@ -24,7 +24,7 @@ public class MonitoringOfficerForm extends BaseBindingResultTarget {
     private String firstName;
 
     @NotEmpty(message = "{validation.standard.lastname.required}")
-    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.required}")
+    @Pattern(regexp = "[\\p{L} \\-']*", message = "{validation.standard.lastname.invalid}")
     @Size.List ({
             @Size(min=2, message="{validation.standard.lastname.length.min}"),
             @Size(max=70, message="{validation.standard.lastname.length.max}"),
@@ -32,8 +32,8 @@ public class MonitoringOfficerForm extends BaseBindingResultTarget {
     private String lastName;
 
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
-    @NotEmpty(message = "{validation.standard.email.required}")
-    @Size(max = 256, message = "{validation.standard.email.length.max}")
+    @NotEmpty(message = "{validation.invite.email.required}")
+    @Size(max = 254, message = "{validation.standard.email.length.max}")
     private String emailAddress;
 
     @NotEmpty(message = "{validation.standard.phonenumber.required}")

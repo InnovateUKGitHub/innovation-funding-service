@@ -3,10 +3,7 @@ package org.innovateuk.ifs.competition.transactional;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -82,4 +79,20 @@ public interface CompetitionService {
     @PreAuthorize("hasAnyAuthority('system_registrar')")
     @SecuredBySpring(value = "GET_COMPETITION_ORGANISATION_TYPES", description = "Anyone should be able to see what organisation types are allowed in a competition")
     ServiceResult<List<OrganisationTypeResource>> getCompetitionOrganisationTypes(long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('project_finance')")
+    @SecuredBySpring(value = "GET_OPEN_QUERIES", description = "Project finance users can see all open queries for a competition")
+    ServiceResult<List<CompetitionOpenQueryResource>> findAllOpenQueries(Long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('project_finance')")
+    @SecuredBySpring(value = "GET_OPEN_QUERIES", description = "Project finance users can count open queries for a competition")
+    ServiceResult<Long> countAllOpenQueries(Long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('project_finance')")
+    @SecuredBySpring(value = "GET_PENDING_SPEND_PROFILES", description = "Project finance users can get projects for which Spend Profile generation is pending, for a given competition")
+    ServiceResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(Long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('project_finance')")
+    @SecuredBySpring(value = "COUNT_PENDING_SPEND_PROFILES", description = "Project finance users can count projects for which Spend Profile generation is pending, for a given competition")
+    ServiceResult<Long> countPendingSpendProfiles(Long competitionId);
 }

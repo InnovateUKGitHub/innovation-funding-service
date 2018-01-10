@@ -16,6 +16,7 @@ Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../10__Project_setup/PS_Common.robot
 Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
+Resource          ../04__Applicant/Applicant_Commons.robot
 
 *** Variables ***
 ${valid_pdf}      testing.pdf
@@ -113,7 +114,7 @@ Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503
     [Tags]    HappyPath
     [Setup]  The user logs-in in new browser                             &{lead_applicant_credentials}
-    When the user can see the option to upload a file on the page        ${technical_approach_url}
+    When the user can see the option to upload a file on the page        ${APPLICATION_OVERVIEW_URL}
     Then the user uploads the file to the 'technical approach' question  ${valid_pdf}
     When log in as a different user                         &{Comp_admin1_credentials}
     And the user navigates to the page                      ${applicationsForRTOComp}
@@ -141,7 +142,7 @@ Comp admin should be able to view but not edit the finances for every partner
     And the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
     When Log in as a different user    &{collaborator1_credentials}
-    Then the user navigates to the page    ${YOUR_FINANCES_URL}
+    Then the user navigates to Your-finances page  ${OPEN_COMPETITION_APPLICATION_NAME}
     And the applicant edits the Subcontracting costs section
     And the user reloads the page
     When Log in as a different user    &{Comp_admin1_credentials}
@@ -156,6 +157,7 @@ the user uploads the file to the 'technical approach' question
 the user can see the option to upload a file on the page
     [Arguments]    ${url}
     The user navigates to the page    ${url}
+    the user clicks the button/link   jQuery=a:contains("Technical approach")
     the user should see the text in the page    Upload
 
 the user can view this file without any errors
@@ -177,36 +179,36 @@ the finance summary calculations should be correct
     Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(2)    ${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}
     Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(2)    ${DEFAULT_INDUSTRIAL_GRANT_RATE_WITH_PERCENTAGE}
     Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(2)    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(1) td:nth-of-type(3)    £${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(3)    £${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(3)    £${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(3)    £${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(1) td:nth-of-type(5)    £${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(5)    £${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(5)    £${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(5)    £${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(1) td:nth-of-type(3)    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(3)    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(3)    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(3)    ${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(1) td:nth-of-type(5)    ${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(2) td:nth-of-type(5)    ${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(3) td:nth-of-type(5)    ${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tbody tr:nth-of-type(4) td:nth-of-type(5)    ${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}
 
 the finance Project cost breakdown calculations should be correct
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(1) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(2) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(4) td:nth-of-type(1)    £${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(1) td:nth-of-type(1)    ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(2) td:nth-of-type(1)    ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(3) td:nth-of-type(1)    ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tbody tr:nth-of-type(4) td:nth-of-type(1)    ${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
 
 the applicant edits the Subcontracting costs section
     the user clicks the button/link    link=Your project costs
     the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
-    The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    2000
-    The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
-    The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    Romania
-    The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-role"]    Contractor
-    the user selects the checkbox    css=#agree-state-aid-page
+    The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[name^=subcontracting-subcontractingCost]    2000
+    The user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-name"]    Jackson Ltd
+    The user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-country-"]    Romania
+    The user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-role"]    Contractor
+    the user selects the checkbox      stateAidAgreed
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
 the user should see the correct finances change
-    Wait Until Element Contains Without Screenshots    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
     Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
-    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}
 
 The calculations should be correct
     [Arguments]    ${LIST_LOCATOR}    ${SUMMARY_LOCATOR}

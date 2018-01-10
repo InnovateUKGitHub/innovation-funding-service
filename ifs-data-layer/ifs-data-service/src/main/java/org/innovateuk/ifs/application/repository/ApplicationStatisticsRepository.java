@@ -74,7 +74,7 @@ public interface ApplicationStatisticsRepository extends PagingAndSortingReposit
             "  sum(case when competitionParticipant.competition.id = :compId AND activityState.state     IN " + SUBMITTED_STATES_STRING    + " THEN 1 ELSE 0 END)  " +  // submitted
             ") " +
             "FROM User user " +
-            "JOIN CompetitionParticipant competitionParticipant ON competitionParticipant.user.id = user.id " +
+            "JOIN CompetitionAssessmentParticipant competitionParticipant ON competitionParticipant.user.id = user.id " +
             "JOIN Profile profile ON profile.id = user.profileId " +
             // join on all applications for each invited assessor on the system
             "LEFT JOIN ProcessRole processRole ON processRole.user.id = user.id " +

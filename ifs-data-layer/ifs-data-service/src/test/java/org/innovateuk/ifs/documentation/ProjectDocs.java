@@ -47,17 +47,7 @@ public class ProjectDocs {
             fieldWithPath("otherDocumentsStatus").description("Status of the other documents"),
             fieldWithPath("grantOfferLetterStatus").description("Status of the Grant Offer Letter status"),
             fieldWithPath("roleSpecificGrantOfferLetterState").description("Map of specific user role type to Grant Offer Letter status"),
-            fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the the Grant Offer Letter notification has been sent")
-    };
-
-    public static final FieldDescriptor[] projectUserResourceFields = {
-            fieldWithPath("id").description("Id of the Project User record"),
-            fieldWithPath("user").description("Id of the User"),
-            fieldWithPath("userName").description("Full name of the User"),
-            fieldWithPath("project").description("Id of the Project"),
-            fieldWithPath("role").description("Id of the Role"),
-            fieldWithPath("roleName").description("Name of the Role"),
-            fieldWithPath("organisation").description("Id of the Organisation")
+            fieldWithPath("grantOfferLetterSent").description("Flag to indicate if the Grant Offer Letter notification has been sent")
     };
 
     @SuppressWarnings("unchecked")

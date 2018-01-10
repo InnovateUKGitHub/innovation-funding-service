@@ -5,6 +5,8 @@ import org.innovateuk.ifs.documentation.EditUserResourceDocs;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
 import org.innovateuk.ifs.registration.resource.InternalUserRegistrationResource;
 import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.SearchCategory;
+import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserPageResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -24,8 +26,10 @@ import static org.innovateuk.ifs.documentation.UserDocs.userPageResourceFields;
 import static org.innovateuk.ifs.documentation.UserDocs.userResourceFields;
 import static org.innovateuk.ifs.registration.builder.InternalUserRegistrationResourceBuilder.newInternalUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -37,6 +41,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserController> {
@@ -89,13 +95,13 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
         final UserResource userResource = newUserResource().build();
         when(baseUserServiceMock.findByProcessRole(eq(INNOVATION_LEAD))).thenReturn(serviceSuccess(asList(userResource, userResource)));
 
-        mockMvc.perform(get("/user/findByRole/{userRoleName}", INNOVATION_LEAD.getName()))
+        mockMvc.perform(get("/user/findByRole/{userRole}", INNOVATION_LEAD))
                 .andDo(document("user/{method-name}",
                         pathParameters(
-                                parameterWithName("userRoleName").description("The name of the role to get the users by.")
+                                parameterWithName("userRole").description("The role to get the users by.")
                         ),
                         responseFields(
-                                fieldWithPath("[]").description("list of users with the selected role")
+                                fieldWithPath("[]").description("list of users with the selected role, ordered by first name, last name")
                         )
                 ));
     }
@@ -220,5 +226,32 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
                                 parameterWithName("userId").description("Identifier of the user being reactivated")
                         )
                 ));
+    }
+
+    @Test
+    public void findExternalUsers() throws Exception {
+
+        String searchString = "aar";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        List<UserOrganisationResource> userOrganisationResources = newUserOrganisationResource().build(2);
+        when(userServiceMock.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory)).thenReturn(serviceSuccess(userOrganisationResources));
+
+        mockMvc.perform(get("/user/findExternalUsers?searchString=" + searchString + "&searchCategory=" + searchCategory))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(userOrganisationResources)))
+                .andDo(document(
+                        "user/{method-name}",
+                        requestParameters(
+                                parameterWithName("searchString").description("The string to search"),
+                                parameterWithName("searchCategory").description("The category to search")
+                        )
+                        ,
+                        responseFields(
+                                fieldWithPath("[]").description("List of external users with associated organisations, which contain the search string and match the search category")
+                        )
+                ));
+
+        verify(userServiceMock).findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
     }
 }

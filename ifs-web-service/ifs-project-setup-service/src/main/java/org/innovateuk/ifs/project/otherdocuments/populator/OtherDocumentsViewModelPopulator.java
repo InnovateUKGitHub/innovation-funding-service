@@ -29,10 +29,15 @@ public class OtherDocumentsViewModelPopulator {
 
     public OtherDocumentsViewModel populate(Long projectId, UserResource loggedInUser) {
 
-    ProjectResource project = projectService.getById(projectId);
-    Optional<FileEntryResource> collaborationAgreement = otherDocumentsService.getCollaborationAgreementFileDetails(projectId);
-    Optional<FileEntryResource> exploitationPlan = otherDocumentsService.getExploitationPlanFileDetails(projectId);
     List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
+    boolean collaborationAgreementRequired = partnerOrganisations.size() > 1;
+
+    ProjectResource project = projectService.getById(projectId);
+    Optional<FileEntryResource> collaborationAgreement = null;
+    if (collaborationAgreementRequired) {
+        collaborationAgreement = otherDocumentsService.getCollaborationAgreementFileDetails(projectId);
+    }
+    Optional<FileEntryResource> exploitationPlan = otherDocumentsService.getExploitationPlanFileDetails(projectId);
 
     List<String> partnerOrganisationNames = simpleMap(partnerOrganisations, OrganisationResource::getName);
     boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
@@ -43,10 +48,12 @@ public class OtherDocumentsViewModelPopulator {
     ApprovalType otherDocumentsApproved = project.getOtherDocumentsApproved();
 
     return new OtherDocumentsViewModel(projectId, project.getApplication(), project.getName(),
-            collaborationAgreement.map(FileDetailsViewModel::new).orElse(null),
+            collaborationAgreementRequired ? collaborationAgreement.map(FileDetailsViewModel::new).orElse(null) : null,
             exploitationPlan.map(FileDetailsViewModel::new).orElse(null),
             partnerOrganisationNames, rejectionReasons,
             isProjectManager, otherDocumentsSubmitted, otherDocumentsApproved,
-            isSubmitAllowed, project.getDocumentsSubmittedDate());
+            isSubmitAllowed,
+            project.getDocumentsSubmittedDate(),
+            collaborationAgreementRequired);
     }
 }

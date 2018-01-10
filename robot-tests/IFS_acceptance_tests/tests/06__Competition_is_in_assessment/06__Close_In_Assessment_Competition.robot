@@ -14,22 +14,22 @@ The Comp admin closes the competition In Assessment
     [Documentation]    INFUND-6459
     ...
     ...    INFUND-6602
-    When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And The user clicks the button/link    jQuery=.button:contains("Close assessment")
-    Then The user should see the text in the page    Panel
-    And The user clicks the button/link    link=All competitions
-    And The user should see the text in the element    css=section:nth-child(6)    ${IN_ASSESSMENT_COMPETITION_NAME}
+    When The user clicks the button/link  link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And The user clicks the button/link   jQuery=.button:contains("Close assessment")
+    Then The user should see the element  jQuery=h1:contains("Panel")
+    And The user clicks the button/link   link=All competitions
+    And The user should see the element   jQuery=h2:contains("Panel") ~ ul a:contains("${IN_ASSESSMENT_COMPETITION_NAME}")
 
 Comp admin is not allowed to reinstate an application once assessment is closed
     [Documentation]    IFS-1654
-    When the user navigates to the page  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
-    And the user clicks the button/link  link=${application_ids['Application with ineligible']}
+    When the user navigates to the page       ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/ineligible
+    And the user clicks the button/link       link=${application_ids['Application with ineligible']}
     Then the user should not see the element  jQuery=a:contains("Reinstate application")
 
 Assessors shouldn't see the closed competition
     [Documentation]    INFUND-6459
-    [Setup]    Log in as a different user    &{assessor2_credentials}
-    Then The user should not see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    [Setup]    Log in as a different user     &{assessor2_credentials}
+    Then The user should not see the element  link=${IN_ASSESSMENT_COMPETITION_NAME}
 
 *** Keywords ***
 Custom Suite Teardown

@@ -11,6 +11,5 @@ import java.util.List;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface GuidanceRowRepository extends CrudRepository<GuidanceRow, Long> {
-
-    List<GuidanceRow> findByFormInputQuestionCompetitionId(Long competitionId);
+    List<GuidanceRow> findByFormInputId(Long formInputId);
 }

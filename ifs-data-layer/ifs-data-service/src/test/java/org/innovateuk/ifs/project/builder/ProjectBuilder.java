@@ -91,7 +91,6 @@ ProjectBuilder extends BaseBuilder<Project, ProjectBuilder> {
         return withArray((date, project) -> project.setSpendProfileSubmittedDate(date), dates);
     }
 
-
     public ProjectBuilder withPartnerOrganisations(List<PartnerOrganisation>... partnerOrganisations) {
         return withArray((orgs, project) -> project.setPartnerOrganisations(orgs), partnerOrganisations);
     }

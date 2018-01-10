@@ -7,8 +7,10 @@ import com.google.common.base.CharMatcher;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.*;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm.Unrestricted;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
@@ -18,6 +20,7 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -44,6 +47,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/competition/setup")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionSetupController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionSetupController {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupController.class);
@@ -56,6 +60,9 @@ public class CompetitionSetupController {
 
     @Autowired
     private CompetitionService competitionService;
+
+    @Autowired
+    private CompetitionSetupRestService competitionSetupRestService;
 
     @Autowired
     private CompetitionSetupService competitionSetupService;
@@ -104,11 +111,11 @@ public class CompetitionSetupController {
             return "redirect:/dashboard";
         }
 
-        if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
-        competitionService.setSetupSectionMarkedAsIncomplete(competitionId, section).getSuccessObjectOrThrowException();
+        competitionSetupRestService.markSectionIncomplete(competitionId, section).getSuccessObjectOrThrowException();
         if (!competition.isSetupAndLive()) {
             competitionSetupService.setCompetitionAsCompetitionSetup(competitionId);
         }
@@ -123,7 +130,7 @@ public class CompetitionSetupController {
         CompetitionResource competition = competitionService.getById(competitionId);
         CompetitionSetupSection section = CompetitionSetupSection.fromPath(sectionPath);
 
-        if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -207,8 +214,7 @@ public class CompetitionSetupController {
             @SuppressWarnings("UnusedParameters") BindingResult bindingResult,
             ValidationHandler validationHandler,
             @PathVariable(COMPETITION_ID_KEY) long competitionId,
-            Model model
-    ) {
+            Model model) {
         return doSubmitInitialSectionDetails(competitionSetupForm, validationHandler, competitionId, model);
     }
 
@@ -242,7 +248,8 @@ public class CompetitionSetupController {
 
         if (request.getParameterMap().containsKey("generate-code")) {
             if (competition.getStartDate() != null) {
-                String competitionCode = competitionService.generateCompetitionCode(competitionId, competition.getStartDate());
+                String competitionCode = competitionSetupRestService.generateCompetitionCode(competitionId, competition.getStartDate())
+                        .getSuccessObjectOrThrowException();
                 competitionSetupForm.setCompetitionCode(competitionCode);
                 competitionSetupForm.setMarkAsCompleteAction(false);
             }
@@ -323,16 +330,16 @@ public class CompetitionSetupController {
         return String.format("redirect:/competition/setup/%d", competitionId);
     }
 
-    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @GetMapping("/{competitionId}/manage-innovation-leads/find")
-    public String manageInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+    public String manageInnovationLead(@P("competitionId")@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        Model model,
                                        UserResource loggedInUser) {
 
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competition.isInitialDetailsComplete()){
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -341,15 +348,15 @@ public class CompetitionSetupController {
         return "competition/manage-innovation-leads-find";
     }
 
-    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
+    @PreAuthorize("hasPermission(#competitionId,'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @GetMapping("/{competitionId}/manage-innovation-leads/overview")
-    public String manageInnovationLeadOverview(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+    public String manageInnovationLeadOverview(@P("competitionId") @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        Model model,
                                        UserResource loggedInUser) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competition.isInitialDetailsComplete()){
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -358,16 +365,16 @@ public class CompetitionSetupController {
         return "competition/manage-innovation-leads-overview";
     }
 
-    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @PostMapping("/{competitionId}/add-innovation-lead/{innovationLeadUserId}")
-    public String addInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+    public String addInnovationLead(@P("competitionId")@PathVariable(COMPETITION_ID_KEY) long competitionId,
                                     @PathVariable("innovationLeadUserId") long innovationLeadUserId,
                                     Model model,
                                     UserResource loggedInUser) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competition.isInitialDetailsComplete()){
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -377,16 +384,16 @@ public class CompetitionSetupController {
         return "competition/manage-innovation-leads-find";
     }
 
-    @PreAuthorize("hasPermission(#competitionId, 'MANAGE_INNOVATION_LEAD')")
+    @PreAuthorize("hasPermission(#competitionId, 'org.innovateuk.ifs.competition.resource.CompetitionCompositeId', 'MANAGE_INNOVATION_LEAD')")
     @PostMapping("/{competitionId}/remove-innovation-lead/{innovationLeadUserId}")
-    public String removeInnovationLead(@PathVariable(COMPETITION_ID_KEY) long competitionId,
+    public String removeInnovationLead(@P("competitionId") @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                        @PathVariable("innovationLeadUserId") long innovationLeadUserId,
                                        Model model,
                                        UserResource loggedInUser) {
 
         CompetitionResource competition = competitionService.getById(competitionId);
 
-        if (!competition.isInitialDetailsComplete()){
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)){
             return "redirect:/competition/setup/" + competitionId;
         }
 
@@ -404,7 +411,8 @@ public class CompetitionSetupController {
 
         CompetitionResource competition = competitionService.getById(competitionId);
         if (competition.getStartDate() != null) {
-            return this.createJsonObjectNode(true, competitionService.generateCompetitionCode(competitionId, competition.getStartDate()));
+            return this.createJsonObjectNode(true, competitionSetupRestService.generateCompetitionCode(competitionId, competition.getStartDate())
+                    .getSuccessObjectOrThrowException());
         } else {
             return this.createJsonObjectNode(false, "Please set a start date for your competition before generating the competition code, you can do this in the Initial Details section");
         }
@@ -419,7 +427,7 @@ public class CompetitionSetupController {
             return "redirect:/non-ifs-competition/setup/" + competition.getId();
         }
 
-        if (!competition.isInitialDetailsComplete() && section != CompetitionSetupSection.INITIAL_DETAILS) {
+        if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId()) && section != CompetitionSetupSection.INITIAL_DETAILS) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -457,7 +465,7 @@ public class CompetitionSetupController {
                                                   CompetitionResource competitionResource,
                                                   Model model) {
         if (section == CompetitionSetupSection.INITIAL_DETAILS &&
-                competitionResource.isInitialDetailsComplete()) {
+                competitionSetupService.isInitialDetailsCompleteOrTouched(competitionResource.getId())) {
             model.addAttribute(RESTRICT_INITIAL_DETAILS_EDIT, Boolean.TRUE);
         }
     }

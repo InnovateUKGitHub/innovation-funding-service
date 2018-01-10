@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Public Content'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Public Content',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
@@ -14,11 +14,9 @@
         <!-- Link back -->
         <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Public content',linkClass='link-back',linkUrl=@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}"  />
 
-        <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
-            <h2 class="heading-medium error-summary-heading">There was a problem submitting the public content.</h2>
-            <ul class="error-summary-list">
-                <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
-            </ul>
+        <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+            <h2 class="heading-medium error-summary-heading" id="error-summary-heading">There was a problem submitting the public content.</h2>
+            <th:block th:insert="fragments/elements :: error-summary-list(form)" />
         </div>
 
         <th:block th:with="competitionTitle=${#strings.isEmpty(model.competition.name)} ? |${model.competition.id} : $#{ifs.competition.no_title}| : |${model.competition.id} : ${model.competition.name}|">

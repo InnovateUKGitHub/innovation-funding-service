@@ -14,7 +14,7 @@
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
     </form>
-    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'upcoming'}, counts=${model.counts}, supportView=false)" />
+    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'upcoming'}, counts=${model.counts}, tabs=${model.tabs})" />
 
     <section th:with="inPrepComps=${model.competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP)}">
         <h2 class="heading-medium"

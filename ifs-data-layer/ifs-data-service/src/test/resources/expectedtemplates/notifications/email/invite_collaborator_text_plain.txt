@@ -1,6 +1,6 @@
 Dear User 2,
 
-You are invited by Steve Smith to participate in an application for grant funding from Innovate UK. You will be joining as part of the organisation Nomensa. The application is number 1 for the competition Competition 123.
+You are invited by Steve Smith to participate in an application for grant funding from Innovate UK. You will be joining as part of the organisation Nomensa. The application is number 1234 for the competition Competition 123.
 Steve Smith is the lead applicant. If you have any queries, please contact them directly.
 
 Next steps:

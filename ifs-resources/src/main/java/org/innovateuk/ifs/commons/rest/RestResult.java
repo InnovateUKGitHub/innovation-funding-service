@@ -1,13 +1,16 @@
 package org.innovateuk.ifs.commons.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorTemplate;
 import org.innovateuk.ifs.commons.error.exception.*;
-import org.innovateuk.ifs.commons.service.*;
+import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
+import org.innovateuk.ifs.commons.service.ExceptionThrowingFunction;
+import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.util.Either;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -18,15 +21,15 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.Either.left;
 import static org.innovateuk.ifs.util.Either.right;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpStatus.*;
 
 /**
@@ -186,6 +189,30 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
         }
 
         if (restFailure.has(COMPETITION_INVITE_ALREADY_SENT)) {
+            throw new InviteAlreadySentException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_ACCEPT_ALREADY_ACCEPTED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE)) {
+            throw new UnableToAcceptInviteException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(ASSESSMENT_PANEL_INVITE_CLOSED)) {
+            throw new InviteClosedException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(ASSESSMENT_PANEL_INVITE_EXPIRED)) {
+            throw new InviteExpiredException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(ASSESSMENT_PANEL_INVITE_ALREADY_SENT)) {
             throw new InviteAlreadySentException(error.getErrorKey(), error.getArguments());
         }
 

@@ -1,0 +1,103 @@
+= IFS API Guide
+:icons: font
+:toc: left
+:toclevels: 2
+:source-highlighter: highlightjs
+:sectlinks:
+
+[[overview-http-verbs]]
+== HTTP verbs
+
+IFS tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP verbs.
+
+|===
+| Verb | Usage
+
+| `GET`
+| Used to retrieve a resource
+
+| `POST`
+| Used to create a new resource
+
+| `PATCH`
+| Used to update an existing resource, including partial updates
+
+| `DELETE`
+| Used to delete an existing resource
+|===
+
+[[overview-http-status-codes]]
+== HTTP status codes
+
+IFS tries to adhere as closely as possible to standard HTTP and REST conventions in its
+use of HTTP status codes.
+
+|===
+| Status code | Usage
+
+| `200 OK`
+| The request completed successfully
+
+| `201 Created`
+| A new resource has been created successfully. The resource's URI is available from the response's
+`Location` header
+
+| `204 No Content`
+| An update to an existing resource has been applied successfully
+
+| `400 Bad Request`
+| The request was malformed. The response body will include an error providing further information
+
+| `404 Not Found`
+| The requested resource did not exist
+|===
+
+[[overview-headers]]
+== Headers
+
+Every request must contain a valid token to call the API:
+|===
+| Name | Description | Example
+
+| IFS_AUTH_TOKEN | Authentication token | curl --header "IFS_AUTH_TOKEN:testToken123" 'http://localhost:8090/application/findByUser/1' -i
+|===
+
+Every response has the following header(s):
+|===
+| Name | Description
+
+| Content-Type | The Content-Type of the payload, e.g. application/json;charset=UTF-8
+|===
+
+[[overview-error-handling]]
+== Error handling
+
+A failure in the API will be reflected not only in the HTTP status code, but also in a standard error response format that will allow more specific information to be relayed to the client of the API.
+
+The structure is of the form:
+
+[source]
+----
+{
+    "errors":[{
+
+        "errorKey":"PAYLOAD_TOO_LARGE",
+        "arguments":["23762", "5000"],
+        "errorMessage":"File upload was too large.  File was 23762 bytes but the maximum file size in bytes is 5000"
+
+    }, {
+        "errorKey":"ANOTHER_ERROR",
+        ................
+    }]
+}
+----
+
+The errorKey and the arguments are "machine-readable" fields that can be used by client applications to take appropriate action.
+
+The errorMessage on the other hand is an optional "human-readable" field that can be used to provide some helpful understandable information to API client developers.
+
+
+[[silstub]]
+== SIL stubbing endpoints
+include::silstub.adoc[]

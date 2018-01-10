@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
@@ -254,5 +255,25 @@ public class ApplicationAssessorResource {
                 .append(assignedCount)
                 .append(submittedCount)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("userId", userId)
+                .append("firstName", firstName)
+                .append("lastName", lastName)
+                .append("businessType", businessType)
+                .append("innovationAreas", innovationAreas)
+                .append("skillAreas", skillAreas)
+                .append("rejectReason", rejectReason)
+                .append("rejectComment", rejectComment)
+                .append("available", available)
+                .append("mostRecentAssessmentId", mostRecentAssessmentId)
+                .append("mostRecentAssessmentState", mostRecentAssessmentState)
+                .append("totalApplicationsCount", totalApplicationsCount)
+                .append("assignedCount", assignedCount)
+                .append("submittedCount", submittedCount)
+                .toString();
     }
 }

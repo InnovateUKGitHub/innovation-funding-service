@@ -1,0 +1,32 @@
+=== Mark question setup as complete
+==== Request
+include::{snippets}/question/setup/mark-question-setup-as-complete/http-request.adoc[]
+include::{snippets}/question/setup/mark-question-setup-as-complete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question/setup/mark-question-setup-as-complete/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/question/setup/mark-question-setup-as-complete/curl-request.adoc[]
+
+=== Mark question setup as incomplete
+==== Request
+include::{snippets}/question/setup/mark-question-setup-as-incomplete/http-request.adoc[]
+include::{snippets}/question/setup/mark-question-setup-as-incomplete/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question/setup/mark-question-setup-as-incomplete/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/question/setup/mark-question-setup-as-complete/curl-request.adoc[]
+
+=== Get Question setup statuses
+==== Request
+include::{snippets}/question/setup/get-question-statuses/http-request.adoc[]
+include::{snippets}/question/setup/get-question-statuses/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/question/setup/get-question-statuses/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/question/setup/get-question-statuses/curl-request.adoc[]

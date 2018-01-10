@@ -9,11 +9,14 @@ import org.innovateuk.ifs.affiliation.transactional.AffiliationService;
 import org.innovateuk.ifs.alert.mapper.AlertMapper;
 import org.innovateuk.ifs.alert.repository.AlertRepository;
 import org.innovateuk.ifs.alert.transactional.AlertService;
+import org.innovateuk.ifs.analytics.service.GoogleAnalyticsDataLayerService;
 import org.innovateuk.ifs.application.mapper.*;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.assessment.mapper.*;
+import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
+import org.innovateuk.ifs.assessment.panel.workflow.configuration.AssessmentReviewWorkflowHandler;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import org.innovateuk.ifs.assessment.transactional.*;
@@ -22,7 +25,6 @@ import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
-import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
 import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
@@ -33,17 +35,18 @@ import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
+import org.innovateuk.ifs.competition.transactional.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.competition.transactional.template.QuestionNumberOrderService;
+import org.innovateuk.ifs.competition.transactional.template.QuestionPriorityOrderService;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
-import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
@@ -93,6 +96,7 @@ import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServi
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
+import org.innovateuk.ifs.project.spendprofile.configuration.workflow.SpendProfileWorkflowHandler;
 import org.innovateuk.ifs.project.spendprofile.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.spendprofile.transactional.SpendProfileService;
 import org.innovateuk.ifs.project.status.transactional.StatusService;
@@ -100,7 +104,6 @@ import org.innovateuk.ifs.project.transactional.PartnerOrganisationService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.util.FinanceUtil;
-import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
@@ -117,6 +120,7 @@ import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.mapper.*;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
+import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
@@ -182,6 +186,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessmentPanelInviteService assessmentPanelInviteServiceMock;
 
     @Mock
+    protected AssessmentPanelService assessmentPanelServiceMock;
+
+    @Mock
+    protected AssessmentPanelParticipantRepository assessmentPanelParticipantRepositoryMock;
+
+    @Mock
     protected AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
 
     @Mock
@@ -230,16 +240,19 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CompetitionSetupService competitionSetupServiceMock;
 
     @Mock
+    protected CompetitionSetupQuestionService competitionSetupQuestionServiceMock;
+
+    @Mock
     protected CompetitionKeyStatisticsService competitionKeyStatisticsServiceMock;
 
     @Mock
     protected OrganisationRepository organisationRepositoryMock;
 
     @Mock
-    protected ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
+    protected UserOrganisationRepository userOrganisationRepositoryMock;
 
     @Mock
-    protected ApplicationCountSummaryMapper applicationCountSummaryMapperMock;
+    protected ApplicationStatisticsRepository applicationStatisticsRepositoryMock;
 
     @Mock
     protected ApplicationCountSummaryPageMapper applicationCountSummaryPageMapperMock;
@@ -308,7 +321,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationInviteRepository applicationInviteRepositoryMock;
 
     @Mock
-    protected CompetitionInviteRepository competitionInviteRepositoryMock;
+    protected CompetitionAssessmentInviteRepository competitionAssessmentInviteRepositoryMock;
 
     @Mock
     protected CompetitionParticipantRepository competitionParticipantRepositoryMock;
@@ -320,19 +333,25 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CompetitionInviteMapper competitionInviteMapperMock;
 
     @Mock
+    protected AssessmentPanelInviteMapper assessmentPanelInviteMapperMock;
+
+    @Mock
     protected CompetitionMapper competitionMapperMock;
 
     @Mock
     protected CompetitionInviteService competitionInviteServiceMock;
 
     @Mock
-    protected CompetitionParticipantMapper competitionParticipantMapperMock;
+    protected CompetitionAssessmentParticipantMapper competitionAssessmentParticipantMapperMock;
 
     @Mock
     protected CompetitionParticipantRoleMapper competitionParticipantRoleMapperMock;
 
     @Mock
     protected ParticipantStatusMapper participantStatusMapperMock;
+
+    @Mock
+    protected AssessmentPanelParticipantMapper assessmentPanelParticipantMapperMock;
 
     @Mock
     protected InviteProjectRepository inviteProjectRepositoryMock;
@@ -407,9 +426,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected SystemNotificationSource systemNotificationSourceMock;
 
     @Mock
-    protected FileHttpHeadersValidator fileValidatorMock;
-
-    @Mock
     protected FileEntryRepository fileEntryRepositoryMock;
 
     @Mock
@@ -476,9 +492,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CategoryService categoryServiceMock;
 
     @Mock
-    protected CategoryRepository categoryRepositoryMock;
-
-    @Mock
     protected InnovationAreaRepository innovationAreaRepositoryMock;
 
     @Mock
@@ -504,9 +517,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected BankDetailsService bankDetailsServiceMock;
-
-    @Mock
-    protected CompetitionFunderRepository competitionFunderRepositoryMock;
 
     @Mock
     protected SilExperianEndpoint silExperianEndpointMock;
@@ -620,9 +630,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected OrganisationTypeMapper organisationTypeMapperMock;
 
     @Mock
-    protected SpendProfileTableCalculator spendProfileTableCalculatorMock;
-
-    @Mock
     protected NotificationSender notificationSenderMock;
 
     @Mock
@@ -677,9 +684,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationWorkflowHandler applicationWorkflowHandlerMock;
 
     @Mock
-    protected UserSurveyService userSurveyServiceMock;
-
-    @Mock
     protected IneligibleOutcomeMapper ineligibleOutcomeMapperMock;
 
     @Mock
@@ -693,6 +697,24 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected OrganisationInitialCreationService organisationInitialCreationServiceMock;
+
+    @Mock
+    protected QuestionPriorityOrderService questionPriorityOrderServiceMock;
+
+    @Mock
+    protected QuestionNumberOrderService questionNumberOrderServiceMock;
+
+    @Mock
+    protected SpendProfileWorkflowHandler spendProfileWorkflowHandlerMock;
+
+    @Mock
+    protected GoogleAnalyticsDataLayerService googleAnalyticsDataLayerServiceMock;
+
+    @Mock
+    protected AssessmentReviewRepository assessmentReviewRepositoryMock;
+
+    @Mock
+    protected AssessmentReviewWorkflowHandler assessmentReviewWorkflowHandlerMock;
 
     @Before
     public void setupMockInjection() {

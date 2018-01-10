@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assess competition'" />
+    </head>
+
+    <body th:with="context='assessment'" class="create-application-eligibility">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main tabindex="-1" id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Assessment panel',size='heading-xlarge'" />
+            <p th:text="|You have been invited to the assessment panel for: '${model.competitionName}'.|"></p>
+
+            <div class="grid-row">
+                <section class="column-half">
+                    <div>
+                        <p class="heading-medium">Your email address is linked to an existing account.</p>
+                        <p>Please sign in with your existing account.</p>
+                        <p><a th:href="@{/invite-accept/panel/{inviteHash}/accept(inviteHash=${model.panelInviteHash})}">Click here to sign in</a></p>
+                    </div>
+                </section>
+                <section class="column-half"></section>
+            </div>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>

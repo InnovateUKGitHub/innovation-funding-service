@@ -2,37 +2,38 @@ package org.innovateuk.ifs.management.viewmodel.dashboard;
 
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.management.controller.dashboard.DashboardTabsViewModel;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * View model for showing the competitions in project setup
  */
-public class ProjectSetupDashboardViewModel {
+public class ProjectSetupDashboardViewModel extends DashboardViewModel {
 
 
-    private List<CompetitionSearchResultItem> competitions;
-    protected CompetitionCountResource counts;
+    private Long countBankDetails;
+    private boolean projectFinanceUser;
 
-    public ProjectSetupDashboardViewModel(List<CompetitionSearchResultItem> competitions,
-                                          CompetitionCountResource counts) {
+    public ProjectSetupDashboardViewModel(Map<CompetitionStatus, List<CompetitionSearchResultItem>> competitions,
+                                          CompetitionCountResource counts,
+                                          Long countBankDetails,
+                                          DashboardTabsViewModel tabs,
+                                          boolean projectFinanceUser) {
         this.competitions = competitions;
         this.counts = counts;
+        this.tabs = tabs;
+        this.countBankDetails = countBankDetails;
+        this.projectFinanceUser = projectFinanceUser;
     }
 
-    public List<CompetitionSearchResultItem> getCompetitions() {
-        return competitions;
+    public Long getCountBankDetails() {
+        return countBankDetails;
     }
 
-    public void setCompetitions(List<CompetitionSearchResultItem> competitions) {
-        this.competitions = competitions;
-    }
-
-    public CompetitionCountResource getCounts() {
-        return counts;
-    }
-
-    public void setCounts(CompetitionCountResource counts) {
-        this.counts = counts;
+    public boolean isProjectFinanceUser() {
+        return projectFinanceUser;
     }
 }

@@ -1,3 +1,25 @@
+import com.bmuschko.gradle.docker.DockerRegistryCredentials
+
+// Deployment behaviour for differing versions has not been tested yet
+// and so version numbers should always equal project.version
+// DO NOT HAVE OUT OF SYNC VERSION NUMBERS - THIS WILL BE IMPLEMENTED AS PART OF IFS-334
+ext.dataServiceVersion = project.properties['data-service.version'] ?: project.version
+ext.financeDataServiceVersion=project.properties['finance-data-service.version'] ?:project.version
+
+ext.applicationServiceVersion = project.properties['application-service.version'] ?: project.version
+ext.frontDoorServiceVersion = project.properties['front-door-service.version'] ?: project.version
+ext.assessmentServiceVersion = project.properties['assessment-service.version'] ?: project.version
+ext.competitionMgtServiceVersion = project.properties['competition-mgt-service.version'] ?: project.version
+ext.projectSetupMgtServiceVersion = project.properties['project-setup-mgt-service.version'] ?: project.version
+ext.projectSetupServiceVersion = project.properties['project-setup-service.version'] ?: project.version
+ext.registrationServiceVersion = project.properties['registration-service.version'] ?: project.version
+
+ext.spVersion = project.properties['sp.version'] ?: project.version
+ext.idpVersion = project.properties['idp.version'] ?: project.version
+ext.ldapVersion = project.properties['ldap.version'] ?: project.version
+
+ext.silStubVersion = project.properties['sil-stub.version'] ?: project.version
+
 allprojects {
     group 'innovateuk'
     version project.version
@@ -10,6 +32,51 @@ allprojects {
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
+
+}
+
+def getRemoteOCCredentials() {
+    def dockerRegistryCredentials = new DockerRegistryCredentials()
+    try {
+        // Get the docker repository for the remote OS cluster
+        dockerRegistryCredentials.url = project.dockerRegistry
+        dockerRegistryCredentials.username = "unused"
+        dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
+        dockerRegistryCredentials.email = "unused"
+
+    }
+    catch (ignored) {
+        println("Exception thrown creating the OpenShift docker registry credentials. " +
+                "This is most likely because the OpenShift commandline client is not installed. " +
+                "This is only an issue if wanting to deploy to an OpenShift cluster, " +
+                "in which case it will need to be installed")
+        println(ignored)
+    }
+    return dockerRegistryCredentials
+}
+
+def getLocalOCCredentials() {
+    def dockerRegistryCredentials = new DockerRegistryCredentials()
+    try {
+        // Get the docker repository for the local OS cluster
+        def localIpCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.clusterIP}'"
+        def localPortCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.ports..port}'"
+        project.ext.localIp = localIpCommand.execute().text.replace("'", "").trim()
+        project.ext.localPort = localPortCommand.execute().text.replace("'", "").trim()
+        dockerRegistryCredentials.url = project.ext.localIp + ":" + project.ext.localPort
+        dockerRegistryCredentials.username = "unused"
+        dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
+        dockerRegistryCredentials.email = "unused"
+
+    }
+    catch (ignored) {
+        println("Exception thrown creating the OpenShift docker registry credentials. " +
+                "This is most likely because the OpenShift commandline client is not installed. " +
+                "This is only an issue if wanting to deploy to an OpenShift cluster, " +
+                "in which case it will need to be installed")
+        println(ignored)
+    }
+    return dockerRegistryCredentials
 }
 
 apply from: "openshift-support.gradle"
@@ -21,6 +88,14 @@ if (!project.hasProperty('osTestArgs')) {
 
 build.enabled = false
 jar.enabled = false
+
+def isNamedEnv() {
+    return ["sysint", "uat", "demo", "perf", "production"].contains(openshiftEnv)
+}
+
+def isNotProductionEnv() {
+    !"production".equals(openshiftEnv)
+}
 
 configure(subprojects - project(":ifs-auth-service")) {
     apply plugin: 'org.springframework.boot'
@@ -111,7 +186,7 @@ buildscript {
         classpath 'com.bluepapa32:gradle-watch-plugin:0.1.5'
         classpath 'org.flywaydb:flyway-gradle-plugin:4.0'
         classpath 'org.flywaydb:flyway-core:4.0'
-        classpath 'org.sonarqube.gradle:gradle-sonarqube-plugin:1.1'
+        classpath 'org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.6'
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath 'org.owasp:dependency-check-gradle:1.4.5'
         classpath "com.avast.gradle:docker-compose-gradle-plugin:0.4.5"
@@ -121,6 +196,10 @@ buildscript {
     }
 
 }
+
+// use fully qualified class name
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+
 
 dependencyUpdates.resolutionStrategy = {
     componentSelection { rules ->
@@ -161,15 +240,12 @@ release {
     }
 }
 
-
-
 sonarqube {
     properties {
         property "sonar.projectName", "IFS_Project"
         property "sonar.host.url", "https://devops.innovateuk.org/code-quality/"
-        property "sonar.projectKey", "org.innovateuk:ifs"
-        property "sonar.branch", "ifs"
-        // property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
+        property "sonar.branch", "development"
+        property "sonar.projectKey", "org.sonarqube:java-gradle-simple"
         property "sonar.exclusions", "**/*MapperImpl.java"
     }
 }

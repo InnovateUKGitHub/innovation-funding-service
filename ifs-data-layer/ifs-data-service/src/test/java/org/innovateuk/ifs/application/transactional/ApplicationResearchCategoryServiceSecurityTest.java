@@ -8,12 +8,13 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.innovateuk.ifs.security.evaluator.CustomPermissionEvaluator;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.mockito.Mockito.*;
 
 /**
- * Testing the Spring Security and CustomPermissionEvaluator integration with ResearchCategoryService with regards to the
+ * Testing the Spring Security and {@link CustomPermissionEvaluator} integration with ResearchCategoryService with regards to the
  * security rules that are
  */
 

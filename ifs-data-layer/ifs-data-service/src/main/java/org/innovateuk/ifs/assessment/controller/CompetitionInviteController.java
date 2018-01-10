@@ -167,5 +167,4 @@ public class CompetitionInviteController {
     public RestResult<Void> resendInvites(@RequestParam List<Long> inviteIds, @RequestBody AssessorInviteSendResource assessorInviteSendResource) {
         return competitionInviteService.resendInvites(inviteIds, assessorInviteSendResource).toPostWithBodyResponse();
     }
-
 }

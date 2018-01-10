@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.error.Error;
@@ -15,8 +16,9 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
@@ -42,28 +44,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE;
-import static org.innovateuk.ifs.application.resource.ApplicationState.INELIGIBLE_INFORMED;
-import static org.innovateuk.ifs.application.resource.ApplicationState.REJECTED;
+import static org.innovateuk.ifs.application.resource.ApplicationState.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_CANNOT_RELEASE_FEEDBACK;
-import static org.innovateuk.ifs.commons.service.ServiceResult.handlingErrors;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isInnovationLead;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isSupport;
-import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
@@ -117,6 +109,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         put("name", new Sort(ASC, "name", "id"));
     }};
 
+    private static final String EOI = "Expression of interest";
+
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
         return find(competitionRepository.findById(id), notFoundError(Competition.class, id)).andOnSuccess(comp -> serviceSuccess(competitionMapper.mapToResource(comp)));
@@ -125,7 +119,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<List<UserResource>> findInnovationLeads(Long competitionId) {
 
-        List<CompetitionParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
+        List<CompetitionAssessmentParticipant> competitionParticipants = competitionParticipantRepository.getByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.INNOVATION_LEAD);
 
         List<UserResource> innovationLeads = simpleMap(competitionParticipants, competitionParticipant -> userMapper.mapToResource(competitionParticipant.getUser()));
 
@@ -142,7 +136,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 find(userRepository.findOne(innovationLeadUserId),
                      notFoundError(User.class, innovationLeadUserId))
                 .andOnSuccess(innovationLead -> {
-                    CompetitionParticipant competitionParticipant = new CompetitionParticipant();
+                    CompetitionAssessmentParticipant competitionParticipant = new CompetitionAssessmentParticipant();
                     competitionParticipant.setProcess(competition);
                     competitionParticipant.setUser(innovationLead);
                     competitionParticipant.setRole(CompetitionParticipantRole.INNOVATION_LEAD);
@@ -168,7 +162,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<CompetitionResource>> getCompetitionsByUserId(Long userId) {
         List<ApplicationResource> userApplications = applicationService.findByUserId(userId).getSuccessObjectOrThrowException();
         List<Long> competitionIdsForUser = userApplications.stream()
-                .map(applicationResource -> applicationResource.getCompetition())
+                .map(ApplicationResource::getCompetition)
                 .distinct()
                 .collect(Collectors.toList());
 
@@ -199,21 +193,29 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return competition.getApplications()
                 .stream()
                 .filter(application -> application.getManageFundingEmailDate() != null)
-                .max(Comparator.comparing(application -> application.getManageFundingEmailDate()))
+                .max(Comparator.comparing(Application::getManageFundingEmailDate))
                 .get().getManageFundingEmailDate();
     }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
-        List<Competition> competitions = competitionRepository.findProjectSetup();
-        // Only competitions with at least one funded and informed application can be considered as in project setup
-        return serviceSuccess(simpleMap(
-                CollectionFunctions.reverse(competitions.stream()
-                    .map(competition -> Pair.of(findMostRecentFundingInformDate(competition), competition))
-                    .sorted(Comparator.comparing(pair -> pair.getKey()))
-                    .map(pair -> pair.getValue())
-                    .collect(Collectors.toList())),
-                this::searchResultFromCompetition));
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+            List<Competition> competitions;
+            if (user.hasRole(UserRoleType.INNOVATION_LEAD)) {
+                competitions = competitionRepository.findProjectSetupForInnovationLead(user.getId());
+            } else {
+                competitions = competitionRepository.findProjectSetup();
+            }
+            // Only competitions with at least one funded and informed application can be considered as in project setup
+            return serviceSuccess(simpleMap(
+                    CollectionFunctions.reverse(competitions.stream()
+                            .filter(competition -> !competition.getCompetitionType().getName().equals(EOI))
+                            .map(competition -> Pair.of(findMostRecentFundingInformDate(competition), competition))
+                            .sorted(Comparator.comparing(Pair::getKey))
+                            .map(Pair::getValue)
+                            .collect(Collectors.toList())),
+                    this::searchResultFromCompetition));
+        });
     }
 
     @Override
@@ -230,9 +232,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findFeedbackReleasedCompetitions() {
-
         List<Competition> competitions = competitionRepository.findFeedbackReleased();
-        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
+        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition).stream().sorted((c1, c2) -> c2.getOpenDate().compareTo(c1.getOpenDate())).collect(Collectors.toList()));
     }
 
     @Override
@@ -244,13 +245,13 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         Set<State> unsuccessfulStates = simpleMapSet(asLinkedSet(
                 INELIGIBLE,
                 INELIGIBLE_INFORMED,
-                REJECTED), applicationState -> applicationState.getBackingState());
+                REJECTED), ApplicationState::getBackingState);
 
         Sort sort = getApplicationSortField(sortField);
         Pageable pageable = new PageRequest(pageIndex, pageSize, sort);
 
         Page<Application> pagedResult = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, unsuccessfulStates, pageable);
-        List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), application -> convertToApplicationResource(application));
+        List<ApplicationResource> unsuccessfulApplications = simpleMap(pagedResult.getContent(), this::convertToApplicationResource);
 
         return serviceSuccess(new ApplicationPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), unsuccessfulApplications, pagedResult.getNumber(), pagedResult.getSize()));
     }
@@ -309,7 +310,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                         .stream()
                         .map(Category::getName)
                         .collect(Collectors.toCollection(TreeSet::new)),
-                c.getApplications().size(),
+                applicationRepository.countByCompetitionId(c.getId()),
                 c.startDateDisplay(),
                 c.getCompetitionStatus(),
                 ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null),
@@ -323,8 +324,37 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<CompetitionCountResource> countCompetitions() {
         //TODO INFUND-3833 populate complete count
-        return serviceSuccess(new CompetitionCountResource(competitionRepository.countLive(), competitionRepository.countProjectSetup(),
-                competitionRepository.countUpcoming(), competitionRepository.countFeedbackReleased(), competitionRepository.countNonIfs()));
+        return serviceSuccess(
+                new CompetitionCountResource(
+                        getLiveCount(),
+                        getPSCount(),
+                        competitionRepository.countUpcoming(),
+                        competitionRepository.countFeedbackReleased(),
+                        competitionRepository.countNonIfs()));
+    }
+
+    private Long getLiveCount(){
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
+            Long count;
+            if(isInnovationLead(user)) {
+                count = competitionRepository.countLiveForInnovationLead(user.getId());
+            } else {
+                count = competitionRepository.countLive();
+            }
+            return count;
+        }).getSuccessObject();
+    }
+
+    private Long getPSCount(){
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
+            Long count;
+            if(isInnovationLead(user)) {
+                count = competitionRepository.countProjectSetupForInnovationLead(user.getId());
+            } else {
+                count = competitionRepository.countProjectSetup();
+            }
+            return count;
+        }).getSuccessObject();
     }
 
     @Override
@@ -369,5 +399,27 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
             competition.setFundersPanelEndDate(ZonedDateTime.now());
         }
         return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<List<CompetitionOpenQueryResource>> findAllOpenQueries(Long competitionId) {
+        return serviceSuccess(competitionRepository.getOpenQueryByCompetition(competitionId));
+    }
+
+    @Override
+    public ServiceResult<Long> countAllOpenQueries(Long competitionId) {
+        return serviceSuccess(competitionRepository.countOpenQueries(competitionId));
+    }
+
+    @Override
+    public ServiceResult<List<SpendProfileStatusResource>> getPendingSpendProfiles(Long competitionId) {
+
+        return serviceSuccess(competitionRepository.getPendingSpendProfiles(competitionId));
+    }
+
+    @Override
+    public ServiceResult<Long> countPendingSpendProfiles(Long competitionId) {
+
+        return serviceSuccess(competitionRepository.countPendingSpendProfiles(competitionId));
     }
 }

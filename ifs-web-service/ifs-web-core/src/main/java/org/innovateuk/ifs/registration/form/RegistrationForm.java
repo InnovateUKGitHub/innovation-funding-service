@@ -23,7 +23,7 @@ public class RegistrationForm extends BaseBindingResultTarget {
 
     @Email(regexp = ValidationConstants.EMAIL_DISALLOW_INVALID_CHARACTERS_REGEX, message = "{validation.standard.email.format}")
     @NotEmpty(message = "{validation.standard.email.required}")
-    @Size(max = 256, message = "{validation.standard.email.length.max}")
+    @Size(max = 254, message = "{validation.standard.email.length.max}")
     private String email;
 
     @NotEmpty(message = "{validation.standard.password.required}")

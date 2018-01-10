@@ -13,11 +13,19 @@ public class CompetitionStatusViewModel {
     private CompetitionProjectsStatusResource competitionProjectsStatusResource;
     private Map<Long, StatusPermission> statusPermissions;
     private boolean canExportBankDetails;
+    private long openQueryCount;
+    private long pendingSpendProfilesCount;
+    private boolean showTabs;
 
-    public CompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatusResource, boolean canExportBankDetails, Map<Long, StatusPermission> projectStatusPermissionsMap) {
+    public CompetitionStatusViewModel(CompetitionProjectsStatusResource competitionProjectsStatusResource,
+                                      boolean canExportBankDetails, Map<Long, StatusPermission> projectStatusPermissionsMap,
+                                      long openQueryCount, long pendingSpendProfilesCount, boolean showTabs) {
         this.competitionProjectsStatusResource = competitionProjectsStatusResource;
         this.canExportBankDetails = canExportBankDetails;
         this.statusPermissions = projectStatusPermissionsMap;
+        this.openQueryCount = openQueryCount;
+        this.pendingSpendProfilesCount = pendingSpendProfilesCount;
+        this.showTabs = showTabs;
     }
 
     public CompetitionProjectsStatusResource getCompetitionProjectsStatusResource() {
@@ -31,4 +39,10 @@ public class CompetitionStatusViewModel {
     public boolean isCanExportBankDetails() {
         return canExportBankDetails;
     }
+
+    public long getOpenQueryCount() { return openQueryCount; }
+
+    public long getPendingSpendProfilesCount() { return pendingSpendProfilesCount; }
+
+    public boolean isShowTabs() { return showTabs; }
 }

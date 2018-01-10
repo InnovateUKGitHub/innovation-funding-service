@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
@@ -124,8 +125,8 @@ public class MilestonesSectionSaverTest {
 
 
 
-    private LinkedMap<String, MilestoneRowForm> populateMilestoneFormEntry(List<MilestoneResource> resources) {
-        LinkedMap<String, MilestoneRowForm>  milestoneList = new LinkedMap<>();
+    private LinkedMap<String, GenericMilestoneRowForm> populateMilestoneFormEntry(List<MilestoneResource> resources) {
+        LinkedMap<String, GenericMilestoneRowForm>  milestoneList = new LinkedMap<>();
 
         resources.forEach(milestoneResource -> {
             MilestoneRowForm milestone = new MilestoneRowForm(milestoneResource.getType(), milestoneResource.getDate());

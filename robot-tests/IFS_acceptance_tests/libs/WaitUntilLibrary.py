@@ -2,26 +2,16 @@ from logging import warn
 from robot.libraries.BuiltIn import BuiltIn
 s2l = BuiltIn().get_library_instance('Selenium2Library')
 
-currently_waiting_for_keyword_to_succeed = False
-
-
-
-# a decorator that sets and unsets a special flag when performing "Wait until" keywords and enforces that the
-# screenshots are only taken when failure results from a genuine test failure
+# a decorator that prevents intermediate screenshots from being captured.
 def setting_wait_until_flag(func):
 
   def decorator(*args):
 
-    global currently_waiting_for_keyword_to_succeed
-
-    currently_waiting_for_keyword_to_succeed = True
     try:
       result = func(*args)
     except:
-      capture_large_screenshot()
+      # do nothing, especially do not create a screenshot
       raise
-    finally:
-      currently_waiting_for_keyword_to_succeed = False
     return result
 
   return decorator
@@ -80,11 +70,6 @@ def run_keyword_and_ignore_error_without_screenshots(keyword, *args):
 @setting_wait_until_flag
 def run_keyword_and_return_status_without_screenshots(keyword, *args):
   return BuiltIn().run_keyword_and_return_status(keyword, *args)
-
-
-def capture_page_screenshot_on_failure():
-  if not currently_waiting_for_keyword_to_succeed:
-    capture_large_screenshot()
 
 
 def capture_large_screenshot():

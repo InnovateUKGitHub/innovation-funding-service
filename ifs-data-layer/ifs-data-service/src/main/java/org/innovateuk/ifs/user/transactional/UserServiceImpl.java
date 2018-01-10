@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.user.transactional;
 
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
@@ -15,10 +17,10 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
+import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
+import org.innovateuk.ifs.userorganisation.repository.UserOrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -32,11 +34,13 @@ import static java.time.ZonedDateTime.now;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INVALID_INPUT_LENGTH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -83,6 +87,12 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
     @Autowired
     private EthnicityMapper ethnicityMapper;
+
+    @Autowired
+    private UserOrganisationRepository userOrganisationRepository;
+
+    @Autowired
+    private UserOrganisationMapper userOrganisationMapper;
 
     @Override
     public ServiceResult<UserResource> findByEmail(final String email) {
@@ -155,8 +165,8 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
 
                 UserResource userResource = userMapper.mapToResource(user);
 
-                return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccessReturnVoid(() ->
-                        identityProviderService.updateUserPassword(userResource.getUid(), password).andOnSuccess(() ->
+                return passwordPolicyValidator.validatePassword(password, userResource).andOnSuccess(() ->
+                        identityProviderService.updateUserPassword(userResource.getUid(), password).andOnSuccessReturnVoid(() ->
                             tokenRepository.delete(token))
                 );
             })
@@ -218,6 +228,42 @@ public class UserServiceImpl extends UserTransactionalService implements UserSer
         Page<User> pagedResult = userRepository.findDistinctByStatusAndRolesNameIn(UserStatus.INACTIVE, roleTypes.stream().map(UserRoleType::getName).collect(Collectors.toSet()), pageable);
         List<UserResource> userResources = simpleMap(pagedResult.getContent(), user -> userMapper.mapToResource(user));
         return serviceSuccess(new UserPageResource(pagedResult.getTotalElements(), pagedResult.getTotalPages(), sortByName(userResources), pagedResult.getNumber(), pagedResult.getSize()));
+    }
+
+    @Override
+    public ServiceResult<List<UserOrganisationResource>> findByProcessRolesAndSearchCriteria(Set<UserRoleType> roleTypes, String searchString, SearchCategory searchCategory) {
+
+        return validateSearchString(searchString).andOnSuccess(() -> {
+            String searchStringExpr = "%" + StringUtils.trim(searchString) + "%";
+            Set<String> roleTypeNames = simpleMapSet(roleTypes, UserRoleType::getName);
+            List<UserOrganisation> userOrganisations;
+            switch (searchCategory) {
+                case NAME:
+                    userOrganisations = userOrganisationRepository.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchStringExpr, searchStringExpr, roleTypeNames);
+                    break;
+
+                case ORGANISATION_NAME:
+                    userOrganisations = userOrganisationRepository.findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchStringExpr, roleTypeNames);
+                    break;
+
+                case EMAIL:
+                default:
+                    userOrganisations = userOrganisationRepository.findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(searchStringExpr, roleTypeNames);
+                    break;
+            }
+            return serviceSuccess(simpleMap(userOrganisations, userOrganisationMapper::mapToResource));
+        });
+    }
+
+    private ServiceResult<Void> validateSearchString(String searchString) {
+
+        searchString = StringUtils.trim(searchString);
+
+        if (StringUtils.isEmpty(searchString) || StringUtils.length(searchString) < 3) {
+            return serviceFailure(new Error(USER_SEARCH_INVALID_INPUT_LENGTH, singletonList(3)) );
+        } else {
+            return serviceSuccess();
+        }
     }
 
     private List<UserResource> sortByName(List<UserResource> userResources) {

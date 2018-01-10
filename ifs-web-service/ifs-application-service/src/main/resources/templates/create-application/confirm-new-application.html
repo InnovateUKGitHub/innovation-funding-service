@@ -10,44 +10,45 @@
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub"          th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
     <div class="grid-row">
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You have an application in progress',size='heading-large'" />
-        <p>You have already started an application in this competition. Do you want to continue with your existing application or create a new one in the same competition?</p>
+        <div class="column-two-thirds">
+            <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='You have an application in progress',size='heading-large'" />
+            <p>You have already started an application in this competition. Do you want to continue with your existing application or create a new one in the same competition?</p>
+        </div>
+    </div>
+    <div class="grid-row">
+        <div class="column-full">
+            <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" novalidate="novalidate">
 
-        <form method="post" action="#" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
-
-            <fieldset>
-                <legend class="visuallyhidden">Create a new application?</legend>
-                <div class="form-group">
-                    <div class="multiple-choice">
-                        <input id="new-application-yes"
-                               type="radio"
-                               th:name="create-application"
-                               value="true" />
-                        <label for="new-application-yes">
-                            Yes, I want to create a new application.
-                        </label>
+                <fieldset>
+                    <legend class="visuallyhidden">Create a new application?</legend>
+                    <div class="form-group">
+                        <div class="multiple-choice">
+                            <input id="new-application-yes"
+                                   type="radio"
+                                   th:name="create-application"
+                                   value="true" />
+                            <label for="new-application-yes">
+                                Yes, I want to create a new application.
+                            </label>
+                        </div>
+                        <div class="multiple-choice">
+                            <input type="radio"
+                                   id="new-application-no"
+                                   name="create-application"
+                                   value="false" />
+                            <label for="new-application-no">
+                                No, I want to continue with my existing application.
+                            </label>
+                        </div>
                     </div>
-                    <div class="multiple-choice">
-                        <input type="radio"
-                               id="new-application-no"
-                               name="create-application"
-                               value="false" />
-                        <label for="new-application-no">
-                            No, I want to continue with my existing application.
-                        </label>
-                    </div>
-                </div>
-            </fieldset>
+                </fieldset>
 
-
-            <button type="submit" name="create-application-submit" class="button">
-                Continue
-            </button>
-        </form>
-
-
+                <button type="submit" name="create-application-submit" class="button">
+                    Continue
+                </button>
+            </form>
+        </div>
     </div>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

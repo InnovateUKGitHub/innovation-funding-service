@@ -100,6 +100,10 @@ class CsvUtils {
         return simpleMap(readCsvLines("projects"), ProjectLine::new);
     }
 
+    static List<QuestionLine> readQuestions() {
+        return simpleMap(readCsvLines("questions"), QuestionLine::new);
+    }
+
     static class ProjectLine {
 
         String name;
@@ -412,6 +416,7 @@ class CsvUtils {
         Boolean multiStream;
         ZonedDateTime openDate;
         ZonedDateTime briefingDate;
+        ZonedDateTime registrationDate;
         ZonedDateTime submissionDate;
         ZonedDateTime allocateAssessorDate;
         ZonedDateTime assessorBriefingDate;
@@ -465,6 +470,7 @@ class CsvUtils {
             multiStream = nullableBoolean(line.get(i++));
             openDate = nullableDateTime(line.get(i++));
             briefingDate = nullableDateTime(line.get(i++));
+            registrationDate = nullableDateTime(line.get(i++));
             submissionDate = nullableDateTime(line.get(i++));
             allocateAssessorDate = nullableDateTime(line.get(i++));
             assessorBriefingDate = nullableDateTime(line.get(i++));
@@ -671,6 +677,23 @@ class CsvUtils {
 
                 return kvMap;
             });
+        }
+    }
+
+    static class QuestionLine {
+        int ordinal;
+        String competitionName;
+        String heading;
+        String title;
+        String subtitle;
+
+        private QuestionLine(List<String> line) {
+            int i = 0;
+            competitionName = nullable(line.get(i++));
+            ordinal = nullableInteger(line.get(i++));
+            heading = nullable(line.get(i++));
+            title = nullable(line.get(i++));
+            subtitle = nullable(line.get(i++));
         }
     }
 

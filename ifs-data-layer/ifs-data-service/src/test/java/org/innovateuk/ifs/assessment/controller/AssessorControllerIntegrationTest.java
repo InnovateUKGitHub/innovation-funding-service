@@ -1,20 +1,21 @@
 package org.innovateuk.ifs.assessment.controller;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.profile.domain.Profile;
+import org.innovateuk.ifs.profile.repository.ProfileRepository;
+import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -22,8 +23,8 @@ import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuild
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.profile.builder.ProfileBuilder.newProfile;
+import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -87,13 +88,14 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
                 )
                 .build();
 
-        // truncate time - saved in DB to seconds resolution
-        expectedAssessorProfileResource.getUser().setModifiedOn(expectedAssessorProfileResource.getUser().getModifiedOn().truncatedTo(ChronoUnit.SECONDS));
-
         AssessorProfileResource actualAssessorProfileResource = controller.getAssessorProfile(3L).getSuccessObjectOrThrowException();
 
-        assertEquals(expectedAssessorProfileResource, actualAssessorProfileResource);
+        // We can be certain of how everything should be, with the exception of the modified time on the user which
+        // we don't know.
+        Assert.assertEquals(expectedAssessorProfileResource.getProfile(), actualAssessorProfileResource.getProfile());
+        Assert.assertTrue(EqualsBuilder.reflectionEquals(expectedAssessorProfileResource.getUser(), actualAssessorProfileResource.getUser(), "modifiedOn"));
     }
+
 
     @Test
     public void getAssessorProfile_notFound() throws Exception {

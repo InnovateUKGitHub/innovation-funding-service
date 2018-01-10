@@ -50,7 +50,7 @@ IFS.core.modal = (function () {
 
       if (target.length) {
         event.preventDefault()
-        if ((formValid) && (button.is('[aria-disabled="true"]') === false)) {
+        if ((formValid) && (button.is('[aria-disabled="true"]') === false) && (button.is('[disabled="disabled"]') === false)) {
           IFS.core.modal.disableTabPage()
           target.add('.modal-overlay').attr('aria-hidden', 'false')
           // vertical center,old browser support so no fancy css stuff :(

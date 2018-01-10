@@ -12,9 +12,11 @@ import org.innovateuk.ifs.project.monitoringofficer.form.MonitoringOfficerForm;
 import org.innovateuk.ifs.project.monitoringofficer.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.monitoringofficer.viewmodel.MonitoringOfficerViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.status.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.CollectionFunctions;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
@@ -27,6 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
@@ -44,6 +47,8 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
@@ -93,6 +98,13 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
             withAddress(projectAddress).
             withTargetStartDate(LocalDate.of(2017, 01, 05));
 
+    @Override
+    @Before
+    public void setUp() {
+        super.setUp();
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
+    }
+
     @Test
     public void testViewMonitoringOfficerPage() throws Exception {
 
@@ -100,9 +112,11 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         boolean existingMonitoringOfficer = true;
 
+        String url = "/project/123/monitoring-officer";
+
         setupViewMonitoringOfficerTestExpectations(project, existingMonitoringOfficer);
 
-        MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer")).
+        MvcResult result = mockMvc.perform(get(url)).
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
@@ -118,10 +132,20 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertFalse(model.isDisplayAssignMonitoringOfficerButton());
         assertTrue(model.isDisplayChangeMonitoringOfficerLink());
         assertFalse(model.isEditMode());
+        assertTrue(model.isEditable());
         assertTrue(model.isReadOnly());
 
         // assert the form for the MO details have been pre-populated ok
         assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(modelMap);
+        checkEditableFlagIsSetCorrectlyForSupportUser(url, false);
+    }
+
+    private void checkEditableFlagIsSetCorrectlyForSupportUser(String url, boolean post) throws Exception {
+        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.SUPPORT).build())).build());
+        MvcResult result = mockMvc.perform(post ? post(url) : get(url)).andReturn();
+        Map<String, Object> modelMap = result.getModelAndView().getModel();
+        MonitoringOfficerViewModel model = (MonitoringOfficerViewModel) modelMap.get("model");
+        assertFalse(model.isEditable());
     }
 
     @Test
@@ -133,7 +157,9 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         setupViewMonitoringOfficerTestExpectations(project, existingMonitoringOfficer);
 
-        MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer")).
+        String url = "/project/123/monitoring-officer";
+
+        MvcResult result = mockMvc.perform(get(url)).
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
@@ -151,10 +177,12 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertTrue(model.isDisplayAssignMonitoringOfficerButton());
         assertFalse(model.isDisplayChangeMonitoringOfficerLink());
         assertTrue(model.isEditMode());
+        assertTrue(model.isEditable());
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details is not prepopulated
         assertMonitoringOfficerFormNotPrepopulated(modelMap);
+        checkEditableFlagIsSetCorrectlyForSupportUser(url, false);
     }
 
     @Test
@@ -186,7 +214,9 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         setupViewMonitoringOfficerTestExpectations(project, existingMonitoringOfficer);
 
-        MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer/edit")).
+        String url = "/project/123/monitoring-officer/edit";
+
+        MvcResult result = mockMvc.perform(get(url)).
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
@@ -202,10 +232,12 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertTrue(model.isDisplayAssignMonitoringOfficerButton());
         assertFalse(model.isDisplayChangeMonitoringOfficerLink());
         assertTrue(model.isEditMode());
+        assertTrue(model.isEditable());
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details have been pre-populated ok
         assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(modelMap);
+        checkEditableFlagIsSetCorrectlyForSupportUser(url, false);
     }
 
     @Test
@@ -217,7 +249,9 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         setupViewMonitoringOfficerTestExpectations(project, existingMonitoringOfficer);
 
-        MvcResult result = mockMvc.perform(get("/project/123/monitoring-officer/edit")).
+        String url = "/project/123/monitoring-officer/edit";
+
+        MvcResult result = mockMvc.perform(get(url)).
                 andExpect(view().name("project/monitoring-officer")).
                 andReturn();
 
@@ -233,10 +267,12 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertTrue(model.isDisplayAssignMonitoringOfficerButton());
         assertFalse(model.isDisplayChangeMonitoringOfficerLink());
         assertTrue(model.isEditMode());
+        assertTrue(model.isEditable());
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details is not prepopulated
         assertMonitoringOfficerFormNotPrepopulated(modelMap);
+        checkEditableFlagIsSetCorrectlyForSupportUser(url, false);
     }
 
     @Test
@@ -293,8 +329,8 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
         setupViewMonitoringOfficerTestExpectations(project, false);
-
-        MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/confirm").
+        String url = "/project/123/monitoring-officer/confirm";
+        MvcResult result = mockMvc.perform(post(url).
                 param("firstName", "").
                 param("lastName", "").
                 param("emailAddress", "asdf").
@@ -314,6 +350,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertTrue(model.isDisplayAssignMonitoringOfficerButton());
         assertFalse(model.isDisplayChangeMonitoringOfficerLink());
         assertTrue(model.isEditMode());
+        assertTrue(model.isEditable());
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details have been retained from the ones in error
@@ -340,6 +377,8 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertEquals("NotEmpty", phoneNumberErrors.get(0).getCode());
         assertEquals("Pattern", phoneNumberErrors.get(1).getCode());
         assertEquals("Size", phoneNumberErrors.get(2).getCode());
+
+        checkEditableFlagIsSetCorrectlyForSupportUser(url, true);
     }
 
     @Test
@@ -400,8 +439,8 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf2@asdf.com", "0987654321")).thenReturn(failureResponse);
         setupViewMonitoringOfficerTestExpectations(project, false);
-
-        MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/assign").
+        String url = "/project/123/monitoring-officer/assign";
+        MvcResult result = mockMvc.perform(post(url).
                 param("firstName", "First").
                 param("lastName", "Last").
                 param("emailAddress", "asdf2@asdf.com").
@@ -421,6 +460,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertTrue(model.isDisplayAssignMonitoringOfficerButton());
         assertFalse(model.isDisplayChangeMonitoringOfficerLink());
         assertTrue(model.isEditMode());
+        assertTrue(model.isEditable());
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details have been retained from the ones that resulted in error
@@ -433,6 +473,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertEquals(1, form.getObjectErrors().size());
         assertEquals(PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED.getErrorKey(),
                 form.getObjectErrors().get(0).getCode());
+        checkEditableFlagIsSetCorrectlyForSupportUser(url, true);
     }
 
     @Test
@@ -466,8 +507,9 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         when(monitoringOfficerService.updateMonitoringOfficer(123L, "First", "Last", "asdf@asdf.com", "1234567890")).thenReturn(serviceSuccess());
         setupViewMonitoringOfficerTestExpectations(project, false);
+        String url = "/project/123/monitoring-officer/assign";
 
-        MvcResult result = mockMvc.perform(post("/project/123/monitoring-officer/assign").
+        MvcResult result = mockMvc.perform(post(url).
                 param("firstName", "").
                 param("lastName", "").
                 param("emailAddress", "asdf").
@@ -487,6 +529,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertTrue(model.isDisplayAssignMonitoringOfficerButton());
         assertFalse(model.isDisplayChangeMonitoringOfficerLink());
         assertTrue(model.isEditMode());
+        assertTrue(model.isEditable());
         assertFalse(model.isReadOnly());
 
         // assert the form for the MO details have been retained from the ones in error
@@ -513,6 +556,8 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
 
         assertEquals("Pattern", phoneNumberErrors.get(0).getCode());
         assertEquals("Size", phoneNumberErrors.get(1).getCode());
+
+        checkEditableFlagIsSetCorrectlyForSupportUser(url, true);
     }
 
     private void assertMonitoringOfficerFormPrepopulatedFromExistingMonitoringOfficer(Map<String, Object> modelMap) {
@@ -557,6 +602,7 @@ public class MonitoringOfficerControllerTest extends BaseControllerMockMVCTest<M
         assertEquals(asList("Line 1", "Line 3", "Line 4", "Line 5"), model.getPrimaryAddressLines());
         assertEquals(asList("Partner Org 1", "Partner Org 2"), model.getPartnerOrganisationNames());
         assertEquals(LocalDate.of(2017, 01, 05), model.getTargetProjectStartDate());
+        assertTrue(model.isEditable());
     }
 
     private void assertMonitoringOfficerFormNotPrepopulated(Map<String, Object> modelMap) {

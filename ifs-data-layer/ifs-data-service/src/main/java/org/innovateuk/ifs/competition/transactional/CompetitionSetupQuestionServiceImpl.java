@@ -8,6 +8,7 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
 import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
@@ -20,12 +21,15 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -48,37 +52,43 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
     @Autowired
     private GuidanceRowRepository guidanceRowRepository;
 
+    @Autowired
+    private CompetitionSetupTemplateService competitionSetupTemplateService;
+
     @Override
     public ServiceResult<CompetitionSetupQuestionResource> getByQuestionId(Long questionId) {
         return find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId))
-                .andOnSuccess(question -> {
-                    CompetitionSetupQuestionResource setupResource = new CompetitionSetupQuestionResource();
+                .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
+    }
 
-                    question.getFormInputs().forEach(formInput -> {
-                        if (FormInputScope.ASSESSMENT.equals(formInput.getScope())) {
-                            mapAssessmentFormInput(formInput, setupResource);
-                        } else {
-                            mapApplicationFormInput(formInput, setupResource);
-                        }
-                    });
+    private ServiceResult<CompetitionSetupQuestionResource> mapQuestionToSuperQuestionResource(Question question) {
+        CompetitionSetupQuestionResource setupResource = new CompetitionSetupQuestionResource();
 
-                    setupResource.setScoreTotal(question.getAssessorMaximumScore());
-                    setupResource.setNumber(question.getQuestionNumber());
-                    setupResource.setShortTitle(question.getShortName());
-                    setupResource.setTitle(question.getName());
-                    setupResource.setSubTitle(question.getDescription());
-                    setupResource.setQuestionId(question.getId());
-                    setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
-                    setupResource.setShortTitleEditable(isShortNameEditable(setupResource.getType()));
+        question.getFormInputs().forEach(formInput -> {
+            if (FormInputScope.ASSESSMENT.equals(formInput.getScope())) {
+                mapAssessmentFormInput(formInput, setupResource);
+            } else {
+                mapApplicationFormInput(formInput, setupResource);
+            }
+        });
 
-                    return ServiceResult.serviceSuccess(setupResource);
-                });
+        setupResource.setScoreTotal(question.getAssessorMaximumScore());
+        setupResource.setNumber(question.getQuestionNumber());
+        setupResource.setShortTitle(question.getShortName());
+        setupResource.setTitle(question.getName());
+        setupResource.setSubTitle(question.getDescription());
+        setupResource.setQuestionId(question.getId());
+        setupResource.setType(CompetitionSetupQuestionType.typeFromQuestionTitle(question.getShortName()));
+        setupResource.setShortTitleEditable(isShortNameEditable(setupResource.getType()));
+
+        return serviceSuccess(setupResource);
     }
 
     private void mapApplicationFormInput(FormInput formInput, CompetitionSetupQuestionResource setupResource) {
         switch (formInput.getType()) {
             case FILEUPLOAD:
                 setupResource.setAppendix(formInput.getActive());
+                setupResource.setAllowedFileTypes(asList(StringUtils.commaDelimitedListToStringArray(formInput.getAllowedFileTypes())));
                 break;
             case TEXTAREA:
                 setupResource.setGuidanceTitle(formInput.getGuidanceTitle());
@@ -117,7 +127,23 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
 
     @Override
     @Transactional
-    public ServiceResult<CompetitionSetupQuestionResource> save(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
+    public ServiceResult<CompetitionSetupQuestionResource> createByCompetitionId(Long competitionId) {
+        return find(competitionRepository.findById(competitionId), notFoundError(Competition.class, competitionId))
+                .andOnSuccess(competition -> competitionSetupTemplateService.addDefaultAssessedQuestionToCompetition(competition))
+                .andOnSuccess(question -> mapQuestionToSuperQuestionResource(question));
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<Void> delete(Long questionId) {
+        competitionSetupTemplateService.deleteAssessedQuestionInCompetition(questionId);
+
+        return serviceSuccess();
+    }
+
+    @Override
+    @Transactional
+    public ServiceResult<CompetitionSetupQuestionResource> update(CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         Long questionId = competitionSetupQuestionResource.getQuestionId();
         Question question = questionRepository.findOne(questionId);
 
@@ -140,13 +166,14 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
         markResearchCategoryQuestionAsActiveOrInactive(questionId, competitionSetupQuestionResource);
         markScopeAsActiveOrInactive(questionId, competitionSetupQuestionResource);
 
-        return ServiceResult.serviceSuccess(competitionSetupQuestionResource);
+        return serviceSuccess(competitionSetupQuestionResource);
     }
 
     private void markAppendixAsActiveOrInactive(Long questionId, CompetitionSetupQuestionResource competitionSetupQuestionResource) {
         FormInput appendixFormInput = formInputRepository.findByQuestionIdAndScopeAndType(questionId, FormInputScope.APPLICATION, FormInputType.FILEUPLOAD);
         if (appendixFormInput != null && competitionSetupQuestionResource.getAppendix() != null) {
             appendixFormInput.setActive(competitionSetupQuestionResource.getAppendix());
+            appendixFormInput.setAllowedFileTypes(StringUtils.collectionToDelimitedString(competitionSetupQuestionResource.getAllowedFileTypes(), ","));
         }
     }
 

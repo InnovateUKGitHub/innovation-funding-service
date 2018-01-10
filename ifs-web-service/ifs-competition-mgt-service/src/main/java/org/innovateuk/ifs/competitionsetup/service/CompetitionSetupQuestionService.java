@@ -15,5 +15,9 @@ public interface CompetitionSetupQuestionService {
 
 	ServiceResult<Void> updateQuestion(CompetitionSetupQuestionResource question);
 
+	ServiceResult<CompetitionSetupQuestionResource> createDefaultQuestion(Long competitionId);
+
+	ServiceResult<Void> deleteQuestion(Long questionId);
+
     ServiceResult<Void> validateApplicationQuestions(CompetitionResource competitionResource, LandingPageForm form, BindingResult result);
 }

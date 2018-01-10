@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.registration.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.registration.form.OrganisationTypeForm;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping(AbstractOrganisationCreationController.BASE_URL + "/initialize")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = OrganisationCreationInitializationController.class)
 @PreAuthorize("permitAll")
 public class OrganisationCreationInitializationController extends AbstractOrganisationCreationController {
     @GetMapping

@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.nonifs.saver;
 
 import org.hibernate.validator.internal.util.CollectionHelper;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
-import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
+import org.innovateuk.ifs.competitionsetup.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +27,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 @Service
 public class NonIfsDetailsFormSaver {
 
-    private static List<MilestoneType> PUBLIC_MILESTONE_TYPES = asList(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.NOTIFICATIONS);
+    private static List<MilestoneType> PUBLIC_MILESTONE_TYPES = asList(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.NOTIFICATIONS);
 
     @Autowired
-    private CompetitionService competitionService;
+    private CompetitionSetupRestService competitionSetupRestService;
 
     @Autowired
     private CompetitionSetupMilestoneService competitionSetupMilestoneService;
@@ -43,9 +43,9 @@ public class NonIfsDetailsFormSaver {
             return serviceFailure(CommonFailureKeys.ONLY_NON_IFS_COMPETITION_VALID);
         }
 
-        Map<String, MilestoneRowForm> mappedMilestones = createMilestoneMap(form);
+        Map<String, GenericMilestoneRowForm> mappedMilestones = createMilestoneMap(form);
         mapFormFields(form, competitionResource);
-        return competitionService.update(competitionResource).andOnSuccess(() -> {
+        return competitionSetupRestService.update(competitionResource).toServiceResult().andOnSuccess(() -> {
             List<MilestoneResource> milestones = getPublicMilestones(competitionResource);
             return competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, mappedMilestones, competitionResource.getId());
         });
@@ -71,10 +71,11 @@ public class NonIfsDetailsFormSaver {
         competitionResource.setInnovationAreas(CollectionHelper.asSet(form.getInnovationAreaCategoryId()));
     }
 
-    private Map<String, MilestoneRowForm> createMilestoneMap(NonIfsDetailsForm form) {
-        Map<String, MilestoneRowForm> milestones = new HashMap<>();
+    private Map<String, GenericMilestoneRowForm> createMilestoneMap(NonIfsDetailsForm form) {
+        Map<String, GenericMilestoneRowForm> milestones = new HashMap<>();
         milestones.put(MilestoneType.OPEN_DATE.name(), form.getOpenDate());
         milestones.put(MilestoneType.SUBMISSION_DATE.name(), form.getCloseDate());
+        milestones.put(MilestoneType.REGISTRATION_DATE.name(), form.getRegistrationCloseDate());
         milestones.put(MilestoneType.NOTIFICATIONS.name(), form.getApplicantNotifiedDate());
         return milestones;
     }

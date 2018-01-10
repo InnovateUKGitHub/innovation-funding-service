@@ -13,7 +13,6 @@ import java.util.List;
 import static org.innovateuk.ifs.util.NullCheckFunctions.allNull;
 
 public class TravelCostHandler extends FinanceRowHandler {
-    private static final Log LOG = LogFactory.getLog(TravelCostHandler.class);
 
     @Override
     public FinanceRowItem toFinanceRowItem(Long id, List<FinanceFormField> financeFormFields) {

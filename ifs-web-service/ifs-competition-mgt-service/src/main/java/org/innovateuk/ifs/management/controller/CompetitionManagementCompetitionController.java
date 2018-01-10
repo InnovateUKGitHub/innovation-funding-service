@@ -2,8 +2,10 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +22,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/competition")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementCompetitionController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance','innovation_lead')")
 public class CompetitionManagementCompetitionController {
 
     @Autowired
     private CompetitionService competitionService;
+
+    @Autowired
+    private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @Autowired
     private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
@@ -44,19 +50,28 @@ public class CompetitionManagementCompetitionController {
 
     @PostMapping("/{competitionId}/close-assessment")
     public String closeAssessment(@PathVariable("competitionId") Long competitionId) {
-        competitionService.closeAssessment(competitionId).getSuccessObjectOrThrowException();
+        competitionPostSubmissionRestService.closeAssessment(competitionId).getSuccessObjectOrThrowException();
         return "redirect:/competition/" + competitionId;
     }
 
     @PostMapping("/{competitionId}/notify-assessors")
     public String notifyAssessors(@PathVariable("competitionId") Long competitionId) {
-        competitionService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
+        competitionPostSubmissionRestService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
         return "redirect:/competition/" + competitionId;
     }
 
     @PostMapping("/{competitionId}/release-feedback")
     public String releaseFeedback(@PathVariable("competitionId") Long competitionId) {
-        competitionService.releaseFeedback(competitionId);
-        return "redirect:/dashboard/project-setup";
+        competitionPostSubmissionRestService.releaseFeedback(competitionId);
+
+        if (isCompetitionTypeEOI(competitionId)) {
+            return "redirect:/dashboard/previous";
+        } else {
+            return "redirect:/dashboard/project-setup";
+        }
+    }
+
+    private boolean isCompetitionTypeEOI(Long competitionId) {
+            return competitionService.getById(competitionId).getCompetitionTypeName().equals("Expression of interest");
     }
 }

@@ -1,15 +1,14 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
 import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.innovateuk.ifs.management.form.AssessorSelectionForm;
 import org.innovateuk.ifs.management.form.OverviewSelectionForm;
 import org.innovateuk.ifs.management.form.ResendInviteForm;
 import org.innovateuk.ifs.management.form.SendInviteForm;
-import org.innovateuk.ifs.management.viewmodel.SendInviteViewModel;
 import org.innovateuk.ifs.management.viewmodel.SendInvitesViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,7 +21,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.lang.String.format;
@@ -35,6 +33,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors/invite")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementSendInviteController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class CompetitionManagementSendInviteController extends CompetitionManagementCookieController<OverviewSelectionForm> {
 
@@ -94,7 +93,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
                     .toServiceResult();
 
             return validationHandler.addAnyErrors(sendResult, fieldErrorsToFieldErrors(), asGlobalErrors())
-                    .failNowOrSucceedWith(failureView, () -> redirectToInviteListView(competitionId));
+                    .failNowOrSucceedWith(failureView, () -> redirectToOverview(competitionId, 0));
         });
     }
 
@@ -159,7 +158,7 @@ public class CompetitionManagementSendInviteController extends CompetitionManage
     }
 
     private String redirectToResendView(long competitionId) {
-        return format("redirect:/competition/%s/assessors/invite", competitionId);
+        return format("redirect:/competition/%s/assessors/resend", competitionId);
     }
 
     private String redirectToInviteListView(long competitionId) {

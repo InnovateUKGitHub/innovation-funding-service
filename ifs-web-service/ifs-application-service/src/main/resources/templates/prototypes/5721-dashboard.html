@@ -4,10 +4,10 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
     </head>
-    <body class="dashboard-internal">
+    <body class="competition-management">
       <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
         <th:block th:insert="fragments/layout :: body-start" />
-          <th:block th:insert="fragments/layout :: global-header" />
+          <th:block th:insert="prototypes/fragments/layout :: prototype-comp-admin-header" th:with="status='loggedIn'" />
             <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
               <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${(param.status != null ? '/prototypes/3115-comp-dashboard?status=' + param.status[0] :'/prototypes/3115-comp-dashboard')})" th:unless="${param.status != null and param.status[0] == 'ready'}" />
@@ -183,7 +183,7 @@
                                         <a th:href="${(param.status != null ? '/prototypes/5052-view-applications?comp=' + param.status[0] : '/prototypes/5052-view-applications?comp=Open')}" class="" th:classappend="${(param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Applications: All, submitted, non-submitted, ineligible</a>
                                       </li>
                                       <li>
-                                        <a th:href="${(param.status != null ? '/prototypes/5062-manage-assessors?comp=' + param.status[0] : '/prototypes/5062-manage-assessors?comp=Open')}" class="">Invite assessors to assess the competition</a>
+                                        <a th:href="${(param.status != null ? '/prototypes/5062-manage-assessors?comp=' + param.status[0] : '/prototypes/IFS-6-invite-assessors?comp=Open')}" class="">Invite assessors to assess the competition</a>
                                       </li>
                                       <li>
                                         <a th:href="${(param.status != null ? '/prototypes/5052-manage-assessments?comp=' + param.status[0] : '/prototypes/5052-manage-assessments')}" class="" th:classappend="${(param.status == null or param.status[0] == 'Open' or param.status != null and param.status[0] == 'ready' ? 'disabled' : '')}">Assessor management: Assignments</a>

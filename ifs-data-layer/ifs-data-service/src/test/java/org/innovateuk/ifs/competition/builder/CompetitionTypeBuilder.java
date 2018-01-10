@@ -33,6 +33,10 @@ public class CompetitionTypeBuilder extends BaseBuilder<CompetitionType, Competi
         return with(competitionType -> setField("name", name, competitionType));
     }
 
+    public CompetitionTypeBuilder withTemplate(Competition competitionTemplate) {
+        return with(competitionType -> setField("template", competitionTemplate, competitionType));
+    }
+
     public CompetitionTypeBuilder withStateAid(Boolean stateAid) {
         return with(competitionType -> setField("stateAid", stateAid, competitionType));
     }

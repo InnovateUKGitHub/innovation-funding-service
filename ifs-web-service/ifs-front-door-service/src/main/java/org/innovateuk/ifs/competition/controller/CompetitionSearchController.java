@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.competition.populator.CompetitionSearchPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +26,7 @@ public class CompetitionSearchController {
     @Autowired
     private CompetitionSearchPopulator itemSearchPopulator;
 
+    @NotSecured("Not currently secured")
     @GetMapping
     public String publicContentSearch(Model model, @RequestParam(value = KEYWORDS_KEY, required = false) Optional<String> keywords,
                                       @RequestParam(value = INNOVATION_AREA_ID_KEY, required = false) Optional<Long> innovationAreaId,

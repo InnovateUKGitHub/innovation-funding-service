@@ -95,6 +95,12 @@ public class ApplicationWorkflowHandlerIntegrationTest extends BaseWorkflowHandl
                 applicationWorkflowHandler.notifyFromApplicationState(application, ApplicationState.SUBMITTED));
     }
 
+    @Test
+    public void approveFromApplicationState_rejectedToApproved() {
+        assertStateChangeOnWorkflowHandlerCall(ApplicationState.REJECTED, ApplicationState.APPROVED, application ->
+                applicationWorkflowHandler.approve(application));
+    }
+
     private void assertStateChangeOnWorkflowHandlerCall(ApplicationState initialApplicationState, ApplicationState expectedApplicationState, Function<Application, Boolean> workflowHandlerMethod) {
         assertStateChangeOnWorkflowHandlerCall(initialApplicationState, expectedApplicationState, workflowHandlerMethod, null);
     }

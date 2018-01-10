@@ -30,13 +30,14 @@ public class FinanceCheckSummaryResource {
     private List<FinanceCheckPartnerStatusResource> partnerStatusResources;
     private BigDecimal researchParticipationPercentage;
     private BigDecimal competitionMaximumResearchPercentage;
+    private Long applicationId;
 
     public FinanceCheckSummaryResource() {
     }
 
     public FinanceCheckSummaryResource(FinanceCheckOverviewResource overviewResource, Long competitionId, String competitionName, boolean spendProfilesGenerated,
                                        List<FinanceCheckPartnerStatusResource> partnerStatusResources, boolean bankDetailsApproved,
-                                       String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate) {
+                                       String spendProfileGeneratedBy, LocalDate spendProfileGeneratedDate, Long applicationId) {
         this.projectId = overviewResource.getProjectId();
         this.projectName = overviewResource.getProjectName();
         this.competitionId = competitionId;
@@ -54,6 +55,7 @@ public class FinanceCheckSummaryResource {
         this.spendProfileGeneratedDate = spendProfileGeneratedDate;
         this.researchParticipationPercentage = overviewResource.getResearchParticipationPercentage();
         this.competitionMaximumResearchPercentage = overviewResource.getCompetitionMaximumResearchPercentage();
+        this.applicationId = applicationId;
     }
 
     public Long getProjectId() {
@@ -214,4 +216,8 @@ public class FinanceCheckSummaryResource {
     public void setBankDetailsApproved(boolean bankDetailsApproved) {
         this.bankDetailsApproved = bankDetailsApproved;
     }
+
+    public Long getApplicationId() { return applicationId; }
+
+    public void setApplicationId(Long applicationId) { this.applicationId = applicationId; }
 }

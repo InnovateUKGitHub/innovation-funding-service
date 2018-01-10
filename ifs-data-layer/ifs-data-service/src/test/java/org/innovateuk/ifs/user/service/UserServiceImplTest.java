@@ -7,17 +7,18 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.resource.TokenType;
+import org.innovateuk.ifs.user.builder.OrganisationBuilder;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.UserPageResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.resource.UserStatus;
+import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.user.transactional.UserServiceImpl;
+import org.innovateuk.ifs.userorganisation.domain.UserOrganisation;
+import org.innovateuk.ifs.userorganisation.mapper.UserOrganisationMapper;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -27,13 +28,20 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USER_SEARCH_INVALID_INPUT_LENGTH;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserOrganisationResourceBuilder.newUserOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.externalApplicantRoles;
+import static org.innovateuk.ifs.userorganisation.builder.UserOrganisationBuilder.newUserOrganisation;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
@@ -45,6 +53,9 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
     @Captor
     ArgumentCaptor<Notification> notificationArgumentCaptor;
+
+    @Mock
+    UserOrganisationMapper userOrganisationMapperMock;
 
     @Test
     public void testChangePassword() {
@@ -77,6 +88,26 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
 
         ServiceResult<Void> result = service.changePassword("myhash", "mypassword");
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(CommonErrors.badRequestError("bad password")));
+        verify(tokenRepositoryMock, never()).delete(token);
+    }
+
+    @Test
+    public void testChangePasswordButPasswordValidationFailsOnIDP() {
+        final User user = newUser().build();
+        final UserResource userResource = newUserResource().withUID("myuid").build();
+        final String password = "mypassword";
+
+        Token token = new Token(TokenType.RESET_PASSWORD, null, 123L, null, null, null);
+        when(tokenServiceMock.getPasswordResetToken("myhash")).thenReturn(ServiceResult.serviceSuccess(token));
+        when(userRepositoryMock.findOne(123L)).thenReturn(user);
+        when(userMapperMock.mapToResource(user)).thenReturn(userResource);
+
+        when(passwordPolicyValidatorMock.validatePassword(password, userResource)).thenReturn(ServiceResult.serviceSuccess());
+        when(idpServiceMock.updateUserPassword(anyString(), anyString())).thenReturn(ServiceResult.serviceFailure(CommonErrors.badRequestError("bad password")));
+
+        ServiceResult<Void> result = service.changePassword("myhash", password);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(CommonErrors.badRequestError("bad password")));
         verify(tokenRepositoryMock, never()).delete(token);
@@ -127,7 +158,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.APPLICANT)
                                         .build()))
@@ -150,7 +181,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Arrays.asList(
+                        asList(
                                 newRoleResource()
                                         .withType(UserRoleType.APPLICANT)
                                         .build(),
@@ -175,7 +206,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.ASSESSOR)
                                         .build()))
@@ -195,7 +226,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.PROJECT_FINANCE)
                                         .build()))
@@ -215,7 +246,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.COMP_ADMIN)
                                         .build()))
@@ -235,7 +266,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.COMP_EXEC)
                                         .build()))
@@ -255,7 +286,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.INNOVATION_LEAD)
                                         .build()))
@@ -274,7 +305,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testSendPasswordResetNotificationInactiveLeadApplicantNoVerifyToken() {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.LEADAPPLICANT)
                                         .build()))
@@ -296,7 +327,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testSendPasswordResetNotificationInactivePartnerNoVerifyToken() {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.PARTNER)
                                         .build()))
@@ -318,7 +349,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
     public void testSendPasswordResetNotificationInactiveProjectManagerNoVerifyToken() {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE).withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.PROJECT_MANAGER)
                                         .build()))
@@ -341,7 +372,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.COLLABORATOR)
                                         .build()))
@@ -364,7 +395,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         final UserResource user = newUserResource()
                 .withStatus(UserStatus.INACTIVE)
                 .withRolesGlobal(
-                        Collections.singletonList(
+                        singletonList(
                                 newRoleResource()
                                         .withType(UserRoleType.FINANCE_CONTACT)
                                         .build()))
@@ -505,6 +536,160 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         UserPageResource resultObject = result.getSuccessObject();
         assertEquals(userResource2, resultObject.getContent().get(0));
         assertEquals(userResource1, resultObject.getContent().get(1));
+    }
+
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchStringIsNull(){
+
+        String searchString = null;
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+
+        assertTrue(result.isFailure());
+        assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
+
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationMapperMock, never()).mapToResource(any(UserOrganisation.class));
+    }
+
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchStringIsEmpty(){
+
+        String searchString = "";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+
+        assertTrue(result.isFailure());
+        assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
+
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationMapperMock, never()).mapToResource(any(UserOrganisation.class));
+    }
+
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchStringLengthLessThan5(){
+
+        String searchString = "a";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+
+        assertTrue(result.isFailure());
+        assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
+
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationMapperMock, never()).mapToResource(any(UserOrganisation.class));
+    }
+
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchStringIsAllSpaces(){
+
+        String searchString = "          ";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+
+        assertTrue(result.isFailure());
+        assertEquals(USER_SEARCH_INVALID_INPUT_LENGTH.getErrorKey(), result.getFailure().getErrors().get(0).getErrorKey());
+
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationMapperMock, never()).mapToResource(any(UserOrganisation.class));
+    }
+
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchCategoryIsName(){
+
+        String searchString = "%well%";
+        SearchCategory searchCategory = SearchCategory.NAME;
+
+        List<UserOrganisation> userOrganisations = setUpMockingFindByProcessRolesAndSearchCriteria();
+
+        when(userOrganisationRepositoryMock.findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet())).thenReturn(userOrganisations);
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+
+        assertTrue(result.isSuccess());
+        assertEquals(2, result.getSuccessObject().size());
+        assertEquals("Aaron Powell", result.getSuccessObject().get(0).getName());
+        assertEquals("David Wellington", result.getSuccessObject().get(1).getName());
+
+        verify(userOrganisationRepositoryMock).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+    }
+
+    private List<UserOrganisation> setUpMockingFindByProcessRolesAndSearchCriteria() {
+
+        UserOrganisationResource userOrganisationResource1 = newUserOrganisationResource().withName("Aaron Powell").withEmail("aaron.powell@example.com").withStatus(UserStatus.ACTIVE)
+                .withOrganisationId(1L).withOrganisationName("Guitar Gods Ltd").build();
+        UserOrganisationResource userOrganisationResource2 = newUserOrganisationResource().withName("David Wellington").withEmail("david.wellington@load.example.com").withStatus(UserStatus.ACTIVE)
+                .withOrganisationId(2L).withOrganisationName("Engine Equations Ltd").build();
+
+        List<UserOrganisation> userOrganisations = newUserOrganisation()
+                .withUser(newUser().withEmailAddress("aaron.powell@example.com").build(),
+                        newUser().withEmailAddress("david.wellington@load.example.com").build())
+                .withOrganisation(OrganisationBuilder.newOrganisation().withId(1L).withName("Guitar Gods Ltd").build(),
+                        OrganisationBuilder.newOrganisation().withId(2L).withName("Engine Equations Ltd").build())
+                .build(2);
+
+        when(userOrganisationMapperMock.mapToResource(userOrganisations.get(0))).thenReturn(userOrganisationResource1);
+        when(userOrganisationMapperMock.mapToResource(userOrganisations.get(1))).thenReturn(userOrganisationResource2);
+
+        return userOrganisations;
+    }
+
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchCategoryIsOrganisationName(){
+
+        String searchString = "%Ltd%";
+        SearchCategory searchCategory = SearchCategory.ORGANISATION_NAME;
+
+        List<UserOrganisation> userOrganisations = setUpMockingFindByProcessRolesAndSearchCriteria();
+
+        when(userOrganisationRepositoryMock.findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet())).thenReturn(userOrganisations);
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+
+        assertTrue(result.isSuccess());
+        assertEquals(2, result.getSuccessObject().size());
+        assertEquals("Guitar Gods Ltd", result.getSuccessObject().get(0).getOrganisationName());
+        assertEquals("Engine Equations Ltd", result.getSuccessObject().get(1).getOrganisationName());
+
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+    }
+
+    @Test
+    public void findByProcessRolesAndSearchCriteriaWhenSearchCategoryIsEmail(){
+
+        String searchString = "%com%";
+        SearchCategory searchCategory = SearchCategory.EMAIL;
+
+        List<UserOrganisation> userOrganisations = setUpMockingFindByProcessRolesAndSearchCriteria();
+
+        when(userOrganisationRepositoryMock.findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet())).thenReturn(userOrganisations);
+
+        ServiceResult<List<UserOrganisationResource>> result = service.findByProcessRolesAndSearchCriteria(externalApplicantRoles(), searchString, searchCategory);
+
+        assertTrue(result.isSuccess());
+        assertEquals(2, result.getSuccessObject().size());
+        assertEquals("aaron.powell@example.com", result.getSuccessObject().get(0).getEmail());
+        assertEquals("david.wellington@load.example.com", result.getSuccessObject().get(1).getEmail());
+
+        verify(userOrganisationRepositoryMock, never()).findByUserFirstNameLikeOrUserLastNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anyString(), anySet());
+        verify(userOrganisationRepositoryMock, never()).findByOrganisationNameLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
+        verify(userOrganisationRepositoryMock).findByUserEmailLikeAndUserRolesNameInOrderByIdUserEmailAsc(anyString(), anySet());
     }
 
     @Override

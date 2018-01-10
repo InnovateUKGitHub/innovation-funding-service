@@ -4,8 +4,9 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.mapper.CompetitionParticipantMapper;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
+import org.innovateuk.ifs.invite.mapper.CompetitionAssessmentParticipantMapper;
 import org.innovateuk.ifs.invite.mapper.CompetitionParticipantRoleMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
@@ -23,7 +24,7 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
- * Service for managing {@link org.innovateuk.ifs.invite.domain.CompetitionParticipant}s.
+ * Service for managing {@link CompetitionParticipant}s.
  */
 @Service
 @Transactional(readOnly = true)
@@ -33,7 +34,7 @@ public class CompetitionParticipantServiceImpl implements CompetitionParticipant
     private CompetitionParticipantRepository competitionParticipantRepository;
 
     @Autowired
-    private CompetitionParticipantMapper compParticipantMapper;
+    private CompetitionAssessmentParticipantMapper compParticipantMapper;
 
     @Autowired
     private CompetitionParticipantRoleMapper competitionParticipantRoleMapper;

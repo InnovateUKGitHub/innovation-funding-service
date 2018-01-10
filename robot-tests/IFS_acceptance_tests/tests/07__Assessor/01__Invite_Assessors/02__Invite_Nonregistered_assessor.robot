@@ -39,7 +39,7 @@ User can navigate back to Become an Assessor page
     [Tags]
     When the user clicks the button/link           jQuery=.button:contains("Create account")
     Then the user should see the element           jQuery=.heading-small:contains("Email") ~ p:contains("worth.email.test+thomas.fister@gmail.com")
-    And the user clicks the button/link            Link=Back
+    And the user clicks the button/link            jQuery=.link-back:contains("Back")
     And the user should see the element            jQuery=h1:contains("Become an assessor for Innovate UK")
 
 Create assessor account: server-side validations
@@ -119,13 +119,13 @@ Non-registered assessor: Reject invitation
     Then the user should see an error              The reason cannot be blank.
     And the assessor fills in all fields
     And The user clicks the button/link            jQuery=button:contains("Confirm")
-    Then the user should see the text in the page  Thank you for letting us know you are unable to assess applications within this competition.
+    Then the user should see the element           jQuery=p:contains("Thank you for letting us know you are unable to assess applications within this competition.")
     And the assessor shouldn't be able to reject the rejected competition
     And the assessor shouldn't be able to accept the rejected competition
 
 *** Keywords ***
 the assessor fills in all fields
-    Select From List By Index    id=rejectReason  3
+    Select From List By Index                     id=rejectReasonValid  3
     The user should not see the text in the page  This field cannot be left blank
     The user enters text to a text field          id=rejectComment    Unable to assess this application.
 
@@ -146,5 +146,5 @@ the assessor shouldn't be able to accept the rejected competition
     the assessor is unable to see the invitation
 
 The assessor is unable to see the invitation
-    The user should see the text in the page  This invitation is now closed
-    The user should see the text in the page  You have already accepted or rejected this invitation.
+    the user should see the element   jQuery=h1:contains("This invitation is now closed")
+    The user should see the element   jQuery=span:contains("You have already accepted or rejected this invitation.")

@@ -2,7 +2,8 @@ package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.publiccontent.form.AbstractPublicContentForm;
 import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
@@ -33,7 +34,10 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
     protected PublicContentService publicContentService;
 
     @Autowired
-    protected CompetitionsRestService competitionsRestService;
+    protected CompetitionRestService competitionRestService;
+
+    @Autowired
+    protected CompetitionSetupService competitionSetupService;
 
     protected abstract PublicContentViewModelPopulator<M> modelPopulator();
     protected abstract PublicContentFormPopulator<F> formPopulator();
@@ -70,10 +74,10 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
     }
 
     protected String getPage(PublicContentResource publicContent, Model model, Optional<F> form, boolean readOnly) {
-        CompetitionResource competition = competitionsRestService.getCompetitionById(publicContent.getCompetitionId())
+        CompetitionResource competition = competitionRestService.getCompetitionById(publicContent.getCompetitionId())
                 .getSuccessObjectOrThrowException();
 
-        if (!competition.isNonIfs() && !competition.isInitialDetailsComplete()) {
+        if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId())) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 
@@ -87,10 +91,10 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
     }
 
     protected String markAsComplete(Long competitionId, Model model, F form, ValidationHandler validationHandler) {
-        CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId)
+        CompetitionResource competition = competitionRestService.getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        if (!competition.isNonIfs() && !competition.isInitialDetailsComplete()) {
+        if (!competition.isNonIfs() && !competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
             return "redirect:/competition/setup/" + competition.getId();
         }
 

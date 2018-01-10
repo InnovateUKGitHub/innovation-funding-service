@@ -15,16 +15,16 @@ public interface CompetitionDashboardSearchService {
 
     Map<CompetitionStatus, List<CompetitionSearchResultItem>> getLiveCompetitions();
 
-    List<CompetitionSearchResultItem> getProjectSetupCompetitions();
+    Map<CompetitionStatus, List<CompetitionSearchResultItem>> getProjectSetupCompetitions();
 
     Map<CompetitionStatus, List<CompetitionSearchResultItem>> getUpcomingCompetitions();
 
-    List<CompetitionSearchResultItem> getNonIfsCompetitions();
+    Map<CompetitionStatus, List<CompetitionSearchResultItem>> getNonIfsCompetitions();
 
     CompetitionSearchResult searchCompetitions(String searchQuery, int page);
 
     CompetitionCountResource getCompetitionCounts();
 
-    List<CompetitionSearchResultItem> getPreviousCompetitions();
+    Map<CompetitionStatus, List<CompetitionSearchResultItem>> getPreviousCompetitions();
 
 }

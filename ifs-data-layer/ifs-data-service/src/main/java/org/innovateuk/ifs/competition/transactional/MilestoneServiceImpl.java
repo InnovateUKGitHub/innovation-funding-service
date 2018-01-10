@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -23,6 +21,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -34,8 +33,10 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
  */
 @Service
 public class MilestoneServiceImpl extends BaseTransactionalService implements MilestoneService {
-    private static final Log LOG = LogFactory.getLog(MilestoneServiceImpl.class);
-    private static final List<MilestoneType> PUBLIC_MILESTONES = asList(MilestoneType.OPEN_DATE, MilestoneType.NOTIFICATIONS, MilestoneType.SUBMISSION_DATE);
+
+    private static final List<MilestoneType> PUBLIC_MILESTONES =
+            asList(MilestoneType.OPEN_DATE, MilestoneType.REGISTRATION_DATE, MilestoneType.SUBMISSION_DATE, MilestoneType.NOTIFICATIONS);
+
     @Autowired
     private MilestoneRepository milestoneRepository;
 
@@ -54,10 +55,34 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Override
     public ServiceResult<Boolean> allPublicDatesComplete(Long competitionId) {
-        List<Milestone> milestones = milestoneRepository
-                .findByCompetitionIdAndTypeIn(competitionId, PUBLIC_MILESTONES);
+        boolean isNonIfs = competitionRepository.findById(competitionId).isNonIfs();
+        List<MilestoneType> milestonesRequired = PUBLIC_MILESTONES.stream()
+                .filter(milestoneType -> filterNonIfsOutOnIFSComp(milestoneType, isNonIfs))
+                .collect(toList());
 
-        return serviceSuccess(milestones.size() == PUBLIC_MILESTONES.size() && milestones.stream().noneMatch(milestone -> milestone.getDate() == null));
+        List<Milestone> milestones = milestoneRepository
+                .findByCompetitionIdAndTypeIn(competitionId, milestonesRequired);
+
+        return serviceSuccess(hasRequiredMilestones(milestones, milestonesRequired));
+    }
+
+    private Boolean hasRequiredMilestones(List<Milestone> milestones, List<MilestoneType> milestonesRequired) {
+        List<MilestoneType> milestoneTypes = milestones
+                .stream()
+                .map(milestone -> milestone.getType()).collect(toList());
+
+        return milestoneTypes.containsAll(milestonesRequired)
+            && milestones
+                .stream()
+                .noneMatch(milestone -> milestone.getDate() == null);
+    }
+
+    private boolean filterNonIfsOutOnIFSComp(MilestoneType milestoneType, boolean isNonIfs) {
+        if(isNonIfs) {
+            return !milestoneType.equals(MilestoneType.NOTIFICATIONS);
+        } else {
+            return !milestoneType.isOnlyNonIfs();
+        }
     }
 
     @Override
@@ -66,7 +91,6 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     }
 
     @Override
-    @Transactional(readOnly = true)
     public ServiceResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(MilestoneType type, Long id) {
         return find(milestoneRepository.findByTypeAndCompetitionId(type, id), notFoundError(MilestoneResource.class, type, id))
                 .andOnSuccess(milestone -> serviceSuccess(milestoneMapper.mapToResource(milestone)));
@@ -81,9 +105,8 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
             return serviceFailure(messages.getErrors());
         }
 
-        milestones.forEach(milestone -> milestoneRepository.save(milestoneMapper.mapToDomain(milestone)));
+        milestoneRepository.save(milestoneMapper.mapToDomain(milestones));
         return serviceSuccess();
-
     }
 
     @Override
@@ -98,7 +121,6 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     public ServiceResult<MilestoneResource> create(MilestoneType type, Long id) {
         Competition competition = competitionRepository.findById(id);
 
-        // TODO INFUND-6256 remove public default constructor for Milestone
         Milestone milestone = new Milestone();
         milestone.setType(type);
         milestone.setCompetition(competition);

@@ -12,18 +12,24 @@ public class AssessorDashboardViewModel {
     private List<AssessorDashboardActiveCompetitionViewModel> activeCompetitions;
     private List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions;
     private List<AssessorDashboardPendingInviteViewModel> pendingInvites;
+    private List<AssessorDashboardAssessmentPanelInviteViewModel> assessmentPanelInvites;
+    private List<AssessorDashboardAssessmentPanelAcceptedViewModel> assessmentPanelAccepted;
     private AssessorProfileStatusViewModel profileStatus;
 
     public AssessorDashboardViewModel(
             AssessorProfileStatusViewModel profileStatus,
             List<AssessorDashboardActiveCompetitionViewModel> activeCompetitions,
             List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions,
-            List<AssessorDashboardPendingInviteViewModel> pendingInvites
+            List<AssessorDashboardPendingInviteViewModel> pendingInvites,
+            List<AssessorDashboardAssessmentPanelInviteViewModel> assessmentPanelInvites,
+            List<AssessorDashboardAssessmentPanelAcceptedViewModel> assessmentPanelAccepted
     ) {
         this.profileStatus = profileStatus;
         this.activeCompetitions = activeCompetitions;
         this.upcomingCompetitions = upcomingCompetitions;
         this.pendingInvites = pendingInvites;
+        this.assessmentPanelInvites = assessmentPanelInvites;
+        this.assessmentPanelAccepted = assessmentPanelAccepted;
     }
 
     public List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions() {
@@ -40,6 +46,22 @@ public class AssessorDashboardViewModel {
 
     public void setUpcomingCompetitions(List<AssessorDashboardUpcomingCompetitionViewModel> upcomingCompetitions) {
         this.upcomingCompetitions = upcomingCompetitions;
+    }
+
+    public void setAssessmentPanelInvites(List<AssessorDashboardAssessmentPanelInviteViewModel> assessmentPanelInvites) {
+        this.assessmentPanelInvites = assessmentPanelInvites;
+    }
+
+    public List<AssessorDashboardAssessmentPanelInviteViewModel> getAssessmentPanelInvites() {
+        return assessmentPanelInvites;
+    }
+
+    public List<AssessorDashboardAssessmentPanelAcceptedViewModel> getAssessmentPanelAccepted() {
+        return assessmentPanelAccepted;
+    }
+
+    public void setAssessmentPanelAccepted(List<AssessorDashboardAssessmentPanelAcceptedViewModel> assessmentPanelAccepted) {
+        this.assessmentPanelAccepted = assessmentPanelAccepted;
     }
 
     public AssessorProfileStatusViewModel getProfileStatus() {

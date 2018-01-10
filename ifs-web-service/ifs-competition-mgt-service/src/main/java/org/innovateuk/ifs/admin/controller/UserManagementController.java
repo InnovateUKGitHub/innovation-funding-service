@@ -1,34 +1,38 @@
 package org.innovateuk.ifs.admin.controller;
 
 import org.innovateuk.ifs.admin.form.EditUserForm;
+import org.innovateuk.ifs.admin.form.SearchExternalUsersForm;
 import org.innovateuk.ifs.admin.viewmodel.EditUserViewModel;
 import org.innovateuk.ifs.admin.viewmodel.UserListViewModel;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.EditUserResource;
+import org.innovateuk.ifs.invite.resource.ExternalInviteResource;
 import org.innovateuk.ifs.invite.service.InviteUserRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.registration.service.InternalUserService;
+import org.innovateuk.ifs.user.resource.UserOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
@@ -37,7 +41,6 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasAnyAuthority('ifs_administrator')")
 public class UserManagementController {
 
     private static final String DEFAULT_PAGE_NUMBER = "0";
@@ -55,6 +58,8 @@ public class UserManagementController {
     @Autowired
     private InternalUserService internalUserService;
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/users/active")
     public String viewActive(Model model,
                              HttpServletRequest request,
@@ -63,6 +68,8 @@ public class UserManagementController {
         return view(model, "active", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/users/inactive")
     public String viewInactive(Model model,
                                HttpServletRequest request,
@@ -71,6 +78,8 @@ public class UserManagementController {
         return view(model, "inactive", page, size, Objects.toString(request.getQueryString(), ""));
     }
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('ifs_administrator')")
     @GetMapping("/users/pending")
     public String viewPending(Model model,
                                HttpServletRequest request,
@@ -101,21 +110,19 @@ public class UserManagementController {
                                 }).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException()).getSuccessObjectOrThrowException();
     }
 
-    @PreAuthorize("hasPermission(#userId, 'ACCESS_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId' ,'ACCESS_INTERNAL_USER')")
     @GetMapping("/user/{userId}")
-    public String viewUser(@PathVariable Long userId, Model model){
+    public String viewUser(@P("userId")@PathVariable Long userId, Model model){
         return userRestService.retrieveUserById(userId).andOnSuccessReturn( user -> {
                     model.addAttribute("model", new EditUserViewModel(user));
                     return "admin/user";
         }).getSuccessObjectOrThrowException();
     }
 
-    @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
     @GetMapping("/user/{userId}/edit")
-    public String viewEditUser(@PathVariable Long userId,
-                               Model model,
-                               HttpServletRequest request,
-                               UserResource loggedInUser) {
+    public String viewEditUser(@P("userId")@PathVariable Long userId,
+                               Model model) {
 
         return viewEditUser(model, userId, new EditUserForm());
     }
@@ -135,14 +142,12 @@ public class UserManagementController {
 
     }
 
-    @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
     @PostMapping("/user/{userId}/edit")
-    public String updateUser(@PathVariable Long userId,
+    public String updateUser(@P("userId")@PathVariable Long userId,
                              Model model,
-                             HttpServletRequest request,
                              @Valid @ModelAttribute(FORM_ATTR_NAME) EditUserForm form,
-                             @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
-                             UserResource loggedInUser) {
+                             @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler) {
 
         Supplier<String> failureView = () -> viewEditUser(model, userId, form);
 
@@ -159,23 +164,88 @@ public class UserManagementController {
     }
 
     private EditUserResource constructEditUserResource(EditUserForm form, Long userId) {
-
-        EditUserResource editUserResource = new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
-
-        return editUserResource;
+        return new EditUserResource(userId, form.getFirstName(), form.getLastName(), form.getRole());
     }
 
-    @PreAuthorize("hasPermission(#userId, 'EDIT_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'EDIT_INTERNAL_USER')")
     @PostMapping(value = "/user/{userId}/edit", params = "deactivateUser")
-    public String deactivateUser(@PathVariable Long userId) {
+    public String deactivateUser(@P("userId")@PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
                 userRestService.deactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
     }
 
-    @PreAuthorize("hasPermission(#userId, 'ACCESS_INTERNAL_USER')")
+    @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserCompositeId', 'ACCESS_INTERNAL_USER')")
     @PostMapping(value = "/user/{userId}", params = "reactivateUser")
-    public String reactivateUser(@PathVariable Long userId) {
+    public String reactivateUser(@P("userId") @PathVariable Long userId) {
         return userRestService.retrieveUserById(userId).andOnSuccess( user ->
                 userRestService.reactivateUser(userId).andOnSuccessReturn(p -> "redirect:/admin/user/" + userId)).getSuccessObjectOrThrowException();
+    }
+
+    @SecuredBySpring(value = "FIND_EXTERNAL_USERS", description = "Only the support user or IFS Admin can access external user information")
+    @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
+    @GetMapping(value = "/external/users")
+    public String viewFindExternalUsers(@ModelAttribute(FORM_ATTR_NAME) SearchExternalUsersForm form, Model model) {
+        model.addAttribute("tab", "users");
+        return emptyPage(model);
+    }
+
+    @SecuredBySpring(value = "FIND_EXTERNAL_INVITES", description = "Only the support user or IFS Admin can access external user invites")
+    @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
+    @GetMapping(value = "/external/invites")
+    public String viewFindExternalInvites(@ModelAttribute(FORM_ATTR_NAME) SearchExternalUsersForm form, Model model) {
+        model.addAttribute("tab", "invites");
+        return emptyPage(model);
+    }
+
+    private String emptyPage(Model model){
+        model.addAttribute("mode", "init");
+        model.addAttribute("users", emptyList());
+        return "admin/search-external-users";
+    }
+
+    @SecuredBySpring(value = "FIND_EXTERNAL_USERS", description = "Only the support user or IFS Admin can access external user information")
+    @PreAuthorize("hasAnyAuthority('support', 'ifs_administrator')")
+    @PostMapping({"/external/users", "/external/invites"})
+    public String findExternalUsers(@Valid @ModelAttribute(FORM_ATTR_NAME) SearchExternalUsersForm form,
+                                    @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
+                                    Model model, HttpServletRequest request) {
+        Map<String, String[]> requestParams = request.getParameterMap();
+        if (requestParams.containsKey("pending")) {
+            return findExternalInvites(form, validationHandler, model);
+        } else {
+            return findExternalUsers(form, validationHandler, model);
+        }
+    }
+
+    private String findExternalUsers(SearchExternalUsersForm form, ValidationHandler validationHandler, Model model) {
+        Supplier<String> failureView = () -> viewFindExternalUsers(form, model);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            RestResult<List<UserOrganisationResource>> users = userRestService.findExternalUsers(form.getSearchString(), form.getSearchCategory());
+            return validationHandler.addAnyErrors(users, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, () -> {
+                                model.addAttribute("mode", "search");
+                                model.addAttribute("tab", "users");
+                                model.addAttribute("users", users.getSuccessObjectOrThrowException());
+                                return "admin/search-external-users";
+                            }
+                    );
+        });
+    }
+
+    private String findExternalInvites(SearchExternalUsersForm form, ValidationHandler validationHandler, Model model) {
+        Supplier<String> failureView = () -> viewFindExternalInvites(form, model);
+
+        return validationHandler.failNowOrSucceedWith(failureView, () -> {
+            RestResult<List<ExternalInviteResource>> invites = inviteUserRestService.findExternalInvites(form.getSearchString().trim(), form.getSearchCategory());
+            return validationHandler.addAnyErrors(invites, fieldErrorsToFieldErrors(), asGlobalErrors()).
+                    failNowOrSucceedWith(failureView, () -> {
+                                model.addAttribute("mode", "search");
+                                model.addAttribute("tab", "invites");
+                                model.addAttribute("invites", invites.getSuccessObjectOrThrowException());
+                                return "admin/search-external-users";
+                            }
+                    );
+        });
     }
 }

@@ -6,8 +6,8 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.category.domain.*;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
@@ -101,13 +101,6 @@ public class Competition implements ProcessActivity {
             inverseJoinColumns = @JoinColumn(name = "organisation_type_id", referencedColumnName = "id"))
     private List<OrganisationType> leadApplicantTypes;
 
-    @ElementCollection
-    @JoinTable(name = "competition_setup_status", joinColumns = @JoinColumn(name = "competition_id"))
-    @MapKeyEnumerated(EnumType.STRING)
-    @MapKeyColumn(name = "section")
-    @Column(name = "status")
-    private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
-
     private boolean fullApplicationFinance = true;
     private Boolean setupComplete;
 
@@ -122,7 +115,7 @@ public class Competition implements ProcessActivity {
         setupComplete = false;
     }
 
-    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
+    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate) {
         this.id = id;
         this.applications = applications;
         this.questions = questions;
@@ -130,6 +123,7 @@ public class Competition implements ProcessActivity {
         this.name = name;
         this.setStartDate(startDate);
         this.setEndDate(endDate);
+        this.setRegistrationDate(registrationDate);
         this.setupComplete = true;
     }
 
@@ -240,6 +234,14 @@ public class Competition implements ProcessActivity {
         setMilestoneDate(SUBMISSION_DATE, endDate);
     }
 
+    public ZonedDateTime getRegistrationDate() {
+        return getMilestoneDate(REGISTRATION_DATE).orElse(null);
+    }
+
+    public void setRegistrationDate(ZonedDateTime endDate) {
+        setMilestoneDate(REGISTRATION_DATE, endDate);
+    }
+
     public ZonedDateTime getStartDate() {
         return getMilestoneDate(OPEN_DATE).orElse(null);
     }
@@ -270,6 +272,14 @@ public class Competition implements ProcessActivity {
 
     public void setReleaseFeedbackDate(ZonedDateTime releaseFeedbackDate) {
         setMilestoneDate(MilestoneType.RELEASE_FEEDBACK, releaseFeedbackDate);
+    }
+
+    public ZonedDateTime getAssessmentPanelDate() {
+        return getMilestoneDate(MilestoneType.ASSESSMENT_PANEL).orElse(null);
+    }
+
+    public void setAssessmentPanelDate(ZonedDateTime assessmentPanelDate) {
+        setMilestoneDate(MilestoneType.ASSESSMENT_PANEL, assessmentPanelDate);
     }
 
     public ZonedDateTime getFundersPanelDate() {
@@ -312,7 +322,8 @@ public class Competition implements ProcessActivity {
             milestones.add(m);
             return m;
         });
-        milestone.setDate(dateTime);
+        // IFS-2263 truncation to avoid mysql rounding up datetimes to the nearest second
+        milestone.setDate(dateTime == null ? null : dateTime.truncatedTo(ChronoUnit.SECONDS));
     }
 
     private Optional<Milestone> getMilestone(MilestoneType milestoneType) {
@@ -522,10 +533,6 @@ public class Competition implements ProcessActivity {
 
     public void setLeadApplicantTypes(List<OrganisationType> leadApplicantTypes) {
         this.leadApplicantTypes = leadApplicantTypes;
-    }
-
-    public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
-        return sectionSetupStatus;
     }
 
     public String getActivityCode() {

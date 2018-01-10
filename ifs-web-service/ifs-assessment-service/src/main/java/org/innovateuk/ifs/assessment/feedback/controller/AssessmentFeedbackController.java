@@ -16,6 +16,7 @@ import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponsesResource;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
@@ -43,10 +45,12 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.a
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.mappingFieldErrorToField;
 import static org.innovateuk.ifs.form.resource.FormInputScope.APPLICATION;
 import static org.innovateuk.ifs.form.resource.FormInputScope.ASSESSMENT;
+import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_APPLICATION_IN_SCOPE;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 @Controller
 @RequestMapping("/{assessmentId}")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentFeedbackController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessmentFeedbackController {
 
@@ -120,9 +124,7 @@ public class AssessmentFeedbackController {
         Supplier<String> failureView = () -> doViewQuestion(model, assessmentId, getQuestionForAssessment(questionId, assessmentId));
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            List<FormInputResource> formInputs = formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT)
-                    .getSuccessObjectOrThrowException();
-
+            List<FormInputResource> formInputs = getAssessmentFormInputsForQuestion(questionId);
             AssessorFormInputResponsesResource responses = getFormInputResponses(form, formInputs, assessmentId);
             RestResult<Void> updateResult = assessorFormInputResponseRestService.updateFormInputResponses(responses);
 
@@ -156,7 +158,24 @@ public class AssessmentFeedbackController {
         List<AssessorFormInputResponseResource> assessorResponses = getAssessorResponses(assessmentId, questionId);
         Map<Long, AssessorFormInputResponseResource> mappedResponses = simpleToMap(assessorResponses, AssessorFormInputResponseResource::getFormInput);
         mappedResponses.forEach((k, v) -> form.addFormInput(k.toString(), v.getValue()));
+        processScopeInput(form, mappedResponses, questionId);
+
         return form;
+    }
+
+    private void processScopeInput(Form form, Map<Long, AssessorFormInputResponseResource> mappedResponses, long questionId) {
+        Optional<FormInputResource> scopeInput = getScopeFormInput(getAssessmentFormInputsForQuestion(questionId));
+
+        scopeInput.ifPresent(scope -> {
+            if (!mappedResponses.containsKey(scope.getId())) {
+                form.addFormInput(scope.getId().toString(), "none");
+            }
+        });
+    }
+
+    private List<FormInputResource> getAssessmentFormInputsForQuestion(long questionId) {
+        return formInputRestService.getByQuestionIdAndScope(questionId, ASSESSMENT)
+                .getSuccessObjectOrThrowException();
     }
 
     private String doViewQuestion(Model model, long assessmentId, QuestionResource question) {
@@ -189,6 +208,12 @@ public class AssessmentFeedbackController {
 
     private List<FormInputResource> getApplicationFormInputs(long questionId) {
         return formInputRestService.getByQuestionIdAndScope(questionId, APPLICATION).getSuccessObjectOrThrowException();
+    }
+
+    private Optional<FormInputResource> getScopeFormInput(List<FormInputResource> formInputs) {
+        return formInputs.stream()
+                .filter(input -> input.getType().equals(ASSESSOR_APPLICATION_IN_SCOPE))
+                .findAny();
     }
 
     private AssessorFormInputResponsesResource getFormInputResponses(Form form, List<FormInputResource> formInputs, long assessmentId) {

@@ -12,13 +12,16 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
+import org.innovateuk.ifs.competitionsetup.form.GenericMilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.form.MilestoneRowForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
-import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupService;
 import org.innovateuk.ifs.competitionsetup.utils.CompetitionSpecialSectors;
+import org.innovateuk.ifs.competitionsetup.utils.CompetitionUtils;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.TimeZoneUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +50,15 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
     public final static String OPENINGDATE_FIELDNAME = "openingDate";
 	private static Log LOG = LogFactory.getLog(InitialDetailsSectionSaver.class);
+
 	@Autowired
 	private CompetitionService competitionService;
+
+	@Autowired
+    private CompetitionSetupService competitionSetupService;
+
+	@Autowired
+    private CompetitionSetupRestService competitionSetupRestService;
 
     @Autowired
     private MilestoneRestService milestoneRestService;
@@ -81,9 +91,9 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 return serviceFailure(errors);
             }
 
-            return competitionService.updateCompetitionInitialDetails(competition).andOnSuccess(() -> {
+            return competitionSetupRestService.updateCompetitionInitialDetails(competition).toServiceResult().andOnSuccess(() -> {
                 if (initialDetailsForm.isMarkAsCompleteAction() && applicationFormHasNotBeenInitialised(competition)) {
-                    return competitionService.initApplicationFormByCompetitionType(competition.getId(), initialDetailsForm.getCompetitionTypeId());
+                    return competitionSetupRestService.initApplicationForm(competition.getId(), initialDetailsForm.getCompetitionTypeId()).toServiceResult();
                 } else {
                     return serviceSuccess();
                 }
@@ -94,7 +104,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
     }
 
     private boolean applicationFormHasNotBeenInitialised(CompetitionResource competition) {
-        return !competition.isInitialDetailsComplete();
+        return !competitionSetupService.isInitialDetailsCompleteOrTouched(competition.getId());
     }
 
     private List<Error> doSetupComplete(final CompetitionResource competition, final InitialDetailsForm initialDetailsForm) {
@@ -237,11 +247,11 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
 
         List<MilestoneResource> milestones = milestoneRestService.getAllMilestonesByCompetitionId(competitionId).getSuccessObjectOrThrowException();
         if(milestones.isEmpty()) {
-            milestones = competitionSetupMilestoneService.createMilestonesForCompetition(competitionId).getSuccessObjectOrThrowException();
+            milestones = competitionSetupMilestoneService.createMilestonesForIFSCompetition(competitionId).getSuccessObjectOrThrowException();
         }
         milestones.sort(Comparator.comparing(MilestoneResource::getType));
 
-		LinkedMap<String, MilestoneRowForm> milestoneEntryMap = new LinkedMap<>();
+		LinkedMap<String, GenericMilestoneRowForm> milestoneEntryMap = new LinkedMap<>();
 		milestoneEntryMap.put(MilestoneType.OPEN_DATE.name(), milestoneEntry);
 
         ServiceResult<Void> result = competitionSetupMilestoneService.updateMilestonesForCompetition(milestones, milestoneEntryMap, competitionId);
@@ -263,7 +273,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
                 if(!errors.isEmpty()) {
                     return serviceFailure(errors);
                 } else {
-                    return competitionService.update(competitionResource);
+                    return competitionSetupRestService.update(competitionResource).toServiceResult();
                 }
             } catch (Exception e) {
                 LOG.error(e.getMessage());
@@ -271,7 +281,7 @@ public class InitialDetailsSectionSaver extends AbstractSectionSaver implements 
             }
         } else if(fieldName.equals("autosaveInnovationAreaIds")) {
             processInnovationAreas(value, competitionResource);
-            return competitionService.update(competitionResource);
+            return competitionSetupRestService.update(competitionResource).toServiceResult();
         }
         return super.handleIrregularAutosaveCase(competitionResource, fieldName, value, questionId);
     }

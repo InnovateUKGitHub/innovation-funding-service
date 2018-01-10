@@ -23,26 +23,18 @@
                 <tr>
                     <th scope="col">Total costs</th>
                     <th scope="col" class="numeric">% Grant</th>
-                    <th scope="col" class="numeric">Funding sought</th>
-                    <th scope="col" class="numeric">Other public sector funding</th>
-                    <th scope="col" class="numeric">Contribution to project</th>
+                    <th scope="col" class="numeric">Funding sought (&pound;)</th>
+                    <th scope="col" class="numeric">Other public sector funding (&pound;)</th>
+                    <th scope="col" class="numeric">Contribution to project (&pound;)</th>
                 </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <td class="numeric">&pound;
-                            <th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'COMMA')}"/>
-                        </td>
-                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}"/>
-                        <td class="numeric">&pound;
-                            <th:block th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'COMMA')}"/>
-                        </td>
-                        <td class="numeric">&pound;
-                            <th:block th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'COMMA')}"/>
-                        </td>
-                        <td class="numeric">&pound;
-                            <th:block th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'COMMA')}"/>
-                        </td>
+                        <td class="numeric">&pound;<th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'DEFAULT')}"/></td>
+                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}">30%</td>
+                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'DEFAULT')}">57,803</td>
+                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'DEFAULT')}">2,468</td>
+                        <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'DEFAULT')}">140,632</td>
                     </tr>
                 </tbody>
             </table>
@@ -56,16 +48,17 @@
                 <thead>
                 <tr>
                     <th:block th:each="rowType : ${sectionDiffs.keySet()}">
-                        <th th:unless="${#strings.isEmpty(rowType.name)}" scope="col" class="numeric"
-                            th:text="${rowType.name}"></th>
+                        <th th:unless="${#strings.isEmpty(rowType.name)}" scope="col" class="numeric">
+                            <th:block th:text="${rowType.name}" /> (&pound;)
+                        </th>
                     </th:block>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <th:block th:each="rowType : ${sectionDiffs.keySet()}">
-                        <td th:unless="${#strings.isEmpty(rowType.name)}" class="numeric">&pound;
-                            <th:block th:text="${#numbers.formatInteger(sectionDiffs.get(rowType),1,'COMMA')}"/>
+                        <td th:unless="${#strings.isEmpty(rowType.name)}" class="numeric">
+                            <th:block th:text="${#numbers.formatInteger(sectionDiffs.get(rowType),1,'DEFAULT')}"/>
                         </td>
                     </th:block>
                 </tr>
@@ -91,7 +84,7 @@
                 <tfoot>
                 <tr>
                     <th>Overall</th>
-                    <th colspan="5" class="numeric" th:text="${#numbers.formatInteger(model.getDifferenceInTotalCostsAfterChanges(),1,'COMMA')}"></th>
+                    <th colspan="5" class="numeric" th:text="${#numbers.formatInteger(model.getDifferenceInTotalCostsAfterChanges(),1,'DEFAULT')}"></th>
                 </tr>
                 </tfoot>
                 <tbody>

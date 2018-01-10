@@ -13,11 +13,15 @@ import java.util.List;
 public interface QuestionRepository extends PagingAndSortingRepository<Question, Long> {
 	@Override
     List<Question> findAll();
+	Question findFirstByIdAndSectionName(Long questionId, String sectionName);
     List<Question> findByCompetitionId(Long competitionId);
     Question findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Long sectionId, Integer priority);
     Question findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(Long competitionId, Long sectionId, Integer priority);
     Question findFirstByCompetitionIdAndSectionIdOrderByPriorityAsc(Long competitionId, Long sectionId);
+    List<Question> findByCompetitionIdAndSectionNameOrderByPriorityAsc(Long competitionId, String sectionName);
+    Question findFirstByCompetitionIdAndSectionNameOrderByPriorityDesc(Long competitionId, String sectionName);
     Question findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(Long competitionId, Long sectionId);
+    List<Question> findByCompetitionIdAndSectionNameAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, String sectionName, Integer priority);
     Question findFirstByCompetitionIdAndPriorityGreaterThanOrderByPriorityAsc(Long competitionId, Integer priority);
-    Question findByNameAndCompetitionIdAndSectionName(String name, long competitionId, String sectionName);
+    long countByCompetitionIdAndSectionName(Long competitionId, String sectionName);
 }

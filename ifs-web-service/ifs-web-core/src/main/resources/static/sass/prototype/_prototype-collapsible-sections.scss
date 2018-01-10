@@ -1,111 +1,12 @@
 .collapsible {
-    h2 {
-        border-top: 1px solid $border-colour;
-
-        &:last-child {
-            border-top: 1px solid $border-colour;
-        }
-    }
-
-    div {
-        h2,
-        h3 {
-            border: none;
-        }
-    }
-
-    h2 button {
-        background: white;
-        margin-bottom: 0;
-        padding-top: 0;
-        padding-bottom: 0;
-        line-height: 2.5em;
-
-        &[aria-expanded] {
-            &:after {
-                top: 16px;
-            }
-        }
-
-        @include media-down(mobile) {
-            line-height: 1.8em;
-        }
-    }
-
-    h2 + [aria-hidden='false'] {
-        padding: 0 0 15px 0;
-    }
-
-    .collapsible-content {
-        margin-bottom: 3em;
-    }
-
-    .question {
-        margin: 0 20px 20px 20px;
-    }
-
-    .form-block {
-        margin: 0 20px 20px 20px;
-    }
-
-    .textarea-wrapped .readonly {
-        border-top: 1px solid $border-colour;
-    }
-
-    .section-score {
+    .input-counter{
         float: right;
-        margin-left: 30px;
+        color: $secondary-text-colour;
         font-weight: normal;
-    }
+        padding-right: 30px;
 
-    .section-status {
-        width: 86px;
-        text-align: right;
-    }
-
-    .section-percentage {
-        float: right;
-
-        @include media-down(mobile) {
-            float: none;
+        @include media-down(mobile){
+            padding-right: 0;
         }
     }
-
-    .section-value {
-        float: right;
-        width: 180px;
-        text-align: right;
-
-        @include media-down(mobile) {
-            float: none;
-            text-align: left;
-        }
-    }
-
-    span[data-mirror] {
-        width: 180px;
-        text-align: right;
-    }
-
-    @include media-down(mobile) {
-        span {
-            display: block;
-        }
-
-        .section-score {
-            float: left;
-            margin: 0;
-        }
-
-        .section-status {
-            float: right;
-        }
-    }
-}
-
-.no-js .collapsible > h2 {
-    background: white;
-    margin-bottom: 0;
-    padding-top: 10px;
-    padding-bottom: 10px;
 }

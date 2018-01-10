@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 <body th:with="context='applicant'" class="create-application-eligibility">
 
@@ -20,10 +20,10 @@
 
     <h2 class="heading-medium">Choose your organisation type</h2>
 
-    <form th:object="${form}" th:action="@{/organisation/create/new-account-organisation-type/}" method="POST">
-        <div th:class="${#fields.hasErrors('*{organisationType}')} ? 'form-group form-group-error' : 'form-group'">
+    <form id="organisation-type-form" th:object="${form}" th:action="@{/organisation/create/new-account-organisation-type/}" method="POST">
+        <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationType}')} ? 'form-group-error'">
             <fieldset>
-                <legend>
+                <legend id="organisationType">
                     <span class="visuallyhidden">Please select your organisation type</span>
                     <th:block th:if="${#fields.hasErrors('*{organisationType}')}">
                         <span class="error-message" th:each="err : ${#fields.errors('organisationType')}" th:text="${err}"></span>
@@ -41,7 +41,7 @@
         <p>
             If your organisation type is not listed contact the <a th:href="@{/info/contact}">customer support service</a>.
         </p>
-        <button class="button button-large extra-margin" name="select-company-type" type="submit">Continue</button>
+        <button id="organisation-type-cta" class="button button-large extra-margin" name="select-company-type" type="submit">Continue</button>
     </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />

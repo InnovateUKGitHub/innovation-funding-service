@@ -2,18 +2,18 @@ package org.innovateuk.ifs.management.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import org.innovateuk.ifs.assessment.service.AssessmentPanelInviteRestService;
-import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
-import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
-import org.innovateuk.ifs.management.form.*;
-import org.innovateuk.ifs.management.model.*;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsFindViewModel;
+import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
+import org.innovateuk.ifs.management.form.PanelSelectionForm;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsAcceptedModelPopulator;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsFindModelPopulator;
+import org.innovateuk.ifs.management.model.PanelInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsFindViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,15 +26,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -44,13 +40,12 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
  */
 @Controller
 @RequestMapping("/assessment/panel/competition/{competitionId}/assessors")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionManagementPanelInviteAssessorsController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-public class CompetitionManagementPanelInviteAssessorsController extends CompetitionManagementCookieController<AssessorPanelSelectionForm> {
+public class CompetitionManagementPanelInviteAssessorsController extends CompetitionManagementCookieController<PanelSelectionForm> {
 
     private static final String SELECTION_FORM = "assessorPanelSelectionForm";
-
-    @Autowired
-    private CompetitionInviteRestService competitionInviteRestService;
+    private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
     private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
@@ -61,12 +56,15 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
     @Autowired
     private PanelInviteAssessorsInviteModelPopulator panelInviteAssessorsInviteModelPopulator;
 
+    @Autowired
+    private PanelInviteAssessorsAcceptedModelPopulator panelInviteAssessorsAcceptedModelPopulator;
+
     protected String getCookieName() {
         return SELECTION_FORM;
     }
 
-    protected Class<AssessorPanelSelectionForm> getFormType() {
-        return AssessorPanelSelectionForm.class;
+    protected Class<PanelSelectionForm> getFormType() {
+        return PanelSelectionForm.class;
     }
 
     @GetMapping
@@ -76,7 +74,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
 
     @GetMapping("/find")
     public String find(Model model,
-                       @ModelAttribute(name = SELECTION_FORM, binding = false) AssessorPanelSelectionForm selectionForm,
+                       @ModelAttribute(name = SELECTION_FORM, binding = false) PanelSelectionForm selectionForm,
                        @SuppressWarnings("unused") BindingResult bindingResult,
                        @PathVariable("competitionId") long competitionId,
                        @RequestParam(defaultValue = "0") int page,
@@ -97,20 +95,20 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
     private void updateSelectionForm(HttpServletRequest request,
                                      HttpServletResponse response,
                                      long competitionId,
-                                     AssessorPanelSelectionForm selectionForm) {
-        AssessorPanelSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorPanelSelectionForm());
+                                     PanelSelectionForm selectionForm) {
+        PanelSelectionForm storedSelectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new PanelSelectionForm());
 
-        AssessorPanelSelectionForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, competitionId);
+        PanelSelectionForm trimmedAssessorForm = trimSelectionByFilteredResult(storedSelectionForm, competitionId);
         selectionForm.setSelectedAssessorIds(trimmedAssessorForm.getSelectedAssessorIds());
         selectionForm.setAllSelected(trimmedAssessorForm.getAllSelected());
 
         saveFormToCookie(response, competitionId, selectionForm);
     }
 
-    private AssessorPanelSelectionForm trimSelectionByFilteredResult(AssessorPanelSelectionForm selectionForm,
-                                                                     long competitionId) {
+    private PanelSelectionForm trimSelectionByFilteredResult(PanelSelectionForm selectionForm,
+                                                             long competitionId) {
         List<Long> filteredResults = getAllAssessorIds(competitionId);
-        AssessorPanelSelectionForm updatedSelectionForm = new AssessorPanelSelectionForm();
+        PanelSelectionForm updatedSelectionForm = new PanelSelectionForm();
 
         selectionForm.getSelectedAssessorIds().retainAll(filteredResults);
         updatedSelectionForm.setSelectedAssessorIds(selectionForm.getSelectedAssessorIds());
@@ -135,7 +133,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
         boolean limitExceeded = false;
         try {
             List<Long> assessorIds = getAllAssessorIds(competitionId);
-            AssessorPanelSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorPanelSelectionForm());
+            PanelSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new PanelSelectionForm());
             if (isSelected) {
                 int predictedSize = selectionForm.getSelectedAssessorIds().size() + 1;
                 if(limitIsExceeded(predictedSize)){
@@ -164,7 +162,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
                                               HttpServletRequest request,
                                               HttpServletResponse response) {
         try {
-            AssessorPanelSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new AssessorPanelSelectionForm());
+            PanelSelectionForm selectionForm = getSelectionFormFromCookie(request, competitionId).orElse(new PanelSelectionForm());
 
             if (addAll) {
                 selectionForm.setSelectedAssessorIds(getAllAssessorIds(competitionId));
@@ -191,12 +189,12 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
                                                    @PathVariable("competitionId") long competitionId,
                                                    @RequestParam(defaultValue = "0") int page,
                                                    @RequestParam Optional<Long> innovationArea,
-                                                   @ModelAttribute(SELECTION_FORM) AssessorPanelSelectionForm selectionForm,
+                                                   @ModelAttribute(SELECTION_FORM) PanelSelectionForm selectionForm,
                                                    ValidationHandler validationHandler,
                                                    HttpServletRequest request,
                                                    HttpServletResponse response) {
 
-        AssessorPanelSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
+        PanelSelectionForm submittedSelectionForm = getSelectionFormFromCookie(request, competitionId)
                 .filter(form -> !form.getSelectedAssessorIds().isEmpty())
                 .orElse(selectionForm);
         Supplier<String> failureView = () -> redirectToFind(competitionId, page, innovationArea);
@@ -237,6 +235,49 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
         return "assessors/panel-invite";
     }
 
+    @GetMapping("/accepted")
+    public String accepted(Model model,
+                           @PathVariable("competitionId") long competitionId,
+                           @RequestParam(defaultValue = "0") int page,
+                           @RequestParam MultiValueMap<String, String> queryParams) {
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.PANEL_ACCEPTED, queryParams);
+
+        model.addAttribute("model", panelInviteAssessorsAcceptedModelPopulator.populateModel(
+                competitionId,
+                page,
+                originQuery
+        ));
+
+        return "assessors/panel-accepted";
+    }
+
+    @PostMapping(value = "/invite", params = {"remove"})
+    public String removeInviteFromInviteView(Model model,
+                                             @PathVariable("competitionId") long competitionId,
+                                             @RequestParam(name = "remove") String email,
+                                             @RequestParam(defaultValue = "0") int page,
+                                             @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
+        deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
+        return redirectToInvite(competitionId, page);
+    }
+
+    @PostMapping(value = "/invite", params = {"removeAll"})
+    public String removeAllInvitesFromInviteView(Model model,
+                                                 @PathVariable("competitionId") long competitionId,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
+        deleteAllInvites(competitionId).getSuccessObjectOrThrowException();
+        return redirectToInvite(competitionId, page);
+    }
+
+    private ServiceResult<Void> deleteInvite(String email, long competitionId) {
+        return assessmentPanelInviteRestService.deleteInvite(email, competitionId).toServiceResult();
+    }
+
+    private ServiceResult<Void> deleteAllInvites(long competitionId) {
+        return assessmentPanelInviteRestService.deleteAllInvites(competitionId).toServiceResult();
+    }
+
     private String redirectToInvite(long competitionId, int page) {
         return "redirect:" + UriComponentsBuilder.fromPath("/assessment/panel/competition/{competitionId}/assessors/invite")
                 .queryParam("page", page)
@@ -244,7 +285,7 @@ public class CompetitionManagementPanelInviteAssessorsController extends Competi
                 .toUriString();
     }
 
-    private ExistingUserStagedInviteListResource newSelectionFormToResource(AssessorPanelSelectionForm form, long competitionId) {
+    private ExistingUserStagedInviteListResource newSelectionFormToResource(PanelSelectionForm form, long competitionId) {
         return new ExistingUserStagedInviteListResource(simpleMap(
                 form.getSelectedAssessorIds(), id -> new ExistingUserStagedInviteResource(id, competitionId)));
     }

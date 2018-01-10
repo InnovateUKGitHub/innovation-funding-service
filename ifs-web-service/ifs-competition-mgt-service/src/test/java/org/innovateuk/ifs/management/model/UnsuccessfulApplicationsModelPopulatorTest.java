@@ -3,9 +3,10 @@ package org.innovateuk.ifs.management.model;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
+import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.management.viewmodel.UnsuccessfulApplicationsViewModel;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -27,7 +29,10 @@ public class UnsuccessfulApplicationsModelPopulatorTest {
     private UnsuccessfulApplicationsModelPopulator unsuccessfulApplicationsModelPopulator;
 
     @Mock
-    private CompetitionService competitionService;
+    private CompetitionRestService competitionRestService;
+
+    @Mock
+    private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
     @Test
     public void populateModel() throws Exception {
@@ -50,8 +55,10 @@ public class UnsuccessfulApplicationsModelPopulatorTest {
         when(unsuccessfulApplicationsPagedResult.getContent()).thenReturn(unsuccessfulApplications);
         when(unsuccessfulApplicationsPagedResult.getTotalElements()).thenReturn((long)unsuccessfulApplications.size());
 
-        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
-        when(competitionService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField)).thenReturn(unsuccessfulApplicationsPagedResult);
+        when(competitionRestService.getCompetitionById(competitionId))
+                .thenReturn(restSuccess(competitionResource));
+        when(competitionPostSubmissionRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField))
+                .thenReturn(restSuccess(unsuccessfulApplicationsPagedResult));
 
         UnsuccessfulApplicationsViewModel viewModel = unsuccessfulApplicationsModelPopulator.populateModel(competitionId,
                 pageNumber, pageSize, sortField, existingQueryString);

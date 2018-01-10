@@ -13,13 +13,13 @@
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
     </form>
-    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'non-ifs'}, counts=${model.counts}, supportView=false)" />
+    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (selectedTab=${'non-ifs'}, counts=${model.counts}, tabs=${model.tabs})" />
 
     <section>
         <h2 class="heading-medium"
             th:text="'Non-IFS competitions ('+${model.counts.nonIfsCount}+')'"></h2>
         <ul class="list-overview">
-            <li class="grid-row" th:each="competition : ${model.competitions}">
+            <li class="grid-row" th:each="competition : ${model.getAllCompetitions()}">
                 <th:block
                     th:insert="competition/dashboard :: dashboard-row(nonIfs=${true})"
                     th:with="competition=${competition},

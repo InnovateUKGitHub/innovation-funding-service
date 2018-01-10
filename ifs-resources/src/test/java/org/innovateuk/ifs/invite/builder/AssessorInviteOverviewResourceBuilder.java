@@ -44,4 +44,8 @@ public class AssessorInviteOverviewResourceBuilder extends AssessorInviteResourc
     public AssessorInviteOverviewResourceBuilder withDetails(String... value) {
         return withArraySetFieldByReflection("details", value);
     }
+
+    public AssessorInviteOverviewResourceBuilder withInviteId(Long... value) {
+        return withArraySetFieldByReflection("inviteId", value);
+    }
 }

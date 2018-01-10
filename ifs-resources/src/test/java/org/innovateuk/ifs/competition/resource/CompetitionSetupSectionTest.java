@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.resource;
 
-import com.google.common.collect.ImmutableMap;
 import org.junit.Test;
 
 import java.time.ZonedDateTime;
@@ -134,38 +133,5 @@ public class CompetitionSetupSectionTest {
 		assertTrue(assessorSection.preventEdit(competitionResource));
 		assertTrue(initialDetailsSection.preventEdit(competitionResource));
 		assertTrue(additionalInfoSection.preventEdit(competitionResource));
-	}
-
-	@Test
-	public void testIsComplete() {
-		CompetitionSetupSection homeSection = CompetitionSetupSection.HOME;
-		CompetitionSetupSection eligibilitySection = CompetitionSetupSection.ELIGIBILITY;
-		CompetitionSetupSection milestonesSection = CompetitionSetupSection.MILESTONES;
-		CompetitionSetupSection applicationFormSection = CompetitionSetupSection.APPLICATION_FORM;
-		CompetitionSetupSection assessorSection = CompetitionSetupSection.ASSESSORS;
-		CompetitionSetupSection initialDetailsSection = CompetitionSetupSection.INITIAL_DETAILS;
-		CompetitionSetupSection additionalInfoSection = CompetitionSetupSection.ADDITIONAL_INFO;
-
-
-		CompetitionResource competitionResource = newCompetitionResource()
-				.withSectionSetupStatus(ImmutableMap.<CompetitionSetupSection, Boolean> builder()
-						.put(homeSection, true)
-						.put(eligibilitySection,true)
-						.put(milestonesSection,false)
-						.put(applicationFormSection,false)
-						.put(assessorSection,false)
-						.put(initialDetailsSection,false)
-						.put(additionalInfoSection,false).build())
-				.build();
-
-		assertEquals(homeSection.isComplete(competitionResource), true);
-		assertEquals(eligibilitySection.isComplete(competitionResource), true);
-		assertEquals(milestonesSection.isComplete(competitionResource), false);
-		assertEquals(applicationFormSection.isComplete(competitionResource), false);
-		assertEquals(assessorSection.isComplete(competitionResource), false);
-		assertEquals(initialDetailsSection.isComplete(competitionResource), false);
-		assertEquals(additionalInfoSection.isComplete(competitionResource), false);
-
-
 	}
 }

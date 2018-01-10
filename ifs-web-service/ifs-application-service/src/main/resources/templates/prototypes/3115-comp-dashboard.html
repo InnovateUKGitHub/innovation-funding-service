@@ -4,13 +4,12 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body class="comp-dashboard full-width">
+<body class="competition-management comp-dashboard">
 
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" th:if="${param.userRole == null}" />
-<th:block th:insert="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn',userRole='admin',user='James Danek'" th:if="${param.userRole != null and param.userRole[0] == 'admin'}" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-comp-admin-header" th:with="status='loggedIn'" />
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />

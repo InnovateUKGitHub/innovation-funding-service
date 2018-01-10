@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
 /**
@@ -94,7 +94,7 @@ public class GrantClaimCostPopulatorTest {
 
         assertThat(viewModel.isComplete(), equalTo(true));
         assertThat(viewModel.getCostCategory(), equalTo(category));
-        assertThat(viewModel.getViewmode(), equalTo("approved"));
+        assertThat(viewModel.getViewmode(), equalTo("readonly"));
         assertThat(viewModel.getMaximumGrantClaimPercentage(), equalTo(MAXIMUM_GRANT_CLAIM));
         assertThat(viewModel.getOrganisationGrantClaimPercentage(), equalTo(GRANT_CLAIM));
         assertThat(viewModel.getOrganisationGrantClaimPercentageId(), equalTo(GRANT_CLAIM_ID));

@@ -79,7 +79,7 @@ public class Project implements ProcessActivity {
     @JoinColumn(name="additionalContractFileEntryId", referencedColumnName = "id")
     private FileEntry additionalContractFile;
 
-    //TODO INFUND-7493
+    //TODO IFS-471 use workflow for approving other documents
     @NotNull
     @Enumerated(STRING)
     private ApprovalType otherDocumentsApproved = ApprovalType.UNSET;

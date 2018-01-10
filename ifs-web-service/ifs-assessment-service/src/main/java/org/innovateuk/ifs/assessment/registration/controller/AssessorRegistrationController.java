@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.assessment.registration.controller;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.assessment.registration.form.AssessorRegistrationForm;
@@ -8,13 +10,10 @@ import org.innovateuk.ifs.assessment.registration.populator.AssessorRegistration
 import org.innovateuk.ifs.assessment.registration.service.AssessorService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.AddressForm;
-import org.innovateuk.ifs.invite.service.EthnicityRestService;
-import org.innovateuk.ifs.user.resource.EthnicityResource;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -39,6 +38,7 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping("/registration")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorRegistrationController.class)
 @PreAuthorize("permitAll")
 public class AssessorRegistrationController {
     private static final Log LOG = LogFactory.getLog(AssessorRegistrationController.class);

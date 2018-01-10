@@ -58,7 +58,7 @@ Mark application details as incomplete
     the user clicks the button/link       link=Application details
     the user clicks the button/link       jQuery=button:contains("Edit")
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
-    the user should see the element       jQuery=li:contains("Application details") > .action-required
+    the user should see the element       jQuery=li:contains("Application details") > .task-status-incomplete
 
 the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=img.complete[alt*="Application details"]
@@ -79,7 +79,7 @@ the user fills in the application details
     The user enters text to a text field  id=application_details-startdate_day  18
     The user enters text to a text field  id=application_details-startdate_year  2018
     The user enters text to a text field  id=application_details-startdate_month  11
-    The user enters text to a text field  id=application_details-duration  20
+    The user enters text to a text field  css=[id="application.durationInMonths"]  20
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user should see the element       jQuery=button:contains("Edit")
     the user should not see the element   css=input
@@ -91,11 +91,11 @@ the user moves Application details in Edit mode
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
     the user should see the element       jQuery=h1:contains("Application details")
-    the user enters text to a text field  css=#application_details-title  ${appTitle}
+    the user enters text to a text field  css=[id="application.name"]  ${appTitle}
     the user enters text to a text field  css=#application_details-startdate_day  ${tomorrowday}
     the user enters text to a text field  css=#application_details-startdate_month  ${month}
     the user enters text to a text field  css=#application_details-startdate_year  ${nextyear}
-    the user enters text to a text field  css=#application_details-duration  24
+    the user enters text to a text field  css=[id="application.durationInMonths"]  24
     the user clicks the button twice      css=label[for="application.resubmission-no"]
     the user selects Research category    ${res_category}
     the user should not see the element   link=Choose your innovation area
@@ -110,9 +110,10 @@ the user selects Research category
     the user clicks the button/link   jQuery=button:contains("Save")
 
 the user marks the finances as complete
-    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
+    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
     the user fills in the project costs  ${overheadsCost}  ${totalCosts}
-    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    Run Keyword if  '${Project_growth_table}'=='no'    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    Run Keyword if  '${Project_growth_table}'=='yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
     the user clicks the button/link  link=Application overview
@@ -128,7 +129,7 @@ the user fills in the project costs
     the user fills in Subcontracting costs
     the user fills in Travel and subsistence
     the user fills in Other costs
-    the user clicks the button/link  css=label[for="agree-state-aid-page"]
+    the user clicks the button/link  css=label[for="stateAidAgreed"]
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
     the user has read only view once section is marked complete
@@ -141,7 +142,7 @@ the user has read only view once section is marked complete
 the user fills in Labour
     the user clicks the button/link            jQuery=button:contains("Labour")
     the user should see the element            css=.labour-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input
-    the user enters text to a text field       css=input[id$="labourDaysYearly"]    230
+    the user enters text to a text field       css=input[name^="labour-labourDaysYearly"]    230
     the user should see the element            jQuery=input.form-control[name^=labour-role]:text[value=""]:first
     the user enters text to a text field       jQuery=input.form-control[name^=labour-role]:text[value=""]:first    anotherrole
     the user enters text to a text field       jQuery=input.form-control[name^=labour-gross][value=""]:first    120000
@@ -153,6 +154,7 @@ the user fills in Overhead costs
     run keyword if  '${overheadsCost}'=='Calculate'  the user chooses Calculate overheads option  ${totalCosts}
     run keyword if  '${overheadsCost}'=='labour costs'  the user chooses 20% overheads option
 #    run keyword if  '${overheadsCost}'=='No overhead'  the user chooses No overhead costs
+# The above line is commented out because we do not use the 3rd option yet. Once we do we can enable it.
 
 the user chooses Calculate overheads option
     [Arguments]  ${totalCosts}
@@ -163,7 +165,7 @@ the user chooses Calculate overheads option
     wait for autosave
     the user enters text to a text field                    css=input[name^="overheads-total"][id^="cost-overheads"]   40
     wait for autosave
-    the total overhead costs should reflect rate entered    css=#total-cost  £ ${totalCosts}
+    the total overhead costs should reflect rate entered    css=#total-cost  £${totalCosts}
 
 the total overhead costs should reflect rate entered
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
@@ -193,7 +195,7 @@ the user fills in Capital usage
     the user enters text to a text field  css=.form-finances-capital-usage-residual-value  25
     the user enters text to a text field  css=.form-finances-capital-usage-utilisation   100
     focus                                 css=.section-total-summary > [data-mirror^="#section-total"]
-    textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £ 4,975
+    textfield should contain              css=#capital_usage .form-row:nth-of-type(1) [readonly]  £4,975
     the user clicks the button/link       jQuery=button:contains("Capital usage")
 
 the user fills in Subcontracting costs
@@ -230,7 +232,7 @@ the academic user fills in his finances
 the academic fills in the project costs
     [Arguments]  ${application}
     the user clicks the button/link       link=Your project costs
-    The user enters text to a text field  id=tsb-ref  ${application}
+    The user enters text to a text field  css=input[name$="tsb_reference"]  ${application}
     The user enters text to a text field  id=incurred-staff  999.999
     The user enters text to a text field  id=travel    999.999
     The user enters text to a text field  id=other    999.999
@@ -290,7 +292,7 @@ the user fills in the funding information
     [Arguments]  ${Application}
     the user navigates to Your-finances page   ${Application}
     the user clicks the button/link       link=Your funding
-    the user enters text to a text field  css=#cost-financegrantclaim  45
+    the user enters text to a text field  css=[name^="finance-grantclaimpercentage"]  45
     click element                         jQuery=label:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
@@ -307,17 +309,6 @@ the user should see all finance subsections incomplete
     the user should see the element  css=li:nth-of-type(1) .action-required
     the user should see the element  css=li:nth-of-type(2) .action-required
     the user should see the element  jQuery=h3:contains("Your funding")
-
-Remove previous rows
-    [Arguments]  ${element}
-    :FOR    ${i}    IN RANGE  10
-    # The sleep of 200 ms is actually for speed, originally the test used "should not see the element" however that made it wait for 10 seconds on every loop.
-    \  sleep    200ms
-    \  ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    ${element}
-    \  Log    ${status}
-    \  Exit For Loop If  '${status}'=='FAIL'
-    \  run keyword if  '${status}'=='PASS'  the user clicks the button/link  ${element}
-    \  ${i} =  Set Variable  ${i + 1}
 
 Invite a non-existing collaborator
     [Arguments]   ${email}  ${competition_name}
@@ -339,11 +330,11 @@ Newly invited collaborator can create account and sign in
     the user reads his email and clicks the link   ${email}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  2
     the user clicks the button/link    jQuery=a:contains("Yes, accept invitation")
     the user should see the element    jquery=h1:contains("Choose your organisation type")
-    the user completes the new account creation   ${email}
+    the user completes the new account creation  ${email}  ${PUBLIC_SECTOR_TYPE_ID}
 
 the user completes the new account creation
-    [Arguments]    ${email}
-    the user selects the radio button           organisationType    radio-${PUBLIC_SECTOR_TYPE_ID}
+    [Arguments]    ${email}  ${organisationType}
+    the user selects the radio button           organisationType    radio-${organisationType}
     the user clicks the button/link             jQuery=button:contains("Continue")
     the user should see the element             jQuery=span:contains("Create your account")
     the user enters text to a text field        id=organisationSearchName    innovate
@@ -363,10 +354,7 @@ the user completes the new account creation
     the user reads his email and clicks the link   ${email}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link             link=Sign in
-    the user should see the text in the page    Sign in
-    the user enters text to a text field        css=input[id="username"]  ${email}
-    the user enters text to a text field        css=input[id="password"]  ${correct_password}
-    the user clicks the button/link             jQuery=button:contains("Sign in")
+    Logging in and Error Checking               ${email}  ${correct_password}
 
 the applicant adds some content and marks this section as complete
     Focus    css=.textarea-wrapped .editor
@@ -390,3 +378,38 @@ navigate to next page if not found
     [Arguments]  ${competition}
     ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible  link=${competition}
     Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery=a:contains("Next")
+
+Lead Applicant applies to the new created competition
+    [Arguments]   ${competition}  &{lead_credentials}
+    log in as a different user       &{lead_credentials}
+    the user navigates to the eligibility of the competition  ${competition}
+    the user clicks the button/link  jQuery=a:contains("Sign in")
+    the user clicks the button/link  jQuery=a:contains("Begin application")
+
+the user navigates to the eligibility of the competition
+    [Arguments]  ${competition}
+    ${competitionId} =  get comp id from comp title    ${competition}
+    the user navigates to the page   ${server}/application/create/check-eligibility/${competitionId}
+
+the applicant submits the application
+    the user clicks the button/link                    link=Review and submit
+    the user clicks the button/link                    jQuery=.button:contains("Submit application")
+    the user clicks the button/link                    jQuery=.button:contains("Yes, I want to submit my application")
+    the user should be redirected to the correct page  submit
+
+the user applies to competition and enters organisation type
+    [Arguments]  ${compId}  ${organisationType}
+    the user navigates to the page     ${server}/competition/${compId}/overview
+    the user clicks the button/link    link=Start new application
+    the user clicks the button/link    link=Create account
+    the user selects the radio button  organisationTypeId  ${organisationType}
+    the user clicks the button/link    css=button[type="submit"]
+
+the user selects his organisation in Companies House
+    [Arguments]  ${search}  ${link}
+    the user enters text to a text field  id=organisationSearchName  ${search}
+    the user clicks the button/link       id=org-search
+    the user clicks the button/link       link=${link}
+    the user selects the checkbox         address-same
+    the user clicks the button/link       css=button[name="save-organisation-details"]
+    the user clicks the button/link       css=button[name="save-organisation"]
