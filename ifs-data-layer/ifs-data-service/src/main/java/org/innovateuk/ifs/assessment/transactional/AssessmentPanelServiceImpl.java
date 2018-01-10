@@ -149,18 +149,24 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     @Override
     public ServiceResult<Void> acceptAssessmentReview(long assessmentReviewId) {
-        return getAssessmentReview(assessmentReviewId).andOnSuccess(this::acceptAssessmentReview);
+        return findAssessmentReview(assessmentReviewId).andOnSuccess(this::acceptAssessmentReview);
     }
 
     @Override
     public ServiceResult<Void> rejectAssessmentReview(long assessmentReviewId,
                                                       AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcome) {
-        return getAssessmentReview(assessmentReviewId)
+        return findAssessmentReview(assessmentReviewId)
                 .andOnSuccess(
                         r -> rejectAssessmentReview(r, assessmentReviewRejectOutcomeMapper.mapToDomain(assessmentReviewRejectOutcome)));
     }
 
-    private ServiceResult<AssessmentReview> getAssessmentReview(long assessmentReviewId) {
+    @Override
+    public ServiceResult<AssessmentReviewResource> getAssessmentReview(long assessmentReviewId) {
+        return find(assessmentReviewRepository.findOne(assessmentReviewId), notFoundError(AssessmentReviewResource.class, assessmentReviewId))
+                .andOnSuccessReturn(assessmentReviewMapper::mapToResource);
+    }
+
+    private ServiceResult<AssessmentReview> findAssessmentReview(long assessmentReviewId) {
         return find(assessmentReviewRepository.findOne(assessmentReviewId), notFoundError(AssessmentReview.class, assessmentReviewId));
     }
 

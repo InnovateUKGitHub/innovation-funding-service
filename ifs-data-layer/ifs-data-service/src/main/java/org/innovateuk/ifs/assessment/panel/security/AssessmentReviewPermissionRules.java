@@ -55,6 +55,11 @@ public class AssessmentReviewPermissionRules extends BasePermissionRules {
         return isAssessorForAssessmentReview(assessmentReview, loggedInUser);
     }
 
+    @PermissionRule(value = "READ", description = "An assessor may only read their own invites to assessment reviews")
+    public boolean userCanReadAssessmentReviews(AssessmentReviewResource assessmentReview, UserResource loggedInUser) {
+        return isAssessorForAssessmentReview(assessmentReview, loggedInUser);
+    }
+
     private boolean isAssessorForAssessmentReview(AssessmentReviewResource assessmentReview, UserResource user, Set<AssessmentReviewState> allowedStates) {
         return isAssessorForAssessmentReview(assessmentReview, user) && assessmentReviewIsInState(assessmentReview, allowedStates);
     }

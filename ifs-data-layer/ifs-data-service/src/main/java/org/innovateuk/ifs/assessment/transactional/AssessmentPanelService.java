@@ -41,6 +41,9 @@ public interface AssessmentPanelService {
     @PostFilter("hasPermission(filterObject, 'READ_PANEL_DASHBOARD')")
     ServiceResult<List<AssessmentReviewResource>> getAssessmentReviews(long userId, long competitionId);
 
+    @PreAuthorize("hasPermission(#assessmentReviewId, 'org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource', 'READ')")
+    ServiceResult<AssessmentReviewResource> getAssessmentReview(long assessmentReviewId);
+
     @PreAuthorize("hasPermission(#assessmentReviewId, 'org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource', 'UPDATE')")
     ServiceResult<Void> acceptAssessmentReview(long assessmentReviewId);
 

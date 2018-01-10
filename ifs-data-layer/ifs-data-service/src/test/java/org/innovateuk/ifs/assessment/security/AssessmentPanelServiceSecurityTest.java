@@ -86,6 +86,11 @@ public class AssessmentPanelServiceSecurityTest extends BaseServiceSecurityTest<
         }
 
         @Override
+        public ServiceResult<AssessmentReviewResource> getAssessmentReview(long assessmentReviewId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> acceptAssessmentReview(long assessmentReviewId) {
             return null;
         }

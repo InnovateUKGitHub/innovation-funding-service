@@ -42,6 +42,11 @@ public class AssessmentPanelRestServiceImpl extends BaseRestService implements A
     }
 
     @Override
+    public RestResult<AssessmentReviewResource> getAssessmentReview(long assessmentReviewId) {
+        return getWithRestResult(format("%s/review/%d", assessmentPanelRestUrl, assessmentReviewId), AssessmentReviewResource.class);
+    }
+
+    @Override
     public RestResult<Void> acceptAssessmentReview(long assessmentReviewId) {
         return putWithRestResult(format("%s/review/%d/accept", assessmentPanelRestUrl, assessmentReviewId), Void.class);
     }

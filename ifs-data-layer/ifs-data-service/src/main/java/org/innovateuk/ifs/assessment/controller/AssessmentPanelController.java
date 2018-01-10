@@ -53,6 +53,11 @@ public class AssessmentPanelController {
         return assessmentPanelService.getAssessmentReviews(userId, competitionId).toGetResponse();
     }
 
+    @GetMapping("/review/{assessmentReviewId}")
+    public RestResult<AssessmentReviewResource> getAssessmentReview(@PathVariable("assessmentReviewId") long assessmentReviewId) {
+        return assessmentPanelService.getAssessmentReview(assessmentReviewId).toGetResponse();
+    }
+
     @PutMapping("/review/{id}/accept")
     public RestResult<Void> acceptInvitation(@PathVariable("id") long id) {
         return assessmentPanelService.acceptAssessmentReview(id).toPutResponse();

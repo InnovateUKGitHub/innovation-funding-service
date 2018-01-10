@@ -113,4 +113,16 @@ public class AssessmentPanelControllerTest extends BaseControllerMockMVCTest<Ass
 
         verify(assessmentPanelServiceMock, only()).rejectAssessmentReview(assessmentReviewId, assessmentReviewRejectOutcomeResource);
     }
+
+    @Test
+    public void getAssessmentReview() throws Exception {
+        AssessmentReviewResource assessmentReviewResource = newAssessmentReviewResource().build();
+
+        when(assessmentPanelServiceMock.getAssessmentReview(assessmentReviewResource.getId())).thenReturn(serviceSuccess(assessmentReviewResource));
+
+        mockMvc.perform(get("/assessmentpanel/review/{id}", assessmentReviewResource.getId()))
+                .andExpect(status().isOk());
+
+        verify(assessmentPanelServiceMock, only()).getAssessmentReview(assessmentReviewResource.getId());
+    }
 }

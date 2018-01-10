@@ -12,30 +12,30 @@ import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState
  */
 public class AssessorCompetitionForPanelDashboardApplicationViewModel {
 
-    private Long applicationId;
-    private Long assessmentId;
+    private long applicationId;
+    private long reviewId;
     private String displayLabel;
     private String leadOrganisation;
     private AssessmentReviewState state;
 
-    public AssessorCompetitionForPanelDashboardApplicationViewModel(Long applicationId,
-                                                                    Long assessmentId,
+    public AssessorCompetitionForPanelDashboardApplicationViewModel(long applicationId,
+                                                                    long reviewId,
                                                                     String displayLabel,
                                                                     String leadOrganisation,
                                                                     AssessmentReviewState state) {
         this.applicationId = applicationId;
-        this.assessmentId = assessmentId;
+        this.reviewId = reviewId;
         this.displayLabel = displayLabel;
         this.leadOrganisation = leadOrganisation;
         this.state = state;
     }
 
-    public Long getApplicationId() {
+    public long getApplicationId() {
         return applicationId;
     }
 
-    public Long getAssessmentId() {
-        return assessmentId;
+    public long getReviewId() {
+        return reviewId;
     }
 
     public String getDisplayLabel() {
@@ -76,7 +76,7 @@ public class AssessorCompetitionForPanelDashboardApplicationViewModel {
 
         return new EqualsBuilder()
                 .append(applicationId, that.applicationId)
-                .append(assessmentId, that.assessmentId)
+                .append(reviewId, that.reviewId)
                 .append(displayLabel, that.displayLabel)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(state, that.state)
@@ -87,7 +87,7 @@ public class AssessorCompetitionForPanelDashboardApplicationViewModel {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(applicationId)
-                .append(assessmentId)
+                .append(reviewId)
                 .append(displayLabel)
                 .append(leadOrganisation)
                 .append(state)

@@ -74,6 +74,18 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
     }
 
     @Test
+    public void getAssessmentReview() {
+        long assessmentReviewId = 11L;
+
+        AssessmentReviewResource assessmentReview = newAssessmentReviewResource().build();
+
+        setupGetWithRestResultExpectations(format("%s/review/%d", restUrl, assessmentReviewId), AssessmentReviewResource.class, assessmentReview, OK);
+
+        AssessmentReviewResource result = service.getAssessmentReview(assessmentReviewId).getSuccessObjectOrThrowException();
+        assertEquals(assessmentReview, result);
+    }
+
+    @Test
     public void acceptAssessmentReview() {
         long assessmentReviewId = 1L;
 

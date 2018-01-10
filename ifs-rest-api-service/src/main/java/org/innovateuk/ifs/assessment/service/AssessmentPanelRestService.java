@@ -17,4 +17,5 @@ public interface AssessmentPanelRestService {
     RestResult<List<AssessmentReviewResource>> getAssessmentReviews(long userId, long competitionId);
     RestResult<Void> acceptAssessmentReview(long assessmentReviewId);
     RestResult<Void> rejectAssessmentReview(long assessmentReviewId, AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcomeResource);
+    RestResult<AssessmentReviewResource> getAssessmentReview(long assessmentReviewId);
 }

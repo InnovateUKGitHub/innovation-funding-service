@@ -70,8 +70,6 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         application = newApplication().withId(applicationId).build();
     }
 
-
-
     @Test
     public void assignApplicationsToPanel() throws Exception {
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
@@ -339,6 +337,25 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         inOrder.verify(assessmentReviewRepositoryMock).findOne(assessmentReview.getId());
         inOrder.verify(assessmentReviewRejectOutcomeMapperMock).mapToDomain(rejectOutcomeResource);
         inOrder.verify(assessmentReviewWorkflowHandlerMock).rejectInvitation(assessmentReview, assessmentReviewRejectOutcome);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getAssessmentReview() {
+        AssessmentReviewResource assessmentReviewResource = newAssessmentReviewResource().build();
+        AssessmentReview assessmentReview = newAssessmentReview().build();
+
+        when(assessmentReviewRepositoryMock.findOne(assessmentReviewResource.getId())).thenReturn(assessmentReview);
+        when(assessmentReviewMapperMock.mapToResource(assessmentReview)).thenReturn(assessmentReviewResource);
+
+        AssessmentReviewResource result = service.getAssessmentReview(assessmentReviewResource.getId())
+                .getSuccessObjectOrThrowException();
+
+        assertEquals(assessmentReviewResource, result);
+
+        InOrder inOrder = inOrder(assessmentReviewRepositoryMock, assessmentReviewMapperMock);
+        inOrder.verify(assessmentReviewRepositoryMock).findOne(assessmentReviewResource.getId());
+        inOrder.verify(assessmentReviewMapperMock).mapToResource(assessmentReview);
         inOrder.verifyNoMoreInteractions();
     }
 }
