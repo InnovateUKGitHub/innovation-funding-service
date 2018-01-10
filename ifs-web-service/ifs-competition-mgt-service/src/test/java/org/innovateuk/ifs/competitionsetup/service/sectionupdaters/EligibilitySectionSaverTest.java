@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
+import com.google.common.collect.Sets;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.form.enumerable.ResearchParticipationAmount;
 import org.innovateuk.ifs.competition.resource.CollaborationLevel;
@@ -20,9 +21,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.HashSet;
 import java.util.Set;
 
+import static com.google.common.collect.Sets.newHashSet;
 import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -54,7 +55,10 @@ public class EligibilitySectionSaverTest {
 		competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.THIRTY.getId());
 		competitionSetupForm.setSingleOrCollaborative("collaborative");
 		
-		CompetitionResource competition = newCompetitionResource().build();
+		CompetitionResource competition = newCompetitionResource()
+                .withFullApplicationFinance(true)
+                .build();
+
 		when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
 
 		service.saveSection(competition, competitionSetupForm);
@@ -70,13 +74,14 @@ public class EligibilitySectionSaverTest {
 	}
 
     @Test
-    public void saveSectionWithoutResearchParticipationAmountIdDefaultsToNone() {
-	    EligibilityForm  competitionSetupForm = new EligibilityForm();
+    public void saveSection_withoutResearchParticipationAmountIdDefaultsToNone() {
+        CompetitionResource competition = newCompetitionResource()
+                .withFullApplicationFinance(true)
+                .build();
 
-        CompetitionResource competition = newCompetitionResource().build();
         when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
 
-        service.saveSection(competition, competitionSetupForm);
+        service.saveSection(competition, new EligibilityForm());
 
         assertEquals(ResearchParticipationAmount.NONE.getAmount(), competition.getMaxResearchRatio());
 
@@ -84,12 +89,29 @@ public class EligibilitySectionSaverTest {
 	}
 
     @Test
+    public void saveSection_doesNotChangeMaxResearchRatiosForCompetitionsWithNullFullApplicationFinance() {
+        EligibilityForm  competitionSetupForm = new EligibilityForm();
+        competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.HUNDRED.getId());
+
+        CompetitionResource competition = newCompetitionResource()
+                .withMaxResearchRatio(0)
+                .withFullApplicationFinance(null)
+                .build();
+
+        when(competitionSetupRestService.update(competition)).thenReturn(restSuccess());
+
+        service.saveSection(competition, competitionSetupForm);
+
+        assertEquals(0, competition.getMaxResearchRatio().intValue());
+
+        verify(competitionSetupRestService).update(competition);
+    }
+
+    @Test
 	public void autoSaveResearchCategoryCheck() {
 		when(milestoneRestService.getAllMilestonesByCompetitionId(1L)).thenReturn(restSuccess(singletonList(getMilestone())));
 		EligibilityForm form = new EligibilityForm();
-		Set<Long> researchCategories = new HashSet<>();
-		researchCategories.add(33L);
-		researchCategories.add(34L);
+		Set<Long> researchCategories = Sets.newHashSet(33L, 34L);
 
 		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
 		competition.setMilestones(singletonList(10L));
@@ -107,10 +129,7 @@ public class EligibilitySectionSaverTest {
 	public void autoSaveResearchCategoryUncheck() {
 		when(milestoneRestService.getAllMilestonesByCompetitionId(1L)).thenReturn(restSuccess(singletonList(getMilestone())));
 		EligibilityForm form = new EligibilityForm();
-		Set<Long> researchCategories = new HashSet<>();
-		researchCategories.add(33L);
-		researchCategories.add(34L);
-		researchCategories.add(35L);
+		Set<Long> researchCategories = newHashSet(33L, 34L, 35L);
 
 		CompetitionResource competition = newCompetitionResource().withResearchCategories(researchCategories).build();
 		competition.setMilestones(singletonList(10L));
