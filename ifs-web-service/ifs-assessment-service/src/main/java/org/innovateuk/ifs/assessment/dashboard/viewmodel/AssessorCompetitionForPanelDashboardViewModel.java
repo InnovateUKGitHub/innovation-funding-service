@@ -45,8 +45,4 @@ public class AssessorCompetitionForPanelDashboardViewModel {
     public List<AssessorCompetitionForPanelDashboardApplicationViewModel> getApplications() {
         return applications;
     }
-
-    public boolean isAfterPanelDate() {
-        return ZonedDateTime.now().isAfter(this.panelDate);
-    }
 }

@@ -83,7 +83,7 @@
                             </th:block>
 
                         </li>
-                        <th:block th:if="${ #lists.isEmpty(model.applications) || model.afterPanelDate }">
+                        <th:block th:if="${#lists.isEmpty(model.applications)}">
                             <li class="status-2-col">
                                 <div class="task">
                                     <h3 class="heading-small">No applications have been assigned to this panel.</h3>
