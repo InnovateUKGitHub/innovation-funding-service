@@ -2,6 +2,7 @@ package org.innovateuk.ifs.async.controller;
 
 import org.springframework.ui.Model;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -14,6 +15,7 @@ import java.util.function.Supplier;
  * nothing is attempting to write to the Model.  Writing to the underlying Model will temporarily block other threads
  * until write is complete.
  */
+@ThreadSafe
 public class ThreadsafeModel implements Model {
 
     private Model model;

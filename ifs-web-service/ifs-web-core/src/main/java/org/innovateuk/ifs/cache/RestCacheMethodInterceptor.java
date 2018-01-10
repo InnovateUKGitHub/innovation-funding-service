@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import static java.util.Arrays.asList;
 
 @Component
+@ThreadSafe
 public class RestCacheMethodInterceptor implements MethodInterceptor {
 
     private static Logger LOG = LoggerFactory.getLogger(RestCacheMethodInterceptor.class);
