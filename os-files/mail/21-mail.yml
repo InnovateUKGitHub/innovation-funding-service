@@ -19,7 +19,7 @@ items:
           deploymentconfig: mail
       spec:
         containers:
-        - image: innovateuk/application-service:${mailSinkVersion}
+        - image: innovateuk/mail-sink:${mailSinkVersion}
           name: mail
           imagePullPolicy: IfNotPresent
           env:
