@@ -151,9 +151,9 @@ Assesor is able to accept the invitation from dashboard
     [Setup]  Log in as a different user       ${panel_assessor_ben}  ${short_password}
     Given the user clicks the button/link     jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button    acceptInvitation  true
-    And The user clicks the button/link       jQuery=button:contains("Confirm")
+    And The user clicks the button/link       css=button[type="submit"]  # Confirm
     Then the user should not see the element  jQuery=h2:contains("Invitations to attend panel")
-    And the user should see the element       jQuery=h2:contains("Attend panel") ~ h3:contains("${CLOSED_COMPETITION_NAME}")
+    And the user should see the element       jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
 
 Assesor is able to reject the invitation from email
     [Documentation]  IFS-37
