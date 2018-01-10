@@ -21,12 +21,12 @@
 
     <th:block th:if="${model.getSignedGrantOfferLetterApproved()}">
         <div class="success-alert extra-margin-bottom">
-            <h2 class="heading-small no-margin-top">The grant offer letter has been received and accepted.</h2>
+            <h2 class="heading-small no-margin-top">These documents have been approved.</h2>
         </div>
     </th:block>
 
     <div class="warning-alert" th:if="${model.getSignedGrantOfferLetterRejected()}">
-        <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager.</p>
+        <p class="heading-small no-margin-top">These documents have been reviewed and rejected. We have returned them to the Project Manager. If you have not already done so, please contact the Project Manager to explain your decision.</p>
     </div>
 
     <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
