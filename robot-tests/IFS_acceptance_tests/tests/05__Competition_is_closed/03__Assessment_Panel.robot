@@ -30,6 +30,8 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-1125 Assessment panels - Send panel applications to assessors for review
 ...
 ...               IFS-1566 Assessment panels - Assessor dashboard 'Attend panel' box
+...
+...               IFS-1138 Assessment panels - Competition for panel dashboard
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin
@@ -146,14 +148,17 @@ CompAdmin resend invites to multiple assessors
     And the user should see the element       jQuery=td:contains("${assessor_joel}") ~ td:contains("Invite sent: ${today}")
 
 Assesor is able to accept the invitation from dashboard
-    [Documentation]  IFS-37  IFS-1135  IFS-1566
+    [Documentation]  IFS-37  IFS-1135  IFS-1566  IFS-1138
     [Tags]  HappyPath
     [Setup]  Log in as a different user       ${panel_assessor_ben}  ${short_password}
     Given the user clicks the button/link     jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
     When the user selects the radio button    acceptInvitation  true
     And The user clicks the button/link       css=button[type="submit"]  # Confirm
     Then the user should not see the element  jQuery=h2:contains("Invitations to attend panel")
-    And the user should see the element       jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
+    When the user clicks the button/link      jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
+    Then the user should see the element      jQuery=dt:contains("Competition:") ~ dd:contains("${CLOSED_COMPETITION_NAME}")
+    And the user should see the element       jQuery=dt:contains("Innovation Lead:") ~ dd:contains("Ian Cooper")
+    And the user should see the element       jQuery=h2:contains("Applications for Panel (0)") + ul li h3:contains("No applications have been assigned to this panel.")
 
 Assesor is able to reject the invitation from email
     [Documentation]  IFS-37
@@ -208,10 +213,10 @@ Assign application link activate if competition is in panel state
 Manage Assessment Panel Assign and remove button functionality
     [Documentation]   IFS-2039
     [Tags]
-    When the user clicks the button/link    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    When the user clicks the button/link    jQuery=td:contains("${Neural_network}") ~ td:contains("Assign")
     Then the user should see the element    jQuery=h2:contains("Assigned applications (1)")
-    And the user clicks the button/link     jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Remove")
-    Then the user should see the element    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    And the user clicks the button/link     jQuery=td:contains("${Neural_network}") ~ td:contains("Remove")
+    Then the user should see the element    jQuery=td:contains("${Neural_network}") ~ td:contains("Assign")
     And the user should see the element     jQuery=h2:contains("Assigned applications (0)")
 
 Filter by application number
@@ -219,19 +224,32 @@ Filter by application number
     [Tags]
     Given the user enters text to a text field     id=filterSearch   ${Neural_network}
     When the user clicks the button/link           jQuery=.button:contains("Filter")
-    Then the user should see the element           jQuery=td:contains("Neural networks to optimise freight train routing")
+    Then the user should see the element           jQuery=td:contains("${Neural_network}")
     #TODO IFS-2069 need to add more checks once the webtest data is ready.
 
 Assign applications to panel
     [Documentation]  IFS-1125
     [Tags]
-    When the user clicks the button/link    jQuery=td:contains("Neural networks to optimise freight train routing") ~ td:contains("Assign")
+    When the user clicks the button/link    jQuery=td:contains("${Neural_network}") ~ td:contains("Assign")
     And the user clicks the button/link     jQuery=td:contains("Computer vision and machine learning for transport networks") ~ td:contains("Assign")
     Then the user should see the element    jQuery=h2:contains("Assigned applications (2)")
     When the user clicks the button/link    link=Manage assessment panel
     And the user clicks the button/link     jQuery=button:contains("Confirm actions")
     And the user reads his email            ${assessor_ben}  Applications ready for review   You have been allocated applications to review within the competition Machine learning for transport infrastructure.
 
+Assessor view to panel competition dashboard
+    [Documentation]  IFS-1138
+    [Tags]
+    Given Log in as a different user         ${panel_assessor_ben}  ${short_password}
+    When the user clicks the button/link     jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
+    Then the user should see the element    jQuery=h2:contains("Applications for Panel") + ul li h3:contains("Neural networks to optimise freight train routing")
+
+Assessor cannot see applcations after panel date
+    [Documentation]  IFS-1138
+    [Tags]
+    Given the funder panel period changes in the db  2017-06-27 00:00:00
+    Then the user should not see the element         jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
+    [Teardown]  the funder panel period changes in the db   2068-06-27 00:00:00
 
 *** Keywords ***
 
@@ -244,6 +262,11 @@ the assessment panel period changes in the db
     [Arguments]  ${Date}
     Connect to Database    @{database}
     Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='ASSESSMENT_PANEL' AND competition_id=${competition_ids["${CLOSED_COMPETITION_NAME}"]};
+
+the funder panel period changes in the db
+    [Arguments]  ${Date}
+    Connect to Database    @{database}
+    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='FUNDERS_PANEL' AND competition_id=${competition_ids["${CLOSED_COMPETITION_NAME}"]};
 
 the user move the closed competition to in panel
     the user clicks the button/link     link=Competition
