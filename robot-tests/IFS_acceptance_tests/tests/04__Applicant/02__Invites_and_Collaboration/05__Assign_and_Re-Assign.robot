@@ -40,7 +40,7 @@ Lead applicant can assign a question
     And the user should see the element        jQuery=.assign-container:contains("Dennis Bergkamp")
 
 Lead applicant can assign question multiple times
-    [Documentation]    INFUND-3288
+    [Documentation]    INFUND-3288  Pending
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
     When the user assigns the question to the collaborator      Stuart Anderson
@@ -56,9 +56,13 @@ The question is enabled for the assignee
     [Setup]  log in as a different user   ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=Assign test  #Application Title
-    Then the user should see the browser notification  Stuart ANDERSON has assigned a question to you
+#    Then the user should see the browser notification  Stuart ANDERSON has assigned a question to you
     And the user should see the element   jQuery=li:contains("Public description") .task-status-incomplete
-    And the user clicks the button/link   link= Public description
+    When the user clicks the button/link  jQuery=.button:contains("Review")
+    and the user expands the section       Public description
+    then the user should see the element   jQuery=button:contains("Assign to lead for review")
+    and the user should see the element    jQuery=button:contains("Return and edit")
+#    And the user clicks the button/link   link= Public description
     And the user should see the element   css=.textarea-wrapped .editor
 
 Collaborator should see the terms and conditions from the overview page
@@ -86,8 +90,8 @@ Collaborator should be able to edit the assigned question
     ...  This test depends on the previous test suite to run first
     [Tags]  Email  HappyPath
     When the user clicks the button/link  jQuery=button:contains("Public description")
-    And the user should see the element   jQuery=button:contains("Assign to lead for review")
-    then the user clicks the button/link  link=Return and edit
+    then the user should see the element   jQuery=button:contains("Assign to lead for review")
+#    then the user clicks the button/link  link=Return and edit
 
 Last update message is correctly updating
     [Documentation]  INFUND-280
