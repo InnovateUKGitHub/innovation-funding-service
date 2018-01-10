@@ -19,7 +19,7 @@ items:
           deploymentconfig: mail
       spec:
         containers:
-        - image: davidrums/local-webmail-sink:preview
+        - image: innovateuk/application-service:${mailSinkVersion}
           name: mail
           imagePullPolicy: IfNotPresent
           env:
