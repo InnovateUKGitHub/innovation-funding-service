@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.service.CompetitionSetupFinanceRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +26,5 @@ public class CompetitionSetupFinanceServiceImpl implements CompetitionSetupFinan
     @Override
     public CompetitionSetupFinanceResource getByCompetitionId(Long competitionId) {
         return competitionSetupFinanceRestService.getByCompetitionId(competitionId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public boolean isNoFinanceCompetition(CompetitionResource competitionResource) {
-        return competitionResource.getCompetitionTypeName().equals(COMPETITION_TYPE_EOI);
     }
 }

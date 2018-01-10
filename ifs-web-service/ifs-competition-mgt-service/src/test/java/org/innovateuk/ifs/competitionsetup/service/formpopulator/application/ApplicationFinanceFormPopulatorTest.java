@@ -71,7 +71,8 @@ public class ApplicationFinanceFormPopulatorTest {
                 .withId(compId)
                 .build();
 
-        when(competitionSetupFinanceService.isNoFinanceCompetition(competition)).thenReturn(false);
+        assertTrue(competition.isFinanceType());
+
         when(competitionSetupFinanceService.getByCompetitionId(compId)).thenReturn(csfr);
         when(sectionService.getSectionsForCompetitionByType(compId, SectionType.OVERVIEW_FINANCES)).thenReturn(asList(overviewFinanceSection));
         when(questionService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL)).thenReturn(newQuestionResource()
@@ -103,10 +104,10 @@ public class ApplicationFinanceFormPopulatorTest {
 
         CompetitionResource competition = newCompetitionResource()
                 .withId(compId)
+                .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
                 .build();
 
-
-        when(competitionSetupFinanceService.isNoFinanceCompetition(competition)).thenReturn(true);
+        assertTrue(competition.isNonFinanceType());
 
         CompetitionSetupForm result = populator.populateForm(competition, Optional.empty());
 
