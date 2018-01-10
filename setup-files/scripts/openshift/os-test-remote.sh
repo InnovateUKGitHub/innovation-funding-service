@@ -1,16 +1,17 @@
 #!/bin/bash
 set -e
 
+. $(dirname $0)/deploy-functions.sh
+. $(dirname $0)/local-deploy-functions.sh
+
 PROJECT=$(oc project -q)
 shift 1
 ROBOT_COMMAND=$@
-HOST=prod.ifs-test-clusters.com
+HOST=$(getClusterAddress)
 ROUTE_DOMAIN=apps.${HOST}
-REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
+REGISTRY=docker-registry-default.apps.$(getClusterAddress)
 INTERNAL_REGISTRY=172.30.80.28:5000
 
-. $(dirname $0)/deploy-functions.sh
-. $(dirname $0)/local-deploy-functions.sh
 
 echo "Deploying tests to the current oc project ($PROJECT)"
 
