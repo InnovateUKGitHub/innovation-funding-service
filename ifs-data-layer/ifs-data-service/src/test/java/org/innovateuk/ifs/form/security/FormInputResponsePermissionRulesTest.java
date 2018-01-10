@@ -70,8 +70,8 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
         final FormInput formInput = FormInputBuilder.newFormInput().withQuestion(question).build();
         sharedInputResponse = newFormInputResponseResource().withApplication(application.getId()).build();
         when(formInputRepositoryMock.findOne(sharedInputResponse.getFormInput())).thenReturn(formInput);
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicantForApplicationOnOrganisation1.getId(), application.getId())).thenReturn(newProcessRole().withRole(getRole(LEADAPPLICANT)).build());
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaboratorForApplicationOnOrganisation2.getId(), application.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(leadApplicantForApplicationOnOrganisation1.getId(), application.getId(), LEADAPPLICANT.getName())).thenReturn(true);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(collaboratorForApplicationOnOrganisation2.getId(), application.getId(), COLLABORATOR.getName())).thenReturn(true);
 
         userNotOnApplication = UserResourceBuilder.newUserResource().build();
     }
