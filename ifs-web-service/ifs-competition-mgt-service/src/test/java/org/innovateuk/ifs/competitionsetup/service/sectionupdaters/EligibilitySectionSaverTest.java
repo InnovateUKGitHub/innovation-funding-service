@@ -89,12 +89,11 @@ public class EligibilitySectionSaverTest {
 	}
 
     @Test
-    public void saveSection_doesNotChangeMaxResearchRatiosForCompetitionsWithNullFullApplicationFinance() {
+    public void saveSection_defaultsMaxResearchRatioToNoneForCompetitionsWithNullFullApplicationFinance() {
         EligibilityForm  competitionSetupForm = new EligibilityForm();
         competitionSetupForm.setResearchParticipationAmountId(ResearchParticipationAmount.HUNDRED.getId());
 
         CompetitionResource competition = newCompetitionResource()
-                .withMaxResearchRatio(0)
                 .withFullApplicationFinance(null)
                 .build();
 

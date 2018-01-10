@@ -47,6 +47,8 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
             if (amount != null) {
                 competition.setMaxResearchRatio(amount.getAmount());
             }
+        } else {
+            competition.setMaxResearchRatio(ResearchParticipationAmount.NONE.getAmount());
         }
 
         boolean multiStream = "yes".equals(eligibilityForm.getMultipleStream());
