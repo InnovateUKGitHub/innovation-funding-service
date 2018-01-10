@@ -39,7 +39,8 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
     private OrganisationService organisationService;
 
     @Autowired
-    public ApplicationFinanceOverviewModelManager(ApplicationFinanceRestService applicationFinanceRestService,
+    public ApplicationFinanceOverviewModelManager(
+            ApplicationFinanceRestService applicationFinanceRestService,
             SectionService sectionService,
             FinanceService financeService,
             QuestionService questionService,
@@ -70,8 +71,10 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         model.addAttribute("totalFundingSought", organisationFinanceOverview.getTotalFundingSought());
         model.addAttribute("totalContribution", organisationFinanceOverview.getTotalContribution());
         model.addAttribute("totalOtherFunding", organisationFinanceOverview.getTotalOtherFunding());
-        model.addAttribute("researchParticipationPercentage",
-                applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException());
+        model.addAttribute(
+                "researchParticipationPercentage",
+                applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException()
+        );
         model.addAttribute("isApplicant", true);
     }
 
@@ -96,8 +99,11 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
                         s -> filterQuestions(s.getQuestions(), allQuestions)
                 ));
 
-        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(competitionId,
-                APPLICATION).getSuccessObjectOrThrowException();
+        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(
+                competitionId,
+                APPLICATION
+        )
+                .getSuccessObjectOrThrowException();
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())
@@ -134,8 +140,9 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
         viewModel.setTotalFundingSought(organisationFinanceOverview.getTotalFundingSought());
         viewModel.setTotalContribution(organisationFinanceOverview.getTotalContribution());
         viewModel.setTotalOtherFunding(organisationFinanceOverview.getTotalOtherFunding());
-        viewModel.setResearchParticipationPercentage(applicationFinanceRestService.getResearchParticipationPercentage(
-                applicationId).getSuccessObjectOrThrowException());
+        viewModel.setResearchParticipationPercentage(
+                applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException()
+        );
 
         return viewModel;
     }
@@ -161,8 +168,11 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
                         s -> filterQuestions(s.getQuestions(), allQuestions)
                 ));
 
-        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(competitionId,
-                APPLICATION).getSuccessObjectOrThrowException();
+        List<FormInputResource> formInputs = formInputRestService.getByCompetitionIdAndScope(
+                competitionId,
+                APPLICATION
+        )
+                .getSuccessObjectOrThrowException();
 
         Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
                 .values().stream().flatMap(a -> a.stream())
@@ -184,8 +194,10 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
 
     private List<SectionResource> getFinanceSubSectionChildren(Long competitionId, SectionResource section) {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(competitionId);
-        List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(section.getChildSections(),
-                allSections);
+        List<SectionResource> financeSectionChildren = sectionService.findResourceByIdInList(
+                section.getChildSections(),
+                allSections
+        );
         List<SectionResource> financeSubSectionChildren = new ArrayList<>();
         financeSectionChildren.stream().forEach(sectionResource -> {
                     if (!sectionResource.getChildSections().isEmpty()) {
