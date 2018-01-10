@@ -104,5 +104,4 @@ public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<Boolean> showApplicationTeam(final Long applicationId, final Long userId);
-
 }

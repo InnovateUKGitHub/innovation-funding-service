@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.panel.repository;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -39,4 +38,7 @@ public interface AssessmentReviewRepository extends ProcessRepository<Assessment
     boolean notifiable(@Param("competitionId") long competitionId);
 
     List<AssessmentReview> findByTargetIdAndActivityStateStateNot(long applicationId, State withdrawnState);
+
+    List<AssessmentReview> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(long userId, long competitionId);
+
 }
