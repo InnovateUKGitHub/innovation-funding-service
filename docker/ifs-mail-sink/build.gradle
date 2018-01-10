@@ -2,11 +2,6 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
-task buildDocker(overwrite: true, type: DockerBuildImage) {
-    tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-    inputDir = project.projectDir
-}
-
 task tagDocker(type: DockerTagImage) {
     onlyIf { !isNamedEnv() }
 
