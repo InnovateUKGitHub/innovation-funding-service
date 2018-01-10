@@ -46,24 +46,15 @@
     </div>
 
     <div class="my-applications">
-
-        <th:block th:if="${ #lists.isEmpty(model.applications) }">
-                <div class="task">
-                    <h3 class="heading-small">No applications have been assigned to this panel.</h3>
-                </div>
-        </th:block>
-
-        <div class="in-progress" th:unless="${#lists.isEmpty(model.applications)}">
-
             <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
-
                 <div class="progress-list">
                     <h2 class="heading-medium no-margin">Applications for Panel (<span
                         th:text="${#lists.size(model.applications)}"/>)</h2>
 
                     <ul>
+
                         <li th:each="app,iterStat : ${model.applications}"
-                            th:with="assignmentUrl=@{/review/{reviewId}(reviewId=${app.reviewId})}"
+                            th:with="reviewUrl=@{/{reviewId}/review(reviewId=${app.reviewId})}"
                             th:class="${(app.pending ? 'status-2-col' : '')}">
 
                             <th:block>
@@ -81,7 +72,7 @@
                                             Pending
                                         </div>
                                         <div class="status-msg msg-progress">
-                                            <a th:href="${assignmentUrl}">Accept or reject</a>
+                                            <a th:href="${reviewUrl}">Accept or reject</a>
                                         </div>
                                     </th:block>
 
@@ -92,12 +83,21 @@
                             </th:block>
 
                         </li>
+                        <th:block th:if="${#lists.isEmpty(model.applications)}">
+                            <li class="status-2-col">
+                                <div class="task">
+                                    <h3 class="heading-small">No applications have been assigned to this panel.</h3>
+                                </div>
+                            </li>
+                        </th:block>
                     </ul>
                 </div>
-
             </form>
-        </div>
     </div>
+
+    <p class="extra-margin form-hint">
+        Please complete your review of the applications before the panel date. You cannot edit or add feedback to applications at this stage.
+    </p>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
