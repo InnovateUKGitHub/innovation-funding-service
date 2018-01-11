@@ -80,7 +80,7 @@ Applicant completes Project Details
 Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-2332
     [Tags]  CompAdmin
-    Requesting Organisation ID from this Application
+    [Setup]  Requesting Organisation ID from this Application
     Given Log in as a different user  &{internal_finance_credentials}
     When the user navigates to the page    ${SERVER}/project-setup-management/project/${atiProjectID}/finance-check/organisation/${ATIorganisationID}/eligibility
     And the user clicks the button/link    jQuery=button:contains("Overhead costs")
