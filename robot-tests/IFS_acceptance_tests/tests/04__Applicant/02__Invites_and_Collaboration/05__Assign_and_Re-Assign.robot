@@ -40,7 +40,7 @@ Lead applicant can assign a question
     And the user should see the element        jQuery=.assign-container:contains("Dennis Bergkamp")
 
 Lead applicant can assign question multiple times
-    [Documentation]    INFUND-3288  
+    [Documentation]    INFUND-3288
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
     When the user assigns the question to the collaborator      Stuart Anderson
@@ -59,8 +59,8 @@ The question is enabled for the assignee
     Then the user should see the browser notification  Stuart ANDERSON has assigned a question to you
     And the user should see the element   jQuery=li:contains("Public description") .task-status-incomplete
     When the user clicks the button/link  jQuery=.button:contains("Review")
-    and the user expands the section      Public description
-    then the user should see the element  jQuery=button:contains("Assign to lead for review")
+    And the user expands the section      Public description
+    Then the user should see the element  jQuery=button:contains("Assign to lead for review")
     And the user clicks the button/link   jQuery=.form-group:contains("Public description") button:contains("Return and edit")
     And the user should see the element   css=.textarea-wrapped .editor
 
