@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.configuration.workflow;
 
+import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
@@ -75,6 +76,18 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
         return fireEvent(internalUserEvent(project, internalUser, GOL_REMOVED), project);
     }
 
+    public boolean removeSignedGrantOfferLetter(Project project, User user) {
+
+        ProjectUser projectManager = projectUserRepository.findByProjectIdAndRoleAndUserId(project.getId(),
+                ProjectParticipantRole.PROJECT_MANAGER, user.getId());
+
+        if (projectManager == null) {
+            return false;
+        }
+
+        return fireEvent(externalUserEvent(project, projectManager, GOL_REMOVED), project);
+    }
+
     public boolean isAlreadySent(Project project) {
         GOLProcess process = getCurrentProcess(project);
         return process != null && !GrantOfferLetterState.PENDING.equals(process.getActivityState());
@@ -87,7 +100,8 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
 
     public boolean isRejected(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.SENT.equals(process.getActivityState()) && GOL_REJECTED.getType().equalsIgnoreCase(process.getProcessEvent());
+        return process != null && GrantOfferLetterState.SENT.equals(process.getActivityState()) &&
+                GOL_REJECTED.getType().equalsIgnoreCase(process.getProcessEvent());
     }
 
     public boolean isReadyToApprove(Project project) {

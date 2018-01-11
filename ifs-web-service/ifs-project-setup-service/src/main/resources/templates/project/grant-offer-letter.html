@@ -32,8 +32,8 @@
         </th:block>
 
         <th:block th:if="${model.showGrantOfferLetterRejectedMessage}">
-            <div class="warning-alert extra-margin-bottom">
-                <h2>Your grant offer letter has been rejected by Innovate UK.</h2>
+            <div class="fail-alert extra-margin-bottom">
+                <h2 class="heading-small">Your grant offer letter has been rejected by Innovate UK.</h2>
                 <p>Someone will be in touch with you soon.</p>
             </div>
         </th:block>
@@ -93,7 +93,7 @@
                                filename=${model.signedGrantOfferLetterFile?.filename},
                                inputField='signedGrantOfferLetter',
                                validationField=${inputField},
-                               mayRemove=true,
+                               mayRemove=${model.ableToRemoveSignedGrantOffer},
                                removeName='removeSignedGrantOfferLetterClicked',
                                saveName='uploadSignedGrantOfferLetterClicked'">
                     <th:block th:insert="question-type/types :: fileupload-fragment(${uploadViewmode},${downloadUrl},${filename},${inputField},${validationField},${mayRemove},${removeName},${saveName})" />
