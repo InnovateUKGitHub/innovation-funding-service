@@ -11,6 +11,7 @@ import org.innovateuk.ifs.util.ExceptionThrowingRunnable;
 import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +47,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 public class AsyncFuturesGenerator {
 
     private static final Log LOG = LogFactory.getLog(AsyncFuturesGenerator.class);
+
+    @Autowired
+    private TaskExecutor executor;
 
     /**
      * A self-wiring here to allow methods within this class to use the @Async proxy mechanisms put in place by Spring
@@ -166,24 +170,24 @@ public class AsyncFuturesGenerator {
     }
 
     public <R1> CompletableFutureTuple1Handler<R1> awaitAll(String futureName, CompletableFuture<R1> future1) {
-        return new CompletableFutureTuple1Handler<>(futureName, future1);
+        return new CompletableFutureTuple1Handler<>(futureName, executor, future1);
     }
 
     public <R1, R2> CompletableFutureTuple2Handler<R1, R2> awaitAll(String futureName, CompletableFuture<R1> future1, CompletableFuture<R2> future2) {
-        return new CompletableFutureTuple2Handler<>(futureName, future1, future2);
+        return new CompletableFutureTuple2Handler<>(futureName, executor, future1, future2);
     }
 
     public <R1, R2, R3> CompletableFutureTuple3Handler<R1, R2, R3> awaitAll(String futureName, CompletableFuture<R1> future1, CompletableFuture<R2> future2, CompletableFuture<R3> future3) {
-        return new CompletableFutureTuple3Handler<>(futureName, future1, future2, future3);
+        return new CompletableFutureTuple3Handler<>(futureName, executor, future1, future2, future3);
     }
 
     public CompletableFutureTupleNHandler awaitAll(String futureName, CompletableFuture<?> future1, CompletableFuture<?> future2, CompletableFuture<?> future3, CompletableFuture<?>... moreFutures) {
         List<CompletableFuture<?>> allFutures = combineLists(asList(future1, future2, future3), moreFutures);
-        return new CompletableFutureTupleNHandler(futureName, allFutures);
+        return new CompletableFutureTupleNHandler(futureName, executor, allFutures);
     }
 
     public CompletableFutureTupleNHandler awaitAll(String futureName, List<? extends CompletableFuture<?>> futures) {
-        return new CompletableFutureTupleNHandler(futureName, futures);
+        return new CompletableFutureTupleNHandler(futureName, executor, futures);
     }
 
     private String randomName() {

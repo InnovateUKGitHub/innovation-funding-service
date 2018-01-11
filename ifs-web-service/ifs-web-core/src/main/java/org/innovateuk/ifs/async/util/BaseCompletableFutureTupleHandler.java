@@ -9,6 +9,7 @@ import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -62,16 +63,18 @@ abstract class BaseCompletableFutureTupleHandler {
     private static final Log LOG = LogFactory.getLog(BaseCompletableFutureTupleHandler.class);
 
     private String futureName;
+    private Executor threadPool;
     private CompletableFuture<?>[] futures;
 
-    BaseCompletableFutureTupleHandler(String futureName, CompletableFuture<?>... futures) {
+    BaseCompletableFutureTupleHandler(String futureName, Executor threadPool, CompletableFuture<?>... futures) {
         this.futureName = futureName;
+        this.threadPool = threadPool;
         this.futures = futures;
     }
 
     <R> CompletableFuture<R> thenApplyInternal(ExceptionThrowingSupplier<R> supplier) {
 
-        CompletableFuture<R> blockingFuture = CompletableFuture.allOf(futures).thenApply(done -> {
+        CompletableFuture<R> blockingFuture = CompletableFuture.allOf(futures).thenApplyAsync(done -> {
 
             // this ensures that all of the top-level Futures' descendant Futures are fully completed prior to
             // executing the next Future
@@ -82,7 +85,7 @@ abstract class BaseCompletableFutureTupleHandler {
                 LOG.error("Error whilst executing Supplier Future", e);
                 throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst executing Supplier Future - wrapping in AsyncException");
             }
-        });
+        }, threadPool);
 
         if (AsyncAllowedThreadLocal.isAsyncAllowed()) {
             return AsyncFuturesHolder.registerFuture(futureName, blockingFuture);

@@ -8,6 +8,7 @@ import org.innovateuk.ifs.util.ExceptionThrowingConsumer;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 /**
  * A convenience subclass of {@link BaseCompletableFutureTupleHandler} that allows a developer to more concisely handle
@@ -32,8 +33,8 @@ import java.util.concurrent.CompletableFuture;
  */
 public class CompletableFutureTupleNHandler extends BaseCompletableFutureTupleHandler {
 
-    public CompletableFutureTupleNHandler(String futureName, List<? extends CompletableFuture<?>> futures) {
-        super(futureName, futures.toArray(new CompletableFuture<?>[] {}));
+    public CompletableFutureTupleNHandler(String futureName, Executor threadPool, List<? extends CompletableFuture<?>> futures) {
+        super(futureName, threadPool, futures.toArray(new CompletableFuture<?>[] {}));
     }
 
     public <R> CompletableFuture<R> thenApply(ExceptionThrowingFunction<List<?>, R> handler) {
