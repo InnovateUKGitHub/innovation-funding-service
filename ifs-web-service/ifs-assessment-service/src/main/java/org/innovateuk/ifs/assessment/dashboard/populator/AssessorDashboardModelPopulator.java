@@ -20,7 +20,7 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 /**
- * Build the model for the Assessor Dashboard view.
+ * Build the model for the Assessor Panel Dashboard view.
  */
 @Component
 public class AssessorDashboardModelPopulator {

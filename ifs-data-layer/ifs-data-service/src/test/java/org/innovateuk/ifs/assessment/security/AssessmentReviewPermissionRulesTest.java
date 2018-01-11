@@ -116,7 +116,8 @@ public class AssessmentReviewPermissionRulesTest extends BasePermissionRulesTest
             assertFalse("other users should not be able to read assessment reviews in order to respond to invitations",
                     rules.userCanReadToAssign(assessmentReviews.get(state), otherUser)));
     }
- @Test
+
+    @Test
     public void ownersCanReadAssessmentsToReject() {
         EnumSet<AssessmentReviewState> allowedStates = EnumSet.of(PENDING, ACCEPTED);
         allowedStates.forEach(state ->

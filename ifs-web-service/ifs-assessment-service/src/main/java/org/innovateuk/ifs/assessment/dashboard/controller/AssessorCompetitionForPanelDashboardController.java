@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * This controller will handle all requests that are related to the assessor competition dashboard.
+ * This controller will handle all requests that are related to the assessor panel dashboard.
  */
 @Controller
 @RequestMapping(value = "/assessor")
@@ -34,7 +34,7 @@ public class AssessorCompetitionForPanelDashboardController {
     @GetMapping("/dashboard/competition/{competitionId}/panel")
     public String competitionDashboard(final Model model,
                                        UserResource loggedInUser,
-                                       @PathVariable("competitionId") final Long competitionId,
+                                       @PathVariable("competitionId") final long competitionId,
                                        @ModelAttribute(name = FORM_ATTR_NAME, binding = false) AssessorCompetitionDashboardAssessmentForm form) {
 
         model.addAttribute("model", assessorCompetitionForPanelDashboardModelPopulator.populateModel(competitionId, loggedInUser.getId()));
