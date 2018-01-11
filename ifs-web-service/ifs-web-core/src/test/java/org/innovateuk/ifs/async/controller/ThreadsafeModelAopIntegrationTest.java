@@ -42,8 +42,8 @@ public class ThreadsafeModelAopIntegrationTest extends BaseIntegrationTest {
      * parameter.
      */
     @Test
-    public void testModelSwappedOutOnGetMethod() {
-        assertModelSwappedOutForThreadsafeModel(model -> controller.get(model));
+    public void testModelSwappedOutOnAsyncAnnotatedMethod() {
+        assertModelSwappedOutForThreadsafeModel(controller::get);
     }
 
     /**
@@ -51,26 +51,8 @@ public class ThreadsafeModelAopIntegrationTest extends BaseIntegrationTest {
      * parameter.
      */
     @Test
-    public void testModelSwappedOutOnPostMethod() {
-        assertModelSwappedOutForThreadsafeModel(model -> controller.post(model));
-    }
-
-    /**
-     * Test that a Model is not currently being swapped out for a Threadsafe model on a @PutMapping methods (but we could
-     * allow this in the future)
-     */
-    @Test
-    public void testModelNotSwappedOutOnPutMethod() {
-        assertModelNotSwappedOut(model -> controller.put(model));
-    }
-
-    /**
-     * Test that a Model is not currently being swapped out for a Threadsafe model on a @DeleteMapping methods (but we could
-     * allow this in the future)
-     */
-    @Test
-    public void testModelNotSwappedOutOnDeleteMethod() {
-        assertModelNotSwappedOut(model -> controller.delete(model));
+    public void testModelNotSwappedOutOnNonAsyncAnnotatedMethod() {
+        assertModelNotSwappedOut(controller::post);
     }
 
     /**
@@ -104,14 +86,6 @@ public class ThreadsafeModelAopIntegrationTest extends BaseIntegrationTest {
     @Test
     public void testModelNotSwappedOutWithRedirectAttributes() {
         assertModelNotSwappedOut(new RedirectAttributesModelMap(), model -> controller.getWithRedirectAttributes(0, 1, model, 3));
-    }
-
-    /**
-     * Test that non-RequestHandler methods are ignored for Threadsafe model replacement.
-     */
-    @Test
-    public void testModelNotSwappedOutOnNonRequestHandlingMethod() {
-        assertModelNotSwappedOut(model -> controller.nonRequestHandling(model));
     }
 
     private void assertModelSwappedOutForThreadsafeModel(Consumer<Model> controllerCall) {

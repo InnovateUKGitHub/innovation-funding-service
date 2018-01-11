@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.async.controller;
 
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ExtendedModelMap;
 import org.springframework.ui.Model;
@@ -17,41 +18,35 @@ public class ThreadsafeModelAopIntegrationTestHelper {
 
     private Consumer<Model> modelConsumer;
 
+    @AsyncMethod
     @GetMapping
     public void get(Model model) {
         modelConsumer.accept(model);
     }
 
+    @AsyncMethod
     @GetMapping("/get2")
     @SuppressWarnings("unused")
     public void getWithOtherParameters(int i, int i1, Model model, int i2) {
         modelConsumer.accept(model);
     }
 
+    @AsyncMethod
     @GetMapping("/get3")
     @SuppressWarnings("unused")
     public void getWithExtendedModelMap(int i, int i1, ExtendedModelMap model, int i2) {
         modelConsumer.accept(model);
     }
 
+    @AsyncMethod
     @GetMapping("/get4")
     @SuppressWarnings("unused")
     public void getWithRedirectAttributes(int i, int i1, RedirectAttributes model, int i2) {
         modelConsumer.accept(model);
     }
 
-    @PostMapping
+    @GetMapping("/get5")
     public void post(Model model) {
-        modelConsumer.accept(model);
-    }
-
-    @PutMapping
-    public void put(Model model) {
-        modelConsumer.accept(model);
-    }
-
-    @DeleteMapping
-    public void delete(Model model) {
         modelConsumer.accept(model);
     }
 

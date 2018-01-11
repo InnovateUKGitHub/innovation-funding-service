@@ -728,6 +728,23 @@ public final class CollectionFunctions {
     }
 
     /**
+     * A simple wrapper around an anyMatch function that takes an array, to remove boilerplate from production code
+     *
+     * @param array
+     * @param filterFn
+     * @param <T>
+     * @return
+     */
+    public static <T> boolean simpleAnyMatch(T[] array, Predicate<T> filterFn) {
+
+        if (array == null || array.length == 0) {
+            return false;
+        }
+
+        return simpleAnyMatch(asList(array), filterFn);
+    }
+
+    /**
      * A simple wrapper around a String joining function.  Returns a string of the given list, separated by the given
      * joinString
      *

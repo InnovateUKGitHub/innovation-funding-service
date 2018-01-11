@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.security;
 
-import org.innovateuk.ifs.async.controller.AwaitAllFuturesCompletionIntegrationTestHelper;
+import org.innovateuk.ifs.async.controller.AwaitAsyncFuturesCompletionIntegrationTestHelper;
 import org.innovateuk.ifs.async.controller.ThreadsafeModelAopIntegrationTestHelper;
 import org.innovateuk.ifs.async.controller.endtoend.EndToEndAsyncControllerTestController;
 import org.innovateuk.ifs.commons.AbstractServiceSecurityAnnotationsTest;
@@ -29,7 +29,7 @@ public abstract class AbstractWebServiceSecurityAnnotationsTest extends Abstract
     public static final List<Class<?>> GLOBAL_EXCLUDED_CLASSES = asList(
             IfsErrorController.class,
             ThreadsafeModelAopIntegrationTestHelper.class,
-            AwaitAllFuturesCompletionIntegrationTestHelper.class,
+            AwaitAsyncFuturesCompletionIntegrationTestHelper.class,
             EndToEndAsyncControllerTestController.class);
 
     @Override

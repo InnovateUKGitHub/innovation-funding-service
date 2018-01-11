@@ -3,44 +3,44 @@ package org.innovateuk.ifs.async.controller;
 import org.aopalliance.aop.Advice;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.lang.reflect.Method;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
-
 /**
- * An advisor that targets methods annotated with {@link AsyncMethod} in order to supply them with a threadsafe
- * Spring Model rather than the default non-threadsafe Model.
+ * Places {@link AwaitModelFuturesCompletionMethodInterceptor} around Controller methods to ensure that any
+ * Futures added directly to the Spring Model as a Future are resolved before the Controller is allowed to complete.
  */
 @Component
-public class ThreadsafeModelAdvisor extends AbstractPointcutAdvisor {
+public class AwaitModelFuturesCompletionMethodAdvisor extends AbstractPointcutAdvisor {
 
     private static final long serialVersionUID = 1L;
 
-    private static final int ORDER = Ordered.HIGHEST_PRECEDENCE;
+    public static final int ADVICE_ORDER =
+            AwaitAsyncFuturesCompletionMethodAdvisor.ADVICE_ORDER - 1;
 
     private final transient StaticMethodMatcherPointcut pointcut = new
             StaticMethodMatcherPointcut() {
                 @Override
                 public boolean matches(Method method, Class<?> targetClass) {
-            return method.isAnnotationPresent(AsyncMethod.class) &&
-                    simpleAnyMatch(method.getParameterTypes(), p -> p.equals(Model.class));
-        }
-    };
+                    return method.isAnnotationPresent(RequestMapping.class)
+                            || method.isAnnotationPresent(GetMapping.class)
+                            || method.isAnnotationPresent(PostMapping.class);
+                }
+            };
 
     @Autowired
-    private transient ThreadsafeModelMethodInterceptor interceptor;
+    private transient AwaitModelFuturesCompletionMethodInterceptor interceptor;
 
-    public ThreadsafeModelAdvisor(){
-        setOrder(ORDER);
+    public AwaitModelFuturesCompletionMethodAdvisor(){
+        setOrder(ADVICE_ORDER);
     }
 
     @Override
@@ -59,7 +59,7 @@ public class ThreadsafeModelAdvisor extends AbstractPointcutAdvisor {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ThreadsafeModelAdvisor that = (ThreadsafeModelAdvisor) o;
+        AwaitModelFuturesCompletionMethodAdvisor that = (AwaitModelFuturesCompletionMethodAdvisor) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

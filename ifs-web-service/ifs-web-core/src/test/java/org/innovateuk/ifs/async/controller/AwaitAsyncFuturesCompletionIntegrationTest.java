@@ -8,7 +8,6 @@ import org.springframework.validation.support.BindingAwareModelMap;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -16,13 +15,13 @@ import static org.hamcrest.Matchers.*;
 
 /**
  * This test tests the Future blocking mechanism that is applied to request-handing Controller methods as applied by
- * {@link AwaitAllFuturesCompletionMethodInterceptor}.  This ensures that all Futures created during the execution of
+ * {@link AwaitModelFuturesCompletionMethodInterceptor}.  This ensures that all Futures created during the execution of
  * the Controller method have completed before the Controller method finishes.
  */
-public class AwaitAllFuturesCompletionIntegrationTest extends BaseIntegrationTest {
+public class AwaitAsyncFuturesCompletionIntegrationTest extends BaseIntegrationTest {
 
     @Autowired
-    private AwaitAllFuturesCompletionIntegrationTestHelper controller;
+    private AwaitAsyncFuturesCompletionIntegrationTestHelper controller;
 
     /**
      * This method asserts that Futures created using the
@@ -31,8 +30,9 @@ public class AwaitAllFuturesCompletionIntegrationTest extends BaseIntegrationTes
      * Controller from completing until they themselves have completed.
      */
     @Test
-    public void testGetMappingsBlockUntilAllGeneratedFuturesComplete() {
-        assertFuturesAreWaitedOnBeforeControllerCompletes(futuresCompleted -> controller.getMethod(futuresCompleted));
+    public void testAnnotatedAsyncMethodsBlockUntilAllGeneratedFuturesComplete() {
+
+        assertFuturesAreWaitedOnBeforeControllerCompletes(controller::asyncAnnotatedMethod);
     }
 
     @Test
@@ -49,18 +49,9 @@ public class AwaitAllFuturesCompletionIntegrationTest extends BaseIntegrationTes
     }
 
     @Test
-    public void testPostMappingsBlock() {
-        assertFuturesAreWaitedOnBeforeControllerCompletes(futuresCompleted -> controller.post(futuresCompleted));
-    }
+    public void testNonAnnotatedMethodsDontAllowAsyncCallsButAllWorkCompletes() {
 
-    @Test
-    public void testPutMappingsDontCurrentlyBlock() {
-        assertFuturesNotWaitedOnBeforeControllerCompletes(latch -> controller.put(latch));
-    }
-
-    @Test
-    public void testDeleteMappingsDontCurrentlyBlock() {
-        assertFuturesNotWaitedOnBeforeControllerCompletes(latch -> controller.delete(latch));
+        assertAllWorkCompletesButNoFuturesGenerated(controller::nonAsyncAnnotatedethod);
     }
 
     private void assertFuturesAreWaitedOnBeforeControllerCompletes(Consumer<List<String>> methodUnderTest) {
@@ -79,16 +70,19 @@ public class AwaitAllFuturesCompletionIntegrationTest extends BaseIntegrationTes
         assertThat(AsyncFuturesHolder.getFuturesOrInitialise(), empty());
     }
 
-    private void assertFuturesNotWaitedOnBeforeControllerCompletes(Consumer<CountDownLatch> methodUnderTest) {
+    private void assertAllWorkCompletesButNoFuturesGenerated(Consumer<List<String>> methodUnderTest) {
 
-        CountDownLatch latch = new CountDownLatch(1);
+        List<String> futuresCompleted = new ArrayList<>();
 
-        // call the method under test, which should use the latch to create a Future that blocks until the
-        // latch is released
-        methodUnderTest.accept(latch);
+        // call the method under test
+        methodUnderTest.accept(futuresCompleted);
 
-        // and if we've reached this point in the test, the Controller method was NOT blocked by the non-completing
-        // Future
-        latch.countDown();
+        // assert that all work has completed following the completion of the Controller method
+        assertThat(futuresCompleted, containsInAnyOrder("future1", "future2", "awaitingFuture",
+                "awaitingFutureChildFuture", "awaitingFutureChildFutureChild"));
+
+        // assert that the list of registered Futures is empty however, as all work was done on the main Thread rather
+        // than in Futures
+        assertThat(AsyncFuturesHolder.getFuturesOrInitialise(), empty());
     }
 }

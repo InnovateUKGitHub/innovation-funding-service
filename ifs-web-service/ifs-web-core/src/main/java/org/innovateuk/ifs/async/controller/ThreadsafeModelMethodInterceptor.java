@@ -6,9 +6,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
 /**
- * A method interceptor that is applied to web layer Controller handler methods via {@link ThreadsafeModelAdvisor} and
- * replaces the method argument of Model (if any) with a ThreadsafeModel that wraps the original Model in a threadsafe
- * wrapper.  The Controller method is then called with the wrapped Model rather than the original.
+ * A method interceptor that is applied to {@link org.innovateuk.ifs.async.annotations.AsyncMethod} annotated methods
+ * via {@link ThreadsafeModelAdvisor} and replaces the method argument of Model with a ThreadsafeModel that wraps the
+ * original Model in a threadsafe wrapper.  The Controller method is then called with the wrapped Model rather than the
+ * original.
  */
 @Component
 public class ThreadsafeModelMethodInterceptor implements MethodInterceptor {

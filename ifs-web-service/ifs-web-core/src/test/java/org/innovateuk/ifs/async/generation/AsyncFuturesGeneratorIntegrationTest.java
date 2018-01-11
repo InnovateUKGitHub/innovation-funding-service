@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.async.generation;
 
+import org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,16 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
         AsyncFuturesHolder.clearFutures();
     }
 
+    @Before
+    public void enableAsync() {
+        AsyncAllowedThreadLocal.setAsyncAllowed(true);
+    }
+
+    @After
+    public void disableAsync() {
+        AsyncAllowedThreadLocal.setAsyncAllowed(false);
+    }
+
     /**
      * This test asserts that blocks of code executed via {@link AsyncFuturesGenerator#async(org.innovateuk.ifs.util.ExceptionThrowingSupplier)}
      * are executed with our own TaskExecutor.
@@ -66,6 +78,37 @@ public class AsyncFuturesGeneratorIntegrationTest extends BaseIntegrationTest {
         Thread childThread = childThreadList.get(0);
         assertNotSame(currentThread(), childThread);
         assertThat(childThread.getName(), startsWith("IFS-Async-Executor-"));
+    }
+
+    /**
+     * This test asserts that blocks of code executed via {@link AsyncFuturesGenerator#async(org.innovateuk.ifs.util.ExceptionThrowingSupplier)}
+     * are executed with the main thread if async is disabled.
+     */
+    @Test
+    public void testAsyncWithSupplierExecutedByMainThreadIfAsyncNotAllowed() throws ExecutionException, InterruptedException {
+
+        AsyncAllowedThreadLocal.setAsyncAllowed(false);
+
+        CompletableFuture<Thread> childThreadFuture = generator.async(Thread::currentThread);
+        Thread childThread = childThreadFuture.get();
+
+        assertSame(currentThread(), childThread);
+    }
+
+    /**
+     * This test asserts that blocks of code executed via {@link AsyncFuturesGenerator#async(org.innovateuk.ifs.util.ExceptionThrowingRunnable)}
+     * are executed with the main thread if async is disabled.
+     */
+    @Test
+    public void testAsyncWithRunnableExecutedByMainThreadIfAsyncNotAllowed() throws ExecutionException, InterruptedException {
+
+        AsyncAllowedThreadLocal.setAsyncAllowed(false);
+
+        List<Thread> childThreadList = new ArrayList<>();
+        CompletableFuture<Void> childThreadFuture = generator.async(() -> {childThreadList.add(currentThread());});
+        childThreadFuture.get();
+
+        assertSame(currentThread(), childThreadList.get(0));
     }
 
     /**

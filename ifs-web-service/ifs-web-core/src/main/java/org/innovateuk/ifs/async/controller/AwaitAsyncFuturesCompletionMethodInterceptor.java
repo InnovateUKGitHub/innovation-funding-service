@@ -5,22 +5,28 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.innovateuk.ifs.async.generation.AsyncFuturesGenerator;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
 
-import static org.innovateuk.ifs.application.service.Futures.callAllFutures;
 import static org.innovateuk.ifs.async.exceptions.AsyncException.unwrapOriginalExceptionFromAsyncException;
 
 /**
- * This method interceptor targets request-handling Controller methods and ensures that any Futures created via
- * {@link AsyncFuturesGenerator} (and any descendant Futures) are completed before the Controller completes.
+ * This method interceptor targets methods annotated with {@link org.innovateuk.ifs.async.annotations.AsyncMethod} and
+ * ensures that any Futures created via {@link AsyncFuturesGenerator} (and any descendant Futures) are completed before
+ * the method completes.  Typically this will be used by Controller request-handling methods that require some async
+ * support.
  */
 @Component
-public class AwaitAllFuturesCompletionMethodInterceptor implements MethodInterceptor {
+public class AwaitAsyncFuturesCompletionMethodInterceptor implements MethodInterceptor {
 
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
 
+        boolean asyncCurrentlyAllowed = false;
+
         try {
+
+            asyncCurrentlyAllowed = AsyncAllowedThreadLocal.isAsyncAllowed();
+
+            AsyncAllowedThreadLocal.setAsyncAllowed(true);
 
             // call the Controller method
             Object returnValue = invocation.proceed();
@@ -30,15 +36,6 @@ public class AwaitAllFuturesCompletionMethodInterceptor implements MethodInterce
             // {@link AsyncFuturesHolder} in some other way to complete before allowing the Controller to return
             //
             AsyncFuturesHolder.waitForAllFuturesToComplete();
-
-            //
-            // Wait for any Futures added directly to the Spring Model to complete before allowing the Controller to return
-            //
-            for (Object argument : invocation.getArguments()) {
-                if (argument instanceof Model) {
-                    callAllFutures((Model) argument);
-                }
-            }
 
             return returnValue;
 
@@ -50,6 +47,8 @@ public class AwaitAllFuturesCompletionMethodInterceptor implements MethodInterce
             throw unwrapOriginalExceptionFromAsyncException(e);
 
         } finally {
+
+            AsyncAllowedThreadLocal.setAsyncAllowed(asyncCurrentlyAllowed);
 
             // ensure that this Thread is clear of registered Futures
             AsyncFuturesHolder.clearFutures();

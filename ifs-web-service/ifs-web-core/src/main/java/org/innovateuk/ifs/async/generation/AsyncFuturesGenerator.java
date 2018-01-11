@@ -2,6 +2,7 @@ package org.innovateuk.ifs.async.generation;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.async.util.CompletableFutureTuple1Handler;
 import org.innovateuk.ifs.async.util.CompletableFutureTuple2Handler;
 import org.innovateuk.ifs.async.util.CompletableFutureTuple3Handler;
@@ -79,12 +80,25 @@ public class AsyncFuturesGenerator {
             }
         };
 
-        // create and register the Future.  Once registered, release the Future to run
-        CountDownLatch waitForRegistrationLatch = new CountDownLatch(1);
-        CompletableFuture<T> asyncBlock = self.asyncInternal(decoratedSupplier, waitForRegistrationLatch);
-        CompletableFuture<T> registeredFuture = AsyncFuturesHolder.registerFuture(futureName, asyncBlock);
-        waitForRegistrationLatch.countDown();
-        return registeredFuture;
+        if (AsyncAllowedThreadLocal.isAsyncAllowed()) {
+
+            // create and register the Future.  Once registered, release the Future to run
+            CountDownLatch waitForRegistrationLatch = new CountDownLatch(1);
+            CompletableFuture<T> asyncBlock = self.asyncInternal(decoratedSupplier, waitForRegistrationLatch);
+            CompletableFuture<T> registeredFuture = AsyncFuturesHolder.registerFuture(futureName, asyncBlock);
+            waitForRegistrationLatch.countDown();
+            return registeredFuture;
+
+        } else {
+
+            LOG.warn("Cannot process async block asynchronously - processing on the main Thread instead.  Annotate " +
+                    "a method in the callstack with @AsyncMethod to enable asynchronous execution");
+
+//            if (true) {
+//                throw new RuntimeException("aaargh");
+//            }
+            return nonAsyncInternal(decoratedSupplier);
+        }
     }
 
     public CompletableFuture<Void> async(ExceptionThrowingRunnable runnable) {
@@ -113,6 +127,16 @@ public class AsyncFuturesGenerator {
     <T> CompletableFuture<T> asyncInternal(ExceptionThrowingSupplier<T> supplier, CountDownLatch waitForRegistrationLatch) {
         try {
             waitForRegistrationLatch.await(1, TimeUnit.SECONDS);
+            T value = supplier.get();
+            return CompletableFuture.completedFuture(value);
+        } catch (Exception e) {
+            LOG.error("Error whilst processing Supplier Future", e);
+            throw getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst processing Supplier Future");
+        }
+    }
+
+    <T> CompletableFuture<T> nonAsyncInternal(ExceptionThrowingSupplier<T> supplier) {
+        try {
             T value = supplier.get();
             return CompletableFuture.completedFuture(value);
         } catch (Exception e) {

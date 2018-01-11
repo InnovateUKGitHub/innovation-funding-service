@@ -1,7 +1,8 @@
 package org.innovateuk.ifs.async.executor;
 
 import org.innovateuk.ifs.async.AsyncExecutionTestHelper;
-import org.innovateuk.ifs.async.controller.AwaitAllFuturesCompletionMethodInterceptor;
+import org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal;
+import org.innovateuk.ifs.async.controller.AwaitModelFuturesCompletionMethodInterceptor;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Test;
@@ -85,7 +86,7 @@ public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
      * This transfers a List in which we keep a track of all Futures and children of those Futures that were spawned
      * from the main Thread, so that we can keep a track of every Future that has (or will be) launched from the main
      * Thread, so that we can choose to wait for all to complete before letting the main Thread continue, as we do in
-     * {@link AwaitAllFuturesCompletionMethodInterceptor} to ensure that all Futures have
+     * {@link AwaitModelFuturesCompletionMethodInterceptor} to ensure that all Futures have
      * completed populating the Spring Model before passing to Thymeleaf to render.
      */
     @Test
@@ -94,6 +95,23 @@ public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
         Runnable setNewThreadLocalValueFn = () -> AsyncFuturesHolder.setFutures(new ConcurrentLinkedQueue<>());
 
         testThreadLocalTransferredToChildThread(setNewThreadLocalValueFn, AsyncFuturesHolder::getFuturesOrInitialise);
+    }
+
+    /**
+     * This test case asserts that the ThreadLocal value of
+     * {@link org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal} is transferred from the top-level
+     * Thread to its child Threads (and their children).
+     *
+     * This gives us the ability to know that the currentlyexecuting Thread was generated from a code block
+     * that explicitly allows async behaviour to occur.
+     */
+    @Test
+    public void testAsyncAllowedTransferredToChildThreads() throws ExecutionException, InterruptedException {
+
+        Runnable setNewThreadLocalValueFn = () -> AsyncAllowedThreadLocal.setAsyncAllowed(true);
+
+        testThreadLocalTransferredToChildThread(setNewThreadLocalValueFn,
+                AsyncAllowedThreadLocal::isAsyncAllowed);
     }
 
     /**

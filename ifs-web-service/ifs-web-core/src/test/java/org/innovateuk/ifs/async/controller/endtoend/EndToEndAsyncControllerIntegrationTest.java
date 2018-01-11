@@ -24,6 +24,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.ui.Model;
 import org.springframework.validation.support.BindingAwareModelMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -31,6 +32,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BiFunction;
 
 import static com.jayway.awaitility.Awaitility.await;
 import static java.util.Arrays.asList;
@@ -67,6 +69,11 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_RE
  */
 @DirtiesContext
 public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest {
+
+    private enum ExpectedExecutionBehaviour {
+        ASYNC_THREADS,
+        MAIN_THREAD
+    }
 
     @Autowired
     private EndToEndAsyncControllerTestController controller;
@@ -118,6 +125,17 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
 
     @Test
     public void testEndToEndControllerAsyncBehaviour() {
+        assertFutureWorkCompletsSuccessfullyWhenControllerCompletes(controller::asyncMethod, ExpectedExecutionBehaviour.ASYNC_THREADS);
+    }
+
+    @Test
+    public void testEndToEndControllerAsyncBehaviourExecutedInMainThreadWhenAsyncDisabled() {
+        assertFutureWorkCompletsSuccessfullyWhenControllerCompletes(controller::nonAsyncMethod, ExpectedExecutionBehaviour.MAIN_THREAD);
+    }
+
+    private <T> void assertFutureWorkCompletsSuccessfullyWhenControllerCompletes(
+            BiFunction<Long, Model, String> methodUnderTest,
+            ExpectedExecutionBehaviour executionBehaviour) {
 
         BindingAwareModelMap model = new BindingAwareModelMap();
 
@@ -134,15 +152,22 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
                 build();
 
         when(restTemplateMock.exchange(eq(baseRestUrl + "/application/123"), eq(HttpMethod.GET), isA(HttpEntity.class),
-                eq(ApplicationResource.class))).thenAnswer(invocation -> delayedResponse(entity(application)));
+                eq(ApplicationResource.class))).thenAnswer(invocation -> dataLayerResponse(application, executionBehaviour));
 
         when(restTemplateMock.exchange(eq(baseRestUrl + "/competition/456"), eq(HttpMethod.GET), isA(HttpEntity.class),
-                eq(CompetitionResource.class))).thenAnswer(invocation -> delayedResponse(entity(competition)));
+                eq(CompetitionResource.class))).thenAnswer(invocation -> dataLayerResponse(competition, executionBehaviour));
 
         // set up expectations for the retrieval of the Lead Organisation
-        List<Long> leadOrganisationUserIds = setupLeadOrganisationRetrievalExpectations();
+        List<Long> leadOrganisationUserIds = setupLeadOrganisationRetrievalExpectations(executionBehaviour);
 
-        String result = controller.getMethod(application.getId(), model);
+        //
+        // call the method under test
+        //
+        String result = methodUnderTest.apply(application.getId(), model);
+
+        //
+        // assert we get a decision on the correct page to display
+        //
         assertThat(result, equalTo("/application/My Application"));
 
         //
@@ -151,7 +176,9 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
         assertThat(model.get("applicationSectorAndCompetitionCode"), equalTo("The Sector-The Activity Code"));
         assertThat(model.get("leadOrganisationUsers"), equalTo(leadOrganisationUserIds));
 
+        //
         // and assert that the values added as a Future directly to the model in the Controller have resolved correctly
+        //
         assertThat((List<String>) model.get("explicitlyAsyncResultsAddedAsAFutureToTheModel"), contains(
                 "doExplicitAsyncActivities2ThenAmended",
                 "doExplicitAsyncActivities4ThenAmended",
@@ -202,7 +229,7 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
         }
     }
 
-    private List<Long> setupLeadOrganisationRetrievalExpectations() {
+    private List<Long> setupLeadOrganisationRetrievalExpectations(ExpectedExecutionBehaviour executionBehaviour) {
 
         RoleResource leadApplicantRole = newRoleResource().withType(UserRoleType.LEADAPPLICANT).build();
         RoleResource collaboratorRole = newRoleResource().withType(UserRoleType.COLLABORATOR).build();
@@ -214,13 +241,13 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
                 build(3);
 
         when(restTemplateMock.exchange(eq(baseRestUrl + "/processrole/findByApplicationId/123"), eq(HttpMethod.GET), isA(HttpEntity.class),
-                eq(processRoleResourceListType()))).thenAnswer(invocation -> delayedResponse(entity(applicationProcessRoles)));
+                eq(processRoleResourceListType()))).thenAnswer(invocation -> dataLayerResponse(applicationProcessRoles, executionBehaviour));
 
         List<Long> leadOrganisationUserIds = asList(2L, 4L, 6L);
         OrganisationResource leadOrganisation = newOrganisationResource().withUsers(leadOrganisationUserIds).build();
 
         when(restTemplateMock.exchange(eq(baseRestUrl + "/organisation/findById/444"), eq(HttpMethod.GET), isA(HttpEntity.class),
-                eq(OrganisationResource.class))).thenAnswer(invocation -> delayedResponse(entity(leadOrganisation)));
+                eq(OrganisationResource.class))).thenAnswer(invocation -> dataLayerResponse(leadOrganisation, executionBehaviour));
         return leadOrganisationUserIds;
     }
 
@@ -228,28 +255,48 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+
     /**
-     * This method asserts that our async work is being done on the expected task executor Threads, and that the
+     * This method asserts that our async work is being done on the expected Threads, and that the
      * expected ThreadLocal values to support the RestTemplateAdaptors are present.
      *
-     * This then simulates a random time for responses to return from the data layer to ensure that our Futures execute
-     * in different orders, as in real life.
      */
-    private <T> T delayedResponse(T response) {
+    private <T> ResponseEntity<T> dataLayerResponse(T response, ExpectedExecutionBehaviour executionBehaviour) {
 
-        assertThat(Thread.currentThread().getName(), startsWith("IFS-Async-Executor-"));
         assertThat(((UserAuthentication) SecurityContextHolder.getContext().getAuthentication()).getDetails(), sameInstance(loggedInUser));
         assertThat(RequestContextHolder.getRequestAttributes().getAttribute("REQUEST_UUID_KEY", SCOPE_REQUEST),
                 equalTo(requestCachingUuid));
 
+        if (ExpectedExecutionBehaviour.ASYNC_THREADS.equals(executionBehaviour)) {
+            assertThat(Thread.currentThread().getName(), startsWith("IFS-Async-Executor-"));
+            return delayedResponse(entity(response));
+        } else {
+            assertThat(Thread.currentThread().getName(), not(startsWith("IFS-Async-Executor-")));
+            return nonAsyncResponse(entity(response));
+        }
+    }
+
+    /**
+     * This method simulates a random time for responses to return from the data layer to ensure that our Futures execute
+     * in different orders, as in real life.
+     */
+    private <T> T delayedResponse(T response) {
+
         sleepQuietlyForRandomInterval();
+        return response;
+    }
+
+    /**
+     * This method asserts that our async work is being done on the main Thread because async is not currently allowed.
+     */
+    private <T> T nonAsyncResponse(T response) {
         return response;
     }
 
     // a SonarQube-compliant way to sleep the Thread for an interval
     static void sleepQuietlyForRandomInterval() {
         try {
-            int randomMillis = (int) (Math.random() * 20) + 20;
+            int randomMillis = (int) (Math.random() * 10) + 10;
 
             await().pollDelay(randomMillis, TimeUnit.MILLISECONDS).
                     timeout(randomMillis + 1, TimeUnit.MILLISECONDS).

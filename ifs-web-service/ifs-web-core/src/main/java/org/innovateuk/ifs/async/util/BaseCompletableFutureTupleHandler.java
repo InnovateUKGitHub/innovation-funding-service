@@ -2,6 +2,7 @@ package org.innovateuk.ifs.async.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.async.exceptions.AsyncException;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
@@ -83,7 +84,11 @@ abstract class BaseCompletableFutureTupleHandler {
             }
         });
 
-        return AsyncFuturesHolder.registerFuture(futureName, blockingFuture);
+        if (AsyncAllowedThreadLocal.isAsyncAllowed()) {
+            return AsyncFuturesHolder.registerFuture(futureName, blockingFuture);
+        } else {
+            return blockingFuture;
+        }
     }
 
     void waitForFuturesAndDescendantsToFullyComplete() {

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.async.controller;
 
+import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.async.util.AsyncAdaptor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,16 +11,35 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 
 /**
- * Test Controller to aid in testing with {@link AwaitAllFuturesCompletionIntegrationTest}.
+ * Test Controller to aid in testing with {@link AwaitAsyncFuturesCompletionIntegrationTest}.
  */
 @Controller
 @RequestMapping("/AwaitAllFuturesCompletionIntegrationTestHelper")
-public class AwaitAllFuturesCompletionIntegrationTestHelper extends AsyncAdaptor {
+public class AwaitAsyncFuturesCompletionIntegrationTestHelper extends AsyncAdaptor {
 
+    @AsyncMethod
     @GetMapping
-    public String getMethod(List<String> futuresCompleted) {
+    public void asyncAnnotatedMethod(List<String> futuresCompleted) {
         createFutures(futuresCompleted);
-        return null;
+    }
+
+    @AsyncMethod
+    @GetMapping("/2")
+    public void getMethodWithFutureAddedToModel(Model model) {
+
+        model.addAttribute("futureResult", CompletableFuture.supplyAsync(() -> {
+            try {
+                Thread.sleep(20);
+                return "theResult";
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }));
+    }
+
+    @GetMapping("/3")
+    public void nonAsyncAnnotatedethod(List<String> futuresCompleted) {
+        createFutures(futuresCompleted);
     }
 
     private void createFutures(List<String> futuresCompleted) {
@@ -46,31 +66,6 @@ public class AwaitAllFuturesCompletionIntegrationTestHelper extends AsyncAdaptor
             });
 
         });
-    }
-
-    @GetMapping("/2")
-    public String getMethodWithFutureAddedToModel(Model model) {
-
-        model.addAttribute("futureResult", CompletableFuture.supplyAsync(() -> {
-            try {
-                Thread.sleep(20);
-                return "theResult";
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }));
-
-        return null;
-    }
-
-    @PostMapping
-    public void post(List<String> futuresCompleted) {
-        createFutures(futuresCompleted);
-    }
-
-    @PutMapping
-    public void put(CountDownLatch latch) {
-        async(() -> latch.await());
     }
 
     @DeleteMapping
