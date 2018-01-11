@@ -1,14 +1,11 @@
 package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentReviewRejectOutcomeResourceBuilder.newAssessmentReviewRejectOutcomeResource;
-import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
-import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.NOT_AREA_OF_EXPERTISE;
 import static org.junit.Assert.assertEquals;
 
 public class AssessmentReviewRejectOutcomeResourceBuilderTest {
@@ -18,7 +15,7 @@ public class AssessmentReviewRejectOutcomeResourceBuilderTest {
         String expectedRejectComment = "Comment";
 
         AssessmentReviewRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentReviewRejectOutcomeResource()
-                .withRejectComment(expectedRejectComment)
+                .withReason(expectedRejectComment)
                 .build();
 
         assertEquals(expectedRejectComment, assessmentRejectOutcomeResource.getReason());
@@ -29,7 +26,7 @@ public class AssessmentReviewRejectOutcomeResourceBuilderTest {
         String[] expectedRejectComments = {"Comment 1", "Comment 2"};
 
         List<AssessmentReviewRejectOutcomeResource> assessmentReviewRejectOutcomeResources = newAssessmentReviewRejectOutcomeResource()
-                .withRejectComment(expectedRejectComments)
+                .withReason(expectedRejectComments)
                 .build(2);
 
         AssessmentReviewRejectOutcomeResource first = assessmentReviewRejectOutcomeResources.get(0);

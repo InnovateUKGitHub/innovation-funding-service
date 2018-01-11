@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -31,7 +30,7 @@ public class AssessmentReviewRejectOutcomeResourceBuilder
         return new AssessmentReviewRejectOutcomeResource();
     }
 
-    public AssessmentReviewRejectOutcomeResourceBuilder withRejectComment(String... reasons) {
+    public AssessmentReviewRejectOutcomeResourceBuilder withReason(String... reasons) {
         return withArray((value, assessmentRejectOutcomeResource) -> assessmentRejectOutcomeResource.setReason(value), reasons);
     }
 }

@@ -101,7 +101,7 @@ public class AssessmentPanelControllerTest extends BaseControllerMockMVCTest<Ass
         long assessmentReviewId = 1L;
         String rejectComment = String.join(" ", nCopies(100, "comment"));
         AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcomeResource = newAssessmentReviewRejectOutcomeResource()
-                .withRejectComment(rejectComment)
+                .withReason(rejectComment)
                 .build();
 
         when(assessmentPanelServiceMock.rejectAssessmentReview(assessmentReviewId, assessmentReviewRejectOutcomeResource)).thenReturn(serviceSuccess());

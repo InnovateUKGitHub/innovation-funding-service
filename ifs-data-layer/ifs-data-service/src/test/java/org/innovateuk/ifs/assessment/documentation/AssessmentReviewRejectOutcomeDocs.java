@@ -12,5 +12,5 @@ public class AssessmentReviewRejectOutcomeDocs {
     };
 
     public static final AssessmentReviewRejectOutcomeResourceBuilder assessmentReviewRejectOutcomeResourceBuilder = newAssessmentReviewRejectOutcomeResource()
-            .withRejectComment("Member of board of directors");
+            .withReason("Member of board of directors");
 }

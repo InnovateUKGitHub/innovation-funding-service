@@ -572,7 +572,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         flushAndClearSession();
 
         AssessmentReviewRejectOutcomeResource rejectOutcomeResource = newAssessmentReviewRejectOutcomeResource()
-                .withRejectComment("comment")
+                .withReason("comment")
                 .build();
 
         controller.rejectInvitation(assessmentReview.getId(), rejectOutcomeResource).getSuccessObjectOrThrowException();
