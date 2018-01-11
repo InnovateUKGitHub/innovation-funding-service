@@ -2,6 +2,8 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
+apply from: "script-support.gradle"
+
 // This is necessary because the java plugin is also applied to
 // the ifs-data-layer project, which does _not_ build a jar.
 bootRepackage.enabled = false
@@ -144,6 +146,10 @@ subprojects {
         }
     }
 
+}
+
+task initDB {
+    dependsOn startMySql
 }
 
 ext {

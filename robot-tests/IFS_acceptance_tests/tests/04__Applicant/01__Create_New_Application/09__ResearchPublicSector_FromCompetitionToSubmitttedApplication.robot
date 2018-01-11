@@ -86,7 +86,7 @@ The competition admin creates a competition for
     the user clicks the button/link  jQuery=.button:contains("Create competition")
     the user fills in the CS Initial details  ${competition}  ${month}  ${nextyear}  ${compType_Generic}
     the user fills in the CS Funding Information
-    the user fills in the CS Eligibility  ${orgType}
+    the user fills in the CS Eligibility  ${orgType}  1  # 1 means 30%
     the user fills in the CS Milestones   ${month}  ${nextyear}
     the internal user can see that the Generic competition has only one Application Question
     the user marks the Application as done  yes  Generic
