@@ -47,8 +47,8 @@ ${panel_assessor_ben}        benjamin.nixon@gmail.com
 ${panel_assessor_joel}       joel.george@gmail.com
 ${panel_assessor_madeleine}  madeleine.martin@gmail.com
 ${panel_assessor_riley}      riley.butler@gmail.com
-${Neural_network}            ${application_ids["Neural networks to optimise freight train routing"]}
-${computer_vision}           ${application_ids["Computer vision and machine learning for transport networks"]}
+${Neural_network_application}      ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
+${computer_vision_application}     ${application_ids["Computer vision and machine learning for transport networks"]}
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
@@ -214,26 +214,26 @@ Assign application link activate if competition is in panel state
 Manage Assessment Panel Assign and remove button functionality
     [Documentation]   IFS-2039
     [Tags]
-    When the user clicks the button/link    jQuery=td:contains("${Neural_network}") ~ td:contains("Assign")
+    When the user clicks the button/link    jQuery=td:contains("${Neural_network_application}") ~ td:contains("Assign")
     Then the user should see the element    jQuery=h2:contains("Assigned applications (1)")
-    And the user clicks the button/link     jQuery=td:contains("${Neural_network}") ~ td:contains("Remove")
-    Then the user should see the element    jQuery=td:contains("${Neural_network}") ~ td:contains("Assign")
+    And the user clicks the button/link     jQuery=td:contains("${Neural_network_application}") ~ td:contains("Remove")
+    Then the user should see the element    jQuery=td:contains("${Neural_network_application}") ~ td:contains("Assign")
     And the user should see the element     jQuery=h2:contains("Assigned applications (0)")
 
 Filter by application number
     [Documentation]  IFS-2049
     [Tags]
-    Given the user enters text to a text field     id=filterSearch   ${Neural_network}
+    Given the user enters text to a text field     id=filterSearch   ${Neural_network_application}
     When the user clicks the button/link           jQuery=.button:contains("Filter")
-    Then the user should see the element           jQuery=td:contains("${Neural_network}")
-    And the user should not see the element        jQuery=td:contains("${computer_vision}")
+    Then the user should see the element           jQuery=td:contains("${Neural_network_application}")
+    And the user should not see the element        jQuery=td:contains("${computer_vision_application}")
     When the user clicks the button/link           jQuery=a:contains("Clear")
-    Then the user should see the element           jQuery=td:contains("${computer_vision}")
+    Then the user should see the element           jQuery=td:contains("${computer_vision_application}")
 
 Assign applications to panel
     [Documentation]  IFS-1125
     [Tags]
-    When the user clicks the button/link    jQuery=td:contains("${Neural_network}") ~ td:contains("Assign")
+    When the user clicks the button/link    jQuery=td:contains("${Neural_network_application}") ~ td:contains("Assign")
     And the user clicks the button/link     jQuery=td:contains("Computer vision and machine learning for transport networks") ~ td:contains("Assign")
     Then the user should see the element    jQuery=h2:contains("Assigned applications (2)")
     When the user clicks the button/link    link=Manage assessment panel
@@ -255,7 +255,6 @@ Assessor cannot see competition on dashboard after funder panel date expiry
     [Teardown]  the funder panel period changes in the db   2068-06-27 00:00:00
 
 *** Keywords ***
-
 Custom Suite Setup
     The user logs-in in new browser  &{Comp_admin1_credentials}
     ${today} =  get today short month
