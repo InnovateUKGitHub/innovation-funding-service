@@ -24,6 +24,6 @@ public interface ProjectRestService {
 
     RestResult<PartnerOrganisationResource> getPartnerOrganisation(Long projectId, Long organisationId);
 
-    RestResult<Void> createProjectFromApplicationId(Long applicationId);
+    RestResult<ProjectResource> createProjectFromApplicationId(Long applicationId);
 
 }

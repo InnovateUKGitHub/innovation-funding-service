@@ -11,11 +11,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectResourceListType;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.projectUserResourceList;
 
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.junit.Assert.*;
 import static org.springframework.http.HttpStatus.*;
 
@@ -39,7 +41,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
     @Test
     public void testGetProjectUsers() {
-        List<ProjectUserResource> users = Arrays.asList(1,2,3).stream().map(i -> new ProjectUserResource()).collect(Collectors.toList());
+        List<ProjectUserResource> users = Stream.of(1,2,3).map(i -> new ProjectUserResource()).collect(Collectors.toList());
         setupGetWithRestResultExpectations(projectRestURL + "/123/project-users", projectUserResourceList(), users);
         RestResult<List<ProjectUserResource>> result = service.getProjectUsersForProject(123L);
         assertTrue(result.isSuccess());
@@ -49,7 +51,7 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
     @Test
     public void testFindByUserId() {
 
-        List<ProjectResource> projects = Arrays.asList(1,2,3).stream().map(i -> new ProjectResource()).collect(Collectors.toList());
+        List<ProjectResource> projects = Stream.of(1,2,3).map(i -> new ProjectResource()).collect(Collectors.toList());
 
         setupGetWithRestResultExpectations(projectRestURL + "/user/" + 1L, projectResourceListType(), projects);
 
@@ -102,5 +104,13 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         setupGetWithRestResultExpectations(projectRestURL + "/123/partner/234", PartnerOrganisationResource.class, null, NOT_FOUND);
         RestResult<PartnerOrganisationResource> result = service.getPartnerOrganisation(123L, 234L);
         assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void testCreateProjectFromApplicationId() {
+        ProjectResource projectResource = newProjectResource().build();
+        setupPostWithRestResultExpectations(projectRestURL + "/create-project/application/123", ProjectResource.class, null,  projectResource, OK);
+        RestResult<ProjectResource> result = service.createProjectFromApplicationId(123L);
+        assertTrue(result.isSuccess());
     }
 }

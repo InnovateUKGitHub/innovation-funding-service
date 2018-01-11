@@ -9,12 +9,14 @@ import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ProjectDocs.*;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -74,6 +76,23 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
                                 parameterWithName("projectId").description("Id of the project that the Project Users are being requested from")
                         ),
                         responseFields(fieldWithPath("[]").description("List of Project Users the user is allowed to see"))
+                ));
+    }
+
+    @Test
+    public void createProjectFromApplication() throws Exception {
+        Long applicationId = 1L;
+        ProjectResource expectedProject = newProjectResource().build();
+
+        when(projectServiceMock.createProjectFromApplication(applicationId)).thenReturn(serviceSuccess(expectedProject));
+
+        mockMvc.perform(post("/project/create-project/application/{applicationId}", applicationId))
+                .andDo(
+                        document("/project/{method-name}",
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application to turn into a project")
+                        ),
+                                responseFields(fieldWithPath("[]").description("Project that has been created"))
                 ));
     }
 }

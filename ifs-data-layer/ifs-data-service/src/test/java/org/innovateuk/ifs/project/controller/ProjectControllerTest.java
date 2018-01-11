@@ -17,6 +17,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -92,6 +93,17 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         mockMvc.perform(get("/project/{id}/project-manager", project1Id))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testCreateProjectFromApplication() throws Exception {
+        Long applicationId = 1L;
+        ProjectResource expectedProject = newProjectResource().build();
+
+        when(projectServiceMock.createProjectFromApplication(applicationId)).thenReturn(serviceSuccess(expectedProject));
+
+        mockMvc.perform(post("/project/create-project/application/{applicationId}", applicationId))
+                .andExpect(status().isOk());
     }
 }
 

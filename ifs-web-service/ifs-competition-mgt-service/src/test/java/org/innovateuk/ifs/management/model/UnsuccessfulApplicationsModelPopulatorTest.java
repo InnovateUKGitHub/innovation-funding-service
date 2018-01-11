@@ -24,7 +24,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -50,6 +49,7 @@ public class UnsuccessfulApplicationsModelPopulatorTest {
         int pageSize = 20;
         String sortField = "id";
         String existingQueryString = "";
+        boolean isIfsAdmin = true;
 
         String competitionName = "Competition One";
 
@@ -78,6 +78,7 @@ public class UnsuccessfulApplicationsModelPopulatorTest {
 
         assertEquals(competitionId, viewModel.getCompetitionId());
         assertEquals(competitionName, viewModel.getCompetitionName());
+        assertEquals(isIfsAdmin, viewModel.isIfsAdmin());
         assertEquals(unsuccessfulApplications, viewModel.getUnsuccessfulApplications());
         assertEquals(unsuccessfulApplications.size(), viewModel.getUnsuccessfulApplicationsSize());
         assertEquals(new PaginationViewModel(unsuccessfulApplicationsPagedResult, existingQueryString), viewModel.getUnsuccessfulApplicationsPagination());

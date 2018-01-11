@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.*;
 import org.innovateuk.ifs.management.viewmodel.*;
+import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
@@ -31,6 +32,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceB
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
@@ -570,12 +572,17 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                                 .build()))
                 .build());
 
+        ProjectResource projectResource = newProjectResource()
+                .withId(1L)
+                .withName("Successful project")
+                .build();
+
         when(unsuccessfulApplicationsModelPopulator.populateModel(anyLong(), anyInt(), anyInt(), anyString(), any(UserResource.class), any()))
                 .thenReturn(null);
         when(applicationFundingDecisionService.saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class)))
                 .thenReturn(ServiceResult.serviceSuccess());
         when(projectService.createProjectFromApplicationId(anyLong()))
-                .thenReturn(ServiceResult.serviceSuccess());
+                .thenReturn(ServiceResult.serviceSuccess(projectResource));
 
         mockMvc.perform(post("/competition/1/applications/mark-successful/application/2"))
                 .andExpect(status().is3xxRedirection())

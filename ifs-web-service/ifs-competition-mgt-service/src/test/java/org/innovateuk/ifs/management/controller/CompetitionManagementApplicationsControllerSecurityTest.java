@@ -1,11 +1,7 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.security.BaseControllerSecurityTest;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
-import org.springframework.ui.Model;
-
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 
 public class CompetitionManagementApplicationsControllerSecurityTest extends BaseControllerSecurityTest<CompetitionManagementApplicationsController> {
 
