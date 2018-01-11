@@ -381,8 +381,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                         if (user == leadApplicantUser) {
                             verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(user.getId(),application.getId(), LEADAPPLICANT.getName());
                         } else {
-                            verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(eq(user.getId()), application.getId(), COLLABORATOR.getName());
-                            verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(eq(user.getId()), application.getId(), LEADAPPLICANT.getName());
+                            verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(user.getId(), application.getId(), COLLABORATOR.getName());
+                            verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(user.getId(), application.getId(), LEADAPPLICANT.getName());
                         }
 
                     } else {

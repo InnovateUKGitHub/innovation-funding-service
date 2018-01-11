@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.assessment.builder.AssessmentReviewRejectOutcomeResourceBuilder.newAssessmentReviewRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder.newAssessmentReviewResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
@@ -20,12 +21,14 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class AssessmentPanelServiceSecurityTest extends BaseServiceSecurityTest<AssessmentPanelService> {
 
     private static final long applicationId = 1L;
     private static final long competitionId = 2L;
     private static final long userId = 3L;
+    private static final long reviewId = 4L;
     private static int ARRAY_SIZE_FOR_POST_FILTER_TESTS = 2;
     private AssessmentReviewPermissionRules assessmentReviewPermissionRules;
     private AssessmentReviewLookupStrategy assessmentReviewLookupStrategy;
@@ -56,6 +59,34 @@ public class AssessmentPanelServiceSecurityTest extends BaseServiceSecurityTest<
     public void getAssessmentReviews() {
         classUnderTest.getAssessmentReviews(userId, competitionId);
         verify(assessmentReviewPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessmentReviewOnDashboard(isA(AssessmentReviewResource.class), isA(UserResource.class));
+    }
+
+    @Test
+    public void getAssessmentReview() {
+        when(assessmentReviewLookupStrategy.getAssessmentReviewResource(reviewId)).thenReturn(newAssessmentReviewResource().withId(reviewId).build());
+        assertAccessDenied(
+                () -> classUnderTest.getAssessmentReview(reviewId),
+                () -> verify(assessmentReviewPermissionRules).userCanReadAssessmentReviews(isA(AssessmentReviewResource.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
+    public void acceptAssessmentReview() {
+        when(assessmentReviewLookupStrategy.getAssessmentReviewResource(reviewId)).thenReturn(newAssessmentReviewResource().withId(reviewId).build());
+        assertAccessDenied(
+                () -> classUnderTest.acceptAssessmentReview(reviewId),
+                () -> verify(assessmentReviewPermissionRules).userCanUpdateAssessmentReview(isA(AssessmentReviewResource.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
+    public void rejectAssessmentReview() {
+        AssessmentReviewRejectOutcomeResource rejectOutcomeResource = newAssessmentReviewRejectOutcomeResource().build();
+        when(assessmentReviewLookupStrategy.getAssessmentReviewResource(reviewId)).thenReturn(newAssessmentReviewResource().withId(reviewId).build());
+        assertAccessDenied(
+                () -> classUnderTest.rejectAssessmentReview(reviewId, rejectOutcomeResource),
+                () -> verify(assessmentReviewPermissionRules).userCanUpdateAssessmentReview(isA(AssessmentReviewResource.class), isA(UserResource.class))
+        );
     }
 
     public static class TestAssessmentPanelService implements AssessmentPanelService {
