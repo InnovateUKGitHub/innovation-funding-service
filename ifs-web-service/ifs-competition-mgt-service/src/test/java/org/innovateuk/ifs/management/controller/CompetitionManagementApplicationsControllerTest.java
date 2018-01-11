@@ -2,11 +2,9 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
-import org.innovateuk.ifs.application.resource.ApplicationPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.*;
 import org.innovateuk.ifs.management.viewmodel.*;
@@ -18,8 +16,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,10 +34,12 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.IFS_ADMINISTRATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class CompetitionManagementApplicationsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementApplicationsController> {
@@ -544,9 +546,9 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
         ApplicationPageResource applicationPageResource = new ApplicationPageResource();
         UnsuccessfulApplicationsViewModel viewModel = new UnsuccessfulApplicationsViewModel(competitionId,
-                competitionName, unsuccessfulApplications, unsuccessfulApplications.size(), new PaginationViewModel(applicationPageResource, ""));
+                competitionName, true, unsuccessfulApplications, unsuccessfulApplications.size(), new PaginationViewModel(applicationPageResource, ""));
 
-        when(unsuccessfulApplicationsModelPopulator.populateModel(eq(competitionId), eq(pageIndex), eq(pageSize), eq(sortField), any()))
+        when(unsuccessfulApplicationsModelPopulator.populateModel(eq(competitionId), eq(pageIndex), eq(pageSize), eq(sortField), any(UserResource.class), any()))
                 .thenReturn(viewModel);
 
         mockMvc.perform(get("/competition/{competitionId}/applications/unsuccessful?page={pageIndex}&size={pageSize}&sort={sortField}",
@@ -555,6 +557,35 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .andExpect(view().name("competition/unsuccessful-applications"))
                 .andExpect(model().attribute("model", viewModel))
                 .andReturn();
+    }
+
+
+    @Test
+    public void markApplicationAsSuccessful() throws Exception {
+
+        setLoggedInUser(newUserResource()
+                .withRolesGlobal(singletonList(
+                        newRoleResource()
+                                .withType(IFS_ADMINISTRATOR)
+                                .build()))
+                .build());
+
+        when(unsuccessfulApplicationsModelPopulator.populateModel(anyLong(), anyInt(), anyInt(), anyString(), any(UserResource.class), any()))
+                .thenReturn(null);
+        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class)))
+                .thenReturn(ServiceResult.serviceSuccess());
+        when(projectService.createProjectFromApplicationId(anyLong()))
+                .thenReturn(ServiceResult.serviceSuccess());
+
+        mockMvc.perform(post("/competition/1/applications/mark-successful/application/2"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/competition/{competitionId}/applications/unsuccessful"))
+                .andReturn();
+
+        verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class));
+        verify(projectService).createProjectFromApplicationId(anyLong());
+        verifyNoMoreInteractions(applicationFundingDecisionService, projectService);
+
     }
 
     @Test

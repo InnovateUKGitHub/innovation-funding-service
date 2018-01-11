@@ -62,7 +62,7 @@ public class CompetitionManagementApplicationsController {
     @Autowired
     private NavigateApplicationsModelPopulator navigateApplicationsModelPopulator;
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "All internal users can view the applications menu")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping
     public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId, UserResource user) {
@@ -70,7 +70,7 @@ public class CompetitionManagementApplicationsController {
         return "competition/applications-menu";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "All internal users can view the list of all applications to a competition")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/all")
     public String allApplications(Model model,
@@ -87,7 +87,7 @@ public class CompetitionManagementApplicationsController {
         return "competition/all-applications";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "All internal users can view the list of submitted applications to a competition")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/submitted")
     public String submittedApplications(Model model,
@@ -103,7 +103,7 @@ public class CompetitionManagementApplicationsController {
         return "competition/submitted-applications";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "All internal users can view the list of ineligible applications to a competition")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'innovation_lead')")
     @GetMapping("/ineligible")
     public String ineligibleApplications(Model model,
@@ -120,11 +120,10 @@ public class CompetitionManagementApplicationsController {
         return "competition/ineligible-applications";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "All internal users can view the list of unsuccessful applications to a competition")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_admin')")
     @GetMapping("/unsuccessful")
     public String unsuccessfulApplications(Model model,
-                                           HttpServletRequest request,
                                            @PathVariable("competitionId") long competitionId,
                                            @RequestParam MultiValueMap<String, String> queryParams,
                                            @RequestParam(value = "page", defaultValue = DEFAULT_PAGE_NUMBER) int page,
@@ -139,7 +138,7 @@ public class CompetitionManagementApplicationsController {
         return "competition/unsuccessful-applications";
     }
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "READ", description = "All internal users can navigate between different lists of applications to a competition")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'support', 'ifs_admin')")
     @GetMapping("/manage")
     public String manageApplications(Model model,
