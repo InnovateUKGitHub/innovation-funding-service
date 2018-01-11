@@ -10,6 +10,7 @@ import org.innovateuk.ifs.util.ExceptionThrowingSupplier;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -74,7 +75,7 @@ abstract class BaseCompletableFutureTupleHandler {
 
     <R> CompletableFuture<R> thenApplyInternal(ExceptionThrowingSupplier<R> supplier) {
 
-        CompletableFuture<R> blockingFuture = CompletableFuture.allOf(futures).thenApplyAsync(done -> {
+        Supplier<R> waitingSupplier = () -> {
 
             // this ensures that all of the top-level Futures' descendant Futures are fully completed prior to
             // executing the next Future
@@ -85,12 +86,15 @@ abstract class BaseCompletableFutureTupleHandler {
                 LOG.error("Error whilst executing Supplier Future", e);
                 throw AsyncException.getOriginalAsyncExceptionOrWrapInAsyncException(e, () -> "Error whilst executing Supplier Future - wrapping in AsyncException");
             }
-        }, threadPool);
+        };
+
+        CompletableFuture<Void> joiningFuture = CompletableFuture.allOf(futures);
 
         if (AsyncAllowedThreadLocal.isAsyncAllowed()) {
+            CompletableFuture<R> blockingFuture = joiningFuture.thenApplyAsync(done -> waitingSupplier.get(), threadPool);
             return AsyncFuturesHolder.registerFuture(futureName, blockingFuture);
         } else {
-            return blockingFuture;
+            return joiningFuture.thenApply(done -> waitingSupplier.get());
         }
     }
 
