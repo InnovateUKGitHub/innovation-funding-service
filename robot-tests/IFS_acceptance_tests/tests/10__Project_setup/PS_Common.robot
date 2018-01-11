@@ -244,6 +244,12 @@ project lead submits project details
     the user clicks the button/link    jQuery=.button:contains("Save")
     the user navigates to the page     ${server}/project-setup/project/${project_id}/details
 
+project lead submits project address
+    [Arguments]  ${project_id}
+    the user navigates to the page     ${server}/project-setup/project/${project_id}/details/project-address
+    the user selects the radio button  addressType  address-use-org
+    the user clicks the button/link    jQuery=.button:contains("Save")
+
 partners submit their finance contacts
     the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  &{lead_applicant_credentials}
     the partner submits their finance contact  ${PROJECT_SETUP_APPLICATION_1_PARTNER_ID}  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}  &{collaborator1_credentials}

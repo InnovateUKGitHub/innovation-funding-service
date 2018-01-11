@@ -1,11 +1,15 @@
 *** Settings ***
 Documentation   IFS-2396  ATI Competition type template
 ...
+...             IFS-2332  Project Finance user is not able to download the overheads file
+...
 Suite Setup     Custom Suite Setup
 Suite Teardown  Close browser and delete emails
 Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
+Resource        ../../../resources/keywords/User_actions.robot
+Resource        /Users/fahadahmed/innovation-funding-service/robot-tests/IFS_acceptance_tests/tests/10__Project_setup/PS_Common.robot
 
 *** Variables ***
 ${ATIcompetitionTitle}  ATI Competition
@@ -31,6 +35,12 @@ Comp Admin creates an ATI competition
     When the user clicks the button/link           jQuery=a:contains("Complete")
     Then the user clicks the button/link           jQuery=a:contains("Done")
 
+Requesting the ID of this Competition
+    [Documentation]  IFS-2332
+    [Tags]  MySql
+    ${atiCompId} =  get comp id from comp title  ${ATIcompetitionTitle}
+    Set suite variable   ${atiCompId}
+
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
     [Tags]  HappyPath  MySQL
@@ -38,14 +48,46 @@ Applicant applies to newly created ATI competition
     Then Lead Applicant applies to the new created competition   ${ATIcompetitionTitle}  &{lead_applicant_credentials}
 
 Applicant submits his application
-    [Documentation]  IFS-2286
+    [Documentation]  IFS-2286  IFS-2332
     [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${ATIapplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     Then the lead applicant fills all the questions and marks as complete(Programme)
     When the user navigates to Your-finances page       ${ATIapplicationTitle}
-    And the user marks the finances as complete         ${ATIapplicationTitle}   labour costs  54,000  yes
+    And the user marks the finances as complete         ${ATIapplicationTitle}   Calculate  52,214  yes
     Then the applicant submits the application
+
+Moving ATI Competition to Project Setup
+    [Documentation]  IFS-2332
+    [Tags]
+    Log in as a different user    &{internal_finance_credentials}
+    moving competition to Closed    ${atiCompId}
+    making the application a successful project    ${atiCompId}  ${ATIapplicationTitle}
+    moving competition to Project Setup    ${atiCompId}
+
+Requesting Project ID of this Project
+    [Documentation]  IFS-2332
+    [Tags]
+    ${atiProjectID} =  get project id by name    ${ATIapplicationTitle}
+    Set suite variable    ${atiProjectID}
+
+Applicant completes Project Details
+    [Documentation]  IFS-2332
+    [Tags]
+    log in as a different user    &{lead_applicant_credentials}
+    project lead submits project address    ${atiProjectID}
+
+Requesting Organisation ID from this Application
+    ${ATIorganisationID} =  get organisation id by name    Empire Ltd
+    Set suite variable    ${ATIorganisationID}
+
+Project Finance is able to see the Overheads costs file
+    [Documentation]  IFS-2332
+    [Tags]  CompAdmin
+    Given Log in as a different user  &{internal_finance_credentials}
+    When the user navigates to the page    ${SERVER}/project-setup-management/project/${atiProjectID}/finance-check/organisation/${ATIorganisationID}/eligibility
+    And the user clicks the button/link    jQuery=button:contains("Overhead costs")
+    Then the project finance user is able to download the Overheads file
 
 *** Keywords ***
 Custom Suite Setup

@@ -1,5 +1,6 @@
 *** Settings ***
 Resource          ../defaultResources.robot
+Resource          ../variables/GLOBAL_VARIABLES.robot
 
 *** Keywords ***
 The user clicks the button/link
@@ -194,3 +195,38 @@ the internal sends the descision notification email to all applicants
     the user enters text to a text field  css=.editor  ${email}
     the user clicks the button/link       css=.button[data-js-modal="send-to-all-applicants-modal"]
     the user clicks the button/link       css=button[name="send-emails"]
+
+moving competition to Closed
+    [Arguments]  ${compID}
+    Connect to Database  @{database}
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2017-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${compID}';
+
+making the application a successful project
+    [Arguments]  ${compID}  ${appTitle}
+    the user navigates to the page      ${server}/management/competition/${compID}
+    the user clicks the button/link  css=button[type="submit"][formaction$="notify-assessors"]
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=button[type="submit"][formaction$="close-assessment"]
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=button[type="submit"][formaction$="close-assessment"]
+    Run Keyword If  '${status}' == 'FAIL'  Run keywords    the user clicks the button/link    css=button[type="submit"][formaction$="notify-assessors"]
+    ...    AND  the user clicks the button/link    css=button[type="submit"][formaction$="close-assessment"]
+    run keyword and ignore error     the user clicks the button/link    css=button[type="submit"][formaction$="close-assessment"]
+    the user clicks the button/link  link=Input and review funding decision
+    the user clicks the button/link  jQuery=tr:contains("${appTitle}") label
+    the user clicks the button/link  css=[type="submit"][value="FUNDED"]
+    the user navigates to the page   ${server}/management/competition/${compID}/manage-funding-applications
+    the user clicks the button/link  jQuery=tr:contains("${appTitle}") label
+    the user clicks the button/link  css=[name="write-and-send-email"]
+    the internal sends the descision notification email to all applicants  Successful!
+
+moving competition to Project Setup
+    [Arguments]   ${compID}
+    the user navigates to the page   ${server}/management/competition/${compID}
+    the user clicks the button/link  css=button[type="submit"][formaction$="release-feedback"]
+
+The project finance user is able to download the Overheads file
+    the user should see the element               jQuery=a:contains("${excel_file}")
+    the user downloads the file                           ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${atiProjectID}/finance-check/organisation/${ATIorganisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
+    remove the file from the operating system             ${excel_file}
+
+
+
