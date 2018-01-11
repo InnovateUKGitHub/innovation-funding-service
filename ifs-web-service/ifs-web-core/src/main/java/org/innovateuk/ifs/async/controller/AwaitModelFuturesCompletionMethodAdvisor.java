@@ -8,6 +8,7 @@ import org.springframework.aop.support.AbstractPointcutAdvisor;
 import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.lang.reflect.Method;
 
 /**
- * Places {@link AwaitModelFuturesCompletionMethodInterceptor} around Controller methods to ensure that any
+ * Places {@link AwaitModelFuturesCompletionMethodInterceptor} around {@link Controller} methods to ensure that any
  * Futures added directly to the Spring Model as a Future are resolved before the Controller is allowed to complete.
  */
 @Component
@@ -30,11 +31,12 @@ public class AwaitModelFuturesCompletionMethodAdvisor extends AbstractPointcutAd
             StaticMethodMatcherPointcut() {
                 @Override
                 public boolean matches(Method method, Class<?> targetClass) {
-                    return method.isAnnotationPresent(RequestMapping.class)
-                            || method.isAnnotationPresent(GetMapping.class)
-                            || method.isAnnotationPresent(PostMapping.class);
-                }
-            };
+        return targetClass.isAnnotationPresent(Controller.class) &&
+                (  method.isAnnotationPresent(RequestMapping.class)
+                || method.isAnnotationPresent(GetMapping.class)
+                || method.isAnnotationPresent(PostMapping.class));
+        }
+    };
 
     @Autowired
     private transient AwaitModelFuturesCompletionMethodInterceptor interceptor;

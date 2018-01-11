@@ -10,15 +10,16 @@ import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.lang.reflect.Method;
 
 /**
- * Places {@link AwaitAsyncFuturesCompletionMethodInterceptor} around Controllers to ensure that any Futures generated
- * with {@link org.innovateuk.ifs.async.generation.AsyncFuturesGenerator} and all of their descendants complete before
- * the Controller method can complete.
+ * Places {@link AwaitAsyncFuturesCompletionMethodInterceptor} around {@link Controller} methods to ensure that any
+ * Futures generated with {@link org.innovateuk.ifs.async.generation.AsyncFuturesGenerator} and all of their
+ * descendants complete before the Controller method can complete.
  *
- * This advise targets Controller methods that have explicitly been annotated with
+ * This advice targets Controller methods that have explicitly been annotated with
  * {@link org.innovateuk.ifs.async.annotations.AsyncMethod}.
  */
 @Component
@@ -32,9 +33,10 @@ public class AwaitAsyncFuturesCompletionMethodAdvisor extends AbstractPointcutAd
             StaticMethodMatcherPointcut() {
                 @Override
                 public boolean matches(Method method, Class<?> targetClass) {
-                    return method.isAnnotationPresent(AsyncMethod.class);
-                }
-            };
+        return targetClass.isAnnotationPresent(Controller.class) &&
+                method.isAnnotationPresent(AsyncMethod.class);
+        }
+    };
 
     @Autowired
     private transient AwaitAsyncFuturesCompletionMethodInterceptor interceptor;

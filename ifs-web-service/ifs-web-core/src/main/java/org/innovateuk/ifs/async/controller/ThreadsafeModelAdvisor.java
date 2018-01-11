@@ -10,6 +10,7 @@ import org.springframework.aop.support.StaticMethodMatcherPointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 
 import java.lang.reflect.Method;
@@ -17,7 +18,7 @@ import java.lang.reflect.Method;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleAnyMatch;
 
 /**
- * An advisor that targets methods annotated with {@link AsyncMethod} in order to supply them with a threadsafe
+ * An advisor that targets {@link Controller} methods annotated with {@link AsyncMethod} in order to supply them with a threadsafe
  * Spring Model rather than the default non-threadsafe Model.
  */
 @Component
@@ -31,8 +32,9 @@ public class ThreadsafeModelAdvisor extends AbstractPointcutAdvisor {
             StaticMethodMatcherPointcut() {
                 @Override
                 public boolean matches(Method method, Class<?> targetClass) {
-            return method.isAnnotationPresent(AsyncMethod.class) &&
-                    simpleAnyMatch(method.getParameterTypes(), p -> p.equals(Model.class));
+        return targetClass.isAnnotationPresent(Controller.class) &&
+               method.isAnnotationPresent(AsyncMethod.class) &&
+               simpleAnyMatch(method.getParameterTypes(), p -> p.equals(Model.class));
         }
     };
 
