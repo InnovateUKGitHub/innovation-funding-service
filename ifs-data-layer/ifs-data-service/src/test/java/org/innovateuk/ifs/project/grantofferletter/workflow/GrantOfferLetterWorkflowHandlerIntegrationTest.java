@@ -86,22 +86,22 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterRemovedNotAllowedInNonPendingNonSentStates() {
+    public void testGrantOfferLetterRemovedNotAllowedInNonPendingStates() {
 
         asList(GrantOfferLetterState.values()).forEach(startingState -> {
 
-            if (!asList(GrantOfferLetterState.PENDING, GrantOfferLetterState.SENT).contains(startingState)) {
+            if (startingState != GrantOfferLetterState.PENDING) {
                 callWorkflowAndCheckTransitionFailsInternalUser(((project, internalUser) -> golWorkflowHandler.removeGrantOfferLetter(project, internalUser)), startingState);
             }
         });
     }
 
     @Test
-    public void testSignedGrantOfferLetterRemovedNotAllowedInNonPendingNonSentStates() {
+    public void testSignedGrantOfferLetterRemovedNotAllowedInNonSentStates() {
 
         asList(GrantOfferLetterState.values()).forEach(startingState -> {
 
-            if (!asList(GrantOfferLetterState.PENDING, GrantOfferLetterState.SENT).contains(startingState)) {
+            if (startingState != GrantOfferLetterState.SENT) {
 
                 callWorkflowAndCheckTransitionFailsExternalUser(((project, projectUser) -> {
 
@@ -140,7 +140,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterRejected(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterState.SENT, GrantOfferLetterEvent.GOL_REJECTED);
+                GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterState.SENT, GrantOfferLetterEvent.SIGNED_GOL_REJECTED);
     }
 
     @Test
@@ -149,7 +149,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterApproved(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterState.APPROVED, GrantOfferLetterEvent.GOL_APPROVED);
+                GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterState.APPROVED, GrantOfferLetterEvent.SIGNED_GOL_APPROVED);
     }
 
     @Test
@@ -158,7 +158,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterApproved(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterState.APPROVED, GrantOfferLetterEvent.GOL_APPROVED);
+                GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterState.APPROVED, GrantOfferLetterEvent.SIGNED_GOL_APPROVED);
     }
 
     @Test
@@ -182,7 +182,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
             return removed;
         },
         // current State, destination State and expected Event to be fired
-        GrantOfferLetterState.SENT, GrantOfferLetterState.SENT, GrantOfferLetterEvent.GOL_REMOVED);
+        GrantOfferLetterState.SENT, GrantOfferLetterState.SENT, GrantOfferLetterEvent.SIGNED_GOL_REMOVED);
     }
 
     @Test

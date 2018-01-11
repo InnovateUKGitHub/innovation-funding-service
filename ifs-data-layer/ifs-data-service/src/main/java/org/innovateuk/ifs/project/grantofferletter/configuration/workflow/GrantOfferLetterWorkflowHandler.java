@@ -60,11 +60,11 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
     }
 
     public boolean grantOfferLetterRejected(Project project, User internalUser) {
-        return fireEvent(internalUserEvent(project, internalUser, GOL_REJECTED), project);
+        return fireEvent(internalUserEvent(project, internalUser, SIGNED_GOL_REJECTED), project);
     }
 
     public boolean grantOfferLetterApproved(Project project, User internalUser) {
-        return fireEvent(internalUserEvent(project, internalUser, GOL_APPROVED), project);
+        return fireEvent(internalUserEvent(project, internalUser, SIGNED_GOL_APPROVED), project);
     }
 
     public boolean isSendAllowed(Project project) {
@@ -85,7 +85,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
             return false;
         }
 
-        return fireEvent(externalUserEvent(project, projectManager, GOL_REMOVED), project);
+        return fireEvent(externalUserEvent(project, projectManager, SIGNED_GOL_REMOVED), project);
     }
 
     public boolean isAlreadySent(Project project) {
@@ -101,7 +101,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
     public boolean isRejected(Project project) {
         GOLProcess process = getCurrentProcess(project);
         return process != null && GrantOfferLetterState.SENT.equals(process.getActivityState()) &&
-                GOL_REJECTED.getType().equalsIgnoreCase(process.getProcessEvent());
+                SIGNED_GOL_REJECTED.getType().equalsIgnoreCase(process.getProcessEvent());
     }
 
     public boolean isReadyToApprove(Project project) {
