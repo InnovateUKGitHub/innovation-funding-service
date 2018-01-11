@@ -48,7 +48,7 @@
     <div class="my-applications">
             <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
                 <div class="progress-list">
-                    <h2 class="heading-medium no-margin">Applications for Panel (<span
+                    <h2 class="heading-medium no-margin">Applications for panel (<span
                         th:text="${#lists.size(model.applications)}"/>)</h2>
 
                     <ul>
@@ -66,7 +66,6 @@
                                 </div>
 
                                 <div class="status">
-
                                     <th:block th:if="${app.pending}">
                                         <div class="status-msg msg-deadline-waiting">
                                             Pending
@@ -86,7 +85,7 @@
                         <th:block th:if="${#lists.isEmpty(model.applications)}">
                             <li class="status-2-col">
                                 <div class="task">
-                                    <h3 class="heading-small">No applications have been assigned to this panel.</h3>
+                                    <p>No applications have been assigned to this panel.</p>
                                 </div>
                             </li>
                         </th:block>
