@@ -73,6 +73,8 @@ services:
 
   finance-data-service:
     hostname: finance-data-service
+    links:
+      - mysql:ifs-database
     ports:
       - "8092:8080"
       - "9012:8000"
