@@ -20,7 +20,7 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
     public void assignToPanel() {
         long applicationId = 7L;
 
-        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "assignApplication", applicationId), OK);
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "assign-application", applicationId), OK);
 
         service.assignToPanel(applicationId).getSuccessObjectOrThrowException();
     }
@@ -29,7 +29,7 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
     public void unassignFromPanel() {
         long applicationId = 7L;
 
-        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "unassignApplication", applicationId), OK);
+        setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "unassign-application", applicationId), OK);
 
         service.unassignFromPanel(applicationId).getSuccessObjectOrThrowException();
     }

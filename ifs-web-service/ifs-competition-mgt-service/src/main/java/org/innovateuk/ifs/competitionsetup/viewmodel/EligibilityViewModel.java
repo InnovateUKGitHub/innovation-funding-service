@@ -9,6 +9,7 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import java.util.List;
 
 public class EligibilityViewModel extends CompetitionSetupViewModel {
+
     private ResearchParticipationAmount[] researchParticipationAmounts;
     private CollaborationLevel[] collaborationLevels;
     private List<OrganisationTypeResource> leadApplicantTypes;
@@ -16,10 +17,15 @@ public class EligibilityViewModel extends CompetitionSetupViewModel {
     private List<ResearchCategoryResource> researchCategories;
     private String researchCategoriesFormatted;
 
-    public EligibilityViewModel(GeneralSetupViewModel generalSetupViewModel, ResearchParticipationAmount[] researchParticipationAmounts,
-                                CollaborationLevel[] collaborationLevels, List<OrganisationTypeResource> leadApplicantTypes,
-                                String leadApplicantTypesText, List<ResearchCategoryResource> researchCategories,
-                                String researchCategoriesFormatted) {
+    public EligibilityViewModel(
+            GeneralSetupViewModel generalSetupViewModel,
+            ResearchParticipationAmount[] researchParticipationAmounts,
+            CollaborationLevel[] collaborationLevels,
+            List<OrganisationTypeResource> leadApplicantTypes,
+            String leadApplicantTypesText,
+            List<ResearchCategoryResource> researchCategories,
+            String researchCategoriesFormatted
+    ) {
         this.generalSetupViewModel = generalSetupViewModel;
         this.researchParticipationAmounts = researchParticipationAmounts;
         this.collaborationLevels = collaborationLevels;

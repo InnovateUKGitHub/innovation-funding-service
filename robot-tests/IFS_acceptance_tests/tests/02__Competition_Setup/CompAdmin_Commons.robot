@@ -55,18 +55,24 @@ the user fills in the CS Funding Information
     the user should see the element       jQuery=div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Eligibility
-    [Arguments]  ${organisationType}
+    [Arguments]  ${organisationType}  ${researchParticipation}
     the user clicks the button/link   link=Eligibility
     the user clicks the button twice  css=label[for="single-or-collaborative-collaborative"]
     the user clicks the button twice  css=label[for="research-categories-33"]
     the user clicks the button twice  css=label[for="lead-applicant-type-${organisationType}"]
-    the user selects the option from the drop-down menu  1  researchParticipation
+    the user selects Research Participation if required  ${researchParticipation}
     the user clicks the button/link  css=label[for="comp-resubmissions-yes"]
     the user clicks the button/link  css=label[for="comp-resubmissions-yes"]
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element   jQuery=div:contains("Eligibility") ~ .task-status-complete
     #Elements in this page need double clicking
+
+the user selects Research Participation if required
+    [Arguments]  ${percentage}
+    ${status}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  id=researchParticipationAmountId
+    Run Keyword If  '${status}' == 'PASS'  the user selects the option from the drop-down menu  ${percentage}  researchParticipation
+    Run Keyword If  '${status}' == 'FAIL'  the user should not see the element  id=researchParticipation
 
 the user fills in the CS Milestones
     [Arguments]  ${month}  ${nextyear}
@@ -305,7 +311,8 @@ the user is able to configure the new question
     the user enters text to a text field  css=.editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id=question.maxWords  500
     the user selects the radio button     question.appendix  1
-    #the user clicks the button/link       css=label[for="allowed-file-types-PDF"]  #TODO Enable as part of IFS-2425 in another sprint
+    ${status} =  Run Keyword And Return status   the user should see that the checkbox is selected    allowed-file-types-PDF
+    Run Keyword If  '${status}' == 'False'  the user clicks the button/link       css=label[for="allowed-file-types-PDF"]
     the user clicks the button/link       css=label[for="allowed-file-types-Spreadsheet"]
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10

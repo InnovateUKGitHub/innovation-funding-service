@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competition.resource;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -16,10 +17,13 @@ import java.util.*;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 public class CompetitionResource {
+
     public static final ChronoUnit CLOSING_SOON_CHRONOUNIT = ChronoUnit.HOURS;
     public static final int CLOSING_SOON_AMOUNT = 3;
-    private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+
+    private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
+    public static final ImmutableSet<String> NON_FINANCE_TYPES = ImmutableSet.of("Expression of interest");
 
     private Long id;
     private List<Long> milestones = new ArrayList<>();
@@ -70,6 +74,7 @@ public class CompetitionResource {
 
     private String activityCode;
 
+    private Boolean fullApplicationFinance = true;
     private boolean setupComplete = false;
 
     private boolean useResubmissionQuestion;
@@ -83,7 +88,11 @@ public class CompetitionResource {
         // no-arg constructor
     }
 
-    public CompetitionResource(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate) {
+    public CompetitionResource(long id,
+            String name,
+            ZonedDateTime startDate,
+            ZonedDateTime endDate,
+            ZonedDateTime registrationDate) {
         this.id = id;
         this.name = name;
         this.startDate = startDate;
@@ -108,7 +117,8 @@ public class CompetitionResource {
 
     @JsonIgnore
     public boolean isSetupAndAfterNotifications() {
-        return Boolean.TRUE.equals(setupComplete) && (fundersPanelDate != null && fundersPanelDate.isBefore(ZonedDateTime.now()));
+        return Boolean.TRUE.equals(setupComplete) && (fundersPanelDate != null && fundersPanelDate.isBefore(
+                ZonedDateTime.now()));
     }
 
     public CompetitionStatus getCompetitionStatus() {
@@ -466,7 +476,7 @@ public class CompetitionResource {
     public void setFunders(List<CompetitionFunderResource> funders) {
         this.funders = funders;
     }
-    
+
     public boolean isUseResubmissionQuestion() {
         return useResubmissionQuestion;
     }
@@ -489,6 +499,14 @@ public class CompetitionResource {
 
     public void setAssessorPay(BigDecimal assessorPay) {
         this.assessorPay = assessorPay;
+    }
+
+    public Boolean isFullApplicationFinance() {
+        return fullApplicationFinance;
+    }
+
+    public void setFullApplicationFinance(Boolean fullApplicationFinance) {
+        this.fullApplicationFinance = fullApplicationFinance;
     }
 
     public boolean getSetupComplete() {
@@ -523,12 +541,22 @@ public class CompetitionResource {
         this.hasAssessmentPanel = hasAssessmentPanel;
     }
 
-    public Boolean isHasInterviewStage(){
+    public Boolean isHasInterviewStage() {
         return hasInterviewStage;
     }
 
-    public void setHasInterviewStage(Boolean hasInterviewStage){
+    public void setHasInterviewStage(Boolean hasInterviewStage) {
         this.hasInterviewStage = hasInterviewStage;
+    }
+
+    @JsonIgnore
+    public boolean isNonFinanceType() {
+        return NON_FINANCE_TYPES.contains(competitionTypeName);
+    }
+
+    @JsonIgnore
+    public boolean isFinanceType() {
+        return !isNonFinanceType();
     }
 
     @Override
