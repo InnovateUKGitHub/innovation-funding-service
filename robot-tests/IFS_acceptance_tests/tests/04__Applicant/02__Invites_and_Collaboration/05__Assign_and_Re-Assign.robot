@@ -40,7 +40,7 @@ Lead applicant can assign a question
     And the user should see the element        jQuery=.assign-container:contains("Dennis Bergkamp")
 
 Lead applicant can assign question multiple times
-    [Documentation]    INFUND-3288  Pending
+    [Documentation]    INFUND-3288  
     ...    This test depends on the previous test suite to run first
     [Tags]    Email
     When the user assigns the question to the collaborator      Stuart Anderson
@@ -83,7 +83,7 @@ Collaborator should see the review button instead of the review and submit
     And the user clicks the button/link           jQuery=.button:contains("Review")
     And the user should see the text in the page  All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application
     And the user should not see the element       jQuery=.button:contains("Submit application")
-    
+
 Last update message is correctly updating
     [Documentation]  INFUND-280
     ...  This test depends on the previous test suite to run first
