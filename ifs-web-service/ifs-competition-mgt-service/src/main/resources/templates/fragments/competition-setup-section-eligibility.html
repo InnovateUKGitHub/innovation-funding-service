@@ -85,13 +85,15 @@
                 </fieldset>
             </div>
 
-            <div class="form-group" th:classappend="${#fields.hasErrors('researchParticipationAmountId')} ? 'form-group-error'">
+            <div class="form-group"
+                 th:classappend="${#fields.hasErrors('researchParticipationAmountId')} ? 'form-group-error'"
+                 th:if="${!#arrays.isEmpty(model.researchParticipationAmounts)}">
                 <fieldset class="inline">
                     <legend id="researchParticipationAmountId">
                         <span class="form-label-bold">Research participation</span>
                         <span class="hint">This indicates the maximum level of research participation allowed.</span>
                         <th:block th:if="${#fields.hasErrors('researchParticipationAmountId')}">
-                              <span class="error-message"  th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}"></span>
+                            <span class="error-message" th:each="err : ${#fields.errors('researchParticipationAmountId')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
                     <select class="form-control width-large"
@@ -99,7 +101,12 @@
                             id="researchParticipation"
                             required="required"
                             th:attr="data-required-errormessage=#{validation.eligibilityform.researchparticipationamountId.required}">
-                        <option th:each="researchParticipationAmount : ${model.researchParticipationAmounts}" th:text="${researchParticipationAmount.name}" th:value="${researchParticipationAmount.id}" th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">Research participation</option>
+                        <option th:each="researchParticipationAmount : ${model.researchParticipationAmounts}"
+                                th:text="${researchParticipationAmount.name}"
+                                th:value="${researchParticipationAmount.id}"
+                                th:selected="${competitionSetupForm.researchParticipationAmountId == researchParticipationAmount.id}">
+                            Research participation
+                        </option>
                     </select>
                 </fieldset>
             </div>
@@ -164,8 +171,14 @@
                 <dt>Lead applicant</dt>
                 <dd th:text="${model.leadApplicantTypesText}"></dd>
 
-                <dt>Research participation</dt>
-                <dd th:each="(researchParticipationAmount : ${model.researchParticipationAmounts})" th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}" th:text="${researchParticipationAmount.name}">Research category</dd>
+                <th:block th:if="${!#arrays.isEmpty(model.researchParticipationAmounts)}">
+                    <dt>Research participation</dt>
+                    <dd th:each="(researchParticipationAmount : ${model.researchParticipationAmounts})"
+                        th:if="${researchParticipationAmount.id == competitionSetupForm.researchParticipationAmountId}"
+                        th:text="${researchParticipationAmount.name}">
+                        Research participation amount
+                    </dd>
+                </th:block>
 
                 <dt>Are resubmissions allowed?</dt>
                 <dd th:text="${#strings.capitalize(competitionSetupForm.resubmission)}"></dd>

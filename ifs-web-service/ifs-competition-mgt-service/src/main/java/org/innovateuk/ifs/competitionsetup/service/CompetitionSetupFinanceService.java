@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 
 
@@ -13,6 +12,4 @@ public interface CompetitionSetupFinanceService {
     ServiceResult<Void> updateFinance(CompetitionSetupFinanceResource question);
 
 	CompetitionSetupFinanceResource getByCompetitionId(Long competitionId);
-
-    boolean isNoFinanceCompetition(CompetitionResource competitionResource);
 }
