@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept application',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
-<body th:with="context='assessment'" class="reject-invitation-confirm">
+<body th:with="context='assessment'">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
