@@ -98,9 +98,6 @@ public class AsyncFuturesGenerator {
             LOG.warn("Cannot process async block asynchronously - processing on the main Thread instead.  Annotate " +
                     "a method in the callstack with @AsyncMethod to enable asynchronous execution");
 
-//            if (true) {
-//                throw new RuntimeException("aaargh");
-//            }
             return nonAsyncInternal(decoratedSupplier);
         }
     }
