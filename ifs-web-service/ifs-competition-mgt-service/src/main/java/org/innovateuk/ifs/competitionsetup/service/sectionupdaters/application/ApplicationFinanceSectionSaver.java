@@ -51,8 +51,11 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
     }
 
     @Override
-    protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-        if(competitionSetupFinanceService.isNoFinanceCompetition(competition)) {
+    protected ServiceResult<Void> doSaveSection(
+            CompetitionResource competition,
+            CompetitionSetupForm competitionSetupForm
+    ) {
+        if (competition.isNonFinanceType()) {
             return serviceSuccess();
         } else {
             ApplicationFinanceForm form = (ApplicationFinanceForm) competitionSetupForm;
@@ -68,19 +71,28 @@ public class ApplicationFinanceSectionSaver extends AbstractSectionSaver impleme
     }
 
     private void updateFundingRulesQuestion(String fundingRules, Long competitionId) {
-        Optional<QuestionResource> question = questionService.getQuestionsBySectionIdAndType(getOverviewFinancesSectionId(competitionId), QuestionType.GENERAL).stream()
+        Optional<QuestionResource> question = questionService.getQuestionsBySectionIdAndType(
+                getOverviewFinancesSectionId(competitionId),
+                QuestionType.GENERAL
+        )
+                .stream()
                 .filter(questionResource -> questionResource.getName() == null)
                 .findFirst();
 
         question.ifPresent(questionResource -> {
-                    questionResource.setDescription(fundingRules);
-                    questionService.save(questionResource);
-                }
-        );
+            questionResource.setDescription(fundingRules);
+            questionService.save(questionResource);
+        });
     }
 
     private Long getOverviewFinancesSectionId(Long competitionId) {
-        Optional<SectionResource> section = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.OVERVIEW_FINANCES).stream().findFirst();
+        Optional<SectionResource> section = sectionService.getSectionsForCompetitionByType(
+                competitionId,
+                SectionType.OVERVIEW_FINANCES
+        )
+                .stream()
+                .findFirst();
+
         if (section.isPresent()) {
             return section.get().getId();
         }
