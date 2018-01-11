@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.workflow;
 
+import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
@@ -7,6 +8,7 @@ import org.innovateuk.ifs.project.grantofferletter.repository.GrantOfferLetterPr
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
+import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.TestableTransitionWorkflowAction;
@@ -40,11 +42,13 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     private GrantOfferLetterWorkflowHandler golWorkflowHandler;
     private ActivityStateRepository activityStateRepositoryMock;
     private GrantOfferLetterProcessRepository grantOfferLetterProcessRepositoryMock;
+    private ProjectUserRepository projectUserRepositoryMock;
 
     @Override
     protected void collectMocks(Function<Class<? extends Repository>, Repository> mockSupplier) {
         activityStateRepositoryMock = (ActivityStateRepository) mockSupplier.apply(ActivityStateRepository.class);
         grantOfferLetterProcessRepositoryMock = (GrantOfferLetterProcessRepository) mockSupplier.apply(GrantOfferLetterProcessRepository.class);
+        projectUserRepositoryMock = (ProjectUserRepository) mockSupplier.apply(ProjectUserRepository.class);
     }
 
     @Test
@@ -70,7 +74,6 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         expectedGolProcess.setProcessEvent(GrantOfferLetterEvent.PROJECT_CREATED.getType());
 
         verify(grantOfferLetterProcessRepositoryMock).save(expectedGolProcess);
-
     }
 
     @Test
@@ -83,12 +86,32 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterRemovedNotAllowedInNonPendingStates() {
+    public void testGrantOfferLetterRemovedNotAllowedInNonPendingNonSentStates() {
 
         asList(GrantOfferLetterState.values()).forEach(startingState -> {
 
-            if (startingState != GrantOfferLetterState.PENDING) {
+            if (!asList(GrantOfferLetterState.PENDING, GrantOfferLetterState.SENT).contains(startingState)) {
                 callWorkflowAndCheckTransitionFailsInternalUser(((project, internalUser) -> golWorkflowHandler.removeGrantOfferLetter(project, internalUser)), startingState);
+            }
+        });
+    }
+
+    @Test
+    public void testSignedGrantOfferLetterRemovedNotAllowedInNonPendingNonSentStates() {
+
+        asList(GrantOfferLetterState.values()).forEach(startingState -> {
+
+            if (!asList(GrantOfferLetterState.PENDING, GrantOfferLetterState.SENT).contains(startingState)) {
+
+                callWorkflowAndCheckTransitionFailsExternalUser(((project, projectUser) -> {
+
+                    when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(project.getId(), ProjectParticipantRole.PROJECT_MANAGER, projectUser.getUser().getId())).thenReturn(projectUser);
+                    boolean removed = golWorkflowHandler.removeSignedGrantOfferLetter(project, projectUser.getUser());
+                    verify(projectUserRepositoryMock).findByProjectIdAndRoleAndUserId(project.getId(), ProjectParticipantRole.PROJECT_MANAGER, projectUser.getUser().getId());
+
+                    return removed;
+
+                }), startingState);
             }
         });
     }
@@ -150,16 +173,36 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     @Test
     public void testSignedGrantOfferLetterRemoved() {
 
-        callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser(project -> golWorkflowHandler.removeSignedGrantOfferLetter(project),
+        callWorkflowAndCheckTransitionAndEventFired((project, projectUser) -> {
 
-                // current State, destination State and expected Event to be fired
-                GrantOfferLetterState.SENT, GrantOfferLetterState.SENT, GrantOfferLetterEvent.GOL_REMOVED);
+            when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(project.getId(), ProjectParticipantRole.PROJECT_MANAGER, projectUser.getUser().getId())).thenReturn(projectUser);
+            boolean removed = golWorkflowHandler.removeSignedGrantOfferLetter(project, projectUser.getUser());
+            verify(projectUserRepositoryMock).findByProjectIdAndRoleAndUserId(project.getId(), ProjectParticipantRole.PROJECT_MANAGER, projectUser.getUser().getId());
+
+            return removed;
+        },
+        // current State, destination State and expected Event to be fired
+        GrantOfferLetterState.SENT, GrantOfferLetterState.SENT, GrantOfferLetterEvent.GOL_REMOVED);
+    }
+
+    @Test
+    public void testSignedGrantOfferLetterNotRemovedIfNotProjectManager() {
+
+        callWorkflowAndCheckTransitionFailsExternalUser((project, projectUser) -> {
+
+            when(projectUserRepositoryMock.findByProjectIdAndRoleAndUserId(project.getId(), ProjectParticipantRole.PROJECT_MANAGER, projectUser.getUser().getId())).thenReturn(null);
+            boolean removed = golWorkflowHandler.removeSignedGrantOfferLetter(project, projectUser.getUser());
+            verify(projectUserRepositoryMock).findByProjectIdAndRoleAndUserId(project.getId(), ProjectParticipantRole.PROJECT_MANAGER, projectUser.getUser().getId());
+
+            return removed;
+        }, GrantOfferLetterState.SENT);
     }
 
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, GrantOfferLetterState currentGOLState, GrantOfferLetterState destinationGOLState, GrantOfferLetterEvent expectedEventToBeFired) {
 
         Project project = newProject().build();
-        ProjectUser projectUser = newProjectUser().build();
+        User user = newUser().build();
+        ProjectUser projectUser = newProjectUser().withUser(user).build();
 
         // Set the current state in the GOL Process
         ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, currentGOLState.getBackingState());
@@ -224,11 +267,27 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentActivityState);
         when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
 
-        // Set the destination state which we expect when the event is fired
-        ActivityState expectedActivityState = currentActivityState;
-
         // Call the workflow here
         boolean result = workflowMethodToCall.apply(project, internalUser);
+
+        assertFalse(result);
+
+        verify(grantOfferLetterProcessRepositoryMock, never()).save(isA(GOLProcess.class));
+    }
+
+    private void callWorkflowAndCheckTransitionFailsExternalUser(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, GrantOfferLetterState currentGOLState) {
+
+        Project project = newProject().build();
+        User externalUser = newUser().build();
+        ProjectUser projectUser = newProjectUser().withUser(externalUser).build();
+
+        // Set the current state in the GOL Process
+        ActivityState currentActivityState = new ActivityState(PROJECT_SETUP_GRANT_OFFER_LETTER, currentGOLState.getBackingState());
+        GOLProcess currentGOLProcess = new GOLProcess((ProjectUser) null, project, currentActivityState);
+        when(grantOfferLetterProcessRepositoryMock.findOneByTargetId(project.getId())).thenReturn(currentGOLProcess);
+
+        // Call the workflow here
+        boolean result = workflowMethodToCall.apply(project, projectUser);
 
         assertFalse(result);
 
@@ -285,6 +344,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         List<Class<? extends Repository>> repositories = new ArrayList<>(super.getRepositoriesToMock());
         repositories.add(GrantOfferLetterProcessRepository.class);
         repositories.add(ActivityStateRepository.class);
+        repositories.add(ProjectUserRepository.class);
         return repositories;
     }
 }
