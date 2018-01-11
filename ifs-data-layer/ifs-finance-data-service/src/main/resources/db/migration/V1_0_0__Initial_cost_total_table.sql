@@ -6,4 +6,4 @@ CREATE TABLE `cost_total` (
   `total` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY (`finance_id`,`type`,`name`)
-)
+);
