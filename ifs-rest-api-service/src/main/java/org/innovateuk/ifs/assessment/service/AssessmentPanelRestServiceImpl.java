@@ -17,12 +17,12 @@ public class AssessmentPanelRestServiceImpl extends BaseRestService implements A
 
     @Override
     public RestResult<Void> assignToPanel(long applicationId) {
-        return postWithRestResult(format("%s/%s/%s", assessmentPanelRestUrl, "assignApplication", applicationId), Void.class);
+        return postWithRestResult(format("%s/%s/%s", assessmentPanelRestUrl, "assign-application", applicationId), Void.class);
     }
 
     @Override
     public RestResult<Void> unassignFromPanel(long applicationId) {
-        return postWithRestResult(format("%s/%s/%s", assessmentPanelRestUrl, "unassignApplication", applicationId), Void.class);
+        return postWithRestResult(format("%s/%s/%s", assessmentPanelRestUrl, "unassign-application", applicationId), Void.class);
     }
 
     @Override

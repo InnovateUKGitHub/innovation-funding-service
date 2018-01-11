@@ -29,7 +29,7 @@ public class AssessmentPanelControllerTest extends BaseControllerMockMVCTest<Ass
     @Test
     public void assignApplication() throws Exception {
         when(assessmentPanelServiceMock.assignApplicationToPanel(applicationId)).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/assessmentpanel/assignApplication/{applicationId}", applicationId))
+        mockMvc.perform(post("/assessmentpanel/assign-application/{applicationId}", applicationId))
                 .andExpect(status().isOk());
 
         verify(assessmentPanelServiceMock, only()).assignApplicationToPanel(applicationId);
@@ -38,7 +38,7 @@ public class AssessmentPanelControllerTest extends BaseControllerMockMVCTest<Ass
     @Test
     public void unAssignApplication() throws Exception {
         when(assessmentPanelServiceMock.unassignApplicationFromPanel(applicationId)).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/assessmentpanel/unassignApplication/{applicationId}", applicationId))
+        mockMvc.perform(post("/assessmentpanel/unassign-application/{applicationId}", applicationId))
                 .andExpect(status().isOk());
 
         verify(assessmentPanelServiceMock, only()).unassignApplicationFromPanel(applicationId);

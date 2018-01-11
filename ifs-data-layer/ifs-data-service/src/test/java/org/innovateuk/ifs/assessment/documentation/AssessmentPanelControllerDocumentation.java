@@ -31,7 +31,7 @@ public class AssessmentPanelControllerDocumentation extends BaseControllerMockMV
     @Test
     public void assignApplication() throws Exception {
         when(assessmentPanelServiceMock.assignApplicationToPanel(applicationId)).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/assessmentpanel/assignApplication/{applicationId}", applicationId))
+        mockMvc.perform(post("/assessmentpanel/assign-application/{applicationId}", applicationId))
                 .andExpect(status().isOk())
                 .andDo(document("assessmentpanel/{method-name}",
                         pathParameters(
@@ -44,7 +44,7 @@ public class AssessmentPanelControllerDocumentation extends BaseControllerMockMV
     @Test
     public void unassignApplication() throws Exception {
         when(assessmentPanelServiceMock.unassignApplicationFromPanel(applicationId)).thenReturn(serviceSuccess());
-        mockMvc.perform(post("/assessmentpanel/unassignApplication/{applicationId}", applicationId))
+        mockMvc.perform(post("/assessmentpanel/unassign-application/{applicationId}", applicationId))
                 .andExpect(status().isOk())
                 .andDo(document("assessmentpanel/{method-name}",
                         pathParameters(
