@@ -69,17 +69,22 @@ public class ApplicationFinanceSectionSaverTest {
 
         CompetitionResource competition = newCompetitionResource().with(id(competitionId)).build();
 
-        when(competitionSetupFinanceService.isNoFinanceCompetition(competition)).thenReturn(false);
-        when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.OVERVIEW_FINANCES)).thenReturn(asList(overviewFinanceSection));
-        when(questionService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL)).thenReturn(newQuestionResource()
-                .withName("FINANCE_OVERVIEW", null)
-                .withDescription("", fundingRules)
-                .build(2));
+        assertTrue(competition.isFinanceType());
+
+        when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.OVERVIEW_FINANCES))
+                .thenReturn(asList(overviewFinanceSection));
+        when(questionService.getQuestionsBySectionIdAndType(sectionId, QuestionType.GENERAL))
+                .thenReturn(
+                        newQuestionResource()
+                                .withName("FINANCE_OVERVIEW", null)
+                                .withDescription("", fundingRules)
+                                .build(2)
+                );
 
         ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
         competitionSetupForm.setIncludeGrowthTable(isIncludeGrowthTable);
         competitionSetupForm.setApplicationFinanceType(applicationFinanceType);
-        
+
         CompetitionSetupFinanceResource csfr = newCompetitionSetupFinanceResource().
                 withCompetitionId(competitionId).
                 withFullApplicationFinance(isFullApplicationFinance).
@@ -96,9 +101,12 @@ public class ApplicationFinanceSectionSaverTest {
         final ApplicationFinanceType applicationFinanceType = ApplicationFinanceType.NONE;
         final Long competitionId = 1L;
 
-        CompetitionResource competition = newCompetitionResource().with(id(competitionId)).build();
+        CompetitionResource competition = newCompetitionResource()
+                .withId(competitionId)
+                .withCompetitionTypeName(CompetitionResource.NON_FINANCE_TYPES.iterator().next())
+                .build();
 
-        when(competitionSetupFinanceService.isNoFinanceCompetition(competition)).thenReturn(true);
+        assertTrue(competition.isNonFinanceType());
 
         ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
         competitionSetupForm.setApplicationFinanceType(applicationFinanceType);
