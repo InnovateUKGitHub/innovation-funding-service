@@ -34,12 +34,6 @@ Comp Admin creates an ATI competition
     When the user clicks the button/link           jQuery=a:contains("Complete")
     Then the user clicks the button/link           jQuery=a:contains("Done")
 
-Requesting the ID of this Competition
-    [Documentation]  IFS-2332
-    [Tags]  MySql
-    ${atiCompId} =  get comp id from comp title  ${ATIcompetitionTitle}
-    Set suite variable   ${atiCompId}
-
 Applicant applies to newly created ATI competition
     [Documentation]  IFS-2286
     [Tags]  HappyPath  MySQL
@@ -59,6 +53,7 @@ Applicant submits his application
 Moving ATI Competition to Project Setup
     [Documentation]  IFS-2332
     [Tags]
+    [Setup]  Requesting the ID of this Competition
     When Log in as a different user    &{internal_finance_credentials}
     Then moving competition to Closed                  ${atiCompId}
     And making the application a successful project    ${atiCompId}  ${ATIapplicationTitle}
@@ -84,6 +79,12 @@ Project Finance is able to see the Overheads costs file
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
+
+Requesting the ID of this Competition
+    [Documentation]  IFS-2332
+    [Tags]  MySql
+    ${atiCompId} =  get comp id from comp title  ${ATIcompetitionTitle}
+    Set suite variable   ${atiCompId}
 
 moving competition to Closed
     [Arguments]  ${compID}
