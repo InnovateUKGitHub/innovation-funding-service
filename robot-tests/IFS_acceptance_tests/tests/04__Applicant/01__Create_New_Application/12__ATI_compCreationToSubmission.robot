@@ -8,7 +8,6 @@ Suite Teardown  Close browser and delete emails
 Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
-Resource        ../../../resources/keywords/User_actions.robot
 Resource        ../../10__Project_setup/PS_Common.robot
 
 *** Variables ***
@@ -60,29 +59,24 @@ Applicant submits his application
 Moving ATI Competition to Project Setup
     [Documentation]  IFS-2332
     [Tags]
-    Log in as a different user    &{internal_finance_credentials}
-    moving competition to Closed    ${atiCompId}
-    making the application a successful project    ${atiCompId}  ${ATIapplicationTitle}
-    moving competition to Project Setup    ${atiCompId}
-
-Requesting Project ID of this Project
-    [Documentation]  IFS-2332
-    [Tags]
-    ${atiProjectID} =  get project id by name    ${ATIapplicationTitle}
-    Set suite variable    ${atiProjectID}
+    When Log in as a different user    &{internal_finance_credentials}
+    Then moving competition to Closed                  ${atiCompId}
+    And making the application a successful project    ${atiCompId}  ${ATIapplicationTitle}
+    And moving competition to Project Setup            ${atiCompId}
 
 Applicant completes Project Details
     [Documentation]  IFS-2332
     [Tags]
-    log in as a different user    &{lead_applicant_credentials}
-    project lead submits project address    ${atiProjectID}
+    [Setup]  Requesting Project ID of this Project
+    When log in as a different user              &{lead_applicant_credentials}
+    Then project lead submits project address    ${ProjectID}
 
 Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-2332
     [Tags]  CompAdmin
     [Setup]  Requesting Organisation ID from this Application
-    Given Log in as a different user  &{internal_finance_credentials}
-    When the user navigates to the page    ${SERVER}/project-setup-management/project/${atiProjectID}/finance-check/organisation/${ATIorganisationID}/eligibility
+    Given Log in as a different user       &{internal_finance_credentials}
+    When the user navigates to the page    ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationID}/eligibility
     And the user clicks the button/link    jQuery=button:contains("Overhead costs")
     Then the project finance user is able to download the Overheads file
 
@@ -90,3 +84,18 @@ Project Finance is able to see the Overheads costs file
 Custom Suite Setup
     Set predefined date variables
     The guest user opens the browser
+
+moving competition to Closed
+    [Arguments]  ${compID}
+    Connect to Database  @{database}
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2017-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${compID}';
+
+Requesting Project ID of this Project
+    [Documentation]  IFS-2332
+    [Tags]
+    ${ProjectID} =  get project id by name    ${ATIapplicationTitle}
+    Set suite variable    ${ProjectID}
+
+Requesting Organisation ID from this Application
+    ${organisationID} =  get organisation id by name    Empire Ltd
+    Set suite variable    ${organisationID}
