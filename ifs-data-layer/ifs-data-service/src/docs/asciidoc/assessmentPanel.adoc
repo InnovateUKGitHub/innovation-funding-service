@@ -13,3 +13,15 @@ include::{snippets}/assessmentpanel/unassign-application/path-parameters.adoc[]
 
 ==== Curl Example
 include::{snippets}/assessmentpanel/unassign-application/curl-request.adoc[]
+
+=== Get assessment reviews for user and competition
+==== Request
+include::{snippets}/assessmentpanel/get-assessment-reviews/http-request.adoc[]
+include::{snippets}/assessmentpanel/get-assessment-reviews/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanel/get-assessment-reviews/http-response.adoc[]
+include::{snippets}/assessmentpanel/get-assessment-reviews/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanel/get-assessment-reviews/curl-request.adoc[]
