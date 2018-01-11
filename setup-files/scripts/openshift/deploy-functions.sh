@@ -57,7 +57,7 @@ function getHost() {
     elif [[ ${TARGET} == "production" ]]; then
       echo "apply-for-innovation-funding.service.gov.uk"
     else
-      echo "prod.ifs-test-clusters.com"
+      echo $(getClusterAddress)
     fi
 }
 
@@ -78,7 +78,7 @@ function getRegistry() {
     if [[ (${TARGET} == "local") ]]; then
         echo "$(getLocalRegistryUrl)"
     else
-        echo "docker-registry-default.apps.prod.ifs-test-clusters.com"
+        echo "docker-registry-default.apps."$(getClusterAddress)
     fi
 }
 
@@ -87,7 +87,7 @@ function getInternalRegistry() {
     if [[ (${TARGET} == "local") ]]; then
         echo "$(getLocalRegistryUrl)"
     else
-        echo "172.30.80.28:5000"
+        echo "$(getRemoteRegistryUrl)"
     fi
 }
 
@@ -100,7 +100,7 @@ function getSvcAccountClause() {
     if [[ (${TARGET} == "local") ]]; then
         SVC_ACCOUNT_CLAUSE_SERVER_PART='localhost:8443'
     else
-        SVC_ACCOUNT_CLAUSE_SERVER_PART='console.prod.ifs-test-clusters.com:443'
+        SVC_ACCOUNT_CLAUSE_SERVER_PART="console."$(getClusterAddress)":443"
     fi
 
     echo "--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://${SVC_ACCOUNT_CLAUSE_SERVER_PART} --insecure-skip-tls-verify=true"
@@ -387,4 +387,14 @@ function createProjectIfNecessaryForNonNamedEnvs() {
     if ! $(isNamedEnvironment $TARGET); then
         createProject
     fi
+}
+
+function getClusterAddress() {
+    echo "prod.ifs-test-clusters.com"
+#     echo "dev-nige-1.dev.ifs-test-clusters.com"
+}
+
+function getRemoteRegistryUrl() {
+        echo "172.30.80.28:5000"
+#        echo "172.30.114.178:5000"
 }
