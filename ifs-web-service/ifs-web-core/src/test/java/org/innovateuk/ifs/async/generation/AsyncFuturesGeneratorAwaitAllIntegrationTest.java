@@ -169,17 +169,11 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
     }
 
     /**
-     * Test that the Futures created via {@link AsyncFuturesGenerator#awaitAll} methods are executed in one of the
-     * original Threads that it is awaiting the completion of, or the main Thread.
-     *
-     * This is important because it requires access to the same ThreadLocal values that are copied from the main Thread
-     * by the {@link org.innovateuk.ifs.async.executor.AsyncTaskDecorator} in order to perform actions like identifying
-     * the current User on the Thread.
-     *
-     * This is the normal behaviour of {@link CompletableFuture#allOf(CompletableFuture[])}.
+     * Test that the Futures created via {@link AsyncFuturesGenerator#awaitAll} methods are executed via an executor
+     * thread, and that it has access to the ThreadLocals that other executor Threads have access to.
      */
     @Test
-    public void testAwaitingFutureExecutesInSameThreadAsOneOfTheDependentThreads() throws ExecutionException, InterruptedException {
+    public void testAwaitingFutureExecutesInExecutorThread() throws ExecutionException, InterruptedException {
 
         Authentication authentication = new UserAuthentication(newUserResource().build());
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -199,13 +193,9 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
             return currentThread();
         });
 
+        // check that the awaitAll() future was executed by an executor thread
         Thread awaitingFutureThread = awaitingFuture.get();
-        Thread future1Thread = future1.get();
-        Thread future2Thread = future2.get();
-
-        // check that the awaitingFutureThread was either the same one used to execute future1, future2, or the main
-        // Thread
-        assertThat(asList(future1Thread, future2Thread, currentThread()), hasItem(awaitingFutureThread));
+        assertThat(awaitingFutureThread.getName(), startsWith("IFS-Async-Executor-"));
     }
 
     /**
