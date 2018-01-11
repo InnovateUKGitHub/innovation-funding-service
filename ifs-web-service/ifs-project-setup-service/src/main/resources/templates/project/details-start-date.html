@@ -13,7 +13,7 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectId})}" />
 
             <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-                <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">Please check this page.</h2>
+                <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to save your target start date.</h2>
                 <ul class="error-summary-list">
                     <li th:each="err : ${#fields.errors('${form.*}')}">
                         <a href="#projectStartDate_month" th:text="${err}">The error message</a>

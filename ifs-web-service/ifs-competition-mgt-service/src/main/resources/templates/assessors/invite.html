@@ -109,7 +109,7 @@
                                 </optgroup>
                             </select>
                         </div>
-                        <!-- TODO {#fields.hasErrors('invites')} does not work -->
+                        <!--/* TODO {#fields.hasErrors('invites')} does not work. Please see ticket IFS-2521 */-->
                         <div class="form-group" th:classappend="${#fields.hasErrors('invites')} ? 'form-group-error'">
                             <th:block th:if="${#fields.hasErrors('invites')}">
                                 <span class="error-message" th:each="err : ${#fields.errors('invites')}" th:text="${err}"></span>
