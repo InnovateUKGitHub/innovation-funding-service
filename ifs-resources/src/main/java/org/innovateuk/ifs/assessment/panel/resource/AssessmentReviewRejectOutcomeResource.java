@@ -9,12 +9,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * DTO for rejecting invites to assess Applications on Assessment Panel.
+ * DTO for rejecting invites to review Applications on Assessment Panel.
  */
 public class AssessmentReviewRejectOutcomeResource {
 
     @NotNull(message = "{validation.assessmentRejectOutcome.rejectReason.required}")
-    private AssessmentRejectOutcomeValue rejectReason;
+    private AssessmentRejectOutcomeValue rejectReason; // TODO remove in IFS-388
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
     @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String rejectComment;

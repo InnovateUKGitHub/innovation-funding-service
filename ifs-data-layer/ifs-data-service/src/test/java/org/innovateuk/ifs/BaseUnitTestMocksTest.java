@@ -719,7 +719,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected AssessmentReviewMapper assessmentReviewMapperMock;
 
-
     @Before
     public void setupMockInjection() {
         // Process mock annotations

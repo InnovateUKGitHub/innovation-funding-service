@@ -12,14 +12,14 @@ import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState
  */
 public class AssessorCompetitionForPanelDashboardApplicationViewModel {
 
-    private Long applicationId;
-    private Long reviewId;
+    private long applicationId;
+    private long reviewId;
     private String displayLabel;
     private String leadOrganisation;
     private AssessmentReviewState state;
 
-    public AssessorCompetitionForPanelDashboardApplicationViewModel(Long applicationId,
-                                                                    Long reviewId,
+    public AssessorCompetitionForPanelDashboardApplicationViewModel(long applicationId,
+                                                                    long reviewId,
                                                                     String displayLabel,
                                                                     String leadOrganisation,
                                                                     AssessmentReviewState state) {
@@ -30,11 +30,11 @@ public class AssessorCompetitionForPanelDashboardApplicationViewModel {
         this.state = state;
     }
 
-    public Long getApplicationId() {
+    public long getApplicationId() {
         return applicationId;
     }
 
-    public Long getReviewId() {
+    public long getReviewId() {
         return reviewId;
     }
 
