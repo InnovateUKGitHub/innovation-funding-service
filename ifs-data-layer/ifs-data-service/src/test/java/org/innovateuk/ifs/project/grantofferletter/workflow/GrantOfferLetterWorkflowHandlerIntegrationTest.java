@@ -48,7 +48,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testProjectCreated() throws Exception {
+    public void testProjectCreated() {
 
         Project project = newProject().build();
         ProjectUser projectUser = newProjectUser().build();
@@ -74,7 +74,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterRemoved() throws Exception {
+    public void testGrantOfferLetterRemoved() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.removeGrantOfferLetter(project, internalUser)),
 
@@ -83,7 +83,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterRemovedNotAllowedInNonPendingStates() throws Exception {
+    public void testGrantOfferLetterRemovedNotAllowedInNonPendingStates() {
 
         asList(GrantOfferLetterState.values()).forEach(startingState -> {
 
@@ -94,7 +94,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterSent() throws Exception {
+    public void testGrantOfferLetterSent() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterSent(project, internalUser)),
 
@@ -103,7 +103,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterSigned() throws Exception {
+    public void testGrantOfferLetterSigned() {
 
         callWorkflowAndCheckTransitionAndEventFired(((project, projectUser) -> golWorkflowHandler.grantOfferLetterSigned(project, projectUser)),
 
@@ -112,7 +112,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterRejected() throws Exception {
+    public void testGrantOfferLetterRejected() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterRejected(project, internalUser)),
 
@@ -121,7 +121,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testGrantOfferLetterApproved() throws Exception {
+    public void testGrantOfferLetterApproved() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterApproved(project, internalUser)),
 
@@ -130,7 +130,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testApproveSignedGrantOfferLetter() throws Exception {
+    public void testApproveSignedGrantOfferLetter() {
 
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterApproved(project, internalUser)),
 
@@ -139,12 +139,21 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
     }
 
     @Test
-    public void testSignGrantOfferLetterWithoutProjectUser() throws Exception {
+    public void testSignGrantOfferLetterWithoutProjectUser() {
 
         callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> golWorkflowHandler.sign(project)),
 
                 // current State, destination State and expected Event to be fired
                 GrantOfferLetterState.SENT, GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterEvent.GOL_SIGNED);
+    }
+
+    @Test
+    public void testSignedGrantOfferLetterRemoved() {
+
+        callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser(project -> golWorkflowHandler.removeSignedGrantOfferLetter(project),
+
+                // current State, destination State and expected Event to be fired
+                GrantOfferLetterState.SENT, GrantOfferLetterState.SENT, GrantOfferLetterEvent.GOL_REMOVED);
     }
 
     private void callWorkflowAndCheckTransitionAndEventFired(BiFunction<Project, ProjectUser, Boolean> workflowMethodToCall, GrantOfferLetterState currentGOLState, GrantOfferLetterState destinationGOLState, GrantOfferLetterEvent expectedEventToBeFired) {
