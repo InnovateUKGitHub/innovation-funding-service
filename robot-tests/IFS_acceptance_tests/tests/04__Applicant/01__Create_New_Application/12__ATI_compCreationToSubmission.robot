@@ -9,7 +9,7 @@ Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 Resource        ../../../resources/keywords/User_actions.robot
-Resource        /Users/fahadahmed/innovation-funding-service/robot-tests/IFS_acceptance_tests/tests/10__Project_setup/PS_Common.robot
+Resource        ../../10__Project_setup/PS_Common.robot
 
 *** Variables ***
 ${ATIcompetitionTitle}  ATI Competition
@@ -77,13 +77,10 @@ Applicant completes Project Details
     log in as a different user    &{lead_applicant_credentials}
     project lead submits project address    ${atiProjectID}
 
-Requesting Organisation ID from this Application
-    ${ATIorganisationID} =  get organisation id by name    Empire Ltd
-    Set suite variable    ${ATIorganisationID}
-
 Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-2332
     [Tags]  CompAdmin
+    Requesting Organisation ID from this Application
     Given Log in as a different user  &{internal_finance_credentials}
     When the user navigates to the page    ${SERVER}/project-setup-management/project/${atiProjectID}/finance-check/organisation/${ATIorganisationID}/eligibility
     And the user clicks the button/link    jQuery=button:contains("Overhead costs")

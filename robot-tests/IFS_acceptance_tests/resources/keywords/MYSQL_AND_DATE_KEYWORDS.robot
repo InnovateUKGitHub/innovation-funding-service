@@ -178,3 +178,8 @@ Set predefined date variables
     Set suite variable  ${tomorrowday}
     ${monthWord} =      get month as word
     set suite variable  ${monthWord}
+
+moving competition to Closed
+    [Arguments]  ${compID}
+    Connect to Database  @{database}
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2017-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${compID}';
