@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Print Application'"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Print Application'" />
 
 
 </head>
 <body th:with="context='applicant'" class="print-doc">
-<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: body-start" />
 
 <div class="print-bar">
     <button class="button" onclick="window.print()">Print your application</button>
@@ -15,13 +15,13 @@
 
 <div>
     <section class="portrait" th:each="section : ${sections.values()}" th:unless='${section.name.equals("Finances")}'>
-        <h1 th:text="${section.getName()}" class="heading-large"/>
+        <h1 th:text="${section.getName()}" class="heading-large" />
         <th:block th:each="question : ${sectionQuestions.get(section.id)}">
             <div class="form-group" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}"
                  th:if='${formInput.includedInApplicationSummary && formInput.type.displayablePrintType}'
                  th:with="formInputIndex=(${status.index}), readonly=true, response=(${responses.get(formInput.getId())})">
 
-                <th:block th:replace="application/print-elements :: ${formInput.type.nameLower}"/>
+                <th:block th:replace="application/print-elements :: ${formInput.type.nameLower}" />
 
             </div>
         </th:block>
@@ -38,11 +38,11 @@
     <section class="landscape">
         <div>
             <h2 class="heading-medium">Funding breakdown</h2>
-            <th:block th:insert="application/print-elements :: financial_summary_table"/>
+            <th:block th:insert="application/print-elements :: financial_summary_table" />
         </div>
     </section>
 </div>
-<th:block th:insert="fragments/layout :: body-end"/>
+<th:block th:insert="fragments/layout :: body-end" />
 <th:block th:unless="${param.noprint}">
     <script type="text/javascript">
         jQuery(document).ready(function () {

@@ -119,40 +119,51 @@
                     th:text="${financeSubSection.name}"
                     scope="col"
                     class="numeric"
-                    th:classappend="${iteration.count} > 3 ? ' width-small'"/>
+                    th:classappend="${iteration.count} > 3 ? ' width-small'" />
             </tr>
             </thead>
             <tbody>
             <tr th:each="applicationOrganisation : ${applicationOrganisations}">
                 <th scope="row">
                     <div th:text="${applicationOrganisation.name}"></div>
-                    <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Lead organisation</small></div>
-                    <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}"><small>Partner</small></div>
+                    <div th:if="${applicationOrganisation.id.equals(leadOrganisation.id)}">
+                        <small>Lead organisation</small>
+                    </div>
+                    <div th:unless="${applicationOrganisation.id.equals(leadOrganisation.id)}">
+                        <small>Partner</small>
+                    </div>
                 </th>
-                <td class="numeric" th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
+                <td class="numeric"
+                    th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}"
+                    th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                     <strong th:text="'£'+${#numbers.formatInteger(organisationFinance.total, 0, 'DEFAULT')}" />
                 </td>
                 <td class="numeric" th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">
                     <strong>&pound;0</strong>
                 </td>
-                <th:block th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs?.get(question?.id).get(0)}">
-                    <th:block th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
+                <th:block th:each="financeSubSection : ${financeSectionChildren}"
+                          th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs?.get(question?.id).get(0)}">
+                    <th:block th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}"
+                              th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                         <td class="numeric"
                             th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
                             th:text="'£'+${#numbers.formatInteger(category.total, 0, 'DEFAULT')}">
                         </td>
                     </th:block>
-                    <td class="numeric" th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">&pound;0</td>
+                    <td class="numeric" th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">
+                        &pound;0
+                    </td>
                 </th:block>
             </tr>
             <tr>
                 <th scope="row">Total</th>
                 <td class="numeric">
-                    <strong  th:text="'£'+${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}" />
+                    <strong th:text="'£'+${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}" />
                 </td>
                 <th:block th:each="financeSubSection : ${financeSectionChildren}"
-                     th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs?.get(question?.id).get(0)}">
-                    <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
+                          th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs?.get(question?.id).get(0)}">
+                    <td class="numeric"
+                        th:each="financeTotal: ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
                         th:text="'£'+${#numbers.formatInteger(financeTotal, 0, 'DEFAULT')}" />
                 </th:block>
             </tr>
