@@ -159,7 +159,7 @@ Assesor is able to accept the invitation from dashboard
     When the user clicks the button/link      jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
     Then the user should see the element      jQuery=dt:contains("Competition:") ~ dd:contains("${CLOSED_COMPETITION_NAME}")
     And the user should see the element       jQuery=dt:contains("Innovation Lead:") ~ dd:contains("Ian Cooper")
-    And the user should see the element       jQuery=h2:contains("Applications for Panel (0)") + ul li h3:contains("No applications have been assigned to this panel.")
+    And the user should see the element       jQuery=h2:contains("Applications for panel") + ul li p:contains("No applications have been assigned to this panel.")
 
 Assesor is able to reject the invitation from email
     [Documentation]  IFS-37
@@ -245,7 +245,7 @@ Assessors view of competition dashboard in panel status
     [Tags]
     Given Log in as a different user         ${panel_assessor_ben}  ${short_password}
     When the user clicks the button/link     jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
-    Then the user should see the element     jQuery=h2:contains("Applications for Panel") + ul li h3:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
+    Then the user should see the element     jQuery=h2:contains("Applications for panel") + ul li h3:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
 
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]  IFS-1138
