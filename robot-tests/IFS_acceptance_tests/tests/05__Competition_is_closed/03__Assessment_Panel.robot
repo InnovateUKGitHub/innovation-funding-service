@@ -48,6 +48,7 @@ ${panel_assessor_joel}       joel.george@gmail.com
 ${panel_assessor_madeleine}  madeleine.martin@gmail.com
 ${panel_assessor_riley}      riley.butler@gmail.com
 ${Neural_network}            ${application_ids["Neural networks to optimise freight train routing"]}
+${computer_vision}           ${application_ids["Computer vision and machine learning for transport networks"]}
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
@@ -225,7 +226,9 @@ Filter by application number
     Given the user enters text to a text field     id=filterSearch   ${Neural_network}
     When the user clicks the button/link           jQuery=.button:contains("Filter")
     Then the user should see the element           jQuery=td:contains("${Neural_network}")
-    #TODO IFS-2069 need to add more checks once the webtest data is ready.
+    And the user should not see the element        jQuery=td:contains("${computer_vision}")
+    When the user clicks the button/link           jQuery=a:contains("Clear")
+    Then the user should see the element           jQuery=td:contains("${computer_vision}")
 
 Assign applications to panel
     [Documentation]  IFS-1125
@@ -237,14 +240,14 @@ Assign applications to panel
     And the user clicks the button/link     jQuery=button:contains("Confirm actions")
     And the user reads his email            ${assessor_ben}  Applications ready for review   You have been allocated applications to review within the competition Machine learning for transport infrastructure.
 
-Assessor view to panel competition dashboard
+Assessors view of competition dashboard in panel status
     [Documentation]  IFS-1138
     [Tags]
     Given Log in as a different user         ${panel_assessor_ben}  ${short_password}
     When the user clicks the button/link     jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
-    Then the user should see the element    jQuery=h2:contains("Applications for Panel") + ul li h3:contains("Neural networks to optimise freight train routing")
+    Then the user should see the element     jQuery=h2:contains("Applications for Panel") + ul li h3:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
 
-Assessor cannot see applcations after panel date
+Assessor cannot see competition on dashboard after funder panel date expiry
     [Documentation]  IFS-1138
     [Tags]
     Given the funder panel period changes in the db  2017-06-27 00:00:00
@@ -261,12 +264,12 @@ Custom Suite Setup
 the assessment panel period changes in the db
     [Arguments]  ${Date}
     Connect to Database    @{database}
-    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='ASSESSMENT_PANEL' AND competition_id=${competition_ids["${CLOSED_COMPETITION_NAME}"]};
+    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='ASSESSMENT_PANEL' AND competition_id=${CLOSED_COMPETITION};
 
 the funder panel period changes in the db
     [Arguments]  ${Date}
     Connect to Database    @{database}
-    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='FUNDERS_PANEL' AND competition_id=${competition_ids["${CLOSED_COMPETITION_NAME}"]};
+    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='FUNDERS_PANEL' AND competition_id=${CLOSED_COMPETITION};
 
 the user move the closed competition to in panel
     the user clicks the button/link     link=Competition
