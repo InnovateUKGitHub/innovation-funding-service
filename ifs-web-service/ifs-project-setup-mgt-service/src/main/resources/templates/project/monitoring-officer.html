@@ -61,8 +61,8 @@
                            pattern="\D{2,}"
                            minlength="2"
                            maxlength="70"
-                           th:errorclass="form-control-error" r
-                           equired="required"
+                           th:errorclass="form-control-error"
+                           required="required"
                            th:attr="data-required-errormessage=#{validation.standard.firstname.required},data-pattern-errormessage=#{validation.standard.firstname.invalid},data-minlength-errormessage=#{validation.standard.firstname.length.min(null,null,2)}"
                            class="form-control width-full"
                            th:readonly="${readonly}"
