@@ -70,7 +70,7 @@ Project Finance is able to see the Overheads costs file
     [Documentation]  IFS-2332
     [Tags]  CompAdmin
     Given Log in as a different user       &{internal_finance_credentials}
-    When the user navigates to the page    ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/organisation/
+    When the user navigates to the page    ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
     And the user clicks the button/link    jQuery=tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")
     And the user clicks the button/link    jQuery=button:contains("Overhead costs")
     Then the project finance user is able to download the Overheads file
@@ -96,7 +96,3 @@ Requesting Project ID of this Project
     [Tags]
     ${ProjectID} =  get project id by name    ${ATIapplicationTitle}
     Set suite variable    ${ProjectID}
-
-#Requesting Organisation ID from this Application
-#    ${organisationID} =  get organisation id by name    Empire Ltd
-#    Set suite variable    ${organisationID}
