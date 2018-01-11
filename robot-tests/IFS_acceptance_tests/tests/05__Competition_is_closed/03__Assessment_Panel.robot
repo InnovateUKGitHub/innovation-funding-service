@@ -247,7 +247,7 @@ Assessors view of competition dashboard in panel status
     When the user clicks the button/link     jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
     Then the user should see the element     jQuery=h2:contains("Applications for Panel") + ul li h3:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
 
-Assessor cannot see competition on dashboard after funder panel date expiry
+Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]  IFS-1138
     [Tags]
     Given the funder panel period changes in the db  2017-06-27 00:00:00
