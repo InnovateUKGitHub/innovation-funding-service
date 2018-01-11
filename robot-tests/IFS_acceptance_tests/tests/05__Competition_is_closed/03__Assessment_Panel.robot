@@ -250,9 +250,9 @@ Assessors view of competition dashboard in panel status
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]  IFS-1138
     [Tags]
-    Given the funder panel period changes in the db  2017-06-27 00:00:00
+    Given the funders panel period changes in the db  2017-06-27 00:00:00
     Then the user should not see the element         jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
-    [Teardown]  the funder panel period changes in the db   2068-06-27 00:00:00
+    [Teardown]  the funders panel period changes in the db   2068-06-27 00:00:00
 
 *** Keywords ***
 Custom Suite Setup
@@ -265,7 +265,7 @@ the assessment panel period changes in the db
     Connect to Database    @{database}
     Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='ASSESSMENT_PANEL' AND competition_id=${CLOSED_COMPETITION};
 
-the funder panel period changes in the db
+the funders panel period changes in the db
     [Arguments]  ${Date}
     Connect to Database    @{database}
     Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='FUNDERS_PANEL' AND competition_id=${CLOSED_COMPETITION};
