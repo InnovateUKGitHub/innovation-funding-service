@@ -101,7 +101,7 @@ public class Competition implements ProcessActivity {
             inverseJoinColumns = @JoinColumn(name = "organisation_type_id", referencedColumnName = "id"))
     private List<OrganisationType> leadApplicantTypes;
 
-    private boolean fullApplicationFinance = true;
+    private Boolean fullApplicationFinance = true;
     private Boolean setupComplete;
 
     private boolean useResubmissionQuestion = true;
@@ -562,11 +562,11 @@ public class Competition implements ProcessActivity {
         return "";
     }
 
-    public boolean isFullApplicationFinance() {
+    public Boolean isFullApplicationFinance() {
         return fullApplicationFinance;
     }
 
-    public void setFullApplicationFinance(boolean fullApplicationFinance) {
+    public void setFullApplicationFinance(Boolean fullApplicationFinance) {
         this.fullApplicationFinance = fullApplicationFinance;
     }
 
