@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.async.generation;
 
+import org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,16 @@ public class AsyncFuturesGeneratorAwaitAllIntegrationTest extends BaseIntegratio
     @Before
     public void clearRegisteredFutures() {
         AsyncFuturesHolder.clearFutures();
+    }
+
+    @Before
+    public void enableAsync() {
+        AsyncAllowedThreadLocal.setAsyncAllowed(true);
+    }
+
+    @After
+    public void disableAsync() {
+        AsyncAllowedThreadLocal.clearAsyncAllowed();
     }
 
     /**
