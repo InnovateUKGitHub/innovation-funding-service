@@ -72,7 +72,8 @@
                         </div>
                     </div>
                 </th>
-                <th:block th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
+                <th:block th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}"
+                          th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                     <td class="numeric">
                         <strong>&pound;<th:block th:text="${#numbers.formatInteger(organisationFinance.total, 0, 'DEFAULT')}" /></strong>
                     </td>
@@ -82,13 +83,13 @@
                     <td class="numeric" th:text="${#numbers.formatInteger(organisationFinance.totalContribution, 0, 'DEFAULT')}"></td>
                 </th:block>
                 <th:block th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">
-                  <td class="numeric">
-                      <strong>&pound;0</strong>
-                  </td>
-                  <td class="numeric">0%</td>
-                  <td class="numeric">0</td>
-                  <td class="numeric">0</td>
-                  <td class="numeric">0</td>
+                    <td class="numeric">
+                        <strong>&pound;0</strong>
+                    </td>
+                    <td class="numeric">0%</td>
+                    <td class="numeric">0</td>
+                    <td class="numeric">0</td>
+                    <td class="numeric">0</td>
                 </th:block>
             </tr>
             <tr>

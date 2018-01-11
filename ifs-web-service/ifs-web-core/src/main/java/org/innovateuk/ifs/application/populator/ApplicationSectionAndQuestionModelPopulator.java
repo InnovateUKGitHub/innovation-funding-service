@@ -107,6 +107,8 @@ public class ApplicationSectionAndQuestionModelPopulator {
                 competition.getId(), APPLICATION).getSuccessObjectOrThrowException();
 
         model.addAttribute("sections", sections);
+        model.addAttribute("sectionsByType", allSections.stream().collect(Collectors.groupingBy(SectionResource::getType)));
+
         Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
                 .collect(Collectors.toMap(
                         SectionResource::getId,

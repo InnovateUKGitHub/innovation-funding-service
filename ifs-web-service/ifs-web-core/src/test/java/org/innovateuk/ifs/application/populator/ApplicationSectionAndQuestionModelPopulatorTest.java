@@ -92,7 +92,9 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         CompetitionResource competition = newCompetitionResource().build();
         ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
         Long organisationId = 3L;
-        List<SectionResource> allSections = newSectionResource().build(3);
+        List<SectionResource> allSections = newSectionResource()
+                .withType(SectionType.GENERAL)
+                .build(3);
         SectionResource parentSection = newSectionResource()
                 .withChildSections(simpleMap(allSections, SectionResource::getId)).build();
         UserResource user = newUserResource().build();
@@ -115,6 +117,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
         verify(model).addAttribute(eq("completedSections"), anyMap());
         verify(model).addAttribute(eq("sections"), anyMap());
+        verify(model).addAttribute(eq("sectionsByType"), anyMap());
         verify(model).addAttribute(eq("questionFormInputs"), anyMap());
         verify(model).addAttribute(eq("sectionQuestions"), anyMap());
         verify(model).addAttribute(eq("subSections"), anyMap());
