@@ -25,16 +25,13 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * Build the model for the Assessor Competition Dashboard view.
+ * Build the model for the Assessor Panel Dashboard view.
  */
 @Component
 public class AssessorCompetitionForPanelDashboardModelPopulator {
 
     @Autowired
     private CompetitionService competitionService;
-
-    @Autowired
-    private AssessmentService assessmentService;
 
     @Autowired
     private ApplicationService applicationService;

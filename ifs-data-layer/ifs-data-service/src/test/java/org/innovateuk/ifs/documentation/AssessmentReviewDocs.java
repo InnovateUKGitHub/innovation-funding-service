@@ -15,7 +15,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class AssessmentReviewDocs {
     public static final FieldDescriptor[] assessmentReviewFields = {
-            fieldWithPath("id").description("Id of the assessment"),
+            fieldWithPath("id").description("Id of the assessment review"),
             fieldWithPath("event").description("currently not used"),
             fieldWithPath("startDate").description("start date of the assessment"),
             fieldWithPath("endDate").description("end date of the assessment"),
