@@ -31,7 +31,7 @@ Comp Admin Creates Competitions where Research or Public sector can lead
 Requesting the id of this Competition
     [Documentation]  IFS-182
     ...   retrieving the id of the competition so that we can use it in urls
-    [Tags]  MySQL
+    [Tags]  HappyPath  MySQL
     ${reseachCompId} =  get comp id from comp title  ${compResearch}
     Set suite variable  ${reseachCompId}
 

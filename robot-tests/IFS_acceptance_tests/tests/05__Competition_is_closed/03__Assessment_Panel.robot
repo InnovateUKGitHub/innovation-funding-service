@@ -65,7 +65,7 @@ Confirm changes button unavailable before sending invite
 
 Assessment panel links are active if the assessment panel has been set
     [Documentation]  IFS-786
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link   link=Invite assessors to attend
     Then the user should see the element   jQuery=h1:contains("Invite assessors to panel")
 
