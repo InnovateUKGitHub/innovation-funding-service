@@ -380,9 +380,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
                         if (user == leadApplicantUser) {
                             verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(user.getId(),application.getId(), LEADAPPLICANT.getName());
-
                         } else {
-                            verify(processRoleRepositoryMock, times(2)).existsByUserIdAndApplicationIdAndRoleName(eq(user.getId()), eq(application.getId()), anyString());
+                            verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(eq(user.getId()), application.getId(), COLLABORATOR.getName());
+                            verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(eq(user.getId()), application.getId(), LEADAPPLICANT.getName());
                         }
 
                     } else {
@@ -398,7 +398,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     assertFalse(rules.applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
 
                     if (singletonList(PROJECT_SETUP).contains(competitionStatus)) {
-                        verify(processRoleRepositoryMock, times(2)).existsByUserIdAndApplicationIdAndRoleName(eq(user.getId()), eq(application.getId()), anyString());
+                        verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(user.getId(), application.getId(), COLLABORATOR.getName());
+                        verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(user.getId(), application.getId(), LEADAPPLICANT.getName());
                     } else {
                         verify(processRoleRepositoryMock, never()).findByUserIdAndApplicationId(user.getId(), application.getId());
                     }
