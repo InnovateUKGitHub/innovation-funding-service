@@ -2,7 +2,7 @@ package org.innovateuk.ifs.threads.attachments.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,10 +21,10 @@ public interface ProjectFinanceAttachmentService extends AttachmentsService<Atta
                                              @P("projectId") final Long projectId, HttpServletRequest request);
 
     @Override
-    @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.threads.attachment.resource.AttachmentResource', 'PF_ATTACHMENT_DELETE')")
+    @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.ifs.threads.attachment.resource.AttachmentResource', 'PF_ATTACHMENT_DELETE')")
     ServiceResult<Void> delete(Long attachmentId);
 
     @Override
-    @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.threads.attachment.resource.AttachmentResource', 'PF_ATTACHMENT_DOWNLOAD')")
+    @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.ifs.threads.attachment.resource.AttachmentResource', 'PF_ATTACHMENT_DOWNLOAD')")
     ServiceResult<FileAndContents> attachmentFileAndContents(Long attachmentId);
 }

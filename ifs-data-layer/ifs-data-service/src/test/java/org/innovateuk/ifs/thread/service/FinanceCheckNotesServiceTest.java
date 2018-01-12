@@ -5,8 +5,8 @@ import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.project.notes.service.FinanceCheckNotesServiceImpl;
 import org.innovateuk.ifs.threads.domain.Note;
 import org.innovateuk.ifs.threads.domain.Post;
-import org.innovateuk.threads.resource.NoteResource;
-import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
