@@ -20,16 +20,14 @@
 
     <form th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" enctype="multipart/form-data">
 
-        <th:block th:if="${model.submitted}">
-          <th:block th:unless="${model.grantOfferLetterApproved}">
-              <p>The signed grant offer letter has been received by Innovate UK and is awaiting review.</p>
-              <p>The unsigned grant offer letter is available for your records.</p>
-          </th:block>
-
-          <div th:if="${model.grantOfferLetterApproved}" class="success-alert extra-margin-bottom">
-              <p>Your signed grant offer letter has been received and accepted by Innovate UK</p>
-          </div>
+        <th:block th:if="${model.showGrantOfferLetterReceivedByInnovateMessage}">
+            <p>The signed grant offer letter has been received by Innovate UK and is awaiting review.</p>
+            <p>The unsigned grant offer letter is available for your records.</p>
         </th:block>
+
+        <div th:if="${model.showGrantOfferLetterApprovedByInnovateMessage}" class="success-alert extra-margin-bottom">
+            <p>Your signed grant offer letter has been received and accepted by Innovate UK</p>
+        </div>
 
         <th:block th:if="${model.showGrantOfferLetterRejectedMessage}">
             <div class="fail-alert extra-margin-bottom">
@@ -115,7 +113,7 @@
         </th:block>
 
         <th:block th:if="${!model.leadPartner}">
-            <th:block th:if="${!model.submitted && !model.grantOfferLetterApproved}">
+            <th:block th:if="${model.showAwaitingSignatureFromLeadPartnerMessage}">
                 <p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup. It is now awaiting signature by the lead applicant.</p>
                 <p>A copy of the unsigned grant offer letter is available for your records.</p>
             </th:block>

@@ -135,4 +135,30 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
         return false;
     }
+
+    public boolean isShowGrantOfferLetterReceivedByInnovateMessage() {
+
+        if (isGrantOfferLetterRejected()) {
+            return true;
+        }
+
+        if (isGrantOfferLetterApproved()) {
+            return false;
+        }
+
+        return isSubmitted();
+    }
+
+    public boolean isShowAwaitingSignatureFromLeadPartnerMessage() {
+
+        if (!grantOfferLetterSent) {
+            return false;
+        }
+
+        return !isSubmitted();
+    }
+
+    public boolean isShowGrantOfferLetterApprovedByInnovateMessage() {
+        return isGrantOfferLetterApproved();
+    }
 }
