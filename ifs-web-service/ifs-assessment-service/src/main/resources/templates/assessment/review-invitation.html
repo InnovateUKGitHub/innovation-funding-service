@@ -30,12 +30,11 @@
             </div>
             <div class="column-half">
                 <h2 class="heading-small no-margin">Partners:</h2>
-                <ul class="list list-bullet">
-                    <li th:each="partner : ${model.partners}">
+                <span th:each="partner : ${model.partners}">
                         <th:block th:text="${partner.name}">Wessex University</th:block>
                         <strong th:if="${partner.id.equals(model.leadPartner.id)}">(Lead)</strong>
-                    </li>
-                </ul>
+                        <br>
+                </span>
             </div>
         </div>
     </section>

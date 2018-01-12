@@ -5,7 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.threads.domain.Thread;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.ifs.threads.repository.ThreadRepository;
-import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 
 import java.util.List;
 
