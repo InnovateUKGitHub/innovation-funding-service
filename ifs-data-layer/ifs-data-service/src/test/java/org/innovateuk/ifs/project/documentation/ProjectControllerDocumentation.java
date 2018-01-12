@@ -82,17 +82,17 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
     @Test
     public void createProjectFromApplication() throws Exception {
         Long applicationId = 1L;
-        ProjectResource expectedProject = newProjectResource().build();
+        ProjectResource expectedProject = projectResourceBuilder.build();
 
         when(projectServiceMock.createProjectFromApplication(applicationId)).thenReturn(serviceSuccess(expectedProject));
 
         mockMvc.perform(post("/project/create-project/application/{applicationId}", applicationId))
                 .andDo(
-                        document("/project/{method-name}",
+                        document("project/{method-name}",
                         pathParameters(
                                 parameterWithName("applicationId").description("Id of the application to turn into a project")
                         ),
-                                responseFields(fieldWithPath("[]").description("Project that has been created"))
+                                responseFields(projectResourceFields)
                 ));
     }
 }

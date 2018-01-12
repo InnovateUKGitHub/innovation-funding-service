@@ -57,7 +57,7 @@ public class ProjectController {
     }
 
     @PostMapping("/create-project/application/{applicationId}")
-    public RestResult<Void> createProjectFromApplication(@PathVariable("applicationId") final Long applicationId) {
-        return projectService.createProjectFromApplication(applicationId).toPostResponse();
+    public RestResult<ProjectResource> createProjectFromApplication(@PathVariable("applicationId") final Long applicationId) {
+        return projectService.createProjectFromApplication(applicationId).toPostWithBodyResponse();
     }
 }

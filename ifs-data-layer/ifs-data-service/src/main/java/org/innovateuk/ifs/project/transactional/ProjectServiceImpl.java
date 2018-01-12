@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FundingDecision;;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
@@ -61,9 +62,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ProjectUserRepository projectUserRepository;
-
-    @Autowired
-    private ApplicationRepository applicationRepository;
 
     @Autowired
     private ProjectUserMapper projectUserMapper;
@@ -201,8 +199,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     @Transactional
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
-        applicationWorkflowHandler.approve(applicationRepository.findOne(applicationId));
-        return createSingletonProjectFromApplicationId(applicationId);
+        Application application = applicationRepository.findOne(applicationId);
+        return FundingDecisionStatus.FUNDED.equals(application.getFundingDecision()) ?
+        createSingletonProjectFromApplicationId(applicationId) : serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS);
     }
 
     private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {

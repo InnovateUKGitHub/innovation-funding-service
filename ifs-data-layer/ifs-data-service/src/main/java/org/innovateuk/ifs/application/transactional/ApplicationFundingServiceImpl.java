@@ -157,6 +157,9 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
                 FundingDecisionStatus fundingDecision = fundingDecisionMapper.mapToDomain(decisionValue);
                 resetNotificationSentDateIfNecessary(application, fundingDecision);
                 application.setFundingDecision(fundingDecision);
+                if(FundingDecisionStatus.FUNDED.equals(fundingDecision)) {
+                    applicationWorkflowHandler.approve(application);
+                }
             }
         });
 

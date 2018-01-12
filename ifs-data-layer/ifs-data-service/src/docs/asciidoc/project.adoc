@@ -103,6 +103,18 @@ include::{snippets}/project/get-project-users/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/project/get-project-users/curl-request.adoc[]
 
+=== Create Project from Application
+==== Request
+include::{snippets}/project/create-project-from-application/http-request.adoc[]
+include::{snippets}/project/create-project-from-application/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/create-project-from-application/http-response.adoc[]
+include::{snippets}/project/create-project-from-application/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/project/create-project-from-application/curl-request.adoc[]
+
 === Save Monitoring Officer
 ==== Success
 ===== Request
