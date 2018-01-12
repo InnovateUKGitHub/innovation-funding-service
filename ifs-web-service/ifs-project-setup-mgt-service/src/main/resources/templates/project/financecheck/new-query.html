@@ -61,7 +61,7 @@
                     </th:block>
                 </label>
                 <select name="section" id="section" class="form-control">
-                    <th:block th:each="section_type : ${T(org.innovateuk.threads.resource.FinanceChecksSectionType).values()}">
+                    <th:block th:each="section_type : ${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).values()}">
                         <th:block th:if="*{section}">
                             <option th:value="${section_type.name()}"
                                     th:selected="${#strings.toUpperCase(section_type.name())} == ${#strings.toUpperCase(form.section)}"
