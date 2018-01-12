@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.documentation;
 
 import org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder;
-import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;

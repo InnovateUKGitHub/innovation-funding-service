@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.EnumValidator;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
