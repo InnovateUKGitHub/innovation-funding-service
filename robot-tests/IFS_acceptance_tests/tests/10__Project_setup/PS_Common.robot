@@ -234,7 +234,8 @@ lead partner navigates to project and fills project details
     log in as a different user            &{lead_applicant_credentials}
     project lead submits project details  ${FUNDERS_PANEL_APPLICATION_1_PROJECT}
 
-project lead submits project address  #Used in 12__ATI_compCreationToSubmission
+project lead submits project address
+#Used in 12__ATI_compCreationToSubmission
     [Arguments]  ${project_id}
     the user navigates to the page     ${server}/project-setup/project/${project_id}/details/project-address
     the user selects the radio button  addressType  address-use-org
@@ -242,7 +243,7 @@ project lead submits project address  #Used in 12__ATI_compCreationToSubmission
 
 project lead submits project details
     [Arguments]  ${project_id}
-    project lead submits project address
+    project lead submits project address    ${project_id}
     the user navigates to the page     ${server}/project-setup/project/${project_id}/details/project-manager
     the user selects the radio button  projectManager  projectManager2
     the user clicks the button/link    jQuery=.button:contains("Save")
