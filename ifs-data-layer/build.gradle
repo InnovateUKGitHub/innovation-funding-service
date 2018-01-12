@@ -149,7 +149,10 @@ subprojects {
 }
 
 task initDB {
+    createTestSchema.mustRunAfter startMySql
+
     dependsOn startMySql
+    dependsOn createTestSchema
 }
 
 ext {

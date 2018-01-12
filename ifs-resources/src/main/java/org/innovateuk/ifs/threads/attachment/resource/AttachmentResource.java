@@ -1,4 +1,4 @@
-package org.innovateuk.threads.attachment.resource;
+package org.innovateuk.ifs.threads.attachment.resource;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
