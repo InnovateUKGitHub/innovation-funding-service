@@ -111,6 +111,10 @@ public class Competition implements ProcessActivity {
     private boolean nonIfs = false;
     private String nonIfsUrl;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
+    private TermsAndConditions termsAndConditions;
+
     public Competition() {
         setupComplete = false;
     }
@@ -653,6 +657,19 @@ public class Competition implements ProcessActivity {
 
     public void setHasInterviewStage(Boolean hasInterviewStage) {
         this.hasInterviewStage = hasInterviewStage;
+    }
+
+    public TermsAndConditions getTermsAndConditions() {
+        return termsAndConditions;
+    }
+
+    /**
+     * Package-private setter for Hibernate - not currently for use within code
+     *
+     * @param termsAndConditions
+     */
+    void setTermsAndConditions(TermsAndConditions termsAndConditions) {
+        this.termsAndConditions = termsAndConditions;
     }
 }
 

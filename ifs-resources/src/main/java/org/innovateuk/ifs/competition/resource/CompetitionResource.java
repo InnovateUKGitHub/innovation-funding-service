@@ -84,6 +84,8 @@ public class CompetitionResource {
     private boolean nonIfs = false;
     private String nonIfsUrl;
 
+    private String termsAndConditionsTemplate;
+
     public CompetitionResource() {
         // no-arg constructor
     }
@@ -557,6 +559,14 @@ public class CompetitionResource {
     @JsonIgnore
     public boolean isFinanceType() {
         return !isNonFinanceType();
+    }
+
+    public String getTermsAndConditionsTemplate() {
+        return termsAndConditionsTemplate;
+    }
+
+    void setTermsAndConditionsTemplate(String termsAndConditionsTemplate) {
+        this.termsAndConditionsTemplate = termsAndConditionsTemplate;
     }
 
     @Override
