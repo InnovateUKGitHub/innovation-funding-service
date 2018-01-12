@@ -1,4 +1,4 @@
-apply plugin: 'java'
+apply from: rootProject.file("java-spring-boot.gradle")
 
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'

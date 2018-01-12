@@ -1,17 +1,22 @@
 import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 
-subprojects {
-  task buildDocker(type: DockerBuildImage) {
-    tag = "innovateuk/${project.name}"
-    inputDir = project.projectDir
-  }
+//apply plugin: 'java'
 
-  // Required, because of how the java/spring plugins are applied to the root project.
-  build.enabled = false
-  bootRepackage.enabled = false
+subprojects {
+    task buildDocker(type: DockerBuildImage) {
+        tag = "innovateuk/${project.name}"
+        inputDir = project.projectDir
+    }
 }
 
+allprojects {
 
-// Required, because of how the java/spring plugins are applied to the root project.
-build.enabled = false
-bootRepackage.enabled = false
+    buildscript {
+
+        repositories {
+            mavenCentral()
+        }
+    }
+
+}
+

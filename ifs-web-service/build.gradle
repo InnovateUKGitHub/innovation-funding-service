@@ -6,23 +6,14 @@ def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
 
 
-project(':ifs-web-service').bootRepackage {
-    onlyIf { Task task -> false }
-}
-
-jar.enabled = false
-
-// This is necessary because the java plugin is also applied to
-// the ifs-web-service project, which does _not_ build a jar.
-bootRepackage.enabled = false
-
-// Necessary to not build a jar for the ifs-web-core project.
-jar.enabled = false
-
 subprojects {
 
+
+    apply from: rootProject.file("java-spring-boot.gradle")
     // ifs-web-core is not a docker project.
     if (it.name != 'ifs-web-core') {
+
+
 
         task getNewRelicAgent {
             if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
@@ -141,46 +132,46 @@ subprojects {
     }
 }
 
-
-task endpointDocumentation(type: Task) {
-    dependsOn "ifs-application-service:test"
-    dependsOn "ifs-assessment-service:test"
-    dependsOn "ifs-competition-mgt-service:test"
-    dependsOn "ifs-project-setup-mgt-service:test"
-    dependsOn "ifs-project-setup-service:test"
-    dependsOn "ifs-front-door-service:test"
-
-    def combinedFilename = 'build/web-endpoints.csv'
-
-    doLast {
-        def files = fileTree(dir: '.', include: '**/*-endpoints.csv', exclude: combinedFilename)
-        def lines = []
-        files.each {
-            it.eachLine { line ->
-                lines << line
-            }
-        }
-
-        File buildFolder = file("build")
-        buildFolder.mkdirs()
-        File combinedFile = file(combinedFilename)
-        if (combinedFile.exists()) {
-            combinedFile.delete()
-        }
-        combinedFile.append('"path", "method", "constraint", "rule", "description"\n')
-        combinedFile.append(
-                lines
-                        .findAll {
-                    it.startsWith('"/')
-                }
-                .sort()
-                        .join("\n")
-        )
-        println("Wrote web endpoint documentation to " + combinedFile)
-    }
-}
-
-build.finalizedBy endpointDocumentation
+//TODO reinstigate task
+//task endpointDocumentation(type: Task) {
+//    dependsOn "ifs-application-service:test"
+//    dependsOn "ifs-assessment-service:test"
+//    dependsOn "ifs-competition-mgt-service:test"
+//    dependsOn "ifs-project-setup-mgt-service:test"
+//    dependsOn "ifs-project-setup-service:test"
+//    dependsOn "ifs-front-door-service:test"
+//
+//    def combinedFilename = 'build/web-endpoints.csv'
+//
+//    doLast {
+//        def files = fileTree(dir: '.', include: '**/*-endpoints.csv', exclude: combinedFilename)
+//        def lines = []
+//        files.each {
+//            it.eachLine { line ->
+//                lines << line
+//            }
+//        }
+//
+//        File buildFolder = file("build")
+//        buildFolder.mkdirs()
+//        File combinedFile = file(combinedFilename)
+//        if (combinedFile.exists()) {
+//            combinedFile.delete()
+//        }
+//        combinedFile.append('"path", "method", "constraint", "rule", "description"\n')
+//        combinedFile.append(
+//                lines
+//                        .findAll {
+//                    it.startsWith('"/')
+//                }
+//                .sort()
+//                        .join("\n")
+//        )
+//        println("Wrote web endpoint documentation to " + combinedFile)
+//    }
+//}
+//
+//build.finalizedBy endpointDocumentation
 
 
     task prepareFractalDockerInput {

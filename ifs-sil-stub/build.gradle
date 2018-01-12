@@ -5,7 +5,7 @@ import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
 apply plugin: 'org.asciidoctor.convert'
-
+apply from: rootProject.file("java-spring-boot.gradle")
 configurations {
     providedRuntime
 }

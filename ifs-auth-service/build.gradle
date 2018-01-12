@@ -2,6 +2,19 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
+apply from: rootProject.file("java-spring-boot.gradle")
+
+allprojects {
+
+    buildscript {
+
+        repositories {
+            mavenCentral()
+        }
+    }
+
+}
+
 subprojects {
     bootRepackage {
         onlyIf { Task task -> false }
