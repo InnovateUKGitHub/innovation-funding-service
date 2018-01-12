@@ -1,12 +1,15 @@
 package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.junit.Test;
 
+import java.util.List;
+
+import static org.innovateuk.ifs.assessment.builder.AssessmentReviewResourceBuilder.newAssessmentReviewResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.mockito.Mockito.only;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -16,6 +19,7 @@ public class AssessmentPanelControllerTest extends BaseControllerMockMVCTest<Ass
 
     private static final long applicationId = 1L;
     private static final long competitionId = 5L;
+    private static final long userId = 2L;
 
     @Override
     public AssessmentPanelController supplyControllerUnderTest() {
@@ -60,5 +64,18 @@ public class AssessmentPanelControllerTest extends BaseControllerMockMVCTest<Ass
                 .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
         verify(assessmentPanelServiceMock, only()).isPendingReviewNotifications(competitionId);
+    }
+
+    @Test
+    public void getAssessmentReviews() throws Exception {
+        List<AssessmentReviewResource> assessmentReviews = newAssessmentReviewResource().build(2);
+
+        when(assessmentPanelServiceMock.getAssessmentReviews(userId, competitionId)).thenReturn(serviceSuccess(assessmentReviews));
+
+        mockMvc.perform(get("/assessmentpanel/user/{userId}/competition/{competitionId}", userId, competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(assessmentReviews)));
+
+        verify(assessmentPanelServiceMock, only()).getAssessmentReviews(userId, competitionId);
     }
 }
