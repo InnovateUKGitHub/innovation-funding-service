@@ -147,7 +147,15 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public boolean isShowAwaitingSignatureFromLeadPartnerMessage() {
 
-        return isGrantOfferLetterSent() && !isSubmitted();
+        if (isLeadPartner()) {
+            return false;
+        }
+
+        if (!isGrantOfferLetterSent()) {
+            return false;
+        }
+
+        return !isSubmitted();
     }
 
     public boolean isShowGrantOfferLetterApprovedByInnovateMessage() {
