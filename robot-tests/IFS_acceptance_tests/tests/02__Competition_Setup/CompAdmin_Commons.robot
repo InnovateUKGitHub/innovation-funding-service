@@ -364,6 +364,11 @@ the competition is open
     Connect to Database  @{database}
     change the open date of the competition in the database to one day before  ${compTitle}
 
+moving competition to Closed
+    [Arguments]  ${compID}
+    Connect to Database  @{database}
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2017-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${compID}';
+
 making the application a successful project
     [Arguments]  ${compID}  ${appTitle}
     the user navigates to the page      ${server}/management/competition/${compID}
@@ -387,7 +392,7 @@ moving competition to Project Setup
     the user clicks the button/link  css=button[type="submit"][formaction$="release-feedback"]
 
 The project finance user is able to download the Overheads file
-    [Arguments]  ${organisationId}
+    [Arguments]  ${organisationId}  ${ProjectID}
     the user should see the element               jQuery=a:contains("${excel_file}")
     the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
     remove the file from the operating system     ${excel_file}

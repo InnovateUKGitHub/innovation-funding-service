@@ -73,7 +73,7 @@ Project Finance is able to see the Overheads costs file
     When the user navigates to the page    ${SERVER}/project-setup-management/project/${ProjectID}/finance-check/
     And the user clicks the button/link    jQuery=tr:contains("Empire Ltd") td:nth-child(4) a:contains("Review")
     And the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    Then the project finance user is able to download the Overheads file    22    #Raised in the ticket IFS-2599 to improve this as we need cannot rely on hard-coded values.
+    Then the project finance user is able to download the Overheads file    ${ProjectID}  22    #Raised in the ticket IFS-2599 to improve this as we need cannot rely on hard-coded values.
 
 *** Keywords ***
 Custom Suite Setup
@@ -81,18 +81,9 @@ Custom Suite Setup
     The guest user opens the browser
 
 Requesting the ID of this Competition
-    [Documentation]  IFS-2332
-    [Tags]  MySql
     ${atiCompId} =  get comp id from comp title  ${ATIcompetitionTitle}
     Set suite variable   ${atiCompId}
 
-moving competition to Closed
-    [Arguments]  ${compID}
-    Connect to Database  @{database}
-    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2017-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${compID}';
-
 Requesting Project ID of this Project
-    [Documentation]  IFS-2332
-    [Tags]
     ${ProjectID} =  get project id by name    ${ATIapplicationTitle}
     Set suite variable    ${ProjectID}
