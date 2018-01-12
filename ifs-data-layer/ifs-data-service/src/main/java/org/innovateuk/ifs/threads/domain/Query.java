@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.threads.domain;
 
 import org.innovateuk.ifs.security.SecurityRuleUtil;
-import org.innovateuk.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

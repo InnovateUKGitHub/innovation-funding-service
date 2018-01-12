@@ -24,8 +24,8 @@ import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.*;
-import org.innovateuk.threads.resource.NoteResource;
-import org.innovateuk.threads.resource.QueryResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.List;
