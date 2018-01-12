@@ -270,6 +270,91 @@ public class GrantOfferLetterModelTest {
         assertThat(showMessage.isShowGrantOfferLetterReceivedByInnovateMessage(), is(false));
     }
 
+    @Test
+    public void testShowAwaitingSignatureFromLeadPartnerMessageIfGrantOfferLetterSentButNotYetSignedAndNotLeadPartner() {
+
+        boolean leadPartner = false;
+        boolean projectManager = false;
+        boolean grantOfferLetterSent = true;
+        boolean submittedToInnovate = false;
+
+        GrantOfferLetterModel showMessage = createShowAwaitingSignatureFromLeadPartnerMessageModel(leadPartner, projectManager, grantOfferLetterSent, submittedToInnovate);
+
+        assertThat(showMessage.isShowAwaitingSignatureFromLeadPartnerMessage(), is(true));
+    }
+
+    @Test
+    public void testShowAwaitingSignatureFromLeadPartnerMessageNotAllowedIfLeadPartner() {
+
+        boolean leadPartner = true;
+        boolean projectManager = false;
+        boolean grantOfferLetterSent = true;
+        boolean submittedToInnovate = false;
+
+        GrantOfferLetterModel showMessage = createShowAwaitingSignatureFromLeadPartnerMessageModel(leadPartner, projectManager, grantOfferLetterSent, submittedToInnovate);
+
+        assertThat(showMessage.isShowAwaitingSignatureFromLeadPartnerMessage(), is(false));
+    }
+
+    @Test
+    public void testShowAwaitingSignatureFromLeadPartnerMessageNotAllowedIfProjectManager() {
+
+        boolean leadPartner = true;
+        boolean projectManager = true;
+        boolean grantOfferLetterSent = true;
+        boolean submittedToInnovate = false;
+
+        GrantOfferLetterModel showMessage = createShowAwaitingSignatureFromLeadPartnerMessageModel(leadPartner, projectManager, grantOfferLetterSent, submittedToInnovate);
+
+        assertThat(showMessage.isShowAwaitingSignatureFromLeadPartnerMessage(), is(false));
+    }
+
+    @Test
+    public void testShowAwaitingSignatureFromLeadPartnerMessageNotAllowedIfGrantOfferNotYetSent() {
+
+        boolean leadPartner = false;
+        boolean projectManager = false;
+        boolean grantOfferLetterSent = false;
+        boolean submittedToInnovate = false;
+
+        GrantOfferLetterModel showMessage = createShowAwaitingSignatureFromLeadPartnerMessageModel(leadPartner, projectManager, grantOfferLetterSent, submittedToInnovate);
+
+        assertThat(showMessage.isShowAwaitingSignatureFromLeadPartnerMessage(), is(false));
+    }
+
+    @Test
+    public void testShowAwaitingSignatureFromLeadPartnerMessageNotAllowedIfSigned() {
+
+        boolean leadPartner = false;
+        boolean projectManager = false;
+        boolean grantOfferLetterSent = true;
+        boolean submittedToInnovate = true;
+
+        GrantOfferLetterModel showMessage = createShowAwaitingSignatureFromLeadPartnerMessageModel(leadPartner, projectManager, grantOfferLetterSent, submittedToInnovate);
+
+        assertThat(showMessage.isShowAwaitingSignatureFromLeadPartnerMessage(), is(false));
+    }
+
+    @Test
+    public void testShowGrantOfferLetterApprovedByInnovateMessageIfApproved() {
+
+        boolean grantOfferLetterApproved = true;
+
+        GrantOfferLetterModel showMessage = createShowGrantOfferLetterApprovedByInnovateMessageModel(grantOfferLetterApproved);
+
+        assertThat(showMessage.isShowGrantOfferLetterApprovedByInnovateMessage(), is(true));
+    }
+
+    @Test
+    public void testShowGrantOfferLetterApprovedByInnovateMessageNotAllowedIfNotApproved() {
+
+        boolean grantOfferLetterApproved = false;
+
+        GrantOfferLetterModel showMessage = createShowGrantOfferLetterApprovedByInnovateMessageModel(grantOfferLetterApproved);
+
+        assertThat(showMessage.isShowGrantOfferLetterApprovedByInnovateMessage(), is(false));
+    }
+
     private GrantOfferLetterModel createShowSubmitButtonModel(
             boolean projectManager,
             FileDetailsViewModel signedGrantOfferLetterFile,
@@ -340,6 +425,42 @@ public class GrantOfferLetterModelTest {
         FileDetailsViewModel additionalContractFile = new FileDetailsViewModel("additional-contracts", 1000L);
         FileDetailsViewModel signedGrantOfferLetterFile = new FileDetailsViewModel("signed-grant-offer", 1000L);
         ZonedDateTime submittedDate = submittedToInnovate ? ZonedDateTime.now() : null;
+
+        return new GrantOfferLetterModel(123L, "Project name", leadPartner,
+                grantOfferLetterFile, signedGrantOfferLetterFile, additionalContractFile,
+                submittedDate, projectManager, grantOfferLetterApproved, grantOfferLetterSent,
+                grantOfferLetterRejected);
+    }
+
+    private GrantOfferLetterModel createShowAwaitingSignatureFromLeadPartnerMessageModel(
+            boolean leadPartner,
+            boolean projectManager,
+            boolean grantOfferLetterSent,
+            boolean submittedToInnovate) {
+
+        FileDetailsViewModel grantOfferLetterFile = new FileDetailsViewModel("grant-offer", 1000L);
+        FileDetailsViewModel additionalContractFile = new FileDetailsViewModel("additional-contracts", 1000L);
+        FileDetailsViewModel signedGrantOfferLetterFile = new FileDetailsViewModel("signed-grant-offer", 1000L);
+        ZonedDateTime submittedDate = submittedToInnovate ? ZonedDateTime.now() : null;
+        boolean grantOfferLetterApproved = false;
+        boolean grantOfferLetterRejected = false;
+
+        return new GrantOfferLetterModel(123L, "Project name", leadPartner,
+                grantOfferLetterFile, signedGrantOfferLetterFile, additionalContractFile,
+                submittedDate, projectManager, grantOfferLetterApproved, grantOfferLetterSent,
+                grantOfferLetterRejected);
+    }
+
+    private GrantOfferLetterModel createShowGrantOfferLetterApprovedByInnovateMessageModel(boolean grantOfferLetterApproved) {
+
+        boolean leadPartner = false;
+        boolean projectManager = false;
+        boolean grantOfferLetterSent = true;
+        FileDetailsViewModel grantOfferLetterFile = new FileDetailsViewModel("grant-offer", 1000L);
+        FileDetailsViewModel additionalContractFile = new FileDetailsViewModel("additional-contracts", 1000L);
+        FileDetailsViewModel signedGrantOfferLetterFile = new FileDetailsViewModel("signed-grant-offer", 1000L);
+        ZonedDateTime submittedDate = ZonedDateTime.now();
+        boolean grantOfferLetterRejected = false;
 
         return new GrantOfferLetterModel(123L, "Project name", leadPartner,
                 grantOfferLetterFile, signedGrantOfferLetterFile, additionalContractFile,
