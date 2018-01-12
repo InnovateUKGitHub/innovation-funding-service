@@ -16,9 +16,9 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.JsonUtil;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
-import org.innovateuk.threads.resource.FinanceChecksSectionType;
-import org.innovateuk.threads.resource.QueryResource;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -145,7 +145,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
 
         assertEquals(1, saveQueryArgumentCaptor.getAllValues().get(0).posts.size());
         assertEquals("Title", saveQueryArgumentCaptor.getAllValues().get(0).title);
-        assertEquals(org.innovateuk.threads.resource.FinanceChecksSectionType.ELIGIBILITY, saveQueryArgumentCaptor.getAllValues().get(0).section);
+        assertEquals(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType.ELIGIBILITY, saveQueryArgumentCaptor.getAllValues().get(0).section);
         assertEquals(true, saveQueryArgumentCaptor.getAllValues().get(0).awaitingResponse);
         assertTrue(ZonedDateTime.now().compareTo(saveQueryArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
         assertEquals("Query text", saveQueryArgumentCaptor.getAllValues().get(0).posts.get(0).body);

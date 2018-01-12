@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.queries.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.threads.service.ThreadService;
-import org.innovateuk.threads.resource.PostResource;
-import org.innovateuk.threads.resource.QueryResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
@@ -25,6 +25,6 @@ public interface FinanceCheckQueriesService extends ThreadService<QueryResource,
     ServiceResult<Long> create(@P("queryResource") QueryResource queryResource);
 
     @Override
-    @PreAuthorize("hasPermission(#queryId, 'org.innovateuk.threads.resource.QueryResource', 'PF_ADD_POST')")
+    @PreAuthorize("hasPermission(#queryId, 'org.innovateuk.ifs.threads.resource.QueryResource', 'PF_ADD_POST')")
     ServiceResult<Void> addPost(PostResource post, @P("queryId") final Long queryId);
 }
