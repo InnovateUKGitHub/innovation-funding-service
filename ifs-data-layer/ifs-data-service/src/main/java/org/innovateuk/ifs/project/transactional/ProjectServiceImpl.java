@@ -2,9 +2,7 @@ package org.innovateuk.ifs.project.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.FundingDecision;;
-import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -98,9 +96,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private SpendProfileWorkflowHandler spendProfileWorkflowHandler;
-
-    @Autowired
-    private ApplicationWorkflowHandler applicationWorkflowHandler;
 
     @Override
     public ServiceResult<ProjectResource> getProjectById(Long projectId) {
