@@ -118,20 +118,20 @@
                         Please review that these documents meet the requirements for the grant offer letter
                     </legend>
                     <div class="multiple-choice">
-                        <input id="acceptGOL" value="APPROVED" type="radio" name="approvalType" required="required"/>
+                        <input id="acceptGOL" value="APPROVED" type="radio" name="approvalType" required="required" data-switches-button-status="#submit-button"/>
                         <label for="acceptGOL">
                             Accept documents
                         </label>
                     </div>
                     <div class="multiple-choice">
-                        <input id="rejectGOL" value="REJECTED" type="radio" name="approvalType" required="required"/>
+                        <input id="rejectGOL" value="REJECTED" type="radio" name="approvalType" required="required" data-switches-button-status="#submit-button"/>
                         <label for="rejectGOL">
                             Reject documents
                         </label>
                     </div>
                 </fieldset>
             </div>
-            <button class="button" type="submit">Submit</button>
+            <button class="button" type="submit" id="submit-button" data-enable-button-when="one-checked">Submit</button>
             <a th:href="@{'?action=cancel'}" class="button button-clear">Cancel</a>
         </form>
 
