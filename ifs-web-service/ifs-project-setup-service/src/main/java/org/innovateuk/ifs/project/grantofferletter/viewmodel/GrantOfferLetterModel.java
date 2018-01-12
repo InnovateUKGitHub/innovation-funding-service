@@ -104,15 +104,11 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public boolean isShowGrantOfferLetterRejectedMessage() {
 
-        if (!isGrantOfferLetterRejected()) {
+        if (!isProjectManager()) {
             return false;
         }
 
-        if (getSignedGrantOfferLetterFile() == null) {
-            return false;
-        }
-
-        return isProjectManager();
+        return isGrantOfferLetterRejected();
     }
 
     public boolean isAbleToRemoveSignedGrantOffer() {
@@ -138,7 +134,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public boolean isShowGrantOfferLetterReceivedByInnovateMessage() {
 
-        if (isGrantOfferLetterRejected()) {
+        if (isGrantOfferLetterRejected() && !isLeadPartner()) {
             return true;
         }
 
@@ -151,11 +147,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
 
     public boolean isShowAwaitingSignatureFromLeadPartnerMessage() {
 
-        if (!grantOfferLetterSent) {
-            return false;
-        }
-
-        return !isSubmitted();
+        return isGrantOfferLetterSent() && !isSubmitted();
     }
 
     public boolean isShowGrantOfferLetterApprovedByInnovateMessage() {
