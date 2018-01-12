@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.panel.domain;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
 
 import javax.persistence.DiscriminatorValue;
@@ -8,7 +7,7 @@ import javax.persistence.Entity;
 
 
 /**
- * Process outcome for the {@code }AssessmentReview}s {@code REJECT} event.
+ * Process outcome for the {@code AssessmentReview}s {@code REJECT} event.
  */
 @Entity
 @DiscriminatorValue(value = "assessment-panel-application-invite-reject")

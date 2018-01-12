@@ -7,7 +7,7 @@ import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import javax.validation.constraints.Size;
 
 /**
- * DTO for rejecting invites to review Assessments.
+ * DTO for rejecting invites to review Applications on Assessment Panel.
  */
 public class AssessmentReviewRejectOutcomeResource {
 

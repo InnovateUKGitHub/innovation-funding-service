@@ -58,13 +58,12 @@ public class FormInputResponsePermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they assess")
-    public boolean assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyAssess(final FormInputResponseResource response, final UserResource user) {
-        return checkProcessRole(user, response.getApplication(), PANEL_ASSESSOR, processRoleRepository, roleRepository);
+    public boolean assessorCanSeeTheInputResponsesInApplicationsTheyAssess(final FormInputResponseResource response, final UserResource user) {
+        return checkProcessRole(user, response.getApplication(), ASSESSOR, processRoleRepository, roleRepository);
     }
 
-    // TODO test
     @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they review")
-    public boolean assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyReview(final FormInputResponseResource response, final UserResource user) {
+    public boolean assessorCanSeeTheInputResponsesInApplicationsTheyReview(final FormInputResponseResource response, final UserResource user) {
         return checkProcessRole(user, response.getApplication(), PANEL_ASSESSOR, processRoleRepository, roleRepository);
     }
 

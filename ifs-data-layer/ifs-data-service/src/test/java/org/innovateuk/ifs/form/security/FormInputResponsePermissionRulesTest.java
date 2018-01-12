@@ -19,9 +19,8 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static junit.framework.TestCase.assertFalse;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -38,6 +37,9 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
     private Organisation organisation2;
     private Application application;
     private UserResource userNotOnApplication;
+    private UserResource assessorForApplication;
+    private UserResource panelAssessorForApplication;
+
 
     @Override
     protected FormInputResponsePermissionRules supplyPermissionRulesUnderTest() {
@@ -74,11 +76,18 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(collaboratorForApplicationOnOrganisation2.getId(), application.getId(), COLLABORATOR.getName())).thenReturn(true);
 
         userNotOnApplication = UserResourceBuilder.newUserResource().build();
+
+       assessorForApplication = UserResourceBuilder.newUserResource().build();
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(assessorForApplication.getId(), application.getId(), ASSESSOR.getName())).thenReturn(true);
+        panelAssessorForApplication = UserResourceBuilder.newUserResource().build();
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(panelAssessorForApplication.getId(), application.getId(), PANEL_ASSESSOR.getName())).thenReturn(true);
+
+
     }
 
 
     @Test
-    public void testConsortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication() {
+    public void consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication() {
         assertTrue(rules.consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(formInputResponseUpdatedByLead, leadApplicantForApplicationOnOrganisation1));
         assertTrue(rules.consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(formInputResponseUpdatedByCollaborator, collaboratorForApplicationOnOrganisation2));
         assertFalse(rules.consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(formInputResponseUpdatedByLead, collaboratorForApplicationOnOrganisation2));
@@ -86,18 +95,34 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testConsortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations() {
+    public void consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations() {
         assertTrue(rules.consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(sharedInputResponse, leadApplicantForApplicationOnOrganisation1));
         assertTrue(rules.consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(sharedInputResponse, collaboratorForApplicationOnOrganisation2));
         assertFalse(rules.consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(sharedInputResponse, userNotOnApplication));
     }
 
     @Test
-    public void testInternalUserCanSeeFormInputResponsesForApplications() {
+    public void internalUserCanSeeFormInputResponsesForApplications() {
         assertTrue(rules.internalUserCanSeeFormInputResponsesForApplications(sharedInputResponse, compAdminUser()));
         assertTrue(rules.internalUserCanSeeFormInputResponsesForApplications(sharedInputResponse, projectFinanceUser()));
         assertFalse(rules.internalUserCanSeeFormInputResponsesForApplications(sharedInputResponse, leadApplicantForApplicationOnOrganisation1));
     }
 
-}
+    @Test
+    public void assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyAssess() {
+        assertTrue(rules.assessorCanSeeTheInputResponsesInApplicationsTheyAssess(formInputResponseUpdatedByLead, assessorForApplication));
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyAssess(formInputResponseUpdatedByLead, panelAssessorForApplication));
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyAssess(formInputResponseUpdatedByLead, leadApplicantForApplicationOnOrganisation1));
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyAssess(formInputResponseUpdatedByLead, collaboratorForApplicationOnOrganisation2));
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyAssess(formInputResponseUpdatedByLead, userNotOnApplication));
+    }
 
+    @Test
+    public void assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyReview() {
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyReview(formInputResponseUpdatedByLead, assessorForApplication));
+        assertTrue(rules.assessorCanSeeTheInputResponsesInApplicationsTheyReview(formInputResponseUpdatedByLead, panelAssessorForApplication));
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyReview(formInputResponseUpdatedByLead, leadApplicantForApplicationOnOrganisation1));
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyReview(formInputResponseUpdatedByLead, collaboratorForApplicationOnOrganisation2));
+        assertFalse(rules.assessorCanSeeTheInputResponsesInApplicationsTheyReview(formInputResponseUpdatedByLead, userNotOnApplication));
+    }
+}

@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept application',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
 </head>
 
-<body th:with="context='assessment'" class="reject-invitation-confirm">
+<body th:with="context='assessment'">
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
@@ -39,31 +39,6 @@
             </div>
         </div>
     </section>
-
-    <!-- /*
-    <h2 class="visually-hidden">Application details</h2>
-    <div class="boxed">
-        <div class="grid-row">
-            <div class="column-half">
-                <p class="heading-small no-margin">Title:</p>
-                <p th:text="${model.applicationName}"></p>
-            </div>
-            <div class="column-half">
-                <p class="heading-small no-margin">Partners:</p>
-                <ul class="list list-bullet">
-                    <li th:each="partner : ${model.partners}">
-                        <th:block th:text="${partner.name}"></th:block>
-                        <strong th:if="${partner.id.equals(model.leadPartner.id)}">(Lead)</strong>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <h3 class="heading-small no-margin">Project summary:</h3>
-        <p th:text="${model.projectSummary}" data-md-to-html="" class="wysiwyg-styles">This is the applicant response for project summary.</p>
-    </div>
-
-*/ -->
 
     <p class="extra-margin">Read the project summary above to make sure you do not have a conflict of interest with this application.</p>
 

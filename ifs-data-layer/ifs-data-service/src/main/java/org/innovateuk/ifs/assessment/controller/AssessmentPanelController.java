@@ -20,18 +20,12 @@ public class AssessmentPanelController {
     @Autowired
     private AssessmentPanelService assessmentPanelService;
 
-    @PostMapping({
-            "/assignApplication/{applicationId}", // TODO IFS-2480 zdd contract
-            "/assign-application/{applicationId}" // TODO IFS-2480 zdd migrate
-    })
+    @PostMapping("/assign-application/{applicationId}")
     public RestResult<Void> assignApplication(@PathVariable long applicationId) {
         return assessmentPanelService.assignApplicationToPanel(applicationId).toPostResponse();
     }
 
-    @PostMapping({
-            "/unassignApplication/{applicationId}", // TODO IFS-2480 zdd contract
-            "/unassign-application/{applicationId}" // TODO IFS-2480 zdd migrate
-    })
+    @PostMapping("/unassign-application/{applicationId}")
     public RestResult<Void> unAssignApplication(@PathVariable long applicationId) {
         return assessmentPanelService.unassignApplicationFromPanel(applicationId).toPostResponse();
     }

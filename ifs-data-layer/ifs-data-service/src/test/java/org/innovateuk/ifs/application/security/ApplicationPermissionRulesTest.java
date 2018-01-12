@@ -24,8 +24,6 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
@@ -64,7 +62,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private Application application2;
     private ProcessRole processRole1;
     private ProcessRole processRole2;
-    private ProcessRole assessorProcessRole;
     private UserResource leadOnApplication1;
     private UserResource innovationLeadOnApplication1;
     private UserResource user2;
@@ -77,7 +74,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
     private Role collaboratorRole = newRole().withType(UserRoleType.COLLABORATOR).build();
     private Role applicantRole = newRole().withType(UserRoleType.APPLICANT).build();
-    private Role assessorRole = newRole().withType(UserRoleType.ASSESSOR).build();
     private List<Role> applicantRoles = new ArrayList<>();
 
     @Before
@@ -96,7 +92,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
         processRole1 = newProcessRole().withRole(leadApplicantRole).build();
         processRole2 = newProcessRole().withRole(applicantRole).build();
-        assessorProcessRole = newProcessRole().withRole(assessorRole).build();
         applicationResource1 = newApplicationResource().withCompetition(competition.getId()).withApplicationState(ApplicationState.OPEN).build();
         applicationResource2 = newApplicationResource().build();
         application1 = newApplication().withId(applicationResource1.getId()).withCompetition(competition).withProcessRoles(processRole1).build();
@@ -120,15 +115,15 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(user2.getId(), applicationResource2.getId(), LEADAPPLICANT.getName())).thenReturn(true);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(user3.getId(), applicationResource2.getId(), APPLICANT.getName())).thenReturn(true);
 
-        when(processRoleRepositoryMock.existsByUserIdAndApplicationId(leadOnApplication1.getId(), applicationResource1.getId())).thenReturn(TRUE);
-        when(processRoleRepositoryMock.existsByUserIdAndApplicationId(leadOnApplication1.getId(), applicationResource2.getId())).thenReturn(FALSE);
-        when(processRoleRepositoryMock.existsByUserIdAndApplicationId(user2.getId(), applicationResource1.getId())).thenReturn(FALSE);
-        when(processRoleRepositoryMock.existsByUserIdAndApplicationId(user2.getId(), applicationResource2.getId())).thenReturn(TRUE);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationId(leadOnApplication1.getId(), applicationResource1.getId())).thenReturn(true);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationId(leadOnApplication1.getId(), applicationResource2.getId())).thenReturn(false);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationId(user2.getId(), applicationResource1.getId())).thenReturn(false);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationId(user2.getId(), applicationResource2.getId())).thenReturn(true);
 
         when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(leadOnApplication1.getId(), applicantRoles, applicationResource1.getId())).thenReturn(singletonList(processRole1));
         when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user2.getId(), applicantRoles, applicationResource1.getId())).thenReturn(singletonList(processRole1));
         when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user3.getId(), applicantRoles, applicationResource1.getId())).thenReturn(emptyList());
-        when(processRoleRepositoryMock.existsByUserIdAndApplicationId(assessor.getId(), applicationResource2.getId())).thenReturn(FALSE);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationId(assessor.getId(), applicationResource2.getId())).thenReturn(false);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(assessor.getId(), applicationResource1.getId(), ASSESSOR.getName())).thenReturn(true);
 
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competition.getId(), CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(Collections.singletonList(competitionParticipant));
@@ -363,10 +358,6 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
         List<UserResource> allUsersToTests = combineLists(allGlobalRoleUsers, leadApplicantUser, collaboratorUser, assessorUser);
 
-        ProcessRole leadApplicantProcessRole = newProcessRole().withRole(LEADAPPLICANT).build();
-        ProcessRole collaboratorProcessRole = newProcessRole().withRole(COLLABORATOR).build();
-        ProcessRole assessorProcessRole = newProcessRole().withRole(ASSESSOR).build();
-
         // For each possible Competition Status...
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
@@ -389,9 +380,9 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
 
                         if (user == leadApplicantUser) {
                             verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(user.getId(),application.getId(), LEADAPPLICANT.getName());
-
                         } else {
-                            verify(processRoleRepositoryMock, times(2)).existsByUserIdAndApplicationIdAndRoleName(eq(user.getId()), eq(application.getId()), anyString());
+                            verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(user.getId(), application.getId(), COLLABORATOR.getName());
+                            verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(user.getId(), application.getId(), LEADAPPLICANT.getName());
                         }
 
                     } else {
@@ -407,7 +398,8 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                     assertFalse(rules.applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, user));
 
                     if (singletonList(PROJECT_SETUP).contains(competitionStatus)) {
-                        verify(processRoleRepositoryMock, times(2)).existsByUserIdAndApplicationIdAndRoleName(eq(user.getId()), eq(application.getId()), anyString());
+                        verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(user.getId(), application.getId(), COLLABORATOR.getName());
+                        verify(processRoleRepositoryMock, times(1)).existsByUserIdAndApplicationIdAndRoleName(user.getId(), application.getId(), LEADAPPLICANT.getName());
                     } else {
                         verify(processRoleRepositoryMock, never()).findByUserIdAndApplicationId(user.getId(), application.getId());
                     }
