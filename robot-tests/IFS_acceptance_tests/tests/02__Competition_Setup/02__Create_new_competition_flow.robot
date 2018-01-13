@@ -229,7 +229,7 @@ Funding information: calculations
     And the user enters text to a text field    id=budgetCode    2004
     And the user enters text to a text field    id=activityCode    4242
     When the user clicks the button/link    jQuery=Button:contains("+Add co-funder")
-    And the user should see the element    jQuery=Button:contains("+Add co-funder")
+    and the user should see the element    jQuery=Button:contains("+Add co-funder")
     And the user should see the element    jQuery=Button:contains("Remove")
     And the user enters text to a text field    id=funders[1].funder    FunderName2
     And the user enters text to a text field    id=funders[1].funderBudget    1000
@@ -345,7 +345,6 @@ Milestones: Correct Weekdays should show
     Given the user fills the milestones with valid data
     When the user clicks the button/link    jQuery=button:contains(Done)
     Then the weekdays should be correct
-    [Teardown]  The user clicks the button/link    link=Competition setup
 
 Milestones: Green check should show
     [Documentation]    INFUND-2993
@@ -356,7 +355,7 @@ Milestones: Green check should show
 
 Application - Application process Page
     [Documentation]    INFUND-3000 INFUND-5639
-    [Tags]
+    [Tags]    HappyPath
     [Setup]  The user navigates to the page  ${COMP_MANAGEMENT_COMP_SETUP}
     #Writing the following selectors using jQuery in order to avoidhardcoded numbers.
     When The user clicks the button/link  link=Application
@@ -404,8 +403,7 @@ Application: Need or challenge
 
 Application: Application details
     [Documentation]    INFUND-5633
-    [Tags]  HappyPath
-    [Setup]  The user clicks the button/link  link=Application
+    [Tags]
     Given the user clicks the button/link         link=Application details
     And the user should see the element           jQuery=h1:contains("Application details")
     And the user should see the text in the page  These are the default questions included in the application details section.
@@ -417,7 +415,6 @@ Application: Application details
 
 Application: Scope
     [Documentation]  INFUND-5634 INFUND-5635
-    [Tags]  HappyPath
     Given the user clicks the button/link         link=Scope
     Then the user should see the element          jQuery=h1:contains("Scope")
     And the user should see the text in the page  You can edit this question for the applicant as well as the guidance for assessors.
@@ -426,11 +423,9 @@ Application: Scope
     And the user clicks the button/link    link=Scope
     Then The user should see the text in the page    Scope
     And the user checks the question fields
-    [Teardown]  The user clicks the button/link   link=Application
 
 Application: Scope Assessment questions
     [Documentation]    INFUND-5631    INFUND-6044  INFUND-6283
-    [Setup]  the user clicks the button/link    link=Scope
     Given the user clicks the button/link    link=Edit this question
     And the user selects the radio button    question.writtenFeedback    1
     And the user fills the scope assessment questions
@@ -447,7 +442,6 @@ Application: Scope Assessment questions
 
 Application: Project Summary
     [Documentation]  INFUND-5636 INFUND-5637
-    [Tags]  HappyPath
     Given the user clicks the button/link    link=Project summary
     And the user should see the element      jQuery=h1:contains("Project summary")
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
@@ -459,10 +453,9 @@ Application: Project Summary
 
 Application: marking questions as complete
     [Documentation]  IFS-743
-    [Tags]  HappyPath
+    [Tags]
     When the user clicks the button/link      link=Application
     Then the user marks question as complete  Public description
-    And the user marks question as complete   Need or challenge
     And the user marks question as complete   Approach and innovation
     And the user marks question as complete   Team and resources
     And the user marks question as complete   Market awareness
@@ -516,7 +509,7 @@ Application: Finances
 
 Application: Done enabled when all questions are marked as complete
     [Documentation]    INFUND-5964
-    [Tags]  HappyPath
+    [Tags]
     Given The user clicks the button/link     css=button.button  #Done button
     Then The user should not see the element  css=button.button
     When The user clicks the button/link      link=Return to setup overview
@@ -524,7 +517,7 @@ Application: Done enabled when all questions are marked as complete
 
 Public content is required for a Competition to be setup
     [Documentation]
-    [Tags]  HappyPath
+    [Tags]
     Given the user clicks the button/link  link=Public content
     When the user fills in the Public content and publishes  GrowthTable
     And the user clicks the button/link    link=Return to setup overview
@@ -583,6 +576,7 @@ Application: Edit again should mark as incomplete
     When the user clicks the button/link        link=Application details
     And the user clicks the button/link         css=button[type="submit"]
     Then the user should see the element        jQuery=li:contains("Application details") .task-status-complete
+
 
 User should be able to Save the Competition as Open
     [Documentation]    INFUND-4468, INFUND-3002
