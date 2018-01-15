@@ -135,9 +135,10 @@ Project finance user can still view and delete both files
 Post new query server side validations
     [Documentation]    INFUND-4840
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Post query")
-    Then the user should see the element   jQuery=label[for="queryTitle"] .error-message:contains(This field cannot be left blank.)
-    And the user should see the element    jQuery=label[for="query"] .error-message:contains(This field cannot be left blank.)
+    When the user clicks the button/link     jQuery=.button:contains("Post query")
+    Then the user should see the element     jQuery=label[for="queryTitle"] .error-message:contains(This field cannot be left blank.)
+    And the user should see the element      jQuery=label[for="query"] .error-message:contains(This field cannot be left blank.)
+    And the user should see a summary error  This field cannot be left blank.
 
 Post new query client side validations
     [Documentation]    INFUND-4840
@@ -326,8 +327,8 @@ Finance contact can still view both files
 Response to query server side validations
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=.button:contains("Post response")
-    Then The user should see a field error  This field cannot be left blank.
+    When the user clicks the button/link                jQuery=.button:contains("Post response")
+    Then the user should see a field and summary error  This field cannot be left blank.
 
 Response to query client side validations
     [Documentation]    INFUND-4843
