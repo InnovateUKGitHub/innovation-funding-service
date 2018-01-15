@@ -32,9 +32,11 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-1566 Assessment panels - Assessor dashboard 'Attend panel' box
 ...
 ...               IFS-1138 Assessment panels - Competition for panel dashboard
+...
+...               IFS-388 Assessment panels - Accept/Reject Panel applications for review
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
-Force Tags        CompAdmin
+Force Tags        CompAdmin  Assessor
 Resource          ../../resources/defaultResources.robot
 
 *** Variables ***
@@ -48,7 +50,8 @@ ${panel_assessor_joel}       joel.george@gmail.com
 ${panel_assessor_madeleine}  madeleine.martin@gmail.com
 ${panel_assessor_riley}      riley.butler@gmail.com
 ${Neural_network_application}      ${application_ids["${CLOSED_COMPETITION_APPLICATION_TITLE}"]}
-${computer_vision_application}     ${application_ids["Computer vision and machine learning for transport networks"]}
+${computer_vision_application_name}  Computer vision and machine learning for transport networks
+${computer_vision_application}     ${application_ids["${computer_vision_application_name}"]}
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
@@ -241,11 +244,23 @@ Assign applications to panel
     And the user reads his email            ${assessor_ben}  Applications ready for review   You have been allocated applications to review within the competition Machine learning for transport infrastructure.
 
 Assessors view of competition dashboard in panel status
-    [Documentation]  IFS-1138
+    [Documentation]  IFS-1138  IFS-388
     [Tags]
-    Given Log in as a different user         ${panel_assessor_ben}  ${short_password}
-    When the user clicks the button/link     jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
-    Then the user should see the element     jQuery=h2:contains("Applications for panel") + ul li h3:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
+    Given Log in as a different user            ${panel_assessor_ben}  ${short_password}
+    When the user clicks the button/link        jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
+    Then the user should see the element        jQuery=h2:contains("Applications for panel") + ul li h3:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
+    When the user clicks the button/link        JQuery=.progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ div a:contains("Accept or reject")
+    Then the user selects the radio button      reviewAccept  false
+    And the user should see the text in the element     reject-application  Use this space to tell us why.
+    When the user enters text to a text field   id=rejectComment   Conflict of interest
+    And the user clicks the button/link         jQuery=button:contains("Confirm")
+    Then the user should not see the element    jQuery=h2:contains("Applications for panel") + ul li h3:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}")
+    When the user clicks the button/link        jQuery=.progress-list div:contains("${computer_vision_application_name}") ~ div a:contains("Accept or reject")
+    And the user selects the radio button       reviewAccept  true
+    Then The user should see the text in the element    accept-application    You will still have the option to reject after accepting and viewing the full application.
+    When the user clicks the button/link        jQuery=button:contains("Confirm")
+    Then the user should see the element        jQuery=.progress-list div:contains("${computer_vision_application_name}") ~ div strong:contains("Accepted")
+    #TODO Navigation after Accept/Reject to be included as part of IFS-29
 
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]  IFS-1138

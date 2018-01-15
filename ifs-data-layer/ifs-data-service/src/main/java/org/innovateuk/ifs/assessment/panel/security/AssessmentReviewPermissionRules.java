@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.security;
+package org.innovateuk.ifs.assessment.panel.security;
 
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
@@ -31,23 +31,14 @@ public class AssessmentReviewPermissionRules extends BasePermissionRules {
         return isAssessorForAssessmentReview(assessmentReview, user, allowedStates);
     }
 
-    @PermissionRule(value = "READ_REVIEWS", description = "Assessors can directly read Assessment Reviews that are accepted")
-    public boolean userCanReadAssessmentReview(AssessmentReviewResource assessment, UserResource user) {
-        Set<AssessmentReviewState> allowedStates = EnumSet.of(ACCEPTED);
-        return isAssessorForAssessmentReview(assessment, user, allowedStates);
+    @PermissionRule(value = "UPDATE", description = "An assessor may only update their own invites to assessment reviews")
+    public boolean userCanUpdateAssessmentReview(AssessmentReviewResource assessmentReview, UserResource loggedInUser) {
+        return isAssessorForAssessmentReview(assessmentReview, loggedInUser);
     }
 
-    @PermissionRule(value = "READ_REVIEWS_TO_ASSIGN", description = "Assessors can read pending Assessment Reviews to decide to " +
-            "either to accept or reject")
-    public boolean userCanReadToAssign(AssessmentReviewResource assessment, UserResource user) {
-        Set<AssessmentReviewState> allowedStates = Collections.singleton(PENDING);
-        return isAssessorForAssessmentReview(assessment, user, allowedStates);
-    }
-
-    @PermissionRule(value = "READ_REVIEWS_TO_REJECT", description = "Assessors can reject Assessment Reviews that are pending or accepted")
-    public boolean userCanReadToReject(AssessmentReviewResource assessmentReview, UserResource user) {
-        Set<AssessmentReviewState> allowedStates = EnumSet.of(PENDING, ACCEPTED);
-        return isAssessorForAssessmentReview(assessmentReview, user, allowedStates);
+    @PermissionRule(value = "READ", description = "An assessor may only read their own invites to assessment reviews")
+    public boolean userCanReadAssessmentReviews(AssessmentReviewResource assessmentReview, UserResource loggedInUser) {
+        return isAssessorForAssessmentReview(assessmentReview, loggedInUser);
     }
 
     private boolean isAssessorForAssessmentReview(AssessmentReviewResource assessmentReview, UserResource user, Set<AssessmentReviewState> allowedStates) {
