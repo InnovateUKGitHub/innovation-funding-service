@@ -55,11 +55,11 @@
         <div class="column-half">
             <th:block th:if="${param.tab == null or param.tab[0] == 'assign'}">
                 <span class="heading-xlarge no-margin">60</span>
-                <span class="heading-small">assessors</span>
+                <span class="heading-small">applications</span>
             </th:block>
             <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
                 <span class="heading-xlarge no-margin">23</span>
-                <span class="heading-small">applicants invited</span>
+                <span class="heading-small">applications assigned</span>
             </th:block>
         </div>
     </div>
@@ -70,11 +70,11 @@
                 <div class="multiple-choice">
                     <input type="checkbox" data-select-all="" id="select-all-check">
                     <label for="select-all-check">
-                        Select all assessors
+                        Select all applications
                     </label>
                 </div>
                 <span class="form-hint">
-                          <span data-count-selected="" class="applications-selected">0</span> assessors selected
+                          <span data-count-selected="" class="applications-selected">0</span> applications selected
                       </span>
             </div>
             <div class="column-half select-all alignright">
@@ -137,7 +137,7 @@
                     <td>Healthcare, Regnerative medicine, Stratified medicine</td>
                     <td>Empire Ltd</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
-                        <td><strong>Pending</strong></td>
+                        <td>Pending</td>
                         <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a></td>
                     </th:block>
                 </tr>
@@ -156,7 +156,7 @@
                     <td>Healthcare, Analytical science</td>
                     <td>Ideas</td>
                     <th:block th:if="${param.tab != null and param.tab[0] == 'view'}">
-                        <td><strong>Pending</strong></td>
+                        <td>Pending</td>
                         <td><a href="/prototypes/IFS-2246-view-invite" class="button button-secondary">View invite</a></td>
                     </th:block>
                 </tr>
