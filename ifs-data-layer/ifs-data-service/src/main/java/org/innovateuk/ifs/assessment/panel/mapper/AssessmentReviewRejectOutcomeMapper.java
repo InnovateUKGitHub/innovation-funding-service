@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.mapper;
+package org.innovateuk.ifs.assessment.panel.mapper;
 
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReviewRejectOutcome;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
@@ -15,12 +15,15 @@ import org.mapstruct.Mappings;
 )
 public abstract class AssessmentReviewRejectOutcomeMapper {
 
-    public abstract AssessmentReviewRejectOutcomeResource mapToResource(AssessmentReviewRejectOutcome domain);
+    @Mappings({
+            @Mapping(source = "rejectReason", target = "reason"),
+    })    public abstract AssessmentReviewRejectOutcomeResource mapToResource(AssessmentReviewRejectOutcome domain);
 
     @Mappings({
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "assessmentPanelApplicationInvite", ignore = true),
             @Mapping(target = "process", ignore = true),
+            @Mapping(target = "rejectReason", source = "reason"),
     })
     public abstract AssessmentReviewRejectOutcome mapToDomain(AssessmentReviewRejectOutcomeResource resource);
 

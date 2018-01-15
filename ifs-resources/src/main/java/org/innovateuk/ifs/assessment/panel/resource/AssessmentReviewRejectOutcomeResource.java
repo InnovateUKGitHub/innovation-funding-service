@@ -2,10 +2,8 @@ package org.innovateuk.ifs.assessment.panel.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -13,34 +11,23 @@ import javax.validation.constraints.Size;
  */
 public class AssessmentReviewRejectOutcomeResource {
 
-    @NotNull(message = "{validation.assessmentRejectOutcome.rejectReason.required}")
-    private AssessmentRejectOutcomeValue rejectReason; // TODO remove in IFS-388
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
     @WordCount(max = 100, message = "{validation.field.max.word.count}")
-    private String rejectComment;
+    private String reason;
 
     public AssessmentReviewRejectOutcomeResource() {
     }
 
-    public AssessmentReviewRejectOutcomeResource(AssessmentRejectOutcomeValue rejectReason, String rejectComment) {
-        this.rejectReason = rejectReason;
-        this.rejectComment = rejectComment;
+    public AssessmentReviewRejectOutcomeResource(String reason) {
+        this.reason = reason;
     }
 
-    public AssessmentRejectOutcomeValue getRejectReason() {
-        return rejectReason;
+    public String getReason() {
+        return reason;
     }
 
-    public void setRejectReason(AssessmentRejectOutcomeValue rejectReason) {
-        this.rejectReason = rejectReason;
-    }
-
-    public String getRejectComment() {
-        return rejectComment;
-    }
-
-    public void setRejectComment(String rejectComment) {
-        this.rejectComment = rejectComment;
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 
     @Override
@@ -52,16 +39,14 @@ public class AssessmentReviewRejectOutcomeResource {
         AssessmentReviewRejectOutcomeResource that = (AssessmentReviewRejectOutcomeResource) o;
 
         return new EqualsBuilder()
-                .append(rejectReason, that.rejectReason)
-                .append(rejectComment, that.rejectComment)
+                .append(reason, that.reason)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(rejectReason)
-                .append(rejectComment)
+                .append(reason)
                 .toHashCode();
     }
 }

@@ -56,19 +56,16 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             collaborator = newUserResource().build();
 
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(leadApplicant.getId(), getRole(LEADAPPLICANT).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
+            when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(leadApplicant.getId(), getRole(LEADAPPLICANT).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaborator.getId(), getRole(COLLABORATOR).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(assessor.getId(), getRole(ASSESSOR).getId(), applicationId, organisationId)).thenReturn(newProcessRole().build());
 
-            Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
-            Role collaboratorRole = newRole().withType(UserRoleType.COLLABORATOR).build();
             Role compAdminRole = newRole().withType(UserRoleType.COMP_ADMIN).build();
 
-            ProcessRole leadApplicantProcessRole = newProcessRole().withRole(leadApplicantRole).build();
-            ProcessRole collaboratorProcessRole = newProcessRole().withRole(collaboratorRole).build();
             ProcessRole compAdminProcessRole = newProcessRole().withRole(compAdminRole).build();
 
-            when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicant.getId(), applicationId)).thenReturn(leadApplicantProcessRole);
-            when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaborator.getId(), applicationId)).thenReturn(collaboratorProcessRole);
+            when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(leadApplicant.getId(), applicationId, LEADAPPLICANT.getName())).thenReturn(true);
+            when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(collaborator.getId(), applicationId, COLLABORATOR.getName())).thenReturn(true);
             when(processRoleRepositoryMock.findByUserIdAndApplicationId(compAdmin.getId(), applicationId)).thenReturn(compAdminProcessRole);
 
         }
@@ -80,7 +77,7 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
             otherApplicationFinance = newApplicationFinanceResource().withOrganisation(otherOrganisation.getId()).withApplication(otherApplicationId).build();
             otherLeadApplicant = newUserResource().build();
             when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(otherLeadApplicant.getId(), getRole(LEADAPPLICANT).getId(), otherApplicationId, otherOrganisationId)).thenReturn(newProcessRole().build());
-            when(processRoleRepositoryMock.findByUserIdAndApplicationId(otherLeadApplicant.getId(), otherApplicationId)).thenReturn(newProcessRole().withRole(LEADAPPLICANT).build());
+            when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(otherLeadApplicant.getId(), otherApplicationId, LEADAPPLICANT.getName())).thenReturn(true);
         }
     }
 
@@ -178,5 +175,4 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
         assertFalse(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, collaborator));
         assertFalse(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, leadApplicant));
     }
-
 }
