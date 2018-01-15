@@ -269,15 +269,9 @@ Project Finance can see the progress of partners bank details
     And the user clicks the button/link             css=#table-project-status tr:nth-child(4) td:nth-child(4) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
     And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
-    Then the user should see the element            jQuery=li:nth-child(1):contains("Review required")
-    And the user should see the element             jQuery=li:nth-child(2):contains("Review required")
-    And the user should see the element             jQuery=li:nth-child(3):contains("Review required")
-    When the user clicks the button/link            link=${Vitruvius_Name}
-    Then the user should see the text in the page   ${Vitruvius_Name} - Account details
-    And the user should see the text in the page    ${PS_BD_APPLICATION_LEAD_FINANCE}
-    And the user should see the element             jQuery=a:contains("${PS_BD_APPLICATION_PM_EMAIL}")
-    And the user should see the text in the page    ${PS_BD_APPLICATION_LEAD_TELEPHONE}
-    And the user goes back to the previous page
+    Then the user should see the element            jQuery=li:contains("${Vitruvius_Name}") .task-status-complete
+    And the user should see the element             jQuery=li:contains("${A_B_Cad_Services_Name}") .action-required
+    And the user should see the element             jQuery=li:contains("${Armstrong_Butler_Name}") .action-required
     When the user clicks the button/link            link=${A_B_Cad_Services_Name}
     Then the user should see the text in the page   ${A_B_Cad_Services_Name} - Account details
     And the user should see the text in the page    Ryan Welch
@@ -287,7 +281,6 @@ Project Finance can see the progress of partners bank details
     Then the user should see the text in the page   ${Armstrong_Butler_Name} - Account details
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_FINANCE}
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_EMAIL}
-
 
 IFS Admin can see Bank Details
     [Documentation]    INFUND-4903, INFUND-4903, IFS-603, IFS-1881
@@ -300,11 +293,10 @@ IFS Admin can see Bank Details
     When the user clicks the button/link          css=#table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(3) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
     And the user should see the text in the page  each partner has submitted their bank details
-    Then the user should see the element          jQuery=li:nth-child(1):contains("Review required")
-    And the user should see the element           jQuery=li:nth-child(2):contains("Review required")
-    And the user should see the element           jQuery=li:nth-child(1) a:contains("${Vitruvius_Name}")
-    And the user should see the element           jQuery=li:nth-child(3):contains("Review required")
-    When the user clicks the button/link          link=${Vitruvius_Name}
+    Then the user should see the element          jQuery=li:contains("${Vitruvius_Name}") .task-status-complete
+    And the user should see the element           jQuery=li:contains("${A_B_Cad_Services_Name}") .action-required
+    And the user should see the element           jQuery=li:contains("${Armstrong_Butler_Name}") .action-required
+    When the user clicks the button/link          link=${A_B_Cad_Services_Name}
     Then the user should see the element          jQuery=.button:contains("Approve bank account details")
 
 Other internal users do not have access to bank details export
@@ -384,4 +376,4 @@ The project finance user confirms the approved Bank Details
 the bank details have been verified by the Experian
     [Arguments]  ${organisationId}
     Connect to Database  @{database}
-    execute sql string  UPDATE `${database_name}`.`bank_details` SET `company_name_score`=7, `registration_number_matched`=1, `address_score`=8, `manual_approval`=1  WHERE `organisation_id`='${organisationId}';
+    execute sql string  UPDATE `${database_name}`.`bank_details` SET `company_name_score`=7, `registration_number_matched`=1, `address_score`=8, `manual_approval`=1 WHERE `organisation_id`='${organisationId}';
