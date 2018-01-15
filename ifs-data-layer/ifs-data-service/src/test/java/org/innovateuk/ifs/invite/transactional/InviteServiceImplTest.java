@@ -3,31 +3,41 @@ package org.innovateuk.ifs.invite.transactional;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.HibernateValidator;
-import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
 import org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.invite.mapper.ApplicationInviteMapper;
 import org.innovateuk.ifs.invite.mapper.InviteOrganisationMapper;
+import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
+import org.innovateuk.ifs.invite.repository.InviteOrganisationRepository;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.notifications.resource.NotificationMedium;
+import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
@@ -62,7 +72,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
-public class InviteServiceImplTest extends BaseUnitTestMocksTest {
+@RunWith(MockitoJUnitRunner.class)
+public class InviteServiceImplTest {
     private final Log log = LogFactory.getLog(getClass());
 
     @Mock
@@ -76,6 +87,33 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
     @Mock
     private QuestionReassignmentService questionReassignmentServiceMock;
+
+    @Mock
+    private ApplicationService applicationServiceMock;
+
+    @Mock
+    private ApplicationInviteRepository applicationInviteRepositoryMock;
+
+    @Mock
+    private ApplicationFinanceRepository applicationFinanceRepositoryMock;
+
+    @Mock
+    private ProcessRoleRepository processRoleRepositoryMock;
+
+    @Mock
+    private OrganisationRepository organisationRepositoryMock;
+
+    @Mock
+    private InviteOrganisationRepository inviteOrganisationRepositoryMock;
+
+    @Mock
+    private ApplicationRepository applicationRepositoryMock;
+
+    @Mock
+    private LoggedInUserSupplier loggedInUserSupplierMock;
+
+    @Mock
+    private SystemNotificationSource systemNotificationSourceMock;
 
     @InjectMocks
     private InviteServiceImpl inviteService = new InviteServiceImpl();
@@ -463,7 +501,6 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         assertTrue(applicationInviteResult.isSuccess());
     }
 
-
     @Test
     public void removeApplicationInvite_deletesInviteFromInviteOrganisationButNotOrganisationApplicationData() throws Exception {
         User user = newUser().build();
@@ -481,10 +518,11 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         ApplicationInvite applicationInviteToDelete = applicationInvites.get(0);
         inviteOrganisation.setInvites(applicationInvites);
 
-        List<ProcessRole> inviteProcessRoles = newProcessRole().withOrganisationId(1L).build(1);
+        List<ProcessRole> inviteProcessRoles = newProcessRole().withOrganisationId(organisation.getId()).build(1);
 
         when(applicationInviteMapper.mapIdToDomain(applicationInviteToDelete.getId())).thenReturn(applicationInviteToDelete);
         when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(inviteProcessRoles);
+        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(application.getId(), organisation.getId())).thenReturn(newProcessRole().withOrganisationId(1L).build(1));
 
         ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInviteToDelete.getId());
 
