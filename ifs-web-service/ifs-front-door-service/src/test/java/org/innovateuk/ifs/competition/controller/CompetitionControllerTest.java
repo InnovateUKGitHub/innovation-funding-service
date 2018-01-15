@@ -62,27 +62,14 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     public void termsAndConditions() throws Exception {
         final CompetitionResource competitionResource = newCompetitionResource()
                 .withCompetitionTypeName("Competition name")
+                .withTermsAndConditionsTemplate("special-terms-and-conditions")
                 .build();
+
         when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
 
         mockMvc.perform(get("/competition/{id}/info/terms-and-conditions", competitionResource.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("competition/info/default-terms-and-conditions"));
-
-        verify(competitionService).getById(competitionResource.getId());
-    }
-
-    @Test
-    public void termsAndConditions_apcComp() throws Exception {
-        final CompetitionResource competitionResource = newCompetitionResource()
-                .withCompetitionTypeName("Advanced Propulsion Centre")
-                .withCompetitionType(8L)
-                .build();
-        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
-
-        mockMvc.perform(get("/competition/{id}/info/terms-and-conditions", competitionResource.getId()))
-                .andExpect(status().isOk())
-                .andExpect(view().name("competition/info/apc-terms-and-conditions"));
+                .andExpect(view().name("competition/info/special-terms-and-conditions"));
 
         verify(competitionService).getById(competitionResource.getId());
     }

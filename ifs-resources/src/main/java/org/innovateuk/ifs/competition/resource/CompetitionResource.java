@@ -565,7 +565,7 @@ public class CompetitionResource {
         return termsAndConditionsTemplate;
     }
 
-    void setTermsAndConditionsTemplate(String termsAndConditionsTemplate) {
+    public void setTermsAndConditionsTemplate(String termsAndConditionsTemplate) {
         this.termsAndConditionsTemplate = termsAndConditionsTemplate;
     }
 

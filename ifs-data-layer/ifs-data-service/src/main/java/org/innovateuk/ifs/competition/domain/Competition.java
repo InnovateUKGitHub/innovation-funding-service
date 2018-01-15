@@ -663,12 +663,7 @@ public class Competition implements ProcessActivity {
         return termsAndConditions;
     }
 
-    /**
-     * Package-private setter for Hibernate - not currently for use within code
-     *
-     * @param termsAndConditions
-     */
-    void setTermsAndConditions(TermsAndConditions termsAndConditions) {
+    public void setTermsAndConditions(TermsAndConditions termsAndConditions) {
         this.termsAndConditions = termsAndConditions;
     }
 }

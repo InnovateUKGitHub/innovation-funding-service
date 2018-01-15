@@ -6,6 +6,7 @@ import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.domain.TermsAndConditions;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -124,6 +125,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withNonIfsUrl(String... nonIfsUrl) {
         return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
+    }
+
+    public CompetitionBuilder withTermsAndConditions(TermsAndConditions... termsAndConditions) {
+        return withArray((terms, competition) -> competition.setTermsAndConditions(terms), termsAndConditions);
     }
 
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {
