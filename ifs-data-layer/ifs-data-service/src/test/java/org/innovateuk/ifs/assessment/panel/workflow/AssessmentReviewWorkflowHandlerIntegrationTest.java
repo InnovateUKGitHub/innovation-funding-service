@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentReviewBuilder.newAssessmentReview;
-import static org.innovateuk.ifs.assessment.panel.builder.AssessmentReviewRejectOutcomeBuilder.newAssessmentPanelApplicationInviteRejectOutcome;
+import static org.innovateuk.ifs.assessment.panel.builder.AssessmentReviewRejectOutcomeBuilder.newAssessmentReviewRejectOutcome;
 import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -64,12 +64,12 @@ public class AssessmentReviewWorkflowHandlerIntegrationTest
     @Test
     public void rejectInvitation() {
         assertStateChangeOnWorkflowHandlerCall(PENDING, REJECTED, invite -> workflowHandler.rejectInvitation(invite, createRejection()),
-                assessmentPanelApplicationInvite -> assertEquals("reason", assessmentPanelApplicationInvite.getRejection().getRejectionComment())
+                assessmentPanelApplicationInvite -> assertEquals("reason", assessmentPanelApplicationInvite.getRejection().getRejectReason())
         );
     }
 
     private AssessmentReviewRejectOutcome createRejection() {
-        return newAssessmentPanelApplicationInviteRejectOutcome().withRejectionComment("reason").build();
+        return newAssessmentReviewRejectOutcome().withRejectionComment("reason").build();
     }
 
     @Test

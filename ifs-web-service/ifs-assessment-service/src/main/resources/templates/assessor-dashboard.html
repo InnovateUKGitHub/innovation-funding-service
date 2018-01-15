@@ -153,8 +153,7 @@
                             <li th:each="assessmentPanelAccept : ${model.assessmentPanelAccepted}">
                                 <div class="task">
                                     <h3 class="heading-small">
-                                        <!--/* link will be implemented in IFS-1388 */-->
-                                        <a class="disabled" aria-disabled="true"
+                                        <a th:href="@{/assessor/dashboard/competition/{competitionId}/panel(competitionId=${assessmentPanelAccept.competitionId})}"
                                            th:text="${assessmentPanelAccept.competitionName}"/>
                                     </h3>
 

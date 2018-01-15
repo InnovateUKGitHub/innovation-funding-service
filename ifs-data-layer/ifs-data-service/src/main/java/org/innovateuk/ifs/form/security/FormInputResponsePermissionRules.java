@@ -50,17 +50,21 @@ public class FormInputResponsePermissionRules {
         final FormInput formInput = formInputRepository.findOne(response.getFormInput());
         final Question question = formInput.getQuestion();
         if (!question.getMultipleStatuses()) {
-            final boolean isLeadApplicant = checkProcessRole(user, response.getApplication(), LEADAPPLICANT, processRoleRepository);
-            final boolean isCollaborator = checkProcessRole(user, response.getApplication(), COLLABORATOR, processRoleRepository);
+            final boolean isLeadApplicant = checkProcessRole(user, response.getApplication(), LEADAPPLICANT, processRoleRepository, roleRepository);
+            final boolean isCollaborator = checkProcessRole(user, response.getApplication(), COLLABORATOR, processRoleRepository, roleRepository);
             return isCollaborator || isLeadApplicant;
         }
         return false;
     }
 
     @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they assess")
-    public boolean assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyAssess(final FormInputResponseResource response, final UserResource user) {
-        final boolean isAssessor = checkProcessRole(user, response.getApplication(), ASSESSOR, processRoleRepository);
-        return isAssessor;
+    public boolean assessorCanSeeTheInputResponsesInApplicationsTheyAssess(final FormInputResponseResource response, final UserResource user) {
+        return checkProcessRole(user, response.getApplication(), ASSESSOR, processRoleRepository, roleRepository);
+    }
+
+    @PermissionRule(value = "READ", description = "The assessor can see the input responses of in applications for the applications they review")
+    public boolean assessorCanSeeTheInputResponsesInApplicationsTheyReview(final FormInputResponseResource response, final UserResource user) {
+        return checkProcessRole(user, response.getApplication(), PANEL_ASSESSOR, processRoleRepository, roleRepository);
     }
 
     @PermissionRule(value = "READ", description = "An internal user can see form input responses for applications")
@@ -72,8 +76,8 @@ public class FormInputResponsePermissionRules {
             description = "A consortium member can update the response.")
     public boolean aConsortiumMemberCanUpdateAFormInputResponse(final FormInputResponseCommand response, final UserResource user) {
         final long applicationId = response.getApplicationId();
-        final boolean isLead = checkProcessRole(user, applicationId, UserRoleType.LEADAPPLICANT, processRoleRepository);
-        final boolean isCollaborator = checkProcessRole(user, applicationId, UserRoleType.COLLABORATOR, processRoleRepository);
+        final boolean isLead = checkProcessRole(user, applicationId, UserRoleType.LEADAPPLICANT, processRoleRepository, roleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationId, UserRoleType.COLLABORATOR, processRoleRepository, roleRepository);
 
         List<QuestionStatus> questionStatuses = getQuestionStatuses(response);
 
@@ -101,7 +105,6 @@ public class FormInputResponsePermissionRules {
         FormInput formInput = formInputRepository.findOne(responseCommand.getFormInputId());
         return questionStatusRepository.findByQuestionIdAndApplicationId(formInput.getQuestion().getId(), responseCommand.getApplicationId());
     }
-
 
     private boolean checkIfAssignedToQuestion(List<QuestionStatus> questionStatuses, final UserResource user) {
         boolean isAssigned = questionStatuses.stream()
@@ -133,4 +136,3 @@ public class FormInputResponsePermissionRules {
         return checkProcessRole(user, applicationId, organisationId, userRoleType, roleRepository, processRoleRepository);
     }
 }
-
