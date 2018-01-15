@@ -329,7 +329,6 @@ PM can remove the signed grant offer letter
     Then the user should not see the text in the page    Remove
     And the user should not see the text in the page    jQuery=.upload-section a:contains("${valid_pdf}")
 
-
 PM can upload new signed grant offer letter
     [Documentation]    INFUND-6780
     [Tags]
@@ -337,7 +336,6 @@ PM can upload new signed grant offer letter
     And the user reloads the page
     Then the user should see the element       css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
     And the user should not see the element    jQuery=[disabled='disabled'].button:contains(Send signed offer letter)
-
 
 PM Sends the Grant Offer letter
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
@@ -360,7 +358,6 @@ PM cannot remove the signed grant offer letter after submission
     [Documentation]    INFUND-6780
     When the user should not see the element    name=removeSignedGrantOfferLetterClicked
     Then the user should not see the text in the page    Remove
-
 
 PM's status should be updated
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
@@ -393,7 +390,7 @@ Comp Admin can accept the signed grant offer letter
     Then the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     And the user should see the element   css=label[for="acceptGOL"]
     And the user should see the element   css=#submit-button.disabled
-    When the user selects the radio button  approalType  Rejected
+    When the user selects the radio button  approalType  rejectGOL
     Then the user should not see the element  css=#submit-button.disabled
     And the user clicks the button/link   link=Cancel
     Then the user should not see an error in the page
@@ -401,7 +398,7 @@ Comp Admin can accept the signed grant offer letter
 Comp Admin is able to Reject the Grant Offer letter
     [Documentation]  IFS-2174
     [Tags]  HappyPath
-    Given the user selects the radio button  approvalType  REJECTED
+    Given the user selects the radio button  approvalType  rejectGOL
     And the user clicks the button/link      jQuery=button:contains("Submit")
     Then the user should see the element     jQuery=.warning-alert:contains("documents have been reviewed and rejected.")
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
@@ -430,9 +427,9 @@ Internal user accepts signed grant offer letter
     [Setup]  log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page   ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
     When the user clicks the button/link   jQuery=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a:contains("Review")
-    And the user selects the radio button  approvalType  APPROVED
+    And the user selects the radio button  approvalType  acceptGOL
     And the user clicks the button/link    jQuery=button:contains("Submit")
-    Then the user should see the element   jQuery=.success-alert h2:contains("The grant offer letter has been received and accepted.")
+    Then the user should see the element   jQuery=.success-alert h2:contains("These documents have been approved.")
     When the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
     Then the user should see the element   css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.ok
 
@@ -510,7 +507,7 @@ Verify support users permissions in project setup tab
     And the user should see the element      jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(5).status.ok a  # Spend profile
     And the user should see the element      jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(6).status.ok a  # Other docs
     And the user clicks the button/link      jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(7).status.ok a  # GOL
-    And the user should see the element      jQuery=.success-alert h2:contains("The grant offer letter has been received and accepted.")
+    And the user should see the element      jQuery=.success-alert h2:contains("These documents have been approved.")
 
 *** Keywords ***
 the user uploads a file
