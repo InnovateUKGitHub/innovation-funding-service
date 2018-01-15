@@ -35,7 +35,7 @@
         </div>
     </section>
 
-    <section class="landscape" th:if="${#maps.containsKey(sectionsByType, T(org.innovateuk.ifs.application.resource.SectionType).FUNDING_FINANCES)}">
+    <section class="landscape" th:if="${fundingFinancesSection}">
         <div>
             <h2 class="heading-medium">Funding breakdown</h2>
             <th:block th:insert="application/print-elements :: financial_summary_table" />

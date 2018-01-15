@@ -107,7 +107,11 @@ public class ApplicationSectionAndQuestionModelPopulator {
                 competition.getId(), APPLICATION).getSuccessObjectOrThrowException();
 
         model.addAttribute("sections", sections);
-        model.addAttribute("sectionsByType", allSections.stream().collect(Collectors.groupingBy(SectionResource::getType)));
+
+        Optional<SectionResource> financeSection = allSections.stream()
+                .filter(section -> section.getType() == SectionType.FUNDING_FINANCES)
+                .findFirst();
+        model.addAttribute("fundingFinancesSection", financeSection.orElse(null));
 
         Map<Long, List<QuestionResource>> sectionQuestions = parentSections.stream()
                 .collect(Collectors.toMap(
