@@ -21,7 +21,8 @@
           method="post" enctype="multipart/form-data"
           th:object="${form}" class="form-serialize-js section-overview">
 
-        <th:block th:insert="fragments/application :: application-summary (isApplicant = false)" />
+        <h2 class="heading-medium">Details</h2>
+        <th:block th:insert="fragments/application :: application-summary (isApplicant = false, hideDetails = true)" />
     </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
