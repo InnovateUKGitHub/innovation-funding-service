@@ -7,6 +7,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * Represents a set of Terms and Conditions, comprising a name, a version, and an identifier for the template to use
+ * for those terms and conditions.
+ */
 @Entity
 @Immutable
 public class TermsAndConditions {
@@ -15,10 +19,13 @@ public class TermsAndConditions {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @SuppressWarnings("unused")
     private String name;
 
+    @SuppressWarnings("unused")
     private String template;
 
+    @SuppressWarnings("unused")
     private String version;
 
     public Long getId() {
