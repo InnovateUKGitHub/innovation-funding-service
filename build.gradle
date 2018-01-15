@@ -1,4 +1,3 @@
-import com.bmuschko.gradle.docker.DockerRegistryCredentials
 
 // Deployment behaviour for differing versions has not been tested yet
 // and so version numbers should always equal project.version
@@ -25,53 +24,10 @@ allprojects {
     version project.version
 
     apply plugin: 'idea'
-    apply plugin: 'com.bmuschko.docker-remote-api'
+//    apply plugin: 'com.bmuschko.docker-remote-api'
     apply plugin: 'com.github.ben-manes.versions'
 }
 
-def getRemoteOCCredentials() {
-    def dockerRegistryCredentials = new DockerRegistryCredentials()
-    try {
-        // Get the docker repository for the remote OS cluster
-        dockerRegistryCredentials.url = project.dockerRegistry
-        dockerRegistryCredentials.username = "unused"
-        dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
-        dockerRegistryCredentials.email = "unused"
-
-    }
-    catch (ignored) {
-        println("Exception thrown creating the OpenShift docker registry credentials. " +
-                "This is most likely because the OpenShift commandline client is not installed. " +
-                "This is only an issue if wanting to deploy to an OpenShift cluster, " +
-                "in which case it will need to be installed")
-        println(ignored)
-    }
-    return dockerRegistryCredentials
-}
-
-def getLocalOCCredentials() {
-    def dockerRegistryCredentials = new DockerRegistryCredentials()
-    try {
-        // Get the docker repository for the local OS cluster
-        def localIpCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.clusterIP}'"
-        def localPortCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.ports..port}'"
-        project.ext.localIp = localIpCommand.execute().text.replace("'", "").trim()
-        project.ext.localPort = localPortCommand.execute().text.replace("'", "").trim()
-        dockerRegistryCredentials.url = project.ext.localIp + ":" + project.ext.localPort
-        dockerRegistryCredentials.username = "unused"
-        dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
-        dockerRegistryCredentials.email = "unused"
-
-    }
-    catch (ignored) {
-        println("Exception thrown creating the OpenShift docker registry credentials. " +
-                "This is most likely because the OpenShift commandline client is not installed. " +
-                "This is only an issue if wanting to deploy to an OpenShift cluster, " +
-                "in which case it will need to be installed")
-        println(ignored)
-    }
-    return dockerRegistryCredentials
-}
 
 apply from: "openshift-support.gradle"
 apply from: "zipkin-support.gradle"
@@ -131,15 +87,11 @@ buildscript {
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath 'org.owasp:dependency-check-gradle:1.4.5'
         classpath "com.avast.gradle:docker-compose-gradle-plugin:0.4.5"
-        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
         classpath 'net.researchgate:gradle-release:2.6.0'
         classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 
 }
-
-// use fully qualified class name
-apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 
 
 dependencyUpdates.resolutionStrategy = {
