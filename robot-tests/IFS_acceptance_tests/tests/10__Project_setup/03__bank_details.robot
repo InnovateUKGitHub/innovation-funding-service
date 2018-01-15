@@ -251,10 +251,20 @@ Non lead partner submits bank details
     And the user should see the text in the page   Project team status
     And the user should see the element            css=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(3)
 
+Bank details verified by Experian require no action by the Project Finance
+    [Documentation]  IFS-2495
+    [Tags]  HappyPath  MySQL
+    [Setup]  log in as a different user      &{internal_finance_credentials}
+    Given the bank details have been verified by the Experian  ${Vitruvius_Id}
+    When the user navigates to the page      ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/organisation/${Vitruvius_Id}/review-bank-details
+    Then the user should see the element     jQuery=.success-alert:contains("The bank details provided have been approved.")
+    And the user should not see the element  css=button[data-js-modal="modal-partner-approve-bank-details"]
+    When the user navigates to the page      ${server}/project-setup-management/competitions/status/pending-bank-details-approvals
+    Then the user should not see the element  jQuery=td:contains("${PS_BD_APPLICATION_NUMBER}") ~ td:contains("${Vitruvius_Name}")
+
 Project Finance can see the progress of partners bank details
     [Documentation]  INFUND-4903, INFUND-5966, INFUND-5507
     [Tags]    HappyPath
-    [Setup]  log in as a different user             &{internal_finance_credentials}
     Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
     And the user clicks the button/link             css=#table-project-status tr:nth-child(4) td:nth-child(4) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
@@ -370,3 +380,8 @@ The project finance user confirms the approved Bank Details
     the user should not see the element    jQuery=a:contains("Dreambit")
     the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/all
     the user should see the element    jQuery=tr:contains("Complete") td:nth-child(4) a:contains("Complete")
+
+the bank details have been verified by the Experian
+    [Arguments]  ${organisationId}
+    Connect to Database  @{database}
+    execute sql string  UPDATE `${database_name}`.`bank_details` SET `company_name_score`=7, `registration_number_matched`=1, `address_score`=8, `manual_approval`=1  WHERE `organisation_id`='${organisationId}';
