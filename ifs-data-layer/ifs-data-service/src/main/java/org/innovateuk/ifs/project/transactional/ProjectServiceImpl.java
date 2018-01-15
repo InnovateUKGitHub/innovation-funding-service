@@ -116,9 +116,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                 .filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED))
                 .map(this::createSingletonProjectFromApplicationId)
                 .collect(toList());
-        boolean anyProjectCreationFailed = projectCreationResults
-                .stream()
-                .anyMatch(BaseEitherBackedResult::isFailure);
+
+        boolean anyProjectCreationFailed = simpleAnyMatch(projectCreationResults, BaseEitherBackedResult::isFailure);
+
         return  anyProjectCreationFailed ?
                 serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS) : serviceSuccess();
     }
@@ -194,9 +194,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     @Transactional
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
-        Application application = applicationRepository.findOne(applicationId);
-        return FundingDecisionStatus.FUNDED.equals(application.getFundingDecision()) ?
-        createSingletonProjectFromApplicationId(applicationId) : serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS);
+
+        return getApplication(applicationId).andOnSuccess(application -> {
+
+            if (FundingDecisionStatus.FUNDED.equals(application.getFundingDecision())) {
+                return createSingletonProjectFromApplicationId(applicationId);
+            } else {
+                return serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS);
+            }
+        });
     }
 
     private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {

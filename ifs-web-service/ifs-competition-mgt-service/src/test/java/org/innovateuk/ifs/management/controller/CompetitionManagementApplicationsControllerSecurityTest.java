@@ -56,7 +56,7 @@ public class CompetitionManagementApplicationsControllerSecurityTest extends Bas
 
     @Test
     public void testMarkApplicationAsSuccessful() {
-        assertAccessDenied(() -> classUnderTest.manageApplications(null, competitionId),
+        assertAccessDenied(() -> classUnderTest.markApplicationAsSuccessful(competitionId, 0L),
                 () -> {
                 });
     }

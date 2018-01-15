@@ -3,7 +3,6 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.*;
@@ -17,10 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.ui.Model;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,9 +32,7 @@ import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.IFS_ADMINISTRATOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.INNOVATION_LEAD;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -577,8 +572,6 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .withName("Successful project")
                 .build();
 
-        when(unsuccessfulApplicationsModelPopulator.populateModel(anyLong(), anyInt(), anyInt(), anyString(), any(UserResource.class), any()))
-                .thenReturn(null);
         when(applicationFundingDecisionService.saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class)))
                 .thenReturn(ServiceResult.serviceSuccess());
         when(projectService.createProjectFromApplicationId(anyLong()))
@@ -589,6 +582,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .andExpect(view().name("redirect:/competition/{competitionId}/applications/unsuccessful"))
                 .andReturn();
 
+        verify(unsuccessfulApplicationsModelPopulator, never()).populateModel(anyLong(), anyInt(), anyInt(), anyString(), any(UserResource.class), any());
         verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(anyLong(), any(FundingDecision.class), anyListOf(Long.class));
         verify(projectService).createProjectFromApplicationId(anyLong());
         verifyNoMoreInteractions(applicationFundingDecisionService, projectService);

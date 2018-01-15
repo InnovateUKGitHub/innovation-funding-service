@@ -34,44 +34,22 @@ public class UnsuccessfulApplicationsViewModel {
         return competitionId;
     }
 
-    public void setCompetitionId(Long competitionId) {
-        this.competitionId = competitionId;
-    }
-
     public String getCompetitionName() {
         return competitionName;
     }
 
-    public void setCompetitionName(String competitionName) {
-        this.competitionName = competitionName;
-    }
-
     public boolean isIfsAdmin() { return isIfsAdmin; }
-
-    public void setIfsAdmin(boolean ifsAdmin) { isIfsAdmin = ifsAdmin; }
 
     public List<ApplicationResource> getUnsuccessfulApplications() {
         return unsuccessfulApplications;
-    }
-
-    public void setUnsuccessfulApplications(List<ApplicationResource> unsuccessfulApplications) {
-        this.unsuccessfulApplications = unsuccessfulApplications;
     }
 
     public long getUnsuccessfulApplicationsSize() {
         return unsuccessfulApplicationsSize;
     }
 
-    public void setUnsuccessfulApplicationsSize(long unsuccessfulApplicationsSize) {
-        this.unsuccessfulApplicationsSize = unsuccessfulApplicationsSize;
-    }
-
     public PaginationViewModel getUnsuccessfulApplicationsPagination() {
         return unsuccessfulApplicationsPagination;
-    }
-
-    public void setUnsuccessfulApplicationsPagination(PaginationViewModel unsuccessfulApplicationsPagination) {
-        this.unsuccessfulApplicationsPagination = unsuccessfulApplicationsPagination;
     }
 
     @Override
