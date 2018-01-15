@@ -384,7 +384,6 @@ Internal user can download the signed GOL
 Comp Admin can accept the signed grant offer letter
     [Documentation]  INFUND-6377 IFS-2174
     [Tags]  HappyPath
-    [Setup]  log in as a different user   &{Comp_admin1_credentials}
     Given the user navigates to the page  ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
     When the user clicks the button/link  css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a
     Then the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
@@ -392,14 +391,13 @@ Comp Admin can accept the signed grant offer letter
     And the user should see the element   css=#submit-button.disabled
     When the user selects the radio button  approvalType  rejectGOL
     Then the user should not see the element  css=#submit-button.disabled
-    And the user clicks the button/link   link=Cancel
-    Then the user should not see an error in the page
 
 Comp Admin is able to Reject the Grant Offer letter
     [Documentation]  IFS-2174
     [Tags]  HappyPath
     Given the user selects the radio button  approvalType  rejectGOL
     And the user clicks the button/link      jQuery=button:contains("Submit")
+    And the user clicks the button/link      jQuery=button[type="submit"]:contains("Reject signed grant offer letter")
     Then the user should see the element     jQuery=.warning-alert:contains("documents have been reviewed and rejected.")
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
     Then the user should see the element     jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(7).rejected
@@ -429,6 +427,7 @@ Internal user accepts signed grant offer letter
     When the user clicks the button/link   jQuery=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a:contains("Review")
     And the user selects the radio button  approvalType  acceptGOL
     And the user clicks the button/link    jQuery=button:contains("Submit")
+    And the user clicks the button/link    jQuery=button[type="submit"]:contains("Accept signed grant offer letter")
     Then the user should see the element   jQuery=.success-alert h2:contains("These documents have been approved.")
     When the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
     Then the user should see the element   css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.ok
