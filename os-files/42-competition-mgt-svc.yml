@@ -38,7 +38,7 @@ items:
             httpGet:
               path: /management/monitoring/health
               port: 8080
-            initialDelaySeconds: 60
+            initialDelaySeconds: 100
             periodSeconds: 5
             timeoutSeconds: 5
             successThreshold: 1
