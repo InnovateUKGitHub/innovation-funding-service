@@ -390,7 +390,7 @@ Comp Admin can accept the signed grant offer letter
     Then the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     And the user should see the element   css=label[for="acceptGOL"]
     And the user should see the element   css=#submit-button.disabled
-    When the user selects the radio button  approalType  rejectGOL
+    When the user selects the radio button  approvalType  rejectGOL
     Then the user should not see the element  css=#submit-button.disabled
     And the user clicks the button/link   link=Cancel
     Then the user should not see an error in the page
