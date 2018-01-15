@@ -11,3 +11,8 @@ task startMySql(type:Exec) {
         }
     }
 }
+
+task createTestSchema(type:Exec) {
+    workingDir '../'
+    commandLine 'docker-compose', '-f', 'docker-compose.yml', '-f', 'docker-compose-dev.yml', 'exec', '-T', 'mysql' ,'mysql' ,'-uroot' ,'-ppassword' ,'-e', 'create database if not exists ifs_test'
+}

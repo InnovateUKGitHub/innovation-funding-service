@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.thread.viewmodel;
 
-import org.innovateuk.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 
 import java.time.ZonedDateTime;
 import java.util.List;
