@@ -1,54 +1,57 @@
+import com.bmuschko.gradle.docker.tasks.image.*
+
 buildscript {
 
+
     repositories {
-        jcenter()
         mavenCentral()
+        jcenter()
     }
 
     dependencies {
-        classpath "com.bmuschko:gradle-docker-plugin:3.2.1"
+        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
     }
+
+}
+
+
+repositories {
+    mavenCentral()
 }
 
 // use fully qualified class name
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 
-// import task classes
-import com.bmuschko.gradle.docker.tasks.image.*
 
-task prepareFractalDockerInput {
+    task prepareFractalDockerInput {
 
-    def inputDir = project.file("$project.buildDir/fractal")
+        def inputDir = project.file("$project.buildDir/fractal")
+        inputDir.delete();
 
-    inputDir.delete();
-
-    doFirst {
-        copy {
-            from file("ifs-web-core/src/main/resources/templates/fractal-components")
-            into file("${inputDir}/fractal-components")
-        }
-        copy {
-            from file("ifs-web-core/src/main/resources/static")
-            into file("${inputDir}/static")
-        }
-        copy {
-            from file("fractal.js")
-            into inputDir
-        }
-        copy {
-            from file("fractal")
-            into inputDir
+        doFirst {
+            copy {
+                from file("ifs-web-core/src/main/resources/templates/fractal-components")
+                into file("${inputDir}/fractal-components")
+            }
+            copy {
+                from file("ifs-web-core/src/main/resources/static")
+                into file("${inputDir}/static")
+            }
+            copy {
+                from file("fractal.js")
+                into inputDir
+            }
+            copy {
+                from file("fractal")
+                into inputDir
+            }
         }
     }
-}
 
-task buildFractal(type: DockerBuildImage) {
-    dependsOn prepareFractalDockerInput
-    tag = "innovateuk/fractal:latest"
-    inputDir = project.file("$project.buildDir/fractal")
-//    inputDir = file("/Users/adambirse/development/code/innovation-funding-service/ifs-web-service/build/fractal")
-    println "***********************"
-    println inputDir
-}
+    task buildFractal(type: DockerBuildImage) {
+        dependsOn prepareFractalDockerInput
+        tag = "innovateuk/fractal:latest"
+        inputDir = project.file("$project.buildDir/fractal")
+    }
 
 

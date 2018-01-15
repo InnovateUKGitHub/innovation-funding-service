@@ -1,8 +1,5 @@
 import com.bmuschko.gradle.docker.tasks.image.*
 
-import com.bmuschko.gradle.docker.tasks.image.*
-import com.bmuschko.gradle.docker.DockerRegistryCredentials
-
 buildscript {
 
 
@@ -16,6 +13,7 @@ buildscript {
     }
 
 }
+
 
 // use fully qualified class name
 apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin

@@ -2,7 +2,7 @@
 
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
-
+apply from: "fractal.gradle";
 
 subprojects {
 
@@ -136,36 +136,3 @@ subprojects {
 //}
 //
 //build.finalizedBy endpointDocumentation
-
-
-//TODO reinstate fractal build
-//    task prepareFractalDockerInput {
-//
-//        def inputDir = project.file("$project.buildDir/fractal")
-//        inputDir.delete();
-//
-//        doFirst {
-//            copy {
-//                from file("ifs-web-core/src/main/resources/templates/fractal-components")
-//                into file("${inputDir}/fractal-components")
-//            }
-//            copy {
-//                from file("ifs-web-core/src/main/resources/static")
-//                into file("${inputDir}/static")
-//            }
-//            copy {
-//                from file("fractal.js")
-//                into inputDir
-//            }
-//            copy {
-//                from file("fractal")
-//                into inputDir
-//            }
-//        }
-//    }
-//
-//    task buildFractal(type: DockerBuildImage) {
-//        dependsOn prepareFractalDockerInput
-//        tag = "innovateuk/fractal:latest"
-//        inputDir = project.file("$project.buildDir/fractal")
-//    }
