@@ -10,6 +10,15 @@ public class TermsAndConditionsResource {
     private String template;
     private String version;
 
+    public TermsAndConditionsResource() {
+    }
+
+    public TermsAndConditionsResource(String name, String template, String version) {
+        this.name = name;
+        this.template = template;
+        this.version = version;
+    }
+
     public Long getId() {
         return id;
     }

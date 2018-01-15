@@ -119,7 +119,7 @@ public class Competition implements ProcessActivity {
         setupComplete = false;
     }
 
-    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate) {
+    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate, TermsAndConditions termsAndConditions) {
         this.id = id;
         this.applications = applications;
         this.questions = questions;
@@ -129,6 +129,7 @@ public class Competition implements ProcessActivity {
         this.setEndDate(endDate);
         this.setRegistrationDate(registrationDate);
         this.setupComplete = true;
+        this.termsAndConditions = termsAndConditions;
     }
 
     public Competition(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate) {

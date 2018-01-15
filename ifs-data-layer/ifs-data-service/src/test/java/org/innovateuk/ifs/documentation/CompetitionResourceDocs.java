@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
+import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.ZonedDateTime;
@@ -57,7 +58,8 @@ public class CompetitionResourceDocs {
             fieldWithPath("nonIfs").description("Is this competition a non-ifs competition (not managed via IFS)"),
             fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition"),
             fieldWithPath("hasAssessmentPanel").description("indicates if the competition will have an assessment panel stage"),
-            fieldWithPath("hasInterviewStage").description("indicates if the competition will have an interview stage")
+            fieldWithPath("hasInterviewStage").description("indicates if the competition will have an interview stage"),
+            fieldWithPath("termsAndConditions").description("indicates the terms and conditions that apply to this competition")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
@@ -91,5 +93,6 @@ public class CompetitionResourceDocs {
             .withNonIfsUrl("https://google.co.uk")
             .withMilestones(asList(1L, 2L, 3L))
             .withHasAssessmentPanel(false)
-            .withHasInterviewStage(false);
+            .withHasInterviewStage(false)
+            .withTermsAndConditions(new TermsAndConditionsResource("T&C", "terms-and-conditions-template", "1"));
 }
