@@ -14,6 +14,8 @@ UPDATE competition SET terms_and_conditions_id=@apc_terms_and_conditions_id
 UPDATE competition SET terms_and_conditions_id=@ati_terms_and_conditions_id
   WHERE competition_type_id=@ati_competition_type_id;
 
-UPDATE competition SET terms_and_conditions_id=@default_terms_and_conditions_id
-  WHERE (competition_type_id IS NULL)
-  OR (competition_type_id NOT IN (@apc_competition_type_id, @ati_competition_type_id));
+UPDATE competition SET terms_and_conditions_id=@apc_terms_and_conditions_id
+  WHERE name = 'Template for the Advanced Propulsion Centre competition type';
+
+UPDATE competition SET terms_and_conditions_id=@ati_terms_and_conditions_id
+  WHERE name = 'Template for the Aerospace Technology Institute competition type';

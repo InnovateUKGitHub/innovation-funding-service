@@ -62,7 +62,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     public void termsAndConditions() throws Exception {
         final CompetitionResource competitionResource = newCompetitionResource()
                 .withCompetitionTypeName("Competition name")
-                .withTermsAndConditionsTemplate("special-terms-and-conditions")
+                .withTermsAndConditions("special-terms-and-conditions")
                 .build();
 
         when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);

@@ -54,6 +54,6 @@ public class CompetitionController {
     @GetMapping("info/terms-and-conditions")
     public String termsAndConditions(@PathVariable("competitionId") final long competitionId) {
         CompetitionResource compResource = competitionService.getById(competitionId);
-        return "competition/info/" + compResource.getTermsAndConditionsTemplate();
+        return "competition/info/" + compResource.getTermsAndConditions().getTemplate();
     }
 }

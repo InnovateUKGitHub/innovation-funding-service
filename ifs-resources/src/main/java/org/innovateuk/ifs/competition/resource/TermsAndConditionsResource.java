@@ -1,33 +1,19 @@
-package org.innovateuk.ifs.competition.domain;
+package org.innovateuk.ifs.competition.resource;
 
-import org.hibernate.annotations.Immutable;
+/**
+ * Resource representation of TermsAndConditions
+ */
+public class TermsAndConditionsResource {
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-@Entity
-@Immutable
-public class TermsAndConditions {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
     private String name;
-
     private String template;
-
     private String version;
 
     public Long getId() {
         return id;
     }
 
-    /**
-     * Setter for MapStruct
-     */
     public void setId(Long id) {
         this.id = id;
     }
@@ -36,11 +22,23 @@ public class TermsAndConditions {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getTemplate() {
         return template;
     }
 
+    public void setTemplate(String template) {
+        this.template = template;
+    }
+
     public String getVersion() {
         return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

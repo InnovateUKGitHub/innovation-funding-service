@@ -84,7 +84,7 @@ public class CompetitionResource {
     private boolean nonIfs = false;
     private String nonIfsUrl;
 
-    private String termsAndConditionsTemplate;
+    private TermsAndConditionsResource termsAndConditions;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -561,12 +561,12 @@ public class CompetitionResource {
         return !isNonFinanceType();
     }
 
-    public String getTermsAndConditionsTemplate() {
-        return termsAndConditionsTemplate;
+    public TermsAndConditionsResource getTermsAndConditions() {
+        return termsAndConditions;
     }
 
-    public void setTermsAndConditionsTemplate(String termsAndConditionsTemplate) {
-        this.termsAndConditionsTemplate = termsAndConditionsTemplate;
+    public void setTermsAndConditions(TermsAndConditionsResource termsAndConditions) {
+        this.termsAndConditions = termsAndConditions;
     }
 
     @Override

@@ -4,9 +4,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.TermsAndConditions;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionTypeMapper;
+import org.innovateuk.ifs.competition.mapper.TermsAndConditionsMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.repository.TermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -64,6 +66,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private SetupStatusService setupStatusService;
     @Autowired
     private TermsAndConditionsRepository termsAndConditionsRepository;
+    @Autowired
+    private TermsAndConditionsMapper termsAndConditionsMapper;
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
@@ -114,8 +118,23 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingLeadTechnologistId) {
 
         return deleteExistingLeadTechnologist(competitionId, existingLeadTechnologistId)
+                .andOnSuccess(() -> attachCorrectTermsAndConditions(competitionResource))
                 .andOnSuccess(() -> save(competitionId, competitionResource))
-                .andOnSuccess(updatedCompetitionResource -> saveLeadTechnologist(updatedCompetitionResource));
+                .andOnSuccess(this::saveLeadTechnologist);
+    }
+
+    private ServiceResult<Void> attachCorrectTermsAndConditions(CompetitionResource competitionResource) {
+
+        Long competitionTypeId = competitionResource.getCompetitionType();
+
+        if (competitionTypeId != null) {
+            CompetitionType competitionTypeSelected = competitionTypeRepository.findOne(competitionTypeId);
+            Competition competitionTemplate = competitionTypeSelected.getTemplate();
+            TermsAndConditions termsAndConditions = competitionTemplate.getTermsAndConditions();
+            competitionResource.setTermsAndConditions(termsAndConditionsMapper.mapToResource(termsAndConditions));
+        }
+
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> deleteExistingLeadTechnologist(Long competitionId, Long existingLeadTechnologistId) {
@@ -302,7 +321,6 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
                 termsAndConditionsRepository.findOneByTemplate(TermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME);
 
         competition.setTermsAndConditions(defaultTermsAndConditions);
-
 
         Competition savedCompetition = competitionRepository.save(competition);
         return publicContentService.initialiseByCompetitionId(savedCompetition.getId())

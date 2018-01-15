@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.competition.resource.CollaborationLevel;
-import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.*;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -210,8 +207,8 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("hasInterviewStage", hasInterviewStage);
     }
 
-    public CompetitionResourceBuilder withTermsAndConditionsTemplate(String... value) {
-        return withArray((template, competition) -> competition.setTermsAndConditionsTemplate(template), value);
+    public CompetitionResourceBuilder withTermsAndConditions(TermsAndConditionsResource... value) {
+        return withArray((template, competition) -> competition.setTermsAndConditions(template), value);
     }
 
     @Override

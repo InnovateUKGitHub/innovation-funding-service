@@ -111,7 +111,7 @@ public class Competition implements ProcessActivity {
     private boolean nonIfs = false;
     private String nonIfsUrl;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
     private TermsAndConditions termsAndConditions;
 
