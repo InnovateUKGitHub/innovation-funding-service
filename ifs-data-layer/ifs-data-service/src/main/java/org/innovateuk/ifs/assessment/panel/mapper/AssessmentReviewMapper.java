@@ -1,7 +1,8 @@
-package org.innovateuk.ifs.assessment.mapper;
+package org.innovateuk.ifs.assessment.panel.mapper;
 
 import org.innovateuk.ifs.application.mapper.ApplicationMapper;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;

@@ -25,4 +25,5 @@ public interface ProcessRoleRepository extends PagingAndSortingRepository<Proces
     ProcessRole findByUserIdAndApplicationId(Long userId, Long applicationId);
     ProcessRole findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(Long userId, Long roleId, Long applicationId, Long organisationId);
     boolean existsByUserIdAndApplicationId(Long userId, Long applicationId);
+    boolean existsByUserIdAndApplicationIdAndRoleName(Long id, Long applicationId, String roleName);
 }

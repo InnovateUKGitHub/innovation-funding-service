@@ -103,11 +103,11 @@ public class ApplicationInvitePermissionRules {
     }
 
     private boolean isLeadForInvite(final ApplicationInvite invite, final UserResource user) {
-        return checkProcessRole(user, invite.getTarget().getId(), UserRoleType.LEADAPPLICANT, processRoleRepository);
+        return checkProcessRole(user, invite.getTarget().getId(), UserRoleType.LEADAPPLICANT, processRoleRepository, roleRepository);
     }
 
     private boolean isLeadForInvite(final ApplicationInviteResource invite, final UserResource user) {
-        return checkProcessRole(user, invite.getApplication(), UserRoleType.LEADAPPLICANT, processRoleRepository);
+        return checkProcessRole(user, invite.getApplication(), UserRoleType.LEADAPPLICANT, processRoleRepository, roleRepository);
     }
 
     private boolean applicationIsEditableById(final Long applicationId) {
