@@ -551,7 +551,7 @@ Moving competition to Ready to Open state
 
 Requesting the id of this Competition
     [Documentation]  retrieving the id of the competition so that we can use it in urls
-    [Tags]  HappyPath MySQL
+    [Tags]   HappyPath   MySQL
     ${competitionId} =  get comp id from comp title  ${competitionTitle}
     Set suite variable  ${competitionId}
 
@@ -653,14 +653,17 @@ Innovation leads can be added to a competition
     When the user clicks the button/link      jQuery=.inline-nav a:contains("Find")
     Then the user should see the element      jQuery=td:contains(${peter_freeman}) button:contains("Add")
 
-The Applicant is able to apply to the competition once is Open and see the correct Questions
+The Applicant is able to apply to the competition once is Open
     [Documentation]  IFS-182
     [Tags]  HappyPath  MySQL
-    [Setup]  the competition moves to Open state  ${competitionId}
-    Given log in as a different user              &{lead_applicant_credentials}
-    And logged in user applies to competition     ${competitionTitle}
-    Then the user should see the element          jQuery=li:contains("${customQuestion}")
-    And the user should not see the element       jQuery=li:contains("Costs and value for money")
+    [Setup]  the competition moves to Open state    ${competitionId}
+    Given log in as a different user                &{lead_applicant_credentials}
+    And logged in user applies to competition       ${competitionTitle}
+
+The Applicant see the correct Questions
+    [Documentation]   IFS-182
+    Given the user should see the element            jQuery=li:contains("${customQuestion}")
+    And the user should not see the element         jQuery=li:contains("Costs and value for money")
     #default question that has been removed is not there.
 
 *** Keywords ***
