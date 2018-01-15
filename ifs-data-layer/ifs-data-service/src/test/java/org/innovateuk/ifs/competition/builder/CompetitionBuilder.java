@@ -30,7 +30,14 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     }
 
     public static CompetitionBuilder newCompetition() {
-        return new CompetitionBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Competition "));
+        return new CompetitionBuilder(emptyList()).
+                with(uniqueIds()).
+                with(idBasedNames("Competition ")).
+                with(competition -> {
+                    TermsAndConditions termsAndConditions = new TermsAndConditions();
+                    termsAndConditions.setId(1L);
+                    competition.setTermsAndConditions(termsAndConditions);
+                });
     }
 
     public CompetitionBuilder withSections(List<Section> sections) {

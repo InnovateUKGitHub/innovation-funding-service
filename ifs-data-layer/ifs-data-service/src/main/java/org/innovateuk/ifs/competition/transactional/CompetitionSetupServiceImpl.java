@@ -127,6 +127,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
         Long competitionTypeId = competitionResource.getCompetitionType();
 
+        // it is possible during autosave for this competition type to not yet be selected.  Therefore we need a null check
+        // here
         if (competitionTypeId != null) {
             CompetitionType competitionTypeSelected = competitionTypeRepository.findOne(competitionTypeId);
             Competition competitionTemplate = competitionTypeSelected.getTemplate();
