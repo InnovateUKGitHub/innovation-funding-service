@@ -1,8 +1,8 @@
-package org.innovateuk.thread.service;
+package org.innovateuk.ifs.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.List;
