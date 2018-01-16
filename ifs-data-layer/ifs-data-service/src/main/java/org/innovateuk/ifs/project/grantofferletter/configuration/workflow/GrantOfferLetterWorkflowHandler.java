@@ -85,6 +85,11 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
         return process != null && GrantOfferLetterState.APPROVED.equals(process.getActivityState());
     }
 
+    public boolean isRejected(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        return process != null && GrantOfferLetterState.SENT.equals(process.getActivityState()) && GOL_REJECTED.getType().equalsIgnoreCase(process.getProcessEvent());
+    }
+
     public boolean isReadyToApprove(Project project) {
         GOLProcess process = getCurrentProcess(project);
         return process != null && GrantOfferLetterState.READY_TO_APPROVE.equals(process.getActivityState());
