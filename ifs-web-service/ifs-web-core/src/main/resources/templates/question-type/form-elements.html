@@ -236,7 +236,7 @@
 
 <!-- ========================= read only text for form responses ==================== -->
 <th:block th:fragment="form-text-only (model)" th:with="formInput=${model.formInput}">
-        <div class="wysiwyg-styles" ifs:utext="*{formInput[__${formInput.id}__]}"/>
+    <div class="wysiwyg-styles" ifs:utext="*{formInput[__${formInput.id}__]}"/>
 </th:block>
 
 <!-- ========================= Current Assignee =========================== -->

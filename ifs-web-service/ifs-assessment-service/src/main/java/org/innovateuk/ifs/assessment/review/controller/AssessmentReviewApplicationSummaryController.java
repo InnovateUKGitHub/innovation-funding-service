@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping(value = "/review/{reviewId}")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentReviewController.class)
+@SecuredBySpring(value = "Controller", description = "Assessors can access applications for review", securedType = AssessmentReviewController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessmentReviewApplicationSummaryController {
 
