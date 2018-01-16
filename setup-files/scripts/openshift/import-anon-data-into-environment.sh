@@ -3,6 +3,7 @@ echo "############################################################"
 echo "# Expects there to be an anonymised database dump at:      #"
 echo "# /tmp/anonymised/anonymised-dump.sql.gpg                  #"
 echo "# Which should be there if db-anonymised dump has been run #"
+echo "# TODO other assumptions                                   #"
 echo "############################################################"
 set -e
 
@@ -23,57 +24,90 @@ SVC_ACCOUNT_CLAUSE=$(getSvcAccountClause $TARGET $PROJECT $SVC_ACCOUNT_TOKEN)
 REGISTRY_TOKEN=$SVC_ACCOUNT_TOKEN
 
 function checkVariables() {
-    if [ -z "$DB_DESTINATION_USER" ]; then echo "Set DB_DESTINATION_USER environment variable"; exit -1; fi
-    if [ -z "$DB_DESTINATION_PASS" ]; then echo "Set DB_DESTINATION_PASS environment variable"; exit -1; fi
-    if [ -z "$DB_DESTINATION_NAME" ]; then echo "Set DB_DESTINATION_NAME environment variable"; exit -1; fi
-    if [ -z "$DB_DESTINATION_HOST" ]; then echo "Set DB_DESTINATION_HOST environment variable"; exit -1; fi
-    if [ -z "$DB_DESTINATION_SYSTEM_USER_UID" ]; then echo "Set DB_DESTINATION_SYSTEM_USER_UID environment variable"; exit -1; fi
+    if [ -z "$DB_USER" ];                                    then echo "Set DB_USER environment variable"; exit -1; fi
+    if [ -z "$DB_PASS" ];                                    then echo "Set DB_PASS environment variable"; exit -1; fi
+    if [ -z "$DB_NAME" ];                                    then echo "Set DB_NAME environment variable"; exit -1; fi
+    if [ -z "$DB_HOST" ];                                    then echo "Set DB_HOST environment variable"; exit -1; fi
+    if [ -z "$DB_DESTINATION_SYSTEM_USER_UID" ];             then echo "Set DB_DESTINATION_SYSTEM_USER_UID environment variable"; exit -1; fi
     if [ -z "$DB_DESTINATION_SYSTEM_MAINTENANCE_USER_UID" ]; then echo "DB_DESTINATION_SYSTEM_MAINTENANCE_USER_UID environment variable"; exit -1; fi
-    if [ -z "$DB_DUMP_PASS" ]; then echo "Set DB_DUMP_PASS environment variable"; exit -1; fi
-    DB_DESTINATION_PORT=${DB_DESTINATION_PORT:-3306}
+    if [ -z "$DUMP_PASS" ];                                  then echo "Set DB_DUMP_PASS environment variable"; exit -1; fi
+
+    DB_PORT=${DB_DESTINATION_PORT:-3306}
 }
 
-function getDatapodName {
- oc get pods -o go-template --template '{{range .items}}{{.metadata.name}}{{"\n"}}{{end}}' ${SVC_ACCOUNT_CLAUSE} \
- | grep data-service \
- | head -n1
+function startupMysqlClientPod() {
+
+    echo "Starting up a new mysql-client pod."
+
+    until oc create -f $(getBuildLocation)/mysql-client/91-mysql-client.yml ${SVC_ACCOUNT_CLAUSE} &> /dev/null;
+    do
+      echo "Shutting down any pre-existing mysql-client pods before starting a new one."
+      oc delete -f $(getBuildLocation)/mysql-client/91-mysql-client.yml ${SVC_ACCOUNT_CLAUSE} &> /dev/null;
+      sleep 10
+    done
 }
 
-function copyDumpToDatapod() {
-  DATA_POD_NAME=$1
-  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME mkdir -p /tmp/anonymised
-  oc rsync ${SVC_ACCOUNT_CLAUSE} /tmp/anonymised $DATA_POD_NAME:/tmp/
+function waitForMysqlClientPodToStart() {
+
+    until oc get pods mysql-client ${SVC_ACCOUNT_CLAUSE} | grep "Running" &> /dev/null;
+    do
+      echo "Wait for mysql to start running"
+      sleep 2
+    done
+}
+
+function shutdownMysqlClientPodAfterUse() {
+
+    echo "Shutting down mysql-client pod.  Waiting for it to stop..."
+
+    oc delete -f $(getBuildLocation)/mysql-client/91-mysql-client.yml ${SVC_ACCOUNT_CLAUSE} &> /dev/null;
+    max_termination_timeout_seconds=$((120))
+    time_waited_so_far=$((0))
+
+    until ! oc get po mysql-client ${SVC_ACCOUNT_CLAUSE} &> /dev/null;
+    do
+      if [ "$time_waited_so_far" -gt "$max_termination_timeout_seconds" ]; then
+        echo "mysql-client pod didn't shut down as expected"
+        exit -1;
+      fi
+      echo "Still waiting for mysql-client pod to shut down..."
+      sleep 2
+      time_waited_so_far=$((time_waited_so_far + 5))
+    done
+}
+
+function copyDumpToMysqlClientPod() {
+  oc rsh ${SVC_ACCOUNT_CLAUSE} mysql-client mkdir -p /tmp/anonymised
+  oc rsync ${SVC_ACCOUNT_CLAUSE} /tmp/anonymised mysql-client:/tmp/
 }
 
 function insertDataIntoDestinationDatabase() {
-  DATA_POD_NAME=$1
-  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME apt-get update
-  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME apt-get install mysql-client -y
-  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME \
-  bash -c "gpg --decrypt --passphrase $DB_DUMP_PASS /tmp/anonymised/anonymised-dump.sql.gpg \
-  | mysql -u$DB_DESTINATION_USER -p$DB_DESTINATION_PASS -h$DB_DESTINATION_HOST -P$DB_DESTINATION_PORT $DB_DESTINATION_NAME"
+  oc rsh ${SVC_ACCOUNT_CLAUSE} mysql-client \
+  sh -c "gpg --decrypt --passphrase $DB_DUMP_PASS /tmp/anonymised/anonymised-dump.sql.gpg \
+  | mysql -u$DB_USER -p$DB_PASS -h$DB_HOST -P$DB_PORT $DB_NAME"
 }
 
 function resetSystemUserUids() {
-  DATA_POD_NAME=$1
+  MYSQL_CLIENT_POD_NAME=$1
   echo
-  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME \
+  oc rsh ${SVC_ACCOUNT_CLAUSE} mysql-client \
   mysql -u$DB_DESTINATION_USER -p$DB_DESTINATION_PASS -h$DB_DESTINATION_HOST -P$DB_DESTINATION_PORT $DB_DESTINATION_NAME \
   --execute "UPDATE user SET uid = '$DB_DESTINATION_SYSTEM_USER_UID' WHERE email = 'ifs_web_user@innovateuk.org'"
-  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME \
+  oc rsh ${SVC_ACCOUNT_CLAUSE} mysql-client \
   mysql -u$DB_DESTINATION_USER -p$DB_DESTINATION_PASS -h$DB_DESTINATION_HOST -P$DB_DESTINATION_PORT $DB_DESTINATION_NAME \
   --execute "UPDATE user SET uid = '$DB_DESTINATION_SYSTEM_MAINTENANCE_USER_UID' WHERE email = 'ifs_system_maintenance_user@innovateuk.org'"
 }
 
 function deleteDumpFromDataPod() {
-  DATA_POD_NAME=$1
-  oc rsh ${SVC_ACCOUNT_CLAUSE} $DATA_POD_NAME rm /tmp/anonymised/anonymised-dump.sql.gpg
+  MYSQL_CLIENT_POD_NAME=$1
+  oc rsh ${SVC_ACCOUNT_CLAUSE} mysql-client rm /tmp/anonymised/anonymised-dump.sql.gpg
 }
 
-
 checkVariables
-DATA_POD_NAME=$(getDatapodName)
-copyDumpToDatapod $DATA_POD_NAME
-insertDataIntoDestinationDatabase $DATA_POD_NAME
-resetSystemUserUids $DATA_POD_NAME
-deleteDumpFromDataPod $DATA_POD_NAME
+useContainerRegistry
+startupMysqlClientPod
+waitForMysqlClientPodToStart
+copyDumpToMysqlClientPod
+insertDataIntoDestinationDatabase
+resetSystemUserUids
+#shutdownMysqlClientPodAfterUse

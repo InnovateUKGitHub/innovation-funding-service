@@ -28,6 +28,10 @@ processResources {
     filesMatching("mail/*.*") {
         expand project.properties
     }
+
+    filesMatching("mysql-client/*.*") {
+        expand project.properties
+    }
 }
 
 task osDeployProduction(type:Exec) {
@@ -182,6 +186,12 @@ task dbAnonymisedDumpLocal(type:Exec) {
 task createProjectLocal(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-create-project.sh'
     args = [openshiftEnv, "local"]
+}
+
+task importAnonDataIntoLocal(type:Exec) {
+    dependsOn processResources
+    executable = 'setup-files/scripts/openshift/import-anon-data-into-environment.sh'
+    args = [openshiftEnv, "local",  project.version]
 }
 
 
