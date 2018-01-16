@@ -17,9 +17,8 @@ public class AssessmentReviewDocs {
     public static final FieldDescriptor[] assessmentReviewFields = {
             fieldWithPath("id").description("Id of the assessment review"),
             fieldWithPath("event").description("currently not used"),
-            fieldWithPath("startDate").description("start date of the assessment"),
-            fieldWithPath("endDate").description("end date of the assessment"),
-            fieldWithPath("fundingDecision").description("Response to the application funding confirmation"),
+            fieldWithPath("startDate").description("start date of the assessment review"),
+            fieldWithPath("endDate").description("end date of the assessment review"),
             fieldWithPath("rejection").description("The reason for rejecting the application"),
             fieldWithPath("processRole").description("process role of the assigned assessor"),
             fieldWithPath("application").description("the id of the application being assessed"),
@@ -37,12 +36,4 @@ public class AssessmentReviewDocs {
             .withActivityState(PENDING)
             .withProcessRole(1L)
             .withApplication(2L);
-
-    public static final FieldDescriptor[] assessmentSubmissionsFields = {
-            fieldWithPath("assessmentIds").description("List of assessment ids to submit.")
-    };
-
-    public static final AssessmentSubmissionsResourceBuilder assessmentSubmissionsResourceBuilder =
-            newAssessmentSubmissionsResource()
-                    .withAssessmentIds(asList(1L, 2L));
 }

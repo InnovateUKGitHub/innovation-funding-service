@@ -48,6 +48,10 @@ processResources {
     filesMatching("sil-stub/*.*") {
         expand project.properties
     }
+
+    filesMatching("mail/*.*") {
+        expand project.properties
+    }
 }
 
 task osDeployProduction(type: Exec) {

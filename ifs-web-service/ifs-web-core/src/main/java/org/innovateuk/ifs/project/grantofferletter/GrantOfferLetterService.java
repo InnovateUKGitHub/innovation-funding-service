@@ -41,6 +41,8 @@ public interface GrantOfferLetterService {
 
     ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
 
+    ServiceResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId);
+
     ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId);
 
     Optional<ByteArrayResource> getAdditionalContractFile(Long projectId);

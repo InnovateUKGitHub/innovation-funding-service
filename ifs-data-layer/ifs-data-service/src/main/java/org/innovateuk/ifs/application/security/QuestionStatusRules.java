@@ -17,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 @Component
@@ -33,9 +34,6 @@ public class QuestionStatusRules {
 
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
-
-    @Autowired
-    private QuestionStatusMapper questionStatusMapper;
 
     @PermissionRule(value = "READ", description = "Users can only read statuses of applications they are connected to")
     public boolean userCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
@@ -67,8 +65,7 @@ public class QuestionStatusRules {
     }
 
     private boolean userIsConnected(Long applicationId, UserResource user){
-        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), applicationId);
-        return processRole != null;
+        return processRoleRepository.existsByUserIdAndApplicationId(user.getId(), applicationId);
     }
 
     private boolean userIsAssigned(Long questionId, Long applicationId, UserResource user){
@@ -81,7 +78,6 @@ public class QuestionStatusRules {
     }
 
     private boolean userIsLeadApplicant(Long applicationId, UserResource user){
-        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), applicationId);
-        return processRole.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName());
+        return processRoleRepository.existsByUserIdAndApplicationIdAndRoleName(user.getId(), applicationId, LEADAPPLICANT.getName());
     }
 }
