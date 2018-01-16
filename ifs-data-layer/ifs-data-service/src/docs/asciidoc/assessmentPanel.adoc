@@ -25,3 +25,37 @@ include::{snippets}/assessmentpanel/get-assessment-reviews/response-fields.adoc[
 
 ==== Curl Example
 include::{snippets}/assessmentpanel/get-assessment-reviews/curl-request.adoc[]
+
+=== Get assessment review
+==== Request
+include::{snippets}/assessmentpanel/get-assessment-review/http-request.adoc[]
+include::{snippets}/assessmentpanel/get-assessment-review/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanel/get-assessment-review/http-response.adoc[]
+include::{snippets}/assessmentpanel/get-assessment-review/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanel/get-assessment-reviews/curl-request.adoc[]
+
+=== Accept assessment review
+==== Request
+include::{snippets}/assessmentpanel/accept-invitation/http-request.adoc[]
+include::{snippets}/assessmentpanel/accept-invitation/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanel/accept-invitation/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanel/accept-invitation/curl-request.adoc[]
+
+=== Reject assessment review
+==== Request
+include::{snippets}/assessmentpanel/accept-invitation/http-request.adoc[]
+include::{snippets}/assessmentpanel/accept-invitation/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessmentpanel/accept-invitation/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/assessmentpanel/accept-invitation/curl-request.adoc[]

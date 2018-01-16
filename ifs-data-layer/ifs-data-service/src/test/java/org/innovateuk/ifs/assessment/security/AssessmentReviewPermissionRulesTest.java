@@ -1,10 +1,11 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
-import org.innovateuk.ifs.assessment.mapper.AssessmentReviewMapper;
+import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewMapper;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState;
+import org.innovateuk.ifs.assessment.panel.security.AssessmentReviewPermissionRules;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -73,68 +74,6 @@ public class AssessmentReviewPermissionRulesTest extends BasePermissionRulesTest
         EnumSet.allOf(AssessmentReviewState.class).forEach(state ->
                 assertFalse("other users should not be able to read any assessment reviews",
                         rules.userCanReadAssessmentReviewOnDashboard(assessmentReviews.get(state), otherUser)));
-    }
-
-    @Test
-    public void ownersCanReadAssessmentsNonDashboard() {
-        EnumSet<AssessmentReviewState> allowedStates = EnumSet.of(ACCEPTED);
-
-        allowedStates.forEach(state ->
-                assertTrue("the owner of an assessment review should be able to read that assessment review",
-                        rules.userCanReadAssessmentReview(assessmentReviews.get(state), assessorUser)));
-
-        EnumSet.complementOf(allowedStates).forEach(state ->
-                assertFalse("the owner of an assessment review should not be able to read that assessment review",
-                        rules.userCanReadAssessmentReview(assessmentReviews.get(state), assessorUser)));
-    }
-
-    @Test
-    public void otherUsersCanNotReadAssessmentsNonDashboard() {
-        EnumSet.allOf(AssessmentReviewState.class).forEach(state ->
-                assertFalse("other users should not be able to read any assessment reviews",
-                        rules.userCanReadAssessmentReview(assessmentReviews.get(state), otherUser)));
-    }
-
-    @Test
-    public void ownersCanReadPendingAssessmentsToRespond() {
-        EnumSet<AssessmentReviewState> allowedStates = EnumSet.of(PENDING);
-        allowedStates.forEach(state ->
-                assertTrue("the owner of a pending assessment review should be able to read it in order to respond to their" +
-                                " invitation",
-                        rules.userCanReadToAssign(assessmentReviews.get(state), assessorUser)));
-
-        EnumSet.complementOf(allowedStates).forEach(state ->
-                assertFalse("the owner of an assessment review should not be able to read it in order to respond to" +
-                                " their invitation if the assessment review is not pending",
-                        rules.userCanReadToAssign(assessmentReviews.get(state), assessorUser)));
-    }
-
-    @Test
-    public void otherUsersCanNotReadPendingAssessmentsToRespond() {
-        EnumSet.allOf(AssessmentReviewState.class).forEach(state ->
-            assertFalse("other users should not be able to read assessment reviews in order to respond to invitations",
-                    rules.userCanReadToAssign(assessmentReviews.get(state), otherUser)));
-    }
-
-    @Test
-    public void ownersCanReadAssessmentsToReject() {
-        EnumSet<AssessmentReviewState> allowedStates = EnumSet.of(PENDING, ACCEPTED);
-        allowedStates.forEach(state ->
-                assertTrue("the owner of a pending assessment review should be able to read it in order to respond to their" +
-                                " invitation",
-                        rules.userCanReadToReject(assessmentReviews.get(state), assessorUser)));
-
-        EnumSet.complementOf(allowedStates).forEach(state ->
-                assertFalse("the owner of an assessment review should not be able to read it in order to respond to" +
-                                " their invitation if the assessment review is not pending or accepted",
-                        rules.userCanReadToReject(assessmentReviews.get(state), assessorUser)));
-    }
-
-    @Test
-    public void otherUsersCanNotReadAssessmentsToReject() {
-        EnumSet.allOf(AssessmentReviewState.class).forEach(state ->
-            assertFalse("other users should not be able to read assessment reviews in order to respond to invitations",
-                    rules.userCanReadToReject(assessmentReviews.get(state), otherUser)));
     }
 
     private AssessmentReviewResource setupAssessmentReview(ProcessRole participant, AssessmentReviewState state) {
