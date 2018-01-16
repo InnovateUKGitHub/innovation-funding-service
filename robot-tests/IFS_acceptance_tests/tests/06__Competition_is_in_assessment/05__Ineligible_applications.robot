@@ -90,7 +90,7 @@ Sort ineligible applications by lead
 
 Filter ineligible applications
     [Documentation]    INFUND-8942
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user        &{Comp_admin1_credentials}
     Given the user navigates to the page       ${ineligibleApplications}
     When the user selects the option from the drop-down menu  No  id=filterInform
