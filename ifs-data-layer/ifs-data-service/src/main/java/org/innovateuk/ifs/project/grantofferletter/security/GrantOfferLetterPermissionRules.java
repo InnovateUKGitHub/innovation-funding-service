@@ -145,13 +145,18 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
         return isPartner(project.getId(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_STATUS", description = "A user can see signed grant offer status that they are partners on")
-    public boolean partnersOnProjectCanViewSignedGrantOfferStatus(ProjectResource project, UserResource user) {
+    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS", description = "A user can view signed grant offer letter approval status that they are partners on")
+    public boolean partnersOnProjectCanViewSignedGrantOfferLetterApprovedStatus(ProjectResource project, UserResource user) {
         return project != null && isPartner(project.getId(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_STATUS", description = "Internal users can see signed grant offer status")
-    public boolean internalUsersCanViewSignedGrantOfferStatus(ProjectResource project, UserResource user) {
+    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS", description = "Internal users can view signed grant offer letter approval status")
+    public boolean internalUsersCanViewSignedGrantOfferLetterApprovedStatus(ProjectResource project, UserResource user) {
+        return isInternal(user);
+    }
+
+    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_REJECTED_STATUS", description = "Internal users can view signed grant offer letter rejection status")
+    public boolean internalUsersCanViewSignedGrantOfferLetterRejectedStatus(ProjectResource project, UserResource user) {
         return isInternal(user);
     }
 
