@@ -117,7 +117,7 @@ public class GrantOfferLetterWorkflowHandlerIntegrationTest extends
         callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterRejected(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
-                GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterState.PENDING, GrantOfferLetterEvent.GOL_REJECTED);
+                GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterState.SENT, GrantOfferLetterEvent.GOL_REJECTED);
     }
 
     @Test

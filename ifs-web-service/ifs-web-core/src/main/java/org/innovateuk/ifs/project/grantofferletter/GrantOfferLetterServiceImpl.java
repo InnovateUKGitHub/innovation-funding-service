@@ -91,6 +91,11 @@ public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
     }
 
     @Override
+    public ServiceResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId) {
+        return grantOfferLetterRestService.isSignedGrantOfferLetterRejected(projectId).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
         return grantOfferLetterRestService.getGrantOfferLetterWorkflowState(projectId).toServiceResult();
     }

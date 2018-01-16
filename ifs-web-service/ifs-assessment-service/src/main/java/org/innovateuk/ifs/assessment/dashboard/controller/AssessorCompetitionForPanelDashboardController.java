@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping(value = "/assessor")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessorCompetitionForPanelDashboardController.class)
+@SecuredBySpring(value = "Controller", description = "Assessors can access the assessment panel dashboard", securedType = AssessorCompetitionForPanelDashboardController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessorCompetitionForPanelDashboardController {
 
@@ -27,9 +27,6 @@ public class AssessorCompetitionForPanelDashboardController {
 
     @Autowired
     private AssessorCompetitionForPanelDashboardModelPopulator assessorCompetitionForPanelDashboardModelPopulator;
-
-    @Autowired
-    private AssessmentService assessmentService;
 
     @GetMapping("/dashboard/competition/{competitionId}/panel")
     public String competitionDashboard(final Model model,

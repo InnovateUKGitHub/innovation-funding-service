@@ -135,7 +135,7 @@ Project finance user can still view and delete both files
 Post new query server side validations
     [Documentation]    INFUND-4840
     [Tags]
-    When the user clicks the button/link     jQuery=.button:contains("Post Query")
+    When the user clicks the button/link     jQuery=.button:contains("Post query")
     Then the user should see the element     jQuery=label[for="queryTitle"] .error-message:contains(This field cannot be left blank.)
     And the user should see the element      jQuery=label[for="query"] .error-message:contains(This field cannot be left blank.)
     And the user should see a summary error  This field cannot be left blank.
@@ -178,8 +178,8 @@ Query can be re-entered
 New query can be posted
     [Documentation]    INFUND-4840 INFUND-9546
     [Tags]  HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Post Query")
-    Then the user should not see the element  jQuery=.button:contains("Post Query")
+    When the user clicks the button/link    jQuery=.button:contains("Post query")
+    Then the user should not see the element  jQuery=.button:contains("Post query")
     And the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
     And the user should see the element  css=#post-new-response
 
@@ -207,7 +207,7 @@ Project finance user can add another query
     And the user enters text to a text field    id=queryTitle    a viability query's title
     And the user selects the option from the drop-down menu    VIABILITY    id=section
     And the user enters text to a text field    css=.editor    another query body
-    And the user clicks the button/link    jQuery=.button:contains("Post Query")
+    And the user clicks the button/link    jQuery=.button:contains("Post query")
     Then the user should not see an error in the page
 
 Queries show in reverse chronological order

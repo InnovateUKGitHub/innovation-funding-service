@@ -280,6 +280,23 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
     }
 
     @Test
+    public void isSignedGrantOfferLetterRejected() throws Exception {
+
+        when(grantOfferLetterServiceMock.isSignedGrantOfferLetterRejected(projectId)).thenReturn(serviceSuccess(true));
+
+        mockMvc.perform(get("/project/{projectId}/signed-grant-offer-letter/is-rejected", 123L))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"))
+                .andDo(document("project/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which the rejection status of the signed Grant Offer Letter is requested.")
+                        )))
+                .andReturn();
+
+        verify(grantOfferLetterServiceMock).isSignedGrantOfferLetterRejected(projectId);
+    }
+
+    @Test
     public void getGrantOfferLetterWorkflowState() throws Exception {
 
         Long projectId = 123L;

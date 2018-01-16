@@ -222,7 +222,7 @@ Lead should see the accepted partner in the assign list
 
 Lead applicant invites a non registered user in the same organisation
     [Documentation]    INFUND-928  INFUND-1463  INFUND-7979
-    [Tags]
+    [Tags]  HappyPath
     Given the user navigates to the page           ${DASHBOARD_URL}
     And the user clicks the button/link            link=Invite robot test application
     When the user clicks the button/link           link=view and manage contributors and collaborators
