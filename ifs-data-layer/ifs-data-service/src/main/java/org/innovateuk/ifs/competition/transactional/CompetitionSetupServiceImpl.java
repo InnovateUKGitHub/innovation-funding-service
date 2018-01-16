@@ -131,8 +131,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         // here
         if (competitionTypeId != null) {
             CompetitionType competitionTypeSelected = competitionTypeRepository.findOne(competitionTypeId);
-            Competition competitionTemplate = competitionTypeSelected.getTemplate();
-            TermsAndConditions termsAndConditions = competitionTemplate.getTermsAndConditions();
+            TermsAndConditions termsAndConditions = competitionTypeSelected.getTemplate().getTermsAndConditions();
             competitionResource.setTermsAndConditions(termsAndConditionsMapper.mapToResource(termsAndConditions));
         }
 
