@@ -408,16 +408,30 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testPartnersOnProjectCanViewGrantOfferApprovedStatus(){
+    public void testPartnersOnProjectCanViewSignedGrantOfferStatus(){
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
 
         setupUserNotAsPartner(project, user);
 
-        assertFalse(rules.partnersOnProjectCanViewGrantOfferApprovedStatus(project, user));
+        assertFalse(rules.partnersOnProjectCanViewSignedGrantOfferStatus(project, user));
 
         setupUserAsPartner(project, user);
 
-        assertTrue(rules.partnersOnProjectCanViewGrantOfferApprovedStatus(project, user));
+        assertTrue(rules.partnersOnProjectCanViewSignedGrantOfferStatus(project, user));
+    }
+
+    @Test
+    public void testInternalUsersCanViewSignedGrantOfferStatus(){
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsProjectFinanceUser(project, user);
+
+        assertFalse(rules.internalUsersCanViewSignedGrantOfferStatus(project, user));
+
+        setUpUserAsProjectFinanceUser(project, user);
+
+        assertTrue(rules.internalUsersCanViewSignedGrantOfferStatus(project, user));
     }
 }

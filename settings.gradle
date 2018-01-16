@@ -1,6 +1,7 @@
 include 'docker:oracle-jre'
 include 'docker:app-base-image'
 include 'docker:ifs-mysql'
+include 'docker:ifs-mail-sink'
 include 'ifs-commons'
 include 'ifs-resources'
 include 'ifs-data-layer'

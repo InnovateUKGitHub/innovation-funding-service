@@ -1,0 +1,45 @@
+import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
+import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
+import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
+
+task tagDocker(type: DockerTagImage) {
+    onlyIf { !isNamedEnv() }
+
+    dependsOn buildDocker
+    imageId = buildDocker.getTag()
+    repository = project.dockerRegistry + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+    tag = mailSinkVersion
+}
+
+task osStageRemote(type: DockerPushImage) {
+    onlyIf { !isNamedEnv() }
+
+    dependsOn tagDocker
+    registryCredentials=getRemoteOCCredentials()
+    imageName = project.dockerRegistry + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+    tag = mailSinkVersion
+}
+
+task tagDockerLocal(type: DockerTagImage) {
+    dependsOn buildDocker
+    imageId = buildDocker.getTag()
+    repository = "dummy"
+    tag = "dummy"
+    doFirst {
+        repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        tag = mailSinkVersion
+    }
+}
+
+task osStageLocal(type: DockerPushImage) {
+    dependsOn tagDockerLocal
+    imageName = "dummy"
+    doFirst {
+        registryCredentials = getLocalOCCredentials()
+        imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        tag = mailSinkVersion
+    }
+}
+
+
+
