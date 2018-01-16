@@ -81,7 +81,6 @@ ${PS_BD_Competition_Id}         ${competition_ids["Rolling stock future developm
 ${PS_BD_Competition_Name}       Rolling stock future developments
 ${PS_BD_APPLICATION_TITLE}      Grade crossing manufacture and supply
 ${PS_BD_APPLICATION_NUMBER}     ${application_ids["${PS_BD_APPLICATION_TITLE}"]}
-${PS_BD_APPLICATION_HEADER}     ${PS_BD_APPLICATION_TITLE}
 ${PS_BD_APPLICATION_PROJECT}    ${project_ids["${PS_BD_APPLICATION_TITLE}"]}
 ${PS_BD_APPLICATION_LEAD_ORGANISATION_ID}    ${Vitruvius_Id}
 ${PS_BD_APPLICATION_LEAD_ORGANISATION_NAME}  ${Vitruvius_Name}

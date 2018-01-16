@@ -100,12 +100,12 @@ Application details server side
     And the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
     And the user enters text to a text field    css=[id="application.durationInMonths"]    ${EMPTY}
     And the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then The user should see an error    Please enter the full title of the project.
-    And the user should see an error    Please enter a future date.
-    And the user should see an error    This field cannot be left blank.
-    And the user should see an error    Is this application a resubmission?
-    And the user should see an error    Please enter the full title of the project.
-    And the user should see an error    Please select a research category.
+    Then The user should see a field and summary error   Please enter the full title of the project.
+    And the user should see a field and summary error    Please enter a future date.
+    And the user should see a field and summary error    This field cannot be left blank.
+    And the user should see a field and summary error    Please tell us if this application is a resubmission or not.
+    And the user should see a field and summary error    Please enter the full title of the project.
+    And the user should see a field and summary error    Please select a research category.
     And the user should see the element    css=.error-summary-list
     [Teardown]    Run keywords    the user enters text to a text field    css=[id="application.name"]    Robot test application
     ...    AND    Focus    jQuery=button:contains("Save and return to application overview")
