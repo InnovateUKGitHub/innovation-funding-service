@@ -96,43 +96,13 @@ subprojects {
     }
 }
 
-//TODO reinstigate task
-//task endpointDocumentation(type: Task) {
-//    dependsOn "ifs-application-service:test"
-//    dependsOn "ifs-assessment-service:test"
-//    dependsOn "ifs-competition-mgt-service:test"
-//    dependsOn "ifs-project-setup-mgt-service:test"
-//    dependsOn "ifs-project-setup-service:test"
-//    dependsOn "ifs-front-door-service:test"
-//
-//    def combinedFilename = 'build/web-endpoints.csv'
-//
-//    doLast {
-//        def files = fileTree(dir: '.', include: '**/*-endpoints.csv', exclude: combinedFilename)
-//        def lines = []
-//        files.each {
-//            it.eachLine { line ->
-//                lines << line
-//            }
-//        }
-//
-//        File buildFolder = file("build")
-//        buildFolder.mkdirs()
-//        File combinedFile = file(combinedFilename)
-//        if (combinedFile.exists()) {
-//            combinedFile.delete()
-//        }
-//        combinedFile.append('"path", "method", "constraint", "rule", "description"\n')
-//        combinedFile.append(
-//                lines
-//                        .findAll {
-//                    it.startsWith('"/')
-//                }
-//                .sort()
-//                        .join("\n")
-//        )
-//        println("Wrote web endpoint documentation to " + combinedFile)
-//    }
-//}
-//
-//build.finalizedBy endpointDocumentation
+
+apply from: "documentation.gradle"
+
+endpointDocumentation.dependsOn "ifs-application-service:test"
+endpointDocumentation.dependsOn "ifs-assessment-service:test"
+endpointDocumentation.dependsOn "ifs-competition-mgt-service:test"
+endpointDocumentation.dependsOn "ifs-project-setup-mgt-service:test"
+endpointDocumentation.dependsOn "ifs-project-setup-service:test"
+endpointDocumentation.dependsOn "ifs-front-door-service:test"
+
