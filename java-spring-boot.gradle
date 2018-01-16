@@ -18,6 +18,12 @@ jacocoTestReport {
 
 }
 
+test {
+    beforeTest { desc ->
+        println "Executing test ${desc.className}.${desc.name}"
+    }
+}
+
 dependencies {
     if (project.hasProperty("cloud") && project.cloud == "development") {
         compile 'de.codecentric:spring-boot-admin-starter-client:1.3.5'

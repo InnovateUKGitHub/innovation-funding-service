@@ -1,32 +1,11 @@
 
-// Deployment behaviour for differing versions has not been tested yet
-// and so version numbers should always equal project.version
-// DO NOT HAVE OUT OF SYNC VERSION NUMBERS - THIS WILL BE IMPLEMENTED AS PART OF IFS-334
-ext.dataServiceVersion = project.properties['data-service.version'] ?: project.version
-ext.financeDataServiceVersion=project.properties['finance-data-service.version'] ?:project.version
-
-ext.applicationServiceVersion = project.properties['application-service.version'] ?: project.version
-ext.frontDoorServiceVersion = project.properties['front-door-service.version'] ?: project.version
-ext.assessmentServiceVersion = project.properties['assessment-service.version'] ?: project.version
-ext.competitionMgtServiceVersion = project.properties['competition-mgt-service.version'] ?: project.version
-ext.projectSetupMgtServiceVersion = project.properties['project-setup-mgt-service.version'] ?: project.version
-ext.projectSetupServiceVersion = project.properties['project-setup-service.version'] ?: project.version
-ext.registrationServiceVersion = project.properties['registration-service.version'] ?: project.version
-
-ext.spVersion = project.properties['sp.version'] ?: project.version
-ext.idpVersion = project.properties['idp.version'] ?: project.version
-ext.ldapVersion = project.properties['ldap.version'] ?: project.version
-
-ext.mailSinkVersion = project.properties['mail-sink.version'] ?: project.version
-
-ext.silStubVersion = project.properties['sil-stub.version'] ?: project.version
+apply from: "versions.gradle"
 
 allprojects {
     group 'innovateuk'
     version project.version
 
     apply plugin: 'idea'
-//    apply plugin: 'com.bmuschko.docker-remote-api'
     apply plugin: 'com.github.ben-manes.versions'
 }
 
@@ -49,15 +28,8 @@ def isNotProductionEnv() {
 configure(subprojects - project(":ifs-auth-service")) {
 
     apply plugin: 'io.spring.dependency-management'
-
     apply plugin: 'org.owasp.dependencycheck'
 
-
-    test {
-        beforeTest { desc ->
-            println "Executing test ${desc.className}.${desc.name}"
-        }
-    }
 }
 
 buildscript {
@@ -165,16 +137,6 @@ dockerCompose {
     removeImages = "Local" // Accepted values are: "All", "Local" and "None"
     removeVolumes = false
 
-}
-
-task dockerTidy(type: Exec) {
-    executable = 'setup-files/scripts/docker/docker_tidy_up.sh'
-    args = [project.version]
-}
-
-task happyRobotTests(type: Exec) {
-    workingDir 'robot-tests'
-    commandLine './micro_run_tests.sh', '-hnw'
 }
 
 task wrapper(type: Wrapper) {
