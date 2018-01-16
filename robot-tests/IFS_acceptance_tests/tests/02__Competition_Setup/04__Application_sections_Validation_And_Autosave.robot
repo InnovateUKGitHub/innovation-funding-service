@@ -27,9 +27,13 @@ Business opportunity Sever-side validations assessment questions
     [Setup]
     Given the user leaves all the assessment questions empty
     When the user clicks the button/link    css=button[type="submit"]
-    Then the user should see a field and summary error  Please enter a from score.
-    And the user should see a field and summary error   Please enter a to score.
-    And the user should see a field and summary error   Please enter a justification.
+    Then the user should see a field error   Please enter a from score.
+    And the user should see a field error    Please enter a to score.
+    And the user should see a field error    Please enter a justification.
+#   TODO commented due to IFS-2621
+#    And the user should see a summary error  Please enter a from score.
+#    And the user should see a summary error  Please enter a to score.
+#    And the user should see a summary error  Please enter a justification.
 
 Business opportunity: Client side validations
     [Documentation]    INFUND-5629 INFUND-5685
