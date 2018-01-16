@@ -60,6 +60,7 @@ function forceReload {
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
         oc rollout latest dc/sil-stub ${SVC_ACCOUNT_CLAUSE}
+        oc rollout latest dc/finance-data-service ${SVC_ACCOUNT_CLAUSE}
     fi
 
     watchStatus
@@ -79,6 +80,7 @@ function watchStatus {
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
         rolloutStatus sil-stub
+        rolloutStatus finance-data-service
     fi
 }
 
@@ -109,8 +111,9 @@ then
     forceReload
 fi
 
-if [[ ${TARGET} == "production" || ${TARGET} == "uat" ]]
+if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf" ]]
 then
     # We only scale up data-service once data-service started up and performed the Flyway migrations on one thread
     scaleDataService
+    scaleFinanceDataService
 fi
