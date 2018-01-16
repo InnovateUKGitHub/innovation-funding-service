@@ -9,7 +9,8 @@ dependencies {
     compile project(":ifs-resources")
 
 
-    testCompile project(":ifs-resources").sourceSets.test.output
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
+
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 
