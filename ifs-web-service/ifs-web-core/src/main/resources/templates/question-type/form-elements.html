@@ -139,10 +139,10 @@
             <div class="year">
                 <th:block th:insert="question-type/form-elements :: form-label (name='Year',id=${id}+'_year',bold=false)" />
                 <th:block th:if="${dateFieldPresent}">
-            		<th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_year', field=${field}+'.year',placeholder='YYYY',required=true)" />
+            		    <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_year', field=${field}+'.year',placeholder='YYYY',required=true)" />
                 </th:block>
                 <th:block th:unless="${dateFieldPresent}">
-               		<th:block th:insert="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_year',field=${field}+'.year', placeholder='YYYY',required=true)" />
+               		  <th:block th:insert="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_year',field=${field}+'.year', placeholder='YYYY',required=true)" />
                 </th:block>
             </div>
             <!--/* The hidden field below is used as a dummy value that is essentially ignored by the LocalDatePropertyEditor in order to allow
