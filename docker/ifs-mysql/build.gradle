@@ -13,7 +13,6 @@ osStageRemote.imageName = project.dockerRegistry + "/" + openshiftEnv + "/ifs-my
 osStageRemote.tag = sqlVersion
 
 tagDockerLocal {
-    //Will this work? not sure
     doFirst {
         repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
         tag = sqlVersion
