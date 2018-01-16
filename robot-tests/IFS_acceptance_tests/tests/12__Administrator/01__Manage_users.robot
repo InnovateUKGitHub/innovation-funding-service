@@ -214,7 +214,7 @@ The internal user can login with his new role and sees no competitions assigned
 
 Administrator is able to disable internal users
     [Documentation]  IFS-644
-    [Tags]  HappyPath
+    [Tags]
     [Setup]  log in as a different user   &{ifs_admin_user_credentials}
     Given the user navigates to the View internal users details  Innovation Lead  active
     And the user clicks the button/link   link=Edit

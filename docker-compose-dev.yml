@@ -91,7 +91,7 @@ services:
         - JAVA_OPTS=-Xmx300m
 
   mail:
-    image: davidrums/local-webmail-sink
+    image: innovateuk/mail-sink
     ports:
       - "9876:8143"
       - "8765:8080"
