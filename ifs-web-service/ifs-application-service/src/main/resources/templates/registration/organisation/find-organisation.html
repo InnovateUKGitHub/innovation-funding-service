@@ -30,7 +30,9 @@
             <p>Your organisation must be registered on Je-S before we will consider you to be a research organisation.</p>
         </div>
     </th:block>
+
     <form th:action="@{/organisation/create/find-organisation}" th:object="${organisationForm}" method="POST">
+
         <div class="form-group" th:classappend="${#fields.hasErrors('*{organisationSearchName}') and organisationForm.organisationSearching} ? 'form-group-error'">
             <label class="form-label" th:for="*{organisationSearchName}">
                 <span class="form-label-bold" th:text="${searchLabel}">Find your ? organisation</span>
