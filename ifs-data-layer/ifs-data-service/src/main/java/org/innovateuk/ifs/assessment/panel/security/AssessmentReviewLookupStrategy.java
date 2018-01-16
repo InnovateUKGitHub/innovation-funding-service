@@ -1,6 +1,6 @@
-package org.innovateuk.ifs.assessment.security;
+package org.innovateuk.ifs.assessment.panel.security;
 
-import org.innovateuk.ifs.assessment.mapper.AssessmentReviewMapper;
+import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewMapper;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;

@@ -3,9 +3,11 @@ package org.innovateuk.ifs.assessment.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.mapper.AssessmentReviewMapper;
+import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewMapper;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -36,6 +38,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.assessment.builder.AssessmentReviewRejectOutcomeResourceBuilder.newAssessmentReviewRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentReviewBuilder.newAssessmentReview;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -451,5 +454,129 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         // Returned reviews ordered activity state id
         assertEquals(assessmentReviews.get(0).getId(), reviews.get(1).getId());
         assertEquals(assessmentReviews.get(1).getId(), reviews.get(0).getId());
+    }
+
+    @Test
+    public void acceptInvitation() {
+        loginPaulPlum();
+
+        Competition competition = newCompetition()
+                .with(id(null))
+                .build();
+        competitionRepository.save(competition);
+
+        Application application = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withInAssessmentPanel(true)
+                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
+                .build();
+        applicationRepository.save(application);
+
+        ProcessRole processRole = newProcessRole()
+                .with(id(null))
+                .withUser(userRepository.findByEmail(getPaulPlum().getEmail()).get())
+                .withApplication(application)
+                .withRole(UserRoleType.PANEL_ASSESSOR)
+                .build();
+        processRoleRepository.save(processRole);
+
+        AssessmentReview assessmentReview = newAssessmentReview()
+                .with(id(null))
+                .withTarget(application)
+                .withParticipant(processRole)
+                .build();
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING));
+        assessmentReviewRepository.save(assessmentReview);
+
+        flushAndClearSession();
+
+        controller.acceptInvitation(assessmentReview.getId()).getSuccessObjectOrThrowException();
+
+        assertEquals(AssessmentReviewState.ACCEPTED, assessmentReviewRepository.findOne(assessmentReview.getId()).getActivityState());
+    }
+
+    @Test
+    public void acceptInvitation_rejected() {
+        loginPaulPlum();
+
+        Competition competition = newCompetition()
+                .with(id(null))
+                .build();
+        competitionRepository.save(competition);
+
+        Application application = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withInAssessmentPanel(true)
+                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
+                .build();
+        applicationRepository.save(application);
+
+        ProcessRole processRole = newProcessRole()
+                .with(id(null))
+                .withUser(userRepository.findByEmail(getPaulPlum().getEmail()).get())
+                .withApplication(application)
+                .withRole(UserRoleType.PANEL_ASSESSOR)
+                .build();
+        processRoleRepository.save(processRole);
+
+        AssessmentReview assessmentReview = newAssessmentReview()
+                .with(id(null))
+                .withTarget(application)
+                .withParticipant(processRole)
+                .build();
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.REJECTED));
+        assessmentReviewRepository.save(assessmentReview);
+
+        flushAndClearSession();
+
+        controller.acceptInvitation(assessmentReview.getId()).getSuccessObjectOrThrowException();
+
+        assertEquals(AssessmentReviewState.ACCEPTED, assessmentReviewRepository.findOne(assessmentReview.getId()).getActivityState());
+    }
+
+    @Test
+    public void rejectInvitation() {
+        loginPaulPlum();
+
+        Competition competition = newCompetition()
+                .with(id(null))
+                .build();
+        competitionRepository.save(competition);
+
+        Application application = newApplication()
+                .with(id(null))
+                .withCompetition(competition)
+                .withInAssessmentPanel(true)
+                .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
+                .build();
+        applicationRepository.save(application);
+
+        ProcessRole processRole = newProcessRole()
+                .with(id(null))
+                .withUser(userRepository.findByEmail(getPaulPlum().getEmail()).get())
+                .withApplication(application)
+                .withRole(UserRoleType.PANEL_ASSESSOR)
+                .build();
+        processRoleRepository.save(processRole);
+
+        AssessmentReview assessmentReview = newAssessmentReview()
+                .with(id(null))
+                .withTarget(application)
+                .withParticipant(processRole)
+                .build();
+        assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING));
+        assessmentReviewRepository.save(assessmentReview);
+
+        flushAndClearSession();
+
+        AssessmentReviewRejectOutcomeResource rejectOutcomeResource = newAssessmentReviewRejectOutcomeResource()
+                .withReason("comment")
+                .build();
+
+        controller.rejectInvitation(assessmentReview.getId(), rejectOutcomeResource).getSuccessObjectOrThrowException();
+
+        assertEquals(AssessmentReviewState.REJECTED, assessmentReviewRepository.findOne(assessmentReview.getId()).getActivityState());
     }
 }
