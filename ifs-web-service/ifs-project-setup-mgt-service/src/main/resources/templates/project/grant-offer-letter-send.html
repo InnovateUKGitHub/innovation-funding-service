@@ -7,6 +7,7 @@
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/modals :: modal-accept-send-gol" />
 <th:block th:insert="fragments/modals :: modal-accept-signed-gol" />
+<th:block th:insert="fragments/modals :: modal-reject-signed-gol" />
 
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
@@ -115,24 +116,31 @@
             <div class="form-group">
                 <fieldset>
                     <legend id="decisionGOL" class="extra-margin-bottom">
-                        Please review that these documents meet the requirements for the grant offer letter
+                        Please confirm that these documents meet the requirements for the grant offer letter.
                     </legend>
                     <div class="multiple-choice">
-                        <input id="acceptGOL" value="APPROVED" type="radio" name="approvalType" required="required"/>
+                        <input id="acceptGOL" value="APPROVED" type="radio" name="approvalType" required="required"
+                               data-switches-button-status="#submit-button"
+                               data-switches-modal-target="#submit-button"
+                               data-switches-modal-target-value="modal-accept-signed-gol"
+                               />
                         <label for="acceptGOL">
                             Accept documents
                         </label>
                     </div>
                     <div class="multiple-choice">
-                        <input id="rejectGOL" value="REJECTED" type="radio" name="approvalType" required="required"/>
+                        <input id="rejectGOL" value="REJECTED" type="radio" name="approvalType" required="required"
+                               data-switches-button-status="#submit-button"
+                               data-switches-modal-target="#submit-button"
+                               data-switches-modal-target-value="modal-reject-signed-gol"
+                        />
                         <label for="rejectGOL">
                             Reject documents
                         </label>
                     </div>
                 </fieldset>
             </div>
-            <button class="button" type="submit">Submit</button>
-            <a th:href="@{'?action=cancel'}" class="button button-clear">Cancel</a>
+            <button class="button" type="submit" id="submit-button" data-js-modal="" data-enable-button-when="one-checked">Submit</button>
         </form>
 
     </th:block>

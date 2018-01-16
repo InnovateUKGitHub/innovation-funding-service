@@ -36,14 +36,15 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-1579 Allow change of Finance Contact until generation of GOL
 ...
 ...               IFS-1307 CSS access: Project Setup/Previous
+...
+...               IFS-2174 Reject Signed Grant Offer Letter
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup    Upload
 Resource          PS_Common.robot
 
+
 *** Test Cases ***
-
-
 External user cannot view the GOL section before spend profiles have been approved
     [Documentation]    INFUND-6741
     [Tags]
@@ -195,7 +196,7 @@ Partners should not be able to send the Grant Offer
     Given the user clicks the button/link       link=${PS_GOL_APPLICATION_HEADER}
     And the user clicks the button/link         link=Grant offer letter
     Then the user should not see the element    jQuery=label:contains(+ Upload)
-    And the user should not see the element     jQuery=.button:contains("Send to Innovate UK")
+    And the user should not see the element    css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -229,10 +230,10 @@ PM should be able upload a file and then access the Send button
     When the user uploads a file                     signedGrantOfferLetter   ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     When the user reloads the page
-    Then the user should see the element             jQuery=.button:contains("Send to Innovate UK")
-    And the user clicks the button/link              link=Project setup status
-    And the user should see the element              css=li.require-action:nth-child(8)
-    When the user clicks the button/link             link=status of my partners
+    Then the user should see the element    css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
+    And the user clicks the button/link    link=Project setup status
+    And the user should see the element    css=li.require-action:nth-child(8)
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
 
@@ -328,21 +329,19 @@ PM can remove the signed grant offer letter
     Then the user should not see the text in the page    Remove
     And the user should not see the text in the page     jQuery=.upload-section a:contains("${valid_pdf}")
 
-
 PM can upload new signed grant offer letter
     [Documentation]    INFUND-6780
     [Tags]
     When the user uploads a file               signedGrantOfferLetter    ${valid_pdf}
     And the user reloads the page
-    Then the user should see the element       jQuery=.button:contains("Send to Innovate UK")
+    Then the user should see the element    css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
     And the user should not see the element    jQuery=[disabled='disabled'].button:contains(Send signed offer letter)
-
 
 PM Sends the Grant Offer letter
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
     [Tags]    HappyPath
-    When the user clicks the button/link               jQuery=.button:contains("Send to Innovate UK")
-    Then the user clicks the button/link               jQuery=button:contains("Send to Innovate UK")
+    When the user clicks the button/link    css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
+    Then the user clicks the button/link    css=button[name="confirmSubmit"]
     And the user should not see an error in the page
     When the user navigates to the page                ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should see the element               css=li.waiting:nth-child(8)
@@ -360,7 +359,6 @@ PM cannot remove the signed grant offer letter after submission
     When the user should not see the element             name=removeSignedGrantOfferLetterClicked
     Then the user should not see the text in the page    Remove
 
-
 PM's status should be updated
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
     [Tags]    HappyPath
@@ -368,7 +366,6 @@ PM's status should be updated
     And the user clicks the button/link              link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
-
 Internal Dashboard should be updated
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
     [Tags]    HappyPath
@@ -418,32 +415,63 @@ Comp Admin can accept the signed grant offer letter
     Then the user should see the element                jQuery=h2:contains("These documents have been approved")
     #When the user clicks the button/link               jQuery=.modal-accept-signed-gol button:contains("Cancel")
     Then the user should not see an error in the page
+Comp Admin can accept the signed grant offer letter
+    [Documentation]  INFUND-6377 IFS-2174
+    [Tags]  HappyPath
+    Given the user navigates to the page  ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
+    When the user clicks the button/link  css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a
+    Then the user navigates to the page   ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
+    And the user should see the element   css=label[for="acceptGOL"]
+    And the user should see the element   css=#submit-button.disabled
+    When the user selects the radio button  approvalType  rejectGOL
+    Then the user should not see the element  css=#submit-button.disabled
+
+Comp Admin is able to Reject the Grant Offer letter
+    [Documentation]  IFS-2174
+    [Tags]  HappyPath
+    Given the user selects the radio button  approvalType  rejectGOL
+    And the user clicks the button/link      jQuery=button:contains("Submit")
+    And the user clicks the button/link      jQuery=button[type="submit"]:contains("Reject signed grant offer letter")
+    Then the user should see the element     jQuery=.warning-alert:contains("documents have been reviewed and rejected.")
+    When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
+    Then the user should see the element     jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(7).rejected
+
+PM can see that the GOL section requires completion
+    [Documentation]  IFS-2174
+    [Tags]
+    [Setup]  log in as a different user   ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
+    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    Then the user should see the element  jQuery=li.require-action:contains("Grant offer letter")
+    When the user navigates to the page   ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/team-status
+    Then the user should see the element  jQuery=th:contains("${Gabtype_Name}") ~ td:nth-of-type(7).action
+    And the user should see the element   jQuery=th:contains("${Cogilith_Name}") ~ td:nth-of-type(7).waiting
+
+PM is uploading the GOL one more time
+    [Documentation]  IFS-2174
+    [Tags]  HappyPath
+    [Setup]  log in as a different user   ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
+    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user removes existing and uploads new grant offer letter
 
 Internal user accepts signed grant offer letter
-    [Documentation]    INFUND-5998, INFUND-6377
-    [Tags]    HappyPath
-    [Setup]    log in as a different user              &{internal_finance_credentials}
-    Given the user navigates to the page               ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
-    When the user should see the element               jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-child(8) a:contains("Review")
-    #When the user clicks the button/link              jQuery=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a:contains("Review")
-    Then the user should not see the text in the page    "Confirm receipt of signed grant offer letter"
-    And the user clicks the button/link                jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-child(8) a:contains("Review")
-    And the user selects the radio button              approvalType  APPROVED
-    And the user clicks the button/link                jQuery=button:contains("Submit")
-    #And the user clicks the button/link               jQuery=label:contains("Accept documents")
-    Then the user should see the element               jQuery=h2:contains("These documents have been approved")
-    And the user should not see the element            jQuery=button:contains("Submit")
-    #And the user should not see the element           jQuery=#content .button:contains("Accept signed grant offer letter")
-    When the user navigates to the page                ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
-    Then the user should see the element               jQuery=tr:contains("Complete") td:nth-child(8) a:contains("Complete")
-    #Then the user should see the element              css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.ok
+    [Documentation]  INFUND-5998, INFUND-6377
+    [Tags]  HappyPath
+    [Setup]  log in as a different user    &{internal_finance_credentials}
+    Given the user navigates to the page   ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
+    When the user clicks the button/link   jQuery=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a:contains("Review")
+    And the user selects the radio button  approvalType  acceptGOL
+    And the user clicks the button/link    jQuery=button:contains("Submit")
+    And the user clicks the button/link    jQuery=button[type="submit"]:contains("Accept signed grant offer letter")
+    Then the user should see the element   jQuery=.success-alert h2:contains("These documents have been approved.")
+    When the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
+    Then the user should see the element   css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.ok
 
 Project manager's status should be updated
     [Documentation]   INFUND-5998, INFUND-6377
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
-    And the user should see the element      css=li.complete:nth-child(8)
+    Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
+    Then the user should see the element    css=li.complete:nth-child(8)When the user should see the element  jQuery=.success-alert:contains("The project is live, you can review progress at")
     And the user should see the element      link=_connect
 
 Non lead's status should be updated
@@ -511,7 +539,7 @@ Verify support users permissions in project setup tab
     And the user should see the element      jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(5).status.ok a  # Spend profile
     And the user should see the element      jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(6).status.ok a  # Other docs
     And the user clicks the button/link      jQuery=tr:contains("${PS_GOL_APPLICATION_TITLE}") td:nth-of-type(7).status.ok a  # GOL
-    And the user should see the element      jQuery=h2:contains("These documents have been approved")
+    And the user should see the element      jQuery=.success-alert h2:contains("These documents have been approved.")
 
 *** Keywords ***
 the user uploads a file
@@ -526,3 +554,9 @@ all the other sections of the project are completed (except spend profile approv
     project finance generates the Spend Profile  ${Gabtype_Id}  ${Kazio_Id}  ${Cogilith_Id}  ${PS_GOL_APPLICATION_PROJECT}
     log in as a different user                   ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     all partners submit their Spend Profile
+
+the user removes existing and uploads new grant offer letter
+    the user clicks the button/link  css=button[name="removeSignedGrantOfferLetterClicked"]
+    the user uploads a file          signedGrantOfferLetter    ${valid_pdf}
+    the user clicks the button/link  css=.button[data-js-modal="modal-confirm-grant-offer-letter"]
+    the user clicks the button/link  css=button[name="confirmSubmit"]
