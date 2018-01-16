@@ -262,10 +262,10 @@ Assessors view of competition dashboard and applications in panel status
     Then The user should see the text in the element    accept-application    You will still have the option to reject after accepting and viewing the full application.
     When the user clicks the button/link        jQuery=button:contains("Confirm")
     Then the user should see the element        jQuery=.progress-list div:contains("${computer_vision_application_name}") ~ div strong:contains("Accepted")
-    When the user clicks the button/link        jQuery=a:contains("${computer_vision_application_name}")
-    Then the user should see the element        jQuery=span:contains("${computer_vision_application_name}")
+    When the user clicks the button/link        link=${computer_vision_application_name}
+    Then the user should see the element        jQuery=h1 span:contains("${computer_vision_application_name}")
     And the user should see the element         jQuery=h1:contains("Application summary")
-    When the user clicks the button/link        jQuery=button:contains("1. Business opportunity")
+    When the user clicks the button/link        jQuery=button:contains("Business opportunity")
     Then the user should not see the element    jQuery=span:contains("Question score")
     And the user should not see the element     jQuery=label:contains("Feedback")
 
