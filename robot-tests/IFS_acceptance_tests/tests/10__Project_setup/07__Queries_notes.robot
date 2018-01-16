@@ -328,7 +328,9 @@ Response to query server side validations
     [Documentation]    INFUND-4843
     [Tags]
     When the user clicks the button/link                jQuery=.button:contains("Post response")
-    Then the user should see a field and summary error  This field cannot be left blank.
+    Then the user should see a field error              This field cannot be left blank.
+#    TODO commmented due to IFS-2622
+#    And the user should see a summary error            This field cannot be left blank.
 
 Response to query client side validations
     [Documentation]    INFUND-4843
