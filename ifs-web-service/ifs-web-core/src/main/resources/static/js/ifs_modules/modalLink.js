@@ -6,6 +6,7 @@ IFS.core.modal = (function () {
   return {
     settings: {
       element: '[data-js-modal]',
+      modalTargetSwitch: '[data-switches-modal-target]',
       html5validationMode: {}
     },
     init: function () {
@@ -14,6 +15,9 @@ IFS.core.modal = (function () {
 
       IFS.core.modal.initButtonRole()
 
+      jQuery('body').on('click', s.modalTargetSwitch, function (e) {
+        IFS.core.modal.setModalTarget(e, this)
+      })
       jQuery('body').on('click', s.element, function (e) {
         IFS.core.modal.openModal(e, this)
       })
@@ -39,6 +43,12 @@ IFS.core.modal = (function () {
         formValid = form[0].checkValidity()
       }
       return formValid
+    },
+    setModalTarget: function (event, button) {
+      var targetSetter = jQuery(button)
+      var targetButton = targetSetter.attr('data-switches-modal-target')
+      var targetModal = targetSetter.attr('data-switches-modal-target-value')
+      jQuery(targetButton).attr('data-js-modal', targetModal)
     },
     openModal: function (event, button) {
       button = jQuery(button)

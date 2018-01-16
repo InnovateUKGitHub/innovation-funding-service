@@ -117,7 +117,7 @@ Project finance sends a query to lead organisation
     When the user clicks the button/link      link=Post a new query
     And the user enters text to a text field  id=queryTitle  Eligibility query's title
     And the user enters text to a text field  css=.editor    Eligibility query
-    Then the user clicks the button/link      jQuery=.button:contains("Post Query")
+    Then the user clicks the button/link      jQuery=.button:contains("Post query")
 
 Lead partner responds to query
     [Documentation]    IFS-2062

@@ -43,7 +43,7 @@ IFS.core.disableSubmitUntilChecked = (function () {
       jQuery('[' + s.checkBoxesAttribute + '="' + submitButton + '"]').each(function () {
         var inst = jQuery(this)
         var state
-        if (inst.is('[type="checkbox"]')) {
+        if (inst.is('[type="checkbox"]') || inst.is('[type="radio"]')) {
           state = inst.prop('checked')
         } else if (inst.is('select')) {
           state = inst.val() !== 'UNSET'

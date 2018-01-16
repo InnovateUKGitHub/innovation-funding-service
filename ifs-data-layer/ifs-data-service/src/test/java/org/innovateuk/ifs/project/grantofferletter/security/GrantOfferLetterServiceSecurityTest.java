@@ -309,8 +309,20 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.isSignedGrantOfferLetterApproved(123L), () -> {
-            verify(projectGrantOfferPermissionRules).partnersOnProjectCanViewGrantOfferApprovedStatus(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferApprovedStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).partnersOnProjectCanViewSignedGrantOfferStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewSignedGrantOfferStatus(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectGrantOfferPermissionRules);
+        });
+    }
+
+    @Test
+    public void testIsSignedGrantOfferLetterRejected() {
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+        assertAccessDenied(() -> classUnderTest.isSignedGrantOfferLetterRejected(123L), () -> {
+            verify(projectGrantOfferPermissionRules).partnersOnProjectCanViewSignedGrantOfferStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewSignedGrantOfferStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -433,6 +445,11 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
         @Override
         public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId) {
             return null;
         }
 
