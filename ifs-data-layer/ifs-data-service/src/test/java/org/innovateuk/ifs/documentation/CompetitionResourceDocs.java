@@ -57,9 +57,9 @@ public class CompetitionResourceDocs {
             fieldWithPath("setupComplete").description("Has the setup been completed and will move to open once past the open date"),
             fieldWithPath("nonIfs").description("Is this competition a non-ifs competition (not managed via IFS)"),
             fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition"),
-            fieldWithPath("hasAssessmentPanel").description("indicates if the competition will have an assessment panel stage"),
-            fieldWithPath("hasInterviewStage").description("indicates if the competition will have an interview stage"),
-            fieldWithPath("termsAndConditions").description("indicates the terms and conditions that apply to this competition")
+            fieldWithPath("hasAssessmentPanel").description("Indicates if the competition will have an assessment panel stage"),
+            fieldWithPath("hasInterviewStage").description("Indicates if the competition will have an interview stage"),
+            fieldWithPath("termsAndConditions").description("The terms and conditions template that applies to this competition")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()
