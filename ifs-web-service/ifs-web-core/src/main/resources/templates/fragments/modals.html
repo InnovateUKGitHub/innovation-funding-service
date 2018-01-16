@@ -393,9 +393,30 @@
         <h2 class="heading-medium no-margin">Accept signed grant offer letter</h2>
         <p>This will inform the Project Manager that the signed grant offer letter has been accepted.</p>
         <hr />
-        <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed/APPROVED'}" method="post">
+        <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed'}" method="post">
+            <input type="hidden" name="approvalType" value="APPROVED" />
             <div>
                 <button class="button" type="submit">Accept signed grant offer letter</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
+            </div>
+        </form>
+    </div>
+</th:block>
+
+<!-- Confirmation of rejecting signed grant offer letter -->
+<th:block th:fragment="modal-reject-signed-gol">
+    <div class="modal-reject-signed-gol warning-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Reject signed grant offer letter</h2>
+            <p>This will be returned to the Project Manager. You should contact the Project Manager to explain why the
+                signed grant offer letter is being rejected.</p>
+        </div>
+        <hr />
+        <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/signed'}" method="post">
+            <input type="hidden" name="approvalType" value="REJECTED" />
+            <div>
+                <button class="button" type="submit">Reject signed grant offer letter</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>
             </div>
         </form>

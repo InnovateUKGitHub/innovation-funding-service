@@ -263,8 +263,12 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
 
         ApprovalType spendProfileApprovalType = spendProfileService.getSpendProfileStatus(project.getId()).getSuccessObject();
 
-        if (project.getOfferSubmittedDate() == null && ApprovalType.APPROVED.equals(spendProfileApprovalType)) {
+        if (project.getOfferSubmittedDate() == null && ApprovalType.APPROVED.equals(spendProfileApprovalType) && !golWorkflowHandler.isRejected(project)) {
             return PENDING;
+        }
+
+        if (project.getOfferSubmittedDate() == null && golWorkflowHandler.isRejected(project)) {
+            return REJECTED;
         }
 
         if (project.getOfferSubmittedDate() != null) {
@@ -288,6 +292,8 @@ public class StatusServiceImpl extends AbstractProjectServiceImpl implements Sta
         if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved()) && COMPLETE.equals(spendProfileStatus)) {
             if (golWorkflowHandler.isApproved(project)) {
                 roleSpecificGolStates.put(COMP_ADMIN, COMPLETE);
+            } else if (golWorkflowHandler.isRejected(project)) {
+                roleSpecificGolStates.put(COMP_ADMIN, REJECTED);
             } else {
                 if (golWorkflowHandler.isReadyToApprove(project)) {
                     roleSpecificGolStates.put(COMP_ADMIN, ACTION_REQUIRED);

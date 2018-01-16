@@ -675,6 +675,18 @@ include::{snippets}/project/is-send-grant-offer-letter-allowed/http-response.ado
 ===== Curl Example
 include::{snippets}/project/is-send-grant-offer-letter-allowed/curl-request.adoc[]
 
+=== Is Signed Grant Offer Letter Rejected
+==== Success
+===== Request
+include::{snippets}/project/is-signed-grant-offer-letter-rejected/http-request.adoc[]
+include::{snippets}/project/is-signed-grant-offer-letter-rejected/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/is-signed-grant-offer-letter-rejected/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/is-signed-grant-offer-letter-rejected/curl-request.adoc[]
+
 === Get Grant Offer Letter Workflow State
 ==== Success
 ===== Request

@@ -379,7 +379,7 @@ Application - Application process Page
 
 Application: Need or challenge
     [Documentation]    INFUND-5632 INFUND-5685 INFUND-5630 INFUND-6283
-    [Tags]
+    [Tags]  HappyPath
     Given the user should not see the element  jQuery=li:contains("${amendedQuestion}") .task-status-complete
     When the user clicks the button/link    jQuery=h4 a:contains("${amendedQuestion}")
     And the user clicks the button/link     css=button[type="submit"]
@@ -403,7 +403,7 @@ Application: Need or challenge
 
 Application: Application details
     [Documentation]    INFUND-5633
-    [Tags]
+    [Tags]  HappyPath
     Given the user clicks the button/link         link=Application details
     And the user should see the element           jQuery=h1:contains("Application details")
     And the user should see the text in the page  These are the default questions included in the application details section.
@@ -415,6 +415,7 @@ Application: Application details
 
 Application: Scope
     [Documentation]  INFUND-5634 INFUND-5635
+    [Tags]  HappyPath
     Given the user clicks the button/link         link=Scope
     Then the user should see the element          jQuery=h1:contains("Scope")
     And the user should see the text in the page  You can edit this question for the applicant as well as the guidance for assessors.
@@ -426,6 +427,7 @@ Application: Scope
 
 Application: Scope Assessment questions
     [Documentation]    INFUND-5631    INFUND-6044  INFUND-6283
+    [Tags]  HappyPath
     Given the user clicks the button/link    link=Edit this question
     And the user selects the radio button    question.writtenFeedback    1
     And the user fills the scope assessment questions
@@ -442,6 +444,7 @@ Application: Scope Assessment questions
 
 Application: Project Summary
     [Documentation]  INFUND-5636 INFUND-5637
+    [Tags]  HappyPath
     Given the user clicks the button/link    link=Project summary
     And the user should see the element      jQuery=h1:contains("Project summary")
     And the user should see the text in the page    You can edit this question for the applicant as well as the guidance for assessors.
@@ -453,7 +456,7 @@ Application: Project Summary
 
 Application: marking questions as complete
     [Documentation]  IFS-743
-    [Tags]
+    [Tags]  HappyPath
     When the user clicks the button/link      link=Application
     Then the user marks question as complete  Public description
     And the user marks question as complete   Approach and innovation
@@ -509,7 +512,7 @@ Application: Finances
 
 Application: Done enabled when all questions are marked as complete
     [Documentation]    INFUND-5964
-    [Tags]
+    [Tags]  Happypath
     Given The user clicks the button/link     css=button.button  #Done button
     Then The user should not see the element  css=button.button
     When The user clicks the button/link      link=Return to setup overview
@@ -517,7 +520,8 @@ Application: Done enabled when all questions are marked as complete
 
 Public content is required for a Competition to be setup
     [Documentation]
-    [Tags]
+    [Tags]  HappyPath
+    [Setup]  the user navigates to the page  ${COMP_MANAGEMENT_COMP_SETUP}
     Given the user clicks the button/link  link=Public content
     When the user fills in the Public content and publishes  GrowthTable
     And the user clicks the button/link    link=Return to setup overview
@@ -547,7 +551,7 @@ Moving competition to Ready to Open state
 
 Requesting the id of this Competition
     [Documentation]  retrieving the id of the competition so that we can use it in urls
-    [Tags]  MySQL
+    [Tags]   HappyPath   MySQL
     ${competitionId} =  get comp id from comp title  ${competitionTitle}
     Set suite variable  ${competitionId}
 
@@ -649,14 +653,17 @@ Innovation leads can be added to a competition
     When the user clicks the button/link      jQuery=.inline-nav a:contains("Find")
     Then the user should see the element      jQuery=td:contains(${peter_freeman}) button:contains("Add")
 
-The Applicant is able to apply to the competition once is Open and see the correct Questions
+The Applicant is able to apply to the competition once is Open
     [Documentation]  IFS-182
     [Tags]  HappyPath  MySQL
-    [Setup]  the competition moves to Open state  ${competitionId}
-    Given log in as a different user              &{lead_applicant_credentials}
-    And logged in user applies to competition     ${competitionTitle}
-    Then the user should see the element          jQuery=li:contains("${customQuestion}")
-    And the user should not see the element       jQuery=li:contains("Costs and value for money")
+    [Setup]  the competition moves to Open state    ${competitionId}
+    Given log in as a different user                &{lead_applicant_credentials}
+    And logged in user applies to competition       ${competitionTitle}
+
+The Applicant see the correct Questions
+    [Documentation]   IFS-182
+    Given the user should see the element            jQuery=li:contains("${customQuestion}")
+    And the user should not see the element         jQuery=li:contains("Costs and value for money")
     #default question that has been removed is not there.
 
 *** Keywords ***

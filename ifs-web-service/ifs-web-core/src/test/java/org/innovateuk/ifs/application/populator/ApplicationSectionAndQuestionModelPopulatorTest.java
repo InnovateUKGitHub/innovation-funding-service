@@ -115,6 +115,7 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
         verify(model).addAttribute(eq("completedSections"), anyMap());
         verify(model).addAttribute(eq("sections"), anyMap());
+        verify(model).addAttribute(eq("fundingFinancesSection"), isNull());
         verify(model).addAttribute(eq("questionFormInputs"), anyMap());
         verify(model).addAttribute(eq("sectionQuestions"), anyMap());
         verify(model).addAttribute(eq("subSections"), anyMap());
