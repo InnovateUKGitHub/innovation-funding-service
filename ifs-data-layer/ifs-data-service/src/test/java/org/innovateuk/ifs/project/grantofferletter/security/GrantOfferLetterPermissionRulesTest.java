@@ -408,30 +408,44 @@ public class GrantOfferLetterPermissionRulesTest extends BasePermissionRulesTest
     }
 
     @Test
-    public void testPartnersOnProjectCanViewSignedGrantOfferStatus(){
+    public void testPartnersOnProjectCanViewSignedGrantOfferLetterApprovedStatus(){
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
 
         setupUserNotAsPartner(project, user);
 
-        assertFalse(rules.partnersOnProjectCanViewSignedGrantOfferStatus(project, user));
+        assertFalse(rules.partnersOnProjectCanViewSignedGrantOfferLetterApprovedStatus(project, user));
 
         setupUserAsPartner(project, user);
 
-        assertTrue(rules.partnersOnProjectCanViewSignedGrantOfferStatus(project, user));
+        assertTrue(rules.partnersOnProjectCanViewSignedGrantOfferLetterApprovedStatus(project, user));
     }
 
     @Test
-    public void testInternalUsersCanViewSignedGrantOfferStatus(){
+    public void testInternalUsersCanViewSignedGrantOfferLetterApprovedStatus(){
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
 
         setUpUserNotAsProjectFinanceUser(project, user);
 
-        assertFalse(rules.internalUsersCanViewSignedGrantOfferStatus(project, user));
+        assertFalse(rules.internalUsersCanViewSignedGrantOfferLetterApprovedStatus(project, user));
 
         setUpUserAsProjectFinanceUser(project, user);
 
-        assertTrue(rules.internalUsersCanViewSignedGrantOfferStatus(project, user));
+        assertTrue(rules.internalUsersCanViewSignedGrantOfferLetterApprovedStatus(project, user));
+    }
+
+    @Test
+    public void testInternalUsersCanViewSignedGrantOfferLetterRejectedStatus(){
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setUpUserNotAsProjectFinanceUser(project, user);
+
+        assertFalse(rules.internalUsersCanViewSignedGrantOfferLetterRejectedStatus(project, user));
+
+        setUpUserAsProjectFinanceUser(project, user);
+
+        assertTrue(rules.internalUsersCanViewSignedGrantOfferLetterRejectedStatus(project, user));
     }
 }
