@@ -1,4 +1,5 @@
-apply from: rootProject.file("java-spring-boot.gradle")
+apply plugin: 'java'
+
 
 task endpointDocumentation(type: Task) {
 
@@ -30,6 +31,11 @@ task endpointDocumentation(type: Task) {
         )
         println("Wrote web endpoint documentation to " + combinedFile)
     }
+}
+
+repositories {
+    maven { url "https://repo.spring.io/milestone" }
+    mavenCentral()
 }
 
 build.finalizedBy endpointDocumentation

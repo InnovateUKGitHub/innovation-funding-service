@@ -3,7 +3,6 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
 apply from: "fractal.gradle";
-apply from: "documentation.gradle"
 
 subprojects {
 
@@ -96,6 +95,8 @@ subprojects {
         }
     }
 }
+apply from: "documentation.gradle"
+
 
 endpointDocumentation.dependsOn "ifs-application-service:test"
 endpointDocumentation.dependsOn "ifs-assessment-service:test"
