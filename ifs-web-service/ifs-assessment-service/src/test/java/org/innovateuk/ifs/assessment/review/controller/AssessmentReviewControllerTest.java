@@ -176,7 +176,6 @@ public class AssessmentReviewControllerTest extends BaseControllerMockMVCTest<As
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("reviewAccept", String.valueOf(accept))
                 .param("rejectComment", comment))
-
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/assessor/dashboard/competition/%d/panel", COMPETITION_ID)));
 
