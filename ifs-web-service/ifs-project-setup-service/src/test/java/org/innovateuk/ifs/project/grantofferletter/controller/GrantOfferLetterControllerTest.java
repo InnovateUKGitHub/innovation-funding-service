@@ -227,11 +227,13 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         ProjectResource project = newProjectResource().withId(123L).build();
 
-        ProjectUserResource pmUser = newProjectUserResource().withRoleName(UserRoleType.PROJECT_MANAGER).withUser(loggedInUser.getId()).build();
-        List<ProjectUserResource> puRes = new ArrayList<ProjectUserResource>(Arrays.asList(pmUser));
+        List<ProjectUserResource> pmUser = newProjectUserResource().
+                withRoleName(UserRoleType.PROJECT_MANAGER).
+                withUser(loggedInUser.getId()).
+                build(1);
 
         when(projectService.getById(123L)).thenReturn(project);
-        when(projectService.getProjectUsersForProject(123L)).thenReturn(puRes);
+        when(projectService.getProjectUsersForProject(123L)).thenReturn(pmUser);
         when(grantOfferLetterService.getGrantOfferFileDetails(123L)).thenReturn(Optional.of(createdFileDetails));
         when(grantOfferLetterService.addSignedGrantOfferLetter(123L, "text/plain", 11, "filename.txt", "My content!".getBytes())).
                 thenReturn(serviceSuccess(createdFileDetails));
@@ -289,11 +291,13 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         ProjectResource project = newProjectResource().withId(123L).build();
 
-        ProjectUserResource pmUser = newProjectUserResource().withRoleName(UserRoleType.PROJECT_MANAGER).withUser(loggedInUser.getId()).build();
-        List<ProjectUserResource> puRes = new ArrayList<ProjectUserResource>(Arrays.asList(pmUser));
+        List<ProjectUserResource> pmUser = newProjectUserResource().
+                withRoleName(UserRoleType.PROJECT_MANAGER).
+                withUser(loggedInUser.getId()).
+                build(1);
 
         when(projectService.getById(123L)).thenReturn(project);
-        when(projectService.getProjectUsersForProject(123L)).thenReturn(puRes);
+        when(projectService.getProjectUsersForProject(123L)).thenReturn(pmUser);
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(123L)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getGrantOfferFileDetails(123L)).thenReturn(Optional.of(createdFileDetails));
         when(grantOfferLetterService.getAdditionalContractFileDetails(123L)).thenReturn(Optional.empty());
