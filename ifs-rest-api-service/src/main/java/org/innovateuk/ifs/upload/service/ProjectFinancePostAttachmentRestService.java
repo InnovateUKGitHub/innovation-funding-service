@@ -2,12 +2,10 @@ package org.innovateuk.ifs.upload.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 @Qualifier("projectFinance")

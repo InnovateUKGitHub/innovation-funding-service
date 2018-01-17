@@ -46,52 +46,50 @@
     </div>
 
     <div class="my-applications">
-            <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
-                <div class="progress-list">
-                    <h2 class="heading-medium no-margin">Applications for panel (<span
-                        th:text="${#lists.size(model.applications)}"/>)</h2>
+        <form method="post" th:object="${form}" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <div class="progress-list">
+                <h2 class="heading-medium no-margin">Applications for panel (<span
+                    th:text="${#lists.size(model.applications)}"/>)</h2>
 
-                    <ul>
+                <ul>
+                    <li th:each="app,iterStat : ${model.applications}"
+                        th:with="reviewUrl=@{/review/{reviewId}(reviewId=${app.reviewId})}"
+                        th:class="${(app.pending ? 'status-2-col' : '')}">
 
-                        <li th:each="app,iterStat : ${model.applications}"
-                            th:with="reviewUrl=@{/{reviewId}/review(reviewId=${app.reviewId})}"
-                            th:class="${(app.pending ? 'status-2-col' : '')}">
+                        <th:block>
+                            <div class="task">
+                                <a th:if="${app.accepted}" class="heading-small" th:href="@{/review/{reviewId}/application/{appId}(reviewId=${app.reviewId}, appId=${app.applicationId})}" th:text="${app.displayLabel}">Application name</a>
+                                <h3 th:unless="${app.accepted}" class="heading-small" th:text="${app.displayLabel}">Application name</h3>
+                                <p th:text="${app.leadOrganisation}" class="no-margin"/>
+                            </div>
 
-                            <th:block>
-                                <div class="task">
-                                    <h3 class="heading-small" th:text="${app.displayLabel}">
-                                        Application name
-                                    </h3>
-                                    <p th:text="${app.leadOrganisation}" class="no-margin"/>
-                                </div>
+                            <div class="status">
+                                <th:block th:if="${app.pending}">
+                                    <div class="status-msg msg-deadline-waiting">
+                                        Pending
+                                    </div>
+                                    <div class="status-msg msg-progress">
+                                        <a th:href="${reviewUrl}">Accept or reject</a>
+                                    </div>
+                                </th:block>
 
-                                <div class="status">
-                                    <th:block th:if="${app.pending}">
-                                        <div class="status-msg msg-deadline-waiting">
-                                            Pending
-                                        </div>
-                                        <div class="status-msg msg-progress">
-                                            <a class="disabled" aria-disabled="true">Accept or reject</a>
-                                        </div>
-                                    </th:block>
-
-                                    <strong th:if="${app.accepted}" class="status-msg msg-progress">
-                                        Accepted
-                                    </strong>
-                                </div>
-                            </th:block>
-
-                        </li>
-                        <th:block th:if="${#lists.isEmpty(model.applications)}">
-                            <li class="status-2-col">
-                                <div class="task">
-                                    <p>No applications have been assigned to this panel.</p>
-                                </div>
-                            </li>
+                                <strong th:if="${app.accepted}" class="status-msg msg-progress">
+                                    Accepted
+                                </strong>
+                            </div>
                         </th:block>
-                    </ul>
-                </div>
-            </form>
+
+                    </li>
+                    <th:block th:if="${#lists.isEmpty(model.applications)}">
+                        <li class="status-2-col">
+                            <div class="task">
+                                <p>No applications have been assigned to this panel.</p>
+                            </div>
+                        </li>
+                    </th:block>
+                </ul>
+            </div>
+        </form>
     </div>
 
     <p class="extra-margin form-hint">

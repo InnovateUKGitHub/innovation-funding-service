@@ -6,7 +6,7 @@ import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
