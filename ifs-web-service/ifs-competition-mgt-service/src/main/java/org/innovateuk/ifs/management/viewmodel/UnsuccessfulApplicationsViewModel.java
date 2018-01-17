@@ -16,13 +16,15 @@ public class UnsuccessfulApplicationsViewModel {
     private List<ApplicationResource> unsuccessfulApplications;
     private long unsuccessfulApplicationsSize;
     private PaginationViewModel unsuccessfulApplicationsPagination;
+    private boolean isIfsAdmin;
 
-    public UnsuccessfulApplicationsViewModel(Long competitionId, String competitionName,
+    public UnsuccessfulApplicationsViewModel(Long competitionId, String competitionName, boolean isIfsAdmin,
                                              List<ApplicationResource> unsuccessfulApplications,
                                              long unsuccessfulApplicationsSize,
                                              PaginationViewModel unsuccessfulApplicationsPagination) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
+        this.isIfsAdmin = isIfsAdmin;
         this.unsuccessfulApplications = unsuccessfulApplications;
         this.unsuccessfulApplicationsSize = unsuccessfulApplicationsSize;
         this.unsuccessfulApplicationsPagination = unsuccessfulApplicationsPagination;
@@ -32,41 +34,22 @@ public class UnsuccessfulApplicationsViewModel {
         return competitionId;
     }
 
-    public void setCompetitionId(Long competitionId) {
-        this.competitionId = competitionId;
-    }
-
     public String getCompetitionName() {
         return competitionName;
     }
 
-    public void setCompetitionName(String competitionName) {
-        this.competitionName = competitionName;
-    }
-
+    public boolean isIfsAdmin() { return isIfsAdmin; }
 
     public List<ApplicationResource> getUnsuccessfulApplications() {
         return unsuccessfulApplications;
-    }
-
-    public void setUnsuccessfulApplications(List<ApplicationResource> unsuccessfulApplications) {
-        this.unsuccessfulApplications = unsuccessfulApplications;
     }
 
     public long getUnsuccessfulApplicationsSize() {
         return unsuccessfulApplicationsSize;
     }
 
-    public void setUnsuccessfulApplicationsSize(long unsuccessfulApplicationsSize) {
-        this.unsuccessfulApplicationsSize = unsuccessfulApplicationsSize;
-    }
-
     public PaginationViewModel getUnsuccessfulApplicationsPagination() {
         return unsuccessfulApplicationsPagination;
-    }
-
-    public void setUnsuccessfulApplicationsPagination(PaginationViewModel unsuccessfulApplicationsPagination) {
-        this.unsuccessfulApplicationsPagination = unsuccessfulApplicationsPagination;
     }
 
     @Override
@@ -81,6 +64,7 @@ public class UnsuccessfulApplicationsViewModel {
                 .append(unsuccessfulApplicationsSize, viewModel.unsuccessfulApplicationsSize)
                 .append(competitionId, viewModel.competitionId)
                 .append(competitionName, viewModel.competitionName)
+                .append(isIfsAdmin, viewModel.isIfsAdmin)
                 .append(unsuccessfulApplications, viewModel.unsuccessfulApplications)
                 .append(unsuccessfulApplicationsPagination, viewModel.unsuccessfulApplicationsPagination)
                 .isEquals();
@@ -91,6 +75,7 @@ public class UnsuccessfulApplicationsViewModel {
         return new HashCodeBuilder(17, 37)
                 .append(competitionId)
                 .append(competitionName)
+                .append(isIfsAdmin)
                 .append(unsuccessfulApplications)
                 .append(unsuccessfulApplicationsSize)
                 .append(unsuccessfulApplicationsPagination)
