@@ -11,11 +11,7 @@ allprojects {
 }
 
 subprojects {
-    apply from: rootProject.file("java-spring-boot.gradle")
-    bootRepackage {
-        onlyIf { Task task -> false }
-    }
-
+//    apply from: rootProject.file("java-spring-boot.gradle")
     apply from: rootProject.file("openshift-build.gradle")
 
     buildDocker.tag="innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
