@@ -65,7 +65,10 @@ public class CompetitionTest {
         sections.add(new Section());
         sections.add(new Section());
 
-        competition = new Competition(id, applications, questions, sections, name, startDate, endDate, registrationDate);
+        TermsAndConditions termsAndConditions = new TermsAndConditions();
+        termsAndConditions.setId(1L);
+
+        competition = new Competition(id, applications, questions, sections, name, startDate, endDate, registrationDate, termsAndConditions);
         competition.setMaxResearchRatio(maxResearchRatio);
         competition.setAcademicGrantPercentage(academicGrantPercentage);
 

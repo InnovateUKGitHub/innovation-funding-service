@@ -111,11 +111,15 @@ public class Competition implements ProcessActivity {
     private boolean nonIfs = false;
     private String nonIfsUrl;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "termsAndConditionsId", referencedColumnName = "id")
+    private TermsAndConditions termsAndConditions;
+
     public Competition() {
         setupComplete = false;
     }
 
-    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate) {
+    public Competition(Long id, List<Application> applications, List<Question> questions, List<Section> sections, String name, ZonedDateTime startDate, ZonedDateTime endDate, ZonedDateTime registrationDate, TermsAndConditions termsAndConditions) {
         this.id = id;
         this.applications = applications;
         this.questions = questions;
@@ -125,6 +129,7 @@ public class Competition implements ProcessActivity {
         this.setEndDate(endDate);
         this.setRegistrationDate(registrationDate);
         this.setupComplete = true;
+        this.termsAndConditions = termsAndConditions;
     }
 
     public Competition(long id, String name, ZonedDateTime startDate, ZonedDateTime endDate) {
@@ -653,6 +658,14 @@ public class Competition implements ProcessActivity {
 
     public void setHasInterviewStage(Boolean hasInterviewStage) {
         this.hasInterviewStage = hasInterviewStage;
+    }
+
+    public TermsAndConditions getTermsAndConditions() {
+        return termsAndConditions;
+    }
+
+    public void setTermsAndConditions(TermsAndConditions termsAndConditions) {
+        this.termsAndConditions = termsAndConditions;
     }
 }
 

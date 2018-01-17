@@ -55,7 +55,7 @@ public class ApplicationFundingDecisionController {
         return fundingDecisions.keySet().stream().findFirst().map(applicationId -> {
             ApplicationResource application = applicationService.getApplicationById(applicationId).getSuccessObject();
             CompetitionResource competition = competitionService.getCompetitionById(application.getCompetition()).getSuccessObject();
-            return competition.getCompetitionTypeName().equals("Expression of interest");
+            return ("Expression of interest").equals(competition.getCompetitionTypeName());
         }).orElse(false);
     }
 }
