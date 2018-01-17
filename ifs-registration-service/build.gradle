@@ -39,32 +39,8 @@ jar {
     baseName = 'ifs-registration-service'
 }
 
-/**
- * END OF.... CONFIGURATION FROM ifs-application-service/build.gradle
- */
+apply from: rootProject.file("new-relic.gradle")
 
-/**
- * CONFIGURATION FROM ifs-web-service/build.gradle
- */
-task getNewRelicAgent {
-    if (!file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
-            !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists()) {
-        exec {
-            executable = 'curl'
-            args = ['--connect-timeout', '30',
-                    '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar",
-                    'https://tools.innovateuk.org/holding/newrelic/newrelic.jar'
-            ]
-        }
-        exec {
-            executable = 'curl'
-            args = ['--connect-timeout', '30',
-                    '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml",
-                    'https://tools.innovateuk.org/holding/newrelic/newrelic.yml'
-            ]
-        }
-    }
-}
 
 task prepareDockerInput {
     dependsOn getNewRelicAgent
@@ -126,6 +102,3 @@ bootRepackage {
     mainClass = 'org.innovateuk.ifs.Application'
     //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
 }
-/**
- * END OF CONFIGURATION FROM ifs-web-service/build.gradle
- */

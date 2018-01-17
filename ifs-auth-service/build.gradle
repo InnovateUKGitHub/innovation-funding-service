@@ -1,7 +1,4 @@
 
-
-apply from: rootProject.file("java-spring-boot.gradle")
-
 allprojects {
 
     buildscript {
@@ -14,6 +11,7 @@ allprojects {
 }
 
 subprojects {
+    apply from: rootProject.file("java-spring-boot.gradle")
     bootRepackage {
         onlyIf { Task task -> false }
     }

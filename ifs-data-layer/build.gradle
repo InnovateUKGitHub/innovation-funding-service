@@ -15,26 +15,8 @@ subprojects {
     if (it.name != 'data-service-commons') {
 
         apply from: rootProject.file("openshift-build.gradle")
+        apply from: rootProject.file("new-relic.gradle")
 
-        task getNewRelicAgent {
-            if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() || 
-                 !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists() ) {
-                exec {
-                    executable = 'curl'
-                   args = ['--connect-timeout', '30',
-                            '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar",
-                            'https://tools.innovateuk.org/holding/newrelic/newrelic.jar'
-                    ]
-                }
-                 exec {
-                    executable = 'curl'
-                    args = ['--connect-timeout', '30',
-                            '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml",
-                            'https://tools.innovateuk.org/holding/newrelic/newrelic.yml'
-                    ]
-                }
-            }
-        }
 
         /**
          * This task creates a `docker` directory in the $BUILD/docker` directory of the project,
