@@ -40,6 +40,7 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-2174 Reject Signed Grant Offer Letter
 ...
 ...               IFS-2511 Resend Signed Grant Offer Letter
+...
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup    Upload
