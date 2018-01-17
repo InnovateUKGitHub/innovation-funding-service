@@ -417,10 +417,11 @@ PM can see that the GOL section requires completion
     And the user should see the element   jQuery=th:contains("${Cogilith_Name}") ~ td:nth-of-type(7).waiting
 
 PM is uploading the GOL one more time
-    [Documentation]  IFS-2174
+    [Documentation]  IFS-2174  IFS-2511
     [Tags]  HappyPath
     [Setup]  log in as a different user   ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    When the user should see the element    jQuery=.fail-alert:contains("grant offer letter has been rejected")
     Then the user removes existing and uploads new grant offer letter
 
 Internal user accepts signed grant offer letter
