@@ -12,7 +12,10 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static java.time.temporal.ChronoUnit.DAYS;
 
@@ -83,6 +86,8 @@ public class CompetitionResource {
 
     private boolean nonIfs = false;
     private String nonIfsUrl;
+
+    private TermsAndConditionsResource termsAndConditions;
 
     public CompetitionResource() {
         // no-arg constructor
@@ -559,6 +564,14 @@ public class CompetitionResource {
         return !isNonFinanceType();
     }
 
+    public TermsAndConditionsResource getTermsAndConditions() {
+        return termsAndConditions;
+    }
+
+    public void setTermsAndConditions(TermsAndConditionsResource termsAndConditions) {
+        this.termsAndConditions = termsAndConditions;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -610,9 +623,11 @@ public class CompetitionResource {
                 .append(assessorCount, that.assessorCount)
                 .append(assessorPay, that.assessorPay)
                 .append(activityCode, that.activityCode)
+                .append(fullApplicationFinance, that.fullApplicationFinance)
                 .append(hasAssessmentPanel, that.hasAssessmentPanel)
                 .append(hasInterviewStage, that.hasInterviewStage)
                 .append(nonIfsUrl, that.nonIfsUrl)
+                .append(termsAndConditions, that.termsAndConditions)
                 .isEquals();
     }
 
@@ -658,12 +673,14 @@ public class CompetitionResource {
                 .append(assessorCount)
                 .append(assessorPay)
                 .append(activityCode)
+                .append(fullApplicationFinance)
                 .append(setupComplete)
                 .append(useResubmissionQuestion)
                 .append(hasAssessmentPanel)
                 .append(hasInterviewStage)
                 .append(nonIfs)
                 .append(nonIfsUrl)
+                .append(termsAndConditions)
                 .toHashCode();
     }
 }

@@ -4,9 +4,10 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Unsuccessful applications - ${model.competitionName}|" />
 </head>
 
-<body>
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<body class="wide-page">
+    <th:block th:insert="fragments/modals :: modal-overlay" />
+    <th:block th:insert="fragments/layout :: body-start" />
+    <th:block th:insert="fragments/layout :: global-header" />
 
 <main tabindex="-1" id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
@@ -27,7 +28,7 @@
                 <th scope="col">Application number</th>
                 <th scope="col">Project title</th>
                 <th scope="col">Lead organisation</th>
-                <th scope="col">Status</th>
+                <th scope="col" th:colspan="${model.ifsAdmin ? '2' : '1'}">Status</th>
             </tr>
             </thead>
             <tbody>
@@ -38,12 +39,23 @@
                 <td th:text="${row.name}">Automated Project Title generator</td>
                 <td th:text="${row.leadOrganisationName}">B.Systems</td>
                 <td th:text="${#messages.msg('ifs.application.unsuccessful.' + row.applicationState.getStateName())}">Not funded</td>
+                <th:block th:if="${model.ifsAdmin and (row.applicationState.getStateName() == 'REJECTED')}">
+                    <td class="alignright">
+                        <a
+                            data-js-modal="mark-as-successful-modal"
+                            th:attr="data-modal-form-action=@{/competition/{cid}/applications/mark-successful/application/{aid}(cid=${row.competition}, aid=${row.id})}"
+                            class="button button-secondary"
+                            th:href="@{/competition/{cid}/applications/mark-successful/application/{aid}(cid=${row.competition}, aid=${row.id})}"> Mark as successful
+                        </a>
+                    </td>
+                </th:block>
             </tr>
             </tbody>
         </table>
     </div>
-    <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.unsuccessfulApplicationsPagination})" />
+    <th:block th:insert="fragments/competition-setup :: comp-setup-mark-as-successful-modal" />
 
+    <th:block th:insert="fragments/elements :: general-pagination(pagination=${model.unsuccessfulApplicationsPagination})" />
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
