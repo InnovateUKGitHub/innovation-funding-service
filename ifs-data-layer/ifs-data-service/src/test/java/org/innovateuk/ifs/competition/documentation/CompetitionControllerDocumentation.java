@@ -5,7 +5,6 @@ import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
-import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
 import org.innovateuk.ifs.documentation.CompetitionCountResourceDocs;
 import org.innovateuk.ifs.documentation.CompetitionSearchResultDocs;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -22,7 +21,8 @@ import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competiti
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -32,9 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class CompetitionControllerDocumentation extends BaseControllerMockMVCTest<CompetitionController> {
     @Mock
     private CompetitionService competitionService;
-
-    @Mock
-    private CompetitionSetupService competitionSetupService;
 
     @Override
     protected CompetitionController supplyControllerUnderTest() {
