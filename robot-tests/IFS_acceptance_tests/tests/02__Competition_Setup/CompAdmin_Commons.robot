@@ -49,24 +49,30 @@ the user fills in the CS Funding Information
     the user enters text to a text field  id=activityCode  133t
     the user clicks the button/link       jQuery=button:contains("Generate code")
     sleep  2s  #This sleeps is intended as the competition Code needs some time
-    textfield should contain              css=input[name="competitionCode"]  18
+    textfield should contain              css=input[name="competitionCode"]  19
     the user clicks the button/link       jQuery=button:contains("Done")
     the user clicks the button/link       link=Competition setup
     the user should see the element       jQuery=div:contains("Funding information") ~ .task-status-complete
 
 the user fills in the CS Eligibility
-    [Arguments]  ${organisationType}
+    [Arguments]  ${organisationType}  ${researchParticipation}
     the user clicks the button/link   link=Eligibility
     the user clicks the button twice  css=label[for="single-or-collaborative-collaborative"]
     the user clicks the button twice  css=label[for="research-categories-33"]
     the user clicks the button twice  css=label[for="lead-applicant-type-${organisationType}"]
-    the user selects the option from the drop-down menu  1  researchParticipation
+    the user selects Research Participation if required  ${researchParticipation}
     the user clicks the button/link  css=label[for="comp-resubmissions-yes"]
     the user clicks the button/link  css=label[for="comp-resubmissions-yes"]
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
     the user should see the element   jQuery=div:contains("Eligibility") ~ .task-status-complete
     #Elements in this page need double clicking
+
+the user selects Research Participation if required
+    [Arguments]  ${percentage}
+    ${status}  ${value}=  Run Keyword And Ignore Error Without Screenshots  the user should see the element  id=researchParticipationAmountId
+    Run Keyword If  '${status}' == 'PASS'  the user selects the option from the drop-down menu  ${percentage}  researchParticipation
+    Run Keyword If  '${status}' == 'FAIL'  the user should not see the element  id=researchParticipation
 
 the user fills in the CS Milestones
     [Arguments]  ${month}  ${nextyear}
@@ -305,7 +311,8 @@ the user is able to configure the new question
     the user enters text to a text field  css=.editor  Please use Microsoft Word where possible. If you complete your application using Google Docs or any other open source software, this can be incompatible with the application form.
     the user enters text to a text field  id=question.maxWords  500
     the user selects the radio button     question.appendix  1
-    #the user clicks the button/link       css=label[for="allowed-file-types-PDF"]  #TODO Enable as part of IFS-2425 in another sprint
+    ${status} =  Run Keyword And Return status   the user should see that the checkbox is selected    allowed-file-types-PDF
+    Run Keyword If  '${status}' == 'False'  the user clicks the button/link       css=label[for="allowed-file-types-PDF"]
     the user clicks the button/link       css=label[for="allowed-file-types-Spreadsheet"]
     the user selects the radio button     question.scored  1
     the user enters text to a text field  question.scoreTotal  10
@@ -356,3 +363,36 @@ the competition is open
     [Arguments]  ${compTitle}
     Connect to Database  @{database}
     change the open date of the competition in the database to one day before  ${compTitle}
+
+moving competition to Closed
+    [Arguments]  ${compID}
+    Connect to Database  @{database}
+    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2017-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${compID}';
+
+making the application a successful project
+    [Arguments]  ${compID}  ${appTitle}
+    the user navigates to the page      ${server}/management/competition/${compID}
+    the user clicks the button/link  css=button[type="submit"][formaction$="notify-assessors"]
+    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=button[type="submit"][formaction$="close-assessment"]
+    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=button[type="submit"][formaction$="close-assessment"]
+    Run Keyword If  '${status}' == 'FAIL'  Run keywords    the user clicks the button/link    css=button[type="submit"][formaction$="notify-assessors"]
+    ...    AND  the user clicks the button/link    css=button[type="submit"][formaction$="close-assessment"]
+    run keyword and ignore error     the user clicks the button/link    css=button[type="submit"][formaction$="close-assessment"]
+    the user clicks the button/link  link=Input and review funding decision
+    the user clicks the button/link  jQuery=tr:contains("${appTitle}") label
+    the user clicks the button/link  css=[type="submit"][value="FUNDED"]
+    the user navigates to the page   ${server}/management/competition/${compID}/manage-funding-applications
+    the user clicks the button/link  jQuery=tr:contains("${appTitle}") label
+    the user clicks the button/link  css=[name="write-and-send-email"]
+    the internal sends the descision notification email to all applicants  Successful!
+
+moving competition to Project Setup
+    [Arguments]   ${compID}
+    the user navigates to the page   ${server}/management/competition/${compID}
+    the user clicks the button/link  css=button[type="submit"][formaction$="release-feedback"]
+
+The project finance user is able to download the Overheads file
+    [Arguments]   ${ProjectID}  ${organisationId}
+    the user should see the element               jQuery=a:contains("${excel_file}")
+    the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
+    remove the file from the operating system     ${excel_file}

@@ -139,10 +139,10 @@
             <div class="year">
                 <th:block th:insert="question-type/form-elements :: form-label (name='Year',id=${id}+'_year',bold=false)" />
                 <th:block th:if="${dateFieldPresent}">
-            		<th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_year', field=${field}+'.year',placeholder='YYYY',required=true)" />
+            		    <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_year', field=${field}+'.year',placeholder='YYYY',required=true)" />
                 </th:block>
                 <th:block th:unless="${dateFieldPresent}">
-               		<th:block th:insert="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_year',field=${field}+'.year', placeholder='YYYY',required=true)" />
+               		  <th:block th:insert="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_year',field=${field}+'.year', placeholder='YYYY',required=true)" />
                 </th:block>
             </div>
             <!--/* The hidden field below is used as a dummy value that is essentially ignored by the LocalDatePropertyEditor in order to allow
@@ -197,18 +197,21 @@
         <div class="form-footer">
 
             <div class="form-footer__actions">
+                <th:block th:insert="question-type/form-elements :: ready-for-review"
+                          th:unless="${model.assignButtonsViewModel.currentUserIsLead}"
+                          th:with="displayBlock=${true}, model=${model.assignButtonsViewModel}" />
+
                 <th:block th:unless="${model.closed and !model.summary}">
 
                     <th:block th:if="${model.assignButtonsViewModel.currentUserIsLead}">
                         <!--/*  we show mark as complete buttons and the question should be assigned to you or */-->
                         <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons (${model})" />
-                        <!--/* if  readonly we show the edit form button */-->
-                        <th:block th:if="${readonly}" th:insert="question-type/form-elements :: form-edit-question-button (${model})" />
                     </th:block>
 
-                </th:block>
+                    <!--/* if  readonly we show the edit form button */-->
+                    <th:block th:if="${readonly} and ${model.assignButtonsViewModel.assignedToCurrentUser}" th:insert="question-type/form-elements :: form-edit-question-button (${model})" />
 
-                <th:block th:insert="question-type/form-elements :: ready-for-review" th:unless="${model.assignButtonsViewModel.currentUserIsLead}" th:with="displayBlock=${true}, model=${model.assignButtonsViewModel}" />
+                </th:block>
             </div>
 
             <div class="form-footer__info" aria-live="polite" aria-atomic="true" role="status">
@@ -253,13 +256,13 @@
 <!-- ========================= Assign / reassign buttons =========================== -->
 <th:block th:fragment="ready-for-review">
     <th:block th:if="${model != null}" th:with="question=${model.question}">
-      <div class="ready-for-review-container" th:if="${question.isAssignEnabled()} and ${model.assignedToCurrentUser}">
+      <th:block th:if="${question.isAssignEnabled()} and ${model.assignedToCurrentUser}">
         <button type="submit"
                 name="assign_question"
                 th:value="${question.id}+'_'+${model.assignedBy.processRole.id}"
                 th:class="'buttonlink'">Assign to lead for review
         </button>
-      </div>
+      </th:block>
     </th:block>
 </th:block>
 

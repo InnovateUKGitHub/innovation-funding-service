@@ -3,7 +3,7 @@ package org.innovateuk.ifs.threads.security;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.util.SecurityRuleUtil.isProjectFinanceUser;

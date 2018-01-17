@@ -80,8 +80,11 @@ public interface GrantOfferLetterService {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'APPROVE_SIGNED_GRANT_OFFER_LETTER')")
     ServiceResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType);
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_SIGNED_GRANT_OFFER_LETTER_STATUS')")
     ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_SIGNED_GRANT_OFFER_LETTER_STATUS')")
+    ServiceResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectResource', 'VIEW_GRANT_OFFER_LETTER_SEND_STATUS')")
     ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId);

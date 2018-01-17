@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
 import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.innovateuk.ifs.threads.mapper.NoteMapper;
 import org.innovateuk.ifs.threads.repository.NoteRepository;
-import org.innovateuk.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.threads.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.threads.service.ThreadService;
-import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

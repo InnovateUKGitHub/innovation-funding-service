@@ -15,7 +15,7 @@ public class AssessmentReviewRejectOutcomeBuilder extends BaseBuilder<Assessment
         super(multiActions);
     }
 
-    public static AssessmentReviewRejectOutcomeBuilder newAssessmentPanelApplicationInviteRejectOutcome() {
+    public static AssessmentReviewRejectOutcomeBuilder newAssessmentReviewRejectOutcome() {
         return new AssessmentReviewRejectOutcomeBuilder(emptyList());
     }
 
@@ -34,6 +34,6 @@ public class AssessmentReviewRejectOutcomeBuilder extends BaseBuilder<Assessment
     }
 
     public AssessmentReviewRejectOutcomeBuilder withRejectionComment(String... rejectionComments) {
-        return withArray((rejectionComment, assessmentRejectOutcome) -> assessmentRejectOutcome.setRejectionComment(rejectionComment), rejectionComments);
+        return withArray((rejectionComment, assessmentRejectOutcome) -> assessmentRejectOutcome.setRejectReason(rejectionComment), rejectionComments);
     }
 }
