@@ -171,6 +171,20 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
+    public void testIsSignedGrantOfferLetterRejected() throws Exception {
+
+        when(grantOfferLetterRestService.isSignedGrantOfferLetterRejected(123L)).thenReturn(restSuccess(Boolean.TRUE));
+
+        ServiceResult<Boolean> result = grantOfferLetterService.isSignedGrantOfferLetterRejected(123L);
+
+        assertTrue(result.isSuccess());
+        assertEquals(Boolean.TRUE, result.getSuccessObject());
+
+        verify(grantOfferLetterRestService).isSignedGrantOfferLetterRejected(123L);
+
+    }
+
+    @Test
     public void testGrantOfferLetterAlreadySent() throws Exception {
 
         when(grantOfferLetterRestService.isGrantOfferLetterAlreadySent(123L)).thenReturn(restSuccess(Boolean.TRUE));

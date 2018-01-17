@@ -175,6 +175,11 @@ public class GrantOfferLetterController {
         return grantOfferLetterService.isSignedGrantOfferLetterApproved(projectId).toGetResponse();
     }
 
+    @GetMapping("/{projectId}/signed-grant-offer-letter/is-rejected")
+    public RestResult<Boolean> isSignedGrantOfferLetterRejected(@PathVariable("projectId") final Long projectId) {
+        return grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).toGetResponse();
+    }
+
     @GetMapping("/{projectId}/grant-offer-letter/state")
     public RestResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(@PathVariable("projectId") final Long projectId) {
         return grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).toGetResponse();

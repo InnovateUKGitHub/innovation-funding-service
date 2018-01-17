@@ -6,6 +6,7 @@ import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.domain.TermsAndConditions;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -29,7 +30,14 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
     }
 
     public static CompetitionBuilder newCompetition() {
-        return new CompetitionBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Competition "));
+        return new CompetitionBuilder(emptyList()).
+                with(uniqueIds()).
+                with(idBasedNames("Competition ")).
+                with(competition -> {
+                    TermsAndConditions termsAndConditions = new TermsAndConditions();
+                    termsAndConditions.setId(1L);
+                    competition.setTermsAndConditions(termsAndConditions);
+                });
     }
 
     public CompetitionBuilder withSections(List<Section> sections) {
@@ -79,8 +87,8 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> setField("activitiyCode", activityCode, competition));
     }
 
-    public CompetitionBuilder withFullFinance(boolean fullFinance) {
-        return with(competition -> setField("fullApplicationFinance", fullFinance, competition));
+    public CompetitionBuilder withFullApplicationFinance(Boolean fullApplicationFinance) {
+        return with(competition -> setField("fullApplicationFinance", fullApplicationFinance, competition));
     }
 
     public CompetitionBuilder withInnovateBudget(String innovateBudget) {
@@ -124,6 +132,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withNonIfsUrl(String... nonIfsUrl) {
         return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
+    }
+
+    public CompetitionBuilder withTermsAndConditions(TermsAndConditions... termsAndConditions) {
+        return withArray((terms, competition) -> competition.setTermsAndConditions(terms), termsAndConditions);
     }
 
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {

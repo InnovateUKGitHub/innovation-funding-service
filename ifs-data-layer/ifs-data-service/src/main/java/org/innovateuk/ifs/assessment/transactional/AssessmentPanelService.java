@@ -1,8 +1,13 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.List;
 
 /**
  * Service for managing assessment panel status of {@link org.innovateuk.ifs.application.domain.Application}s
@@ -32,4 +37,16 @@ public interface AssessmentPanelService {
             value = "PENDING_ASSESSMENT_REVIEWS",
             description = "Comp admins and execs can determine if there are pending assessment reviews")
     ServiceResult<Boolean> isPendingReviewNotifications(long competitionId);
+
+    @PostFilter("hasPermission(filterObject, 'READ_PANEL_DASHBOARD')")
+    ServiceResult<List<AssessmentReviewResource>> getAssessmentReviews(long userId, long competitionId);
+
+    @PreAuthorize("hasPermission(#assessmentReviewId, 'org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource', 'READ')")
+    ServiceResult<AssessmentReviewResource> getAssessmentReview(long assessmentReviewId);
+
+    @PreAuthorize("hasPermission(#assessmentReviewId, 'org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource', 'UPDATE')")
+    ServiceResult<Void> acceptAssessmentReview(long assessmentReviewId);
+
+    @PreAuthorize("hasPermission(#assessmentReviewId, 'org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource', 'UPDATE')")
+    ServiceResult<Void> rejectAssessmentReview(long assessmentReviewId, AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcomeResource);
 }
