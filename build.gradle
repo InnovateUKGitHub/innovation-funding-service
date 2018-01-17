@@ -272,6 +272,7 @@ dockerCompose {
     removeImages = "Local" // Accepted values are: "All", "Local" and "None"
     removeVolumes = false
 
+    waitForTcpPortsDisconnectionProbeTimeout = java.time.Duration.ofMillis(100)
 }
 
 task dockerTidy(type: Exec) {
