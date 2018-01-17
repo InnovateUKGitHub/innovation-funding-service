@@ -38,6 +38,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               IFS-1307 CSS access: Project Setup/Previous
 ...
 ...               IFS-2174 Reject Signed Grant Offer Letter
+...
+...               IFS-2511 Resend Signed Grant Offer Letter
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup    Upload
@@ -366,6 +368,7 @@ PM's status should be updated
     And the user clicks the button/link              link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              css=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
+
 Internal Dashboard should be updated
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
     [Tags]    HappyPath
@@ -381,40 +384,6 @@ Internal user can download the signed GOL
     And the user downloads the file                            ${Comp_admin1_credentials["email"]}  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
     [Teardown]    remove the file from the operating system    testing.pdf
 
-Comp Admin can reject the signed grant offer letter
-    [Documentation]  IFS-2511
-    [Tags]
-    [Setup]  the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
-    Given the user clicks the button/link      css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a
-    When the user navigates to the page        ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
-    #And the user clicks the button/link        jQuery=label:contains("Reject documents")
-    And the user selects the radio button      approvalType  REJECTED
-    And the user clicks the button/link        jQuery=button:contains("Submit")
-    Then the user should see the element       jQuery=p:contains(These documents have been reviewed and rejected.)
-
-Project Manager re-sends the Signed Grant Offer Letter
-    [Documentation]  IFS-2511
-    [Tags]
-    [Setup]  log in as a different user     ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
-    Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
-    When the user clicks the button/link    jQuery=.button:contains("Send to Innovate UK")
-    Then the user clicks the button/link    jQuery=button:contains("Send to Innovate UK")
-
-Comp Admin can accept the signed grant offer letter
-    [Documentation]  INFUND-6377
-    [Tags]
-    [Setup]  log in as a different user                 &{Comp_admin1_credentials}
-    Given the user navigates to the page                ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
-    When the user clicks the button/link                jQuery=tr:contains(Complete) td:nth-child(8) a:contains("Review")
-    #When the user clicks the button/link                css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.action a
-    And the user navigates to the page                  ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
-    And the user selects the radio button               approvalType  APPROVED
-    #And the user should see the element                jQuery=label:contains("Accept documents")
-    #When the user clicks the button/link               jQuery=label:contains("Accept documents")
-    And the user clicks the button/link                 jQuery=button:contains("Submit")
-    Then the user should see the element                jQuery=h2:contains("These documents have been approved")
-    #When the user clicks the button/link               jQuery=.modal-accept-signed-gol button:contains("Cancel")
-    Then the user should not see an error in the page
 Comp Admin can accept the signed grant offer letter
     [Documentation]  INFUND-6377 IFS-2174
     [Tags]  HappyPath
