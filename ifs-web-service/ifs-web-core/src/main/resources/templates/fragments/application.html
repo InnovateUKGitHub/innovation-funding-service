@@ -26,8 +26,25 @@
 
                 <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
                     <div th:replace="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
-                </th:block>
 
+                    <!--need to seperate out the score and text from the value-->
+                    <div th:if="!${#lists.isEmpty(feedback)}">
+                        <ul>
+                            <li th:each="item : ${feedback}">
+                                <div th:if="${formInput.getQuestion()} == ${item.question}">
+                                    <div class="column-half">
+                                        <h3 class="heading-small">Feedback</h3>
+                                    </div>
+                                    <div class="column-half alignright heading-small ">
+                                        Score /10
+                                    </div>
+                                        <p th:text="${item.value}">Feedback text</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </th:block>
             </div>
         </div>
          <th:block th:if="${question.shortName.equals('Application details') and !(currentApplication.isOpen() and isApplicant) and !hideDetails}">
