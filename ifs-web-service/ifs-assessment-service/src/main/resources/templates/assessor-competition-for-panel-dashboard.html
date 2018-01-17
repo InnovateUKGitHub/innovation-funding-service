@@ -58,9 +58,8 @@
 
                         <th:block>
                             <div class="task">
-                                <h3 class="heading-small" th:text="${app.displayLabel}">
-                                    Application name
-                                </h3>
+                                <a th:if="${app.accepted}" class="heading-small" th:href="@{/review/{reviewId}/application/{appId}(reviewId=${app.reviewId}, appId=${app.applicationId})}" th:text="${app.displayLabel}">Application name</a>
+                                <h3 th:unless="${app.accepted}" class="heading-small" th:text="${app.displayLabel}">Application name</h3>
                                 <p th:text="${app.leadOrganisation}" class="no-margin"/>
                             </div>
 

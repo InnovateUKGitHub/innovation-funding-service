@@ -34,6 +34,8 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-1138 Assessment panels - Competition for panel dashboard
 ...
 ...               IFS-388 Assessment panels - Accept/Reject Panel applications for review
+...
+...               IFS-29 Assessment panels - Assessor Review applications
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -237,14 +239,14 @@ Assign applications to panel
     [Documentation]  IFS-1125
     [Tags]
     When the user clicks the button/link    jQuery=td:contains("${Neural_network_application}") ~ td:contains("Assign")
-    And the user clicks the button/link     jQuery=td:contains("Computer vision and machine learning for transport networks") ~ td:contains("Assign")
+    And the user clicks the button/link     jQuery=td:contains("${computer_vision_application_name}") ~ td:contains("Assign")
     Then the user should see the element    jQuery=h2:contains("Assigned applications (2)")
     When the user clicks the button/link    link=Manage assessment panel
     And the user clicks the button/link     jQuery=button:contains("Confirm actions")
     And the user reads his email            ${assessor_ben}  Applications ready for review   You have been allocated applications to review within the competition Machine learning for transport infrastructure.
 
-Assessors view of competition dashboard in panel status
-    [Documentation]  IFS-1138  IFS-388
+Assessors view of competition dashboard and applications in panel status
+    [Documentation]  IFS-1138  IFS-388  IFS-29
     [Tags]
     Given Log in as a different user            ${panel_assessor_ben}  ${short_password}
     When the user clicks the button/link        jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
@@ -260,7 +262,12 @@ Assessors view of competition dashboard in panel status
     Then The user should see the text in the element    accept-application    You will still have the option to reject after accepting and viewing the full application.
     When the user clicks the button/link        jQuery=button:contains("Confirm")
     Then the user should see the element        jQuery=.progress-list div:contains("${computer_vision_application_name}") ~ div strong:contains("Accepted")
-    #TODO Navigation after Accept/Reject to be included as part of IFS-29
+    When the user clicks the button/link        link=${computer_vision_application_name}
+    Then the user should see the element        jQuery=h1 span:contains("${computer_vision_application_name}")
+    And the user should see the element         jQuery=h1:contains("Application summary")
+    When the user clicks the button/link        jQuery=button:contains("Business opportunity")
+    Then the user should not see the element    jQuery=span:contains("Question score")
+    And the user should not see the element     jQuery=label:contains("Feedback")
 
 Assessor cannot see competition on dashboard after funders panel date expiry
     [Documentation]  IFS-1138
