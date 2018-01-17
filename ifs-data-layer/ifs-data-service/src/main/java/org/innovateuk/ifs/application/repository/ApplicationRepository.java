@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -112,4 +113,5 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 	int countByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
 
 	List<Application> findByCompetitionIdAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(long competitionId, State applicationState);
+	List<Application> findByCompetitionAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(Competition competitionId, State applicationState);
 }

@@ -61,8 +61,8 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     @Autowired
     private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
 
-    @Autowired
-    private AssessmentPanelParticipantMapper assessmentPanelParticipantMapper;
+//    @Autowired
+//    private AssessmentPanelParticipantMapper assessmentPanelParticipantMapper;
 
     @Autowired
     private AssessmentReviewWorkflowHandler workflowHandler;
@@ -76,14 +76,14 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     @Autowired
     private ActivityStateRepository activityStateRepository;
 
-    @Autowired
-    private ProcessRoleRepository processsRoleRepository;
+//    @Autowired
+//    private ProcessRoleRepository processsRoleRepository;
 
     @Autowired
     private NotificationSender notificationSender;
 
-    @Autowired
-    private NotificationTemplateRenderer renderer;
+//    @Autowired
+//    private NotificationTemplateRenderer renderer;
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
@@ -93,6 +93,8 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     @Autowired
     private AssessmentReviewRejectOutcomeMapper assessmentReviewRejectOutcomeMapper;
+
+
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -186,18 +188,21 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     private ServiceResult<Void> createAssessmentReview(AssessmentPanelParticipant assessor, Application application) {
         if (!assessmentReviewRepository.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor.getUser(), application, State.WITHDRAWN)) {
-            final ProcessRole processRole = createProcessRoleForAssessmentReview(assessor, application);
-            AssessmentReview assessmentReview =  new AssessmentReview(application, processRole);
+//            final ProcessRole processRole = createProcessRoleForAssessmentReview(assessor, application);
+            final Role assessorRole = roleRepository.findOneByName(PANEL_ASSESSOR.getName());
+
+            AssessmentReview assessmentReview =  new AssessmentReview(application, assessor, assessorRole);
+
             assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
             assessmentReviewRepository.save(assessmentReview);
         }
         return serviceSuccess();
     }
 
-    private ProcessRole createProcessRoleForAssessmentReview(AssessmentPanelParticipant assessor, Application application) {
-        final Role assessorRole = roleRepository.findOneByName(PANEL_ASSESSOR.getName());
-        return processsRoleRepository.save(new ProcessRole(assessor.getUser(), application.getId(), assessorRole, null));
-    }
+//    private ProcessRole createProcessRoleForAssessmentReview(AssessmentPanelParticipant assessor, Application application) {
+//        final Role assessorRole = roleRepository.findOneByName(PANEL_ASSESSOR.getName());
+//        return processsRoleRepository.save(new ProcessRole(assessor.getUser(), application.getId(), assessorRole));
+//    }
 
     private ServiceResult<Application> getApplication(long applicationId) {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));

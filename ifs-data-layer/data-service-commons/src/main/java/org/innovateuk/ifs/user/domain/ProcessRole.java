@@ -27,22 +27,20 @@ public class ProcessRole {
     private Long organisationId;
 
     public ProcessRole(){
-    	// no-arg constructor
     }
 
-    public ProcessRole(Long id, User user, Long applicationId, Role role, Long organisationId) {
-        this.id = id;
+    public ProcessRole(User user, long applicationId, Role role, long organisationId) {
         this.user = user;
         this.applicationId = applicationId;
         this.role = role;
         this.organisationId = organisationId;
     }
 
-    public ProcessRole(User user, Long applicationId, Role role, Long organisationId) {
+    public ProcessRole(User user, long applicationId, Role role) {
         this.user = user;
         this.applicationId = applicationId;
         this.role = role;
-        this.organisationId = organisationId;
+        this.organisationId = null;
     }
 
     public Role getRole() {

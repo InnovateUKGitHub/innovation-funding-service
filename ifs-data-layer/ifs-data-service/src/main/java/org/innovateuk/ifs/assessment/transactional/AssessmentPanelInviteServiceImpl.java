@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.mapper.AssessmentPanelInviteMapper;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
@@ -19,7 +20,6 @@ import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
-import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
@@ -30,9 +30,13 @@ import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -89,8 +93,8 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     @Autowired
     private CompetitionRepository competitionRepository;
 
-    @Autowired
-    private RejectionReasonRepository rejectionReasonRepository;
+//    @Autowired
+//    private RejectionReasonRepository rejectionReasonRepository;
 
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
@@ -127,6 +131,9 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
     @Autowired
     private AssessmentReviewRepository assessmentReviewRepository;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     enum Notifications {
         INVITE_ASSESSOR_TO_PANEL,
@@ -451,7 +458,20 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         final User user = userRepository.findOne(currentUser.getId());
         return getParticipantByInviteHash(inviteHash)
                 .andOnSuccess(p -> accept(p, user))
+                .andOnSuccess(this::assignAllPanelApplicationsToParticipant)
                 .andOnSuccessReturnVoid();
+    }
+
+
+    // TODO tidy and test
+    private ServiceResult<Void> assignAllPanelApplicationsToParticipant(AssessmentPanelParticipant participant) {
+        // assume reviewer has no existing reviews
+        // get all applications on panel (i.e. inAssessmentPanel)
+        Competition competition = participant.getProcess();
+        List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
+        Role role = roleRepository.findOneByName(UserRoleType.PANEL_ASSESSOR.getName());
+        applicationsInPanel.forEach(application -> assessmentReviewRepository.save(new AssessmentReview(application, participant, role)));
+        return serviceSuccess();
     }
 
     private ServiceResult<AssessmentPanelParticipant> getParticipantByInviteHash(String inviteHash) {

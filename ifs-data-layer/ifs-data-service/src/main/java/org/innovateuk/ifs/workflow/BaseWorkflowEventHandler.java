@@ -44,11 +44,11 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
         stateHandler.addPersistStateChangeListener(new LocalStateChangeListener());
     }
 
-    protected ProcessType getProcessByParticipantId(Long participantId) {
+    protected ProcessType getProcessByParticipantId(long participantId) {
         return getProcessRepository().findOneByParticipantId(participantId);
     }
 
-    protected ProcessType getProcessByTargetId(Long targetId) {
+    protected ProcessType getProcessByTargetId(long targetId) {
         return getProcessRepository().findOneByTargetId(targetId);
     }
 
