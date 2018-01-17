@@ -137,6 +137,8 @@ configure(subprojects - project(":ifs-auth-service")) {
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
         compile 'org.realityforge.gelf4j:gelf4j:1.10'
+        compile "org.springframework.cloud:spring-cloud-starter-sleuth"
+        compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
 
         // Test Libraries
         testCompile group: 'org.hamcrest', name: 'hamcrest-core'
@@ -145,6 +147,12 @@ configure(subprojects - project(":ifs-auth-service")) {
         testCompile 'org.mockito:mockito-core'
         testCompile group: 'org.hamcrest', name: 'hamcrest-library'
 
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
     }
 
     repositories {
@@ -170,6 +178,7 @@ buildscript {
     ext {
         springBootVersion = '1.5.6.RELEASE'
         thymeleafVersion = ext['thymeleaf.version']
+        springCloudVersion = 'Dalston.RELEASE'
     }
 
     repositories {
@@ -288,3 +297,5 @@ task happyRobotTests(type: Exec) {
 task wrapper(type: Wrapper) {
     gradleVersion = '3.5'
 }
+
+ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false

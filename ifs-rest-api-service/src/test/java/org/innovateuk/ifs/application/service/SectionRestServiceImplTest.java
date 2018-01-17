@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
 import java.util.*;
-import java.util.concurrent.Future;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
@@ -129,30 +128,6 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
         // now run the method under test
         List<Long> response = service.getIncompletedSectionIds(123L).getSuccessObject();
         assertEquals(returnedResponse, response);
-    }
-
-    @Test
-    public void getPreviousSection() throws Exception {
-        long sectionId = 1L;
-        String expectedUrl = sectionRestUrl + "/getPreviousSection/" + sectionId;
-        SectionResource resource = newSectionResource().build();
-        setupGetWithRestResultAsyncExpectations(expectedUrl, SectionResource.class, resource);
-
-        Future<RestResult<SectionResource>> result = service.getPreviousSection(sectionId);
-
-        assertEquals(resource, result.get().getSuccessObjectOrThrowException());
-    }
-
-    @Test
-    public void getNextSection() throws Exception {
-        long sectionId = 1L;
-        String expectedUrl = sectionRestUrl + "/getNextSection/" + sectionId;
-        SectionResource resource = newSectionResource().build();
-        setupGetWithRestResultAsyncExpectations(expectedUrl, SectionResource.class, resource);
-
-        Future<RestResult<SectionResource>> result = service.getNextSection(sectionId);
-
-        assertEquals(resource, result.get().getSuccessObjectOrThrowException());
     }
 
     @Test
