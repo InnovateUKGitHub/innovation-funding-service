@@ -36,7 +36,7 @@
             </p>
 
             <form th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js section-overview" novalidate="novalidate">
-                <th:block th:insert="fragments/application :: application-summary (competitionIsOpen = ${currentCompetition.isOpen()}, isApplicant = true)" />
+                <th:block th:insert="fragments/application :: application-summary (competitionIsOpen = ${currentCompetition.isOpen()}, isApplicant = true, hideDetails = false)" />
             </form>
 
             <div th:if="${!currentCompetition.isOpen() and !currentApplication.isSubmitted()}">
