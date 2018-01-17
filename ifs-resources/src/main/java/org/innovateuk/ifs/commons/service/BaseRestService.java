@@ -11,10 +11,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
 import static java.util.Collections.singletonList;
 
@@ -202,15 +201,19 @@ public abstract class BaseRestService {
     }
 
     // Asynchronous public calls
-    protected <T> Future<RestResult<T>> getWithRestResultAsync(String path, Class<T> returnType) {
+    protected <T> CompletableFuture<RestResult<T>> getWithRestResultAsync(String path, Class<T> returnType) {
         return adaptor.getWithRestResultAsyc(getDataRestServiceURL() + path, returnType);
     }
 
-    public <T> ListenableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz) {
+    protected <T> CompletableFuture<RestResult<T>> getWithRestResultAsync(String path, ParameterizedTypeReference<T> returnType) {
+        return adaptor.getWithRestResultAsyc(getDataRestServiceURL() + path, returnType);
+    }
+
+    public <T> CompletableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz) {
         return adaptor.restGetAsync(getDataRestServiceURL() + path, clazz);
     }
 
-    protected <T> Future<RestResult<T>> getWithRestResultAsyncAnonymous(String path, Class<T> returnType) {
+    protected <T> CompletableFuture<RestResult<T>> getWithRestResultAsyncAnonymous(String path, Class<T> returnType) {
         return anonymousRestTemplateAdaptor.getWithRestResultAsyc(getDataRestServiceURL() + path, returnType);
     }
 

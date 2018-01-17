@@ -27,7 +27,7 @@ import static java.util.stream.Collectors.toList;
  */
 @Controller
 @RequestMapping(value = "/review/{reviewId}")
-@SecuredBySpring(value = "Controller", description = "TODO", securedType = AssessmentReviewController.class)
+@SecuredBySpring(value = "Controller", description = "Assessors can access applications for review", securedType = AssessmentReviewController.class)
 @PreAuthorize("hasAuthority('assessor')")
 public class AssessmentReviewApplicationSummaryController {
 

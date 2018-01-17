@@ -69,8 +69,10 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     private UserResource assessor;
     private UserResource compAdmin;
     private UserResource projectFinance;
+    private UserResource panelAssessor;
 
     private RoleResource innovationLeadRole = newRoleResource().withType(INNOVATION_LEAD).build();
+    private RoleResource panelAssessorRole = newRoleResource().withType(PANEL_ASSESSOR).build();
     private Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
     private Role collaboratorRole = newRole().withType(UserRoleType.COLLABORATOR).build();
     private Role applicantRole = newRole().withType(UserRoleType.APPLICANT).build();
@@ -89,6 +91,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         compAdmin = compAdminUser();
         assessor = assessorUser();
         projectFinance = projectFinanceUser();
+        panelAssessor = newUserResource().withRolesGlobal(singletonList(panelAssessorRole)).build();
 
         processRole1 = newProcessRole().withRole(leadApplicantRole).build();
         processRole2 = newProcessRole().withRole(applicantRole).build();
@@ -125,6 +128,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
         when(processRoleRepositoryMock.findByUserIdAndRoleInAndApplicationId(user3.getId(), applicantRoles, applicationResource1.getId())).thenReturn(emptyList());
         when(processRoleRepositoryMock.existsByUserIdAndApplicationId(assessor.getId(), applicationResource2.getId())).thenReturn(false);
         when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(assessor.getId(), applicationResource1.getId(), ASSESSOR.getName())).thenReturn(true);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(panelAssessor.getId(), applicationResource1.getId(), PANEL_ASSESSOR.getName())).thenReturn(true);
 
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competition.getId(), CompetitionParticipantRole.INNOVATION_LEAD)).thenReturn(Collections.singletonList(competitionParticipant));
     }
@@ -222,6 +226,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     @Test
     public void assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssessTest() {
         assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, assessor));
+        assertTrue(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, panelAssessor));
         assertFalse(rules.assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(applicationResource1, compAdmin));
     }
 

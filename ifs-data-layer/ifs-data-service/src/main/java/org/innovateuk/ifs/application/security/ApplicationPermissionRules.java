@@ -46,7 +46,9 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
     public boolean assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(final ApplicationResource applicationResource, UserResource user) {
-        return isAssessor(applicationResource.getId(), user);
+        boolean isAssessor = isAssessor(applicationResource.getId(), user);
+        boolean isPanelAssessor = isPanelAssessor(applicationResource.getId(), user);
+        return isAssessor || isPanelAssessor;
     }
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The internal users can see the participation percentage for applications they assess")

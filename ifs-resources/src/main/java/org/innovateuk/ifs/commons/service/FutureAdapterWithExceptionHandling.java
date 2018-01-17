@@ -2,22 +2,22 @@ package org.innovateuk.ifs.commons.service;
 
 
 import org.innovateuk.ifs.util.Either;
-import org.springframework.util.concurrent.FutureAdapter;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureAdapter;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
-public class FutureAdapterWithExceptionHandling<T, S> extends FutureAdapter<T, S> {
+public class FutureAdapterWithExceptionHandling<T, S> extends ListenableFutureAdapter<T, S> {
 
     private final Object mutex = new Object();
 
     private final Function<Throwable, Either<?, T>> handler;
     private final Function<S, T> mapper;
 
-    public FutureAdapterWithExceptionHandling(final Future<S> adaptee, final Function<S, T> mapper, final Function<Throwable, Either<?, T>> handler) {
+    public FutureAdapterWithExceptionHandling(final ListenableFuture<S> adaptee, final Function<S, T> mapper, final Function<Throwable, Either<?, T>> handler) {
         super(adaptee);
         this.handler = handler;
         this.mapper = mapper;
