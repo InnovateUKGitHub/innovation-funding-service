@@ -15,6 +15,10 @@ import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.application.workflow.configuration.ApplicationWorkflowHandler;
 import org.innovateuk.ifs.assessment.mapper.*;
+import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewMapper;
+import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewRejectOutcomeMapper;
+import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
+import org.innovateuk.ifs.assessment.panel.workflow.configuration.AssessmentReviewWorkflowHandler;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import org.innovateuk.ifs.assessment.transactional.*;
@@ -45,7 +49,6 @@ import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.service.FileTemplateRenderer;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
-import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
@@ -320,7 +323,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationInviteRepository applicationInviteRepositoryMock;
 
     @Mock
-    protected CompetitionInviteRepository competitionInviteRepositoryMock;
+    protected CompetitionAssessmentInviteRepository competitionAssessmentInviteRepositoryMock;
 
     @Mock
     protected CompetitionParticipantRepository competitionParticipantRepositoryMock;
@@ -423,9 +426,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected SystemNotificationSource systemNotificationSourceMock;
-
-    @Mock
-    protected FileHttpHeadersValidator fileValidatorMock;
 
     @Mock
     protected FileEntryRepository fileEntryRepositoryMock;
@@ -711,6 +711,18 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected GoogleAnalyticsDataLayerService googleAnalyticsDataLayerServiceMock;
+
+    @Mock
+    protected AssessmentReviewRepository assessmentReviewRepositoryMock;
+
+    @Mock
+    protected AssessmentReviewWorkflowHandler assessmentReviewWorkflowHandlerMock;
+
+    @Mock
+    protected AssessmentReviewMapper assessmentReviewMapperMock;
+
+    @Mock
+    protected AssessmentReviewRejectOutcomeMapper assessmentReviewRejectOutcomeMapperMock;
 
     @Before
     public void setupMockInjection() {

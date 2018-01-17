@@ -17,8 +17,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isSupport;
-import static org.innovateuk.ifs.util.SecurityRuleUtil.isInnovationLead;
+import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
 @Component
 @PermissionRules
@@ -35,24 +35,15 @@ public class QuestionStatusRules {
     @Autowired
     private QuestionStatusRepository questionStatusRepository;
 
-    @Autowired
-    private QuestionStatusMapper questionStatusMapper;
-
     @PermissionRule(value = "READ", description = "Users can only read statuses of applications they are connected to")
     public boolean userCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
         return userIsConnected(questionStatusResource.getApplication(), user);
     }
 
-    @PermissionRule(value = "READ", description = "Support users can read statuses of all questions")
-    public boolean supportCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
-        return isSupport(user);
-    }
-
     @PermissionRule(value = "READ", description = "Innovation lead users can read statuses of all questions")
-    public boolean innovationLeadCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
-        return isInnovationLead(user);
+    public boolean internalUserCanReadQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
+        return isInternal(user);
     }
-
 
     @PermissionRule(value = "UPDATE", description = "Users can only update statuses of questions they are assigned to")
     public boolean userCanUpdateQuestionStatus(QuestionStatusResource questionStatusResource, UserResource user){
@@ -74,8 +65,7 @@ public class QuestionStatusRules {
     }
 
     private boolean userIsConnected(Long applicationId, UserResource user){
-        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), applicationId);
-        return processRole != null;
+        return processRoleRepository.existsByUserIdAndApplicationId(user.getId(), applicationId);
     }
 
     private boolean userIsAssigned(Long questionId, Long applicationId, UserResource user){
@@ -88,7 +78,6 @@ public class QuestionStatusRules {
     }
 
     private boolean userIsLeadApplicant(Long applicationId, UserResource user){
-        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), applicationId);
-        return processRole.getRole().getName().equals(UserRoleType.LEADAPPLICANT.getName());
+        return processRoleRepository.existsByUserIdAndApplicationIdAndRoleName(user.getId(), applicationId, LEADAPPLICANT.getName());
     }
 }

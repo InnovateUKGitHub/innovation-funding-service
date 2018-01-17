@@ -39,7 +39,7 @@ Comp Admin starts a new Competition
     When the user clicks the button/link           jQuery=.button:contains("Create competition")
     Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}
+    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
@@ -73,7 +73,7 @@ Competition is Open to Applications
 
 Create new Application for this Competition
     [Tags]  MySQL
-    Lead Applicant applies to the new created competition  ${compWithoutGrowth}
+    Lead Applicant applies to the new created competition    ${compWithoutGrowth}  &{lead_applicant_credentials}
 
 Applicant visits his Finances
     [Documentation]    INFUND-6393
@@ -110,7 +110,7 @@ Once the project growth table is selected
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}
+    And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  # 1 means 30%
     And the user fills in the CS Milestones              ${month}  ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
@@ -127,7 +127,7 @@ Once the project growth table is selected
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
     [Tags]    MySQL
-    Given Lead Applicant applies to the new created competition  ${compWithGrowth}
+    Given Lead Applicant applies to the new created competition  ${compWithGrowth}  &{lead_applicant_credentials}
     When the user clicks the button/link                         link=Your finances
     And the user clicks the button/link                          link=Your organisation
     Then the user should not see the text in the page            Turnover (£)
@@ -346,7 +346,7 @@ Business organisation is not allowed to apply on Comp where only RTOs are allowe
 
 *** Keywords ***
 the user should see the dates in full format
-    the user should see the element  jQuery=td:contains("Allocate assessors") ~ td:contains("3 ${monthWord} ${nextyear}")
+    the user should see the element  jQuery=td:contains("Allocate assessors") ~ td:contains("4 ${monthWord} ${nextyear}")
 
 the user should see that the funding depends on the research area
     the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in"):contains("application details")
@@ -363,18 +363,6 @@ the user decides about the growth table
     the user should see the element   jQuery=dt:contains("Include project growth table") + dd:contains("${read}")
     the user clicks the button/link   link=Application
     the user clicks the button/link   link=Competition setup
-
-Lead Applicant applies to the new created competition
-    [Arguments]  ${competition}
-    log in as a different user       &{lead_applicant_credentials}
-    the user navigates to the eligibility of the competition  ${competition}
-    the user clicks the button/link  jQuery=a:contains("Sign in")
-    the user clicks the button/link  jQuery=a:contains("Begin application")
-
-the user navigates to the eligibility of the competition
-    [Arguments]  ${competition}
-    ${competitionId} =               get comp id from comp title    ${competition}
-    the user navigates to the page   ${server}/application/create/check-eligibility/${competitionId}
 
 the user enters value to field
     [Arguments]  ${field}  ${value}
@@ -454,7 +442,7 @@ Newly invited collaborator can create account and sign in
     the user reads his email and clicks the link  ${newUsersEmail}  Invitation to collaborate in ${compWithGrowth}  You will be joining as part of the organisation  2
     the user clicks the button/link               jQuery=a:contains("Yes, accept invitation")
     the user should see the element               jquery=h1:contains("Choose your organisation type")
-    the user completes the new account creation   ${newUsersEmail}
+    the user completes the new account creation   ${newUsersEmail}  ${PUBLIC_SECTOR_TYPE_ID}
 
 the user fills in the Open-All Initial details
     [Arguments]  ${compTitle}  ${month}  ${nextyear}

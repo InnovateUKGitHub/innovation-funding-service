@@ -1,9 +1,9 @@
-email|EMAIL_WITH_ID('x')
+email|EMAIL_WITH_ID_EXCEPT_SYSTEM('x')
 first_name|MASK(2, 'x')
 last_name|MASK(2, 'y')
 invite_name|MASK(2, 'x')
 phone_number|MASK(2, 'x')
 disability|'NOT_STATED'
 gender|'NOT_STATED'
-uid|''
+uid|UUID_REPLACEMENT
 ethnicity_id|7

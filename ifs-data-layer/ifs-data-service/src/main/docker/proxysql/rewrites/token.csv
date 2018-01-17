@@ -1,1 +1,1 @@
-hash|MASK(4, 'x')
+hash|MASK_WITH_ID(4, 'x')

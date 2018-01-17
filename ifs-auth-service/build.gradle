@@ -21,22 +21,29 @@ subprojects {
 
     task osStageRemote(type: DockerPushImage) {
         dependsOn tagDocker
-        registryCredentials = project.ext.dockerRegistryCredentials
-        imageName = dockerRegistryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        registryCredentials=getRemoteOCCredentials()
+        imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
         tag = project.version
     }
 
     task tagDockerLocal(type: DockerTagImage) {
         dependsOn buildDocker
         imageId = buildDocker.getTag()
-        repository = localDockerRegistryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        repository = "dummy"
+        doFirst {
+            repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        }
         tag = project.version
     }
 
     task osStageLocal(type: DockerPushImage) {
         dependsOn tagDockerLocal
-        registryCredentials = project.ext.localDockerRegistryCredentials
-        imageName = localDockerRegistryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        imageName = "dummy"
+        doFirst {
+            registryCredentials = getLocalOCCredentials()
+            imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+        }
+
         tag = project.version
     }
 }
@@ -81,11 +88,11 @@ def String ldapEncryptionCertificateFileName = 'ldap-encryption.crt'
 def String ldapEncryptionCertificateFile = "${buildDir}/${ldapEncryptionCertificateFileName}"
 
 task prepareIDPProxySecrets {
+
     if (!file("${idpCertsVolume}/${idpProxyKeyFileName}").exists() ||
             !file("${idpCertsVolume}/${idpProxyCertificateFileName}").exists() ||
             !file("${idpCertsVolume}/${idpProxyCacertificateFileName}").exists()) {
         buildDir.mkdir()
-
         // a valid CA certificate is required for the data service to work
         assert project.hasProperty('idp.proxy.key')
         new File(idpProxyKeyFile).write(project['idp.proxy.key'])
@@ -214,13 +221,19 @@ task prepareSecrets {
     // on top of their respective certificates SP and IDP need each other's
     // and the IDP needs ldap's
     copy {
-        from file(spProxyCertificateFile)
-        from file(ldapEncryptionCertificateFile)
+        // Copy from the spCertsVolume and ldapCertsVolume as these files should always present at this point where as
+        // the relevant buildDir may well not contain them if a clean has been performed.
+        // Additionally it allows us to drop know cert files into the spCertsVolume and ldapCertsVolume for named builds
+        from file(spCertsVolume + "/" + spProxyCertificateFileName)
+        from file(ldapCertsVolume + "/" + ldapEncryptionCertificateFileName)
         into idpCertsVolume
     }
     copy {
-        from file(idpSigningCertificateFile)
-        from file(idpEncryptionCertificateFile)
+        // Copy from the idpCertsVolume as these files should always present at this point whereas the relevant
+        // buildDir may well not contain them if a clean has been performed.
+        // Additionally it allows us to drop know cert files into the idpCertsVolume for named builds
+        from file(idpCertsVolume + "/" + idpSigningCertificateFileName)
+        from file(idpCertsVolume + "/" + idpEncryptionCertificateFileName)
         into spCertsVolume
     }
 }

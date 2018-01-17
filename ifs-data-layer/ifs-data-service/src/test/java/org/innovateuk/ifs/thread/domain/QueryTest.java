@@ -4,7 +4,7 @@ import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

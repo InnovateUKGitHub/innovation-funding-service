@@ -22,7 +22,7 @@ task osStageRemote(type: DockerPushImage) {
     onlyIf { !isNamedEnv() }
 
     dependsOn tagDocker
-    registryCredentials = project.ext.dockerRegistryCredentials
+    registryCredentials=getRemoteOCCredentials()
     imageName = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
     tag = sqlVersion
 }
@@ -30,15 +30,22 @@ task osStageRemote(type: DockerPushImage) {
 task tagDockerLocal(type: DockerTagImage) {
     dependsOn buildDocker
     imageId = buildDocker.getTag()
-    repository = localDockerRegistryCredentials.url + "/" + openshiftEnv + "/ifs-mysql"
-    tag = sqlVersion
+    repository = "dummy"
+    tag = "dummy"
+    doFirst {
+        repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
+        tag = sqlVersion
+    }
 }
 
 task osStageLocal(type: DockerPushImage) {
     dependsOn tagDockerLocal
-    registryCredentials = project.ext.localDockerRegistryCredentials
-    imageName=localDockerRegistryCredentials.url + "/" + openshiftEnv + "/ifs-mysql"
-    tag = sqlVersion
+    imageName = "dummy"
+    doFirst {
+        registryCredentials = getLocalOCCredentials()
+        imageName = registryCredentials.url + "/" + openshiftEnv + "/ifs-mysql"
+        tag = sqlVersion
+    }
 }
 
 

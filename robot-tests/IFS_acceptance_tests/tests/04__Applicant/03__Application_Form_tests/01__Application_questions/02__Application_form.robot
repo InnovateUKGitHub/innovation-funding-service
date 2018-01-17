@@ -115,9 +115,9 @@ Mark a question as incomplete
     ...    INFUND-202
     [Tags]    HappyPath
     Given the user clicks the button/link    link=Project summary
-    When the user clicks the button/link    jQuery=button:contains("Edit")
+    When the user clicks the button/link     jQuery=button:contains("Edit")
     Then the text box should be editable
-    And the user should see the element    jQuery=button:contains("Mark as complete")
+    And the user should see the element      jQuery=button:contains("Mark as complete")
     And the question should not be marked as complete on the application overview page
 
 Review and submit button
@@ -173,7 +173,7 @@ the text box should be editable
 
 the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application overview
-    the user should see the element    css=li:nth-child(2)
+    the user should see the element    css=li:nth-child(2) .task-status-incomplete
     the user should not see the element    jQuery=li:nth-child(2) span:contains("Complete")
 
 the finance summary page should show a warning

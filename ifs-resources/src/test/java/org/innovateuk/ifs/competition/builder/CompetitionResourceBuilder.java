@@ -1,10 +1,7 @@
 package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.competition.resource.CollaborationLevel;
-import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.resource.*;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -182,6 +179,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return with(competition -> competition.setSetupComplete(setupComplete));
     }
 
+    public CompetitionResourceBuilder withFullApplicationFinance(Boolean fullApplicationFinance) {
+        return with(competitionResource -> competitionResource.setFullApplicationFinance(fullApplicationFinance));
+    }
+
     public CompetitionResourceBuilder withAssessorCount(Integer... assessorCount) {
         return withArraySetFieldByReflection("assessorCount", assessorCount);
     }
@@ -204,6 +205,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
 
     public CompetitionResourceBuilder withHasInterviewStage(Boolean... hasInterviewStage) {
         return withArraySetFieldByReflection("hasInterviewStage", hasInterviewStage);
+    }
+
+    public CompetitionResourceBuilder withTermsAndConditions(TermsAndConditionsResource... value) {
+        return withArray((template, competition) -> competition.setTermsAndConditions(template), value);
     }
 
     @Override

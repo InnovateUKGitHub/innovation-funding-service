@@ -2,6 +2,7 @@ package org.innovateuk.ifs.analytics;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * The Google Analytics Tag Manager Data Layer. Contains our properties for Google Analytics.
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class GoogleAnalyticsDataLayer {
 
     private String competitionName;
+    private String userRole;
 
     public String getCompetitionName() {
         return competitionName;
@@ -17,6 +19,14 @@ public class GoogleAnalyticsDataLayer {
 
     public void setCompetitionName(String competitionName) {
         this.competitionName = competitionName;
+    }
+
+    public String getUserRole() {
+        return userRole;
+    }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
     }
 
     @Override
@@ -29,6 +39,7 @@ public class GoogleAnalyticsDataLayer {
 
         return new EqualsBuilder()
                 .append(competitionName, that.competitionName)
+                .append(userRole, that.userRole)
                 .isEquals();
     }
 
@@ -36,6 +47,15 @@ public class GoogleAnalyticsDataLayer {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(competitionName)
+                .append(userRole)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("competitionName", competitionName)
+                .append("userRole", userRole)
+                .toString();
     }
 }

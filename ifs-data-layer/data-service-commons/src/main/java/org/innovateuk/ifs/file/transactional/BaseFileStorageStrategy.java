@@ -44,7 +44,7 @@ abstract class BaseFileStorageStrategy implements FileStorageStrategy {
     }
 
     @Override
-    public final Pair<List<String>, String> getAbsoluteFilePathAndName(FileEntry file) {
+    public Pair<List<String>, String> getAbsoluteFilePathAndName(FileEntry file) {
         return getAbsoluteFilePathAndName(file.getId());
     }
 

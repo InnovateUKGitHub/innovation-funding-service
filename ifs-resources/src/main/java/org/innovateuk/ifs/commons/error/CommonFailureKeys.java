@@ -135,6 +135,8 @@ public enum CommonFailureKeys implements ErrorTemplate {
     ASSESSMENT_PANEL_INVITE_EXPIRED(BAD_REQUEST),
     ASSESSMENT_PANEL_INVITE_ALREADY_SENT(BAD_REQUEST),
     ASSESSMENT_PANEL_CANNOT_RELEASE_FEEDBACK(BAD_REQUEST),
+    ASSESSMENT_REVIEW_ACCEPT_FAILED(BAD_REQUEST),
+    ASSESSMENT_REVIEW_REJECT_FAILED(BAD_REQUEST),
 
     /**
      * Project Setup
@@ -270,8 +272,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
     /**
      * External user search
      */
-    USER_SEARCH_INVALID_INPUT_LENGTH(BAD_REQUEST)
-    ;
+    USER_SEARCH_INVALID_INPUT_LENGTH(BAD_REQUEST);
 
 
     private ErrorTemplate errorTemplate;

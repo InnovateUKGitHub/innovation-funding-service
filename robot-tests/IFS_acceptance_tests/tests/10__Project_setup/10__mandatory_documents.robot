@@ -28,6 +28,8 @@ Documentation     INFUND-3013 As a partner I want to be able to download mandato
 ...               IFS-1864 Sole applicants do not have to provide a collaboration agreement document
 ...
 ...               IFS-1881 Project Setup internal project dashboard navigation
+...
+...               IFS-2371-2258 Prevent submission without both doc
 Suite Setup       the project is completed if it is not already complete
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -73,7 +75,6 @@ PM cannot submit when both documents are not uploaded
     And the user should see the element    css=label[for="exploitationPlan"]
     Then the user should not see the element    jQuery=.button.enabled:contains("Submit documents")
 
-
 Large pdfs not allowed for either document
     [Documentation]    INFUND-3011
     [Tags]
@@ -97,14 +98,16 @@ Non pdf files not allowed for either document
 
 
 PM can upload both documents
-    [Documentation]    INFUND-3011
+    [Documentation]    INFUND-3011  IFS-2371-2258
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}  ${short_password}
     Given the user navigates to the page    ${project_in_setup_page}
     And the user clicks the button/link    link=Other documents
-    When the user uploads to the collaboration agreement question    ${valid_pdf}
-    Then the user should see the text in the page    ${valid_pdf}
     When the user uploads to the exploitation plan question    ${valid_pdf}
+    And the user should see the element    jQuery=button:disabled:contains("Submit documents")
+    And the user should see the element    jQuery=.upload-section:contains("Exploitation plan") a:contains("testing")
+    And the user uploads to the collaboration agreement question    ${valid_pdf}
+    And the user should see the element    jQuery=.upload-section:contains("Collaboration agreement") a:contains("testing")
     Then the user should not see an error in the page
 
 Lead partner can view both documents

@@ -58,7 +58,7 @@ Mark application details as incomplete
     the user clicks the button/link       link=Application details
     the user clicks the button/link       jQuery=button:contains("Edit")
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
-    the user should see the element       jQuery=li:contains("Application details") > .action-required
+    the user should see the element       jQuery=li:contains("Application details") > .task-status-incomplete
 
 the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=img.complete[alt*="Application details"]
@@ -107,9 +107,10 @@ the user selects Research category
     the user clicks the button/link   jQuery=button:contains("Save")
 
 the user marks the finances as complete
-    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}
+    [Arguments]  ${Application}  ${overheadsCost}  ${totalCosts}  ${Project_growth_table}
     the user fills in the project costs  ${overheadsCost}  ${totalCosts}
-    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    Run Keyword if  '${Project_growth_table}'=='no'    the user fills in the organisation information  ${Application}  ${SMALL_ORGANISATION_SIZE}
+    Run Keyword if  '${Project_growth_table}'=='yes'  the user fills the organisation details with Project growth table  ${Application}  ${SMALL_ORGANISATION_SIZE}
     the user checks Your Funding section        ${Application}
     the user should see all finance subsections complete
     the user clicks the button/link  link=Application overview
@@ -326,11 +327,11 @@ Newly invited collaborator can create account and sign in
     the user reads his email and clicks the link   ${email}  Invitation to collaborate in ${competition_name}  You will be joining as part of the organisation  2
     the user clicks the button/link    jQuery=a:contains("Yes, accept invitation")
     the user should see the element    jquery=h1:contains("Choose your organisation type")
-    the user completes the new account creation   ${email}
+    the user completes the new account creation  ${email}  ${PUBLIC_SECTOR_TYPE_ID}
 
 the user completes the new account creation
-    [Arguments]    ${email}
-    the user selects the radio button           organisationType    radio-${PUBLIC_SECTOR_TYPE_ID}
+    [Arguments]    ${email}  ${organisationType}
+    the user selects the radio button           organisationType    radio-${organisationType}
     the user clicks the button/link             jQuery=button:contains("Continue")
     the user should see the element             jQuery=span:contains("Create your account")
     the user enters text to a text field        id=organisationSearchName    innovate
@@ -350,10 +351,7 @@ the user completes the new account creation
     the user reads his email and clicks the link   ${email}  Please verify your email address  Once verified you can sign into your account.
     the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
     the user clicks the button/link             link=Sign in
-    the user should see the text in the page    Sign in
-    the user enters text to a text field        css=input[id="username"]  ${email}
-    the user enters text to a text field        css=input[id="password"]  ${correct_password}
-    the user clicks the button/link             jQuery=button:contains("Sign in")
+    Logging in and Error Checking               ${email}  ${correct_password}
 
 the applicant adds some content and marks this section as complete
     Focus    css=.textarea-wrapped .editor
@@ -379,8 +377,8 @@ navigate to next page if not found
     Run Keyword If    '${status}' == 'FAIL'    the user clicks the button/link  jQuery=a:contains("Next")
 
 Lead Applicant applies to the new created competition
-    [Arguments]  ${competition}
-    log in as a different user       &{lead_applicant_credentials}
+    [Arguments]   ${competition}  &{lead_credentials}
+    log in as a different user       &{lead_credentials}
     the user navigates to the eligibility of the competition  ${competition}
     the user clicks the button/link  jQuery=a:contains("Sign in")
     the user clicks the button/link  jQuery=a:contains("Begin application")
@@ -390,8 +388,25 @@ the user navigates to the eligibility of the competition
     ${competitionId} =  get comp id from comp title    ${competition}
     the user navigates to the page   ${server}/application/create/check-eligibility/${competitionId}
 
-the lead applicant marks every question as complete(EOI)
-    [Arguments]  ${question_link}
-    the user clicks the button/link             jQuery=h3 a:contains("${question_link}")
-    the user marks the section as complete
-    the user clicks the button/link             link=Application overview
+the applicant submits the application
+    the user clicks the button/link                    link=Review and submit
+    the user clicks the button/link                    jQuery=.button:contains("Submit application")
+    the user clicks the button/link                    jQuery=.button:contains("Yes, I want to submit my application")
+    the user should be redirected to the correct page  submit
+
+the user applies to competition and enters organisation type
+    [Arguments]  ${compId}  ${organisationType}
+    the user navigates to the page     ${server}/competition/${compId}/overview
+    the user clicks the button/link    link=Start new application
+    the user clicks the button/link    link=Create account
+    the user selects the radio button  organisationTypeId  ${organisationType}
+    the user clicks the button/link    css=button[type="submit"]
+
+the user selects his organisation in Companies House
+    [Arguments]  ${search}  ${link}
+    the user enters text to a text field  id=organisationSearchName  ${search}
+    the user clicks the button/link       id=org-search
+    the user clicks the button/link       link=${link}
+    the user selects the checkbox         address-same
+    the user clicks the button/link       css=button[name="save-organisation-details"]
+    the user clicks the button/link       css=button[name="save-organisation"]

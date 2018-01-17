@@ -145,6 +145,44 @@
                 </div>
             </div>
 
+            <div class="assessment-panel-invites">
+                <th:block th:unless="${#lists.isEmpty(model.assessmentPanelAccepted)}">
+                    <div class="progress-list"><h2 class="heading-medium no-margin-top">Attend panel (<span
+                        th:text="${#lists.size(model.assessmentPanelAccepted)}"/>)</h2>
+                        <ul>
+                            <li th:each="assessmentPanelAccept : ${model.assessmentPanelAccepted}">
+                                <div class="task">
+                                    <h3 class="heading-small">
+                                        <a th:href="@{/assessor/dashboard/competition/{competitionId}/panel(competitionId=${assessmentPanelAccept.competitionId})}"
+                                           th:text="${assessmentPanelAccept.competitionName}"/>
+                                    </h3>
+
+                                    <div th:if="${assessmentPanelAccept.awaitingApplications == 0}">
+                                        Applications awaiting review will be added here.
+                                    </div>
+
+                                    <div th:if="${assessmentPanelAccept.awaitingApplications > 0}" class="action-required">
+                                        <strong>
+                                            <span th:text="${assessmentPanelAccept.awaitingApplications}" class="accepted-applications">COUNT
+                                            </span> applications awaiting review
+                                        </strong>
+                                    </div>
+                                </div>
+                                <div class="status">
+                                    <div class="status-msg msg-deadline">
+                                        <strong class="bold-medium days-remaining" th:text="${assessmentPanelAccept.daysLeft}"></strong>
+                                        <br />days left <br />
+                                        Deadline
+                                        <span class="day" th:text="${#temporals.day(assessmentPanelAccept.panelDateDeadline)}">END DAY</span>
+                                        <span class="month" th:text="${#temporals.monthName(assessmentPanelAccept.panelDateDeadline)}">END MONTH</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </th:block>
+            </div>
+
             <div class="assessment-panel-invites" th:unless="${#lists.isEmpty(model.assessmentPanelInvites)}">
                 <div class="progress-list"><h2 class="heading-medium">Invitations to attend panel (<span
                     th:text="${#lists.size(model.assessmentPanelInvites)}"/>)</h2>

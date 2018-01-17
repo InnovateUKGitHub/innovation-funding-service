@@ -12,7 +12,6 @@ Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 ${apcCompetitionTitle}  Advanced Propulsion Centre Competition
 ${apcApplicationTitle}  Advanced Propulsion Centre Application
 
-
 *** Test Cases ***
 Comp Admin creates an APC competition
     [Documentation]  IFS-2284, IFS-2286
@@ -22,7 +21,7 @@ Comp Admin creates an APC competition
     When the user clicks the button/link           link=Create competition
     Then the user fills in the CS Initial details  ${apcCompetitionTitle}  ${month}  ${nextyear}  Advanced Propulsion Centre
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility      ${RTO_TYPE_ID}
+    And the user fills in the CS Eligibility      ${business_type_id}  1  # 1 means 30%
     And the user fills in the CS Milestones       ${month}  ${nextyear}
     And the user fills in the CS Application section with custom questions  yes  ${compType_APC}
     And the user fills in the CS Assessors
@@ -33,18 +32,28 @@ Comp Admin creates an APC competition
     When the user clicks the button/link           jQuery=a:contains("Complete")
     Then the user clicks the button/link           jQuery=a:contains("Done")
 
-Requesting the id of this Competition
-    [Documentation]  retrieving the id of the competition so that we can use it in urls
-    [Tags]  MySQL
-    ${apcCompetitionId} =  get comp id from comp title  ${apcCompetitionTitle}
-    Set suite variable  ${apcCompetitionId}
+Applicant applies to newly created APC competition
+    [Documentation]  IFS-2286
+    [Tags]  HappyPath  MySQL
+    When the competition is open                                 ${apcCompetitionTitle}
+    Then Lead Applicant applies to the new created competition   ${apcCompetitionTitle}  &{lead_applicant_credentials}
+
+Applicant submits his application
+    [Documentation]  IFS-2286
+    [Tags]  HappyPath
+    Given the user clicks the button/link               link=Application details
+    When the user fills in the Application details      ${apcApplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
+    Then the lead applicant fills all the questions and marks as complete(APC)
+    When the user navigates to Your-finances page       ${apcApplicationTitle}
+    And the user marks the finances as complete         ${apcApplicationTitle}   labour costs  54,000  yes
+    Then the applicant submits the application
 
 *** Keywords ***
 Custom Suite Setup
-    ${month} =          get tomorrow month
-    set suite variable  ${month}
-    ${nextyear} =       get next year
-    Set suite variable  ${nextyear}
-    ${tomorrowday} =    get tomorrow day
-    Set suite variable  ${tomorrowday}
+    Set predefined date variables
     The guest user opens the browser
+
+the lead applicant fills all the questions and marks as complete(APC)
+    the user marks the project details as complete
+    :FOR  ${ELEMENT}    IN    @{APC_questions}
+     \     the lead applicant marks every question as complete     ${ELEMENT}

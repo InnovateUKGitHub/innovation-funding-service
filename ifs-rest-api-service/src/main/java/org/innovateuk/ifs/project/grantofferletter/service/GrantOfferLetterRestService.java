@@ -42,6 +42,8 @@ public interface GrantOfferLetterRestService {
 
     RestResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
 
+    RestResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId);
+
     RestResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId);
 
     RestResult<Optional<ByteArrayResource>> getAdditionalContractFile(Long projectId);

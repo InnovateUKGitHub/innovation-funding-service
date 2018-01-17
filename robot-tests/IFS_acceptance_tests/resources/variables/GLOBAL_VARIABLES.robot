@@ -101,8 +101,6 @@ ${SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${APPLICATION_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}
 ${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
 
-${PUBLIC_DESCRIPTION_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/462
-${TECHNICAL_APPROACH_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1_NUMBER}/form/question/468
 ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
 
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
@@ -159,7 +157,7 @@ ${USER_MGMT_URL}    ${SERVER}/management/admin/users/active
 ${403_error_message}    You do not have the necessary permissions for your request
 ${404_error_message}    Please check the web address or search term you entered for any errors
 ${500_error_message}    something went wrong
-${wrong_filetype_validation_error}    Please upload a file in .pdf format only
+${wrong_filetype_validation_error}    Your upload must be a PDF.
 ${too_large_pdf_validation_error}    the size of file or request being submitted is too large
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issues
 ${empty_field_warning_message}    This field cannot be left blank.
@@ -191,3 +189,12 @@ ${compType_Generic}    Generic
 ${compType_EOI}        Expression of interest
 ${compType_APC}        Advanced Propulsion Centre
 ${compType_ATI}        Aerospace Technology Institute
+
+# Competition and Applicant lists
+# the questions are only the assessed questions for a particular compettion type
+@{milestones}             Open date  Briefing event  Submission date  Allocate assessors  Assessor briefing  Assessor accepts  Assessor deadline  Line draw  Assessment panel  Panel date  Funders panel  Notifications  Release feedback
+@{programme_questions}    Business opportunity  Potential market  Project exploitation  Economic benefit  Technical approach  Innovation  Risks  Project team  Funding  Adding value
+@{sector_questions}       Need or challenge  Approach and innovation  Team and resources   Market awareness  Outcomes and route to market  Wider impacts  Project management  Risks  Additionality  Costs and value for money
+@{EOI_questions}          Business opportunity and potential market  Innovation  Project team  Funding and adding value
+@{APC_questions}          How innovative is your project?   Your approach regarding innovation.   Your technical approach.
+@{project_details}        Project summary  Public description  Scope

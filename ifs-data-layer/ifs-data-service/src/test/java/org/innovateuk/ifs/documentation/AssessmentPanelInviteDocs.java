@@ -24,7 +24,7 @@ public class AssessmentPanelInviteDocs {
     public static final AssessmentPanelInviteResourceBuilder assessmentPanelInviteResourceBuilder = newAssessmentPanelInviteResource()
             .withCompetitionId(1L)
             .withCompetitionName("Connected digital additive manufacturing")
-            .withHash("0519d73a-f062-4784-ae86-7a933a7de4c3")
+            .withInviteHash("0519d73a-f062-4784-ae86-7a933a7de4c3")
             .withEmail("paul.plum@gmail.com")
             .withPanelDate(ZonedDateTime.now())
             .withUserId(2L)

@@ -98,7 +98,7 @@ subprojects {
 
         task osStageRemote(type: DockerPushImage) {
             dependsOn tagDocker
-            registryCredentials = project.ext.dockerRegistryCredentials
+            registryCredentials=getRemoteOCCredentials()
             imageName=project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
             tag=project.version
         }
@@ -106,15 +106,21 @@ subprojects {
         task tagDockerLocal(type: DockerTagImage) {
             dependsOn buildDocker
             imageId = buildDocker.getTag()
-            repository = localDockerRegistryCredentials.url+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
-            tag = project.version
+            repository = "dummy"
+            doFirst {
+                repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+                tag = project.version
+            }
         }
 
         task osStageLocal(type: DockerPushImage) {
             dependsOn tagDockerLocal
-            registryCredentials = project.ext.localDockerRegistryCredentials
-            imageName=localDockerRegistryCredentials.url +"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
-            tag = project.version
+            imageName = "dummy"
+            doFirst {
+                registryCredentials = getLocalOCCredentials()
+                imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+                tag = project.version
+            }
         }
 
         // Workaround for https://github.com/spring-projects/spring-boot/issues/8308

@@ -18,10 +18,7 @@ import org.innovateuk.ifs.organisation.domain.OrganisationAddress;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.sil.experian.resource.AccountDetails;
-import org.innovateuk.ifs.sil.experian.resource.SILBankDetails;
-import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
-import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
+import org.innovateuk.ifs.sil.experian.resource.*;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -135,6 +132,11 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
     @Test
     public void testBankDetailsAreNotSavedIfExperianValidationFails(){
         ValidationResult validationResult = new ValidationResult();
+        Condition condition = new Condition();
+        condition.setSeverity("error");
+        condition.setDescription("Invalid sort code");
+        condition.setCode(5);
+        validationResult.setConditions(singletonList(condition));
         validationResult.setCheckPassed(false);
         when(silExperianEndpointMock.validate(silBankDetails)).thenReturn(serviceSuccess(validationResult));
         when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
@@ -240,6 +242,19 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
 
         assertTrue(result.isSuccess());
         assertEquals(pendingBankDetails, result.getSuccessObject());
+    }
+
+    @Test
+    public void countPendingBankDetailsApprovals() throws Exception {
+
+        Long pendingBankDetailsCount = 8L;
+
+        when(bankDetailsRepositoryMock.countPendingBankDetailsApprovals()).thenReturn(pendingBankDetailsCount);
+
+        ServiceResult<Long> result = service.countPendingBankDetailsApprovals();
+
+        assertTrue(result.isSuccess());
+        assertEquals(pendingBankDetailsCount, result.getSuccessObject());
     }
 
     @Override

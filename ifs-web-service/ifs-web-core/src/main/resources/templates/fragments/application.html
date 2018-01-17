@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="application-summary">
   <section th:each="section : ${sections.values()}" th:unless="${section.name.equals('Finances')}">
 
@@ -18,7 +20,7 @@
                 </th:block>
             </h3>
             <div class="question" th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
-                 th:with="formInputIndex=(${status.index}), summary=true, readonly=true, appIsClosed=${!(currentApplication.isOpen() and isApplicant)}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
+                 th:with="formInputIndex=(${status.index}), hideDetails=${hideDetails}, summary=true, readonly=true, appIsClosed=${!(currentApplication.isOpen() and isApplicant)}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
                  th:id="'form-input-'+${formInput.getId()}">
 
 
@@ -28,7 +30,7 @@
 
             </div>
         </div>
-         <th:block th:if="${question.shortName.equals('Application details') and !(currentApplication.isOpen() and isApplicant)}">
+         <th:block th:if="${question.shortName.equals('Application details') and !(currentApplication.isOpen() and isApplicant) and !hideDetails}">
              <div class="extra-margin">
                <div th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
                     th:with="formInputIndex=(${status.index}), summary=true, readonly=true, appIsClosed=${!(currentApplication.isOpen() and isApplicant)}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
