@@ -41,7 +41,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.pairsToMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
-class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
+public class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
 
     @Autowired
     private NotificationService notificationService;
@@ -70,7 +70,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    enum Notifications {
+    public enum Notifications {
         APPLICATION_FUNDING,
     }
 
