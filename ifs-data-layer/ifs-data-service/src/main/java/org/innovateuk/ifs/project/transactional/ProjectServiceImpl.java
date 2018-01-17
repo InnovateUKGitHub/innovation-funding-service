@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.project.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.resource.FundingDecision;;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.organisation.mapper.OrganisationMapper;
@@ -108,13 +110,17 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     @Transactional
     public ServiceResult<Void> createProjectsFromFundingDecisions(Map<Long, FundingDecision> applicationFundingDecisions) {
-        List<ServiceResult<ProjectResource>> projectCreationResults = applicationFundingDecisions.keySet().stream().filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED)).map(this::createSingletonProjectFromApplicationId).collect(toList());
-        long failedProjectCreationCount = projectCreationResults.stream().filter(r -> r.isFailure()).count();
-        if (failedProjectCreationCount > 0) {
-            return serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS);
-        } else {
-            return serviceSuccess();
-        }
+        List<ServiceResult<ProjectResource>> projectCreationResults = applicationFundingDecisions
+                .keySet()
+                .stream()
+                .filter(d -> applicationFundingDecisions.get(d).equals(FundingDecision.FUNDED))
+                .map(this::createSingletonProjectFromApplicationId)
+                .collect(toList());
+
+        boolean anyProjectCreationFailed = simpleAnyMatch(projectCreationResults, BaseEitherBackedResult::isFailure);
+
+        return  anyProjectCreationFailed ?
+                serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS) : serviceSuccess();
     }
 
     @Override
@@ -188,7 +194,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     @Transactional
     public ServiceResult<ProjectResource> createProjectFromApplication(Long applicationId) {
-        return createSingletonProjectFromApplicationId(applicationId);
+
+        return getApplication(applicationId).andOnSuccess(application -> {
+
+            if (FundingDecisionStatus.FUNDED.equals(application.getFundingDecision())) {
+                return createSingletonProjectFromApplicationId(applicationId);
+            } else {
+                return serviceFailure(CREATE_PROJECT_FROM_APPLICATION_FAILS);
+            }
+        });
     }
 
     private ServiceResult<ProjectResource> createSingletonProjectFromApplicationId(final Long applicationId) {
