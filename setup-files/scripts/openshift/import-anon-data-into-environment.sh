@@ -36,7 +36,7 @@ function checkVariables() {
 function copyDumpToMysqlClientPod() {
   echo "Copying dump to /tmp/${DUMP_DIR_NAME}/${DUMP_NAME} on mysql-client pod"
   oc rsh ${SVC_ACCOUNT_CLAUSE} mysql-client mkdir -p /tmp/${DUMP_DIR_NAME}
-  oc rsync ${SVC_ACCOUNT_CLAUSE} ${DUMP_LOCATION} mysql-client:/tmp/
+  oc rsync ${SVC_ACCOUNT_CLAUSE} ${DUMP_DIR_NAME}/${DUMP_NAME} mysql-client:/tmp/
   echo "Copied dump to /tmp/${DUMP_DIR_NAME}/${DUMP_NAME} on mysql-client pod"
 }
 
