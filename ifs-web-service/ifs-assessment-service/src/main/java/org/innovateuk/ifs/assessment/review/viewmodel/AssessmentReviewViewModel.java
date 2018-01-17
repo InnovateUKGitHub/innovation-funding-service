@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.review.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.util.SortedSet;
@@ -18,13 +19,13 @@ public class AssessmentReviewViewModel {
     private OrganisationResource leadPartner;
     private String projectSummary;
 
-    public AssessmentReviewViewModel(long assessmentId,
+    public AssessmentReviewViewModel(long reviewId,
                                      long competitionId,
                                      String applicationName,
                                      SortedSet<OrganisationResource> partners,
                                      OrganisationResource leadPartner,
                                      String projectSummary) {
-        this.reviewId = assessmentId;
+        this.reviewId = reviewId;
         this.competitionId = competitionId;
         this.applicationName = applicationName;
         this.partners = partners;
@@ -88,5 +89,17 @@ public class AssessmentReviewViewModel {
                 .append(leadPartner)
                 .append(projectSummary)
                 .toHashCode();
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("reviewId", reviewId)
+                .append("competitionId", competitionId)
+                .append("applicationName", applicationName)
+                .append("partners", partners)
+                .append("leadPartner", leadPartner)
+                .append("projectSummary", projectSummary)
+                .toString();
     }
 }
