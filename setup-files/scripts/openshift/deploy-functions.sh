@@ -377,6 +377,10 @@ function scaleDataService() {
     oc scale dc data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
 }
 
+function scaleFinanceDataService() {
+    oc scale dc finance-data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
+}
+
 function createProject() {
     until oc new-project $PROJECT ${SVC_ACCOUNT_CLAUSE}
     do
