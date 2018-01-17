@@ -437,12 +437,12 @@ Internal user accepts signed grant offer letter
     When the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status/all
     Then the user should see the element   css=#table-project-status tr:nth-of-type(7) td:nth-of-type(7).status.ok
 
-Project manager's status should be updated
+ should be updated
     [Documentation]   INFUND-5998, INFUND-6377
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
-    Then the user should see the element     css=li.complete:nth-child(8)When the user should see the element  jQuery=.success-alert:contains("The project is live, you can review progress at")
+    Then the user should see the element     jQuery=.success-alert:contains("The project is live, you can review progress at")
     And the user should see the element      link=_connect
 
 Non lead's status should be updated
