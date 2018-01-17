@@ -19,9 +19,9 @@
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired'}, ${'Applications allocated for interview'}, ${'competition closed'})" />
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired'}, ${'Allocate applications to ' + name}, ${'competition closed'})" />
 
-    <h2 class="heading-large" th:text="${param.name != null ? param.name[0] : 'John Smith'}">ASSESSOR NAME</h2>
+    <!-- <h2 class="heading-large" th:text="${param.name != null ? param.name[0] : 'John Smith'}">ASSESSOR NAME</h2> -->
 
     <div class="grid-row">
         <div class="column-half">
@@ -33,6 +33,7 @@
                 <dt>Email address</dt>
                 <dd th:text="${(#strings.replace(name,' ','.')) + '@gmail.com'}"></dd>
             </dl>
+            <a th:href="${'/prototypes/5229-assessor-profile?comp=assessment&#38;name=' + name }">View assessor profile</a>
         </div>
 
         <div class="column-half">
@@ -67,7 +68,7 @@
 
     <th:block th:if="${param.tab == null or param.tab[0] == 'applications'}">
 
-        <h2 class="heading-medium">Assign applications to this assessor for interview.</h2>
+        <h2 class="heading-medium">Allocate applications to this assessor for interview panel.</h2>
 
         <form action="GET">
             <div class="search-filters">
@@ -101,11 +102,11 @@
                 <div class="multiple-choice">
                     <input type="checkbox" data-select-all="" id="select-all-check">
                     <label for="select-all-check">
-                        Select all assessors
+                        Select all applications
                     </label>
                 </div>
                 <span class="form-hint">
-                              <span data-count-selected="" class="applications-selected">0</span> assessors selected
+                              <span data-count-selected="" class="applications-selected">0</span> applications selected
                           </span>
             </div>
             <div class="column-half select-all alignright">

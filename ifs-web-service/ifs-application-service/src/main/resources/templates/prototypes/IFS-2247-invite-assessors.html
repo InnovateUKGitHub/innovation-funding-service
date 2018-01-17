@@ -76,14 +76,11 @@
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'invite'}">
         <h2 class="heading-medium">
-            Invite assessors to interview.
+            Invite assessors to interview panel.
         </h2>
 
         <div class="grid-row sorting">
-            <div class="column-half">
-                <h2 class="heading-small">Invite list</h2>
-            </div>
-            <div class="column-half alignright">
+            <div class="column-one alignright">
                 <a href="/prototypes/IFS-2247-review-send" class="button">Review and send invites</a>
             </div>
         </div>
@@ -98,7 +95,7 @@
                         <th scope="col">Contract and DOI</th>
                         <td scope="col" class="alignright">
                             <button name="removeAll" class="buttonlink alignright">
-                                Remove all from list
+                                Remove all
                             </button>
                         </td>
                     </tr>
@@ -178,7 +175,7 @@
                         <th scope="col">Innovation area</th>
                         <th scope="col">Contract and DOI</th>
                         <th scope="col">Status</th>
-                        <th scope="col" class="width-medium">Details</th>
+                        <th scope="col">Details</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -196,7 +193,7 @@
                         <td>Materials, process and manufacturing design technologies</td>
                         <td><span class="no">No</span></td>
                         <td>Pending</td>
-                        <td>Invite sent: 09-Feb-2017</td>
+                        <td>Invite sent:<br />09 Feb 2017</td>
                     </tr>
                     <tr>
                         <td>
@@ -212,7 +209,7 @@
                         <td>Digital manufacturing</td>
                         <td><span class="no">No</span></td>
                         <td>Declined</td>
-                        <td>Invite sent: 16-May-2017</td>
+                        <td>Invite sent:<br />16 May 2017</td>
                     </tr>
                     <tr>
                         <td>
@@ -228,7 +225,7 @@
                         <td>Digital health</td>
                         <td><span class="yes">Yes</span></td>
                         <td>Pending</td>
-                        <td>Invite sent: 16-May-2017</td>
+                        <td>Invite sent:<br />16 May 2017</td>
                     </tr>
                     <tr>
                         <td>
@@ -244,7 +241,7 @@
                         <td>Nanotechnology / nanomaterials, Electronics, sensors and photonics</td>
                         <td><span class="yes">Yes</span></td>
                         <td>Pending</td>
-                        <td>Invite sent: 09-Feb-2017</td>
+                        <td>Invite sent:<br />09 Feb 2017</td>
                     </tr>
                     <tr>
                         <td>
@@ -260,7 +257,7 @@
                         <td>Nanotechnology / nanomaterials, Precision medicine, Energy systems</td>
                         <td><span class="yes">Yes</span></td>
                         <td>Declined</td>
-                        <td>Invite sent: 09-May-2017</td>
+                        <td>Invite sent:<br />09 May 2017</td>
                     </tr>
                     </tbody>
                 </table>
@@ -272,7 +269,7 @@
 
     <th:block th:if="${param.tab != null and param.tab[0] == 'accepted'}">
         <h2 class="heading-medium">
-            View assessors who have accepted an invite to interview.
+            View assessors who have accepted an invite to interview panel.
         </h2>
 
         <p th:unless="${param.status != null and param.status[0] == 'invitesPending'}">There are no assessors who have accepted invites to this assessment panel.</p>
