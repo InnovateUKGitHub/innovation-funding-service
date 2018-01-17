@@ -111,12 +111,13 @@ the comp admin closes the assessment and releases feedback
     [Documentation]  IFS-2376
     [Tags]  HappyPath
     log in as a different user                   &{Comp_admin1_credentials}
-    the user clicks the button/link             link=${comp_name}
-    the user clicks the button/link             jQuery=.button:contains("Close assessment")
-    the comp admin informs the applicants
-    the user clicks the button/link             jQuery=a:contains("Competition")
-    the user clicks the button/link             jQuery=button:contains("Release feedback")
-    the user should not see an error in the page
+    making the application a successful project  ${competitionId}  ${EOI_application}
+#    the user clicks the button/link             link=${comp_name}
+#    the user clicks the button/link             jQuery=.button:contains("Close assessment")
+#    the comp admin informs the applicants
+#    the user clicks the button/link             jQuery=a:contains("Competition")
+#    the user clicks the button/link             jQuery=button:contains("Release feedback")
+#    the user should not see an error in the page
 
 the EOI comp moves to Previous tab
     [Documentation]  IFS-2376
@@ -169,16 +170,16 @@ the assessor adds score and feedback for every question
       \    mouse out  css=.editor
       \    Wait Until Page Contains Without Screenshots    Saved!
     The user clicks the button/link               jquery=button:contains("Save and return to assessment overview")
-
-the comp admin informs the applicants
-    the user clicks the button/link           jQuery=a:contains("Input and review funding decision")
-    the user clicks the button/link           jQuery=tr:contains("${EOI_application}") label[for^="app-row"]
-    the user clicks the button/link           jQuery=button:contains("Successful")
-    the user clicks the button/link           jQuery=a:contains("Competition")
-    the user clicks the button/link           jQuery=a:contains("Manage funding notifications")
-    the user clicks the button/link           jQuery=tr:contains("${EOI_application}") label
-    the user clicks the button/link           jQuery=button:contains("Write and send email")
-    the user should see the element           jQuery=h1:contains("Funding decision notification")
-    the user enters text to a text field      css=.editor  EOI sussessful applicant
-    the user clicks the button/link           jQuery=button:contains("Send email to all applicants")
-    the user clicks the button/link           jQuery=.send-to-all-applicants-modal button:contains("Send email")
+#
+#the comp admin informs the applicants
+#    the user clicks the button/link           jQuery=a:contains("Input and review funding decision")
+#    the user clicks the button/link           jQuery=tr:contains("${EOI_application}") label[for^="app-row"]
+#    the user clicks the button/link           jQuery=button:contains("Successful")
+#    the user clicks the button/link           jQuery=a:contains("Competition")
+#    the user clicks the button/link           jQuery=a:contains("Manage funding notifications")
+#    the user clicks the button/link           jQuery=tr:contains("${EOI_application}") label
+#    the user clicks the button/link           jQuery=button:contains("Write and send email")
+#    the user should see the element           jQuery=h1:contains("Funding decision notification")
+#    the user enters text to a text field      css=.editor  EOI sussessful applicant
+#    the user clicks the button/link           jQuery=button:contains("Send email to all applicants")
+#    the user clicks the button/link           jQuery=.send-to-all-applicants-modal button:contains("Send email")
