@@ -35,14 +35,14 @@
                             <label th:for="'invite-'+${user.id}" th:text="${user.name}"></label>
                             <button
                                 th:value="${user.id}"
-                                class="buttonlink"
+                                class="button button-secondary"
                                 name="resend_pm_invite"
                                 type="submit">
                                 Resend
                             </button>
                             <button
                                 th:value="${user.id}"
-                                class="buttonlink"
+                                class="button button-secondary"
                                 name="remove_pm_invite"
                                 type="submit">
                                 Remove invite

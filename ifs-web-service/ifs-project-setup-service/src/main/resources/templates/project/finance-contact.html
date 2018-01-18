@@ -47,14 +47,14 @@
                             <label data-set-section-valid="#finance-contact-section" data-clear-inputs="#name-finance-contact,#email-finance-contact" th:for="${#ids.prev('financeContact')}" th:text="${user.name}">Username</label>
                             <button
                                     th:value="${user.id}"
-                                    class="buttonlink"
+                                    class="button button-secondary"
                                     name="resend_fc_invite"
                                     type="submit">
                                 Resend
                             </button>
                             <button
                                 th:value="${user.id}"
-                                class="buttonlink"
+                                class="button button-secondary"
                                 name="remove_fc_invite"
                                 type="submit">
                                 Remove invite

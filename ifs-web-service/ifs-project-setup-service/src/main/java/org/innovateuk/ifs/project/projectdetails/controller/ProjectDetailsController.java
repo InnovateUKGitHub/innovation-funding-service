@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.project.projectdetails.controller;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -103,8 +101,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
     @Autowired
     private SetupStatusViewModelPopulator setupStatusViewModelPopulator;
-
-    private static final Log LOG = LogFactory.getLog(ProjectDetailsController.class);
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId','ACCESS_PROJECT_DETAILS_SECTION')")
     @GetMapping("/{projectId}/details")
@@ -240,8 +236,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String removeProjectManagerInvite(@P("projectId")@PathVariable("projectId") final Long projectId,
                                              @RequestParam("remove_pm_invite") Long inviteId
     ) {
-        LOG.warn("**************************");
-        LOG.warn(inviteId);
         projectDetailsService.removeProjectInvite(inviteId);
         return redirectToProjectManager(projectId);
     }
@@ -251,7 +245,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     public String inviteProjectManager(Model model,
                                        @P("projectId")@PathVariable("projectId") final Long projectId,
                                        @Valid @ModelAttribute(FORM_ATTR_NAME) ProjectManagerForm projectManagerForm,
-                                       ValidationHandler validationHandler,
+                                       @SuppressWarnings("unused") BindingResult bindingResult, ValidationHandler validationHandler,
                                        UserResource loggedInUser) {
         populateOriginalProjectManagerForm(projectId, projectManagerForm);
 
