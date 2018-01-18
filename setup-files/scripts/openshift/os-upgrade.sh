@@ -115,5 +115,6 @@ if [[ ${TARGET} == "production" || ${TARGET} == "uat" || ${TARGET} == "perf" ]]
 then
     # We only scale up data-service once data-service started up and performed the Flyway migrations on one thread
     scaleDataService
-    scaleFinanceDataService
+    # Below is not required for now, it will be put back in when we start deploying it to production & UAT in future
+    # scaleFinanceDataService
 fi
