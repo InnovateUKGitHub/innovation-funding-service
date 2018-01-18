@@ -45,14 +45,22 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "mysql:mysql-connector-java"
     compile "org.flywaydb:flyway-core:4.1.2"
+    compile "org.mapstruct:mapstruct:1.2.0.Final"
+    mapstruct 'org.mapstruct:mapstruct-processor:1.2.0.Final'
+
     compile project(':ifs-commons')
     compile project(':ifs-resources')
+    compile project(':ifs-data-layer:data-service-commons')
 
     testCompile 'org.assertj:assertj-core:3.9.0'
     testCompile project(':ifs-resources')
-    testCompile project(":ifs-commons")
+    testCompile project(':ifs-commons')
+    testCompile project(':ifs-data-layer:data-service-commons')
+
     testCompile project(':ifs-resources').sourceSets.test.output
     testCompile project(':ifs-commons').sourceSets.test.output
+    testCompile project(':ifs-data-layer:data-service-commons').sourceSets.test.output
+
 }
 
 task initDB() {
@@ -62,5 +70,36 @@ task initDB() {
     dependsOn flywayMigrate
 }
 
+task generateMainMapperClasses(type: JavaCompile) {
+    ext.aptDumpDir = file("build/tmp/apt/mapstruct")
+    destinationDir = aptDumpDir
+
+    classpath = compileJava.classpath + configurations.mapstruct
+    source = sourceSets.main.originalJavaSrcDirs
+    ext.sourceDestDir = file generatedMapperSourcesDir
+
+    options.define(
+            compilerArgs: [
+                    "-nowarn",
+                    "-proc:only",
+                    "-encoding", "UTF-8",
+                    "-processor", "org.mapstruct.ap.MappingProcessor",
+                    "-s", sourceDestDir.absolutePath,
+                    "-source", 1.8,
+                    "-target", 1.8,
+            ]
+    );
+
+    inputs.dir source
+    outputs.dir generatedMapperSourcesDir
+    doFirst {
+        sourceDestDir.mkdirs()
+    }
+    doLast {
+        aptDumpDir.delete()
+    }
+}
+
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
+compileJava.dependsOn generateMainMapperClasses
