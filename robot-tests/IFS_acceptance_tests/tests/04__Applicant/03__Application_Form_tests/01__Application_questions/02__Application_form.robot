@@ -26,15 +26,15 @@ ${aeroApplication}  Aerospace test application
 *** Test Cases ***
 Application details: Previous submission
     [Documentation]    INFUND-4694
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=${aeroApplication}
-    And the user clicks the button/link    link=Application details
-    When the user clicks the button/link    jQuery=label:contains("Yes")
-    Then the user should see the text in the page    Please provide the details of this previous application
-    And the user should see the text in the page    Previous application number
-    And the user should see the text in the page    Previous application title
-    When the user clicks the button/link    jQuery=label:contains("No")
-    Then The user should not see the element    css=[id="application.previousApplicationNumber"]
+    Given the user navigates to the page           ${DASHBOARD_URL}
+    And the user clicks the button/link            link=${aeroApplication}
+    And the user clicks the button/link            link=Application details
+    When the user clicks the button/link           jQuery=label:contains("Yes")
+    Then the user should see the text in the page  Please provide the details of this previous application
+    And the user should see the text in the page   Previous application number
+    And the user should see the text in the page   Previous application title
+    When the user clicks the button/link           jQuery=label:contains("No")
+    Then The user should not see the element       css=[id="application.previousApplicationNumber"]
 
 Application details: Research category
     [Documentation]    INFUND-6823
@@ -60,32 +60,32 @@ Research Category : Autosave not applicable
 Application details: Innovation area section is visible
     [Documentation]  INFUND-8115 INFUND-9154
     [Tags]
-    Given the user clicks the button/link    link=Application overview
-    And the user clicks the button/link    link=Application details
-    Given the user should not see the element    jQuery=button:contains("Change your innovation area")
-    When The user clicks the button/link    jQuery=button:contains("Choose your innovation area")
-    Then the user should see the element    jQuery=label:contains("Digital manufacturing"):contains("Process analysis and control technologies including digital, sensor technology and metrology.")
-    And the user should see the element    jQuery=label:contains("My innovation area is not listed")
-    And the user should see the element    jQuery=a:contains("Cancel")
-    and the user clicks the button/link    jQuery=button:contains("Save")
-    Then the user should see an error    This field cannot be left blank
-    and the user clicks the button/link    jQuery=label:contains("Digital manufacturing")
-    and the user clicks the button/link    jQuery=button:contains("Save")
-    Then the user should see the element    jQuery=button:contains("Change your innovation area")
+    Given the user clicks the button/link      link=Application overview
+    And the user clicks the button/link        link=Application details
+    Given the user should not see the element  jQuery=button:contains("Change your innovation area")
+    When The user clicks the button/link       jQuery=button:contains("Choose your innovation area")
+    Then the user should see the element       jQuery=label:contains("Digital manufacturing"):contains("Process analysis and control technologies including digital, sensor technology and metrology.")
+    And the user should see the element        jQuery=label:contains("My innovation area is not listed")
+    And the user should see the element        jQuery=a:contains("Cancel")
+    When the user clicks the button/link       jQuery=button:contains("Save")
+    Then the user should see an error          This field cannot be left blank
+    When the user clicks the button/link       jQuery=label:contains("Digital manufacturing")
+    And the user clicks the button/link        jQuery=button:contains("Save")
+    Then the user should see the element       jQuery=button:contains("Change your innovation area")
 
 Autosave in the form questions
     [Documentation]    INFUND-189
     [Tags]    HappyPath
     [Setup]
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=${aeroApplication}
-    When the user clicks the button/link    link=Application details
-    then the application details need to be autosaved
-    and the user clicks the button/link    link=Application overview
-    And the user clicks the button/link    link=Project summary
-    When The user enters text to a text field    css=.editor    I am a robot
+    Given the user navigates to the page  ${DASHBOARD_URL}
+    And the user clicks the button/link   link=${aeroApplication}
+    When the user clicks the button/link  link=Application details
+    Then the application details need to be autosaved
+    And the user clicks the button/link   link=Application overview
+    And the user clicks the button/link   link=Project summary
+    When The user enters text to a text field  css=.editor  I am a robot
     And the user reloads the page
-    Then the text should be visible
+    Then the user should not see the text in the element  css=.editor  I am a robot
 
 Word count works
     [Documentation]    INFUND-198
@@ -154,9 +154,6 @@ Custom Suite Setup
     Set predefined date variables
     Log in and create a new application for the Aerospace competition
 
-the text should be visible
-    Wait Until Element Contains Without Screenshots    css=.editor    I am a robot
-
 the application details need to be autosaved
     the user enters text to a text field    application.durationInMonths    22
     wait for autosave
@@ -170,14 +167,6 @@ the word count should be correct for the Project summary
 the text box should turn to green
     the user should see the element    css=div.success-alert
     Element Should Be Disabled    css= textarea
-
-the Applicant edits Project summary and marks it as complete
-    focus    css=.editor
-    Clear Element Text    css=.editor
-    Press Key    css=.editor    \\8
-    focus    css=.editor
-    The user enters text to a text field    css=.editor    Hi, I’m a robot @#$@#$@#$
-    the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
 the question should be marked as complete on the application overview page
     The user clicks the button/link    link=Application overview
