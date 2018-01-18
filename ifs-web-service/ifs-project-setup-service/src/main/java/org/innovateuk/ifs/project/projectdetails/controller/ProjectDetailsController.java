@@ -210,12 +210,12 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return redirectToFinanceContact(projectId, organisation);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_MANAGER_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-manager", params = RESEND_PM_INVITE)
     public String resendProjectManagerInvite(@P("projectId")@PathVariable("projectId") final Long projectId,
                                              @RequestParam("resend_pm_invite") Long userId
     ) {
-        resendInvite(userId, projectId, (project, inviteProjectResource) -> projectDetailsService.inviteFinanceContact(project, inviteProjectResource));
+        resendInvite(userId, projectId, (project, inviteProjectResource) -> projectDetailsService.inviteProjectManager(project, inviteProjectResource));
         return redirectToProjectManager(projectId);
     }
 
@@ -273,8 +273,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 .filter(i -> id.equals(i.getId()))
                 .findFirst();
 
-            existingInvite
-                    .ifPresent(i -> sendInvite.apply(projectId, existingInvite.get()));
+        existingInvite
+                .ifPresent(i -> sendInvite.apply(projectId, existingInvite.get()));
     }
 
     private void validateIfTryingToInviteSelf(String loggedInUserEmail, String inviteEmail,
