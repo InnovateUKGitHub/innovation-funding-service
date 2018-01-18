@@ -26,6 +26,7 @@ Suite Setup       The user logs-in in new browser  &{assessor2_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
+Resource          ../../07__Assessor/Assessor_Commons.robot
 
 *** Test Cases ***
 Summary:All the sections are present
@@ -47,31 +48,31 @@ Summary:Number of days remaining until assessment submission
     And the days remaining should be correct (Top of the page)    2068-01-28
 
 Summary shows questions as incomplete
-    [Documentation]    INFUND-550
-    Then the collapsible button should contain    jQuery=button:contains("1. Business opportunity")    Incomplete
-    And the collapsible button should contain    jQuery=button:contains("2. Potential market")    Incomplete
-    And the collapsible button should contain    jQuery=button:contains("3. Project exploitation")    Incomplete
-    And the collapsible button should contain    jQuery=button:contains("4. Economic benefit")    Incomplete
-    And the collapsible button should contain    jQuery=button:contains("5. Technical approach")    Incomplete
-    And the collapsible button should contain    jQuery=button:contains("6. Innovation")    Incomplete
-    And the collapsible button should contain    jQuery=button:contains("7. Risks")    Incomplete
-    And the collapsible button should contain    jQuery=button:contains("8. Project team")    Incomplete
-    And the collapsible button should contain    jQuery=button:contains("9. Funding")    Incomplete
-    And the collapsible button should contain    jQuery=button:contains("10. Adding value")    Incomplete
-    And the collapsible button should contain    jQuery=button:contains("Scope")    Incomplete
+    [Documentation]    INFUND-550 
+    Then the user should see the text in the element   jQuery=button:contains("1. Business opportunity")    Incomplete
+    And the user should see the text in the element    jQuery=button:contains("2. Potential market")    Incomplete
+    And the user should see the text in the element    jQuery=button:contains("3. Project exploitation")    Incomplete
+    And the user should see the text in the element    jQuery=button:contains("4. Economic benefit")    Incomplete
+    And the user should see the text in the element    jQuery=button:contains("5. Technical approach")    Incomplete
+    And the user should see the text in the element    jQuery=button:contains("6. Innovation")    Incomplete
+    And the user should see the text in the element    jQuery=button:contains("7. Risks")    Incomplete
+    And the user should see the text in the element    jQuery=button:contains("8. Project team")    Incomplete
+    And the user should see the text in the element    jQuery=button:contains("9. Funding")    Incomplete
+    And the user should see the text in the element    jQuery=button:contains("10. Adding value")    Incomplete
+    And the user should see the text in the element    jQuery=button:contains("Scope")    Incomplete
 
 Summary: Questions should show without score
     [Documentation]    INFUND-550
-    Then the collapsible button should contain    jQuery=button:contains("1. Business opportunity")    N/A
-    And the collapsible button should contain    jQuery=button:contains("2. Potential market")    N/A
-    And the collapsible button should contain    jQuery=button:contains("3. Project exploitation")    N/A
-    And the collapsible button should contain    jQuery=button:contains("4. Economic benefit")    N/A
-    And the collapsible button should contain    jQuery=button:contains("5. Technical approach")    N/A
-    And the collapsible button should contain    jQuery=button:contains("6. Innovation")    N/A
-    And the collapsible button should contain    jQuery=button:contains("7. Risks")    N/A
-    And the collapsible button should contain    jQuery=button:contains("8. Project team")    N/A
-    And the collapsible button should contain    jQuery=button:contains("9. Funding")    N/A
-    And the collapsible button should contain    jQuery=button:contains("10. Adding value")    N/A
+    Then the user should see the text in the element    jQuery=button:contains("1. Business opportunity")    N/A
+    And the user should see the text in the element     jQuery=button:contains("2. Potential market")    N/A
+    And the user should see the text in the element    jQuery=button:contains("3. Project exploitation")    N/A
+    And the user should see the text in the element    jQuery=button:contains("4. Economic benefit")    N/A
+    And the user should see the text in the element    jQuery=button:contains("5. Technical approach")    N/A
+    And the user should see the text in the element    jQuery=button:contains("6. Innovation")    N/A
+    And the user should see the text in the element    jQuery=button:contains("7. Risks")    N/A
+    And the user should see the text in the element    jQuery=button:contains("8. Project team")    N/A
+    And the user should see the text in the element    jQuery=button:contains("9. Funding")    N/A
+    And the user should see the text in the element   jQuery=button:contains("10. Adding value")    N/A
     [Teardown]    The user clicks the button/link    link=Back to your assessment overview
 
 Summary:Questions should show as complete
@@ -79,35 +80,35 @@ Summary:Questions should show as complete
     [Tags]    HappyPath
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
     Given The user clicks the button/link    link=Intelligent Building
-    And the user adds score and feedback for every question
+    And the assessor adds score and feedback for every question   11
     When the user clicks the button/link    link=Review and complete your assessment
-    Then the collapsible button should contain    jQuery=button:contains("1. Business opportunity")    Complete
-    And the collapsible button should contain    jQuery=button:contains("2. Potential market")    Complete
-    And the collapsible button should contain    jQuery=button:contains("3. Project exploitation")    Complete
-    And the collapsible button should contain    jQuery=button:contains("4. Economic benefit")    Complete
-    And the collapsible button should contain    jQuery=button:contains("5. Technical approach")    Complete
-    And the collapsible button should contain    jQuery=button:contains("6. Innovation")    Complete
-    And the collapsible button should contain    jQuery=button:contains("7. Risks")    Complete
-    And the collapsible button should contain    jQuery=button:contains("8. Project team")    Complete
-    And the collapsible button should contain    jQuery=button:contains("9. Funding")    Complete
-    And the collapsible button should contain    jQuery=button:contains("10. Adding value")    Complete
-    And the collapsible button should contain    jQuery=button:contains("Scope")    Complete
+    Then the user should see the text in the element    jQuery=button:contains("1. Business opportunity")    Complete
+    And the user should see the text in the element   jQuery=button:contains("2. Potential market")    Complete
+    And the user should see the text in the element   jQuery=button:contains("3. Project exploitation")    Complete
+    And the user should see the text in the element    jQuery=button:contains("4. Economic benefit")    Complete
+    And the user should see the text in the element    jQuery=button:contains("5. Technical approach")    Complete
+    And the user should see the text in the element    jQuery=button:contains("6. Innovation")    Complete
+    And the user should see the text in the element    jQuery=button:contains("7. Risks")    Complete
+    And the user should see the text in the element    jQuery=button:contains("8. Project team")    Complete
+    And the user should see the text in the element    jQuery=button:contains("9. Funding")    Complete
+    And the user should see the text in the element   jQuery=button:contains("10. Adding value")    Complete
+    And the user should see the text in the element    jQuery=button:contains("Scope")    Complete
 
 Summary:Questions should show the scores
     [Documentation]    INFUND-550
     [Tags]    HappyPath
     Then The user should see the text in the page    Total: 100/100
     And The user should see the text in the page    100%
-    And the collapsible button should contain    jQuery=button:contains("1. Business opportunity")    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains("2. Potential market")    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains("3. Project exploitation")    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains("4. Economic benefit")    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains("5. Technical approach")    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains("6. Innovation")    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains("7. Risks")    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains("8. Project team")    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains("9. Funding")    Score 10/10
-    And the collapsible button should contain    jQuery=button:contains("10. Adding value")    Score 10/10
+    And the user should see the text in the element    jQuery=button:contains("1. Business opportunity")    Score 10/10
+    And the user should see the text in the element    jQuery=button:contains("2. Potential market")    Score 10/10
+    And the user should see the text in the element   jQuery=button:contains("3. Project exploitation")    Score 10/10
+    And the user should see the text in the element   jQuery=button:contains("4. Economic benefit")    Score 10/10
+    And the user should see the text in the element   jQuery=button:contains("5. Technical approach")    Score 10/10
+    And the user should see the text in the element    jQuery=button:contains("6. Innovation")    Score 10/10
+    And the user should see the text in the element    jQuery=button:contains("7. Risks")    Score 10/10
+    And the user should see the text in the element   jQuery=button:contains("8. Project team")    Score 10/10
+    And the user should see the text in the element   jQuery=button:contains("9. Funding")    Score 10/10
+    And the user should see the text in the element    jQuery=button:contains("10. Adding value")    Score 10/10
 
 Summary:Feedback should show in each section
     [Documentation]    INFUND-550
@@ -249,7 +250,7 @@ User Saves the Assessment as Not Recommended
     [Tags]    HappyPath
     [Setup]
     Given The user clicks the button/link                    link=Park living
-    And the user adds score and feedback for every question
+    And the assessor adds score and feedback for every question  11
     And the user clicks the button/link                      jQuery=.button:contains("Review and complete your assessment")
     When the user selects the radio button                   fundingConfirmation    false
     And the user enters text to a text field                 id=feedback    Negative feedback
@@ -291,69 +292,6 @@ Progress of the applications in Dashboard
     And the user should see the text in the page    ${EXPECTED_TOTAL_PENDING} applications awaiting acceptance | ${EXPECTED_TOTAL_ACCEPTED} applications to assess
 
 *** Keywords ***
-the collapsible button should contain
-    [Arguments]    ${BUTTON}    ${TEXT}
-    Element Should Contain    ${BUTTON}    ${TEXT}
-
-the user adds score and feedback for every question
-    The user clicks the button/link    link=Scope
-    The user selects the index from the drop-down menu    1    css=.research-category
-    The user clicks the button/link    jQuery=label:contains("Yes")
-    The user enters text to a text field    css=.editor    Testing scope feedback text
-    mouse out  css=.editor
-    Wait Until Page Contains Without Screenshots    Saved!
-    The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    css=.assessor-question-score
-    The user enters text to a text field    css=.editor    Testing Business opportunity feedback text
-    mouse out  css=.editor
-    Wait Until Page Contains Without Screenshots    Saved!
-    The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    css=.assessor-question-score
-    The user enters text to a text field    css=.editor    Testing Potential market feedback text
-    mouse out  css=.editor
-    Wait Until Page Contains Without Screenshots    Saved!
-    The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    css=.assessor-question-score
-    The user enters text to a text field    css=.editor    Testing Project exploitation feedback text
-    mouse out  css=.editor
-    Wait Until Page Contains Without Screenshots    Saved!
-    The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    css=.assessor-question-score
-    The user enters text to a text field    css=.editor    Testing Economic benefit feedback text
-    mouse out  css=.editor
-    Wait Until Page Contains Without Screenshots    Saved!
-    The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    css=.assessor-question-score
-    The user enters text to a text field    css=.editor    Testing Technical approach feedback text
-    mouse out  css=.editor
-    Wait Until Page Contains Without Screenshots    Saved!
-    The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    css=.assessor-question-score
-    The user enters text to a text field    css=.editor    Testing Innovation feedback text
-    mouse out  css=.editor
-    Wait Until Page Contains Without Screenshots    Saved!
-    The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    css=.assessor-question-score
-    The user enters text to a text field    css=.editor    Testing Risks feedback text
-    mouse out  css=.editor
-    Wait Until Page Contains Without Screenshots    Saved!
-    The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    css=.assessor-question-score
-    The user enters text to a text field    css=.editor    Testing Project team feedback text
-    mouse out  css=.editor
-    Wait Until Page Contains Without Screenshots    Saved!
-    The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    css=.assessor-question-score
-    The user enters text to a text field    css=.editor    Testing Funding feedback text
-    mouse out  css=.editor
-    Wait Until Page Contains Without Screenshots    Saved!
-    The user clicks the button/link    css=.next
-    The user selects the option from the drop-down menu    10    css=.assessor-question-score
-    The user enters text to a text field    css=.editor    Testing Adding value feedback text
-    mouse out  css=.editor
-    Wait Until Page Contains Without Screenshots    Saved!
-    The user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
-
 the word count should be correct
     [Arguments]    ${wordCount}
     the user should see the text in the page    ${wordCount}
