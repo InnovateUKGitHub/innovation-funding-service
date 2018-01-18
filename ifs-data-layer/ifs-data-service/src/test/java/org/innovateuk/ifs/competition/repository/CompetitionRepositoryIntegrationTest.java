@@ -17,6 +17,7 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
+import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.threads.domain.Query;
@@ -35,17 +36,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.test.annotation.Rollback;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.time.ZonedDateTime.now;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.junit.Assert.*;
 
 public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionRepository> {
@@ -108,7 +112,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
         compFundedAndInformed = repository.save(compFundedAndInformed);
 
-        Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed).withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(ZonedDateTime.now()).build();
+        Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed).withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(now()).build();
         applicationRepository.save(applicationFundedAndInformed);
 
         assertEquals(1L, repository.countProjectSetup().longValue());
@@ -122,13 +126,13 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Competition compWithFeedBackReleased = newCompetition().withName("Comp1").withNonIfs(false).withSetupComplete(true).build();
         compWithFeedBackReleased = repository.save(compWithFeedBackReleased);
 
-        Application applicationFeedbackReleased = newApplication().withCompetition(compWithFeedBackReleased).withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(ZonedDateTime.now()).build();
+        Application applicationFeedbackReleased = newApplication().withCompetition(compWithFeedBackReleased).withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(now()).build();
         applicationRepository.save(applicationFeedbackReleased);
 
         Competition compFundedAndInformed = newCompetition().withName("Comp2").withNonIfs(false).withSetupComplete(true).build();
         compFundedAndInformed = repository.save(compFundedAndInformed);
 
-        Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed).withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(ZonedDateTime.now()).build();
+        Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed).withFundingDecision(FundingDecisionStatus.FUNDED).withManageFundingEmailDate(now()).build();
         applicationRepository.save(applicationFundedAndInformed);
 
         Competition compNonIfs = newCompetition().withName("Comp3").withNonIfs(true).withSetupComplete(true).build();
@@ -159,7 +163,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Competition compFundedAndInformed = newCompetition().withNonIfs(false).withSetupComplete(true).build();
         compFundedAndInformed = repository.save(compFundedAndInformed);
 
-        Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed).withFundingDecision(FundingDecisionStatus.UNFUNDED).withManageFundingEmailDate(ZonedDateTime.now()).build();
+        Application applicationFundedAndInformed = newApplication().withCompetition(compFundedAndInformed).withFundingDecision(FundingDecisionStatus.UNFUNDED).withManageFundingEmailDate(now()).build();
         applicationRepository.save(applicationFundedAndInformed);
 
         assertEquals(0L, repository.countProjectSetup().longValue());
@@ -190,7 +194,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         openComp.setLeadTechnologist(leadTechnologist);
         openComp.setSetupComplete(true);
         openComp = repository.save(openComp);
-        openComp.setMilestones(replaceOpenDateMilestoneDate(openComp.getMilestones(), ZonedDateTime.now().minusHours(5L)));
+        openComp.setMilestones(replaceOpenDateMilestoneDate(openComp.getMilestones(), now().minusHours(5L)));
         openComp = repository.save(openComp);
         CompetitionAssessmentParticipant competitionParticipant = buildCompetitionParticipant(openComp, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
@@ -199,7 +203,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         earliestOpenComp.setLeadTechnologist(leadTechnologist);
         earliestOpenComp.setSetupComplete(true);
         earliestOpenComp = repository.save(earliestOpenComp);
-        earliestOpenComp.setMilestones(replaceOpenDateMilestoneDate(earliestOpenComp.getMilestones(), ZonedDateTime.now().minusDays(3L)));
+        earliestOpenComp.setMilestones(replaceOpenDateMilestoneDate(earliestOpenComp.getMilestones(), now().minusDays(3L)));
         earliestOpenComp = repository.save(earliestOpenComp);
         competitionParticipant = buildCompetitionParticipant(earliestOpenComp, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
@@ -208,7 +212,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         compWithNoInnovationLead.setLeadTechnologist(notLeadTechnologist);
         compWithNoInnovationLead.setSetupComplete(true);
         compWithNoInnovationLead = repository.save(compWithNoInnovationLead);
-        compWithNoInnovationLead.setMilestones(replaceOpenDateMilestoneDate(compWithNoInnovationLead.getMilestones(), ZonedDateTime.now().minusHours(10L)));
+        compWithNoInnovationLead.setMilestones(replaceOpenDateMilestoneDate(compWithNoInnovationLead.getMilestones(), now().minusHours(10L)));
         compWithNoInnovationLead = repository.save(compWithNoInnovationLead);
         competitionParticipant = buildCompetitionParticipant(compWithNoInnovationLead, notLeadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
@@ -217,7 +221,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         compInPreparation.setLeadTechnologist(leadTechnologist);
         compInPreparation.setSetupComplete(false);
         compInPreparation = repository.save(compInPreparation);
-        compInPreparation.setMilestones(replaceOpenDateMilestoneDate(compInPreparation.getMilestones(), ZonedDateTime.now().minusHours(20L)));
+        compInPreparation.setMilestones(replaceOpenDateMilestoneDate(compInPreparation.getMilestones(), now().minusHours(20L)));
         compInPreparation = repository.save(compInPreparation);
         competitionParticipant = buildCompetitionParticipant(compInPreparation, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
@@ -226,7 +230,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         compReadyToOpen.setLeadTechnologist(leadTechnologist);
         compReadyToOpen.setSetupComplete(true);
         compReadyToOpen = repository.save(compReadyToOpen);
-        compReadyToOpen.setMilestones(replaceOpenDateMilestoneDate(compReadyToOpen.getMilestones(), ZonedDateTime.now().plusHours(12L)));
+        compReadyToOpen.setMilestones(replaceOpenDateMilestoneDate(compReadyToOpen.getMilestones(), now().plusHours(12L)));
         compReadyToOpen = repository.save(compReadyToOpen);
         competitionParticipant = buildCompetitionParticipant(compReadyToOpen, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
@@ -235,7 +239,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         compInInform.setLeadTechnologist(leadTechnologist);
         compInInform.setSetupComplete(true);
         compInInform = repository.save(compInInform);
-        compInInform.setMilestones(replaceOpenDateMilestoneDate(compInInform.getMilestones(), ZonedDateTime.now().minusDays(1L).minusHours(12L)));
+        compInInform.setMilestones(replaceOpenDateMilestoneDate(compInInform.getMilestones(), now().minusDays(1L).minusHours(12L)));
         compInInform = repository.save(compInInform);
         competitionParticipant = buildCompetitionParticipant(compInInform, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
@@ -244,12 +248,12 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         compInProjectSetup.setLeadTechnologist(leadTechnologist);
         compInProjectSetup.setSetupComplete(true);
         compInProjectSetup = repository.save(compInProjectSetup);
-        compInProjectSetup.setMilestones(replaceOpenDateMilestoneDate(compInProjectSetup.getMilestones(), ZonedDateTime.now().minusDays(2L)));
+        compInProjectSetup.setMilestones(replaceOpenDateMilestoneDate(compInProjectSetup.getMilestones(), now().minusDays(2L)));
         compInProjectSetup = repository.save(compInProjectSetup);
         competitionParticipant = buildCompetitionParticipant(compInProjectSetup, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
-        Milestone feedbackReleasedMilestoneInProjectSetup = newMilestone().withCompetition(compInProjectSetup).withType(MilestoneType.FEEDBACK_RELEASED).withDate(ZonedDateTime.now().minusDays(1L)).build();
+        Milestone feedbackReleasedMilestoneInProjectSetup = newMilestone().withCompetition(compInProjectSetup).withType(MilestoneType.FEEDBACK_RELEASED).withDate(now().minusDays(1L)).build();
         milestoneRepository.save(feedbackReleasedMilestoneInProjectSetup);
 
         Pageable pageable = new PageRequest(0, 40);
@@ -372,6 +376,81 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     @Test
+    @Rollback
+    public void twoQueriesCreatedBySamePartnerSameProject() {
+
+        List<Competition> comps = createTwoQueriesFromSamePartnerSameProject();
+
+        // and see that we now have a single query count because the 2 queries are from the same partner
+        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, newResults.size());
+    }
+
+    @Test
+    @Rollback
+    public void twoQueriesCreatedBySamePartnerSameProjectAndOneIsResolved() {
+
+        List<Competition> comps = createTwoQueriesFromSamePartnerSameProject();
+
+        // and see that we now have a single query count because the 2 queries are from the same partner
+        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, results.size());
+
+        Long projectId = results.get(0).getProjectId();
+        Long organisationId = results.get(0).getOrganisationId();
+
+        ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+
+        // get all of the open queries and close them
+        List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(), ProjectFinance.class.getName());
+        Query query = openQueries.get(0);
+        query.closeThread(userRepository.findByEmail("steve.smith@empire.com").get());
+        queryRepository.save(query);
+
+        // clean the cache and get some fresh results
+        flushAndClearSession();
+
+        // assert that we still see a count of one because not all of these partner org's queries are yet resolved
+        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, newResults.size());
+    }
+
+    @Test
+    @Rollback
+    public void twoQueriesCreatedBySamePartnerSameProjectAndBothAreResolved() {
+
+        List<Competition> comps = createTwoQueriesFromSamePartnerSameProject();
+
+        // and see that we now have a single query count because the 2 queries are from the same partner
+        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, results.size());
+
+        Long projectId = results.get(0).getProjectId();
+        Long organisationId = results.get(0).getOrganisationId();
+
+        ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+
+        // get all of the open queries and close them
+        List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(), ProjectFinance.class.getName());
+        openQueries.forEach(query -> {
+            query.closeThread(userRepository.findByEmail("steve.smith@empire.com").get());
+            queryRepository.save(query);
+        });
+
+        // clean the cache and get some fresh results
+        flushAndClearSession();
+
+        // and see that we now see all resolved
+        assertEquals(0L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(0L, newResults.size());
+    }
+
+    @Test
     public void twoOpenQueryResponsesFromDifferentPartners() {
         List<Competition> comps = repository.findByName("Comp21005");
         assertTrue(comps.size() > 0);
@@ -387,6 +466,34 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Long projectId = project.getId();
         assertEquals(new CompetitionOpenQueryResource(appId, org1Id, "Org1", projectId, "project 5"), results.get(0));
         assertEquals(new CompetitionOpenQueryResource(appId, org2Id, "Org2", projectId, "project 5"), results.get(1));
+    }
+
+    @Test
+    public void twoOpenQueryResponsesFromDifferentPartnersAndOneIsResolved() {
+        List<Competition> comps = repository.findByName("Comp21005");
+        assertTrue(comps.size() > 0);
+        assertEquals(2L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(2L, results.size());
+
+        Long projectId = results.get(0).getProjectId();
+        Long organisationId = results.get(0).getOrganisationId();
+        ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+
+        // get all of the open queries and close them
+        List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(), ProjectFinance.class.getName());
+        openQueries.forEach(query -> {
+            query.closeThread(userRepository.findByEmail("steve.smith@empire.com").get());
+            queryRepository.save(query);
+        });
+
+        // clean the cache and get some fresh results
+        flushAndClearSession();
+
+        // and see that we now see one resolved
+        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, newResults.size());
     }
 
     @Test
@@ -412,6 +519,34 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         assertNotNull(project);
         projectId = project.getId();
         assertEquals(new CompetitionOpenQueryResource(appId, org1Id, "Org1", projectId, "project 7"), results.get(1));
+    }
+
+    @Test
+    public void twoProjectsHaveOpenQueriesAndOneIsResolved() {
+        List<Competition> comps = repository.findByName("Comp21006");
+        assertTrue(comps.size() > 0);
+        assertEquals(2L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(2L, results.size());
+
+        Long projectId = results.get(0).getProjectId();
+        Long organisationId = results.get(0).getOrganisationId();
+        ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+
+        // get all of the open queries and close them
+        List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(), ProjectFinance.class.getName());
+        openQueries.forEach(query -> {
+            query.closeThread(userRepository.findByEmail("steve.smith@empire.com").get());
+            queryRepository.save(query);
+        });
+
+        // clean the cache and get some fresh results
+        flushAndClearSession();
+
+        // and see that we now see one resolved
+        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, newResults.size());
     }
 
     @Test
@@ -498,5 +633,33 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         Competition retrieved = repository.findByAssessmentId(assessment.getId());
 
         assertEquals(competition, retrieved);
+    }
+
+    private List<Competition> createTwoQueriesFromSamePartnerSameProject() {
+        // firstly assert that we have 2 unique queries for this competition as 2 partners have open queries currently
+        List<Competition> comps = repository.findByName("Comp21005");
+        assertTrue(comps.size() > 0);
+        assertEquals(2L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(2L, results.size());
+
+        Long projectId = results.get(0).getProjectId();
+        Long organisationId = results.get(0).getOrganisationId();
+
+        Project project = projectRepository.findOne(projectId);
+        PartnerOrganisation otherPartnerOrganisation = simpleFindFirst(project.getPartnerOrganisations(), org -> !org.getOrganisation().getId().equals(organisationId)).get();
+
+        ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+        ProjectFinance otherPartnerFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, otherPartnerOrganisation.getOrganisation().getId());
+
+        // now assign one of the queries to the other partner so that they are both coming from the same partner
+        List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(), ProjectFinance.class.getName());
+        Query queryToAssignToOtherPartner = openQueries.get(0);
+        ReflectionTestUtils.setField(queryToAssignToOtherPartner, "classPk", otherPartnerFinanceRow.getId());
+        queryRepository.save(queryToAssignToOtherPartner);
+
+        // clean the cache and get some fresh results
+        flushAndClearSession();
+        return comps;
     }
 }
