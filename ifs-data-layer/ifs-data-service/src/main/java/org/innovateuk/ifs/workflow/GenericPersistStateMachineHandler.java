@@ -4,6 +4,7 @@ import org.springframework.messaging.Message;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.access.StateMachineAccess;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.listener.AbstractCompositeListener;
 import org.springframework.statemachine.listener.StateMachineListenerAdapter;
 import org.springframework.statemachine.state.State;
@@ -26,18 +27,17 @@ import java.util.List;
  */
 public class GenericPersistStateMachineHandler<StateType, EventType> extends LifecycleObjectSupport {
 
-    private final StateMachine<StateType, EventType> stateMachine;
+    private final StateMachineFactory<StateType, EventType> stateMachineFactory;
     private final GenericCompositePersistStateChangeListener listeners = new GenericCompositePersistStateChangeListener();
 
     /**
      * Instantiates a new persist state machine handler.
      *
-     * @param stateMachine the state machine
+     * @param stateMachineFactory the state machine
      */
-    public GenericPersistStateMachineHandler(StateMachine<StateType, EventType> stateMachine) {
-        Assert.notNull(stateMachine, "State machine must be set");
-        this.stateMachine = stateMachine;
-        this.stateMachine.addStateListener(new PersistingStateMachineListener());
+    public GenericPersistStateMachineHandler(StateMachineFactory<StateType, EventType> stateMachineFactory) {
+        Assert.notNull(stateMachineFactory, "State machine must be set");
+        this.stateMachineFactory = stateMachineFactory;
     }
 
     private class PersistingStateMachineListener extends StateMachineListenerAdapter<StateType, EventType> {
@@ -58,7 +58,9 @@ public class GenericPersistStateMachineHandler<StateType, EventType> extends Lif
      * @return true if event was accepted
      */
     public boolean handleEventWithState(Message<EventType> event, StateType state) {
-        stateMachine.stop();
+        StateMachine<StateType, EventType> stateMachine = stateMachineFactory.getStateMachine();
+        stateMachine.addStateListener(new PersistingStateMachineListener());
+
         List<StateMachineAccess<StateType, EventType>> withAllRegions = stateMachine.getStateMachineAccessor().withAllRegions();
         for (StateMachineAccess<StateType, EventType> a : withAllRegions) {
             a.resetStateMachine(new DefaultStateMachineContext<>(state, null, null, null));

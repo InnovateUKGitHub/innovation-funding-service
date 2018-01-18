@@ -28,9 +28,10 @@ import static org.innovateuk.ifs.project.spendprofile.resource.SpendProfileEvent
 
 @Component
 public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendProfileProcess, SpendProfileState, SpendProfileEvent, Project, ProjectUser> {
+
     @Autowired
     @Qualifier("spendProfileStateMachine")
-    private StateMachineFactory<SpendProfileState, SpendProfileEvent> stateMachine;
+    private StateMachineFactory<SpendProfileState, SpendProfileEvent> stateMachineFactory;
 
     @Autowired
     private SpendProfileProcessRepository spendProfileProcessRepository;
@@ -125,8 +126,8 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
     }
 
     @Override
-    protected StateMachine<SpendProfileState, SpendProfileEvent> getStateMachine() {
-        return stateMachine.getStateMachine();
+    protected StateMachineFactory<SpendProfileState, SpendProfileEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override

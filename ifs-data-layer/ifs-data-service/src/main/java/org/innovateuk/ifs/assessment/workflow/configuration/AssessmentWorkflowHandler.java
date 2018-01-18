@@ -35,7 +35,7 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
 
     @Autowired
     @Qualifier("assessmentStateMachine")
-    private StateMachineFactory<AssessmentState, AssessmentEvent> stateMachine;
+    private StateMachineFactory<AssessmentState, AssessmentEvent> stateMachineFactory;
 
     @Autowired
     private AssessmentRepository assessmentRepository;
@@ -100,8 +100,8 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
     }
 
     @Override
-    protected StateMachine<AssessmentState, AssessmentEvent> getStateMachine() {
-        return stateMachine.getStateMachine();
+    protected StateMachineFactory<AssessmentState, AssessmentEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override

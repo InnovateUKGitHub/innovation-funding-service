@@ -31,7 +31,7 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
 
     @Autowired
     @Qualifier("projectStateMachine")
-    private StateMachineFactory<ProjectState, ProjectEvent> stateMachine;
+    private StateMachineFactory<ProjectState, ProjectEvent> stateMachineFactory;
 
     @Autowired
     private ProjectProcessRepository projectProcessRepository;
@@ -80,8 +80,8 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
     }
 
     @Override
-    protected StateMachine<ProjectState, ProjectEvent> getStateMachine() {
-        return stateMachine.getStateMachine();
+    protected StateMachineFactory<ProjectState, ProjectEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override

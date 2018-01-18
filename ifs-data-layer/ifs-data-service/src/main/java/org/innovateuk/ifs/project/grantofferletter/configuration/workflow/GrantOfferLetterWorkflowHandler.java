@@ -36,7 +36,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
 
     @Autowired
     @Qualifier("golStateMachine")
-    private StateMachineFactory<GrantOfferLetterState, GrantOfferLetterEvent> stateMachine;
+    private StateMachineFactory<GrantOfferLetterState, GrantOfferLetterEvent> stateMachineFactory;
 
     @Autowired
     private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
@@ -146,8 +146,8 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
     }
 
     @Override
-    protected StateMachine<GrantOfferLetterState, GrantOfferLetterEvent> getStateMachine() {
-        return stateMachine.getStateMachine();
+    protected StateMachineFactory<GrantOfferLetterState, GrantOfferLetterEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override

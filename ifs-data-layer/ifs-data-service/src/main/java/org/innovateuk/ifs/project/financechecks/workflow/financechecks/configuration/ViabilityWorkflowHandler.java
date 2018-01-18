@@ -37,7 +37,7 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
 
     @Autowired
     @Qualifier("viabilityStateMachine")
-    private StateMachineFactory<ViabilityState, ViabilityEvent> stateMachine;
+    private StateMachineFactory<ViabilityState, ViabilityEvent> stateMachineFactory;
 
     @Autowired
     private ViabilityProcessRepository viabilityProcessRepository;
@@ -95,8 +95,8 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
     }
 
     @Override
-    protected StateMachine<ViabilityState, ViabilityEvent> getStateMachine() {
-        return stateMachine.getStateMachine();
+    protected StateMachineFactory<ViabilityState, ViabilityEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override

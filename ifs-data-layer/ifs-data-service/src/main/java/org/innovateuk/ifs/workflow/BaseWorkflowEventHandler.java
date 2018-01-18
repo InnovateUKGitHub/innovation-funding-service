@@ -16,6 +16,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.state.State;
 import org.springframework.statemachine.transition.Transition;
 
@@ -40,7 +41,8 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
 
     @PostConstruct
     public void postConstruct() {
-        stateHandler = new GenericPersistStateMachineHandler<>(getStateMachine());
+        StateMachineFactory<StateType, EventType> stateMachine = getStateMachineFactory();
+        stateHandler = new GenericPersistStateMachineHandler<>(stateMachine);
         stateHandler.addPersistStateChangeListener(new LocalStateChangeListener());
     }
 
@@ -137,7 +139,7 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
 
     protected abstract CrudRepository<ParticipantType, Long> getParticipantRepository();
 
-    protected abstract StateMachine<StateType, EventType> getStateMachine();
+    protected abstract StateMachineFactory<StateType, EventType> getStateMachineFactory();
 
     protected abstract ProcessType getOrCreateProcess(Message<EventType> message);
 }

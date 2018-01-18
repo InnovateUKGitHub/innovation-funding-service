@@ -35,7 +35,7 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
 
     @Autowired
     @Qualifier("applicationProcessStateMachine")
-    private StateMachineFactory<ApplicationState, ApplicationEvent> stateMachine;
+    private StateMachineFactory<ApplicationState, ApplicationEvent> stateMachineFactory;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -72,8 +72,8 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
     }
 
     @Override
-    protected StateMachine<ApplicationState, ApplicationEvent> getStateMachine() {
-        return stateMachine.getStateMachine();
+    protected StateMachineFactory<ApplicationState, ApplicationEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override

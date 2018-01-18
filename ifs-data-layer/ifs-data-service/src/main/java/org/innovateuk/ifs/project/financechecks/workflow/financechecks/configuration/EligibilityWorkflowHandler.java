@@ -39,7 +39,7 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
 
     @Autowired
     @Qualifier("eligibilityStateMachine")
-    private StateMachineFactory<EligibilityState, EligibilityEvent> stateMachine;
+    private StateMachineFactory<EligibilityState, EligibilityEvent> stateMachineFactory;
 
     @Autowired
     private EligibilityProcessRepository eligibilityProcessRepository;
@@ -97,8 +97,8 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
     }
 
     @Override
-    protected StateMachine<EligibilityState, EligibilityEvent> getStateMachine() {
-        return stateMachine.getStateMachine();
+    protected StateMachineFactory<EligibilityState, EligibilityEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override

@@ -241,7 +241,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     @Before
-    public void readCsvs() throws Exception {
+    public void readCsvs() {
         organisationLines = readOrganisations();
         competitionLines = readCompetitions();
         questionLines = readQuestions();
@@ -310,9 +310,13 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     @Test
-    public void generateTestData() throws IOException {
+    public void generateTestData() {
 
         long before = System.currentTimeMillis();
+
+        LOG.info("Starting generating data...");
+        System.out.println("Starting generating data...");
+
         fixUpDatabase();
         createOrganisations();
         createInternalUsers();
@@ -547,13 +551,13 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 return competitionRepository.findByName(line.name).get(0).getId();
             });
 
-            CompletableFuture<Void> createApplicationsFuture = createCompetitionFuture.thenAcceptAsync(competitionId -> {
+            CompletableFuture<Long> createApplicationsFuture = createCompetitionFuture.thenApplyAsync(competitionId -> {
 
                 List<ApplicationLine> competitionApplications =
                         simpleFilter(applicationLines, app -> app.competitionName.equals(line.name));
 
                 if (competitionApplications.isEmpty()) {
-                    return;
+                    return competitionId;
                 }
 
                 CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
@@ -572,7 +576,12 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                     });
                 });
 
-                waitForFuturesToComplete(applicationFutures);
+                return competitionId;
+            });
+
+            CompletableFuture<Void> fundersPanelDecisionFuture = createApplicationsFuture.thenAcceptAsync(competitionId -> {
+
+                CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
 
                 basicCompetitionInformation.restoreOriginalMilestones().build();
 
@@ -585,7 +594,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 }
             });
 
-            return createApplicationsFuture;
+            return fundersPanelDecisionFuture;
         });
 
         waitForFuturesToComplete(futures);
