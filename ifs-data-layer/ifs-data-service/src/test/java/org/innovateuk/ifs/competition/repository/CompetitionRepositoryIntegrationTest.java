@@ -11,16 +11,20 @@ import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.domain.TermsAndConditions;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
+import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -69,6 +73,12 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Autowired
     private QueryRepository queryRepository;
+
+    @Autowired
+    private ProjectFinanceRepository projectFinanceRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     @Override
@@ -300,25 +310,32 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         assertEquals(new CompetitionOpenQueryResource(appId, org1Id, "Org1", projectId, "project 1"), results.get(0));
     }
 
-//    @Test
-//    @Rollback
-//    public void oneQueryCreatedByProjectFinanceAndResolved() {
-//
-//        List<Competition> comps = repository.findByName("Comp21001");
-//        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
-//        results.get(0).getProjectId()
-//
-//        queryRepository.findAllByClassPkAndClassName()
-//        assertEquals(1L, results.size());
-//        List<Application> apps = applicationRepository.findByName("App21001");
-//        assertEquals(1L, apps.size());
-//        Long appId = apps.get(0).getId();
-//        List<Project> projects = projectRepository.findByApplicationCompetitionId(comps.get(0).getId());
-//        Project project = projects.stream().filter(p -> p.getName().equals("project 1")).findFirst().get();
-//        assertNotNull(project);
-//        Long projectId = project.getId();
-//        assertEquals(new CompetitionOpenQueryResource(appId, org1Id, "Org1", projectId, "project 1"), results.get(0));
-//    }
+    @Test
+    @Rollback
+    public void oneQueryCreatedByProjectFinanceAndResolved() {
+
+        List<Competition> comps = repository.findByName("Comp21001");
+        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, results.size());
+        Long projectId = results.get(0).getProjectId();
+        Long organisationId = results.get(0).getOrganisationId();
+        ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+
+        // get all of the open queries and close them
+        List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(), ProjectFinance.class.getName());
+        openQueries.forEach(query -> {
+            query.closeThread(userRepository.findByEmail("steve.smith@empire.com").get());
+            queryRepository.save(query);
+        });
+
+        // clean the cache and get some fresh results
+        flushAndClearSession();
+
+        assertEquals(0L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(0L, newResults.size());
+    }
 
     @Test
     public void oneQueryCreatedByProjectManager() {
