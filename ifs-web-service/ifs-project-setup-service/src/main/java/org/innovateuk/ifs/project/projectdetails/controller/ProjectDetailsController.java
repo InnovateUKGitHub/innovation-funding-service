@@ -256,7 +256,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
 
                 if(savedInvite.isPresent()) {
                     ServiceResult<Void> inviteResult = sendInvite.apply(projectId, savedInvite.get());
-                    return validationHandler.failNowOrSucceedWith(failureView, successView);
+                    return validationHandler.addAnyErrors(inviteResult).failNowOrSucceedWith(failureView, successView);
                 } else {
                     return validationHandler.failNowOrSucceedWith(failureView, successView);
                 }
@@ -271,6 +271,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 .getSuccessObjectOrThrowException()
                 .stream()
                 .filter(i -> id.equals(i.getId()))
+                .filter(i -> projectId.equals(i.getProject()))
                 .findFirst();
 
         existingInvite
