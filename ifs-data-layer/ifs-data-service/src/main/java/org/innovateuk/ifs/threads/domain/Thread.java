@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.threads.domain;
 
 
+import org.innovateuk.ifs.user.domain.User;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -38,6 +39,12 @@ public abstract class Thread {
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private ZonedDateTime createdOn;
+
+    private ZonedDateTime closedDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "closed_by_user_id", referencedColumnName = "id")
+    private User closedBy;
 
     Thread() {
     }
@@ -92,5 +99,10 @@ public abstract class Thread {
 
     public void setContext(String context) {
         this.className = context;
+    }
+
+    public void closeThread(User closedBy) {
+        this.closedBy = closedBy;
+        this.closedDate = ZonedDateTime.now();
     }
 }
