@@ -144,7 +144,7 @@ public class RestCacheMethodInterceptorTest {
         }
     }
 
-    public static class UidSupplierImpl implements UidSupplier {
+    public static class UidSupplierImpl implements RestCacheUuidSupplier {
 
         private String uid;
 

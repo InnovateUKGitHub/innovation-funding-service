@@ -39,6 +39,7 @@ buildscript {
     ext {
         springBootVersion = '1.5.6.RELEASE'
         thymeleafVersion = ext['thymeleaf.version']
+        springCloudVersion = 'Dalston.RELEASE'
     }
 
     repositories {
@@ -143,3 +144,5 @@ dockerCompose {
 task wrapper(type: Wrapper) {
     gradleVersion = '3.5'
 }
+
+ext.zipkinEnabled = project.hasProperty('ifs.zipkin.enabled') ? project.property('ifs.zipkin.enabled').toBoolean() : false
