@@ -74,9 +74,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     private static final String SAVE_PM = "save_pm";
     private static final String INVITE_PM = "invite_pm";
     private static final String RESEND_FC_INVITE = "resend_fc_invite";
-    private static final String REMOVE_FC_INVITE = "remove_fc_invite";
     private static final String RESEND_PM_INVITE = "resend_pm_invite";
-    private static final String REMOVE_PM_INVITE = "remove_pm_invite";
 
 	@Autowired
     private ProjectService projectService;
@@ -213,30 +211,11 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
-    @PostMapping(value = "/{projectId}/details/finance-contact", params = REMOVE_FC_INVITE)
-    public String removeFinanceContactInvite(@P("projectId")@PathVariable("projectId") final Long projectId,
-                                             @RequestParam(value="organisation") final Long organisation,
-                                             @RequestParam("remove_fc_invite") Long inviteId
-    ) {
-        projectDetailsService.removeProjectInvite(inviteId);
-        return redirectToFinanceContact(projectId, organisation);
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-manager", params = RESEND_PM_INVITE)
     public String resendProjectManagerInvite(@P("projectId")@PathVariable("projectId") final Long projectId,
                                              @RequestParam("resend_pm_invite") Long userId
     ) {
         resendInvite(userId, projectId, (project, inviteProjectResource) -> projectDetailsService.inviteFinanceContact(project, inviteProjectResource));
-        return redirectToProjectManager(projectId);
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
-    @PostMapping(value = "/{projectId}/details/project-manager", params = REMOVE_PM_INVITE)
-    public String removeProjectManagerInvite(@P("projectId")@PathVariable("projectId") final Long projectId,
-                                             @RequestParam("remove_pm_invite") Long inviteId
-    ) {
-        projectDetailsService.removeProjectInvite(inviteId);
         return redirectToProjectManager(projectId);
     }
 

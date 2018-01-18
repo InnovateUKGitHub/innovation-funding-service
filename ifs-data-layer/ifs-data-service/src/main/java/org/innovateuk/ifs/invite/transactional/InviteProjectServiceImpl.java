@@ -154,13 +154,6 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
                 .andOnSuccess(u -> u.map(ServiceResult::serviceSuccess).orElseGet(() -> serviceFailure(notFoundError(UserResource.class))));
     }
 
-    @Override
-    @Transactional
-    public ServiceResult<Void> removeById(@P("inviteId") Long inviteId) {
-        inviteProjectRepository.deleteById(inviteId);
-        return serviceSuccess();
-    }
-
     private ServiceResult<Void> validateProjectInviteResource(InviteProjectResource inviteProjectResource) {
 
         if (StringUtils.isEmpty(inviteProjectResource.getEmail()) || StringUtils.isEmpty(inviteProjectResource.getName())

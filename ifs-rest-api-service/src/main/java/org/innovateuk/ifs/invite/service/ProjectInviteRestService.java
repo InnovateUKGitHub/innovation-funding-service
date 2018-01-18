@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.invite.service;
+    package org.innovateuk.ifs.invite.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -14,7 +14,6 @@ public interface ProjectInviteRestService {
     RestResult<Void> acceptInvite(String inviteHash, Long userId);
     RestResult<Void> saveProjectInvite(InviteProjectResource inviteProjectResource);
     RestResult<List<InviteProjectResource>> getInvitesByProject (Long projectId);
-    RestResult<Void> removeProjectInvite(Long projectId);
 }
 
 

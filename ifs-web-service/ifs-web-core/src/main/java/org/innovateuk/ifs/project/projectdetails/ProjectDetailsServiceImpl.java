@@ -63,9 +63,4 @@ public class ProjectDetailsServiceImpl implements ProjectDetailsService {
     public ServiceResult<List<InviteProjectResource>>  getInvitesByProject (Long projectId) {
         return projectInviteRestService.getInvitesByProject (projectId).toServiceResult();
     }
-
-    @Override
-    public ServiceResult<Void> removeProjectInvite(Long inviteId) {
-        return projectInviteRestService.removeProjectInvite(inviteId).toServiceResult();
-    }
 }

@@ -22,6 +22,4 @@ public interface InviteProjectRepository extends PagingAndSortingRepository<Proj
     List<ProjectInvite> findByProjectIdAndEmail(Long projectId, String email);
 
     ProjectInvite getByHash(String hash);
-
-    void deleteById(Long id);
 }
