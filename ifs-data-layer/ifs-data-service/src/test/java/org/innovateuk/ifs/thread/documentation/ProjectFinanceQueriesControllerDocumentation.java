@@ -2,9 +2,9 @@ package org.innovateuk.ifs.thread.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.queries.controller.ProjectFinanceQueriesController;
-import org.innovateuk.threads.resource.FinanceChecksSectionType;
-import org.innovateuk.threads.resource.PostResource;
-import org.innovateuk.threads.resource.QueryResource;
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;

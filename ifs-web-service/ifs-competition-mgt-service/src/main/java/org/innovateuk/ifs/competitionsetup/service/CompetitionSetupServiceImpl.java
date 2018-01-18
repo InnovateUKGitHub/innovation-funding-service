@@ -90,14 +90,15 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
         subsectionModelPopulators = populators.stream().collect(Collectors.toMap(CompetitionSetupSubsectionModelPopulator::sectionToPopulateModel, Function.identity()));
 	}
 
-	@Override
-    public CompetitionSetupViewModel populateCompetitionSectionModelAttributes(CompetitionResource competitionResource,
-                                                                               CompetitionSetupSection section) {
-
+    @Override
+    public CompetitionSetupViewModel populateCompetitionSectionModelAttributes(
+            CompetitionResource competitionResource,
+            CompetitionSetupSection section
+    ) {
         CompetitionSetupViewModel viewModel = null;
         CompetitionSetupSectionModelPopulator populator = modelPopulators.get(section);
 
-        if(populator != null) {
+        if (populator != null) {
             viewModel = populator.populateModel(competitionSetupPopulator.populateGeneralModelAttributes(competitionResource, section), competitionResource);
         }
 
@@ -105,15 +106,17 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
     }
 
     @Override
-    public CompetitionSetupSubsectionViewModel populateCompetitionSubsectionModelAttributes(CompetitionResource competitionResource,
-                                                                                            CompetitionSetupSection section, CompetitionSetupSubsection subsection,
-                                                                                            Optional<Long> objectId) {
-
+    public CompetitionSetupSubsectionViewModel populateCompetitionSubsectionModelAttributes(
+            CompetitionResource competitionResource,
+            CompetitionSetupSection section,
+            CompetitionSetupSubsection subsection,
+            Optional<Long> objectId
+    ) {
         CompetitionSetupSubsectionViewModel viewModel = null;
 	    checkIfSubsectionIsInSection(section, subsection);
         CompetitionSetupSubsectionModelPopulator populator = subsectionModelPopulators.get(subsection);
 
-        if(populator != null) {
+        if (populator != null) {
             viewModel = populator.populateModel(competitionResource, objectId);
         }
 
@@ -273,7 +276,7 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 		}
 
         Map<CompetitionSetupSection, Optional<Boolean>> statuses = competitionSetupRestService.getSectionStatuses(competitionResource.getId()).getSuccessObjectOrThrowException();
-		
+
 		Optional<CompetitionSetupSection> notDoneSection = getRequiredSectionsForReadyToOpen().stream()
                 .filter(section -> isNotDoneSection(statuses, section))
                 .findFirst();

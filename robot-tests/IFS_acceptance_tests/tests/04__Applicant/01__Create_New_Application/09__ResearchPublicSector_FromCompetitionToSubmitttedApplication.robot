@@ -31,7 +31,7 @@ Comp Admin Creates Competitions where Research or Public sector can lead
 Requesting the id of this Competition
     [Documentation]  IFS-182
     ...   retrieving the id of the competition so that we can use it in urls
-    [Tags]  MySQL
+    [Tags]  HappyPath  MySQL
     ${reseachCompId} =  get comp id from comp title  ${compResearch}
     Set suite variable  ${reseachCompId}
 
@@ -86,7 +86,7 @@ The competition admin creates a competition for
     the user clicks the button/link  jQuery=.button:contains("Create competition")
     the user fills in the CS Initial details  ${competition}  ${month}  ${nextyear}  ${compType_Generic}
     the user fills in the CS Funding Information
-    the user fills in the CS Eligibility  ${orgType}
+    the user fills in the CS Eligibility  ${orgType}  1  # 1 means 30%
     the user fills in the CS Milestones   ${month}  ${nextyear}
     the internal user can see that the Generic competition has only one Application Question
     the user marks the Application as done  yes  Generic

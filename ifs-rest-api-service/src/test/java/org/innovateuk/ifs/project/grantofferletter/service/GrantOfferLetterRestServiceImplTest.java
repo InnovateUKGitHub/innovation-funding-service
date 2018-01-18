@@ -175,6 +175,18 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
+    public void testIsSignedGrantOfferLetterRejected() {
+        long projectId = 123L;
+
+        String expectedUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter/is-rejected";
+        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.TRUE, OK);
+
+        RestResult<Boolean> result = service.isSignedGrantOfferLetterRejected(projectId);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void testGetGrantOfferLetterWorkflowState() {
         long projectId = 123L;
 

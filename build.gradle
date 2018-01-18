@@ -18,6 +18,8 @@ ext.spVersion = project.properties['sp.version'] ?: project.version
 ext.idpVersion = project.properties['idp.version'] ?: project.version
 ext.ldapVersion = project.properties['ldap.version'] ?: project.version
 
+ext.mailSinkVersion = project.properties['mail-sink.version'] ?: project.version
+
 ext.silStubVersion = project.properties['sil-stub.version'] ?: project.version
 
 allprojects {
@@ -270,6 +272,7 @@ dockerCompose {
     removeImages = "Local" // Accepted values are: "All", "Local" and "None"
     removeVolumes = false
 
+    waitForTcpPortsDisconnectionProbeTimeout = java.time.Duration.ofMillis(100)
 }
 
 task dockerTidy(type: Exec) {

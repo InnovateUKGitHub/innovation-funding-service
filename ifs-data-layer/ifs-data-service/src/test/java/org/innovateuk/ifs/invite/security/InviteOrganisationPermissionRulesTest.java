@@ -51,11 +51,10 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         otherApplicant = newUserResource().build();
 
         Role collaboratorRole = getRole(COLLABORATOR);
-
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicant.getId(), applicationResource.getId()))
-                .thenReturn(newProcessRole().withRole(getRole(LEADAPPLICANT)).build());
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaborator.getId(), applicationResource.getId()))
-                .thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(leadApplicant.getId(), applicationResource.getId(), LEADAPPLICANT.getName()))
+                .thenReturn(true);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(collaborator.getId(), applicationResource.getId(), COLLABORATOR.getName()))
+                .thenReturn(true);
         when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaborator.getId(),
                 collaboratorRole.getId(), applicationResource.getId(), organisationResource.getId())).thenReturn(newProcessRole().withRole(getRole(COLLABORATOR)).build());
     }
@@ -147,10 +146,10 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         List<ApplicationInviteResource> inviteResource = ApplicationInviteResourceBuilder.newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicant.getId(), applicationResource.getId()))
-                .thenReturn(null);
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaborator.getId(), applicationResource.getId()))
-                .thenReturn(null);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(leadApplicant.getId(), applicationResource.getId(), LEADAPPLICANT.getName()))
+                .thenReturn(false);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(collaborator.getId(), applicationResource.getId(), COLLABORATOR.getName()))
+                .thenReturn(false);
 
         Application application = ApplicationBuilder.newApplication()
                 .withApplicationState(ApplicationState.CREATED).build();
@@ -167,10 +166,10 @@ public class InviteOrganisationPermissionRulesTest extends BasePermissionRulesTe
         List<ApplicationInviteResource> inviteResource = ApplicationInviteResourceBuilder.newApplicationInviteResource().withApplication(applicationResource.getId()).build(5);
         InviteOrganisationResource inviteOrganisationResource = newInviteOrganisationResource().withInviteResources(inviteResource).build();
 
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(leadApplicant.getId(), applicationResource.getId()))
-                .thenReturn(null);
-        when(processRoleRepositoryMock.findByUserIdAndApplicationId(collaborator.getId(), applicationResource.getId()))
-                .thenReturn(null);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(leadApplicant.getId(), applicationResource.getId(), LEADAPPLICANT.getName()))
+                .thenReturn(false);
+        when(processRoleRepositoryMock.existsByUserIdAndApplicationIdAndRoleName(collaborator.getId(), applicationResource.getId(), COLLABORATOR.getName()))
+                .thenReturn(false);
 
         Application application = ApplicationBuilder.newApplication()
                 .withApplicationState(ApplicationState.OPEN).build();

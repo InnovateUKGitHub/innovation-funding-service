@@ -2,7 +2,7 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 
 subprojects {
   task buildDocker(type: DockerBuildImage) {
-    tag = "innovateuk/${project.name}"
+    tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
     inputDir = project.projectDir
   }
 
