@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.junit.Test;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 
@@ -14,9 +15,11 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -92,6 +95,20 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
         mockMvc.perform(get("/project/{id}/project-manager", project1Id))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void testCreateProjectFromApplication() throws Exception {
+        Long applicationId = 1L;
+        ProjectResource expectedProject = newProjectResource().build();
+
+        when(projectServiceMock.createProjectFromApplication(applicationId)).thenReturn(serviceSuccess(expectedProject));
+
+        mockMvc.perform(post("/project/create-project/application/{applicationId}", applicationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedProject)));
+
+        verify(projectServiceMock).createProjectFromApplication(applicationId);
     }
 }
 

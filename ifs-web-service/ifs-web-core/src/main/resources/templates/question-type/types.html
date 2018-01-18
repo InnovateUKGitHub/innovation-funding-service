@@ -65,7 +65,8 @@
         </label>
 
         <th:block th:unless="${model.closed}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-        <th:block th:insert="question-type/form-elements :: form-textarea-wrapped(${model})" />
+        <th:block th:unless="${hideDetails}" th:insert="question-type/form-elements :: form-textarea-wrapped(${model})" />
+        <th:block th:if="${hideDetails}" th:insert="question-type/form-elements :: form-text-only(${model})" />
     </div>
 
     <!-- ===========================Form: Date input =========================== -->

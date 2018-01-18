@@ -31,6 +31,8 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
     compile 'org.realityforge.gelf4j:gelf4j:1.10'
+    compile "org.springframework.cloud:spring-cloud-starter-sleuth"
+    compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
 
     // Test Libraries
     testCompile group: 'org.hamcrest', name: 'hamcrest-core'
@@ -39,6 +41,12 @@ dependencies {
     testCompile 'org.mockito:mockito-core'
     testCompile group: 'org.hamcrest', name: 'hamcrest-library'
 
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
 }
 
 repositories {

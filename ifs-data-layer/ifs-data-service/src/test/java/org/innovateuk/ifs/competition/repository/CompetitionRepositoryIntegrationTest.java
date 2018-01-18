@@ -8,22 +8,22 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
+import org.innovateuk.ifs.competition.domain.TermsAndConditions;
 import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
-import org.junit.Before;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,7 +41,6 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
-
 import static org.junit.Assert.*;
 
 public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<CompetitionRepository> {
@@ -66,9 +65,6 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
     @Autowired
     private CompetitionParticipantRepository competitionParticipantRepository;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @Autowired
     @Override
@@ -171,7 +167,12 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         User leadTechnologist = getUserByEmail("steve.smith@empire.com");
         User notLeadTechnologist = getUserByEmail("pete.tom@egg.com");
 
-        Competition openComp = new Competition(null, null, null,null,"openComp", null, null, null);
+        TermsAndConditions termsAndConditions = new TermsAndConditions();
+        termsAndConditions.setId(1L);
+
+        Competition openComp = new Competition(null, null, null,null,"openComp", null, null, null, termsAndConditions);
+        openComp.setTermsAndConditions(termsAndConditions);
+
         openComp.setLeadTechnologist(leadTechnologist);
         openComp.setSetupComplete(true);
         openComp = repository.save(openComp);
@@ -180,7 +181,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         CompetitionAssessmentParticipant competitionParticipant = buildCompetitionParticipant(openComp, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
-        Competition earliestOpenComp = new Competition(null, null, null,null,"earliestOpenComp", null, null, null);
+        Competition earliestOpenComp = new Competition(null, null, null,null,"earliestOpenComp", null, null, null, termsAndConditions);
         earliestOpenComp.setLeadTechnologist(leadTechnologist);
         earliestOpenComp.setSetupComplete(true);
         earliestOpenComp = repository.save(earliestOpenComp);
@@ -189,7 +190,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(earliestOpenComp, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
-        Competition compWithNoInnovationLead = new Competition(null, null, null,null,"compWithNoInnovationLead", null, null, null);
+        Competition compWithNoInnovationLead = new Competition(null, null, null,null,"compWithNoInnovationLead", null, null, null, termsAndConditions);
         compWithNoInnovationLead.setLeadTechnologist(notLeadTechnologist);
         compWithNoInnovationLead.setSetupComplete(true);
         compWithNoInnovationLead = repository.save(compWithNoInnovationLead);
@@ -198,7 +199,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compWithNoInnovationLead, notLeadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
-        Competition compInPreparation = new Competition(null, null, null,null,"compInPreparation", null, null, null);
+        Competition compInPreparation = new Competition(null, null, null,null,"compInPreparation", null, null, null, termsAndConditions);
         compInPreparation.setLeadTechnologist(leadTechnologist);
         compInPreparation.setSetupComplete(false);
         compInPreparation = repository.save(compInPreparation);
@@ -207,7 +208,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compInPreparation, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
-        Competition compReadyToOpen = new Competition(null, null, null,null,"compReadyToOpen", null, null, null);
+        Competition compReadyToOpen = new Competition(null, null, null,null,"compReadyToOpen", null, null, null, termsAndConditions);
         compReadyToOpen.setLeadTechnologist(leadTechnologist);
         compReadyToOpen.setSetupComplete(true);
         compReadyToOpen = repository.save(compReadyToOpen);
@@ -216,7 +217,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compReadyToOpen, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
-        Competition compInInform = new Competition(null, null, null,null,"compInInform", null, null, null);
+        Competition compInInform = new Competition(null, null, null,null,"compInInform", null, null, null, termsAndConditions);
         compInInform.setLeadTechnologist(leadTechnologist);
         compInInform.setSetupComplete(true);
         compInInform = repository.save(compInInform);
@@ -225,7 +226,7 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         competitionParticipant = buildCompetitionParticipant(compInInform, leadTechnologist);
         competitionParticipantRepository.save(competitionParticipant);
 
-        Competition compInProjectSetup = new Competition(null, null, null,null,"compInProjectSetup", null, null, null);
+        Competition compInProjectSetup = new Competition(null, null, null,null,"compInProjectSetup", null, null, null, termsAndConditions);
         compInProjectSetup.setLeadTechnologist(leadTechnologist);
         compInProjectSetup.setSetupComplete(true);
         compInProjectSetup = repository.save(compInProjectSetup);
@@ -403,9 +404,12 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         final ZonedDateTime dateTime = ZonedDateTime.parse("2017-12-03T10:18:30.500Z");
         final ZonedDateTime expectedDateTime = ZonedDateTime.parse("2017-12-03T10:18:30.000Z");
 
-        Competition savedCompetition = repository.save(
-                new Competition(null, null, null,null,"comp", dateTime, null, null)
-        );
+        TermsAndConditions termsAndConditions = new TermsAndConditions();
+        termsAndConditions.setId(1L);
+
+        Competition competition = new Competition(null, null, null, null, "comp", dateTime, null, null, termsAndConditions);
+
+        Competition savedCompetition = repository.save(competition);
 
         flushAndClearSession();
 

@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 public class AssessmentReviewController {
 
     @Autowired
-    private AssessmentReviewModelPopulator assessmentAssignmentModelPopulator;
+    private AssessmentReviewModelPopulator assessmentReviewModelPopulator;
 
     @Autowired
     private AssessmentPanelRestService assessmentPanelRestService;
@@ -42,7 +42,7 @@ public class AssessmentReviewController {
     public String viewAssignment(@PathVariable("reviewId") long reviewId,
                                  @ModelAttribute(name = "form", binding = false) AssessmentReviewForm form,
                                  Model model) {
-        model.addAttribute("model", assessmentAssignmentModelPopulator.populateModel(reviewId));
+        model.addAttribute("model", assessmentReviewModelPopulator.populateModel(reviewId));
         return "assessment/review-invitation";
     }
 

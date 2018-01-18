@@ -3,12 +3,14 @@ package org.innovateuk.ifs.management.model;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.management.viewmodel.UnsuccessfulApplicationsViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,6 +21,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -34,6 +38,9 @@ public class UnsuccessfulApplicationsModelPopulatorTest {
     @Mock
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
+    @Mock
+    private UserService userService;
+
     @Test
     public void populateModel() throws Exception {
 
@@ -42,12 +49,17 @@ public class UnsuccessfulApplicationsModelPopulatorTest {
         int pageSize = 20;
         String sortField = "id";
         String existingQueryString = "";
+        boolean isIfsAdmin = true;
 
         String competitionName = "Competition One";
 
-        CompetitionResource competitionResource = CompetitionResourceBuilder.newCompetitionResource()
+        CompetitionResource competitionResource = newCompetitionResource()
                 .withId(competitionId)
                 .withName(competitionName)
+                .build();
+
+        UserResource userResource = newUserResource()
+                .withId(5L)
                 .build();
 
         List<ApplicationResource> unsuccessfulApplications = ApplicationResourceBuilder.newApplicationResource().build(2);
@@ -59,12 +71,14 @@ public class UnsuccessfulApplicationsModelPopulatorTest {
                 .thenReturn(restSuccess(competitionResource));
         when(competitionPostSubmissionRestService.findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField))
                 .thenReturn(restSuccess(unsuccessfulApplicationsPagedResult));
+        when(userService.existsAndHasRole(5L, UserRoleType.IFS_ADMINISTRATOR)).thenReturn(true);
 
         UnsuccessfulApplicationsViewModel viewModel = unsuccessfulApplicationsModelPopulator.populateModel(competitionId,
-                pageNumber, pageSize, sortField, existingQueryString);
+                pageNumber, pageSize, sortField, userResource, existingQueryString);
 
         assertEquals(competitionId, viewModel.getCompetitionId());
         assertEquals(competitionName, viewModel.getCompetitionName());
+        assertEquals(isIfsAdmin, viewModel.isIfsAdmin());
         assertEquals(unsuccessfulApplications, viewModel.getUnsuccessfulApplications());
         assertEquals(unsuccessfulApplications.size(), viewModel.getUnsuccessfulApplicationsSize());
         assertEquals(new PaginationViewModel(unsuccessfulApplicationsPagedResult, existingQueryString), viewModel.getUnsuccessfulApplicationsPagination());
