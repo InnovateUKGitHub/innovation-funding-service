@@ -6,7 +6,7 @@ Documentation     INFUND-736: As an applicant I want to be able to add all the f
 ...               INFUND-45: As an applicant and I am on the application form on an open application, I expect the form to help me fill in financial details, so I can have a clear overview and less chance of making mistakes
 ...
 ...               INFUND-6390 As an Applicant I will be invited to add project costs, organisation and funding details via links within the Finances section of my application
-Suite Setup       log in and create new application if there is not one already with complete application details
+Suite Setup       Custom Suite Setup
 Suite Teardown    the user closes the browser    # this keyword no longer needs to mark the application details as incomplete, due to the recent addition of research category this section is already incomplete
 Force Tags        HappyPath    Applicant
 Resource          ../../../../resources/defaultResources.robot
@@ -108,6 +108,10 @@ Other costs
     [Teardown]    the user clicks the button/link        jQuery=button:contains("Other costs")
 
 *** Keywords ***
+Custom Suite Setup
+    Set predefined date variables
+    log in and create new application if there is not one already with complete application details  Robot test application  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
+
 the Applicant fills in the Labour costs for two rows
     the user clicks the button/link            jQuery=button:contains("Labour")
     the user should see the element            css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input

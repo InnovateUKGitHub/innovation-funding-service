@@ -16,6 +16,7 @@ Documentation     This suite depends on the Previous one!
 ...               INFUND-4806 As an applicant (lead) I want to be able to remove a registered collaborator so that I can manage members no longer required to be part of the consortium
 ...
 ...               INFUND-6823 As an Applicant I want to be invited to select the primary Research area for my project
+Suite Setup       Set predefined date variables
 Suite Teardown    The user closes the browser
 Test Teardown
 Force Tags        Applicant
@@ -184,9 +185,9 @@ Lead marks finances as complete
     ...  This test depends on the previous test suite to run first
     [Tags]
     Given the user navigates to the page                 ${DASHBOARD_URL}
-    And the user clicks the button/link                  link=Assign test
-    And the applicant completes the application details  Application details
-    Given the user navigates to Your-finances page       Assign test
+    And the user clicks the button/link                  jQuery=.progress-list a:contains("Assign test")
+    Then the applicant completes the application details  Assign test  Experimental development  ${tomorrowday}  ${month}  ${nextyear}
+    When the user navigates to Your-finances page         Assign test
     Then the user should see the element                 link=Your project costs
     And the user should see the element                  link=Your organisation
     And the user should see the element                  jQuery=h3:contains("Your funding")
