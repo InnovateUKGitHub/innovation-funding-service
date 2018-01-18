@@ -193,7 +193,7 @@ public class ApplicationModelPopulator {
     public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {
 
         return userApplicationRoles.stream()
-                .filter(uar -> uar.getUser().equals(userId))
+                .filter(uar -> uar.getUser().equals(userId) && uar.getOrganisationId() != null)
                 .map(uar -> organisationService.getOrganisationById(uar.getOrganisationId()))
                 .findFirst();
     }

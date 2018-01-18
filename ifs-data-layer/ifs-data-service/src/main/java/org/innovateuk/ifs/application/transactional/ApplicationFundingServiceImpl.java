@@ -23,8 +23,8 @@ import org.innovateuk.ifs.validator.ApplicationFundingDecisionValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -157,6 +157,9 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
                 FundingDecisionStatus fundingDecision = fundingDecisionMapper.mapToDomain(decisionValue);
                 resetNotificationSentDateIfNecessary(application, fundingDecision);
                 application.setFundingDecision(fundingDecision);
+                if(FundingDecisionStatus.FUNDED.equals(fundingDecision)) {
+                    applicationWorkflowHandler.approve(application);
+                }
             }
         });
 

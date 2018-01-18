@@ -27,6 +27,4 @@ public class IncomingConnectionCountHealthIndicator implements HealthIndicator{
             return Health.down().build();
         }
     }
-
-
 }
