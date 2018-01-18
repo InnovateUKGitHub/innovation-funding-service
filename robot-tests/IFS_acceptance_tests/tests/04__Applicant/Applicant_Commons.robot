@@ -46,7 +46,6 @@ the Application details are completed
 
 the applicant completes the application details
     [Arguments]  ${applicationTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
-#    the user clicks the button/link  link=${applicationTitle}
     the user moves Application details in Edit mode
     the user clicks the button/link            link=Application details
     the user fills in the Application details  ${applicationTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
@@ -54,20 +53,6 @@ the applicant completes the application details
 the user moves Application details in Edit mode
      ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=.buttonlink[name="mark_as_incomplete"]
      Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=.buttonlink[name="mark_as_incomplete"]  # the Edit link
-
-#the user fills in the application details
-#    the user clicks the button/link       jQuery=button:contains("research category")
-#    the user clicks the button twice      jQuery=label[for^="researchCategoryChoice"]:contains("Experimental development")
-#    the user clicks the button/link       jQuery=button:contains("Save")
-#    the user clicks the button twice      css=label[for="application.resubmission-no"]
-#    # those Radio buttons need to be clicked twice.
-#    The user enters text to a text field  id=application_details-startdate_day  18
-#    The user enters text to a text field  id=application_details-startdate_year  2018
-#    The user enters text to a text field  id=application_details-startdate_month  11
-#    The user enters text to a text field  css=[id="application.durationInMonths"]  20
-#    the user clicks the button/link       jQuery=button:contains("Mark as complete")
-#    the user should see the element       jQuery=button:contains("Edit")
-#    the user should not see the element   css=input
 
 the user fills in the Application details
     [Arguments]  ${appTitle}  ${res_category}  ${tomorrowday}  ${month}  ${nextyear}
