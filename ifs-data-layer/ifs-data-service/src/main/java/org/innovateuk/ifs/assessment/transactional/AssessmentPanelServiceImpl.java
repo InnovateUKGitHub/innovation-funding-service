@@ -2,8 +2,13 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewMapper;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
+import org.innovateuk.ifs.assessment.panel.domain.AssessmentReviewRejectOutcome;
+import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewRejectOutcomeMapper;
 import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.panel.workflow.configuration.AssessmentReviewWorkflowHandler;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
@@ -35,8 +40,12 @@ import static java.time.format.DateTimeFormatter.ofPattern;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState.CREATED;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REVIEW_ACCEPT_FAILED;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REVIEW_REJECT_FAILED;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PANEL_ASSESSOR;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
@@ -78,6 +87,12 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private AssessmentReviewMapper assessmentReviewMapper;
+
+    @Autowired
+    private AssessmentReviewRejectOutcomeMapper assessmentReviewRejectOutcomeMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -121,10 +136,52 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
         return notifyAllCreated(competitionId);
     }
 
-
     @Override
     public ServiceResult<Boolean> isPendingReviewNotifications(long competitionId) {
         return serviceSuccess(assessmentReviewRepository.notifiable(competitionId));
+    }
+
+    @Override
+    public ServiceResult<List<AssessmentReviewResource>> getAssessmentReviews(long userId, long competitionId) {
+        List<AssessmentReview> assessmentReviews = assessmentReviewRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
+        return serviceSuccess(simpleMap(assessmentReviews, assessmentReviewMapper::mapToResource));
+    }
+
+    @Override
+    public ServiceResult<Void> acceptAssessmentReview(long assessmentReviewId) {
+        return findAssessmentReview(assessmentReviewId).andOnSuccess(this::acceptAssessmentReview);
+    }
+
+    @Override
+    public ServiceResult<Void> rejectAssessmentReview(long assessmentReviewId,
+                                                      AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcome) {
+        return findAssessmentReview(assessmentReviewId)
+                .andOnSuccess(
+                        r -> rejectAssessmentReview(r, assessmentReviewRejectOutcomeMapper.mapToDomain(assessmentReviewRejectOutcome)));
+    }
+
+    @Override
+    public ServiceResult<AssessmentReviewResource> getAssessmentReview(long assessmentReviewId) {
+        return find(assessmentReviewRepository.findOne(assessmentReviewId), notFoundError(AssessmentReviewResource.class, assessmentReviewId))
+                .andOnSuccessReturn(assessmentReviewMapper::mapToResource);
+    }
+
+    private ServiceResult<AssessmentReview> findAssessmentReview(long assessmentReviewId) {
+        return find(assessmentReviewRepository.findOne(assessmentReviewId), notFoundError(AssessmentReview.class, assessmentReviewId));
+    }
+
+    private ServiceResult<Void> acceptAssessmentReview(AssessmentReview assessmentReview) {
+        if (!workflowHandler.acceptInvitation(assessmentReview)) {
+            return serviceFailure(ASSESSMENT_REVIEW_ACCEPT_FAILED);
+        }
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> rejectAssessmentReview(AssessmentReview assessmentReview, AssessmentReviewRejectOutcome rejectOutcome) {
+        if (!workflowHandler.rejectInvitation(assessmentReview, rejectOutcome)) {
+            return serviceFailure(ASSESSMENT_REVIEW_REJECT_FAILED);
+        }
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> createAssessmentReview(AssessmentPanelParticipant assessor, Application application) {

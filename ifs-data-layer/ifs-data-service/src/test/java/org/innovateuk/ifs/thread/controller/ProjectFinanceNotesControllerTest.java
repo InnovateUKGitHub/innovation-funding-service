@@ -2,8 +2,8 @@ package org.innovateuk.ifs.thread.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.notes.controller.ProjectFinanceNotesController;
-import org.innovateuk.threads.resource.NoteResource;
-import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.PostResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;

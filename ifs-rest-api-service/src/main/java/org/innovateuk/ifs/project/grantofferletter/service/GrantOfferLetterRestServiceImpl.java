@@ -88,6 +88,11 @@ public class GrantOfferLetterRestServiceImpl extends BaseRestService implements 
     }
 
     @Override
+    public RestResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer-letter/is-rejected", Boolean.class);
+    }
+
+    @Override
     public RestResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer-letter/state", GrantOfferLetterState.class);
     }

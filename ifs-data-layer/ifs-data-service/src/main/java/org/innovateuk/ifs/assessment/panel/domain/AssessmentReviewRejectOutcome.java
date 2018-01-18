@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 
 
 /**
- * Process outcome for the {@code }AssessmentReview}s {@code REJECT} event.
+ * Process outcome for the {@code AssessmentReview}s {@code REJECT} event.
  */
 @Entity
 @DiscriminatorValue(value = "assessment-panel-application-invite-reject")
@@ -17,11 +17,11 @@ public class AssessmentReviewRejectOutcome extends ProcessOutcome<AssessmentRevi
         setProcess(assessmentReview);
     }
 
-    public String getRejectionComment() {
+    public String getRejectReason() {
         return comment;
     }
 
-    public void setRejectionComment(String rejectComment) {
+    public void setRejectReason(String rejectComment) {
         this.comment = rejectComment;
     }
 }

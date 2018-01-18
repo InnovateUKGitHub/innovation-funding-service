@@ -6,6 +6,9 @@ import org.innovateuk.ifs.competition.service.CompetitionPostSubmissionRestServi
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.management.viewmodel.UnsuccessfulApplicationsViewModel;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,16 +22,21 @@ public class UnsuccessfulApplicationsModelPopulator {
     private CompetitionRestService competitionRestService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private CompetitionPostSubmissionRestService competitionPostSubmissionRestService;
 
-    public UnsuccessfulApplicationsViewModel populateModel(long competitionId, int pageNumber, int pageSize, String sortField, String existingQueryString) {
+    public UnsuccessfulApplicationsViewModel populateModel(long competitionId, int pageNumber, int pageSize, String sortField, UserResource loggedInUser, String existingQueryString) {
 
         CompetitionResource competition = competitionRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
         ApplicationPageResource unsuccessfulApplicationsPagedResult = competitionPostSubmissionRestService
                 .findUnsuccessfulApplications(competitionId, pageNumber, pageSize, sortField)
                 .getSuccessObjectOrThrowException();
 
-        return new UnsuccessfulApplicationsViewModel(competitionId, competition.getName(),
+        boolean isIfsAdmin = userService.existsAndHasRole(loggedInUser.getId(), UserRoleType.IFS_ADMINISTRATOR);
+
+        return new UnsuccessfulApplicationsViewModel(competitionId, competition.getName(), isIfsAdmin,
                 unsuccessfulApplicationsPagedResult.getContent(),
                 unsuccessfulApplicationsPagedResult.getTotalElements(),
                 new PaginationViewModel(unsuccessfulApplicationsPagedResult, existingQueryString));

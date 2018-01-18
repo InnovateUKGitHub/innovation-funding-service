@@ -90,7 +90,7 @@ Sort ineligible applications by lead
 
 Filter ineligible applications
     [Documentation]    INFUND-8942
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user        &{Comp_admin1_credentials}
     Given the user navigates to the page       ${ineligibleApplications}
     When the user selects the option from the drop-down menu  No  id=filterInform
@@ -100,11 +100,13 @@ Filter ineligible applications
     When the user clicks the button/link       jQuery=a:contains("Clear all filters")
     Then the user should see the element       jQuery=td:contains("Informed ineligible application") ~ td span:contains("Informed")
 
-Internal user can view ineligible applications in unsuccessful list
-    [Documentation]  IFS-1458 IFS-1459
-    [Tags]  HappyPath
+The Administrator should see the ineligible applications in unsuccessful list but he cannot reinstate it
+    [Documentation]  IFS-1458 IFS-1459 IFS-50
+    [Tags]  HappyPath  Administrator
+    [Setup]  log in as a different user   &{ifs_admin_user_credentials}
     Given the user navigates to the page  ${server}/management/competition/${IN_ASSESSMENT_COMPETITION}/applications/unsuccessful
     Then the user should see the element  jQuery=td:contains("${ineligibleApplication}")
+    And the user should not see the element  jQuery=td:contains("${ineligibleApplication}") ~ td a:contains("Mark as successful")
 
 Inform a user their application is ineligible
     [Documentation]  INFUND-7374

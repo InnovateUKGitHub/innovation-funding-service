@@ -10,7 +10,7 @@ import org.innovateuk.ifs.threads.mapper.QueryMapper;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

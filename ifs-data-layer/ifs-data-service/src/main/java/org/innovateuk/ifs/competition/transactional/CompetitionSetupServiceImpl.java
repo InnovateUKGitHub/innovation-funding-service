@@ -4,18 +4,21 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionType;
+import org.innovateuk.ifs.competition.domain.TermsAndConditions;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.mapper.CompetitionTypeMapper;
-import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
+import org.innovateuk.ifs.competition.mapper.TermsAndConditionsMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
+import org.innovateuk.ifs.competition.repository.TermsAndConditionsRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
@@ -27,8 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -58,16 +59,15 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     @Autowired
     private CompetitionFunderService competitionFunderService;
     @Autowired
-    private AssessorCountOptionRepository assessorCountOptionRepository;
-    @Autowired
     private PublicContentService publicContentService;
     @Autowired
     private CompetitionSetupTemplateService competitionSetupTemplateService;
     @Autowired
     private SetupStatusService setupStatusService;
-
-    @PersistenceContext
-    private EntityManager entityManager;
+    @Autowired
+    private TermsAndConditionsRepository termsAndConditionsRepository;
+    @Autowired
+    private TermsAndConditionsMapper termsAndConditionsMapper;
 
     public static final BigDecimal DEFAULT_ASSESSOR_PAY = new BigDecimal(100);
 
@@ -118,8 +118,24 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<Void> updateCompetitionInitialDetails(Long competitionId, CompetitionResource competitionResource, Long existingLeadTechnologistId) {
 
         return deleteExistingLeadTechnologist(competitionId, existingLeadTechnologistId)
+                .andOnSuccess(() -> attachCorrectTermsAndConditions(competitionResource))
                 .andOnSuccess(() -> save(competitionId, competitionResource))
-                .andOnSuccess(updatedCompetitionResource -> saveLeadTechnologist(updatedCompetitionResource));
+                .andOnSuccess(this::saveLeadTechnologist);
+    }
+
+    private ServiceResult<Void> attachCorrectTermsAndConditions(CompetitionResource competitionResource) {
+
+        Long competitionTypeId = competitionResource.getCompetitionType();
+
+        // it is possible during autosave for this competition type to not yet be selected.  Therefore we need a null check
+        // here
+        if (competitionTypeId != null) {
+            CompetitionType competitionTypeSelected = competitionTypeRepository.findOne(competitionTypeId);
+            TermsAndConditions termsAndConditions = competitionTypeSelected.getTemplate().getTermsAndConditions();
+            competitionResource.setTermsAndConditions(termsAndConditionsMapper.mapToResource(termsAndConditions));
+        }
+
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> deleteExistingLeadTechnologist(Long competitionId, Long existingLeadTechnologistId) {
@@ -295,12 +311,18 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     @Override
     @Transactional
-        public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
+    public ServiceResult<Void> copyFromCompetitionTypeTemplate(Long competitionId, Long competitionTypeId) {
         return competitionSetupTemplateService.initializeCompetitionByCompetitionTemplate(competitionId, competitionTypeId)
                 .andOnSuccess(() -> serviceSuccess());
     }
 
     private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {
+
+        TermsAndConditions defaultTermsAndConditions =
+                termsAndConditionsRepository.findOneByTemplate(TermsAndConditionsRepository.DEFAULT_TEMPLATE_NAME);
+
+        competition.setTermsAndConditions(defaultTermsAndConditions);
+
         Competition savedCompetition = competitionRepository.save(competition);
         return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
                 .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
