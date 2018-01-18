@@ -1,0 +1,59 @@
+apply from: rootProject.file("new-relic.gradle")
+
+/**
+ * This task creates a `docker` directory in the $BUILD/docker` directory of the project,
+ * where it will write all the necessary files to build a docker container.
+ * In other words, after this task is executed, one could manually run `docker build .`
+ * in the output directory.
+ */
+
+ext.dockerDir = "docker/"
+
+task prepareDockerBaseInput {
+    dependsOn build
+    def inputDir = project.file("$project.buildDir/docker")
+//    ext.dockerDir = project.file("$project.projectDir")
+    println "****************** DOCKER DIR"
+    println dockerDir
+
+    doFirst {
+        copy {
+            println "DOCKER DIR AT EXECUTION TIME"
+            println dockerDir
+            //TODO get this configured right.
+            from dockerDir
+            into inputDir
+
+            include 'Dockerfile-template'
+            rename 'Dockerfile-template', 'Dockerfile'
+            filter {
+                it.replaceAll('@version@', project.properties['version']).replaceAll('@app_name@', jar.baseName)
+            }
+        }
+        copy {
+            from jar
+            into inputDir
+        }
+    }
+}
+
+
+
+task prepareDockerInput {
+    dependsOn prepareDockerBaseInput
+    dependsOn getNewRelicAgent
+
+    def inputDir = project.file("$project.buildDir/docker")
+
+    doFirst {
+        copy {
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
+            into inputDir
+        }
+        copy {
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
+            from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
+            into inputDir
+        }
+    }
+}

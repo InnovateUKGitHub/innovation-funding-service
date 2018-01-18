@@ -14,47 +14,13 @@ subprojects {
     // data-service-commons is not a docker project.
     if (it.name != 'data-service-commons') {
 
+
+
         apply from: rootProject.file("openshift-build.gradle")
-        apply from: rootProject.file("new-relic.gradle")
+        apply from: rootProject.file("prepare-docker.gradle")
 
-
-        /**
-         * This task creates a `docker` directory in the $BUILD/docker` directory of the project,
-         * where it will write all the necessary files to build a docker container.
-         * In other words, after this task is executed, one could manually run `docker build .`
-         * in the output directory.
-         */
-        task prepareDockerInput {
-            dependsOn getNewRelicAgent
-            dependsOn bootRepackage
-
-            def inputDir = project.file("$project.buildDir/docker")
-
-            doFirst {
-                copy {
-                    from '../docker/'
-                    into inputDir
-                    include 'Dockerfile-template'
-                    rename 'Dockerfile-template', 'Dockerfile'
-                    filter {
-                        it.replaceAll('@version@', project.properties['version']).replaceAll('@app_name@', jar.baseName)
-                    }
-                }
-                copy {
-                    from bootRepackage.outputs
-                    into inputDir
-                }
-                copy {
-                    from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
-                    into inputDir
-                }
-                copy {
-                    from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
-                    from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
-                    into inputDir
-                }
-            }
-        }
+        // convoluted rubbish!!!! improve?
+        ext.dockerDir = "$project.parent.projectDir/docker/"
 
         buildDocker.dependsOn prepareDockerInput
         buildDocker.dependsOn ":docker:app-base-image:buildDocker"
