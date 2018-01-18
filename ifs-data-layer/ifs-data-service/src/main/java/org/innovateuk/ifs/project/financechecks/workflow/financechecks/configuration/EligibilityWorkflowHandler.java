@@ -18,6 +18,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 
@@ -38,7 +39,7 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
 
     @Autowired
     @Qualifier("eligibilityStateMachine")
-    private StateMachine<EligibilityState, EligibilityEvent> stateMachine;
+    private StateMachineFactory<EligibilityState, EligibilityEvent> stateMachine;
 
     @Autowired
     private EligibilityProcessRepository eligibilityProcessRepository;
@@ -97,7 +98,7 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
 
     @Override
     protected StateMachine<EligibilityState, EligibilityEvent> getStateMachine() {
-        return stateMachine;
+        return stateMachine.getStateMachine();
     }
 
     @Override

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.testdata;
 
 
-import org.junit.Ignore;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 
 
@@ -11,7 +10,6 @@ import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 
 
 
-@Ignore
 public class GenerateTestData extends BaseGenerateTestData {
 
     @Override

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.Stream;
@@ -34,7 +35,7 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
 
     @Autowired
     @Qualifier("applicationProcessStateMachine")
-    private StateMachine<ApplicationState, ApplicationEvent> stateMachine;
+    private StateMachineFactory<ApplicationState, ApplicationEvent> stateMachine;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -72,7 +73,7 @@ public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<Applica
 
     @Override
     protected StateMachine<ApplicationState, ApplicationEvent> getStateMachine() {
-        return stateMachine;
+        return stateMachine.getStateMachine();
     }
 
     @Override

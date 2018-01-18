@@ -2,6 +2,7 @@ package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.commons.security.NotSecured;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 /**
@@ -15,6 +16,15 @@ public interface TestService {
 
     @NotSecured(value = "Test service only", mustBeSecuredByOtherServices = false)
     <T> T doWithinTransaction(Supplier<T> supplier);
+
+    @NotSecured(value = "Test service only", mustBeSecuredByOtherServices = false)
+    <T> CompletableFuture<T> async(Supplier<T> supplier);
+
+    @NotSecured(value = "Test service only", mustBeSecuredByOtherServices = false)
+    CompletableFuture<Void> async(Runnable runnable);
+
+    @NotSecured(value = "Test service only", mustBeSecuredByOtherServices = false)
+    CompletableFuture<Void> nonAsync(Runnable runnable);
 
     @NotSecured(value = "Test service only", mustBeSecuredByOtherServices = false)
     void flushAndClearSession();

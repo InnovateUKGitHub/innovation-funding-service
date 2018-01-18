@@ -18,6 +18,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.ORGANISATION_IS_ACADEMIC;
@@ -36,7 +37,7 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
 
     @Autowired
     @Qualifier("viabilityStateMachine")
-    private StateMachine<ViabilityState, ViabilityEvent> stateMachine;
+    private StateMachineFactory<ViabilityState, ViabilityEvent> stateMachine;
 
     @Autowired
     private ViabilityProcessRepository viabilityProcessRepository;
@@ -95,7 +96,7 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
 
     @Override
     protected StateMachine<ViabilityState, ViabilityEvent> getStateMachine() {
-        return stateMachine;
+        return stateMachine.getStateMachine();
     }
 
     @Override

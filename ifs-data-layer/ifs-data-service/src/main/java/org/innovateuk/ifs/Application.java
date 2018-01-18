@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 import org.springframework.format.support.DefaultFormattingConversionService;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.servlet.ServletContext;
@@ -18,6 +19,7 @@ import javax.servlet.ServletException;
 @SpringBootApplication
 @EnableScheduling
 @EnableSpringDataWebSupport
+@EnableAsync
 public class Application extends SpringBootServletInitializer {
     private static final Log LOG = LogFactory.getLog(Application.class);
 

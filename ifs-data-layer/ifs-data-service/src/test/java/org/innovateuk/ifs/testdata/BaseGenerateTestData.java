@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailAddress;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -23,7 +24,9 @@ import org.innovateuk.ifs.sil.experian.resource.ValidationResult;
 import org.innovateuk.ifs.sil.experian.resource.VerificationResult;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.testdata.builders.*;
+import org.innovateuk.ifs.testdata.builders.data.ApplicationData;
 import org.innovateuk.ifs.testdata.builders.data.BaseUserData;
+import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
@@ -41,6 +44,7 @@ import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
@@ -52,6 +56,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
@@ -62,6 +67,7 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.testdata.CsvUtils.*;
+import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.testdata.builders.AssessmentDataBuilder.newAssessmentData;
 import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssessorData;
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
@@ -89,6 +95,7 @@ import static org.mockito.Mockito.when;
  */
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
+@SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(BaseGenerateTestData.class);
@@ -139,8 +146,12 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     protected PublicContentRepository publicContentRepository;
 
     @Autowired
+    protected CompetitionRepository competitionRepository;
+
+    @Autowired
     private TestService testService;
 
+    private ApplicationDataBuilder applicationDataBuilder;
     private CompetitionDataBuilder competitionDataBuilder;
     private QuestionDataBuilder questionDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
@@ -282,6 +293,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext, COMP_ADMIN_EMAIL, PROJECT_FINANCE_EMAIL);
 
+        applicationDataBuilder = newApplicationData(serviceLocator);
         competitionDataBuilder = newCompetitionData(serviceLocator);
         competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
         questionDataBuilder = newQuestionData(serviceLocator);
@@ -302,6 +314,7 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
         long before = System.currentTimeMillis();
         fixUpDatabase();
+        createOrganisations();
         createInternalUsers();
         createExternalUsers();
         createCompetitions();
@@ -386,8 +399,11 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     private void createExternalUsers() {
-        testService.doWithinTransaction(() ->
-            externalUserLines.forEach(line -> createUser(externalUserBuilder, line)));
+        List<CompletableFuture<Void>> futures = simpleMap(externalUserLines, line -> {
+            return testService.nonAsync(() -> createUser(externalUserBuilder, line));
+        });
+
+        waitForFuturesToComplete(futures);
     }
 
     private void createAssessors() {
@@ -471,22 +487,108 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
                 .build();
     }
 
+    private void createOrganisations() {
+
+        List<CompletableFuture<Void>> futures = simpleMap(organisationLines, line -> {
+
+            return testService.async(() -> {
+
+                OrganisationDataBuilder organisation =
+                        organisationBuilder.createOrganisation(line.name, line.companyRegistrationNumber, lookupOrganisationType(line.organisationType));
+
+                for (OrganisationAddressType organisationType : line.addressType) {
+                    organisation = organisation.withAddress(organisationType,
+                            line.addressLine1, line.addressLine2,
+                            line.addressLine3, line.town,
+                            line.postcode, line.county);
+                }
+
+                organisation.build();
+            });
+        });
+
+        waitForFuturesToComplete(futures);
+    }
+
     private void createInternalUsers() {
-        testService.doWithinTransaction(() -> setDefaultSystemRegistrar());
-        testService.doWithinTransaction(() ->
-            internalUserLines.forEach(line -> {
 
-                List<UserRoleType> roles = simpleMap(line.roles, UserRoleType::fromName);
+        List<CompletableFuture<Void>> futures = simpleMap(internalUserLines, line -> {
 
-                InternalUserDataBuilder baseBuilder = internalUserBuilder.withRoles(roles);
+            return testService.nonAsync(() -> {
+                testService.doWithinTransaction(() -> {
 
-                createUser(baseBuilder, line);
-            }));
+                    setDefaultSystemRegistrar();
+
+                    List<UserRoleType> roles = simpleMap(line.roles, UserRoleType::fromName);
+
+                    InternalUserDataBuilder baseBuilder = internalUserBuilder.withRoles(roles);
+
+                    createUser(baseBuilder, line);
+                });
+            });
+        });
+
+        waitForFuturesToComplete(futures);
     }
 
     private void createCompetitions() {
-        testService.doWithinTransaction(() -> setDefaultCompAdmin());
-        competitionLines.forEach(line -> createCompetitionWithApplications(line, line.name != null && line.name.equals("Connected digital additive manufacturing") ? Optional.of(1L) : Optional.empty()));
+
+        List<CompletableFuture<Void>> futures = simpleMap(competitionLines, line -> {
+
+            CompletableFuture<Long> createCompetitionFuture = testService.async(() -> {
+
+                testService.doWithinTransaction(this::setDefaultCompAdmin);
+
+                Optional<Long> existingCompetitionIdWithName =
+                        "Connected digital additive manufacturing".equals(line.name) ? Optional.of(1L) : Optional.empty();
+
+                createCompetition(line, existingCompetitionIdWithName);
+
+                return competitionRepository.findByName(line.name).get(0).getId();
+            });
+
+            CompletableFuture<Void> createApplicationsFuture = createCompetitionFuture.thenAcceptAsync(competitionId -> {
+
+                List<ApplicationLine> competitionApplications =
+                        simpleFilter(applicationLines, app -> app.competitionName.equals(line.name));
+
+                if (competitionApplications.isEmpty()) {
+                    return;
+                }
+
+                CompetitionDataBuilder basicCompetitionInformation = competitionDataBuilder.withExistingCompetition(competitionId);
+
+                CompetitionData competitionData = basicCompetitionInformation.moveCompetitionIntoOpenStatus().build();
+
+                ApplicationDataBuilder baseApplicationBuilder = applicationDataBuilder.withCompetition(competitionData.getCompetition());
+
+                List<ApplicationDataBuilder> applicationBuilders = simpleMap(competitionApplications, applicationLine -> {
+                    return createApplicationFromCsv(baseApplicationBuilder, applicationLine, line);
+                });
+
+                List<CompletableFuture<ApplicationData>> applicationFutures = simpleMap(applicationBuilders, builder -> {
+                    return testService.async(() -> {
+                        return testService.doWithinTransaction(() -> builder.build());
+                    });
+                });
+
+                waitForFuturesToComplete(applicationFutures);
+
+                basicCompetitionInformation.restoreOriginalMilestones().build();
+
+                if (line.fundersPanelEndDate != null && line.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
+
+                    basicCompetitionInformation.
+                            moveCompetitionIntoFundersPanelStatus().
+                            sendFundingDecisions(createFundingDecisionsFromCsv(line.name)).
+                            restoreOriginalMilestones().build();
+                }
+            });
+
+            return createApplicationsFuture;
+        });
+
+        waitForFuturesToComplete(futures);
     }
 
     private List<Pair<String, FundingDecision>> createFundingDecisionsFromCsv(String competitionName) {
@@ -495,34 +597,8 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         return simpleMap(applicationsWithDecisions, ma -> Pair.of(ma.title, ma.status == ApplicationState.APPROVED ? FundingDecision.FUNDED : FundingDecision.UNFUNDED));
     }
 
-    private void createCompetitionWithApplications(CompetitionLine competitionLine, Optional<Long> competitionId) {
-
-        CompetitionDataBuilder basicCompetitionInformation = competitionBuilderWithBasicInformation(competitionLine, competitionId);
-
-        List<ApplicationLine> competitionApplications = simpleFilter(applicationLines, app -> app.competitionName.equals(competitionLine.name));
-
-        List<UnaryOperator<ApplicationDataBuilder>> applicationBuilders = simpleMap(competitionApplications,
-                applicationLine -> builder -> createApplicationFromCsv(builder, applicationLine, competitionLine));
-
-        if (applicationBuilders.isEmpty()) {
-            basicCompetitionInformation.build();
-        } else {
-
-            CompetitionDataBuilder withApplications = basicCompetitionInformation.
-                    moveCompetitionIntoOpenStatus().
-                    withApplications(applicationBuilders).
-                    restoreOriginalMilestones();
-
-            if (competitionLine.fundersPanelEndDate != null && competitionLine.fundersPanelEndDate.isBefore(ZonedDateTime.now())) {
-
-                withApplications = withApplications.
-                        moveCompetitionIntoFundersPanelStatus().
-                        sendFundingDecisions(createFundingDecisionsFromCsv(competitionLine.name)).
-                        restoreOriginalMilestones();
-            }
-
-            withApplications.build();
-        }
+    private void createCompetition(CompetitionLine competitionLine, Optional<Long> competitionId) {
+        competitionBuilderWithBasicInformation(competitionLine, competitionId).build();
     }
 
     private List<UnaryOperator<QuestionResponseDataBuilder>> questionResponsesFromCsv(String leadApplicant, List<ApplicationQuestionResponseLine> responsesForApplication) {
@@ -1020,36 +1096,13 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
 
     private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, UserLine line) {
 
-        Function<S, S> createOrgIfNecessary = builder -> {
-
-            boolean newOrganisation = organisationRepository.findOneByName(line.organisationName) == null;
-
-            if (!newOrganisation) {
-                return builder;
-            }
-
-            OrganisationLine matchingOrganisationDetails = simpleFindFirst(organisationLines, orgLine -> orgLine.name.equals(line.organisationName)).get();
-
-            OrganisationDataBuilder organisation = organisationBuilder.
-                    createOrganisation(line.organisationName, matchingOrganisationDetails.companyRegistrationNumber, lookupOrganisationType(matchingOrganisationDetails.organisationType));
-
-            for (OrganisationAddressType organisationType : matchingOrganisationDetails.addressType) {
-                organisation = organisation.withAddress(organisationType,
-                        matchingOrganisationDetails.addressLine1, matchingOrganisationDetails.addressLine2,
-                        matchingOrganisationDetails.addressLine3, matchingOrganisationDetails.town,
-                        matchingOrganisationDetails.postcode, matchingOrganisationDetails.county);
-            }
-
-            return builder.withNewOrganisation(organisation);
-        };
-
         Function<S, S> registerUserIfNecessary = builder -> builder.registerUser(line.firstName, line.lastName, line.emailAddress, line.organisationName, line.phoneNumber);
 
         Function<S, S> verifyEmail = builder -> builder.verifyEmail();
 
         Function<S, S> inactivateUserIfNecessary = builder -> !(line.emailVerified) ? builder.deactivateUser() : builder;
 
-        createOrgIfNecessary.andThen(registerUserIfNecessary).andThen(verifyEmail).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
+        registerUserIfNecessary.andThen(verifyEmail).andThen(inactivateUserIfNecessary).apply(baseBuilder).build();
     }
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
@@ -1076,5 +1129,9 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
         testService.doWithinTransaction(() ->
                 setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccessObjectOrThrowException())
         );
+    }
+
+    private void waitForFuturesToComplete(List<? extends CompletableFuture<?>> futures) {
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[] {})).join();
     }
 }

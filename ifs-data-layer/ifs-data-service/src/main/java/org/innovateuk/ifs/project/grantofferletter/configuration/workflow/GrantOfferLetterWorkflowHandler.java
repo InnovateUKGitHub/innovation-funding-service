@@ -18,6 +18,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.function.BiFunction;
@@ -35,7 +36,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
 
     @Autowired
     @Qualifier("golStateMachine")
-    private StateMachine<GrantOfferLetterState, GrantOfferLetterEvent> stateMachine;
+    private StateMachineFactory<GrantOfferLetterState, GrantOfferLetterEvent> stateMachine;
 
     @Autowired
     private GrantOfferLetterProcessRepository grantOfferLetterProcessRepository;
@@ -146,7 +147,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
 
     @Override
     protected StateMachine<GrantOfferLetterState, GrantOfferLetterEvent> getStateMachine() {
-        return stateMachine;
+        return stateMachine.getStateMachine();
     }
 
     @Override
