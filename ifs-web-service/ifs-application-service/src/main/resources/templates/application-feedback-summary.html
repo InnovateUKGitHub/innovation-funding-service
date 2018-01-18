@@ -57,7 +57,10 @@
                             <li class="section-status">
                                 <div class="grid-row">
                                     <div class="column-two-thirds">
-                                        <h3 th:text="${question.shortName}" class="heading-small">Project summary</h3>
+                                        <h3 class="heading-small">
+                                            <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${currentApplication.id},qId=${question.id})}"
+                                            th:text="${question.shortName}" >Project summary</a>
+                                        </h3>
                                     </div>
                                     <div class="column-third">
                                         <th:block th:if="${question.shortName.equals('Scope')}">
