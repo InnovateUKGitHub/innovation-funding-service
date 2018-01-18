@@ -8,7 +8,7 @@ import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentsServiceImpl;
-import org.innovateuk.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 

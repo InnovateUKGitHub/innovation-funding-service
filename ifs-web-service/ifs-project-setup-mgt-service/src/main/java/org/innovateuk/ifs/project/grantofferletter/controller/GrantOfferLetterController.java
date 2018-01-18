@@ -122,10 +122,10 @@ public class GrantOfferLetterController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
-    @PostMapping("/signed/{approvalType}")
+    @PostMapping("/signed")
     public String signedGrantOfferLetterApproval(
             @P("projectId")@PathVariable("projectId") final Long projectId,
-            @PathVariable("approvalType") final ApprovalType approvalType,
+            @RequestParam(value = "approvalType") ApprovalType approvalType,
             @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
@@ -215,6 +215,8 @@ public class GrantOfferLetterController {
 
         Optional<FileEntryResource> signedGrantOfferLetterFile = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
 
+        Boolean grantOfferLetterRejected = grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).getSuccessObject();
+
         GrantOfferLetterState golState = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).getSuccessObject();
 
         return new GrantOfferLetterModel(competitionSummary,
@@ -227,6 +229,7 @@ public class GrantOfferLetterController {
                 grantOfferFileDetails.isPresent() ? grantOfferFileDetails.isPresent() : Boolean.FALSE,
                 additionalContractFile.isPresent() ? additionalContractFile.isPresent() : Boolean.FALSE,
                 GrantOfferLetterState.APPROVED.equals(golState),
+                grantOfferLetterRejected,
                 GrantOfferLetterState.READY_TO_APPROVE.equals(golState) || GrantOfferLetterState.APPROVED.equals(golState),
                 signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null
         );

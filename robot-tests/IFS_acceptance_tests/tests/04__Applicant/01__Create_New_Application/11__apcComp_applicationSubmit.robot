@@ -21,7 +21,7 @@ Comp Admin creates an APC competition
     When the user clicks the button/link           link=Create competition
     Then the user fills in the CS Initial details  ${apcCompetitionTitle}  ${month}  ${nextyear}  Advanced Propulsion Centre
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility      ${business_type_id}
+    And the user fills in the CS Eligibility      ${business_type_id}  1  # 1 means 30%
     And the user fills in the CS Milestones       ${month}  ${nextyear}
     And the user fills in the CS Application section with custom questions  yes  ${compType_APC}
     And the user fills in the CS Assessors
@@ -36,12 +36,11 @@ Applicant applies to newly created APC competition
     [Documentation]  IFS-2286
     [Tags]  HappyPath  MySQL
     When the competition is open                                 ${apcCompetitionTitle}
-    Then Lead Applicant applies to the new created competition   ${apcCompetitionTitle}
+    Then Lead Applicant applies to the new created competition   ${apcCompetitionTitle}  &{lead_applicant_credentials}
 
 Applicant submits his application
     [Documentation]  IFS-2286
-    [Tags]  HappyPath  Pending
-#    TODO  Pending due to IFS-2439
+    [Tags]  HappyPath
     Given the user clicks the button/link               link=Application details
     When the user fills in the Application details      ${apcApplicationTitle}  Feasibility studies  ${tomorrowday}  ${month}  ${nextyear}
     Then the lead applicant fills all the questions and marks as complete(APC)

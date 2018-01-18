@@ -3,7 +3,6 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
 
-apply from: "script-support.gradle"
 apply plugin: 'base'
 
 apply plugin: 'org.flywaydb.flyway'
@@ -32,7 +31,6 @@ osStageLocal.tag = dataServiceVersion
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 ext.companyHouseKey = ext.get('ifs.company-house.key')
-
 
 sourceSets {
     client {
@@ -228,27 +226,19 @@ task generateMainMapperClasses(type: JavaCompile) {
     }
 }
 
+task syncShib(type:Exec) {
+    workingDir '../'
+    commandLine 'docker-compose', 'exec', '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh', 'mysql'
+}
+
+task initDB() {
+    flywayMigrate.mustRunAfter flywayClean
+
+    dependsOn flywayClean
+    dependsOn flywayMigrate
+}
 
 compileJava.dependsOn generateMainMapperClasses
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
 
-
-task initDB() {
-
-    flywayClean.mustRunAfter startMySql
-    createTestSchema.mustRunAfter startMySql
-    createSchema.mustRunAfter startMySql
-    flywayMigrate.mustRunAfter flywayClean
-
-    dependsOn startMySql
-    dependsOn createTestSchema
-    dependsOn createSchema
-    dependsOn flywayClean
-    dependsOn flywayMigrate
-
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
-}

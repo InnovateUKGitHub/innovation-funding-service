@@ -27,7 +27,7 @@ public class AssessmentPanelInviteResourceBuilderTest {
                 .withCompetitionName(expectedCompetitionName)
                 .withCompetitionId(expectedCompId)
                 .withEmail(expectedEmail)
-                .withHash(expectedHash)
+                .withInviteHash(expectedHash)
                 .withPanelDate(expectedPanelDate)
                 .withUserId(expectedUserId)
                 .build();
@@ -53,7 +53,7 @@ public class AssessmentPanelInviteResourceBuilderTest {
                 .withCompetitionName(expectedCompetitionNames)
                 .withCompetitionId(1L, 2L)
                 .withEmail(expectedEmails)
-                .withHash(expectedHashes)
+                .withInviteHash(expectedHashes)
                 .withPanelDate(expectedPanelDates)
                 .withUserId(3L, 4L)
                 .build(2);

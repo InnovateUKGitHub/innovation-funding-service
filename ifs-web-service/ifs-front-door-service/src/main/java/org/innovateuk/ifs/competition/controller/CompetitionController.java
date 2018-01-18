@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,8 +54,16 @@ public class CompetitionController {
 
     @GetMapping("info/terms-and-conditions")
     public String termsAndConditions(@PathVariable("competitionId") final long competitionId) {
-        CompetitionResource compResource = competitionService.getById(competitionId);
-        return "Advanced Propulsion Centre".equals(compResource.getCompetitionTypeName()) ?
-                "competition/info/apc-terms-and-conditions" : "competition/info/default-terms-and-conditions";
+
+        CompetitionResource competition = competitionService.getById(competitionId);
+        TermsAndConditionsResource termsAndConditions = competition.getTermsAndConditions();
+
+        // if-else block here for ZDD support - to be removed next Sprint
+        if (termsAndConditions != null) {
+            return "competition/info/" + termsAndConditions.getTemplate();
+        } else {
+            return "Advanced Propulsion Centre".equals(competition.getCompetitionTypeName()) ?
+                    "competition/info/apc-terms-and-conditions" : "competition/info/default-terms-and-conditions";
+        }
     }
 }

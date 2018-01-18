@@ -2,7 +2,7 @@ package org.innovateuk.ifs.thread.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceNotesRestService;
-import org.innovateuk.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.junit.Test;
 
 import java.util.List;

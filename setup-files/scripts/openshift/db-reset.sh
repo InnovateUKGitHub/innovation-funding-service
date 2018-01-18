@@ -32,8 +32,7 @@ function dbReset() {
       sleep 10
     done
 
-    
-    oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 data-service | awk '{ print $1 }') /bin/bash -c 'cd /mnt/ifs_storage && ls | grep -v .trashcan | xargs rm -rf'
+    oc rsh ${SVC_ACCOUNT_CLAUSE} $(oc get pods ${SVC_ACCOUNT_CLAUSE} | grep -m 1 data-service | awk '{ print $1 }') /bin/bash -c 'cd /mnt/ifs_storage && ls | grep -v .trashcan | grep -v virus-scan-holding | xargs rm -rf'
 }
 
 # Entry point
@@ -53,6 +52,7 @@ if [[ "$TARGET" == "local" || "$TARGET" == "remote" ]]; then
     export LDAP_SCHEME="ldaps"
 
     export FLYWAY_LOCATIONS="filesystem:/flyway/sql/db/migration,filesystem:/flyway/sql/db/setup,filesystem:/flyway/sql/db/webtest"
+    export SYSTEM_USER_UUID="c0d02979-e66e-11e7-ac43-0242ac120002"
 fi
 
 injectDBVariables

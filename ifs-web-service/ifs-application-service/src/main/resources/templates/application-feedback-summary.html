@@ -45,7 +45,7 @@
                         <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
 
                         <h3 class="heading-small extra-margin">Total project cost</h3>
-                        <p>&pound;<th:block th:text="${#numbers.formatInteger(totalFundingSought, 0, 'DEFAULT')}">203,567</th:block></p>
+                        <p>&pound;<th:block th:text="${totalFundingSought} ? ${#numbers.formatInteger(totalFundingSought, 0, 'DEFAULT')} : '0'">203,567</th:block></p>
                     </div>
                 </div>
             </div>

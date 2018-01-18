@@ -13,6 +13,11 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null" />
 
+    <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+        <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We are unable to post a query.</h2>
+        <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+    </div>
+
     <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle=${model.organisationName},subTitle=${model.projectName},size='heading-xlarge',smallText=${model.leadPartnerOrganisation} ? '(Lead Partner)'" />
     <h2 class="heading-medium">Finance Contact</h2>
     <p>
@@ -56,7 +61,7 @@
                     </th:block>
                 </label>
                 <select name="section" id="section" class="form-control">
-                    <th:block th:each="section_type : ${T(org.innovateuk.threads.resource.FinanceChecksSectionType).values()}">
+                    <th:block th:each="section_type : ${T(org.innovateuk.ifs.threads.resource.FinanceChecksSectionType).values()}">
                         <th:block th:if="*{section}">
                             <option th:value="${section_type.name()}"
                                     th:selected="${#strings.toUpperCase(section_type.name())} == ${#strings.toUpperCase(form.section)}"
@@ -112,7 +117,7 @@
                         </li>
                     </ul>
                 </th:block>
-                <h3 class="heading-small no-margin-bottom">Upload supporting documentation in pdf format</h3>
+                <h3 class="heading-small no-margin-bottom">Upload supporting documentation in PDF format.</h3>
                 <div th:class="${#fields.hasErrors('attachment')} ? 'form-group-error': ''">
                     <th:block th:if="${#fields.hasErrors('attachment')}">
                         <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}"></span>
@@ -126,7 +131,7 @@
             <input type="hidden" id="action" value="postQuery">
             <div class="grid-row">
                 <div class="column-half">
-                    <button type="submit" data-content-on-submit="Please wait..." class="button button-large no-margin">Post Query</button>
+                    <button type="submit" data-content-on-submit="Please wait..." class="button button-large no-margin">Post query</button>
                 </div>
                 <div class="column-half alignright">
                     <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}">Cancel</a>

@@ -39,7 +39,7 @@ Comp Admin starts a new Competition
     When the user clicks the button/link           jQuery=.button:contains("Create competition")
     Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${month}  ${nextyear}  ${compType_Programme}
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}
+    And the user fills in the CS Eligibility       ${BUSINESS_TYPE_ID}  1  # 1 means 30%
     And the user fills in the CS Milestones        ${month}  ${nextyear}
 
 Comp Admin fills in the Milestone Dates and can see them formatted afterwards
@@ -73,7 +73,7 @@ Competition is Open to Applications
 
 Create new Application for this Competition
     [Tags]  MySQL
-    Lead Applicant applies to the new created competition  ${compWithoutGrowth}
+    Lead Applicant applies to the new created competition    ${compWithoutGrowth}  &{lead_applicant_credentials}
 
 Applicant visits his Finances
     [Documentation]    INFUND-6393
@@ -110,7 +110,7 @@ Once the project growth table is selected
     # For the testing of story IFS-40, turning this competition into Sector with All innovation areas
     Then the user fills in the Open-All Initial details  ${compWithGrowth}  ${month}  ${nextyear}
     And the user fills in the CS Funding Information
-    And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}
+    And the user fills in the CS Eligibility             ${BUSINESS_TYPE_ID}  1  # 1 means 30%
     And the user fills in the CS Milestones              ${month}  ${nextyear}
     Then the user marks the Application as done          yes  Sector
     And the user fills in the CS Assessors
@@ -127,7 +127,7 @@ Once the project growth table is selected
 As next step the Applicant cannot see the turnover field
     [Documentation]    INFUND-6393, INFUND-6395
     [Tags]    MySQL
-    Given Lead Applicant applies to the new created competition  ${compWithGrowth}
+    Given Lead Applicant applies to the new created competition  ${compWithGrowth}  &{lead_applicant_credentials}
     When the user clicks the button/link                         link=Your finances
     And the user clicks the button/link                          link=Your organisation
     Then the user should not see the text in the page            Turnover (£)

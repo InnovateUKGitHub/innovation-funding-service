@@ -2,6 +2,8 @@ import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
 import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
 import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
+apply from: "script-support.gradle"
+
 // This is necessary because the java plugin is also applied to
 // the ifs-data-layer project, which does _not_ build a jar.
 bootRepackage.enabled = false
@@ -97,6 +99,7 @@ subprojects {
         task tagDockerLocal(type: DockerTagImage) {
             dependsOn buildDocker
             imageId = buildDocker.getTag()
+            repository = "dummy"
             doFirst {
                 repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
                 tag = project.version
@@ -105,6 +108,7 @@ subprojects {
 
         task osStageLocal(type: DockerPushImage) {
             dependsOn tagDockerLocal
+            imageName = "dummy"
             doFirst {
                 registryCredentials = getLocalOCCredentials()
                 imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
@@ -142,6 +146,13 @@ subprojects {
         }
     }
 
+}
+
+task initDB {
+    createTestSchema.mustRunAfter startMySql
+
+    dependsOn startMySql
+    dependsOn createTestSchema
 }
 
 ext {
