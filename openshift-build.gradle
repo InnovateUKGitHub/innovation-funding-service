@@ -13,7 +13,6 @@ buildscript {
     }
 }
 
-
 task buildDocker(type: DockerBuildImage) {
     tag = "innovateuk/${project.name.replaceAll(/ifs-/, "")}"
     inputDir = project.projectDir
