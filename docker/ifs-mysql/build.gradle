@@ -23,8 +23,8 @@ osStageRemote.tag = sqlVersion
 osStageLocal.tag = sqlVersion
 osStageLocal {
     doFirst {
-        imageName = getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
-        tag = sqlVersion
+        registryCredentials = getLocalOCCredentials()
+        imageName = registryCredentials.url + "/" + openshiftEnv + "/ifs-mysql"
     }
 }
 
