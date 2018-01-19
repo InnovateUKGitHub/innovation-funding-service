@@ -49,9 +49,6 @@
                         </ul>
                     </div>
 
-                    <!--<p th:text="${feedbackSummary.feedback}">Feedback text</p>-->
-                    <!--add feedback summary underneath finance-->
-
                 </th:block>
             </div>
         </div>
@@ -96,4 +93,18 @@
           </div>
       </div>
   </section>
+
+    <section>
+        <h2 class="heading-medium">Feedback summary</h2>
+        <!--replace with actual questions from database-->
+        <h2 class="heading-small">Do you believe that this application is suitable for funding?</h2>
+        <p th:text="${feedbackSummary}">Feedback text</p>
+        <h2 class="heading-small">Your feedback</h2>
+        <p th:text="${comment}">Feedback text</p>
+        <h2 class="heading-small">Other comments</h2>
+        <p th:text="${outcome}">Feedback text</p>
+    </section>
+
+
+
 </th:block>

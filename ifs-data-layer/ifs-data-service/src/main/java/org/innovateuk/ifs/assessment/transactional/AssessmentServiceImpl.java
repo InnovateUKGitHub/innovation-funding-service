@@ -76,9 +76,6 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
 
     @Autowired
-    private ApplicationAssessmentFeedbackResource applicationAssessmentFeedbackResource;
-
-    @Autowired
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
 
     @Autowired

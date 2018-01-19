@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.assessment.review.controller;
 
 import org.innovateuk.ifs.application.form.ApplicationForm;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewApplicationSummaryModelPopulator;
@@ -25,7 +22,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.print.DocFlavor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,27 +88,22 @@ public class AssessmentReviewApplicationSummaryController {
             }
 
 //            retrieve feedback summary
-            List<String> feedback = new ArrayList<>();
-            List<String> comment = new ArrayList<>();
-            List<Boolean> outcome = new ArrayList<>();
+            String feedback = "";
+            String comment = "";
+            Boolean outcome = false;
 
             List<AssessmentResource> assessmentResource = assessmentRestService.getByUserAndApplication(user.getId(),applicationId).getSuccessObjectOrThrowException();
             for(AssessmentResource assessment : assessmentResource){
-                feedback.add(assessment.getFundingDecision().getFeedback());
-                comment.add(assessment.getFundingDecision().getComment());
-                outcome.add(assessment.getFundingDecision().getFundingConfirmation());
+                feedback = assessment.getFundingDecision().getFeedback();
+                comment = assessment.getFundingDecision().getComment();
+                outcome = assessment.getFundingDecision().getFundingConfirmation();
             }
 
-
-//            ApplicationAssessmentFeedbackResource applicationAssessmentFeedbackResourceFeedback = assessmentRestService.getApplicationFeedback(applicationId).getSuccessObjectOrThrowException();
-//            ApplicationAssessmentFeedbackResource applicationAssessmentFeedbackResourceComment = assessmentRestService.getApplicationComment(applicationId).getSuccessObjectOrThrowException();
-//            ApplicationAssessmentFeedbackResource applicationAssessmentFeedbackResourceOutcome = assessmentRestService.getApplicationOutcome(applicationId).getSuccessObjectOrThrowException();
-//
-//            model.addAttribute("feedbackSummary", applicationAssessmentFeedbackResourceFeedback);
-//            model.addAttribute("feedbackComment", applicationAssessmentFeedbackResourceComment);
-//            model.addAttribute("feedbackOutcome", applicationAssessmentFeedbackResourceOutcome);
             model.addAttribute("feedback", questionFeedback);
             model.addAttribute("score", questionScore);
+            model.addAttribute("feedbackSummary",feedback);
+            model.addAttribute("comment",comment);
+            model.addAttribute("outcome",outcome);
         }
         
         return "assessor-panel-application-overview";
