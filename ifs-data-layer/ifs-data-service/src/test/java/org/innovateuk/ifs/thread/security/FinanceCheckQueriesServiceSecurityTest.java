@@ -37,7 +37,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
 
     @Test
     public void test_create() throws Exception {
-        final QueryResource queryResource = new QueryResource(null, null, null, null, null, false, null);
+        final QueryResource queryResource = new QueryResource(null, null, null, null, null, false, null, null, null);
         assertAccessDenied(
                 () -> classUnderTest.create(queryResource),
                 () -> {
@@ -75,7 +75,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
     public void test_addPost() throws Exception {
         setLoggedInUser(null);
         when(queryLookupStrategy.findById(3L)).thenReturn(new QueryResource(3L, null, new ArrayList<PostResource>(),
-                null, null, false, null));
+                null, null, false, null, null, null));
 
 
         assertAccessDenied(() -> classUnderTest.addPost(isA(PostResource.class), 3L), () -> {
@@ -99,7 +99,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
         @Override
         public ServiceResult<QueryResource> findOne(Long id) {
             return ServiceResult.serviceSuccess(new QueryResource(id,
-                    null, null, null, null, false, null));
+                    null, null, null, null, false, null, null, null));
         }
 
         @Override
