@@ -32,7 +32,6 @@ task prepareDockerBaseInput {
 }
 
 
-
 task prepareDockerInput {
     dependsOn prepareDockerBaseInput
     dependsOn getNewRelicAgent

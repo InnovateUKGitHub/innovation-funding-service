@@ -1,7 +1,4 @@
-
-apply from: "script-support.gradle"
-
-
+apply from: "database-support.gradle"
 
 subprojects {
 
@@ -12,12 +9,9 @@ subprojects {
     // data-service-commons is not a docker project.
     if (it.name != 'data-service-commons') {
 
-
-
         apply from: rootProject.file("openshift-build.gradle")
         apply from: rootProject.file("prepare-docker.gradle")
 
-        // convoluted rubbish!!!! improve?
         ext.dockerDir = "$project.parent.projectDir/docker/"
 
         buildDocker.dependsOn prepareDockerInput

@@ -1,5 +1,3 @@
-
-
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
 apply from: "fractal.gradle";
@@ -14,9 +12,7 @@ subprojects {
         apply from: rootProject.file("openshift-build.gradle")
         apply from: rootProject.file("prepare-docker.gradle")
 
-        // convoluted rubbish!!!! improve?
         ext.dockerDir = "$project.parent.projectDir/docker/"
-
 
         buildDocker.dependsOn ":docker:app-base-image:buildDocker"
         buildDocker.dependsOn prepareDockerInput
@@ -27,11 +23,9 @@ subprojects {
 }
 apply from: "documentation.gradle"
 
-
 endpointDocumentation.dependsOn "ifs-application-service:test"
 endpointDocumentation.dependsOn "ifs-assessment-service:test"
 endpointDocumentation.dependsOn "ifs-competition-mgt-service:test"
 endpointDocumentation.dependsOn "ifs-project-setup-mgt-service:test"
 endpointDocumentation.dependsOn "ifs-project-setup-service:test"
 endpointDocumentation.dependsOn "ifs-front-door-service:test"
-
