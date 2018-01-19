@@ -14,6 +14,9 @@ subprojects {
         apply from: rootProject.file("openshift-build.gradle")
         apply from: rootProject.file("prepare-docker.gradle")
 
+        // convoluted rubbish!!!! improve?
+        ext.dockerDir = "$project.parent.projectDir/docker/"
+
 
         buildDocker.dependsOn ":docker:app-base-image:buildDocker"
         buildDocker.dependsOn prepareDockerInput
@@ -29,12 +32,8 @@ subprojects {
 
         bootRepackage {
             mainClass = 'org.innovateuk.ifs.Application'
-            classifier = "autostart"
         //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
 
-            // By explicitly adding the inputs and outputs to this task, we can utilize the `incremental build' feature.
-            inputs.files(jar.outputs)
-            outputs.file file(jar.archiveName.toString().replace(".jar", "-autostart.jar"))
         }
     }
 }

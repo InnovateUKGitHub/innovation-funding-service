@@ -12,15 +12,9 @@ ext.dockerDir = "docker/"
 task prepareDockerBaseInput {
     dependsOn build
     def inputDir = project.file("$project.buildDir/docker")
-//    ext.dockerDir = project.file("$project.projectDir")
-    println "****************** DOCKER DIR"
-    println dockerDir
 
     doFirst {
         copy {
-            println "DOCKER DIR AT EXECUTION TIME"
-            println dockerDir
-            //TODO get this configured right.
             from dockerDir
             into inputDir
 
