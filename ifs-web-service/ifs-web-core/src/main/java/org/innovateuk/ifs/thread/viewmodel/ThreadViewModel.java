@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.thread.viewmodel;
 
 import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -15,11 +16,13 @@ public class ThreadViewModel {
     private Long id;
     private Long organisationId;
     private Long projectId;
-    private boolean resolved;
+    private UserResource closedBy;
+    private ZonedDateTime closedDate;
 
     public ThreadViewModel(List<ThreadPostViewModel> viewModelPosts, FinanceChecksSectionType sectionType,
                            String title, boolean awaitingResponse, ZonedDateTime createdOn,
-                           Long id, Long organisationId, Long projectId, boolean resolved) {
+                           Long id, Long organisationId, Long projectId,
+                           UserResource closedBy, ZonedDateTime closedDate) {
         this.viewModelPosts = viewModelPosts;
         this.sectionType = sectionType;
         this.title = title;
@@ -28,7 +31,8 @@ public class ThreadViewModel {
         this.id = id;
         this.organisationId = organisationId;
         this.projectId = projectId;
-        this.resolved = resolved;
+        this.closedBy = closedBy;
+        this.closedDate = closedDate;
     }
 
     public List<ThreadPostViewModel> getViewModelPosts() {
@@ -61,5 +65,17 @@ public class ThreadViewModel {
 
     public Long getProjectId() {
         return projectId;
+    }
+
+    public UserResource getClosedBy() {
+        return closedBy;
+    }
+
+    public ZonedDateTime getClosedDate() {
+        return closedDate;
+    }
+
+    public boolean isClosed() {
+        return closedDate != null;
     }
 }

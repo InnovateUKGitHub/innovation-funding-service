@@ -48,7 +48,7 @@ public class ThreadViewModelPopulator {
 
         return new ThreadViewModel(posts, query.section,
                 query.title, query.awaitingResponse, query.createdOn, query.id,
-                organisationId, projectId, false);
+                organisationId, projectId, query.closedBy, query.closedDate);
     }
 
     public List<ThreadViewModel> threadViewModelListFromNotes(long projectId, long organisationId, List<NoteResource> notes) {
@@ -73,7 +73,7 @@ public class ThreadViewModelPopulator {
 
         return new ThreadViewModel(posts, null,
                 note.title, false, note.createdOn, note.id,
-                organisationId, projectId,false);
+                organisationId, projectId, null, null);
     }
 
     private List<ThreadPostViewModel> addPosts(List<PostResource> posts, Function<UserResource, String> userToUsernameFn) {
