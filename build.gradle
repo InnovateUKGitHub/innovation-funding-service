@@ -1,4 +1,3 @@
-import com.bmuschko.gradle.docker.DockerRegistryCredentials
 
 // Deployment behaviour for differing versions has not been tested yet
 // and so version numbers should always equal project.version
@@ -27,59 +26,10 @@ allprojects {
     version project.version
 
     apply plugin: 'idea'
-    apply plugin: 'java'
-    apply plugin: 'com.bmuschko.docker-remote-api'
+//    apply plugin: 'com.bmuschko.docker-remote-api'
     apply plugin: 'com.github.ben-manes.versions'
-
-
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
-
 }
 
-def getRemoteOCCredentials() {
-    def dockerRegistryCredentials = new DockerRegistryCredentials()
-    try {
-        // Get the docker repository for the remote OS cluster
-        dockerRegistryCredentials.url = project.dockerRegistry
-        dockerRegistryCredentials.username = "unused"
-        dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
-        dockerRegistryCredentials.email = "unused"
-
-    }
-    catch (ignored) {
-        println("Exception thrown creating the OpenShift docker registry credentials. " +
-                "This is most likely because the OpenShift commandline client is not installed. " +
-                "This is only an issue if wanting to deploy to an OpenShift cluster, " +
-                "in which case it will need to be installed")
-        println(ignored)
-    }
-    return dockerRegistryCredentials
-}
-
-def getLocalOCCredentials() {
-    def dockerRegistryCredentials = new DockerRegistryCredentials()
-    try {
-        // Get the docker repository for the local OS cluster
-        def localIpCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.clusterIP}'"
-        def localPortCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.ports..port}'"
-        project.ext.localIp = localIpCommand.execute().text.replace("'", "").trim()
-        project.ext.localPort = localPortCommand.execute().text.replace("'", "").trim()
-        dockerRegistryCredentials.url = project.ext.localIp + ":" + project.ext.localPort
-        dockerRegistryCredentials.username = "unused"
-        dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
-        dockerRegistryCredentials.email = "unused"
-
-    }
-    catch (ignored) {
-        println("Exception thrown creating the OpenShift docker registry credentials. " +
-                "This is most likely because the OpenShift commandline client is not installed. " +
-                "This is only an issue if wanting to deploy to an OpenShift cluster, " +
-                "in which case it will need to be installed")
-        println(ignored)
-    }
-    return dockerRegistryCredentials
-}
 
 apply from: "openshift-support.gradle"
 apply from: "zipkin-support.gradle"
@@ -87,9 +37,6 @@ apply from: "zipkin-support.gradle"
 if (!project.hasProperty('osTestArgs')) {
     ext.osTestArgs = ""
 }
-
-build.enabled = false
-jar.enabled = false
 
 def isNamedEnv() {
     return ["sysint", "uat", "demo", "perf", "production"].contains(openshiftEnv)
@@ -100,69 +47,10 @@ def isNotProductionEnv() {
 }
 
 configure(subprojects - project(":ifs-auth-service")) {
-    apply plugin: 'org.springframework.boot'
+
     apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'jacoco'
     apply plugin: 'org.owasp.dependencycheck'
 
-    findMainClass.enabled = false
-
-    jacocoTestReport {
-        afterEvaluate {
-            classDirectories = files(classDirectories.files.collect {
-                fileTree(dir: it,
-                        exclude: ['**/*Mapper**'])
-            })
-        }
-
-    }
-
-    task codeCoverage {
-        dependsOn cleanTest
-        dependsOn test
-        dependsOn jacocoTestReport
-    }
-
-
-    dependencies {
-        if (project.hasProperty("cloud") && project.cloud == "development") {
-            compile 'de.codecentric:spring-boot-admin-starter-client:1.3.5'
-            compile "org.springframework.boot:spring-boot-actuator-docs"
-            compile "org.springframework.boot:spring-boot-devtools"
-        }
-
-        compile "org.springframework.boot:spring-boot-starter-actuator"
-        compile "org.springframework.boot:spring-boot-starter-web"
-        compile "com.fasterxml.jackson.core:jackson-databind"
-        compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
-        compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
-        compile 'org.realityforge.gelf4j:gelf4j:1.10'
-        compile "org.springframework.cloud:spring-cloud-starter-sleuth"
-        compile "org.springframework.cloud:spring-cloud-sleuth-zipkin"
-
-        // Test Libraries
-        testCompile group: 'org.hamcrest', name: 'hamcrest-core'
-        testCompile group: 'junit', name: 'junit', version: '4.12'
-        testCompile 'org.springframework.boot:spring-boot-starter-test'
-        testCompile 'org.mockito:mockito-core'
-        testCompile group: 'org.hamcrest', name: 'hamcrest-library'
-
-    }
-
-    dependencyManagement {
-        imports {
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-        }
-    }
-
-    repositories {
-        maven { url "https://repo.spring.io/milestone" }
-        mavenCentral()
-    }
-
-    jar {
-        manifest.attributes provider: 'gradle'
-    }
 
     test {
         beforeTest { desc ->
@@ -176,7 +64,7 @@ buildscript {
     ext['thymeleaf.version'] = '3.0.3.RELEASE'
 
     ext {
-        springBootVersion = '1.5.6.RELEASE'
+        springBootVersion = '1.5.9.RELEASE'
         thymeleafVersion = ext['thymeleaf.version']
         springCloudVersion = 'Dalston.RELEASE'
     }
@@ -201,15 +89,11 @@ buildscript {
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath 'org.owasp:dependency-check-gradle:1.4.5'
         classpath "com.avast.gradle:docker-compose-gradle-plugin:0.4.5"
-        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
         classpath 'net.researchgate:gradle-release:2.6.0'
         classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.13.1"
     }
 
 }
-
-// use fully qualified class name
-apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
 
 
 dependencyUpdates.resolutionStrategy = {
