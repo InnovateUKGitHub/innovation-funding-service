@@ -1,46 +1,27 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
-import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
 def sqlVersion="5.6.29"
 
-task buildDocker(overwrite: true, type: DockerBuildImage) {
-    tag = "innovateuk/ifs-mysql:"+sqlVersion
-    inputDir = project.projectDir
-}
+buildDocker.tag = "innovateuk/ifs-mysql:"+sqlVersion
 
-task tagDocker(type: DockerTagImage) {
-    onlyIf { !isNamedEnv() }
+tagDocker.onlyIf{ !isNamedEnv() }
+tagDocker.repository= project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
+tagDocker.imageId = "innovateuk/ifs-mysql:"+sqlVersion
+tagDocker.tag = sqlVersion
 
-    dependsOn buildDocker
-    imageId = buildDocker.getTag()
-    repository = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
-    tag = sqlVersion
-}
+osStageRemote.onlyIf { !isNamedEnv() }
+osStageRemote.imageName = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
+osStageRemote.tag = sqlVersion
 
-task osStageRemote(type: DockerPushImage) {
-    onlyIf { !isNamedEnv() }
-
-    dependsOn tagDocker
-    registryCredentials=getRemoteOCCredentials()
-    imageName = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
-    tag = sqlVersion
-}
-
-task tagDockerLocal(type: DockerTagImage) {
-    dependsOn buildDocker
-    imageId = buildDocker.getTag()
+tagDockerLocal {
     doFirst {
         repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
         tag = sqlVersion
     }
 }
 
-task osStageLocal(type: DockerPushImage) {
-    dependsOn tagDockerLocal
+osStageLocal {
     doFirst {
-        registryCredentials = getLocalOCCredentials()
-        imageName = registryCredentials.url + "/" + openshiftEnv + "/ifs-mysql"
+        imageName = getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
         tag = sqlVersion
     }
 }

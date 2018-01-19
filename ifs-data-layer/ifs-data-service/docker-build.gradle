@@ -12,7 +12,10 @@ project.ext['flyway.schemas']='ifs,ifs_test'
 project.ext['flyway.user']='root'
 project.ext['flyway.password']="password"
 
-project.ext['flyway.locations']="db/migration,db/setup,db/webtest"
+def flywayPatchesPath = "filesystem:" + project.buildDir.path + "/resources/main/db"
+project.ext['flyway.locations']=flywayPatchesPath + "/migration," +
+                                flywayPatchesPath + "/setup," +
+                                flywayPatchesPath + "/webtest"
 
 project.ext['flyway.placeholders.ifs.system.user.uuid']='c0d02979-e66e-11e7-ac43-0242ac120002'
 

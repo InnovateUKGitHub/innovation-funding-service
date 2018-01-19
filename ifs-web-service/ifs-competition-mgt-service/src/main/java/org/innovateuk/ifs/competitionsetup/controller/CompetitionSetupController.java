@@ -279,7 +279,7 @@ public class CompetitionSetupController {
         CompetitionResource competition = competitionService.getById(competitionId);
 
         if ("yes".equals(competitionSetupForm.getMultipleStream()) && StringUtils.isEmpty(competitionSetupForm.getStreamName())) {
-            bindingResult.addError(new FieldError("competitionSetupForm", "streamName", "A stream name is required"));
+            bindingResult.addError(new FieldError(COMPETITION_SETUP_FORM_KEY, "streamName", "A stream name is required"));
         }
 
         return genericCompetitionSetupSection(competitionSetupForm, validationHandler, competition, CompetitionSetupSection.ELIGIBILITY, model);

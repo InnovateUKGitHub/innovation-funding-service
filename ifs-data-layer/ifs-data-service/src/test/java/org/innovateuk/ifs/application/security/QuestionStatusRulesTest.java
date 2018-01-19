@@ -18,6 +18,8 @@ import org.mockito.Mock;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -45,14 +47,13 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
     @Test
     public void testUserCanReadQuestionStatus() {
         QuestionStatusResource questionStatusResource = QuestionStatusResourceBuilder.newQuestionStatusResource().build();
-        ProcessRole processRole = ProcessRoleBuilder.newProcessRole().build();
         UserResource connectedUser = newUserResource().build();
         UserResource notConnectedUser = newUserResource().build();
 
-        when(processRoleRepository.findByUserIdAndApplicationId(connectedUser.getId(), questionStatusResource.getApplication()))
-                .thenReturn(processRole);
-        when(processRoleRepository.findByUserIdAndApplicationId(notConnectedUser.getId(), questionStatusResource.getApplication()))
-                .thenReturn(null);
+        when(processRoleRepository.existsByUserIdAndApplicationId(connectedUser.getId(), questionStatusResource.getApplication()))
+                .thenReturn(true);
+        when(processRoleRepository.existsByUserIdAndApplicationId(notConnectedUser.getId(), questionStatusResource.getApplication()))
+                .thenReturn(false);
 
         assertTrue(rules.userCanReadQuestionStatus(questionStatusResource, connectedUser));
         assertFalse(rules.userCanReadQuestionStatus(questionStatusResource, notConnectedUser));
@@ -66,13 +67,17 @@ public class QuestionStatusRulesTest extends BasePermissionRulesTest<QuestionSta
         UserResource allowedAndConnectedUser = newUserResource().build();
         UserResource connectedUserAndNotAllowedUser = newUserResource().build();
 
-        ProcessRole leadApplicantProcessRole = ProcessRoleBuilder.newProcessRole().withRole(UserRoleType.LEADAPPLICANT).build();
-        when(processRoleRepository.findByUserIdAndApplicationId(leadApplicant.getId(), questionStatusResource.getApplication()))
-                .thenReturn(leadApplicantProcessRole);
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRoleName(leadApplicant.getId(), questionStatusResource.getApplication(), LEADAPPLICANT.getName()))
+                .thenReturn(true);
 
         ProcessRole allowedProccesRole = ProcessRoleBuilder.newProcessRole().withRole(UserRoleType.APPLICANT).build();
         when(processRoleRepository.findByUserIdAndApplicationId(allowedAndConnectedUser.getId(), questionStatusResource.getApplication()))
                 .thenReturn(allowedProccesRole);
+        when(processRoleRepository.existsByUserIdAndApplicationIdAndRoleName(allowedAndConnectedUser.getId(), questionStatusResource.getApplication(), APPLICANT.getName()))
+                .thenReturn(true);
+        when(processRoleRepository.existsByUserIdAndApplicationId(allowedAndConnectedUser.getId(), questionStatusResource.getApplication()))
+                .thenReturn(true);
+
         when(questionStatusRepository.findByQuestionIdAndApplicationIdAndAssigneeId(questionStatusResource.getQuestion(), questionStatusResource.getApplication(), allowedProccesRole.getId()))
                 .thenReturn(mock(QuestionStatus.class));
         when(questionRepository.findOne(questionStatusResource.getQuestion()))

@@ -504,20 +504,24 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             if (golWorkflowHandler.isReadyToApprove(project)) {
                 if (ApprovalType.APPROVED == approvalType) {
                     return approveGOL(project)
-                            .andOnSuccess(() -> {
-
-                                        if (!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
-                                            LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
-                                            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-                                        }
-                                        notifyProjectIsLive(projectId);
-                                        return serviceSuccess();
-                                    }
-                            );
+                            .andOnSuccess(() -> moveProjectToLiveState(project));
+                } else if (ApprovalType.REJECTED == approvalType) {
+                    return rejectGOL(project);
                 }
             }
             return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
         });
+    }
+
+    private ServiceResult<Void> moveProjectToLiveState(Project project) {
+
+        if (!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
+            LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
+            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+        }
+
+        notifyProjectIsLive(project.getId());
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> approveGOL(Project project) {
@@ -533,9 +537,28 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
         });
     }
 
+    private ServiceResult<Void> rejectGOL(Project project) {
+
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+
+            if (golWorkflowHandler.grantOfferLetterRejected(project, user)) {
+                project.setOfferSubmittedDate(null);
+                return serviceSuccess();
+            } else {
+                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+            }
+        });
+    }
+
     @Override
     public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(golWorkflowHandler::isApproved);
+    }
+
+    @Override
+    public ServiceResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId) {
+        return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.isRejected(project));
     }
 
     @Override

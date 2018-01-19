@@ -1,28 +1,19 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
-import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
+
 
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
-
-
-project(':ifs-web-service').bootRepackage {
-    onlyIf { Task task -> false }
-}
-
-jar.enabled = false
-
-// This is necessary because the java plugin is also applied to
-// the ifs-web-service project, which does _not_ build a jar.
-bootRepackage.enabled = false
-
-// Necessary to not build a jar for the ifs-web-core project.
-jar.enabled = false
+apply from: "fractal.gradle";
 
 subprojects {
 
+
+    apply from: rootProject.file("java-spring-boot.gradle")
     // ifs-web-core is not a docker project.
     if (it.name != 'ifs-web-core') {
+
+        apply from: rootProject.file("openshift-build.gradle")
+
+
 
         task getNewRelicAgent {
             if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
@@ -81,45 +72,11 @@ subprojects {
             }
         }
 
-        task buildDocker(type: DockerBuildImage) {
-            dependsOn ":docker:app-base-image:buildDocker"
-            dependsOn prepareDockerInput
-            tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
-            inputDir = project.file("$project.buildDir/docker")
-        }
-
-        task tagDocker(type: DockerTagImage) {
-            dependsOn buildDocker
-            imageId = buildDocker.getTag()
-            repository = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
-            tag = project.version
-        }
-
-
-        task osStageRemote(type: DockerPushImage) {
-            dependsOn tagDocker
-            registryCredentials=getRemoteOCCredentials()
-            imageName=project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
-            tag=project.version
-        }
-
-        task tagDockerLocal(type: DockerTagImage) {
-            dependsOn buildDocker
-            imageId = buildDocker.getTag()
-            doFirst {
-                repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
-                tag = project.version
-            }
-        }
-
-        task osStageLocal(type: DockerPushImage) {
-            dependsOn tagDockerLocal
-            doFirst {
-                registryCredentials = getLocalOCCredentials()
-                imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
-                tag = project.version
-            }
-        }
+        buildDocker.dependsOn ":docker:app-base-image:buildDocker"
+        buildDocker.dependsOn prepareDockerInput
+        buildDocker.tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
+        buildDocker.inputDir = project.file("$project.buildDir/docker")
+        tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
 
         // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
         // Can reinstate excludeDevtools in the bootRepackage task in next release
@@ -138,76 +95,13 @@ subprojects {
         }
     }
 }
+apply from: "documentation.gradle"
 
 
-task endpointDocumentation(type: Task) {
-    dependsOn "ifs-application-service:test"
-    dependsOn "ifs-assessment-service:test"
-    dependsOn "ifs-competition-mgt-service:test"
-    dependsOn "ifs-project-setup-mgt-service:test"
-    dependsOn "ifs-project-setup-service:test"
-    dependsOn "ifs-front-door-service:test"
+endpointDocumentation.dependsOn "ifs-application-service:test"
+endpointDocumentation.dependsOn "ifs-assessment-service:test"
+endpointDocumentation.dependsOn "ifs-competition-mgt-service:test"
+endpointDocumentation.dependsOn "ifs-project-setup-mgt-service:test"
+endpointDocumentation.dependsOn "ifs-project-setup-service:test"
+endpointDocumentation.dependsOn "ifs-front-door-service:test"
 
-    def combinedFilename = 'build/web-endpoints.csv'
-
-    doLast {
-        def files = fileTree(dir: '.', include: '**/*-endpoints.csv', exclude: combinedFilename)
-        def lines = []
-        files.each {
-            it.eachLine { line ->
-                lines << line
-            }
-        }
-
-        File buildFolder = file("build")
-        buildFolder.mkdirs()
-        File combinedFile = file(combinedFilename)
-        if (combinedFile.exists()) {
-            combinedFile.delete()
-        }
-        combinedFile.append('"path", "method", "constraint", "rule", "description"\n')
-        combinedFile.append(
-                lines
-                        .findAll {
-                    it.startsWith('"/')
-                }
-                .sort()
-                        .join("\n")
-        )
-        println("Wrote web endpoint documentation to " + combinedFile)
-    }
-}
-
-build.finalizedBy endpointDocumentation
-
-
-    task prepareFractalDockerInput {
-
-        def inputDir = project.file("$project.buildDir/fractal")
-        inputDir.delete();
-
-        doFirst {
-            copy {
-                from file("ifs-web-core/src/main/resources/templates/fractal-components")
-                into file("${inputDir}/fractal-components")
-            }
-            copy {
-                from file("ifs-web-core/src/main/resources/static")
-                into file("${inputDir}/static")
-            }
-            copy {
-                from file("fractal.js")
-                into inputDir
-            }
-            copy {
-                from file("fractal")
-                into inputDir
-            }
-        }
-    }
-
-    task buildFractal(type: DockerBuildImage) {
-        dependsOn prepareFractalDockerInput
-        tag = "innovateuk/fractal:latest"
-        inputDir = project.file("$project.buildDir/fractal")
-    }

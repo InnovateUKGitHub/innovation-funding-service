@@ -216,7 +216,8 @@ Lead partner can change the Start Date
     Given the user clicks the button/link    link=Target start date
     And the duration should be visible
     When the user enters text to a text field    id=projectStartDate_year    2013
-    Then the user should see a validation error    Please enter a future date.
+    And the user clicks the button/link                 jQuery=.button:contains("Save")
+    Then the user should see a field and summary error  Please enter a future date.
     And the user shouldn't be able to edit the day field as all projects start on the first of the month
     When the user enters text to a text field    id=projectStartDate_month    1
     And the user enters text to a text field     id=projectStartDate_year    ${nextyear}

@@ -1,18 +1,20 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
-import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
 
-// This is necessary because the java plugin is also applied to
-// the ifs-data-layer project, which does _not_ build a jar.
-bootRepackage.enabled = false
+apply from: "script-support.gradle"
+
 
 
 subprojects {
+
+
+    apply from: rootProject.file("java-spring-boot.gradle")
+
 
     ext.ifsWebSystemUserId="8394d970-b250-4b15-9621-3534325691b4"
 
     // data-service-commons is not a docker project.
     if (it.name != 'data-service-commons') {
+
+        apply from: rootProject.file("openshift-build.gradle")
 
         task getNewRelicAgent {
             if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() || 
@@ -72,45 +74,12 @@ subprojects {
             }
         }
 
-        task buildDocker(type: DockerBuildImage, dependsOn: prepareDockerInput) {
-            dependsOn ":docker:app-base-image:buildDocker"
+        buildDocker.dependsOn prepareDockerInput
+        buildDocker.dependsOn ":docker:app-base-image:buildDocker"
+        buildDocker.tag="innovateuk/" + project.name.replaceAll(/ifs-/,"")+":latest"
+        buildDocker.inputDir = project.file("$project.buildDir/docker")
+        tagDocker.imageId="innovateuk/" + project.name.replaceAll(/ifs-/,"")+":latest"
 
-            tag = "innovateuk/" + project.name.replaceAll(/ifs-/,"")+":latest"
-            inputDir = project.file("$project.buildDir/docker")
-        }
-
-        task tagDocker(type: DockerTagImage) {
-            dependsOn buildDocker
-            imageId = buildDocker.getTag()
-            repository = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
-            tag = project.version
-        }
-
-
-        task osStageRemote(type: DockerPushImage) {
-            dependsOn tagDocker
-            registryCredentials=getRemoteOCCredentials()
-            imageName=project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
-            tag=project.version
-        }
-
-        task tagDockerLocal(type: DockerTagImage) {
-            dependsOn buildDocker
-            imageId = buildDocker.getTag()
-            doFirst {
-                repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
-                tag = project.version
-            }
-        }
-
-        task osStageLocal(type: DockerPushImage) {
-            dependsOn tagDockerLocal
-            doFirst {
-                registryCredentials = getLocalOCCredentials()
-                imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
-                tag = project.version
-            }
-        }
 
         // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
         // Can reinstate excludeDevtools in the bootRepackage task in next release
@@ -142,6 +111,13 @@ subprojects {
         }
     }
 
+}
+
+task initDB {
+    createTestSchema.mustRunAfter startMySql
+
+    dependsOn startMySql
+    dependsOn createTestSchema
 }
 
 ext {

@@ -28,15 +28,18 @@ public abstract class RootPermissionRules {
     }
 
     protected boolean isCollaborator(long applicationId, UserResource user) {
-        return checkProcessRole(user, applicationId, COLLABORATOR, processRoleRepository);
+        return checkProcessRole(user, applicationId, COLLABORATOR, processRoleRepository, roleRepository);
     }
 
     protected boolean isLeadApplicant(long applicationId, UserResource user) {
-        return checkProcessRole(user, applicationId, LEADAPPLICANT, processRoleRepository);
+        return checkProcessRole(user, applicationId, LEADAPPLICANT, processRoleRepository, roleRepository);
     }
 
     protected boolean isAssessor(long applicationId, UserResource user) {
-        return checkProcessRole(user, applicationId, ASSESSOR, processRoleRepository);
+        return checkProcessRole(user, applicationId, ASSESSOR, processRoleRepository, roleRepository);
     }
 
+    protected boolean isPanelAssessor(long applicationId, UserResource user) {
+        return checkProcessRole(user, applicationId, PANEL_ASSESSOR, processRoleRepository, roleRepository);
+    }
 }
