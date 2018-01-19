@@ -241,9 +241,9 @@ Mark Organisation as complete when yes
     And the user enters text to a text field     css=input[name$="year"]    2016
     And the user populates the project growth table
     When the user enters text to a text field    jQuery=label:contains("employees") + input    4
-    And the user clicks the button/link     jQuery=a:contains("Save and return to finances")
-    And the user clicks the button/link     link=Your organisation
-    Then the user should see the element    jQuery=td:contains("Research and development spend") + td input[value="15000"]
+    And the user clicks the button/link          jQuery=button:contains("Save and return to finances")
+    And the user clicks the button/link          link=Your organisation
+    Then the user should see the element         jQuery=td:contains("Research and development spend") + td input[value="15000"]
     When the user clicks the button/link         jQuery=button:contains("Mark as complete")
     Then the user should see the element         jQuery=li:contains("Your organisation") > .task-status-complete
 
