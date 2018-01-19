@@ -71,6 +71,8 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     List<Assessment> findByParticipantUserIdAndActivityStateStateNotIn(long userId, Collection<State> states);
 
+    List<Assessment> findByParticipantUserIdAndTargetId(long userId,long applicationId);
+
     Optional<Assessment> findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(Long userId, Long applicationId);
 
     long countByParticipantUserIdAndActivityStateStateIn(Long userId, Set<State> states);

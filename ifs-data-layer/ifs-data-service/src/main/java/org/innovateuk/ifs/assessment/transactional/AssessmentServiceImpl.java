@@ -76,6 +76,9 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
 
     @Autowired
+    private ApplicationAssessmentFeedbackResource applicationAssessmentFeedbackResource;
+
+    @Autowired
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
 
     @Autowired
@@ -115,6 +118,11 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     @Override
     public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId) {
         return serviceSuccess(simpleMap(assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId), assessmentMapper::mapToResource));
+    }
+
+    @Override
+    public ServiceResult<List<AssessmentResource>> findByUserAndApplication(long userId, long applicationId) {
+        return serviceSuccess(simpleMap(assessmentRepository.findByParticipantUserIdAndTargetId(userId, applicationId), assessmentMapper::mapToResource));
     }
 
     @Override

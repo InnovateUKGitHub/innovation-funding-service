@@ -39,6 +39,11 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    public List<AssessmentResource> getByUserAndApplication(Long userId, Long applicationId) {
+        return assessmentRestService.getByUserAndApplication(userId, applicationId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public AssessmentTotalScoreResource getTotalScore(Long assessmentId) {
         return assessmentRestService.getTotalScore(assessmentId).getSuccessObjectOrThrowException();
     }

@@ -26,23 +26,31 @@
 
                 <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
                     <div th:replace="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
-
-                    <!--need to seperate out the score and text from the value-->
+<!--exclude from being in scope-->
                     <div th:if="!${#lists.isEmpty(feedback)}">
                         <ul>
                             <li th:each="item : ${feedback}">
                                 <div th:if="${formInput.getQuestion()} == ${item.question}">
                                     <div class="column-half">
-                                        <h3 class="heading-small">Feedback</h3>
+                                        <h3 class="heading-small alignleft">Feedback</h3>
                                     </div>
                                     <div class="column-half alignright heading-small ">
-                                        Score /10
+                                        <ul>
+                                            <li th:each="score : ${score}">
+                                                <div th:if="${formInput.getQuestion()} == ${score.question}">
+                                                    Score <span th:text="${score.value}">Feedback score</span>/10
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </div>
                                         <p th:text="${item.value}">Feedback text</p>
                                 </div>
                             </li>
                         </ul>
                     </div>
+
+                    <!--<p th:text="${feedbackSummary.feedback}">Feedback text</p>-->
+                    <!--add feedback summary underneath finance-->
 
                 </th:block>
             </div>
