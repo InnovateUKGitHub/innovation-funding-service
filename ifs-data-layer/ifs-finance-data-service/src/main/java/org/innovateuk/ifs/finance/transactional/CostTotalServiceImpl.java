@@ -9,7 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Transactional(readOnly = true)
 @Service
@@ -28,5 +31,11 @@ public class CostTotalServiceImpl implements CostTotalService {
         costTotalRepository.save(costTotal);
 
         return serviceSuccess();
+    }
+
+    @Transactional
+    @Override
+    public ServiceResult<Void> saveCostTotals(Collection<FinanceCostTotalResource> costTotalResources) {
+        return ServiceResult.processAnyFailuresOrSucceed(simpleMap(costTotalResources, this::saveCostTotal));
     }
 }
