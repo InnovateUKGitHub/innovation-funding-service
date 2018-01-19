@@ -1,17 +1,14 @@
-
 def sqlVersion="5.6.29"
-
-buildDocker.tag = "innovateuk/ifs-mysql:"+sqlVersion
+apply from: rootProject.file("openshift-methods.gradle")
+buildDocker.tag = "innovateuk/ifs-mysql:" + sqlVersion
 
 tagDocker.onlyIf{ !isNamedEnv() }
-tagDocker.repository= project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
-tagDocker.imageId = "innovateuk/ifs-mysql:"+sqlVersion
+tagDocker.repository = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
+tagDocker.imageId = "innovateuk/ifs-mysql:" + sqlVersion
 tagDocker.tag = sqlVersion
 
-osStageRemote.onlyIf { !isNamedEnv() }
-osStageRemote.imageName = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
-osStageRemote.tag = sqlVersion
-
+tagDockerLocal.imageId = "innovateuk/ifs-mysql:" + sqlVersion
+tagDockerLocal.tag = sqlVersion
 tagDockerLocal {
     doFirst {
         repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
@@ -19,12 +16,18 @@ tagDockerLocal {
     }
 }
 
+osStageRemote.onlyIf { !isNamedEnv() }
+osStageRemote.tag = sqlVersion
+
+osStageLocal.tag = sqlVersion
 osStageLocal {
     doFirst {
         imageName = getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
         tag = sqlVersion
     }
 }
+
+
 
 
 

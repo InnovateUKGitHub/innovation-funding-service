@@ -87,10 +87,8 @@ task prepareDockerInput {
 
 buildDocker.dependsOn ":docker:app-base-image:buildDocker"
 buildDocker.dependsOn prepareDockerInput
-buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+
 buildDocker.inputDir = project.file("$project.buildDir/docker")
-tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-tagDockerLocal.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 osStageRemote.onlyIf { isNotProductionEnv() }
 
