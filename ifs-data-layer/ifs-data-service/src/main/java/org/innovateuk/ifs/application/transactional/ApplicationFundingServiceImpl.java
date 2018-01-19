@@ -41,7 +41,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.pairsToMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Service
-class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
+public class ApplicationFundingServiceImpl extends BaseTransactionalService implements ApplicationFundingService {
 
     @Autowired
     private NotificationService notificationService;
@@ -70,7 +70,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    enum Notifications {
+    public enum Notifications {
         APPLICATION_FUNDING,
     }
 
@@ -183,20 +183,26 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         applicationService.setApplicationFundingEmailDateTime(application.getId(), null);
     }
 
-    private Notification createFundingDecisionNotification(List<Application> applications, FundingNotificationResource fundingNotificationResource, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
-
+    private Notification createFundingDecisionNotification(
+            List<Application> applications,
+            FundingNotificationResource fundingNotificationResource,
+            List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId,
+            Notifications notificationType
+    ) {
         Map<String, Object> globalArguments = new HashMap<>();
 
-        List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(notificationTargetsByApplicationId, pair -> {
+        List<Pair<NotificationTarget, Map<String, Object>>> notificationTargetSpecificArgumentList = simpleMap(
+                notificationTargetsByApplicationId,
+                pair -> {
+                    Long applicationId = pair.getKey();
+                    Application application = applications.stream().filter(x -> x.getId().equals(applicationId)).findFirst().get();
 
-            Long applicationId = pair.getKey();
-            Application application = applications.stream().filter(x -> x.getId().equals(applicationId)).findFirst().get();
+                    Map<String, Object> perNotificationTargetArguments = new HashMap<>();
+                    perNotificationTargetArguments.put("applicationName", application.getName());
+                    perNotificationTargetArguments.put("applicationNumber", applicationId);
+                    return Pair.of(pair.getValue(), perNotificationTargetArguments);
+                });
 
-            Map<String, Object> perNotificationTargetArguments = new HashMap<>();
-            perNotificationTargetArguments.put("applicationName", application.getName());
-            perNotificationTargetArguments.put("applicationNumber", applicationId);
-            return Pair.of(pair.getValue(), perNotificationTargetArguments);
-        });
         globalArguments.put("message", fundingNotificationResource.getMessageBody());
 
         List<NotificationTarget> notificationTargets = simpleMap(notificationTargetsByApplicationId, Pair::getValue);
