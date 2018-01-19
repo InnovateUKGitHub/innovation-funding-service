@@ -1,17 +1,17 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-
 subprojects {
-  task buildDocker(type: DockerBuildImage) {
-    tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
-    inputDir = project.projectDir
-  }
-
-  // Required, because of how the java/spring plugins are applied to the root project.
-  build.enabled = false
-  bootRepackage.enabled = false
+    apply from: rootProject.file("openshift-build.gradle")
+    buildDocker.tag = "innovateuk/${project.name}"
 }
 
 
-// Required, because of how the java/spring plugins are applied to the root project.
-build.enabled = false
-bootRepackage.enabled = false
+    allprojects {
+
+        buildscript {
+
+            repositories {
+                mavenCentral()
+            }
+        }
+
+    }
+
