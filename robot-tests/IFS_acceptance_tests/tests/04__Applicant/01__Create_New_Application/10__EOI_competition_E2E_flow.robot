@@ -57,7 +57,7 @@ Invite a registered assessor
 Allocated assessor accepts invite to assess the competition
     [Documentation]  IFS-2376
     [Tags]  HappyPath
-    [Setup]  Milestones are updated in db to move comp to assessment state
+    [Setup]  Milestones are updated in database to move competition to assessment state
     Given Log in as a different user                              &{assessor_credentials}
     When The user clicks the button/link                    Link=${comp_name}
     And the user selects the radio button                   acceptInvitation  true
@@ -103,7 +103,7 @@ the EOI comp moves to Previous tab
     Given the user clicks the button/link  link=Dashboard
     When the user clicks the button/link   jQuery=a:contains("Previous")
     Then the user clicks the button/link   link=${comp_name}
-    And the user should see the element        JQuery=h1:contains("${comp_name}")
+    And the user should see the element    JQuery=h1:contains("${comp_name}")
 #    TODO IFS-2471 Once implemented please update test to see the application appear in relevant section in Previous tab.
 
 *** Keywords ***
@@ -135,13 +135,13 @@ the lead applicant fills all the questions and marks as complete(EOI comp type)
     :FOR  ${ELEMENT}    IN    @{EOI_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 
-Milestones are updated in db to move comp to assessment state
+Milestones are updated in database to move competition to assessment state
     ${competitionId} =  get comp id from comp title  ${comp_name}
     Set suite variable  ${competitionId}
     the assessment start period changes in the db in the past   ${competitionId}
 
 the assessor submits the assessment
-    the assessor adds score and feedback for every question    5
+    the assessor adds score and feedback for every question    5   # value 5: is the number of questions to loop through to submit feedback
     the user clicks the button/link               link=Review and complete your assessment
     the user selects the radio button             fundingConfirmation  true
     the user enters text to a text field          id=feedback    EOI application assessed

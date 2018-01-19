@@ -250,7 +250,7 @@ User Saves the Assessment as Not Recommended
     [Tags]    HappyPath
     [Setup]
     Given The user clicks the button/link                    link=Park living
-    And the assessor adds score and feedback for every question  11
+    And the assessor adds score and feedback for every question  11  # value 11: is the number of questions to loop through to submit feedback
     And the user clicks the button/link                      jQuery=.button:contains("Review and complete your assessment")
     When the user selects the radio button                   fundingConfirmation    false
     And the user enters text to a text field                 id=feedback    Negative feedback
