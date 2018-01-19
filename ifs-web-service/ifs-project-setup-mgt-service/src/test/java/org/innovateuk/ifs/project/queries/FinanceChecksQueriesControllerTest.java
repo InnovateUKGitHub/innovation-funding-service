@@ -13,19 +13,22 @@ import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseFo
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
+import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.ifs.threads.resource.PostResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.JsonUtil;
-import org.innovateuk.ifs.threads.attachment.resource.AttachmentResource;
-import org.innovateuk.ifs.threads.resource.FinanceChecksSectionType;
-import org.innovateuk.ifs.threads.resource.PostResource;
-import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -37,11 +40,7 @@ import org.springframework.validation.ObjectError;
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -96,6 +95,11 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Captor
     private ArgumentCaptor<PostResource> savePostArgumentCaptor;
 
+    @Spy
+    @InjectMocks
+    @SuppressWarnings("unused")
+    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator();
+
     @Before
     public void setup() {
         super.setUp();
@@ -118,15 +122,15 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         UserResource user2 = new UserResource();
         user2.setId(55L);
         PostResource firstResponse = new PostResource(null, user2, "Response", new ArrayList<>(), ZonedDateTime.now().plusMinutes(20L));
-        thread = new QueryResource(1L, projectFinanceId, asList(firstPost, firstResponse), FinanceChecksSectionType.ELIGIBILITY, "Query title", false, ZonedDateTime.now());
+        thread = new QueryResource(1L, projectFinanceId, asList(firstPost, firstResponse), FinanceChecksSectionType.ELIGIBILITY, "Query title", false, ZonedDateTime.now(), null, null);
 
         PostResource firstPost2 = new PostResource(null, user1, "Question2", new ArrayList<>(), ZonedDateTime.now().plusMinutes(15L));
-        thread2 = new QueryResource(3L, projectFinanceId, singletonList(firstPost2), FinanceChecksSectionType.ELIGIBILITY, "Query2 title", true, ZonedDateTime.now());
+        thread2 = new QueryResource(3L, projectFinanceId, singletonList(firstPost2), FinanceChecksSectionType.ELIGIBILITY, "Query2 title", true, ZonedDateTime.now(), null, null);
 
         PostResource firstPost1 = new PostResource(null, user1, "Question3", new ArrayList<>(), ZonedDateTime.now());
         PostResource firstResponse1 = new PostResource(null, user2, "Response3", new ArrayList<>(), ZonedDateTime.now().plusMinutes(10L));
 
-        thread3 = new QueryResource(5L, projectFinanceId, asList(firstPost1, firstResponse1), FinanceChecksSectionType.ELIGIBILITY, "Query title3", false, ZonedDateTime.now());
+        thread3 = new QueryResource(5L, projectFinanceId, asList(firstPost1, firstResponse1), FinanceChecksSectionType.ELIGIBILITY, "Query title3", false, ZonedDateTime.now(), null, null);
 
         queries = asList(thread2, thread, thread3);
     }

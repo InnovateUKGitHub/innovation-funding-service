@@ -70,7 +70,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     public void test_findOne() throws Exception {
         Long queryId = 1L;
         Query query = new Query(queryId, null, null, null, null, null);
-        QueryResource queryResource = new QueryResource(queryId, null, null, null, null, false, null);
+        QueryResource queryResource = new QueryResource(queryId, null, null, null, null, false, null, null, null);
         when(queryRepositoryMock.findOne(queryId)).thenReturn(query);
         when(queryMapper.mapToResource(query)).thenReturn(queryResource);
 
@@ -87,9 +87,9 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         List<Query> queries = asList(query1, query2);
 
         QueryResource queryResource1 = new QueryResource(1L, null, null, null,
-                null, false, null);
+                null, false, null, null, null);
         QueryResource queryResource2 = new QueryResource(2L, null, null, null,
-                null, false, null);
+                null, false, null, null, null);
         List<QueryResource> queryResources = asList(queryResource1, queryResource2);
 
         when(queryRepositoryMock.findAllByClassPkAndClassName(contextId, ProjectFinance.class.getName())).thenReturn(queries);
@@ -103,14 +103,14 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_create() throws Exception {
-        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null);
+        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
 
         Query savedQuery = new Query(1L, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryRepositoryMock.save(queryToCreateAsDomain)).thenReturn(savedQuery);
 
-        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null);
+        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null, null, null);
         when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
 
         User u = newUser().
@@ -152,14 +152,14 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_createNoFinanceContact() throws Exception {
-        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null);
+        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
 
         Query savedQuery = new Query(1L, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryRepositoryMock.save(queryToCreateAsDomain)).thenReturn(savedQuery);
 
-        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null);
+        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null, null, null);
         when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
 
         User u = newUser().
@@ -195,14 +195,14 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_createNotificationNotSent() throws Exception {
-        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null);
+        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
 
         Query savedQuery = new Query(1L, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryRepositoryMock.save(queryToCreateAsDomain)).thenReturn(savedQuery);
 
-        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null);
+        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null, null, null);
         when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
 
         User u = newUser().
@@ -241,14 +241,14 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
     @Test
     public void test_createNoProjectFinance() throws Exception {
-        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null);
+        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null, null, null);
         Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
 
         Query savedQuery = new Query(1L, 22L, ProjectFinance.class.getName(), null, null, null, null);
         when(queryRepositoryMock.save(queryToCreateAsDomain)).thenReturn(savedQuery);
 
-        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null);
+        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null, null, null);
         when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(null);
@@ -268,7 +268,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
-        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null);
+        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
 
@@ -321,7 +321,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
-        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null);
+        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
         User u = newUser().withEmailAddress("a@b.com").withFirstName("A").withLastName("B").build();
         User u2 = newUser().withEmailAddress("Z@Y.com").withFirstName("Z").withLastName("Y").build();
         Organisation o = newOrganisation().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
@@ -369,7 +369,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
-        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null);
+        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
 
@@ -415,7 +415,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
         Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
-        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null);
+        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null, null, null);
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
 

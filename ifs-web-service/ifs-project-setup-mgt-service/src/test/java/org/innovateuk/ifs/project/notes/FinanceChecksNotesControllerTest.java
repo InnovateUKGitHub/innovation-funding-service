@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.notes.viewmodel.FinanceChecksNotesViewModel;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.thread.viewmodel.ThreadViewModelPopulator;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -27,6 +28,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -92,6 +95,11 @@ public class FinanceChecksNotesControllerTest extends BaseControllerMockMVCTest<
 
     @Captor
     ArgumentCaptor<PostResource> savePostArgumentCaptor;
+
+    @Spy
+    @InjectMocks
+    @SuppressWarnings("unused")
+    ThreadViewModelPopulator threadViewModelPopulator = new ThreadViewModelPopulator();
 
     @Before
     public void setup() {

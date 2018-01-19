@@ -36,7 +36,7 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
     @Test
     public void testFindOne() throws Exception {
         final Long queryId = 22L;
-        QueryResource query = new QueryResource(queryId, null, null, null, null, false, null);
+        QueryResource query = new QueryResource(queryId, null, null, null, null, false, null, null, null);
         when(financeCheckQueriesService.findOne(queryId)).thenReturn(serviceSuccess(query));
 
         mockMvc.perform(get("/project/finance/queries/{threadId}", queryId))
@@ -49,7 +49,7 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
     @Test
     public void testFindAll() throws Exception {
         final Long contextId = 22L;
-        QueryResource query = new QueryResource(3L, null, null, null, null, false, null);
+        QueryResource query = new QueryResource(3L, null, null, null, null, false, null, null, null);
         when(financeCheckQueriesService.findAll(contextId)).thenReturn(serviceSuccess(asList(query)));
 
         mockMvc.perform(get("/project/finance/queries/all/{contextClassId}", contextId))
@@ -62,7 +62,7 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
     @Test
     public void testCreate() throws Exception {
         final Long contextId = 22L;
-        final QueryResource query = new QueryResource(35L, contextId, null, null, null, false, null);
+        final QueryResource query = new QueryResource(35L, contextId, null, null, null, false, null, null, null);
         when(financeCheckQueriesService.create(query)).thenReturn(serviceSuccess(query.id));
 
         mockMvc.perform(post("/project/finance/queries")
