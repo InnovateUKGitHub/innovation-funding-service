@@ -1,6 +1,4 @@
 import com.bmuschko.gradle.docker.tasks.image.*
-
-import com.bmuschko.gradle.docker.tasks.image.*
 import com.bmuschko.gradle.docker.DockerRegistryCredentials
 
 buildscript {
