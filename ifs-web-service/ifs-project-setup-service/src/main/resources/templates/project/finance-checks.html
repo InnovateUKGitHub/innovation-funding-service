@@ -47,7 +47,7 @@
 
     <ul>
         <li th:each="query : ${model.getQueries()}">
-            <h2 class="heading-medium" th:text="${query.title}">Query Thread Title</h2>
+            <h2 class="heading-medium" th:text="${query.title}">Query Thread Title <th:block if="${query.isClosed()}">(resolved)</th:block></h2>
             <th:block th:each="(post, iteration : ${query.viewModelPosts})">
                 <div th:class="${iteration.index == 0} ? '' : 'panel'">
                     <div class="heading-small no-margin">
