@@ -37,7 +37,7 @@ task tagDockerLocal(type: DockerTagImage) {
     imageId = buildDocker.getTag()
     repository = "dummy"
     doFirst {
-        if (repository != "dummy") {
+        if (repository == "dummy") {
             repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
         }
     }
@@ -48,7 +48,7 @@ task osStageLocal(type: DockerPushImage) {
     dependsOn tagDockerLocal
     imageName = "dummy"
     doFirst {
-        if (imageName != "dummy") {
+        if (imageName == "dummy") {
             registryCredentials = getLocalOCCredentials()
             imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
         }
