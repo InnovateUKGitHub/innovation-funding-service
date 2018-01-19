@@ -29,7 +29,7 @@ public class ThreadViewModelPopulator {
     @Autowired
     private OrganisationService organisationService;
 
-    public List<ThreadViewModel> threadViewModelListFromQueries(long projectId, long organisationId, List<QueryResource> queries) {
+    public List<ThreadViewModel> threadViewModelListFromQueries(long projectId, long organisationId, List<QueryResource> queries, Function<UserResource, String> userToUsernameFn) {
 
         List<QueryResource> sortedQueries = queries.stream().
                 flatMap(t -> t.posts.stream()
@@ -39,15 +39,12 @@ public class ThreadViewModelPopulator {
                 .distinct()
                 .collect(Collectors.toList());
 
-        return simpleMap(sortedQueries, query -> threadViewModelFromQuery(projectId, organisationId, query));
+        return simpleMap(sortedQueries, query -> threadViewModelFromQuery(projectId, organisationId, query, userToUsernameFn));
     }
 
-    public ThreadViewModel threadViewModelFromQuery(long projectId, long organisationId, QueryResource query) {
+    public ThreadViewModel threadViewModelFromQuery(long projectId, long organisationId, QueryResource query, Function<UserResource, String> userToUsernameFn) {
 
-        List<ThreadPostViewModel> posts = addPosts(query.posts, user ->
-            user.hasRole(UserRoleType.PROJECT_FINANCE) ?
-                user.getName() + " - Innovate UK (Finance team)" :
-                user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName());
+        List<ThreadPostViewModel> posts = addPosts(query.posts, userToUsernameFn);
 
         return new ThreadViewModel(posts, query.section,
                 query.title, query.awaitingResponse, query.createdOn, query.id,
