@@ -38,7 +38,7 @@ task tagDockerLocal(type: DockerTagImage) {
     repository = "dummy"
     doFirst {
         if (repository != "dummy") {
-            repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + projectName
+            repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
         }
     }
     tag = project.version
