@@ -9,26 +9,15 @@ tagDocker.tag = sqlVersion
 
 tagDockerLocal.imageId = "innovateuk/ifs-mysql:" + sqlVersion
 tagDockerLocal.tag = sqlVersion
-tagDockerLocal {
-    doFirst {
-        repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
-        tag = sqlVersion
-    }
-}
+tagDockerLocal.repository = "${-> getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"}"
 
 osStageRemote.onlyIf { !isNamedEnv() }
 osStageRemote.imageName = getRemoteOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
 osStageRemote.tag = sqlVersion
 
 osStageLocal.tag = sqlVersion
-osStageLocal {
-    doFirst {
-        imageName = getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
-        tag = sqlVersion
-    }
-}
-
-
+osStageLocal.imageName = "${-> getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"}"
+osStageLocal.tag = sqlVersion
 
 
 

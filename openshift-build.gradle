@@ -35,19 +35,12 @@ task osStageRemote(type: DockerPushImage) {
 task tagDockerLocal(type: DockerTagImage) {
     dependsOn buildDocker
     imageId = buildDocker.getTag()
-    repository = "dummy"
-    doFirst {
-        repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
-    }
+    repository = "${-> getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")}"
     tag = project.version
 }
 
 task osStageLocal(type: DockerPushImage) {
     dependsOn tagDockerLocal
-    imageName = "dummy"
-    doFirst {
-        registryCredentials = getLocalOCCredentials()
-        imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
-    }
+    imageName = "${-> getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")}"
     tag = project.version
 }
