@@ -499,4 +499,23 @@
     </div>
 </th:block>
 
+<!-- confirmation of resending finance contact invite -->
+<th:block th:fragment="modal-resend-finance-contact">
+    <div class="modal-resend-finance-contact" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Resend invite to team member</h2>
+            <p>They will be reminded to accept the role of finance contact.</p>
+        </div>
+        <hr />
+        <form method="get" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <div>
+                <button class="button" type="submit">Resend</button>
+                <button class="buttonlink js-close" type="button">Cancel</button>
+            </div>
+        </form>
+    </div>
+</th:block>
+
+
 </html>
