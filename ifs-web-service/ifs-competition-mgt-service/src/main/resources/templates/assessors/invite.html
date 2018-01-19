@@ -13,6 +13,12 @@
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Invite assessors',subTitle=${model.competitionName},size='heading-xlarge'" />
+
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading" id="error-summary-heading">We were unable to save your changes.</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
+
             <h2 class="heading-medium">Key statistics</h2>
 
             <div class="grid-row">
@@ -109,12 +115,7 @@
                                 </optgroup>
                             </select>
                         </div>
-                        <!--/* TODO {#fields.hasErrors('invites')} does not work. Please see ticket IFS-2521 */-->
-                        <div class="form-group" th:classappend="${#fields.hasErrors('invites')} ? 'form-group-error'">
-                            <th:block th:if="${#fields.hasErrors('invites')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('invites')}" th:text="${err}"></span>
-                            </th:block>
-
+                        <div class="form-group">
                             <table id="invite-table">
                                 <thead>
                                 <tr>
