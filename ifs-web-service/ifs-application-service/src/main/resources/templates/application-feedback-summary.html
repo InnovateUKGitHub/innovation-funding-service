@@ -69,6 +69,9 @@
                                                 In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span>
                                             </p>
                                         </th:block>
+                                        <th:block th:unless="${question.shortName.equals('Scope')}">
+                                            <p class="form-hint no-margin">No feedback provided</p>
+                                        </th:block>
                                     </div>
                                 </div>
                             </li>
