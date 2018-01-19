@@ -23,18 +23,6 @@ subprojects {
         buildDocker.tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
         buildDocker.inputDir = project.file("$project.buildDir/docker")
         tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
-
-        // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
-        // Can reinstate excludeDevtools in the bootRepackage task in next release
-        springBoot {
-            excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-        }
-
-        bootRepackage {
-            mainClass = 'org.innovateuk.ifs.Application'
-        //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-
-        }
     }
 }
 apply from: "documentation.gradle"

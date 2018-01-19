@@ -75,14 +75,3 @@ tagDocker.tag = silStubVersion
 osStageRemote.tag = silStubVersion
 tagDockerLocal.tag = silStubVersion
 osStageLocal.tag = silStubVersion
-
-// Workaround for https://github.com/spring-projects/spring-boot/issues/8308
-// Can reinstate excludeDevtools in the bootRepackage task in next release
-springBoot {
-    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-}
-
-bootRepackage {
-    mainClass = 'org.innovateuk.ifs.Application'
-    //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-}
