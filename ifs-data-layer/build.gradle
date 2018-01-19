@@ -27,20 +27,7 @@ subprojects {
         buildDocker.tag="innovateuk/" + project.name.replaceAll(/ifs-/,"")+":latest"
         buildDocker.inputDir = project.file("$project.buildDir/docker")
         tagDocker.imageId="innovateuk/" + project.name.replaceAll(/ifs-/,"")+":latest"
-        
-    }
 
-    //noinspection GroovyMissingReturnStatement
-    processResources {
-        filesMatching("*.properties") {
-            expand project.properties
-        }
-    }
-
-    processTestResources {
-        filesMatching("*.properties") {
-            expand project.properties
-        }
     }
 
 }

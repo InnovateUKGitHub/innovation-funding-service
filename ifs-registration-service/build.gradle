@@ -26,6 +26,10 @@ bootRun {
     addResources = false
 }
 
+processResources {
+    enabled = false
+}
+
 configurations {
     providedRuntime
 }

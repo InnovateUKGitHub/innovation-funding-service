@@ -19,12 +19,6 @@ jar {
     baseName = 'ifs-sil-stub'
 }
 
-processResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
-
 dependencies {
     compile project(":ifs-commons")
     compile "org.springframework.boot:spring-boot-starter-web"
