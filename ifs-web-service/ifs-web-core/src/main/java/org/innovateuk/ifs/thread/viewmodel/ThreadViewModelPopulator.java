@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.thread.viewmodel;
 
-import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.threads.resource.NoteResource;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
@@ -25,9 +24,6 @@ public class ThreadViewModelPopulator {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private OrganisationService organisationService;
 
     public List<ThreadViewModel> threadViewModelListFromQueries(long projectId, long organisationId, List<QueryResource> queries, Function<UserResource, String> userToUsernameFn) {
 
