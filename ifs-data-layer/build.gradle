@@ -7,8 +7,6 @@ subprojects {
 
 
     apply from: rootProject.file("java-spring-boot.gradle")
-
-
     ext.ifsWebSystemUserId="8394d970-b250-4b15-9621-3534325691b4"
 
     // data-service-commons is not a docker project.
@@ -30,6 +28,19 @@ subprojects {
 
     }
 
+}
+
+buildscript {
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'org.flywaydb:flyway-gradle-plugin:4.0'
+        classpath 'org.flywaydb:flyway-core:4.0'
+    }
 }
 
 task initDB {
