@@ -12,7 +12,7 @@
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
 
     <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
-        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to submit grant offer letter.</h2>
+        <h2 class="heading-medium error-summary-heading" id="error-summary-heading">Unable to submit grant offer letter</h2>
         <th:block th:insert="fragments/elements :: error-summary-list(form)" />
     </div>
 
@@ -26,12 +26,12 @@
         </th:block>
 
         <div th:if="${model.showGrantOfferLetterApprovedByInnovateMessage}" class="success-alert extra-margin-bottom">
-            <p>Your signed grant offer letter has been received and accepted by Innovate UK</p>
+            <p>Your signed grant offer letter has been received and accepted by Innovate UK.</p>
         </div>
 
         <th:block th:if="${model.showGrantOfferLetterRejectedMessage}">
             <div class="fail-alert extra-margin-bottom">
-                <h2 class="heading-small">Your grant offer letter has been rejected by Innovate UK.</h2>
+                <h2 class="heading-small">Your grant offer letter has been rejected by Innovate UK</h2>
                 <p>Someone will be in touch with you soon.</p>
             </div>
         </th:block>
