@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.form.builder.FormValidatorBuilder.newFormValidator;
 import static org.junit.Assert.assertEquals;
@@ -45,8 +46,14 @@ public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<D
     }
 
     @Test
-    public void buildQuestion_createdQuestionShouldUseValidatorsFromRepository() throws Exception {
+    public void buildQuestion_markCompleteAsEnabledSetToTrue() {
+        Question defaultQuestion =service.buildQuestion(competition);
 
+        assertThat(defaultQuestion.getMarkAsCompletedEnabled()).isTrue();
+    }
+
+    @Test
+    public void buildQuestion_createdQuestionShouldUseValidatorsFromRepository() throws Exception {
         Question defaultQuestion = service.buildQuestion(competition);
 
         FormInput maxWordCountInput = defaultQuestion.getFormInputs().get(0);
