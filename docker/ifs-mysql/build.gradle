@@ -17,6 +17,7 @@ tagDockerLocal {
 }
 
 osStageRemote.onlyIf { !isNamedEnv() }
+osStageRemote.imageName = getRemoteOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
 osStageRemote.tag = sqlVersion
 
 osStageLocal.tag = sqlVersion
