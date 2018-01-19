@@ -115,7 +115,7 @@ Summary:Feedback should show in each section
     When the user clicks the button/link    jQuery=button:contains("Scope")
     Then the user should see the text in the page    Testing feedback text
     :FOR  ${ELEMENT}    IN   @{programme_questions}
-      \  the user clicks the button/link             jQuery=button:contains("${ELEMENT} }")
+      \  the user clicks the button/link             jQuery=button:contains("${ELEMENT}")
       \  the user should see the text in the page    Testing feedback text
 
 Summary:Assessor can return to each question
