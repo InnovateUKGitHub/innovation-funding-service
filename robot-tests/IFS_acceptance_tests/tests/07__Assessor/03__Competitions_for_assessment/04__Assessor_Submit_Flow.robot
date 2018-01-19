@@ -112,28 +112,11 @@ Summary:Questions should show the scores
 
 Summary:Feedback should show in each section
     [Documentation]    INFUND-550
-    When the user clicks the button/link    jQuery=button:contains("1. Business opportunity")
-    Then the user should see the text in the page    Testing Business opportunity feedback text
-    When the user clicks the button/link    jQuery=button:contains("2. Potential market")
-    Then the user should see the text in the page    Testing Potential market feedback text
-    When the user clicks the button/link    jQuery=button:contains("3. Project exploitation")
-    Then the user should see the text in the page    Testing Project exploitation feedback text
-    When the user clicks the button/link    jQuery=button:contains("4. Economic benefit")
-    Then the user should see the text in the page    Testing Economic benefit feedback text
-    When the user clicks the button/link    jQuery=button:contains("5. Technical approach")
-    Then the user should see the text in the page    Testing Technical approach feedback text
-    When the user clicks the button/link    jQuery=button:contains("6. Innovation")
-    Then the user should see the text in the page    Testing Innovation feedback text
-    When the user clicks the button/link    jQuery=button:contains("7. Risks")
-    Then the user should see the text in the page    Testing Risks feedback text
-    When the user clicks the button/link    jQuery=button:contains("8. Project team")
-    Then the user should see the text in the page    Testing Project team feedback text
-    When the user clicks the button/link    jQuery=button:contains("9. Funding")
-    Then the user should see the text in the page    Testing Funding feedback text
-    When the user clicks the button/link    jQuery=button:contains("10. Adding value")
-    Then the user should see the text in the page    Testing Adding value feedback text
     When the user clicks the button/link    jQuery=button:contains("Scope")
-    Then the user should see the text in the page    Testing scope feedback text
+    Then the user should see the text in the page    Testing feedback text
+    :FOR  ${ELEMENT}    IN   @{programme_questions}
+      \  the user clicks the button/link             jQuery=button:contains("${ELEMENT} }")
+      \  the user should see the text in the page    Testing feedback text
 
 Summary:Assessor can return to each question
     [Documentation]    INFUND-4648

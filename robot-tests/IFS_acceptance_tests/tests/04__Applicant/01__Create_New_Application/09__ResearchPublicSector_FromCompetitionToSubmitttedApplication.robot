@@ -130,9 +130,9 @@ the lead is able to submit the application
     the user clicks the button/link  link=Finished
 
 the competition is now in Project Setup
-    moving competition to Closed                  ${reseachCompId}
-    making the application a successful project   ${reseachCompId}  ${publicLeadApp}
-    moving competition to Project Setup           ${reseachCompId}
+    moving competition to Closed                  ${openCompetitionPublicSector}
+    making the application a successful project   ${openCompetitionPublicSector}  ${publicLeadApp}
+    moving competition to Project Setup           ${openCompetitionPublicSector}
 
 the user is able to download the overheads file
     ${projectId} =  get project id by name  ${publicLeadApp}
