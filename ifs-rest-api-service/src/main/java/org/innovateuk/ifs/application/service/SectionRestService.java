@@ -8,7 +8,6 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.Future;
 
 /**
  * Interface for CRUD operations on {@link SectionResource} related data.
@@ -23,8 +22,6 @@ public interface SectionRestService {
     RestResult<List<Long>> getCompletedSectionIds(Long applicationId, Long organisationId);
     RestResult<List<Long>> getIncompletedSectionIds(Long applicationId);
     RestResult<Boolean> allSectionsMarkedAsComplete(Long applicationId);
-    Future<RestResult<SectionResource>> getPreviousSection(Long sectionId);
-    Future<RestResult<SectionResource>> getNextSection(Long sectionId);
     RestResult<SectionResource> getSectionByQuestionId(Long questionId);
     RestResult<Set<Long>> getQuestionsForSectionAndSubsections(Long sectionId);
     RestResult<List<SectionResource>> getSectionsByCompetitionIdAndType(Long competitionId, SectionType type);
