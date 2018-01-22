@@ -1,10 +1,6 @@
-
-buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 tagDocker.onlyIf { !isNamedEnv() }
 tagDocker.tag = mailSinkVersion
-
+tagDockerLocal.tag = mailSinkVersion
 osStageRemote.onlyIf { !isNamedEnv() }
 osStageRemote.tag = mailSinkVersion
-
-tagDockerLocal.tag = mailSinkVersion
 osStageLocal.tag = mailSinkVersion
