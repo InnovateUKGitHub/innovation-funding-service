@@ -1,6 +1,5 @@
 subprojects {
     apply from: rootProject.file("openshift-build.gradle")
-    buildDocker.tag = "innovateuk/${project.name}"
 }
 
 
