@@ -5,8 +5,6 @@ import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.AbstractMap;
@@ -22,10 +20,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class ThreadViewModelPopulator {
 
-    @Autowired
-    private UserService userService;
-
-    public List<ThreadViewModel> threadViewModelListFromQueries(long projectId, long organisationId, List<QueryResource> queries, Function<UserResource, String> userToUsernameFn) {
+    public List<ThreadViewModel> threadViewModelListFromQueries(long projectId, long organisationId,
+                                                                List<QueryResource> queries,
+                                                                Function<UserResource, String> userToUsernameFn) {
 
         List<QueryResource> sortedQueries = queries.stream().
                 flatMap(t -> t.posts.stream()
@@ -74,9 +71,8 @@ public class ThreadViewModelPopulator {
 
     private List<ThreadPostViewModel> addPosts(List<PostResource> posts, Function<UserResource, String> userToUsernameFn) {
         return simpleMap(posts, p -> {
-            UserResource user = userService.findById(p.author.getId());
             ThreadPostViewModel post = new ThreadPostViewModel(p.id, p.author, p.body, p.attachments, p.createdOn);
-            post.setUsername(userToUsernameFn.apply(user));
+            post.setUsername(userToUsernameFn.apply(p.author));
             return post;
         });
     }
