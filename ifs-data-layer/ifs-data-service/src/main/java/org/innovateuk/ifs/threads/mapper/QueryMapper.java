@@ -28,14 +28,20 @@ public abstract class QueryMapper extends BaseMapper<Query, QueryResource, Long>
     @Override
     public QueryResource mapToResource(Query query) {
         return new QueryResource(query.id(), query.contextClassPk(), simpleMap(query.posts(), postMapper::mapToResource), query.section(),
-                    query.title(), query.isAwaitingResponse(), query.createdOn(), userMapper.mapToResource(query.getClosedBy()), query.getClosedDate());
+                query.title(), query.isAwaitingResponse(), query.createdOn(),
+                query.getClosedBy() != null ? userMapper.mapToResource(query.getClosedBy()) : null,
+                query.getClosedDate());
     }
 
     @Override
     public Query mapToDomain(QueryResource queryResource) {
         Query query = new Query(queryResource.id, queryResource.contextClassPk, simpleMap(queryResource.posts, postMapper::mapToDomain),
                 queryResource.section, queryResource.title, queryResource.createdOn);
-        query.setClosedBy(userMapper.mapToDomain(queryResource.closedBy));
+
+        if (queryResource.closedBy != null) {
+            query.setClosedBy(userMapper.mapToDomain(queryResource.closedBy));
+        }
+
         query.setClosedDate(queryResource.closedDate);
         return query;
     }
