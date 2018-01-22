@@ -69,12 +69,12 @@ import static org.innovateuk.ifs.util.CollectionFunctions.*;
 @Controller
 @RequestMapping("/project")
 public class ProjectDetailsController extends AddressLookupBaseController {
-    private static final String SAVE_FC = "save_fc";
-    private static final String INVITE_FC = "invite_fc";
-    private static final String SAVE_PM = "save_pm";
-    private static final String INVITE_PM = "invite_pm";
-    private static final String RESEND_FC_INVITE = "resend_fc_invite";
-    private static final String RESEND_PM_INVITE = "resend_pm_invite";
+    private static final String SAVE_FC = "Save_fc";
+    private static final String INVITE_FC = "Invite_fc";
+    private static final String SAVE_PM = "Save_pm";
+    private static final String INVITE_PM = "Invite_pm";
+    private static final String RESEND_FC_INVITE = "Resend_fc_invite";
+    private static final String RESEND_PM_INVITE = "Resend_pm_invite";
 
 	@Autowired
     private ProjectService projectService;
@@ -203,17 +203,17 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CONTACT_PAGE')")
     @PostMapping(value = "/{projectId}/details/finance-contact", params = RESEND_FC_INVITE)
     public String resendFinanceContactInvite(@P("projectId")@PathVariable("projectId") final Long projectId,
-                                             @RequestParam(value="organisation") final Long organisation,
-                                             @RequestParam("resend_fc_invite") Long userId
+                                             @RequestParam(value="Organisation") final Long organisation,
+                                             @RequestParam(RESEND_FC_INVITE) Long inviteId
     ) {
-        resendInvite(userId, projectId, (project, inviteProjectResource) -> projectDetailsService.inviteFinanceContact(project, inviteProjectResource));
+        resendInvite(inviteId, projectId, (project, inviteProjectResource) -> projectDetailsService.inviteFinanceContact(project, inviteProjectResource));
         return redirectToFinanceContact(projectId, organisation);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_MANAGER_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-manager", params = RESEND_PM_INVITE)
     public String resendProjectManagerInvite(@P("projectId")@PathVariable("projectId") final Long projectId,
-                                             @RequestParam("resend_pm_invite") Long userId
+                                             @RequestParam(RESEND_PM_INVITE) Long userId
     ) {
         resendInvite(userId, projectId, (project, inviteProjectResource) -> projectDetailsService.inviteProjectManager(project, inviteProjectResource));
         return redirectToProjectManager(projectId);
@@ -271,7 +271,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 .getSuccessObjectOrThrowException()
                 .stream()
                 .filter(i -> id.equals(i.getId()))
-                .filter(i -> projectId.equals(i.getProject()))
                 .findFirst();
 
         existingInvite

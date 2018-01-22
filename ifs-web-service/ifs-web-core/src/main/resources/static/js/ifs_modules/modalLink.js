@@ -73,9 +73,11 @@ IFS.core.modal = (function () {
         }
       }
 
-      if (target.find('form').length) {
+      var form = target.find('form')
+      if (form.length) {
         // update the form url of the modal if a data- attribute exists
         if (modalFormAction !== undefined) {
+          this.setInputValues(form, jQuery(event.target))
           target.find('form').attr('action', modalFormAction)
         }
 
@@ -101,6 +103,16 @@ IFS.core.modal = (function () {
           }
         })
       }
+    },
+    setInputValues: function (form, eventTarget) {
+      jQuery.each(eventTarget.data(), function (val, e) {
+        if (val.startsWith('modalInput')) {
+          var inputName = val.replace('modalInput', '')
+          var inputVal = eventTarget.data(val)
+          var input = jQuery('[name=' + inputName + ']')
+          input.val(inputVal)
+        }
+      })
     },
     disableTabPage: function () {
       jQuery(':tabbable').each(function () {
