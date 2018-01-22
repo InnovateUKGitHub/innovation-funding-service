@@ -1,0 +1,24 @@
+version: '3'
+services:
+
+  finance-data-service:
+      hostname: finance-data-service
+      links:
+        - mysql-finance-totals:ifs-finance-database
+      ports:
+        - "8092:8080"
+        - "9012:8000"
+      environment:
+        - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+
+  mysql-finance-totals:
+    image: innovateuk/ifs-mysql:5.6.29
+    ports:
+      - "3307:3306"
+    command: [--character-set-server=utf8, --collation-server=utf8_bin]
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: ifs_finance
+    restart: on-failure
+    networks:
+      - ifs

@@ -162,6 +162,11 @@ dockerCompose {
         useComposeFiles.add('docker-compose-fractal.yml')
     }
 
+    if (project.hasProperty('ifs.finance-totals.enabled') ? project.property('ifs.finance-totals.enabled').toBoolean() : true) {
+        useComposeFiles.add('docker-compose-finance-totals.yml')
+        useComposeFiles.add('docker-compose-finance-totals-dev.yml')
+    }
+
     removeContainers = false
     removeImages = "Local" // Accepted values are: "All", "Local" and "None"
     removeVolumes = false
