@@ -1,0 +1,124 @@
+import com.bmuschko.gradle.docker.tasks.image.*
+
+import com.bmuschko.gradle.docker.tasks.image.*
+import com.bmuschko.gradle.docker.DockerRegistryCredentials
+
+buildscript {
+
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
+    }
+
+}
+
+// use fully qualified class name
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+
+
+def getRemoteOCCredentials() {
+    def dockerRegistryCredentials = new DockerRegistryCredentials()
+    try {
+        // Get the docker repository for the remote OS cluster
+        dockerRegistryCredentials.url = project.dockerRegistry
+        dockerRegistryCredentials.username = "unused"
+        dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
+        dockerRegistryCredentials.email = "unused"
+
+    }
+    catch (ignored) {
+        println("Exception thrown creating the OpenShift docker registry credentials. " +
+                "This is most likely because the OpenShift commandline client is not installed. " +
+                "This is only an issue if wanting to deploy to an OpenShift cluster, " +
+                "in which case it will need to be installed")
+        println(ignored)
+    }
+    return dockerRegistryCredentials
+}
+
+def getLocalOCCredentials() {
+    def dockerRegistryCredentials = new DockerRegistryCredentials()
+    try {
+        // Get the docker repository for the local OS cluster
+        def localIpCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.clusterIP}'"
+        def localPortCommand = "oc get svc docker-registry -n default -o jsonpath='{.spec.ports..port}'"
+        project.ext.localIp = localIpCommand.execute().text.replace("'", "").trim()
+        project.ext.localPort = localPortCommand.execute().text.replace("'", "").trim()
+        dockerRegistryCredentials.url = project.ext.localIp + ":" + project.ext.localPort
+        dockerRegistryCredentials.username = "unused"
+        dockerRegistryCredentials.password = "oc whoami -t".execute().text.trim()
+        dockerRegistryCredentials.email = "unused"
+
+    }
+    catch (ignored) {
+        println("Exception thrown creating the OpenShift docker registry credentials. " +
+                "This is most likely because the OpenShift commandline client is not installed. " +
+                "This is only an issue if wanting to deploy to an OpenShift cluster, " +
+                "in which case it will need to be installed")
+        println(ignored)
+    }
+    return dockerRegistryCredentials
+}
+
+buildscript {
+
+
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+
+    dependencies {
+        classpath "com.bmuschko:gradle-docker-plugin:3.0.11"
+    }
+
+}
+
+// use fully qualified class name
+apply plugin: com.bmuschko.gradle.docker.DockerRemoteApiPlugin
+
+task buildDocker(type: DockerBuildImage) {
+    tag = "innovateuk/${project.name}"
+    inputDir = project.projectDir
+}
+
+task tagDocker(type: DockerTagImage) {
+    dependsOn buildDocker
+    imageId = buildDocker.getTag()
+    repository = project.dockerRegistry + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+    tag = project.version
+}
+
+task osStageRemote(type: DockerPushImage) {
+    dependsOn tagDocker
+    registryCredentials=getRemoteOCCredentials()
+    imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+    tag = project.version
+}
+
+task tagDockerLocal(type: DockerTagImage) {
+    dependsOn buildDocker
+    imageId = buildDocker.getTag()
+    repository = "dummy"
+    doFirst {
+        repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+    }
+    tag = project.version
+}
+
+task osStageLocal(type: DockerPushImage) {
+    dependsOn tagDockerLocal
+    imageName = "dummy"
+    doFirst {
+        registryCredentials = getLocalOCCredentials()
+        imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
+    }
+    tag = project.version
+}
+
+

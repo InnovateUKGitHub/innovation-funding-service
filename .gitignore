@@ -41,6 +41,7 @@ bin/
 
 # ignore properties
 **/*-build.gradle
+!**/openshift-build.gradle
 !**/automated-build.gradle
 **/application-*.properties
 !**/application-local.properties

@@ -20,8 +20,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.notifications.service.senders.email.EmailAddressResolver.fromNotificationSource;
 import static org.innovateuk.ifs.notifications.service.senders.email.EmailAddressResolver.fromNotificationTarget;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static java.io.File.separator;
 import static java.util.Collections.singletonList;
 
@@ -32,7 +30,7 @@ import static java.util.Collections.singletonList;
 @Component
 public class EmailNotificationSender implements NotificationSender {
 
-    static final String EMAIL_NOTIFICATION_TEMPLATES_PATH = "notifications" + separator + "email" + separator;
+    public static final String EMAIL_NOTIFICATION_TEMPLATES_PATH = "notifications" + separator + "email" + separator;
 
     @Autowired
     private EmailService emailService;
