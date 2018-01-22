@@ -39,6 +39,8 @@ public interface FinanceCheckService {
 
     ServiceResult<Void> saveQueryPost(PostResource post, long threadId);
 
+    ServiceResult<Void> closeQuery(Long queryId);
+
     ServiceResult<List<QueryResource>> getQueries(Long projectFinanceId);
 
     ServiceResult<Long> saveNote(NoteResource note);
