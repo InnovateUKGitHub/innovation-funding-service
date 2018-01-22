@@ -301,44 +301,9 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
     public void oneQueryCreatedByProjectFinance() {
         List<Competition> comps = repository.findByName("Comp21001");
         assertTrue(comps.size() > 0);
-        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
-        assertEquals(1L, results.size());
-        List<Application> apps = applicationRepository.findByName("App21001");
-        assertEquals(1L, apps.size());
-        Long appId = apps.get(0).getId();
-        List<Project> projects = projectRepository.findByApplicationCompetitionId(comps.get(0).getId());
-        Project project = projects.stream().filter(p -> p.getName().equals("project 1")).findFirst().get();
-        assertNotNull(project);
-        Long projectId = project.getId();
-        assertEquals(new CompetitionOpenQueryResource(appId, org1Id, "Org1", projectId, "project 1"), results.get(0));
-    }
-
-    @Test
-    @Rollback
-    public void oneQueryCreatedByProjectFinanceAndResolved() {
-
-        List<Competition> comps = repository.findByName("Comp21001");
-        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
-        assertEquals(1L, results.size());
-        Long projectId = results.get(0).getProjectId();
-        Long organisationId = results.get(0).getOrganisationId();
-        ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
-
-        // get all of the open queries and close them
-        List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(), ProjectFinance.class.getName());
-        openQueries.forEach(query -> {
-            query.closeThread(userRepository.findByEmail("steve.smith@empire.com").get());
-            queryRepository.save(query);
-        });
-
-        // clean the cache and get some fresh results
-        flushAndClearSession();
-
         assertEquals(0L, repository.countOpenQueries(comps.get(0).getId()).longValue());
-        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
-        assertEquals(0L, newResults.size());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(0L, results.size());
     }
 
     @Test
@@ -356,6 +321,35 @@ public class CompetitionRepositoryIntegrationTest extends BaseRepositoryIntegrat
         assertNotNull(project);
         Long projectId = project.getId();
         assertEquals(new CompetitionOpenQueryResource(appId, org2Id, "Org2", projectId, "project 2"), results.get(0));
+    }
+
+    @Test
+    public void oneQueryCreatedByProjectManagerAndResolved() {
+        List<Competition> comps = repository.findByName("Comp21002");
+        assertTrue(comps.size() > 0);
+        assertEquals(1L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> results = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(1L, results.size());
+        List<Application> apps = applicationRepository.findByName("App21002");
+        assertEquals(1L, apps.size());
+
+        Long projectId = results.get(0).getProjectId();
+        Long organisationId = results.get(0).getOrganisationId();
+        ProjectFinance projectFinanceRow = projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId);
+
+        // get all of the open queries and close them
+        List<Query> openQueries = queryRepository.findAllByClassPkAndClassName(projectFinanceRow.getId(), ProjectFinance.class.getName());
+        openQueries.forEach(query -> {
+            query.closeThread(userRepository.findByEmail("steve.smith@empire.com").get());
+            queryRepository.save(query);
+        });
+
+        // clean the cache and get some fresh results
+        flushAndClearSession();
+
+        assertEquals(0L, repository.countOpenQueries(comps.get(0).getId()).longValue());
+        List<CompetitionOpenQueryResource> newResults = repository.getOpenQueryByCompetition(comps.get(0).getId());
+        assertEquals(0L, newResults.size());
     }
 
     @Test
