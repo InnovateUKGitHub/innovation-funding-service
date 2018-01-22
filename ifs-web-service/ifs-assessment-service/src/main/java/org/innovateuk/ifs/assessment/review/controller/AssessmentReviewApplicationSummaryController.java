@@ -83,7 +83,11 @@ public class AssessmentReviewApplicationSummaryController {
                 }
             }
 
-            List<AssessmentResource> feedbackSummary = assessmentRestService.getByUserAndApplication(user.getId(),applicationId).getSuccessObjectOrThrowException();
+            List<AssessmentResource> feedbackSummary = new ArrayList<>();
+
+            if(!inputResponse.isEmpty()) {
+               feedbackSummary = assessmentRestService.getByUserAndApplication(user.getId(), applicationId).getSuccessObjectOrThrowException();
+            }
 
             model.addAttribute("feedback", questionFeedback);
             model.addAttribute("score", questionScore);
