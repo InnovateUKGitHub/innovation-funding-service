@@ -133,5 +133,10 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         public ServiceResult<AssessmentDetailsResource> getAssessmentDetails(long assessmentId) {
             return null;
         }
+
+        @Override
+        public ServiceResult<AssessmentDetailsResource> getAssessmentDetailsForPanel(long assessmentId) {
+            return null;
+        }
     }
 }
