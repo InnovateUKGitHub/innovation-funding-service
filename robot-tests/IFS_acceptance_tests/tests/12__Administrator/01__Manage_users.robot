@@ -1,6 +1,5 @@
 *** Settings ***
 Documentation     IFS-604: IFS Admin user navigation to Manage users section
-...               IFS-605: Manage internal users: List of all internal users and roles
 ...               IFS-606: Manage internal users: Read only view of internal user profile
 ...               IFS-27:  Invite new internal user
 ...               IFS-642: Email to new internal user inviting them to register
@@ -240,8 +239,6 @@ Deactivated user cannot login until he is activated
     Then the user should see the element                jQuery=tr:contains("Innovation Lead")  #Checking the user swapped tab
     When the re-activated user tries to login
     Then the user should not see an error in the page
-
-# TODO: Add ATs for IFS-605 with pagination when IFS-637 is implemented
 
 *** Keywords ***
 Custom suite setup
