@@ -17,5 +17,6 @@ ext.idpVersion = project.properties['idp.version'] ?: project.version
 ext.ldapVersion = project.properties['ldap.version'] ?: project.version
 
 ext.mailSinkVersion = project.properties['mail-sink.version'] ?: project.version
+ext.mysqlClientVersion = project.properties['mysql-client.version'] ?: project.version
 
 ext.silStubVersion = project.properties['sil-stub.version'] ?: project.version
