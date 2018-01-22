@@ -32,6 +32,11 @@ public class FinanceCheckNotesServiceImpl implements FinanceCheckNotesService {
     }
 
     @Override
+    public ServiceResult<Void> close(Long noteId) {
+        return service.close(noteId);
+    }
+
+    @Override
     public ServiceResult<NoteResource> findOne(Long id) {
         return service.findOne(id);
     }
