@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    name: mysql-client
+  spec:
+    containers:
+    - name: mysql-client
+      image: innovateuk/mysql-client:${mysqlClientVersion}
+      imagePullPolicy: Always
+    restartPolicy: Never
