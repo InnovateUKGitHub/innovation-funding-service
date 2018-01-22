@@ -59,7 +59,6 @@ public class AssessmentReviewApplicationSummaryController {
 
         assessmentReviewApplicationSummaryModelPopulator.populateModel(model, form, user, applicationId);
 
-//        retrieve application id
         List<ProcessRoleResource> processRoleResources = processRoleService
                 .findProcessRolesByApplicationId(applicationId)
                 .stream()
@@ -67,43 +66,28 @@ public class AssessmentReviewApplicationSummaryController {
                 .filter(processRoleResource -> processRoleResource.getRoleName().equals("assessor"))
                 .collect(toList());
 
-//        if assessor has previously assessed application then show feedback
         if (processRoleResources.size() != 0){
             List<AssessorFormInputResponseResource> questionScore = new ArrayList<>();
             List<AssessorFormInputResponseResource> questionFeedback = new ArrayList<>();
 
-//            get assessor feedback
             List<AssessorFormInputResponseResource> inputResponse = assessorFormInputResponseRestService.getAllAssessorFormInputResponses(processRoleResources.get(0).getId()).getSuccessObjectOrThrowException();
 
-//            split up the feedback into text feedback and score
             for (AssessorFormInputResponseResource assessorFormInputResponseResource : inputResponse) {
 
-                FormInputResource feedbackType = formInputRestService.getById(assessorFormInputResponseResource.getFormInput()).getSuccessObjectOrThrowException();
+                String feedbackType = formInputRestService.getById(assessorFormInputResponseResource.getFormInput()).getSuccessObjectOrThrowException().getDescription();
 
-                if(feedbackType.getDescription().equals("Question score")){
+                if(feedbackType.equals("Question score")){
                     questionScore.add(assessorFormInputResponseResource);
-                }else if(feedbackType.getDescription().equals("Feedback")){
+                }else if(feedbackType.equals("Feedback")){
                     questionFeedback.add(assessorFormInputResponseResource);
                 }
             }
 
-//            retrieve feedback summary
-            String feedback = "";
-            String comment = "";
-            Boolean outcome = false;
-
-            List<AssessmentResource> assessmentResource = assessmentRestService.getByUserAndApplication(user.getId(),applicationId).getSuccessObjectOrThrowException();
-            for(AssessmentResource assessment : assessmentResource){
-                feedback = assessment.getFundingDecision().getFeedback();
-                comment = assessment.getFundingDecision().getComment();
-                outcome = assessment.getFundingDecision().getFundingConfirmation();
-            }
+            List<AssessmentResource> feedbackSummary = assessmentRestService.getByUserAndApplication(user.getId(),applicationId).getSuccessObjectOrThrowException();
 
             model.addAttribute("feedback", questionFeedback);
             model.addAttribute("score", questionScore);
-            model.addAttribute("feedbackSummary",feedback);
-            model.addAttribute("comment",comment);
-            model.addAttribute("outcome",outcome);
+            model.addAttribute("feedbackSummary",feedbackSummary);
         }
         
         return "assessor-panel-application-overview";

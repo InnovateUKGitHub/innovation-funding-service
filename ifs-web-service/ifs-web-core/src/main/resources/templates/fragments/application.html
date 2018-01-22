@@ -26,28 +26,30 @@
 
                 <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
                     <div th:replace="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
-<!--exclude from being in scope-->
-                    <div th:if="!${#lists.isEmpty(feedback)}">
-                        <ul>
-                            <li th:each="item : ${feedback}">
-                                <div th:if="${formInput.getQuestion()} == ${item.question}">
-                                    <div class="column-half">
-                                        <h3 class="heading-small alignleft">Feedback</h3>
+
+                    <th:block th:if="${question.questionNumber!=null}">
+                        <div th:if="!${#lists.isEmpty(feedback)}">
+                            <ul>
+                                <li th:each="item : ${feedback}">
+                                    <div th:if="${formInput.getQuestion()} == ${item.question}">
+                                        <div class="column-half">
+                                            <h3 class="heading-small">Feedback</h3>
+                                        </div>
+                                        <div class="column-half alignright heading-small ">
+                                            <ul>
+                                                <li th:each="score : ${score}">
+                                                    <div th:if="${formInput.getQuestion()} == ${score.question}">
+                                                        Score <span th:text="${score.value}">Feedback score</span>/10
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                            <p th:text="${item.value}">Feedback text</p>
                                     </div>
-                                    <div class="column-half alignright heading-small ">
-                                        <ul>
-                                            <li th:each="score : ${score}">
-                                                <div th:if="${formInput.getQuestion()} == ${score.question}">
-                                                    Score <span th:text="${score.value}">Feedback score</span>/10
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                        <p th:text="${item.value}">Feedback text</p>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </th:block>
 
                 </th:block>
             </div>
@@ -94,15 +96,14 @@
       </div>
   </section>
 
-    <section>
+    <section th:if="!${#lists.isEmpty(feedbackSummary)}">
         <h2 class="heading-medium">Feedback summary</h2>
-        <!--replace with actual questions from database-->
         <h2 class="heading-small">Do you believe that this application is suitable for funding?</h2>
-        <p th:text="${feedbackSummary}">Feedback text</p>
+        <p th:text="${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">Feedback text</p>
         <h2 class="heading-small">Your feedback</h2>
-        <p th:text="${comment}">Feedback text</p>
+        <p th:text="${feedbackSummary[0].getFundingDecision().getFeedback()}">Feedback text</p>
         <h2 class="heading-small">Other comments</h2>
-        <p th:text="${outcome}">Feedback text</p>
+        <p th:text="${feedbackSummary[0].getFundingDecision().getComment()}">Feedback text</p>
     </section>
 
 
