@@ -93,6 +93,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String OPEN_QUERIES_WHERE_CLAUSE = "WHERE t.closedDate IS NULL " +
             "AND t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
             "AND TYPE(t) = Query " +
+            "AND 0 = (SELECT COUNT(id) FROM u.roles r WHERE r.name = 'project_finance') " +
             "AND a.competition.id = :competitionId " +
             "AND (post.thread.id, post.createdOn) IN ( " +
             "    SELECT p.thread.id, MAX(p.createdOn) " +
@@ -104,6 +105,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String COUNT_OPEN_QUERIES = "SELECT COUNT(DISTINCT t.classPk) " +
             "FROM Post post " +
             "JOIN post.thread t " +
+            "JOIN post.author u " +
             "JOIN ProjectFinance pf ON pf.id = t.classPk " +
             "JOIN pf.project pr " +
             "JOIN pr.application a " +
@@ -112,6 +114,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     String GET_OPEN_QUERIES = "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name) " +
             "FROM Post post " +
             "JOIN post.thread t " +
+            "JOIN post.author u " +
             "JOIN ProjectFinance pf ON pf.id = t.classPk " +
             "JOIN pf.project pr " +
             "JOIN pr.application a " +

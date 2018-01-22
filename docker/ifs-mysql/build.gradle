@@ -1,52 +1,34 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
-import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
-
 def sqlVersion="5.6.29"
+apply from: rootProject.file("openshift-methods.gradle")
+buildDocker.tag = "innovateuk/ifs-mysql:" + sqlVersion
 
-task buildDocker(overwrite: true, type: DockerBuildImage) {
-    tag = "innovateuk/ifs-mysql:"+sqlVersion
-    inputDir = project.projectDir
-}
+tagDocker.onlyIf{ !isNamedEnv() }
+tagDocker.repository = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
+tagDocker.imageId = "innovateuk/ifs-mysql:" + sqlVersion
+tagDocker.tag = sqlVersion
 
-task tagDocker(type: DockerTagImage) {
-    onlyIf { !isNamedEnv() }
-
-    dependsOn buildDocker
-    imageId = buildDocker.getTag()
-    repository = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
-    tag = sqlVersion
-}
-
-task osStageRemote(type: DockerPushImage) {
-    onlyIf { !isNamedEnv() }
-
-    dependsOn tagDocker
-    registryCredentials=getRemoteOCCredentials()
-    imageName = project.dockerRegistry + "/" + openshiftEnv + "/ifs-mysql"
-    tag = sqlVersion
-}
-
-task tagDockerLocal(type: DockerTagImage) {
-    dependsOn buildDocker
-    imageId = buildDocker.getTag()
-    repository = "dummy"
-    tag = "dummy"
+tagDockerLocal.imageId = "innovateuk/ifs-mysql:" + sqlVersion
+tagDockerLocal.tag = sqlVersion
+tagDockerLocal {
     doFirst {
         repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
         tag = sqlVersion
     }
 }
 
-task osStageLocal(type: DockerPushImage) {
-    dependsOn tagDockerLocal
-    imageName = "dummy"
+osStageRemote.onlyIf { !isNamedEnv() }
+osStageRemote.imageName = getRemoteOCCredentials().url + "/" + openshiftEnv + "/ifs-mysql"
+osStageRemote.tag = sqlVersion
+
+osStageLocal.tag = sqlVersion
+osStageLocal {
     doFirst {
         registryCredentials = getLocalOCCredentials()
         imageName = registryCredentials.url + "/" + openshiftEnv + "/ifs-mysql"
-        tag = sqlVersion
     }
 }
+
+
 
 
 
