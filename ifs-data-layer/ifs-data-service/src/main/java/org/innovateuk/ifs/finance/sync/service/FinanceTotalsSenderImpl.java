@@ -5,7 +5,6 @@ import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
 import org.innovateuk.ifs.finance.sync.mapper.FinanceCostTotalResourceMapper;
-import org.innovateuk.ifs.finance.sync.rest.QueueRestStub;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,12 +22,12 @@ public class FinanceTotalsSenderImpl implements FinanceTotalsSender {
     private FinanceCostTotalResourceMapper financeCostTotalResourceMapper;
 
     @Autowired
-    private QueueRestStub queueRestStub;
+    private MessageQueueServiceStub messageQueueServiceStub;
 
     public ServiceResult<Void> syncFinanceTotalsForApplication(Long applicationId) {
         List<ApplicationFinanceResource> applicationFinanceResources = applicationFinanceHandler.getApplicationFinances(applicationId);
         List<FinanceCostTotalResource> financeCostTotalResources = financeCostTotalResourceMapper.mapFromApplicationFinanceResourceListToList(applicationFinanceResources);
 
-        return queueRestStub.sendFinanceTotals(financeCostTotalResources).toServiceResult();
+        return messageQueueServiceStub.sendFinanceTotals(financeCostTotalResources);
     }
 }
