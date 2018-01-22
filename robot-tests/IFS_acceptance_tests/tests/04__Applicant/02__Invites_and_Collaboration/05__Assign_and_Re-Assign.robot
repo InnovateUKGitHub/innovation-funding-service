@@ -57,8 +57,11 @@ The question is enabled for the assignee
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=Assign test  #Application Title
     Then the user should see the browser notification  Stuart ANDERSON has assigned a question to you
-    And the user should see the element   jQuery=li:contains("Public description") .action-required
-    And the user clicks the button/link   link= Public description
+    And the user should see the element   jQuery=li:contains("Public description") .task-status-incomplete
+    When the user clicks the button/link  jQuery=.button:contains("Review")
+    And the user expands the section      Public description
+    Then the user should see the element  jQuery=button:contains("Assign to lead for review")
+    And the user clicks the button/link   jQuery=.form-group:contains("Public description") button:contains("Return and edit")
     And the user should see the element   css=.textarea-wrapped .editor
 
 Collaborator should see the terms and conditions from the overview page
@@ -80,13 +83,6 @@ Collaborator should see the review button instead of the review and submit
     And the user clicks the button/link           jQuery=.button:contains("Review")
     And the user should see the text in the page  All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application
     And the user should not see the element       jQuery=.button:contains("Submit application")
-
-Collaborator should be able to edit the assigned question
-    [Documentation]  INFUND-2302
-    ...  This test depends on the previous test suite to run first
-    [Tags]  Email  HappyPath
-    When the user clicks the button/link  jQuery=button:contains("Public description")
-    And the user should see the element   jQuery=button:contains("Assign to lead for review")
 
 Last update message is correctly updating
     [Documentation]  INFUND-280
@@ -214,11 +210,12 @@ The question is disabled for other collaborators
     [Documentation]  INFUND-275
     ...    This test case is still using the old application
     [Tags]
-    [Setup]  log in as a different user   &{lead_applicant_credentials}
+    [Setup]  log in as a different user    &{lead_applicant_credentials}
     Given Steve smith assigns a question to the collaborator
-    Given log in as a different user      &{collaborator2_credentials}
-    When the user navigates to the page   ${PUBLIC_DESCRIPTION_URL}
-    Then The user should see the element  css=.textarea-wrapped .readonly
+    Given log in as a different user       &{collaborator2_credentials}
+    And the user navigates to the page     ${APPLICATION_OVERVIEW_URL}
+    When the user clicks the button/link   jQuery=a:contains("Public description")
+    Then The user should see the element   css=.textarea-wrapped .readonly
 
 The question is disabled on the summary page for other collaborators
     [Documentation]  INFUND-2302
@@ -265,7 +262,8 @@ the applicant changes the name of the application
     And The user clicks the button/link       jQuery=button:contains("Save and return")
 
 Steve smith assigns a question to the collaborator
-    the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
+    the user navigates to the page    ${APPLICATION_OVERVIEW_URL}
+    the user clicks the button/link   jQuery=a:contains("Public description")
     When the applicant assigns the question to the collaborator  Jessica Doe
 
 the user fills out the research category

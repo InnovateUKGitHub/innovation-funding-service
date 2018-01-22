@@ -3,6 +3,7 @@ package org.innovateuk.ifs.commons.service;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
@@ -19,13 +20,12 @@ import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
-import org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.*;
-import org.innovateuk.threads.resource.NoteResource;
-import org.innovateuk.threads.resource.QueryResource;
+import org.innovateuk.ifs.threads.resource.NoteResource;
+import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.List;
@@ -240,6 +240,10 @@ public final class ParameterizedTypeReferences {
         return new ParameterizedTypeReference<List<AssessmentResource>>() {};
     }
 
+    public static ParameterizedTypeReference<List<AssessmentReviewResource>> assessmentReviewResourceListType() {
+        return new ParameterizedTypeReference<List<AssessmentReviewResource>>() {};
+    }
+
     public static ParameterizedTypeReference<List<EthnicityResource>> ethnicityResourceListType() {
         return new ParameterizedTypeReference<List<EthnicityResource>>() {};
     }
@@ -266,6 +270,10 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<SpendProfileStatusResource>> spendProfileStatusResourceListType() {
         return new ParameterizedTypeReference<List<SpendProfileStatusResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<BankDetailsReviewResource>> bankDetailsReviewResourceListType() {
+        return new ParameterizedTypeReference<List<BankDetailsReviewResource>>() {};
     }
 
     public static ParameterizedTypeReference<List<CompetitionOpenQueryResource>> competitionOpenQueryListType() {

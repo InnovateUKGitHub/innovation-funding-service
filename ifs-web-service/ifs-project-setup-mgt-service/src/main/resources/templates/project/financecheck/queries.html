@@ -77,7 +77,7 @@
                     <div class="heading-small no-margin">
                         <th:block th:text="${post.username}">Created by user</th:block>
                         <small>
-                            <th:block th:text="${#temporals.format(post.createdOn, 'dd MMMM yyyy')}"/>
+                            <th:block th:text="${#temporals.format(post.createdOn, 'd MMMM yyyy')}"/>
                             <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'hh:mma'))}"/>
                         </small>
                     </div>
@@ -110,7 +110,7 @@
                               th:field="*{response}"
                               id="response"
                               name="response"
-                              class="form-group"
+                              class="form-control"
                               th:attr="maxlength=${model.maxQueryCharacters},
                                        data-max_words=${model.maxQueryWords},
                                        data-maxwordslength=${model.maxQueryWords},
@@ -119,7 +119,7 @@
                                        data-required-errormessage=#{validation.field.must.not.be.blank}"
                               th:errorclass="field-group-error"></textarea>
                             <div class="textarea-footer" th:with="response=*{response}" aria-live="polite" aria-atomic="true" role="status">
-                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})"/>
+                                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})" />
                             </div>
                         </div>
                     </div>

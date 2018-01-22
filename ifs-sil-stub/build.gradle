@@ -1,8 +1,10 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-def targetBuild = hasProperty('profile') ? profile : 'docker';
-apply from: targetBuild+"-build.gradle";
-apply plugin: 'org.asciidoctor.convert'
 
+
+def targetBuild = hasProperty('profile') ? profile : 'docker';
+apply from: targetBuild + "-build.gradle";
+apply plugin: 'org.asciidoctor.convert'
+apply from: rootProject.file("java-spring-boot.gradle")
+apply from: rootProject.file("openshift-build.gradle")
 configurations {
     providedRuntime
 }
@@ -44,11 +46,11 @@ test {
 asciidoctor {
     dependsOn test
     attributes 'snippets': snippetsDir
-    backends  'html5'
+    backends 'html5'
     inputs.dir snippetsDir
     outputs.dir file("static/docs")
 
-    doLast{
+    doLast {
         copy {
             from "build/asciidoc/html5"
             into 'static/docs'
@@ -83,12 +85,18 @@ task prepareDockerInput {
     }
 }
 
-task buildDocker(type: DockerBuildImage) {
-    dependsOn prepareDockerInput
-    tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
-    inputDir = project.file("$project.buildDir/docker")
-}
+buildDocker.dependsOn ":docker:app-base-image:buildDocker"
+buildDocker.dependsOn prepareDockerInput
 
+buildDocker.inputDir = project.file("$project.buildDir/docker")
+
+osStageRemote.onlyIf { isNotProductionEnv() }
+
+project.version = silStubVersion
+tagDocker.tag = silStubVersion
+osStageRemote.tag = silStubVersion
+tagDockerLocal.tag = silStubVersion
+osStageLocal.tag = silStubVersion
 
 // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
 // Can reinstate excludeDevtools in the bootRepackage task in next release
@@ -99,8 +107,4 @@ springBoot {
 bootRepackage {
     mainClass = 'org.innovateuk.ifs.Application'
     //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
 }

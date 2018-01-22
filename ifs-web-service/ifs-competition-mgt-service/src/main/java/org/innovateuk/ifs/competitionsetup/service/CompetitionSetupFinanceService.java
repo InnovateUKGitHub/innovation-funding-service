@@ -12,5 +12,4 @@ public interface CompetitionSetupFinanceService {
     ServiceResult<Void> updateFinance(CompetitionSetupFinanceResource question);
 
 	CompetitionSetupFinanceResource getByCompetitionId(Long competitionId);
-
 }

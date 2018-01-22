@@ -1,23 +1,31 @@
 package org.innovateuk.ifs.project.bankdetails.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.competition.resource.BankDetailsReviewResource;
 import org.innovateuk.ifs.project.bankdetails.resource.BankDetailsResource;
 import org.innovateuk.ifs.project.bankdetails.resource.ProjectBankDetailsStatusSummary;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.List;
+
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.bankDetailsReviewResourceListType;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.ProjectBankDetailsStatusSummaryBuilder.newProjectBankDetailsStatusSummary;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<BankDetailsRestServiceImpl> {
-    private String competitionsRestURL = "/competition";
+    private String competitionRestURL = "/competition";
+    private String competitionsRestURL = "/competitions";
     private final String projectRestURL = "/project";
     
     @Override
@@ -89,9 +97,33 @@ public class BankDetailsRestServiceImplTest extends BaseRestServiceUnitTest<Bank
     public void testDownloadByCompetition() {
         Long competitionId = 123L;
         ByteArrayResource returnedFileContents = new ByteArrayResource("Retrieved content".getBytes());
-        String url = competitionsRestURL + "/" + competitionId + "/bank-details/export";
+        String url = competitionRestURL + "/" + competitionId + "/bank-details/export";
         setupGetWithRestResultExpectations(url, ByteArrayResource.class, returnedFileContents, OK);
         ByteArrayResource retrievedFileEntry = service.downloadByCompetition(123L).getSuccessObject();
         assertEquals(returnedFileContents, retrievedFileEntry);
+    }
+
+    @Test
+    public void getPendingBankDetailsApprovals() {
+
+        List<BankDetailsReviewResource> returnedResponse = singletonList(new BankDetailsReviewResource());
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/pending-bank-details-approvals", bankDetailsReviewResourceListType(), returnedResponse);
+
+        List<BankDetailsReviewResource> response = service.getPendingBankDetailsApprovals().getSuccessObject();
+        assertNotNull(response);
+        Assert.assertEquals(returnedResponse, response);
+    }
+
+    @Test
+    public void countPendingBankDetailsApprovals() {
+
+        Long pendingBankDetailsCount = 8L;
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/count-pending-bank-details-approvals", Long.class, pendingBankDetailsCount);
+
+        Long response = service.countPendingBankDetailsApprovals().getSuccessObject();
+        assertNotNull(response);
+        Assert.assertEquals(pendingBankDetailsCount, response);
     }
 }

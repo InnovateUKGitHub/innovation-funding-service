@@ -5,9 +5,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionSetupRestService;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.service.CompetitionSetupQuestionRestService;
 import org.innovateuk.ifs.competition.service.CompetitionSetupRestService;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.GuidanceRowForm;
@@ -47,6 +47,7 @@ import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupCon
  */
 @Controller
 @RequestMapping("/competition/setup/{competitionId}/section/application")
+@SecuredBySpring(value = "Controller", description = "TODO", securedType = CompetitionSetupApplicationController.class)
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionSetupApplicationController {
 
@@ -72,9 +73,6 @@ public class CompetitionSetupApplicationController {
 
     @Autowired
     private CompetitionSetupPopulator competitionSetupPopulator;
-
-    @Autowired
-    private CompetitionSetupQuestionRestService competitionSetupQuestionRestService;
 
     @Autowired
     @Qualifier("mvcValidator")
@@ -183,6 +181,20 @@ public class CompetitionSetupApplicationController {
                                             @PathVariable(COMPETITION_ID_KEY) long competitionId,
                                             Model model) {
 
+        return handleFinanceSaving(competitionId, model, form, validationHandler);
+    }
+
+    @PostMapping("/question/finance/none/edit")
+    public String submitApplicationNoFinances(@ModelAttribute(COMPETITION_SETUP_FORM_KEY) ApplicationFinanceForm form,
+                                              BindingResult bindingResult,
+                                              ValidationHandler validationHandler,
+                                              @PathVariable(COMPETITION_ID_KEY) long competitionId,
+                                              Model model) {
+
+       return handleFinanceSaving(competitionId, model, form, validationHandler);
+    }
+
+    private String handleFinanceSaving(long competitionId, Model model, ApplicationFinanceForm form, ValidationHandler validationHandler) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
 
         if (!competitionSetupService.isInitialDetailsCompleteOrTouched(competitionId)) {
@@ -194,7 +206,6 @@ public class CompetitionSetupApplicationController {
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> competitionSetupService.saveCompetitionSetupSubsection(form, competitionResource, APPLICATION_FORM, FINANCES));
-
     }
 
     @GetMapping("/question/{questionId}")

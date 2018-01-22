@@ -20,7 +20,10 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-8688 Experian response - Error message if wrong bank details are submitted
 ...
 ...               IFS-1881 Project Setup internal project dashboard navigation
-
+...
+...               IFS-2015 Project Setup task management: Bank details
+...
+...               IFS-2398 - 2164 Add count of outstanding bank details checks to the task management link
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -48,7 +51,6 @@ Links to other sections in Project setup dependent on project details for partne
     And the user should see the element       link = Finance checks
     And the user should not see the element       link= Spend profile
     And the user should not see the element       link = Grant offer letter
-
 
 Project Finance should not be able to access bank details page
     [Documentation]    INFUND-7090, INFUND-7109
@@ -249,23 +251,27 @@ Non lead partner submits bank details
     And the user should see the text in the page   Project team status
     And the user should see the element            css=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(3)
 
+Bank details verified by Experian require no action by the Project Finance
+    [Documentation]  IFS-2495
+    [Tags]  HappyPath  MySQL
+    [Setup]  log in as a different user      &{internal_finance_credentials}
+    Given the bank details have been verified by the Experian  ${Vitruvius_Id}
+    When the user navigates to the page      ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/organisation/${Vitruvius_Id}/review-bank-details
+    Then the user should see the element     jQuery=.success-alert:contains("The bank details provided have been approved.")
+    And the user should not see the element  css=button[data-js-modal="modal-partner-approve-bank-details"]
+    When the user navigates to the page      ${server}/project-setup-management/competitions/status/pending-bank-details-approvals
+    Then the user should not see the element  jQuery=td:contains("${PS_BD_APPLICATION_NUMBER}") ~ td:contains("${Vitruvius_Name}")
+
 Project Finance can see the progress of partners bank details
     [Documentation]  INFUND-4903, INFUND-5966, INFUND-5507
     [Tags]    HappyPath
-    [Setup]  log in as a different user             &{internal_finance_credentials}
     Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
     And the user clicks the button/link             css=#table-project-status tr:nth-child(4) td:nth-child(4) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
     And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
-    Then the user should see the element            jQuery=li:nth-child(1):contains("Review required")
-    And the user should see the element             jQuery=li:nth-child(2):contains("Review required")
-    And the user should see the element             jQuery=li:nth-child(3):contains("Review required")
-    When the user clicks the button/link            link=${Vitruvius_Name}
-    Then the user should see the text in the page   ${Vitruvius_Name} - Account details
-    And the user should see the text in the page    ${PS_BD_APPLICATION_LEAD_FINANCE}
-    And the user should see the element             jQuery=a:contains("${PS_BD_APPLICATION_PM_EMAIL}")
-    And the user should see the text in the page    ${PS_BD_APPLICATION_LEAD_TELEPHONE}
-    And the user goes back to the previous page
+    Then the user should see the element            jQuery=li:contains("${Vitruvius_Name}") .task-status-complete
+    And the user should see the element             jQuery=li:contains("${A_B_Cad_Services_Name}") .action-required
+    And the user should see the element             jQuery=li:contains("${Armstrong_Butler_Name}") .action-required
     When the user clicks the button/link            link=${A_B_Cad_Services_Name}
     Then the user should see the text in the page   ${A_B_Cad_Services_Name} - Account details
     And the user should see the text in the page    Ryan Welch
@@ -275,7 +281,6 @@ Project Finance can see the progress of partners bank details
     Then the user should see the text in the page   ${Armstrong_Butler_Name} - Account details
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_FINANCE}
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_EMAIL}
-
 
 IFS Admin can see Bank Details
     [Documentation]    INFUND-4903, INFUND-4903, IFS-603, IFS-1881
@@ -288,11 +293,10 @@ IFS Admin can see Bank Details
     When the user clicks the button/link          css=#table-project-status tr:nth-of-type(4) td.status.action:nth-of-type(3) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
     And the user should see the text in the page  each partner has submitted their bank details
-    Then the user should see the element          jQuery=li:nth-child(1):contains("Review required")
-    And the user should see the element           jQuery=li:nth-child(2):contains("Review required")
-    And the user should see the element           jQuery=li:nth-child(1) a:contains("${Vitruvius_Name}")
-    And the user should see the element           jQuery=li:nth-child(3):contains("Review required")
-    When the user clicks the button/link          link=${Vitruvius_Name}
+    Then the user should see the element          jQuery=li:contains("${Vitruvius_Name}") .task-status-complete
+    And the user should see the element           jQuery=li:contains("${A_B_Cad_Services_Name}") .action-required
+    And the user should see the element           jQuery=li:contains("${Armstrong_Butler_Name}") .action-required
+    When the user clicks the button/link          link=${A_B_Cad_Services_Name}
     Then the user should see the element          jQuery=.button:contains("Approve bank account details")
 
 Other internal users do not have access to bank details export
@@ -309,6 +313,18 @@ Project Finance user can export bank details
     When the project finance user downloads the bank details
     Then the user opens the excel and checks the content
     [Teardown]  remove the file from the operating system  bank_details.csv
+
+Project Finance approves Bank Details through the Bank Details list
+    [Documentation]    IFS-2015 IFS-2398/2164
+    [Tags]
+    Given log in as a different user    &{internal_finance_credentials}
+    And the user navigates to the page    ${server}/management/dashboard/project-setup
+    And the user clicks the button/link  jQuery=a:contains("Review bank details")
+    When the user clicks the button/link    jQuery=a:contains("Dreambit")
+    And the user clicks the button/link    jQuery=button:contains("Approve bank account details")
+    And the user clicks the button/link    jQuery=button:contains("Approve account")
+    Then the user should see the element    jQuery=h2:contains("The bank details provided have been approved.")
+    And the project finance user confirms the approved bank details
 
 *** Keywords ***
 the user moves focus away from the element
@@ -350,3 +366,14 @@ the user opens the excel and checks the content
     should be equal                 ${bank_account_number}  ${account_two}
     ${bank_account_sort_code}=      get from list  ${vitruvius_details}  11
     should be equal                 ${bank_account_sort_code}  ${sortCode_two}
+
+The project finance user confirms the approved Bank Details
+    the user navigates to the page    ${server}/project-setup-management/competitions/status/pending-bank-details-approvals
+    the user should not see the element    jQuery=a:contains("Dreambit")
+    the user navigates to the page    ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status/all
+    the user should see the element    jQuery=tr:contains("Complete") td:nth-child(4) a:contains("Complete")
+
+the bank details have been verified by the Experian
+    [Arguments]  ${organisationId}
+    Connect to Database  @{database}
+    execute sql string  UPDATE `${database_name}`.`bank_details` SET `company_name_score`=7, `registration_number_matched`=1, `address_score`=8, `manual_approval`=1 WHERE `organisation_id`='${organisationId}';

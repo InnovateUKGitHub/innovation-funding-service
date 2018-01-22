@@ -1,8 +1,12 @@
+project.version = competitionMgtServiceVersion
+tagDocker.tag = competitionMgtServiceVersion
+osStageRemote.tag = competitionMgtServiceVersion
+tagDockerLocal.tag = competitionMgtServiceVersion
+osStageLocal.tag = competitionMgtServiceVersion
+
 jar {
     baseName = 'management'
 }
-buildDocker.tag = 'innovateuk/competition-management-service:latest'
-
 
 dependencies {
     compile project(':ifs-web-service:ifs-web-core')

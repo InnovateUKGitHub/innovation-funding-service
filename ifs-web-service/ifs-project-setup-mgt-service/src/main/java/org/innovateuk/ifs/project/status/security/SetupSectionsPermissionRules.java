@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
@@ -41,96 +42,96 @@ public class SetupSectionsPermissionRules {
     private ProjectService projectService;
 
     @PermissionRule(value = "ACCESS_PROJECT_DETAILS_SECTION", description = "An internal user can access the Project Details section when submitted by Partners (Individual)")
-    public boolean internalCanAccessProjectDetailsSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessProjectDetailsSection, SecurityRuleUtil::isInternalAdmin);
+    public boolean internalCanAccessProjectDetailsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessProjectDetailsSection, SecurityRuleUtil::isInternalAdmin);
     }
 
     @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "An internal user can access after project details are submitted by the lead")
-    public boolean internalCanAccessMonitoringOfficerSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isInternalAdmin);
+    public boolean internalCanAccessMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isInternalAdmin);
     }
 
     @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "Support user can access after project details are submitted by the lead")
-    public boolean supportCanAccessMonitoringOfficerSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isSupport);
+    public boolean supportCanAccessMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isSupport);
     }
 
     @PermissionRule(value = "ACCESS_MONITORING_OFFICER_SECTION", description = "Innovation lead user can access after project details are submitted by the lead")
-    public boolean innovationLeadUserCanAccessMonitoringOfficerSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isInnovationLead);
+    public boolean innovationLeadUserCanAccessMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isInnovationLead);
     }
 
     @PermissionRule(value = "EDIT_MONITORING_OFFICER_SECTION", description = "An internal user can access after project details are submitted by the lead")
-    public boolean internalCanEditMonitoringOfficerSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isInternalAdmin);
+    public boolean internalCanEditMonitoringOfficerSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessMonitoringOfficerSection, SecurityRuleUtil::isInternalAdmin);
     }
 
     @PermissionRule(value = "ACCESS_BANK_DETAILS_SECTION", description = "An internal user can access the Bank Details " +
             "section when submitted by Partners (Individual)")
-    public boolean internalCanAccessBankDetailsSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessBankDetailsSection, SecurityRuleUtil::isInternalAdmin);
+    public boolean internalCanAccessBankDetailsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessBankDetailsSection, SecurityRuleUtil::isInternalAdmin);
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION", description = "An internal user can always access the Finance checks section")
-    public boolean internalCanAccessFinanceChecksSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessFinanceChecksSection, SecurityRuleUtil::isInternalAdmin);
+    public boolean internalCanAccessFinanceChecksSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessFinanceChecksSection, SecurityRuleUtil::isInternalAdmin);
     }
 
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "An internal user can access the Spend Profile " +
             "section when the lead partner submits the project spendprofile")
-    public boolean internalCanAccessSpendProfileSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::isInternalAdmin);
+    public boolean internalCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::isInternalAdmin);
     }
 
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "Support user can access the Spend Profile " +
             "section when the lead partner submits the project spendprofile")
-    public boolean supportCanAccessSpendProfileSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::isSupport);
+    public boolean supportCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::isSupport);
     }
 
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "Innovation lead user can access the Spend Profile " +
             "section when the lead partner submits the project spendprofile")
-    public boolean innovationLeadCanAccessSpendProfileSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::isInnovationLead);
+    public boolean innovationLeadCanAccessSpendProfileSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessSpendProfileSection, SecurityRuleUtil::isInnovationLead);
     }
 
     @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "An internal user can access the Other Documents " +
             "section when the lead partner submits the documents")
-    public boolean internalCanAccessOtherDocumentsSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isInternalAdmin);
+    public boolean internalCanAccessOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isInternalAdmin);
     }
 
     @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "A support user can access the Other Documents " +
             "section when the lead partner submits the documents")
-    public boolean supportCanAccessOtherDocumentsSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isSupport);
+    public boolean supportCanAccessOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isSupport);
     }
 
     @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "An innovation lead user can access the Other Documents " +
             "section when the lead partner submits the documents")
-    public boolean innovationLeadCanAccessOtherDocumentsSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isInnovationLead);
+    public boolean innovationLeadCanAccessOtherDocumentsSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessOtherDocumentsSection, SecurityRuleUtil::isInnovationLead);
     }
 
     @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SEND_SECTION", description = "An internal user can access the Grant Offer Letter send " +
             "section when the lead partner submits the documents")
-    public boolean internalCanAccessGrantOfferLetterSendSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessGrantOfferLetterSendSection, SecurityRuleUtil::isInternalAdmin);
+    public boolean internalCanAccessGrantOfferLetterSendSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessGrantOfferLetterSendSection, SecurityRuleUtil::isInternalAdmin);
     }
 
     @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SEND_SECTION", description = "A support user can access the Grant Offer Letter send section when the lead partner submits the documents")
-    public boolean supportCanAccessGrantOfferLetterSendSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessGrantOfferLetterSendSection, SecurityRuleUtil::isSupport);
+    public boolean supportCanAccessGrantOfferLetterSendSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessGrantOfferLetterSendSection, SecurityRuleUtil::isSupport);
     }
 
     @PermissionRule(value = "ACCESS_GRANT_OFFER_LETTER_SEND_SECTION", description = "Innovation lead user can access the Grant Offer Letter send section when the lead partner submits the documents")
-    public boolean innovationLeadCanAccessGrantOfferLetterSendSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessGrantOfferLetterSendSection, SecurityRuleUtil::isInnovationLead);
+    public boolean innovationLeadCanAccessGrantOfferLetterSendSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessGrantOfferLetterSendSection, SecurityRuleUtil::isInnovationLead);
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION", description = "A finance team user can always access the Finance checks queries section")
-    public boolean internalCanAccessFinanceChecksQueriesSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection, SecurityRuleUtil::isInternalAdmin);
+    public boolean internalCanAccessFinanceChecksQueriesSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessFinanceChecksQueriesSection, SecurityRuleUtil::isInternalAdmin);
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION_ADD_QUERY", description = "A finance team user cannot add a query until a finance contact has been allocated for the organisation")
@@ -140,8 +141,8 @@ public class SetupSectionsPermissionRules {
     }
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_NOTES_SECTION", description = "A finance team can always access the Finance checks notes section")
-    public boolean internalCanAccessFinanceChecksNotesSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, SetupSectionInternalUser::canAccessFinanceChecksNotesSection, SecurityRuleUtil::isInternalAdmin);
+    public boolean internalCanAccessFinanceChecksNotesSection(ProjectCompositeId projectCompositeId, UserResource user) {
+        return doSectionCheck(projectCompositeId.id(), user, SetupSectionInternalUser::canAccessFinanceChecksNotesSection, SecurityRuleUtil::isInternalAdmin);
     }
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<SetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn, Function<UserResource, Boolean> userCheckFn) {

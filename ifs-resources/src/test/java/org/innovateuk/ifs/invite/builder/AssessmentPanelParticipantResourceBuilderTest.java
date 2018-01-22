@@ -29,6 +29,7 @@ public class AssessmentPanelParticipantResourceBuilderTest {
         long expectedSubmittedAssessments = 1L;
         long expectedPendingAssessments = 2L;
         CompetitionStatus expectedCompetitionStatus = CompetitionStatus.IN_ASSESSMENT;
+        long expectedAwaitingApplications = 3L;
 
         AssessmentPanelParticipantResource competitionParticipant = newAssessmentPanelParticipantResource()
                 .withId(expectedId)
@@ -46,6 +47,7 @@ public class AssessmentPanelParticipantResourceBuilderTest {
                 .withSubmittedAssessments(expectedSubmittedAssessments)
                 .withPendingAssessments(expectedPendingAssessments)
                 .withCompetitionStatus(expectedCompetitionStatus)
+                .withAwaitingApplications(expectedAwaitingApplications)
                 .build();
 
         assertEquals(expectedId, competitionParticipant.getId());
@@ -62,6 +64,7 @@ public class AssessmentPanelParticipantResourceBuilderTest {
         assertEquals(expectedSubmittedAssessments, competitionParticipant.getSubmittedAssessments());
         assertEquals(expectedPendingAssessments, competitionParticipant.getPendingAssessments());
         assertEquals(expectedCompetitionStatus, competitionParticipant.getCompetitionStatus());
+        assertEquals(expectedAwaitingApplications, competitionParticipant.getAwaitingApplications());
     }
 
     @Test
@@ -81,6 +84,7 @@ public class AssessmentPanelParticipantResourceBuilderTest {
         Long[] expectedSubmittedAssessments = {1L, 2L};
         Long[] expectedPendingAssessments = {2L, 3L};
         CompetitionStatus[] expectedCompetitionStatuses = {CompetitionStatus.IN_ASSESSMENT, CompetitionStatus.FUNDERS_PANEL};
+        Long[] expectedAwaitingApplications = {3L, 4L};
 
         List<AssessmentPanelParticipantResource> competitionParticipants = newAssessmentPanelParticipantResource()
                 .withId(expectedIds)
@@ -98,6 +102,7 @@ public class AssessmentPanelParticipantResourceBuilderTest {
                 .withSubmittedAssessments(expectedSubmittedAssessments)
                 .withPendingAssessments(expectedPendingAssessments)
                 .withCompetitionStatus(expectedCompetitionStatuses)
+                .withAwaitingApplications(expectedAwaitingApplications)
                 .build(2);
 
         AssessmentPanelParticipantResource first = competitionParticipants.get(0);
@@ -115,6 +120,7 @@ public class AssessmentPanelParticipantResourceBuilderTest {
         assertEquals(expectedSubmittedAssessments[0].longValue(), first.getSubmittedAssessments());
         assertEquals(expectedPendingAssessments[0].longValue(), first.getPendingAssessments());
         assertEquals(expectedCompetitionStatuses[0], first.getCompetitionStatus());
+        assertEquals(expectedAwaitingApplications[0].longValue(), first.getAwaitingApplications());
 
         AssessmentPanelParticipantResource second = competitionParticipants.get(1);
         assertEquals(expectedIds[1], second.getId());
@@ -131,5 +137,6 @@ public class AssessmentPanelParticipantResourceBuilderTest {
         assertEquals(expectedSubmittedAssessments[1].longValue(), second.getSubmittedAssessments());
         assertEquals(expectedPendingAssessments[1].longValue(), second.getPendingAssessments());
         assertEquals(expectedCompetitionStatuses[1], second.getCompetitionStatus());
+        assertEquals(expectedAwaitingApplications[1].longValue(), second.getAwaitingApplications());
     }
 }

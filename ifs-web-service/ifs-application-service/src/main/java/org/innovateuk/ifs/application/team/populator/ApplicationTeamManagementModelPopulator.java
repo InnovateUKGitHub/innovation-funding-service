@@ -15,8 +15,10 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
@@ -89,8 +91,8 @@ public class ApplicationTeamManagementModelPopulator {
                 organisationName,
                 true,
                 userLeadApplicant,
-                combineLists(getLeadApplicantViewModel(leadApplicant), simpleMap(invites, applicationInviteResource ->
-                        getApplicantViewModel(applicationInviteResource, userLeadApplicant))),
+                sortApplicants(combineLists(getLeadApplicantViewModel(leadApplicant), simpleMap(invites, applicationInviteResource ->
+                        getApplicantViewModel(applicationInviteResource, userLeadApplicant)))),
                 true
         );
     }
@@ -106,9 +108,19 @@ public class ApplicationTeamManagementModelPopulator {
                 getOrganisationName(inviteOrganisationResource),
                 false,
                 userLeadApplicant,
-                simpleMap(inviteOrganisationResource.getInviteResources(), applicationInviteResource ->
-                        getApplicantViewModel(applicationInviteResource, userLeadApplicant)),
+                sortApplicants(simpleMap(inviteOrganisationResource.getInviteResources(), applicationInviteResource ->
+                        getApplicantViewModel(applicationInviteResource, userLeadApplicant))),
                 organisationExists);
+    }
+
+    private List<ApplicationTeamManagementApplicantRowViewModel> sortApplicants(List<ApplicationTeamManagementApplicantRowViewModel> applicants) {
+        return applicants.stream()
+                .sorted(getPendingOnNullFirstComparator())
+                .collect(Collectors.toList());
+    }
+
+    private Comparator<ApplicationTeamManagementApplicantRowViewModel> getPendingOnNullFirstComparator() {
+        return Comparator.comparing(ApplicationTeamManagementApplicantRowViewModel::getPendingSince, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     private ApplicationTeamManagementApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource, boolean userLeadApplicant) {

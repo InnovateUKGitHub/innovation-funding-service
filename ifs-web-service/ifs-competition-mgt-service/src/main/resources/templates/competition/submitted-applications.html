@@ -17,7 +17,7 @@
             <ul class="grid-row extra-margin-bottom">
                 <li class="column-quarter">
                     <div class="highlight-panel highlight-panel-padded">
-                        <span class="heading-medium" th:text="${#temporals.format(model.assessmentDeadline, 'dd MMMM Y')}">17 November 2016</span>
+                        <span class="heading-medium" th:text="${#temporals.format(model.assessmentDeadline, 'd MMMM Y')}">17 November 2016</span>
                         <br />
                         <small>Assessment deadline</small>
                     </div>
@@ -90,8 +90,8 @@
                             <td th:text="${row.lead}">PWC</td>
                             <td th:text="${row.innovationArea} ?: 'Not listed'">HVM</td>
                             <td th:text="${row.numberOfPartners}">5</td>
-                            <td th:text="${#numbers.formatInteger(row.grantRequested, 3, 'DEFAULT')}">£203,000</td>
-                            <td th:text="${#numbers.formatInteger(row.totalProjectCost, 3, 'DEFAULT')}">£324,000</td>
+                            <td th:text="${#numbers.formatInteger(row.grantRequested, 1, 'DEFAULT')}">£203,000</td>
+                            <td th:text="${#numbers.formatInteger(row.totalProjectCost, 1, 'DEFAULT')}">£324,000</td>
                             <td class="alignright" th:text="${row.durationInMonths}">12</td>
                         </tr>
                     </tbody>

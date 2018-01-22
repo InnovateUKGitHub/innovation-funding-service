@@ -23,13 +23,13 @@ items:
           deploymentconfig: project-setup-svc
       spec:
         containers:
-        - image: innovateuk/project-setup-service:1.0-SNAPSHOT
+        - image: innovateuk/project-setup-service:${projectSetupServiceVersion}
           name: project-setup-svc
           livenessProbe:
             httpGet:
               path: /project-setup/monitoring/health
               port: 8080
-            initialDelaySeconds: 60
+            initialDelaySeconds: 100
             periodSeconds: 31
             timeoutSeconds: 5
             successThreshold: 1
@@ -38,7 +38,7 @@ items:
             httpGet:
               path: /project-setup/monitoring/health
               port: 8080
-            initialDelaySeconds: 60
+            initialDelaySeconds: 100
             periodSeconds: 5
             timeoutSeconds: 5
             successThreshold: 1

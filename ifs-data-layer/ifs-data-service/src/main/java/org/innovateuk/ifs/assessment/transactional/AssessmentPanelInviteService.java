@@ -2,18 +2,18 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.invite.resource.AssessorInviteSendResource;
-import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.data.domain.Pageable;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PreAuthorize;
+
 import java.util.List;
 
 /**
- * Service for managing {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite}s.
+ * Service for managing {@link AssessmentPanelInvite}s.
  */
 public interface AssessmentPanelInviteService {
 

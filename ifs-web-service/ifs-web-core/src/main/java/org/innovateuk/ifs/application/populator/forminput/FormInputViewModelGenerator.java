@@ -29,7 +29,7 @@ public class FormInputViewModelGenerator {
     }
 
     public List<AbstractFormInputViewModel> fromQuestion(ApplicantQuestionResource question, ApplicationForm form) {
-        List<AbstractFormInputViewModel> viewModels =  question.getApplicantFormInputs().stream()
+        List<AbstractFormInputViewModel> viewModels = question.getApplicantFormInputs().stream()
                 .filter(applicantFormInput -> applicantFormInput.getFormInput().getType().isDisplayableQuestionType())
                 .map(applicantFormInput -> getPopulator(applicantFormInput.getFormInput().getType()).populate(question, null, question, applicantFormInput, applicantFormInput.responseForApplicant(question.getCurrentApplicant(), question)))
                 .collect(Collectors.toList());

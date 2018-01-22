@@ -1,18 +1,19 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-def targetBuild = hasProperty('profile') ? profile : 'docker';
-apply from: targetBuild+"-build.gradle";
 
-apply from: "script-support.gradle"
+
+def targetBuild = hasProperty('profile') ? profile : 'docker';
+apply from: targetBuild + "-build.gradle";
+
 apply plugin: 'base'
 
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'org.asciidoctor.convert'
+apply from: "db-reset.gradle"
 
 task('copyFreemarkerResources', type: Copy) {
 //Copy freemarker resources to build path to support running as a jar.
     from 'src/main/java/org/innovateuk/ifs/notifications/templates'
-        into 'build/classes/main/org/innovateuk/ifs/notifications/templates'
-        include '**/*'
+    into 'build/classes/main/org/innovateuk/ifs/notifications/templates'
+    include '**/*'
 }
 
 compileJava.dependsOn copyFreemarkerResources
@@ -22,9 +23,15 @@ configurations {
     providedRuntime
 }
 
-ext.idpRestKey=project.properties['idp.rest.key'] ?:"1234567890"
-ext.companyHouseKey=ext.get('ifs.company-house.key')
 
+project.version = dataServiceVersion
+tagDocker.tag = dataServiceVersion
+osStageRemote.tag = dataServiceVersion
+tagDockerLocal.tag = dataServiceVersion
+osStageLocal.tag = dataServiceVersion
+
+ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
+ext.companyHouseKey = ext.get('ifs.company-house.key')
 
 sourceSets {
     client {
@@ -47,7 +54,7 @@ ext {
 }
 
 // Spring Boot 1.3 uses Spring REST Docs 1.0. To use 1.1, override the version
-ext['spring-restdocs.version']='1.1.2.RELEASE'
+ext['spring-restdocs.version'] = '1.1.2.RELEASE'
 
 jar {
     baseName = 'ifs-data-service'
@@ -113,67 +120,17 @@ test {
     finalizedBy asciidoctor
 }
 
-task dbResetDockerEnv {
-    dependsOn "build"
 
-    def inputDir = project.file("$project.buildDir/docker-db-reset")
-    doFirst {
-        copy {
-            from file('src/main/docker/Dockerfile-dbreset')
-            rename 'Dockerfile-dbreset', 'Dockerfile'
-            into inputDir
-        }
-        copy {
-            from file('src/main/resources')
-            include 'db/**/*.sql'
-            into inputDir
-        }
-        copy {
-            from file("${rootProject.projectDir}/setup-files/scripts/docker/ldap-sync-from-ifs-db.sh")
-            into inputDir
-        }
-    }
-}
-
-task dbResetDocker(type: DockerBuildImage) {
-    dependsOn "dbResetDockerEnv"
-    tag = 'innovateuk/dbreset'
-    inputDir = project.file("$project.buildDir/docker-db-reset")
-}
-
-task dbAnonymisedDumpDockerEnv {
-    dependsOn "build"
-    def inputDir = project.file("$project.buildDir/docker-db-anonymised")
-
-    doFirst {
-        copy {
-            from file('src/main/docker/proxysql/Dockerfile-proxysql')
-            rename 'Dockerfile-proxysql', 'Dockerfile'
-            into inputDir
-        }
-        copy {
-            from "src/main/docker/proxysql"
-            into "${inputDir}/proxysql"
-        }
-    }
-}
-
-
-task dbAnonymisedDumpDocker(type: DockerBuildImage, dependsOn: build) {
-    dependsOn "dbAnonymisedDumpDockerEnv"
-    tag = 'innovateuk/db-anonymised-data'
-    inputDir = project.file("$project.buildDir/docker-db-anonymised")
-}
 
 
 asciidoctor {
     dependsOn test
     attributes 'snippets': snippetsDir
-    backends  'html5'
+    backends 'html5'
     inputs.dir snippetsDir
     outputs.dir file("static/docs")
 
-    doLast{
+    doLast {
         copy {
             from "build/asciidoc/html5"
             into 'static/docs'
@@ -183,7 +140,7 @@ asciidoctor {
 }
 
 task generateMainMapperClasses(type: JavaCompile) {
-    ext.aptDumpDir = file( "build/tmp/apt/mapstruct" )
+    ext.aptDumpDir = file("build/tmp/apt/mapstruct")
     destinationDir = aptDumpDir
 
     classpath = compileJava.classpath + configurations.mapstruct
@@ -212,27 +169,19 @@ task generateMainMapperClasses(type: JavaCompile) {
     }
 }
 
+task syncShib(type:Exec) {
+    workingDir '../'
+    commandLine 'docker-compose', 'exec', '-T', 'ldap', '/usr/local/bin/ldap-sync-from-ifs-db.sh', 'mysql'
+}
+
+task initDB() {
+    flywayMigrate.mustRunAfter flywayClean
+
+    dependsOn flywayClean
+    dependsOn flywayMigrate
+}
 
 compileJava.dependsOn generateMainMapperClasses
 flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
 
-
-task initDB() {
-
-    flywayClean.mustRunAfter startMySql
-    createTestSchema.mustRunAfter startMySql
-    createSchema.mustRunAfter startMySql
-    flywayMigrate.mustRunAfter flywayClean
-
-    dependsOn startMySql
-    dependsOn createTestSchema
-    dependsOn createSchema
-    dependsOn flywayClean
-    dependsOn flywayMigrate
-
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = '3.0'
-}

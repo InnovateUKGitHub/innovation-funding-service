@@ -90,7 +90,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
-    public static final String OPEN_QUERIES_WHERE_CLAUSE = "WHERE t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
+    String OPEN_QUERIES_WHERE_CLAUSE = "WHERE t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
             "AND TYPE(t) = Query " +
             "AND 0 = (SELECT COUNT(id) FROM u.roles r WHERE r.name = 'project_finance') " +
             "AND a.competition.id = :competitionId " +
@@ -101,7 +101,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "    GROUP BY p.thread.id) "  +
             "AND NOT EXISTS (SELECT id FROM SpendProfileProcess sp WHERE sp.target.id = pr.id AND sp.event != 'project-created') ";
 
-    public static final String COUNT_OPEN_QUERIES = "SELECT COUNT(DISTINCT t.classPk) " +
+    String COUNT_OPEN_QUERIES = "SELECT COUNT(DISTINCT t.classPk) " +
             "FROM Post post " +
             "JOIN post.thread t " +
             "JOIN post.author u " +
@@ -110,7 +110,7 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "JOIN pr.application a " +
             OPEN_QUERIES_WHERE_CLAUSE;
 
-    public static final String GET_OPEN_QUERIES = "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name) " +
+    String GET_OPEN_QUERIES = "SELECT NEW org.innovateuk.ifs.competition.resource.CompetitionOpenQueryResource(pr.application.id, o.id, o.name, pr.id, pr.name) " +
             "FROM Post post " +
             "JOIN post.thread t " +
             "JOIN post.author u " +
@@ -122,20 +122,20 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "GROUP BY pr.application.id, o.id, pr.id " +
             "ORDER BY pr.application.id, o.name";
 
-    public static final String PENDING_SPEND_PROFILES_WHERE_CLAUSE = " WHERE c.id = :competitionId " +
+    String PENDING_SPEND_PROFILES_WHERE_CLAUSE = " WHERE c.id = :competitionId " +
             " AND NOT EXISTS (SELECT v.id FROM ViabilityProcess v WHERE v.target.id IN (SELECT po.id FROM PartnerOrganisation po WHERE po.project.id = p.id) AND " +
             "   v.event = 'project-created' )" +
             " AND NOT EXISTS (SELECT e.id FROM EligibilityProcess e WHERE e.target.id IN (SELECT po.id FROM PartnerOrganisation po WHERE po.project.id = p.id) AND " +
             "   e.event = 'project-created' )" +
             " AND NOT EXISTS (SELECT sp.id FROM SpendProfile sp WHERE sp.project.id = p.id) ";
 
-    public static final String GET_PENDING_SPEND_PROFILES = "SELECT NEW org.innovateuk.ifs.competition.resource.SpendProfileStatusResource(" +
+    String GET_PENDING_SPEND_PROFILES = "SELECT NEW org.innovateuk.ifs.competition.resource.SpendProfileStatusResource(" +
             "p.application.id, p.id, p.name) " +
             " FROM Project p " +
             " JOIN p.application.competition c " +
             PENDING_SPEND_PROFILES_WHERE_CLAUSE;
 
-    public static final String COUNT_PENDING_SPEND_PROFILES = "SELECT COUNT(DISTINCT p.id)" +
+    String COUNT_PENDING_SPEND_PROFILES = "SELECT COUNT(DISTINCT p.id)" +
             " FROM Project p " +
             " JOIN p.application.competition c " +
             PENDING_SPEND_PROFILES_WHERE_CLAUSE;
@@ -208,6 +208,13 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(GET_OPEN_QUERIES)
     List<CompetitionOpenQueryResource> getOpenQueryByCompetition(@Param("competitionId") long competitionId);
 
+    Competition findByApplicationsId(long applicationId);
+
+    @Query("SELECT c FROM Competition c INNER JOIN Application a ON a.competition = c INNER JOIN Project p ON p.application = a WHERE p.id = :projectId")
+    Competition findByProjectId(@Param("projectId") long projectId);
+
+    @Query("SELECT c FROM Competition c INNER JOIN Application app ON app.competition = c INNER JOIN Assessment ass ON ass.target.id = app.id WHERE ass.id = :assessmentId")
+    Competition findByAssessmentId(@Param("assessmentId") long assessmentId);
     @Query(GET_PENDING_SPEND_PROFILES)
     List<SpendProfileStatusResource> getPendingSpendProfiles(@Param("competitionId") long competitionId);
 

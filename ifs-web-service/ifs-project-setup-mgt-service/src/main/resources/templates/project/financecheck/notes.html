@@ -42,7 +42,7 @@
                         <div th:class="${iteration.index == 0} ? '' : 'panel'">
                             <p class="heading-small no-margin">
                                 <th:block th:text="${post.username}">Created by user</th:block>
-                                <small th:text="${#temporals.format(post.createdOn, 'hh:mma dd MMMM yyyy')}">13:21 27 February 2017</small>
+                                <small th:text="${#temporals.format(post.createdOn, 'hh:mma d MMMM yyyy')}">13:21 27 February 2017</small>
                             </p>
                             <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}">Content of the note.</p>
                             <th:block th:unless="${post.attachments.isEmpty()}">

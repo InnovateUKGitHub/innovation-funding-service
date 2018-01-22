@@ -4,12 +4,14 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.TermsAndConditionsResource;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -59,11 +61,20 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
 
     @Test
     public void termsAndConditions() throws Exception {
-        final CompetitionResource competitionResource = newCompetitionResource().build();
-        when(competitionService.getPublishedById(competitionResource.getId())).thenReturn(competitionResource);
+
+        TermsAndConditionsResource termsAndConditions = new TermsAndConditionsResource("T&C", "special-terms-and-conditions", "3");
+
+        final CompetitionResource competitionResource = newCompetitionResource()
+                .withCompetitionTypeName("Competition name")
+                .withTermsAndConditions(termsAndConditions)
+                .build();
+
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
 
         mockMvc.perform(get("/competition/{id}/info/terms-and-conditions", competitionResource.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("competition/info/terms-and-conditions"));
+                .andExpect(view().name("competition/info/special-terms-and-conditions"));
+
+        verify(competitionService).getById(competitionResource.getId());
     }
 }

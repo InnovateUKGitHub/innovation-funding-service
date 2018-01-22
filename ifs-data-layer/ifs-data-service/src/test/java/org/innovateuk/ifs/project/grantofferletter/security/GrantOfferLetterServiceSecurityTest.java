@@ -7,6 +7,7 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.resource.ProjectCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -189,9 +190,9 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
     @Test
     public void testSubmitGrantOfferLetter() {
-        final Long projectId = 1L;
-
-        assertAccessDenied(() -> classUnderTest.submitGrantOfferLetter(projectId), () -> {
+        final ProjectCompositeId projectId = ProjectCompositeId.id(1L);
+        when(projectLookupStrategy.getProjectCompositeId(projectId.id())).thenReturn(projectId);
+        assertAccessDenied(() -> classUnderTest.submitGrantOfferLetter(projectId.id()), () -> {
             verify(projectGrantOfferPermissionRules).projectManagerSubmitGrantOfferLetter(projectId, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
@@ -308,8 +309,20 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.isSignedGrantOfferLetterApproved(123L), () -> {
-            verify(projectGrantOfferPermissionRules).partnersOnProjectCanViewGrantOfferApprovedStatus(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).internalUsersCanViewGrantOfferApprovedStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).partnersOnProjectCanViewSignedGrantOfferStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewSignedGrantOfferStatus(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectGrantOfferPermissionRules);
+        });
+    }
+
+    @Test
+    public void testIsSignedGrantOfferLetterRejected() {
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+        assertAccessDenied(() -> classUnderTest.isSignedGrantOfferLetterRejected(123L), () -> {
+            verify(projectGrantOfferPermissionRules).partnersOnProjectCanViewSignedGrantOfferStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewSignedGrantOfferStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -432,6 +445,11 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
         @Override
         public ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId) {
             return null;
         }
 

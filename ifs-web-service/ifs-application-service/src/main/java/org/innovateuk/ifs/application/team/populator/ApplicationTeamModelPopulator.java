@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -106,7 +107,13 @@ public class ApplicationTeamModelPopulator {
         boolean editable = userLeadApplicant || isUserMemberOfOrganisation(loggedInUserId, inviteOrganisationResource);
         return new ApplicationTeamOrganisationRowViewModel(inviteOrganisationResource.getOrganisation(),
                 inviteOrganisationResource.getId(), getOrganisationName(inviteOrganisationResource), inviteOrganisationResource.getOrganisationTypeName(), leadOrganisation,
-                inviteOrganisationResource.getInviteResources().stream().map(this::getApplicantViewModel).collect(toList()), editable);
+                inviteOrganisationResource.getInviteResources().stream()
+                        .sorted(getSentOnNullFirstComparator())
+                        .map(this::getApplicantViewModel).collect(toList()), editable);
+    }
+
+    private Comparator<ApplicationInviteResource> getSentOnNullFirstComparator() {
+        return Comparator.comparing(ApplicationInviteResource::getSentOn, Comparator.nullsFirst(Comparator.naturalOrder()));
     }
 
     private ApplicationTeamApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource) {

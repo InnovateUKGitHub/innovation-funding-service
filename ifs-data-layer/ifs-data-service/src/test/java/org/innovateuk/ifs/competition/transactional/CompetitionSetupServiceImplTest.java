@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.commons.error.Error;
@@ -9,16 +8,14 @@ import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
-import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
-import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.setup.resource.SetupStatusResource;
 import org.innovateuk.ifs.setup.transactional.SetupStatusService;
@@ -33,7 +30,6 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 
-import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
@@ -57,19 +53,11 @@ public class CompetitionSetupServiceImplTest {
     @Mock
     private CompetitionRepository competitionRepository;
     @Mock
-    private CompetitionTypeRepository competitionTypeRepository;
-    @Mock
     private FormInputRepository formInputRepository;
     @Mock
     private QuestionRepository questionRepository;
 	@Mock
 	private SectionRepository sectionRepository;
-	@Mock
-	private GuidanceRowRepository assessmentScoreRowRepository;
-	@Mock
-	private AssessorCountOptionRepository competitionTypeAssessorOptionRepository;
-	@Mock
-	private EntityManager entityManager;
 	@Mock
 	private CompetitionMapper competitionMapperMock;
 	@Mock

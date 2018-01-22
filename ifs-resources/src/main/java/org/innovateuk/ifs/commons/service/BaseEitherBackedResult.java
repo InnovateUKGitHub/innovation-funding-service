@@ -222,7 +222,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         try {
             FailingOrSucceedingResult<R, FailureType> successResult = rFunc.apply(result.getRight());
             return successResult.isFailure() ? createFailure(successResult) : createSuccess(successResult);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
         }
@@ -237,7 +237,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         try {
             R successResult = rFunc.apply(result.getRight());
             return createSuccess(successResult);
-        } catch (Throwable e) {
+        } catch (Exception e) {
             LOG.warn("Exception caught while processing success function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
         }

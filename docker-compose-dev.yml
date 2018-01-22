@@ -71,6 +71,16 @@ services:
     environment:
       - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
+  finance-data-service:
+    hostname: finance-data-service
+    links:
+      - mysql:ifs-database
+    ports:
+      - "8092:8080"
+      - "9012:8000"
+    environment:
+      - JAVA_OPTS=-Xmx300m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
+
   sil-stub:
       hostname: sil-stub
       links:
@@ -81,7 +91,7 @@ services:
         - JAVA_OPTS=-Xmx300m
 
   mail:
-    image: davidrums/local-webmail-sink
+    image: innovateuk/mail-sink
     ports:
       - "9876:8143"
       - "8765:8080"

@@ -21,7 +21,7 @@ Competition dashboard
     ...
     ...    INFUND-7362
     When The user clicks the button/link    link=${CLOSED_COMPETITION_NAME}
-    Then The user should see the text in the page    13: Machine learning for transport infrastructure
+    Then The user should see the text in the page   Machine learning for transport infrastructure
     And The user should see the text in the page    Closed
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Infrastructure systems
@@ -86,4 +86,6 @@ the counts of the key statistics of the closed competition should be correct
     Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    3
     ${APPLICATIONS_REQ}=    Get text    css=ul:nth-child(3) > li:nth-child(1) > div > span
     Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    ${APPLICATIONS_REQ}
-    #TODO Should add \ checks for Assignments made and Assessors without applications \
+    ${Assessor_without_app}=    Get text     css=ul:nth-child(3)> li:nth-child(3) > div > span
+    Should Be Equal As Integers    ${Assessor_without_app}   10
+

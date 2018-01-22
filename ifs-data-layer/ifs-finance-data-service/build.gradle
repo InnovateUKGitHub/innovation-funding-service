@@ -1,0 +1,58 @@
+def targetBuild = hasProperty('profile') ? profile : 'docker';
+apply from: targetBuild + "-build.gradle";
+
+apply plugin: 'base'
+apply plugin: 'org.flywaydb.flyway'
+
+configurations {
+    providedRuntime
+}
+
+project.version = financeDataServiceVersion
+tagDocker.tag = financeDataServiceVersion
+osStageRemote.tag = financeDataServiceVersion
+tagDockerLocal.tag = financeDataServiceVersion
+osStageLocal.tag = financeDataServiceVersion
+
+sourceSets {
+    client {
+        java {
+            srcDir 'src/main/java'
+        }
+        main {
+            ext.originalJavaSrcDirs = java.srcDirs
+            java.srcDir "${generatedMapperSourcesDir}"
+        }
+    }
+}
+
+bootRun {
+    addResources = false
+}
+
+// Spring Boot 1.3 uses Spring REST Docs 1.0. To use 1.1, override the version
+ext['spring-restdocs.version'] = '1.1.2.RELEASE'
+
+jar {
+    baseName = 'ifs-finance-data-service'
+}
+
+configurations {
+    mapstruct
+}
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "mysql:mysql-connector-java"
+    compile "org.flywaydb:flyway-core:4.1.2"
+}
+
+task initDB() {
+    flywayMigrate.mustRunAfter flywayClean
+
+    dependsOn flywayClean
+    dependsOn flywayMigrate
+}
+
+flywayMigrate.dependsOn processResources
+flywayClean.dependsOn processResources

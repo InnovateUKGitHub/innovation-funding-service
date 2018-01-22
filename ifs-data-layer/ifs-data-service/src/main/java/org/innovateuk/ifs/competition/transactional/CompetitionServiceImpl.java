@@ -16,9 +16,9 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
@@ -108,6 +108,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         put("id", new Sort(ASC, "id"));
         put("name", new Sort(ASC, "name", "id"));
     }};
+
+    private static final String EOI = "Expression of interest";
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
@@ -207,6 +209,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
             // Only competitions with at least one funded and informed application can be considered as in project setup
             return serviceSuccess(simpleMap(
                     CollectionFunctions.reverse(competitions.stream()
+                            .filter(competition -> !competition.getCompetitionType().getName().equals(EOI))
                             .map(competition -> Pair.of(findMostRecentFundingInformDate(competition), competition))
                             .sorted(Comparator.comparing(Pair::getKey))
                             .map(Pair::getValue)

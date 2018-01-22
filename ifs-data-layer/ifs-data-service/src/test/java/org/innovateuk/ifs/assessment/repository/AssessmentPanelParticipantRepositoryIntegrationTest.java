@@ -1,12 +1,20 @@
 package org.innovateuk.ifs.assessment.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.competition.repository.MilestoneRepository;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.invite.domain.Invite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
@@ -26,18 +34,26 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInviteWithoutId;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
+import static org.innovateuk.ifs.invite.builder.CompetitionAssessmentInviteBuilder.newCompetitionInviteWithoutId;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElement;
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
@@ -85,7 +101,13 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
     private AgreementRepository agreementRepository;
 
     @Autowired
+    private MilestoneRepository milestoneRepository;
+
+    @Autowired
     private AssessmentPanelInviteRepository assessmentPanelInviteRepository;
+
+    @Autowired
+    private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
 
     @Autowired
     @Override
@@ -244,6 +266,44 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
     private void assertEqualParticipants(List<AssessmentPanelParticipant> expected, List<AssessmentPanelParticipant> actual) {
         List<AssessmentPanelParticipant> subList = actual.subList(actual.size() - expected.size(), actual.size()); // Exclude pre-existing participants added via patch
         zip(expected, subList, this::assertEqualParticipants);
+    }
+
+    @Test
+    public void findByUserIdAndRole() {
+
+        Competition competition = newCompetition()
+                .with(id(null))
+                .build();
+        competitionRepository.save(competition);
+
+        User user = newUser()
+                .with(id(null))
+                .withEmailAddress("tom@poly.io")
+                .withUid("foo")
+                .build();
+
+        userRepository.save(user);
+
+        List<AssessmentPanelParticipant> savedParticipants = saveNewAssessmentPanelParticipants(
+                newAssessmentPanelInviteWithoutId()
+                        .withName("name1")
+                        .withHash(Invite.generateInviteHash())
+                        .withEmail("test1@test.com")
+                        .withHash(generateInviteHash())
+                        .withCompetition(competition)
+                        .withStatus(OPENED)
+                        .withUser(user)
+                        .build(1)
+        );
+
+        savedParticipants.get(0).acceptAndAssignUser(user);
+        assessmentPanelParticipantRepository.save( savedParticipants.get(0));
+
+        flushAndClearSession();
+
+        List<AssessmentPanelParticipant> retrievedParticipants = repository.findByUserIdAndRole(user.getId(), PANEL_ASSESSOR);
+        assertEquals(1, retrievedParticipants.size());
+        assertEqualParticipants(savedParticipants, retrievedParticipants);
     }
 
     private void assertEqualParticipants(AssessmentPanelParticipant expected, AssessmentPanelParticipant actual) {

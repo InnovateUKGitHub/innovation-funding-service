@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupSubsectionFormPopulator;
+import org.innovateuk.ifs.setup.resource.ApplicationFinanceType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,15 +41,24 @@ public class ApplicationFinanceFormPopulator implements CompetitionSetupSubsecti
 
 	@Override
 	public CompetitionSetupForm populateForm(CompetitionResource competitionResource, Optional<Long> objectId) {
-		CompetitionSetupFinanceResource competitionSetupFinanceResource = competitionSetupFinanceService.getByCompetitionId(competitionResource.getId());
-		ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
+        ApplicationFinanceForm competitionSetupForm = new ApplicationFinanceForm();
 
-		competitionSetupForm.setFullApplicationFinance(competitionSetupFinanceResource.isFullApplicationFinance());
-		competitionSetupForm.setIncludeGrowthTable(competitionSetupFinanceResource.isIncludeGrowthTable());
-		competitionSetupForm.setFundingRules(getFundingRulesWithoutHeading(competitionResource.getId()));
+        if (competitionResource.isFinanceType()) {
+            CompetitionSetupFinanceResource competitionSetupFinanceResource = competitionSetupFinanceService.getByCompetitionId(competitionResource.getId());
+
+            competitionSetupForm.setApplicationFinanceType(getFinanceType(competitionSetupFinanceResource.isFullApplicationFinance()));
+            competitionSetupForm.setIncludeGrowthTable(competitionSetupFinanceResource.isIncludeGrowthTable());
+            competitionSetupForm.setFundingRules(getFundingRulesWithoutHeading(competitionResource.getId()));
+        } else {
+            competitionSetupForm.setApplicationFinanceType(ApplicationFinanceType.NONE);
+        }
 
 		return competitionSetupForm;
 	}
+
+    private ApplicationFinanceType getFinanceType(boolean fullApplicationFinance) {
+        return fullApplicationFinance ? ApplicationFinanceType.FULL : ApplicationFinanceType.LIGHT;
+    }
 
     private String getFundingRulesWithoutHeading(Long competitionId) {
         Optional<QuestionResource> question = questionService.getQuestionsBySectionIdAndType(getOverviewFinancesSectionId(competitionId), QuestionType.GENERAL).stream()

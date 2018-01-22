@@ -20,9 +20,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.SecurityRuleUtil.*;
 
@@ -48,7 +46,9 @@ public class ApplicationPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The assessor can see the participation percentage for applications they assess")
     public boolean assessorCanSeeTheResearchParticipantPercentageInApplicationsTheyAssess(final ApplicationResource applicationResource, UserResource user) {
-        return isAssessor(applicationResource.getId(), user);
+        boolean isAssessor = isAssessor(applicationResource.getId(), user);
+        boolean isPanelAssessor = isPanelAssessor(applicationResource.getId(), user);
+        return isAssessor || isPanelAssessor;
     }
 
     @PermissionRule(value = "READ_RESEARCH_PARTICIPATION_PERCENTAGE", description = "The internal users can see the participation percentage for applications they assess")
@@ -217,8 +217,7 @@ public class ApplicationPermissionRules extends BasePermissionRules {
     }
 
     boolean userIsConnectedToApplicationResource(ApplicationResource application, UserResource user) {
-        ProcessRole processRole = processRoleRepository.findByUserIdAndApplicationId(user.getId(), application.getId());
-        return processRole != null;
+        return processRoleRepository.existsByUserIdAndApplicationId(user.getId(), application.getId());
     }
 
     @PermissionRule(value = "CREATE",

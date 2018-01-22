@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.application.team.controller;
 
 import org.innovateuk.ifs.application.team.populator.ApplicationTeamModelPopulator;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("/application/{applicationId}")
+@SecuredBySpring(value="Controller", description = "TODO", securedType = ApplicationTeamController.class)
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationTeamController {
 
@@ -22,8 +25,8 @@ public class ApplicationTeamController {
     private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @GetMapping("/team")
-    @PreAuthorize("hasPermission(#applicationId, 'VIEW_APPLICATION_TEAM_PAGE')")
-    public String getApplicationTeam(Model model, @PathVariable("applicationId") long applicationId,
+    @PreAuthorize("hasPermission(#applicationId,'org.innovateuk.ifs.application.resource.ApplicationCompositeId' ,'VIEW_APPLICATION_TEAM_PAGE')")
+    public String getApplicationTeam(Model model, @P("applicationId")@PathVariable("applicationId") long applicationId,
                                      UserResource loggedInUser) {
         model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId, loggedInUser.getId()));
         return "application-team/team";

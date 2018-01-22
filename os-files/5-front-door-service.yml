@@ -23,13 +23,13 @@ items:
           deploymentconfig: front-door-svc
       spec:
         containers:
-        - image: innovateuk/front-door-service:1.0-SNAPSHOT
+        - image: innovateuk/front-door-service:${frontDoorServiceVersion}
           name: front-door-svc
           livenessProbe:
             httpGet:
               path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 60
+            initialDelaySeconds: 100
             periodSeconds: 31
             timeoutSeconds: 5
             successThreshold: 1
@@ -38,7 +38,7 @@ items:
             httpGet:
               path: /monitoring/health
               port: 8080
-            initialDelaySeconds: 60
+            initialDelaySeconds: 100
             periodSeconds: 5
             timeoutSeconds: 5
             successThreshold: 1

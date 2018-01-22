@@ -57,7 +57,7 @@ function getHost() {
     elif [[ ${TARGET} == "production" ]]; then
       echo "apply-for-innovation-funding.service.gov.uk"
     else
-      echo "prod.ifs-test-clusters.com"
+      echo $(getClusterAddress)
     fi
 }
 
@@ -78,7 +78,7 @@ function getRegistry() {
     if [[ (${TARGET} == "local") ]]; then
         echo "$(getLocalRegistryUrl)"
     else
-        echo "docker-registry-default.apps.prod.ifs-test-clusters.com"
+        echo "docker-registry-default.apps."$(getClusterAddress)
     fi
 }
 
@@ -87,7 +87,7 @@ function getInternalRegistry() {
     if [[ (${TARGET} == "local") ]]; then
         echo "$(getLocalRegistryUrl)"
     else
-        echo "172.30.80.28:5000"
+        echo "$(getRemoteRegistryUrl)"
     fi
 }
 
@@ -100,7 +100,7 @@ function getSvcAccountClause() {
     if [[ (${TARGET} == "local") ]]; then
         SVC_ACCOUNT_CLAUSE_SERVER_PART='localhost:8443'
     else
-        SVC_ACCOUNT_CLAUSE_SERVER_PART='console.prod.ifs-test-clusters.com:443'
+        SVC_ACCOUNT_CLAUSE_SERVER_PART="console."$(getClusterAddress)":443"
     fi
 
     echo "--namespace=${PROJECT} --token=${SVC_ACCOUNT_TOKEN} --server=https://${SVC_ACCOUNT_CLAUSE_SERVER_PART} --insecure-skip-tls-verify=true"
@@ -135,16 +135,21 @@ function injectDBVariables() {
 function injectFlywayVariables() {
     [ -z "$FLYWAY_LOCATIONS" ] && { echo "Set FLYWAY_LOCATIONS environment variable"; exit -1; }
     sed -i.bak "s#<<FLYWAY-LOCATIONS>>#${FLYWAY_LOCATIONS}#g" $(getBuildLocation)/db-reset/*.yml
+
+    [ -z "$SYSTEM_USER_UUID" ] && { echo "Set SYSTEM_USER_UUID environment variable"; exit -1; }
+    sed -i.bak "s#<<SYSTEM-USER-UUID>>#${SYSTEM_USER_UUID}#g" $(getBuildLocation)/db-reset/*.yml
 }
 
 function injectLDAPVariables() {
     if [ -z "$LDAP_HOST" ]; then echo "Set LDAP_HOST environment variable"; exit -1; fi
     LDAP_PORT=${LDAP_PORT:-8389}
+    ONLY_SYNC_LDAP=${ONLY_SYNC_LDAP:false}
     sed -i.bak "s#<<LDAP-HOST>>#$LDAP_HOST#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#<<LDAP-PORT>>#$LDAP_PORT#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#<<LDAP-PASS>>#$LDAP_PASS#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#<<LDAP-DOMAIN>>#$LDAP_DOMAIN#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#<<LDAP-SCHEME>>#$LDAP_SCHEME#g" $(getBuildLocation)/db-reset/*.yml
+    sed -i.bak "s#<<ONLY-SYNC-LDAP>>#$ONLY_SYNC_LDAP#g" $(getBuildLocation)/db-reset/*.yml
 }
 
 function getEnvVariableValue() {
@@ -314,75 +319,19 @@ function useContainerRegistry() {
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/fractal/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/db-anonymised-data/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/mysql-client/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/shib/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/robot-tests/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/mysql/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" $(getBuildLocation)/mail/*.yml
 
-    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/*.yml
-    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/sil-stub/*.yml
+
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-reset/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/fractal/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/db-anonymised-data/*.yml
-    sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/shib/*.yml
     sed -i.bak "s#1.0-SNAPSHOT#${VERSION}#g" $(getBuildLocation)/robot-tests/*.yml
 }
 
-function pushApplicationImages() {
-    docker tag innovateuk/data-service:latest \
-        ${REGISTRY}/${PROJECT}/data-service:${VERSION}
-    docker tag innovateuk/project-setup-service:latest \
-        ${REGISTRY}/${PROJECT}/project-setup-service:${VERSION}
-    docker tag innovateuk/project-setup-management-service:latest \
-        ${REGISTRY}/${PROJECT}/project-setup-management-service:${VERSION}
-    docker tag innovateuk/competition-management-service:latest \
-        ${REGISTRY}/${PROJECT}/competition-management-service:${VERSION}
-    docker tag innovateuk/assessment-service:latest \
-        ${REGISTRY}/${PROJECT}/assessment-service:${VERSION}
-    docker tag innovateuk/application-service:latest \
-        ${REGISTRY}/${PROJECT}/application-service:${VERSION}
-    docker tag innovateuk/front-door-service:latest \
-        ${REGISTRY}/${PROJECT}/front-door-service:${VERSION}
-    docker tag innovateuk/sp-service:latest \
-        ${REGISTRY}/${PROJECT}/sp-service:${VERSION}
-    docker tag innovateuk/idp-service:latest \
-        ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
-    docker tag innovateuk/ldap-service:latest \
-        ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
-    docker tag innovateuk/registration-service:latest \
-        ${REGISTRY}/${PROJECT}/registration-service:${VERSION}
-
-    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
-
-    docker push ${REGISTRY}/${PROJECT}/data-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/project-setup-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/project-setup-management-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/competition-management-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/assessment-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/application-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/front-door-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/sp-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/idp-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/ldap-service:${VERSION}
-    docker push ${REGISTRY}/${PROJECT}/registration-service:${VERSION}
-}
-
-function pushIfsMysqlDatabase(){
-    docker tag innovateuk/ifs-mysql:5.6.29 \
-        ${REGISTRY}/${PROJECT}/ifs-mysql:5.6.29
-
-    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
-
-    docker push ${REGISTRY}/${PROJECT}/ifs-mysql:5.6.29
-}
-
-function pushSilStubImages(){
-    docker tag innovateuk/sil-stub:latest \
-        ${REGISTRY}/${PROJECT}/sil-stub:${VERSION}
-
-    docker login -p ${REGISTRY_TOKEN} -u unused ${REGISTRY}
-
-    docker push ${REGISTRY}/${PROJECT}/sil-stub:${VERSION}
-}
 
 function pushDBResetImages() {
     docker tag innovateuk/dbreset:latest \
@@ -429,6 +378,10 @@ function scaleDataService() {
     oc scale dc data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
 }
 
+function scaleFinanceDataService() {
+    oc scale dc finance-data-service --replicas=2 ${SVC_ACCOUNT_CLAUSE}
+}
+
 function createProject() {
     until oc new-project $PROJECT ${SVC_ACCOUNT_CLAUSE}
     do
@@ -441,4 +394,14 @@ function createProjectIfNecessaryForNonNamedEnvs() {
     if ! $(isNamedEnvironment $TARGET); then
         createProject
     fi
+}
+
+function getClusterAddress() {
+    echo "prod.ifs-test-clusters.com"
+#     echo "dev-nige-1.dev.ifs-test-clusters.com"
+}
+
+function getRemoteRegistryUrl() {
+        echo "172.30.80.28:5000"
+#        echo "172.30.114.178:5000"
 }

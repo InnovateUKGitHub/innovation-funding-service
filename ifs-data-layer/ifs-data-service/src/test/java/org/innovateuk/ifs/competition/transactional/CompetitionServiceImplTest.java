@@ -14,11 +14,12 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.invite.domain.CompetitionAssessmentParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionAssessmentParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
@@ -48,8 +49,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.*;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
@@ -228,20 +227,25 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Test
     public void findProjectSetupCompetitions() throws Exception {
-        Competition comp1 = newCompetition().withName("Comp1").withId(competitionId).build();
-        Competition comp2 = newCompetition().withName("Comp2").withId(competitionId).build();
+        CompetitionType progcompetitionType = newCompetitionType().withName("Programme").build();
+        CompetitionType eoicompetitionType = newCompetitionType().withName("Expression of interest").build();
+        Competition comp1 = newCompetition().withName("Comp1").withId(competitionId).withCompetitionType(progcompetitionType).build();
+        Competition comp2 = newCompetition().withName("Comp2").withId(competitionId).withCompetitionType(progcompetitionType).build();
+        Competition comp3 = newCompetition().withName("Comp3").withId(competitionId).withCompetitionType(eoicompetitionType).build();
+
         Application fundedAndInformedApplication1 = newApplication().withCompetition(comp1).withManageFundingEmailDate(ZonedDateTime.now()).withFundingDecision(FundingDecisionStatus.FUNDED).build();
         comp1.setApplications(singletonList(fundedAndInformedApplication1));
         Application fundedAndInformedApplication2 = newApplication().withCompetition(comp2).withManageFundingEmailDate(ZonedDateTime.now().plusHours(1L)).withFundingDecision(FundingDecisionStatus.FUNDED).build();
         comp2.setApplications(singletonList(fundedAndInformedApplication2));
-        List<Competition> competitions = Lists.newArrayList(comp1, comp2);
+        List<Competition> expectedCompetitions = Lists.newArrayList(comp1, comp2);
+        List<Competition> allCompetitions = Lists.newArrayList(comp1, comp2, comp3);
 
         when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
-        when(competitionRepositoryMock.findProjectSetup()).thenReturn(competitions);
+        when(competitionRepositoryMock.findProjectSetup()).thenReturn(allCompetitions);
 
         List<CompetitionSearchResultItem> response = service.findProjectSetupCompetitions().getSuccessObjectOrThrowException();
 
-        assertCompetitionSearchResultsEqualToCompetitions(CollectionFunctions.reverse(competitions), response);
+        assertCompetitionSearchResultsEqualToCompetitions(CollectionFunctions.reverse(expectedCompetitions), response);
     }
 
     @Test

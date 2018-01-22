@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.financechecks.controller;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.service.OverheadFileRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.ExecutionException;
 
 @RestController
-@RequestMapping("/download/overheadfile")
-@PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
-public  class OverheadFileDownloaderController {
+@RequestMapping("/application/download/overheadfile")
+@SecuredBySpring(value = "Controller", description = "IFS Admin and Project Finance can download uploaded overhead spreadsheet", securedType = OverheadFileDownloaderController.class)
+@PreAuthorize("hasAnyAuthority('ifs_administrator', 'project_finance')")
+public class OverheadFileDownloaderController {
     @Autowired
     private OverheadFileRestService overheadFileRestService;
 
@@ -41,5 +43,4 @@ public  class OverheadFileDownloaderController {
         }
         return new ResponseEntity<>(resource, httpHeaders, HttpStatus.OK);
     }
-
 }
