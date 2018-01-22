@@ -12,6 +12,8 @@ public interface AssessorFormInputResponseRestService {
 
     RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponses(long assessmentId);
 
+    RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(long assessmentId);
+
     RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId);
 
     RestResult<Void> updateFormInputResponse(long assessmentId, long formInputId, String value);
@@ -23,4 +25,6 @@ public interface AssessorFormInputResponseRestService {
     RestResult<AssessmentFeedbackAggregateResource> getAssessmentAggregateFeedback(long applicationId, long questionId);
 
     RestResult<AssessmentDetailsResource> getAssessmentDetails(long assessmentId);
+
+    RestResult<AssessmentDetailsResource> getAssessmentDetailsForPanel(long assessmentId);
 }

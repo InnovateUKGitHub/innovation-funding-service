@@ -66,11 +66,11 @@ public class AssessmentReviewApplicationSummaryController {
                 .filter(processRoleResource -> processRoleResource.getRoleName().equals("assessor"))
                 .collect(toList());
 
-        if (processRoleResources.size() != 0){
+        if (!processRoleResources.isEmpty()){
             List<AssessorFormInputResponseResource> questionScore = new ArrayList<>();
             List<AssessorFormInputResponseResource> questionFeedback = new ArrayList<>();
 
-            List<AssessorFormInputResponseResource> inputResponse = assessorFormInputResponseRestService.getAllAssessorFormInputResponses(processRoleResources.get(0).getId()).getSuccessObjectOrThrowException();
+            List<AssessorFormInputResponseResource> inputResponse = assessorFormInputResponseRestService.getAllAssessorFormInputResponsesForPanel(processRoleResources.get(0).getId()).getSuccessObjectOrThrowException();
 
             for (AssessorFormInputResponseResource assessorFormInputResponseResource : inputResponse) {
 
@@ -96,6 +96,4 @@ public class AssessmentReviewApplicationSummaryController {
         
         return "assessor-panel-application-overview";
     }
-
-
 }

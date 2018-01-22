@@ -105,6 +105,11 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         }
 
         @Override
+        public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(long assessmentId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId) {
             return null;
         }

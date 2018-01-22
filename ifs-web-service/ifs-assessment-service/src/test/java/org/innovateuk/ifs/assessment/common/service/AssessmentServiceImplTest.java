@@ -84,6 +84,19 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
     }
 
     @Test
+    public void getByUserAndApplication() throws Exception {
+        List<AssessmentResource> expected = newAssessmentResource().build(2);
+
+        Long userId = 1L;
+        Long applicationId = 2L;
+
+        when(assessmentRestService.getByUserAndApplication(userId, applicationId)).thenReturn(restSuccess(expected));
+
+        assertSame(expected, service.getByUserAndApplication(userId, applicationId));
+        verify(assessmentRestService, only()).getByUserAndApplication(userId, applicationId);
+    }
+
+    @Test
     public void getTotalScore() throws Exception {
         AssessmentTotalScoreResource expected = newAssessmentTotalScoreResource().build();
 
