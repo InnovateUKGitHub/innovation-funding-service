@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.project.projectdetails.workflow.configuration;
 
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.projectdetails.domain.ProjectDetailsProcess;
 import org.innovateuk.ifs.project.projectdetails.repository.ProjectDetailsProcessRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
@@ -17,6 +17,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.project.resource.ProjectDetailsEvent.*;
@@ -32,7 +33,7 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
 
     @Autowired
     @Qualifier("projectDetailsStateMachine")
-    private StateMachine<ProjectDetailsState, ProjectDetailsEvent> stateMachine;
+    private StateMachineFactory<ProjectDetailsState, ProjectDetailsEvent> stateMachineFactory;
 
     @Autowired
     private ProjectDetailsProcessRepository projectDetailsProcessRepository;
@@ -90,8 +91,8 @@ public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<Proj
     }
 
     @Override
-    protected StateMachine<ProjectDetailsState, ProjectDetailsEvent> getStateMachine() {
-        return stateMachine;
+    protected StateMachineFactory<ProjectDetailsState, ProjectDetailsEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override

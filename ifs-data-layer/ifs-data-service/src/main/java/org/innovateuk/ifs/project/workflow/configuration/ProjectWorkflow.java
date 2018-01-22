@@ -4,7 +4,7 @@ import org.innovateuk.ifs.project.resource.ProjectEvent;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.config.EnableStateMachine;
+import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
  * Describes the workflow for Project Setup.
  */
 @Configuration
-@EnableStateMachine(name = "projectStateMachine")
+@EnableStateMachineFactory(name = "projectStateMachine")
 public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState, ProjectEvent> {
 
     @Override

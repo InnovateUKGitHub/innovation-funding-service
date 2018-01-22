@@ -12,7 +12,7 @@ import org.innovateuk.ifs.assessment.workflow.guards.CompetitionInAssessmentGuar
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.config.EnableStateMachine;
+import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
  * A persistent configuration is used, so we can apply different states to different assessments.
  */
 @Configuration
-@EnableStateMachine(name = "assessmentStateMachine")
+@EnableStateMachineFactory(name = "assessmentStateMachine")
 public class AssessmentWorkflow extends StateMachineConfigurerAdapter<AssessmentState, AssessmentEvent> {
 
     @Autowired

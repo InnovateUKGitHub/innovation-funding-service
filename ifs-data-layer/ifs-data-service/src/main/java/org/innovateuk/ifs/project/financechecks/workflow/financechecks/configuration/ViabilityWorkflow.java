@@ -4,7 +4,7 @@ import org.innovateuk.ifs.project.finance.resource.ViabilityEvent;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.config.EnableStateMachine;
+import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
@@ -12,19 +12,14 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.EnumSet;
 
-import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.PROJECT_CREATED;
-import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.ORGANISATION_IS_ACADEMIC;
-import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.VIABILITY_APPROVED;
-
-import static org.innovateuk.ifs.project.finance.resource.ViabilityState.REVIEW;
-import static org.innovateuk.ifs.project.finance.resource.ViabilityState.NOT_APPLICABLE;
-import static org.innovateuk.ifs.project.finance.resource.ViabilityState.APPROVED;
+import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.*;
+import static org.innovateuk.ifs.project.finance.resource.ViabilityState.*;
 
 /**
  * Describes the workflow for the Viability Approval process.
  */
 @Configuration
-@EnableStateMachine(name = "viabilityStateMachine")
+@EnableStateMachineFactory(name = "viabilityStateMachine")
 public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilityState, ViabilityEvent> {
 
     @Override

@@ -18,6 +18,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewEvent.*;
@@ -31,7 +32,7 @@ public class AssessmentReviewWorkflowHandler extends BaseWorkflowEventHandler<As
 
     @Autowired
     @Qualifier("assessmentReviewStateMachine")
-    private StateMachine<AssessmentReviewState, AssessmentReviewEvent> stateMachine;
+    private StateMachineFactory<AssessmentReviewState, AssessmentReviewEvent> stateMachineFactory;
 
     @Autowired
     private AssessmentReviewRepository assessmentReviewRepository;
@@ -97,8 +98,8 @@ public class AssessmentReviewWorkflowHandler extends BaseWorkflowEventHandler<As
     }
 
     @Override
-    protected StateMachine<AssessmentReviewState, AssessmentReviewEvent> getStateMachine() {
-        return stateMachine;
+    protected StateMachineFactory<AssessmentReviewState, AssessmentReviewEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override

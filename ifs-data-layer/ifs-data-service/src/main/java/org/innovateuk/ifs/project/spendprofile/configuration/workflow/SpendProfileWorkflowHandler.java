@@ -19,6 +19,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.function.BiFunction;
@@ -29,7 +30,7 @@ import static org.innovateuk.ifs.project.spendprofile.resource.SpendProfileEvent
 public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendProfileProcess, SpendProfileState, SpendProfileEvent, Project, ProjectUser> {
     @Autowired
     @Qualifier("spendProfileStateMachine")
-    private StateMachine<SpendProfileState, SpendProfileEvent> stateMachine;
+    private StateMachineFactory<SpendProfileState, SpendProfileEvent> stateMachineFactory;
 
     @Autowired
     private SpendProfileProcessRepository spendProfileProcessRepository;
@@ -124,8 +125,8 @@ public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendP
     }
 
     @Override
-    protected StateMachine<SpendProfileState, SpendProfileEvent> getStateMachine() {
-        return stateMachine;
+    protected StateMachineFactory<SpendProfileState, SpendProfileEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override

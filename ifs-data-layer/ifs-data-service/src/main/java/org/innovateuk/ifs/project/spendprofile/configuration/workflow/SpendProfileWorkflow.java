@@ -4,7 +4,7 @@ import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileEvent;
 import org.innovateuk.ifs.project.spendprofile.resource.SpendProfileState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.config.EnableStateMachine;
+import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.project.spendprofile.resource.SpendProfileState
  * Describes the workflow for the overall project Spend Profile section for Project Setup.
  */
 @Configuration
-@EnableStateMachine(name = "spendProfileStateMachine")
+@EnableStateMachineFactory(name = "spendProfileStateMachine")
 public class SpendProfileWorkflow extends StateMachineConfigurerAdapter<SpendProfileState, SpendProfileEvent> {
 
     @Override

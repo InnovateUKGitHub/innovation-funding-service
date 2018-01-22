@@ -4,7 +4,7 @@ import org.innovateuk.ifs.project.finance.resource.EligibilityEvent;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.config.EnableStateMachine;
+import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
@@ -12,19 +12,15 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.EnumSet;
 
-import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.ELIGIBILITY_APPROVED;
-import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.NOT_REQUESTING_FUNDING;
-import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.PROJECT_CREATED;
-import static org.innovateuk.ifs.project.finance.resource.EligibilityState.REVIEW;
-import static org.innovateuk.ifs.project.finance.resource.EligibilityState.NOT_APPLICABLE;
-import static org.innovateuk.ifs.project.finance.resource.EligibilityState.APPROVED;
+import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.*;
+import static org.innovateuk.ifs.project.finance.resource.EligibilityState.*;
 
 
 /**
  * Describes the workflow for the Eligibility Approval process.
  */
 @Configuration
-@EnableStateMachine(name = "eligibilityStateMachine")
+@EnableStateMachineFactory(name = "eligibilityStateMachine")
 public class EligibilityWorkflow extends StateMachineConfigurerAdapter<EligibilityState, EligibilityEvent> {
 
     @Override
