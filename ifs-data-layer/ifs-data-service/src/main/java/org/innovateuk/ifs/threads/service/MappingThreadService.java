@@ -35,6 +35,11 @@ public class MappingThreadService<D extends Thread, R, M extends BaseMapper<D, R
         return service.create(threadMapper.mapToDomain(query));
     }
 
+    @Override
+    public ServiceResult<Void> close(Long threadId) {
+        return service.close(threadId);
+    }
+
     public ServiceResult<Void> addPost(PostResource post, Long threadId) {
         return service.addPost(postMapper.mapToDomain(post), threadId);
     }
