@@ -173,12 +173,12 @@ Invite non-registered users
     [Tags]
     When the user moves focus to the element                 jQuery=.button:contains("Add assessors to list")
     And the user enters text to a text field                 css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input   Olivier Giroud
-    And the user should not see the text in the page         jQuery=span:contains("Please enter a name.")    #check for the client side validation
+    And the user should not see the element                  jQuery=span:contains("Please enter a name.")    #check for the client side validation
     And the user enters text to a text field                 css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input   ${test_mailbox_one}+OlivierGiroud@gmail.com
-    And the user should not see the text in the page         jQuery=span:contains("Please enter an email address.")    #check for the client side validation
+    And the user should not see the element                  jQuery=span:contains("Please enter an email address.")    #check for the client side validation
     And the user selects the option from the drop-down menu  Emerging and enabling    css=.js-progressive-group-select
     And the user selects the option from the drop-down menu  Emerging technology    id=grouped-innovation-area
-    And the user should not see the text in the page         jQuery=span:contains("Please enter an innovation sector and area.")    #check for the client side validation
+    And the user should not see the element                  jQuery=span:contains("Please enter an innovation sector and area.")    #check for the client side validation
     And the user clicks the button/link                      jQuery=.button:contains("Add assessors to list")
     Then the user should see the element                     css=.no
     And the user should see the element                      jQuery=td:contains("Olivier Giroud")
