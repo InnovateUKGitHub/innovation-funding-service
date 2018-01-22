@@ -5,9 +5,10 @@
 </head>
 
 <body class="competition-management project-management query-form">
-
+<th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/layout :: body-start"/>
 <th:block th:insert="fragments/layout :: global-header"/>
+<th:block th:insert="fragments/modals :: modal-confirm-mark-resolved" />
 
 <main tabindex="-1" id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
     <th:block th:insert="fragments/layout :: main-content-start"/>
@@ -93,6 +94,12 @@
             <hr />
             <th:block th:if="${model.queryId == null}">
                 <a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="extra-margin-top button button-secondary">Respond</a>
+                <a class="button button-clear"
+                   data-js-modal="modal-confirm-mark-resolved"
+                   th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}"
+                   th:attr="data-modal-form-action=@{/project/{projectId}/finance-check/organisation/{organisationId}/query/{queryId}/close(projectId=${model.projectId},queryId=${query.id},organisationId=${model.organisationId})}">
+                    Mark as resolved
+                </a>
             </th:block>
             <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
                 <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate" data-single-submit="">
