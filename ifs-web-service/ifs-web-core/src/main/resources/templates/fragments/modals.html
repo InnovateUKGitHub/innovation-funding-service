@@ -510,8 +510,8 @@
         <hr />
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div>
-                <input type="hidden" name="Resend_fc_invite" value=""/>
-                <input type="hidden" name="Organisation" value=""/>
+                <input type="hidden" id="resend-fc-invite" name="resend-fc-invite" value=""/>
+                <input type="hidden" id="organisation" name="organisation" value=""/>
                 <button class="button" type="submit">Resend</button>
                 <button class="buttonlink js-close" type="button">Cancel</button>
             </div>
@@ -531,7 +531,7 @@
         <hr />
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
             <div>
-                <input type="hidden" name="Resend_pm_invite" value=""/>
+                <input type="hidden" id="resend-pm-invite" name="resend-pm-invite" value=""/>
                 <button class="button" type="submit">Resend</button>
                 <button class="buttonlink js-close" type="button">Cancel</button>
             </div>

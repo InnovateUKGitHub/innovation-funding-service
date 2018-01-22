@@ -37,8 +37,8 @@
                             <label th:for="'invite-'+${user.id}" th:text="${user.name}"></label>
                             <a th:inline="text"
                                 data-js-modal="modal-resend-project-manager"
-                                th:attr="data-modal-form-action=@{/project/{projectId}/details/project-manager(projectId=${model.projectId})},data-modal-input-Resend_pm_invite=${user.id}"
-                                th:href="@{/project/{projectId}/details/project-manager?Resend_pm_invite={userId}(projectId=${model.projectId},userId=${user.id})}"
+                                th:attr="data-modal-form-action=@{/project/{projectId}/details/project-manager(projectId=${model.projectId})},data-modal-input-resend-pm-invite=${user.id}"
+                                th:href="@{/project/{projectId}/details/project-manager?resend-pm-invite={userId}(projectId=${model.projectId},userId=${user.id})}"
                                 class="button button-clear no-margin">
                                 Resend invite
                             </a>
@@ -76,7 +76,7 @@
                                         <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail')} ? 'form-control-error'" name="inviteEmail" id="email-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.email.required}"/>
                                     </td>
                                     <td class="alignright">
-                                        <button class="buttonlink no-margin-bottom" id="invite-project-manager" name="invite_pm">Invite to project</button>
+                                        <button class="buttonlink no-margin-bottom" id="invite-project-manager" name="invite-pm">Invite to project</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -86,7 +86,7 @@
 
                 <p>You can change your Project Manager up until your grant offer letter is generated.</p>
 
-                <button class="button extra-margin" type="submit" id="save" name="Save_pm">Save</button>
+                <button class="button extra-margin" type="submit" id="save" name="save-pm">Save</button>
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
