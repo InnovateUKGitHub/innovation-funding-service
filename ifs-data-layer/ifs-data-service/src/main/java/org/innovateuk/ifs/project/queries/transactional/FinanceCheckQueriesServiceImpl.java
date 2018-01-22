@@ -125,6 +125,12 @@ public class FinanceCheckQueriesServiceImpl extends AbstractProjectServiceImpl i
                 });
     }
 
+    @Override
+    @Transactional
+    public ServiceResult<Void> close(Long queryId) {
+        return service.close(queryId);
+    }
+
     private ServiceResult<Void> sendResponseNotification(User financeContact, Project project) {
         NotificationSource from = systemNotificationSource;
         String fullName = financeContact.getName();
