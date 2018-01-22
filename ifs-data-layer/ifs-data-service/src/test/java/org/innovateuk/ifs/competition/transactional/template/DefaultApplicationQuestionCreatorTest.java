@@ -32,13 +32,15 @@ public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<D
 
     @Before
     public void setup() {
-        competition  = newCompetition().build();
+        competition = newCompetition().build();
 
         notEmptyValidator = newFormValidator().withClazzName(NotEmptyValidator.class.getName()).build();
         wordCountValidator = newFormValidator().withClazzName(WordCountValidator.class.getName()).build();
 
-        when(formValidatorRepositoryMock.findByClazzName(NotEmptyValidator.class.getName())).thenReturn(notEmptyValidator);
-        when(formValidatorRepositoryMock.findByClazzName(WordCountValidator.class.getName())).thenReturn(wordCountValidator);
+        when(formValidatorRepositoryMock.findByClazzName(NotEmptyValidator.class.getName()))
+                .thenReturn(notEmptyValidator);
+        when(formValidatorRepositoryMock.findByClazzName(WordCountValidator.class.getName()))
+                .thenReturn(wordCountValidator);
     }
 
     public DefaultApplicationQuestionCreator supplyServiceUnderTest() {
@@ -47,7 +49,7 @@ public class DefaultApplicationQuestionCreatorTest extends BaseServiceUnitTest<D
 
     @Test
     public void buildQuestion_markCompleteAsEnabledSetToTrue() {
-        Question defaultQuestion =service.buildQuestion(competition);
+        Question defaultQuestion = service.buildQuestion(competition);
 
         assertThat(defaultQuestion.getMarkAsCompletedEnabled()).isTrue();
     }
