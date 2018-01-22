@@ -35,4 +35,8 @@ public abstract class ThreadRestService<T> extends BaseRestService {
         return postWithRestResult(baseURL + "/" + threadId + "/post", post, Void.class);
     }
 
+    public RestResult<Void> close(Long threadId) {
+        return postWithRestResult((baseURL + "/close/thread/" + threadId));
+    }
+
 }
