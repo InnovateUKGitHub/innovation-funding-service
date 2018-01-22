@@ -20,7 +20,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
-import org.innovateuk.ifs.finance.sync.service.FinanceTotalsSender;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -102,8 +101,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ApplicationWorkflowHandler applicationWorkflowHandler;
     @Autowired
     private ActivityStateRepository activityStateRepository;
-    @Autowired
-    private FinanceTotalsSender financeTotalsSender;
 
 
     @Value("${ifs.web.baseURL}")
@@ -392,14 +389,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Override
     @Transactional
     public ServiceResult<ApplicationResource> updateApplicationState(final Long id, final ApplicationState state) {
-        if (ApplicationState.SUBMITTED.equals(state) && !applicationReadyToSubmit(id)) {
+        if (Collections.singletonList(ApplicationState.SUBMITTED).contains(state) && !applicationReadyToSubmit(id)) {
                 return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
         }
-
-        if(ApplicationState.SUBMITTED.equals(state)) {
-            financeTotalsSender.syncFinanceTotalsForApplication(id);
-        }
-
         return find(application(id)).andOnSuccess((application) -> {
             applicationWorkflowHandler.notifyFromApplicationState(application, state);
             applicationRepository.save(application);
