@@ -14,8 +14,8 @@
 <main id="content">
   <th:block th:insert="fragments/layout :: main-content-start" />
 
-  <th:block th:unless="${param.status != null and param.status[0] == 'resendInvites'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Invite assessors to attend'}, ${'/prototypes/IFS-2246-assign-applications?tab=assign'})" />
-  <th:block th:if="${param.status != null and param.status[0] == 'resendInvites'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Invite assesssors to attend'}, ${'/prototypes/IFS-2246-assign-applications?tab=view'})" />
+  <th:block th:unless="${param.status != null and param.status[0] == 'resendInvites'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Assign applications to interview panel'}, ${'/prototypes/IFS-2246-assign-applications?tab=assign'})" />
+  <th:block th:if="${param.status != null and param.status[0] == 'resendInvites'}" th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Assign applications to interview panel'}, ${'/prototypes/IFS-2246-assign-applications?tab=view'})" />
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
@@ -37,7 +37,7 @@
                 <table>
                     <thead>
                     <tr>
-                        <th>Application</th>
+                        <th class="width-small">Application number</th>
                         <th>Project title</th>
                         <th>Lead organisation</th>
                         <th>Edit</th>
@@ -121,7 +121,7 @@ Project title: &lt;project title&gt;
 
             <div class="form-group">
                 <label class="form-label-bold" for="message">Additional text</label>
-                <p class="form-hint">Make sure you replace each &lt; and &gt; and all the words in between.</p>
+                <p>Make sure you replace each &lt; and &gt; and all the words in between.</p>
                 <textarea id="message" rows="60" class="width-full">
 Thank you for applying for this competition. The review of your proposal by independent assessors is now complete and we are pleased to invite you to the next stage of the competition: an interview to present your project.
 
@@ -134,11 +134,11 @@ Your interview will be held between &lt;date&gt; and &lt;date&gt;. We will email
 &lt;Respond to assessment feedback&gt;
 &lt;Review assessment feedback&gt;
 
-The assessors' comments and scores are available for you to read by logging into the Innovation Funding Service (IFS). This feedback is intended to be constructive, highlighting the strengths and weaknesses of your application. Different assessors may give conflicting opinions, which reflects their varying interpretations of your proposal.
+The assessors' comments and scores are available for you to read by signing into the Innovation Funding Service (IFS). This feedback is intended to be constructive, highlighting the strengths and weaknesses of your application. Different assessors may give conflicting opinions, which reflects their varying interpretations of your proposal.
 
 &lt;Delete if not applicable:&gt;
 
-You can respond to this feedback in writing if you wish. Your response will be reviewed by the assessor panel before your interview. Upload your response document by following the instructions on IFS before midday on &lt;date&gt;. Your document:
+You can respond to this feedback in writing if you wish. Your response will be reviewed by the assessor panel before your interview. Upload your response by following the instructions on IFS before midday on &lt;date&gt;. Your document:
 
 -	must be a single PDF
 -	must be no more than &lt;3 / 10&gt; pages long
