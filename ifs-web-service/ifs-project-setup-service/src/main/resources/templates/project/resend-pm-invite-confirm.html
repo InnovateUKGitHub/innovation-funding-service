@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Submit to lead partner'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Resend invite to Project Manager'" />
 </head>
 <body th:with="context='project'">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -11,14 +11,14 @@
     <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/project/{projectId}/details/project-manager(projectId=${model.projectId})}" />
 
-    <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
-        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit to lead partner',size='heading-medium'" />
+    <form th:action="@{/project/{projectId}/details/project-manager(projectId=${model.projectId})}" method="POST" >
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Resend invite to team member',size='heading-xlarge'" />
         <h2 class="heading-medium no-margin">Resend invite to team member</h2>
         <p>They will be reminded to accept the role of Project Manager.</p>
         <hr />
-        <input type="hidden" id="resend-pm-invite" name="resend-pm-invite" value=""/>
+        <input type="hidden" id="resend-pm-invite" name="resend-pm-invite" th:value="${model.inviteId}"/>
         <button class="button" type="submit">Resend</button>
-        <button class="buttonlink js-close" type="button">Cancel</button>
+        <button class="button button-clear js-close" type="button">Cancel</button>
     </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
