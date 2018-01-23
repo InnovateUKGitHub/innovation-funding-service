@@ -210,7 +210,6 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         return redirectToFinanceContact(projectId, organisation);
     }
 
-
     private void resendInvite(Long id, Long projectId, BiFunction<Long, InviteProjectResource, ServiceResult<Void>> sendInvite) {
 
         Optional<InviteProjectResource> existingInvite = projectDetailsService
