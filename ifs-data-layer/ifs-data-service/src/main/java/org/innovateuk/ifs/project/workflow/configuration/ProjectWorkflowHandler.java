@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProcess, ProjectState, ProjectEvent, Project, ProjectUser> {
 
     @Autowired
-    @Qualifier("projectStateMachine")
+    @Qualifier("projectStateMachineFactory")
     private StateMachineFactory<ProjectState, ProjectEvent> stateMachineFactory;
 
     @Autowired

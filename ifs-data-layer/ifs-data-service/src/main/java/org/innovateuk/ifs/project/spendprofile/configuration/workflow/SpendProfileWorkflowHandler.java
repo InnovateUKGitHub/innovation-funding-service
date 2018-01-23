@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.project.spendprofile.resource.SpendProfileEvent
 @Component
 public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendProfileProcess, SpendProfileState, SpendProfileEvent, Project, ProjectUser> {
     @Autowired
-    @Qualifier("spendProfileStateMachine")
+    @Qualifier("spendProfileStateMachineFactory")
     private StateMachineFactory<SpendProfileState, SpendProfileEvent> stateMachineFactory;
 
     @Autowired

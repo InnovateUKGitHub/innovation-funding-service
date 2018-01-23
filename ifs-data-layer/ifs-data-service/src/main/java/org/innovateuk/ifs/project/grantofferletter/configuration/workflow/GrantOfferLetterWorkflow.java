@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLet
  * Describes the workflow for the GOL section for Project Setup.
  */
 @Configuration
-@EnableStateMachineFactory(name = "golStateMachine")
+@EnableStateMachineFactory(name = "golStateMachineFactory")
 public class GrantOfferLetterWorkflow extends StateMachineConfigurerAdapter<GrantOfferLetterState, GrantOfferLetterEvent> {
 
     @Override

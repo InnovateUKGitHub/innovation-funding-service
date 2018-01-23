@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESS
 public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessment, AssessmentState, AssessmentEvent, Application, ProcessRole> {
 
     @Autowired
-    @Qualifier("assessmentStateMachine")
+    @Qualifier("assessmentStateMachineFactory")
     private StateMachineFactory<AssessmentState, AssessmentEvent> stateMachineFactory;
 
     @Autowired

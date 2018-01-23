@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentState.*;
  * A persistent configuration is used, so we can apply different states to different assessments.
  */
 @Configuration
-@EnableStateMachineFactory(name = "assessmentStateMachine")
+@EnableStateMachineFactory(name = "assessmentStateMachineFactory")
 public class AssessmentWorkflow extends StateMachineConfigurerAdapter<AssessmentState, AssessmentEvent> {
 
     @Autowired

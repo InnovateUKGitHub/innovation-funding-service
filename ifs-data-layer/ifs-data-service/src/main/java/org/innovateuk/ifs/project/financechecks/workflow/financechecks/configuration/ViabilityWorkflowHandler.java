@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_VIAB
 public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<ViabilityProcess, ViabilityState, ViabilityEvent, PartnerOrganisation, ProjectUser> {
 
     @Autowired
-    @Qualifier("viabilityStateMachine")
+    @Qualifier("viabilityStateMachineFactory")
     private StateMachineFactory<ViabilityState, ViabilityEvent> stateMachineFactory;
 
     @Autowired

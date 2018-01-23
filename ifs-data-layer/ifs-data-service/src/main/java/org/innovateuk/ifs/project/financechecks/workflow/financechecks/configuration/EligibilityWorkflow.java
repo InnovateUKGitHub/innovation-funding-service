@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.project.finance.resource.EligibilityState.*;
  * Describes the workflow for the Eligibility Approval process.
  */
 @Configuration
-@EnableStateMachineFactory(name = "eligibilityStateMachine")
+@EnableStateMachineFactory(name = "eligibilityStateMachineFactory")
 public class EligibilityWorkflow extends StateMachineConfigurerAdapter<EligibilityState, EligibilityEvent> {
 
     @Override

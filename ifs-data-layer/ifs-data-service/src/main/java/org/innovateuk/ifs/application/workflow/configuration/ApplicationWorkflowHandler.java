@@ -33,7 +33,7 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION;
 public class ApplicationWorkflowHandler extends BaseWorkflowEventHandler<ApplicationProcess, ApplicationState, ApplicationEvent, Application, ProcessRole> {
 
     @Autowired
-    @Qualifier("applicationProcessStateMachine")
+    @Qualifier("applicationProcessStateMachineFactory")
     private StateMachineFactory<ApplicationState, ApplicationEvent> stateMachineFactory;
 
     @Autowired

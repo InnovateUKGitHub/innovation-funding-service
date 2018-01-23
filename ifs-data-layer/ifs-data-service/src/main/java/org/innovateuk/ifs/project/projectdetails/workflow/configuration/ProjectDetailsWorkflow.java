@@ -21,7 +21,7 @@ import static org.innovateuk.ifs.project.resource.ProjectDetailsState.*;
  * Describes the workflow for the Project Details section for Project Setup.
  */
 @Configuration
-@EnableStateMachineFactory(name = "projectDetailsStateMachine")
+@EnableStateMachineFactory(name = "projectDetailsStateMachineFactory")
 public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<ProjectDetailsState, ProjectDetailsEvent> {
 
     @Autowired

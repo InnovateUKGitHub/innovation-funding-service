@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState
  * Describes the workflow for assessment reviews.
  */
 @Configuration
-@EnableStateMachineFactory(name = "assessmentReviewStateMachine")
+@EnableStateMachineFactory(name = "assessmentReviewStateMachineFactory")
 public class AssessmentReviewWorkflow extends StateMachineConfigurerAdapter<AssessmentReviewState, AssessmentReviewEvent> {
 
     @Autowired

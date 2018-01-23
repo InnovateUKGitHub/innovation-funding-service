@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRAN
 public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GrantOfferLetterState, GrantOfferLetterEvent, Project, ProjectUser> {
 
     @Autowired
-    @Qualifier("golStateMachine")
+    @Qualifier("golStateMachineFactory")
     private StateMachineFactory<GrantOfferLetterState, GrantOfferLetterEvent> stateMachineFactory;
 
     @Autowired

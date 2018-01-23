@@ -21,7 +21,7 @@ import static java.util.Arrays.asList;
  * transitions through an Application's lifecycle.
  */
 @Configuration
-@EnableStateMachineFactory(name = "applicationProcessStateMachine")
+@EnableStateMachineFactory(name = "applicationProcessStateMachineFactory")
 public class ApplicationWorkflow extends StateMachineConfigurerAdapter<ApplicationState, ApplicationEvent> {
 
     @Autowired

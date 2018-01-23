@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.project.finance.resource.ViabilityState.*;
  * Describes the workflow for the Viability Approval process.
  */
 @Configuration
-@EnableStateMachineFactory(name = "viabilityStateMachine")
+@EnableStateMachineFactory(name = "viabilityStateMachineFactory")
 public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilityState, ViabilityEvent> {
 
     @Override

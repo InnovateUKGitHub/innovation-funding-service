@@ -35,7 +35,7 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_ELIG
 public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<EligibilityProcess, EligibilityState, EligibilityEvent, PartnerOrganisation, ProjectUser> {
 
     @Autowired
-    @Qualifier("eligibilityStateMachine")
+    @Qualifier("eligibilityStateMachineFactory")
     private StateMachineFactory<EligibilityState, EligibilityEvent> stateMachineFactory;
 
     @Autowired

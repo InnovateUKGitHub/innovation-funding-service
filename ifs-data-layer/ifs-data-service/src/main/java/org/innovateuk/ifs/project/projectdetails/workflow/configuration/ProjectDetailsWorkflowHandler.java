@@ -32,7 +32,7 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_PROJ
 public class ProjectDetailsWorkflowHandler extends BaseWorkflowEventHandler<ProjectDetailsProcess, ProjectDetailsState, ProjectDetailsEvent, Project, ProjectUser> {
 
     @Autowired
-    @Qualifier("projectDetailsStateMachine")
+    @Qualifier("projectDetailsStateMachineFactory")
     private StateMachineFactory<ProjectDetailsState, ProjectDetailsEvent> stateMachineFactory;
 
     @Autowired
