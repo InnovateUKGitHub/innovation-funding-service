@@ -26,6 +26,8 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               IFS-1459 View unsuccessful applications after Inform state: list
 ...
 ...               IFS-1517 Internal user: competitions listing in Previous tab
+...
+...               IFS-2437 Viewing application details when feedback has been released
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
@@ -94,8 +96,8 @@ Unsuccessful applicant sees unsuccessful alert
     [Tags]    Email
     [Setup]    log in as a different user    &{unsuccessful_released_credentials}
     Given the user should see the element    jQuery=.status:contains("Unsuccessful")
-    When the user clicks the button/link    jQuery=a:contains("Electric Drive")
-    And the user should see the element    jQuery=.warning-alert:contains("Your application has not been successful in this competition")
+    When the user clicks the button/link     jQuery=a:contains("Electric Drive")
+    And the user should see the element      jQuery=.warning-alert:contains("Your application has not been successful in this competition")
 
 Internal user can view ineligible and unsuccessful applications in previous tab
     [Documentation]  IFS-1458 IFS-1459 IFS-1517
@@ -112,15 +114,15 @@ Successful applicant see successful alert
     [Tags]    Email    HappyPath
     [Setup]    log in as a different user    &{successful_released_credentials}
     Given the user should see the element    jQuery=.status:contains("Successful")
-    When the user clicks the button/link    jQuery=.previous-applications a:contains("High Performance Gasoline Stratified")
-    Then the user should see the element    jQuery=.success-alert:contains("Congratulations, your application has been successful")
+    When the user clicks the button/link     jQuery=.previous-applications a:contains("High Performance Gasoline Stratified")
+    Then the user should see the element     jQuery=.success-alert:contains("Congratulations, your application has been successful")
 
 View feedback from each assessor
     [Documentation]    INFUND-8172
     [Tags]    Email    HappyPath
     Then the user should see the element    jQuery=h3:contains("Assessor 1") ~ p:contains("I have no problem recommending this application")
-    And the user should see the element    jQuery=h3:contains("Assessor 2") ~ p:contains("Very good, but could have been better in areas")
-    And the user should see the element    jQuery=h3:contains("Assessor 3") ~ p:contains("I enjoyed reading this application, well done")
+    And the user should see the element     jQuery=h3:contains("Assessor 2") ~ p:contains("Very good, but could have been better in areas")
+    And the user should see the element     jQuery=h3:contains("Assessor 3") ~ p:contains("I enjoyed reading this application, well done")
 
 Question scores and application details are correct
     [Documentation]    INFUND-8169 INFUND-7861
@@ -128,26 +130,47 @@ Question scores and application details are correct
     Then the application question scores are correct
     And the application details are correct
 
+User can see the Appplication details along with feedback
+    [Documentation]    INF-2473  IFS-2256
+    [Tags]
+    Then the user should see the element     jQuery=h2:contains("Application details")
+    And the user should see the element      jQuery=h3:contains("Project title") ~ p:contains("High Performance Gasoline Stratified")
+    Given the user clicks the button/link    jQuery=a:contains("Project summary")
+    Then the user should see the element     jQuery=h1:contains("Project summary")
+    And the user should see the element      jQuery=p:contains("This is the applicant response for project summary.")
+    Given the user clicks the button/link    jQuery=a:contains("Feedback overview")
+    When the user clicks the button/link     jQuery=a:contains("Public description")
+    Then the user should see the element     jQuery=h1:contains("Public description")
+    And the user should see the element      jQuery=p:contains("This is the applicant response for public description.")
+    Given the user clicks the button/link    jQuery=a:contains("Feedback overview")
+    When the user clicks the button/link     jQuery=a:contains("Scope")
+    Then the user should see the element     jQuery=h1:contains("Scope")
+    And the user should see the element      jQuery=p:contains("This is the applicant response for how does your project align with the scope of this competition?")
+    Then the user should see the element     jQuery=h4:contains("Assessor 1")
+    And the user should see the element      jQuery=p:contains("This is the scope feedback")
+    Then the user clicks the button/link     jQuery=a:contains("Feedback overview")
+    And the user should see the element      jQuery=h2:contains("Application details")
+
 User can see feedback to individual questions
     [Documentation]    INFUND-8005
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains("6. Innovation")
-    Then the user should see the element    jQuery=h3:contains("Your answer") ~ div[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")
-    And the user should see the element    jQuery=h4:contains("Assessor 1") ~ div[data-md-to-html] p:contains("This is the innovation feedback")
+    Then the user should see the element     jQuery=h3:contains("Your answer") ~ div[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")
+    And the user should see the element      jQuery=h4:contains("Assessor 1") ~ div[data-md-to-html] p:contains("This is the innovation feedback")
     [Teardown]    the user clicks the button/link    jQuery=.link-back:contains("Feedback overview")
 
 The finance details are shown
     [Documentation]    INFUND-8168
     [Tags]    Email
-    When the user clicks the button/link    css=.collapsible button
-    Then the user should see the element    css=.collapsible div[aria-hidden="false"]
-    And the user should not see the element    css=.collapsible div[aria-hidden="true"]
+    When the user clicks the button/link     css=.collapsible button
+    Then the user should see the element     css=.collapsible div[aria-hidden="false"]
+    And the user should not see the element  css=.collapsible div[aria-hidden="true"]
 
 Selecting the dashboard link takes user back to the dashboard
     [Documentation]    INFUND-8876
     [Tags]
     Given the user clicks the button/link    jQuery=.link-back:contains("Dashboard")
-    Then the user should see the element    jQuery=h1:contains("Dashboard")
+    Then the user should see the element     jQuery=h1:contains("Dashboard")
 
 *** Keywords ***
 the application question scores are correct
