@@ -499,4 +499,23 @@
     </div>
 </th:block>
 
+<!-- confirmation of marking query as resolved -->
+<th:block th:fragment="modal-confirm-mark-resolved">
+    <div class="modal-confirm-mark-resolved" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Mark as resolved</h2>
+            <p>Are you sure you wish to close this query?</p>
+            <p>You won't be able to make any changes after this point.</p>
+        </div>
+        <hr />
+        <form th:action="'#'" method="post" novalidate="novalidate">
+            <div>
+                <button class="button" name="markAsResolved" type="submit">Submit</button>
+                <button class="buttonlink js-close" type="button">Cancel</button>
+            </div>
+        </form>
+    </div>
+</th:block>
+
 </html>
