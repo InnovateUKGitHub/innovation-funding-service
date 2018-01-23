@@ -38,7 +38,7 @@
                             <a th:inline="text"
                                 data-js-modal="modal-resend-project-manager"
                                 th:attr="data-modal-form-action=@{/project/{projectId}/details/project-manager(projectId=${model.projectId})},data-modal-input-resend-pm-invite=${user.id}"
-                                th:href="@{/project/{projectId}/details/project-manager?resend-pm-invite={userId}(projectId=${model.projectId},userId=${user.id})}"
+                                th:href="@{/project/{projectId}/details/project-manager/confirm?resend-pm-invite={userId}(projectId=${model.projectId},userId=${user.id})}"
                                 class="button button-clear no-margin">
                                 Resend invite
                             </a>

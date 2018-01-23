@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Submit to lead partner'" />
+</head>
+<body th:with="context='project'">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main tabindex="-1" id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/project/{projectId}/details/project-manager(projectId=${model.projectId})}" />
+
+    <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
+        <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Submit to lead partner',size='heading-medium'" />
+        <h2 class="heading-medium no-margin">Resend invite to team member</h2>
+        <p>They will be reminded to accept the role of Project Manager.</p>
+        <hr />
+        <input type="hidden" id="resend-pm-invite" name="resend-pm-invite" value=""/>
+        <button class="button" type="submit">Resend</button>
+        <button class="buttonlink js-close" type="button">Cancel</button>
+    </form>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>
+

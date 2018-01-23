@@ -50,7 +50,7 @@
                             <a
                                 data-js-modal="modal-resend-finance-contact"
                                 th:attr="data-modal-form-action=@{/project/{projectId}/details/finance-contact?resend-fc-invite={userId}(projectId=${model.projectId},userId=${user.id})},data-modal-input-resend-fc-invite=${user.id},data-modal-input-organisation=${model.organisationId}"
-                                th:href="@{/project/{projectId}/details/finance-contact?resend-fc-invite={userId}(projectId=${model.projectId},userId=${user.id})}"
+                                th:href="@{/project/{projectId}/details/finance-contact/confirm?resend-fc-invite={userId}&organisation={orgId}(projectId=${model.projectId},userId=${user.id}, orgId=${model.organisationId})}"
                                 class="button button-clear no-margin">
                                 Resend invite
                             </a>

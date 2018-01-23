@@ -68,10 +68,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
-    private static final String SAVE_FC = "Save_fc";
-    private static final String INVITE_FC = "Invite_fc";
-    private static final String SAVE_PM = "Save_pm";
-    private static final String INVITE_PM = "Invite_pm";
+    private static final String SAVE_FC = "save-fc";
+    private static final String INVITE_FC = "invite-fc";
+    private static final String SAVE_PM = "save-pm";
+    private static final String INVITE_PM = "invite-pm";
+    private static final String RESEND_FC_INVITE = "resend-fc-invite";
+    private static final String RESEND_PM_INVITE = "resend-pm-invite";
 
     @Mock
     SetupStatusViewModelPopulator setupStatusViewModelPopulatorMock;
@@ -835,7 +837,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
 	    when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
 	    mockMvc.perform(post("/project/{id}/details/finance-contact", projectId)
-                .param("Resend_fc_invite", "3")
+                .param(RESEND_FC_INVITE, "3")
                 .param("organisation", "21"))
                 .andExpect(status().is3xxRedirection());
 	    verify(projectDetailsService).getInvitesByProject(projectId);
@@ -862,7 +864,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
 
         when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
         mockMvc.perform(post("/project/{id}/details/project-manager", projectId)
-                .param("Resend_pm_invite", "12"))
+                .param(RESEND_PM_INVITE, "12"))
                 .andExpect(status().is3xxRedirection());
         verify(projectDetailsService).getInvitesByProject(projectId);
     }
