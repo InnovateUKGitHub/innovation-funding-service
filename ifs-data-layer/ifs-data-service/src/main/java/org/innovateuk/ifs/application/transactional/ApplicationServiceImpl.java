@@ -397,7 +397,7 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         }
 
         if(ApplicationState.SUBMITTED.equals(state)) {
-            financeTotalsSender.syncFinanceTotalsForApplication(id);
+            financeTotalsSender.sendFinanceTotalsForApplication(id);
         }
 
         return find(application(id)).andOnSuccess((application) -> {
@@ -482,6 +482,13 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates) {
         Collection<State> states = applicationStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
         List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, states);
+        return serviceSuccess(applicationResults);
+    }
+
+    @Override
+    public ServiceResult<List<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
+        Collection<State> states = applicationStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
+        List<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
         return serviceSuccess(applicationResults);
     }
 

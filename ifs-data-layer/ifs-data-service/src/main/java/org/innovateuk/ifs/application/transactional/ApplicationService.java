@@ -86,6 +86,10 @@ public interface ApplicationService {
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates);
 
+    @SecuredBySpring(value = "READ", description = "Only system registrat should be using this function")
+    @PreAuthorize("hasAnyAuthority('system_registrar')")
+    ServiceResult<List<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates);
+
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(Long applicationId);
 

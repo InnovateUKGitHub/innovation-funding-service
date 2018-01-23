@@ -4,6 +4,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.resource.sync.FinanceType;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -27,14 +28,14 @@ public class FinanceCostTotalResourceMapper {
 
     public List<FinanceCostTotalResource> mapFromApplicationFinanceResourceToList(ApplicationFinanceResource applicationFinanceResource) {
         return applicationFinanceResource.getFinanceOrganisationDetails().entrySet().stream().map(
-                cat -> buildFinanceCostTotalResource(cat.getKey(), cat.getValue(), "APPLICATION", applicationFinanceResource.getTarget())
+                cat -> buildFinanceCostTotalResource(cat.getKey(), cat.getValue(), FinanceType.APPLICATION.getName(), applicationFinanceResource.getTarget())
         ).collect(Collectors.toList());
     }
 
     private static FinanceCostTotalResource buildFinanceCostTotalResource(FinanceRowType financeRowType, FinanceRowCostCategory financeRowItem, String financeType, Long setFinanceId) {
         FinanceCostTotalResource financeCostTotalResource = new FinanceCostTotalResource();
-        financeCostTotalResource.setTotal(financeRowItem.getTotal());
         financeCostTotalResource.setName(financeRowType.getName());
+        financeCostTotalResource.setTotal(financeRowItem.getTotal());
         financeCostTotalResource.setFinanceType(financeType);
         financeCostTotalResource.setFinanceId(setFinanceId);
 
