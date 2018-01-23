@@ -101,16 +101,6 @@ Lead applicant can't view the file on the finances page
     And the user clicks the button/link                link=Your project costs
     Then the user should not see the text in the page  ${valid_pdf}
 
-Lead applicant can view the file on the finances overview page
-    [Documentation]    INFUND-917
-    [Tags]    Pending
-    # TODO Pending due to INFUND-9372
-    When the user navigates to the finance overview of the academic
-    And the user should see the text in the page  ${valid_pdf}
-    When the user opens the link in new window    ${valid_pdf}
-    Then the user should not see an error in the page
-    [Teardown]    the user goes back to the previous page
-
 Academic finances JeS link showing
     [Documentation]    INFUND-2402, INFUND-8347
     [Tags]

@@ -365,10 +365,16 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
     @Transactional
     public ServiceResult<Void> removeSignedGrantOfferLetterFileEntry(Long projectId) {
         return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup)
-                .andOnSuccess(project ->
-                        getSignedGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
+                .andOnSuccess(project -> getCurrentlyLoggedInUser().andOnSuccess(user -> {
+
+                        if (!golWorkflowHandler.removeSignedGrantOfferLetter(project, user)) {
+                            return serviceFailure(GRANT_OFFER_LETTER_CANNOT_BE_REMOVED);
+                        }
+
+                        return getSignedGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
                                 fileService.deleteFileIgnoreNotFound(fileEntry.getId()).andOnSuccessReturnVoid(() ->
-                                        removeSignedGrantOfferLetterFileFromProject(project))));
+                                        removeSignedGrantOfferLetterFileFromProject(project)));
+                }));
     }
 
     private ServiceResult<FileEntry> getSignedGrantOfferLetterFileEntry(Project project) {

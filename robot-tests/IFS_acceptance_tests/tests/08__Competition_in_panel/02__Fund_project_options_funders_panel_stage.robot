@@ -116,12 +116,12 @@ Successful Funding Decision
 Once Successful and Sent you cannot change your mind
     [Documentation]  INFUND-8651
     [Tags]
-    Given log in as a different user          &{internal_finance_credentials}
-    When the user navigates to the page       ${funders_panel_competition_url}/funding
-    Then the user should not see the element  css=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
-    When the user navigates to the page       ${funders_panel_competition_url}/manage-funding-applications
-    Then the user should not see the element  css=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
-    # TODO Add a check that button is disabled IFS-359
+    Given log in as a different user                        &{internal_finance_credentials}
+    When the user navigates to the page                     ${funders_panel_competition_url}/funding
+    Then the user should not see the element                css=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
+    When the user navigates to the page                     ${funders_panel_competition_url}/manage-funding-applications
+    Then the user should not see the element                css=input[type="checkbox"][value="${FUNDERS_PANEL_APPLICATION_1_NUMBER}"]
+    And the user should see that the element is disabled    jQuery=button:contains("Write and send email")
 
 Successful applications are turned into Project
     [Documentation]  INFUND-8624
