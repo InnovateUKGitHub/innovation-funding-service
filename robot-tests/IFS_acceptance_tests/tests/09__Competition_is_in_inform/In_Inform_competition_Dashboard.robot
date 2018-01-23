@@ -133,23 +133,12 @@ Question scores and application details are correct
 User can see the Appplication details along with feedback
     [Documentation]    INF-2473  IFS-2256
     [Tags]
-    Then the user should see the element     jQuery=h2:contains("Application details")
-    And the user should see the element      jQuery=h3:contains("Project title") ~ p:contains("High Performance Gasoline Stratified")
-    Given the user clicks the button/link    jQuery=a:contains("Project summary")
-    Then the user should see the element     jQuery=h1:contains("Project summary")
-    And the user should see the element      jQuery=p:contains("This is the applicant response for project summary.")
-    Given the user clicks the button/link    jQuery=a:contains("Feedback overview")
-    When the user clicks the button/link     jQuery=a:contains("Public description")
-    Then the user should see the element     jQuery=h1:contains("Public description")
-    And the user should see the element      jQuery=p:contains("This is the applicant response for public description.")
-    Given the user clicks the button/link    jQuery=a:contains("Feedback overview")
-    When the user clicks the button/link     jQuery=a:contains("Scope")
-    Then the user should see the element     jQuery=h1:contains("Scope")
-    And the user should see the element      jQuery=p:contains("This is the applicant response for how does your project align with the scope of this competition?")
-    Then the user should see the element     jQuery=h4:contains("Assessor 1")
-    And the user should see the element      jQuery=p:contains("This is the scope feedback")
-    Then the user clicks the button/link     jQuery=a:contains("Feedback overview")
-    And the user should see the element      jQuery=h2:contains("Application details")
+    Given the user should see the element    jQuery=h2:contains("Application details")
+    Then the user should see the element     jQuery=h3:contains("Project title") ~ p:contains("High Performance Gasoline Stratified")
+    And the user checks the Project summary functionality
+    Given the user checks the Public description functionality
+    When the user checks the Scope functionality
+    Then the user should see the element      jQuery=h2:contains("Application details")
 
 User can see feedback to individual questions
     [Documentation]    INFUND-8005
@@ -203,3 +192,23 @@ User sends the notification to enable release feedback
     the user clicks the button/link    jQuery=button:contains("Write and send email")
     the internal sends the descision notification email to all applicants  EmailTextBody
     the user clicks the button/link    jQuery=.link-back:contains("Competition")
+
+The user checks the Project summary functionality
+    the user clicks the button/link    jQuery=a:contains("Project summary")
+    the user should see the element    jQuery=h1:contains("Project summary")
+    the user should see the element    jQuery=p:contains("This is the applicant response for project summary.")
+    the user clicks the button/link    jQuery=a:contains("Feedback overview")
+
+The user checks the Public description functionality
+    the user clicks the button/link    jQuery=a:contains("Public description")
+    the user should see the element    jQuery=h1:contains("Public description")
+    the user should see the element    jQuery=p:contains("This is the applicant response for public description.")
+    the user clicks the button/link    jQuery=a:contains("Feedback overview")
+
+The user checks the Scope functionality
+    the user clicks the button/link    jQuery=a:contains("Scope")
+    the user should see the element    jQuery=h1:contains("Scope")
+    the user should see the element    jQuery=p:contains("This is the applicant response for how does your project align with the scope of this competition?")
+    the user should see the element    jQuery=h4:contains("Assessor 1")
+    the user should see the element    jQuery=p:contains("This is the scope feedback")
+    the user clicks the button/link    jQuery=a:contains("Feedback overview")
