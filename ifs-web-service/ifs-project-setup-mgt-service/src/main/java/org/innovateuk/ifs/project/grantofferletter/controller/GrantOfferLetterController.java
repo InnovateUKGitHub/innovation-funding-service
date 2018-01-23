@@ -215,23 +215,23 @@ public class GrantOfferLetterController {
 
         Optional<FileEntryResource> signedGrantOfferLetterFile = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
 
-        Boolean grantOfferLetterRejected = grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).getSuccessObject();
+        Boolean grantOfferLetterRejected = grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).getSuccessObjectOrThrowException();
 
-        GrantOfferLetterState golState = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).getSuccessObject();
+        GrantOfferLetterState golState = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).getSuccessObjectOrThrowException();
 
         return new GrantOfferLetterModel(competitionSummary,
-                grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
-                additionalContractFile.isPresent() ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
+                grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
+                additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
                 !GrantOfferLetterState.PENDING.equals(golState),
                 projectId,
                 project.getName(),
                 application.getId(),
-                grantOfferFileDetails.isPresent() ? grantOfferFileDetails.isPresent() : Boolean.FALSE,
-                additionalContractFile.isPresent() ? additionalContractFile.isPresent() : Boolean.FALSE,
+                grantOfferFileDetails.isPresent(),
+                additionalContractFile.isPresent(),
                 GrantOfferLetterState.APPROVED.equals(golState),
                 grantOfferLetterRejected,
                 GrantOfferLetterState.READY_TO_APPROVE.equals(golState) || GrantOfferLetterState.APPROVED.equals(golState),
-                signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null
+                signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null)
         );
     }
 

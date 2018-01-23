@@ -61,12 +61,17 @@ public class GrantOfferLetterWorkflow extends StateMachineConfigurerAdapter<Gran
                     .and()
                 .withExternal()
                     .source(READY_TO_APPROVE)
-                    .event(GOL_REJECTED)
+                    .event(SIGNED_GOL_REJECTED)
+                    .target(SENT)
+                    .and()
+                .withExternal()
+                    .source(SENT)
+                    .event(SIGNED_GOL_REMOVED)
                     .target(SENT)
                     .and()
                 .withExternal()
                     .source(READY_TO_APPROVE)
-                    .event(GOL_APPROVED)
+                    .event(SIGNED_GOL_APPROVED)
                     .target(APPROVED);
     }
 }
