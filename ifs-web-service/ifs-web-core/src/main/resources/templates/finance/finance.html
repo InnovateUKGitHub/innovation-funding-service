@@ -51,13 +51,12 @@
             <div class="form-group" th:classappend="${#fields.hasErrors('organisationSize')} ? 'form-group-error'">
                 <fieldset>
                     <legend id="organisationSize">
-                        <span class="form-label form-label-bold" th:text="${question.name}"></span>
-                        <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
+                        <span class="form-label form-label-bold" th:text="${formInput.description}"></span>
+                        <th:block th:insert="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
                         <th:block th:if="${#fields.hasErrors('organisationSize')}">
                             <span class="error-message" th:each="err : ${#fields.errors('organisationSize')}" th:text="${err}"></span>
                         </th:block>
                     </legend>
-                    <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
                     <div class="multiple-choice" th:each="size : ${model.organisationSizes}">
                         <input type="radio"
                                th:id="'financePosition-organisationSize-'+${size.id}"
@@ -74,10 +73,10 @@
         <th:block th:if="${model.readonly}">
             <!--/* view  */-->
             <dl class="readonly-data">
-                <dt th:text="${formInput.description}">Organisation size</dt>
+                <dt th:text="${formInput.description}">Size</dt>
 
                 <th:block th:unless="${model.organisationFinanceSize == null}" th:each="size : ${model.organisationSizes}">
-                    <dd th:if="${model.organisationFinanceSize == size.id}" th:text="${size.description}">Micro / small: claim up to 70%</dd>
+                    <dd th:if="${model.organisationFinanceSize == size.id}" th:text="${size.description}">Micro or small: claim up to 70%</dd>
                 </th:block>
             </dl>
         </th:block>
