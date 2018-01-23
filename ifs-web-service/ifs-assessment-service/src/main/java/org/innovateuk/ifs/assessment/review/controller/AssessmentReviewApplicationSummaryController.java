@@ -74,16 +74,15 @@ public class AssessmentReviewApplicationSummaryController {
 
                 List<AssessorFormInputResponseResource> questionScore = inputResponse
                         .stream()
-                        .filter(p -> formInputRestService.getById(p.getFormInput()).getSuccessObjectOrThrowException().getDescription().equals("Question score"))
+                        .filter(response -> formInputRestService.getById(response.getFormInput()).getSuccessObjectOrThrowException().getDescription().equals("Question score"))
                         .collect(toList());
 
                 List<AssessorFormInputResponseResource> questionFeedback = inputResponse
                         .stream()
-                        .filter(p -> formInputRestService.getById(p.getFormInput()).getSuccessObjectOrThrowException().getDescription().equals("Feedback"))
+                        .filter(response -> formInputRestService.getById(response.getFormInput()).getSuccessObjectOrThrowException().getDescription().equals("Feedback"))
                         .collect(toList());
 
                 List<AssessmentResource> feedbackSummary = assessmentRestService.getByUserAndApplication(user.getId(), applicationId).getSuccessObjectOrThrowException();
-
 
                 model.addAttribute("feedback", questionFeedback);
                 model.addAttribute("score", questionScore);
