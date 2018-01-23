@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -81,19 +82,6 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
 
         assertSame(expected, service.getByUserAndCompetition(userId, competitionId));
         verify(assessmentRestService, only()).getByUserAndCompetition(userId, competitionId);
-    }
-
-    @Test
-    public void getByUserAndApplication() throws Exception {
-        List<AssessmentResource> expected = newAssessmentResource().build(2);
-
-        Long userId = 1L;
-        Long applicationId = 2L;
-
-        when(assessmentRestService.getByUserAndApplication(userId, applicationId)).thenReturn(restSuccess(expected));
-
-        assertSame(expected, service.getByUserAndApplication(userId, applicationId));
-        verify(assessmentRestService, only()).getByUserAndApplication(userId, applicationId);
     }
 
     @Test

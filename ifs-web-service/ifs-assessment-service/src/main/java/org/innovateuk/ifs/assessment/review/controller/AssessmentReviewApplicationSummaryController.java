@@ -67,31 +67,28 @@ public class AssessmentReviewApplicationSummaryController {
                 .collect(toList());
 
         if (!processRoleResources.isEmpty()){
-            List<AssessorFormInputResponseResource> questionScore = new ArrayList<>();
-            List<AssessorFormInputResponseResource> questionFeedback = new ArrayList<>();
 
             List<AssessorFormInputResponseResource> inputResponse = assessorFormInputResponseRestService.getAllAssessorFormInputResponsesForPanel(processRoleResources.get(0).getId()).getSuccessObjectOrThrowException();
 
-            for (AssessorFormInputResponseResource assessorFormInputResponseResource : inputResponse) {
-
-                String feedbackType = formInputRestService.getById(assessorFormInputResponseResource.getFormInput()).getSuccessObjectOrThrowException().getDescription();
-
-                if(feedbackType.equals("Question score")){
-                    questionScore.add(assessorFormInputResponseResource);
-                }else if(feedbackType.equals("Feedback")){
-                    questionFeedback.add(assessorFormInputResponseResource);
-                }
-            }
-
-            List<AssessmentResource> feedbackSummary = new ArrayList<>();
-
             if(!inputResponse.isEmpty()) {
-               feedbackSummary = assessmentRestService.getByUserAndApplication(user.getId(), applicationId).getSuccessObjectOrThrowException();
-            }
 
-            model.addAttribute("feedback", questionFeedback);
-            model.addAttribute("score", questionScore);
-            model.addAttribute("feedbackSummary",feedbackSummary);
+                List<AssessorFormInputResponseResource> questionScore = inputResponse
+                        .stream()
+                        .filter(p -> formInputRestService.getById(p.getFormInput()).getSuccessObjectOrThrowException().getDescription().equals("Question score"))
+                        .collect(toList());
+
+                List<AssessorFormInputResponseResource> questionFeedback = inputResponse
+                        .stream()
+                        .filter(p -> formInputRestService.getById(p.getFormInput()).getSuccessObjectOrThrowException().getDescription().equals("Feedback"))
+                        .collect(toList());
+
+                List<AssessmentResource> feedbackSummary = assessmentRestService.getByUserAndApplication(user.getId(), applicationId).getSuccessObjectOrThrowException();
+
+
+                model.addAttribute("feedback", questionFeedback);
+                model.addAttribute("score", questionScore);
+                model.addAttribute("feedbackSummary", feedbackSummary);
+            }
         }
         
         return "assessor-panel-application-overview";

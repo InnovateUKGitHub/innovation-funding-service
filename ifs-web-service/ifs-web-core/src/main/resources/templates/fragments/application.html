@@ -27,7 +27,7 @@
                 <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
                     <div th:replace="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
 
-                    <th:block th:if="${question.questionNumber!=null}">
+                    <th:block th:if="${question.questionNumber!=null && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FILEUPLOAD}">
                         <div th:if="!${#lists.isEmpty(feedback)}">
                             <ul>
                                 <li th:each="item : ${feedback}">
@@ -58,6 +58,7 @@
                 </th:block>
             </div>
         </div>
+
          <th:block th:if="${question.shortName.equals('Application details') and !(currentApplication.isOpen() and isApplicant) and !hideDetails}">
              <div class="extra-margin">
                <div th:each="formInput, status : ${questionFormInputs?.get(question?.id)}" th:if='${formInput.isIncludedInApplicationSummary()}'
@@ -103,7 +104,8 @@
     <section th:if="!${#lists.isEmpty(feedbackSummary)}">
         <h2 class="heading-medium">Feedback summary</h2>
         <h2 class="heading-small">Do you believe that this application is suitable for funding?</h2>
-        <p th:text="${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">Feedback text</p>
+        <p th:if="${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">Yes</p>
+        <p th:if="!${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">No</p>
         <h2 class="heading-small">Your feedback</h2>
         <p th:text="${feedbackSummary[0].getFundingDecision().getFeedback()}">Feedback text</p>
         <h2 class="heading-small">Other comments</h2>

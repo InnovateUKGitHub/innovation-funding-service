@@ -20,8 +20,6 @@ public interface AssessmentService {
 
     List<AssessmentResource> getByUserAndCompetition(Long userId, Long competitionId);
 
-    List<AssessmentResource> getByUserAndApplication(long userId, long applicationId);
-
     AssessmentTotalScoreResource getTotalScore(Long assessmentId);
 
     ServiceResult<Void> recommend(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment);
