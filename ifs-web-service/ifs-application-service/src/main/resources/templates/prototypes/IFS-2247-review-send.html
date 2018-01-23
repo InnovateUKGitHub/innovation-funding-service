@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body class="wide-page">
+<body class="wide-page"  th:with="titleStatus=${param.status != null and param.status[0] == 'resendInvites' ? 'Resend' : 'Send'}">>
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -20,7 +20,7 @@
 
     <!-- HARDCODED PROTOTYPE HTML -->
 
-  <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${'Send invite to assessors'}, ${null})" />
+  <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'68: Technology inspired, competition closed'}, ${titleStatus} + ${' invite to assessors'}, ${null})" />
 
 	<h2 class="heading-medium">Assessors selected</h2>
     <p>Dave Smith, Christopher Soames, Martin Trollope</p>
@@ -77,7 +77,7 @@ We pay &pound;500 a day for your attendance and &lt;£500 for pre-reading&gt;, p
   </p>
 
 	<div class="extra-margin">
-		<a href="/prototypes/IFS-2247-invite-assessors?tab=overview&#38;status=invitesPending" class="button">Send invites</a>
+		<a href="/prototypes/IFS-2247-invite-assessors?tab=overview&#38;status=invitesPending" class="button" th:text="${titleStatus + ' invites'}">Send invites</a>
     <a href="/prototypes/IFS-2247-invite-assessors?tab=overview?tab=invite" class="button button-clear">Cancel</a>
 	</div>
 
