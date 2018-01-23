@@ -410,22 +410,22 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
     @Test
     public void testRemoveSignedGrantOfferLetterFileEntry() {
 
-        UserResource internalUserResource = newUserResource().build();
-        User internalUser = newUser().withId(internalUserResource.getId()).build();
-        setLoggedInUser(internalUserResource);
+        UserResource externalUser = newUserResource().build();
+        setLoggedInUser(externalUser);
 
         FileEntry existingSignedGOLFile = newFileEntry().build();
         project.setSignedGrantOfferLetter(existingSignedGOLFile);
 
-        when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
+        when(userRepositoryMock.findOne(externalUser.getId())).thenReturn(user);
         when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         when(fileServiceMock.deleteFileIgnoreNotFound(existingSignedGOLFile.getId())).thenReturn(serviceSuccess(existingSignedGOLFile));
+        when(golWorkflowHandlerMock.removeSignedGrantOfferLetter(project, user)).thenReturn(true);
 
         ServiceResult<Void> result = service.removeSignedGrantOfferLetterFileEntry(123L);
-
         assertTrue(result.isSuccess());
         assertNull(project.getSignedGrantOfferLetter());
 
+        verify(golWorkflowHandlerMock).removeSignedGrantOfferLetter(project, user);
         verify(fileServiceMock).deleteFileIgnoreNotFound(existingSignedGOLFile.getId());
     }
 
