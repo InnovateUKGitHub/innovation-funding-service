@@ -98,7 +98,7 @@ public class FinanceChecksQueriesController {
                              @PathVariable Long queryId,
                              Model model) {
 
-        //financeCheckService.closeQuery(queryId);
+        financeCheckService.closeQuery(queryId);
 
         return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/query";
     }
