@@ -2,9 +2,9 @@ package org.innovateuk.ifs.commons.service;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.util.Either;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.util.Either;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -18,12 +18,13 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.Either.left;
 import static org.innovateuk.ifs.util.Either.right;
-import static java.util.Arrays.asList;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -128,8 +129,8 @@ public abstract class AbstractRestTemplateAdaptor {
 
     // Asynchronous public calls
     @RestCacheResult
-    public <T> ListenableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz) {
-        return withEmptyCallback(getAsyncRestTemplate().exchange(path, HttpMethod.GET, jsonEntity(""), clazz));
+    public <T> CompletableFuture<ResponseEntity<T>> restGetAsync(String path, Class<T> clazz) {
+        return withEmptyCallbackCompletable(getAsyncRestTemplate().exchange(path, HttpMethod.GET, jsonEntity(""), clazz));
     }
 
     protected final <T, R> Either<ResponseEntity<R>, ResponseEntity<T>> handleSuccessOrFailureJsonResponse(ResponseEntity<String> asString, Class<T> responseType, Class<R> failureType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
@@ -148,7 +149,12 @@ public abstract class AbstractRestTemplateAdaptor {
         }
     }
 
+    protected final <T> CompletableFuture<ResponseEntity<T>> withEmptyCallbackCompletable(ListenableFuture<ResponseEntity<T>> toAddTo) {
+        return buildCompletableFutureFromListenableFuture(withEmptyCallback(toAddTo));
+    }
+
     protected final <T> ListenableFuture<ResponseEntity<T>> withEmptyCallback(ListenableFuture<ResponseEntity<T>> toAddTo) {
+
         // If we do not add a callback then the behaviour of calling get on the future becomes serial instead of parallel.
         // I.e. the future will not start execution until get is called. However if an empty callback is added the future
         // will start execution immediately (or as soon as a thread is available) and we can then call get.
@@ -163,6 +169,7 @@ public abstract class AbstractRestTemplateAdaptor {
                 // Do nothing
             }
         });
+
         return toAddTo;
     }
 
@@ -185,10 +192,43 @@ public abstract class AbstractRestTemplateAdaptor {
         return new HttpEntity<>(entity, getHeaders());
     }
 
-    public <T> HttpEntity<T> jsonEntity(T entity, HttpHeaders additionalHeaders){
+    <T> HttpEntity<T> jsonEntity(T entity, HttpHeaders additionalHeaders){
         HttpHeaders standardHeaders = getHeaders();
         standardHeaders.putAll(additionalHeaders);
         return new HttpEntity<>(entity, standardHeaders);
     }
 
+    /**
+     * This method converts a ListenableFuture into a CompletableFuture.  CompletableFutures are useful to us because
+     * it allows us to chain futures together to produce new compound Futures.
+     *
+     * Originally from https://blog.krecan.net/2014/06/11/converting-listenablefutures-to-completablefutures-and-back/
+     */
+    protected <T> CompletableFuture<T> buildCompletableFutureFromListenableFuture(ListenableFuture<T> listenableFuture) {
+
+        //create an instance of CompletableFuture
+        CompletableFuture<T> completable = new CompletableFuture<T>() {
+            @Override
+            public boolean cancel(boolean mayInterruptIfRunning) {
+                // propagate cancel to the listenable future
+                boolean result = listenableFuture.cancel(mayInterruptIfRunning);
+                super.cancel(mayInterruptIfRunning);
+                return result;
+            }
+        };
+
+        // add callback
+        listenableFuture.addCallback(new ListenableFutureCallback<T>() {
+            @Override
+            public void onSuccess(T result) {
+                completable.complete(result);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                completable.completeExceptionally(t);
+            }
+        });
+        return completable;
+    }
 }
