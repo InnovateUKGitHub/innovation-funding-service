@@ -27,6 +27,17 @@ function isProductionEnvironment() {
     fi
 }
 
+function isSysIntOrUat() {
+
+    TARGET=$1
+
+    if [[ ${TARGET} == "sysint" || ${TARGET} == "uat" ]]; then
+        exit 1
+    else
+        exit 0
+    fi
+}
+
 function getProjectName() {
 
     PROJECT=$1

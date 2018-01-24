@@ -37,8 +37,12 @@ function upgradeServices {
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
         oc apply -f $(getBuildLocation)/sil-stub/80-sil-stub.yml ${SVC_ACCOUNT_CLAUSE}
+    fi
+
+    if $(isSysIntOrUat ${TARGET}); then
         oc apply -f $(getBuildLocation)/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     fi
+
 
     watchStatus
 }
@@ -60,6 +64,9 @@ function forceReload {
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
         oc rollout latest dc/sil-stub ${SVC_ACCOUNT_CLAUSE}
+    fi
+
+    if $(isSysIntOrUat ${TARGET}); then
         oc rollout latest dc/finance-data-service ${SVC_ACCOUNT_CLAUSE}
     fi
 
@@ -80,6 +87,9 @@ function watchStatus {
     # The SIL stub is required in all environments, in one form or another, except for production
     if ! $(isProductionEnvironment ${TARGET}); then
         rolloutStatus sil-stub
+    fi
+
+    if $(isSysIntOrUat ${TARGET}); then
         rolloutStatus finance-data-service
     fi
 }
