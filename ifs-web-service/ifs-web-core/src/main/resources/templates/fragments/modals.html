@@ -505,7 +505,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="heading-medium no-margin">Resend invite to team member</h2>
-            <p>They will be reminded to accept the role of finance contact.</p>
+            <p>They will be resent an email inviting them to join the project.</p>
         </div>
         <hr />
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
@@ -525,7 +525,7 @@
         <th:block th:insert="fragments/modals :: close-button" />
         <div class="modal-content">
             <h2 class="heading-medium no-margin">Resend invite to team member</h2>
-            <p>They will be reminded to accept the role of Project Manager.</p>
+            <p>They will be resent an email inviting them to join the project.</p>
         </div>
         <hr />
         <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">

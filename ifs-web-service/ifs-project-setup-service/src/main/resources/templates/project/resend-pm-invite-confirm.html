@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Resend invite to Project Manager'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Resend invite to project manager'" />
 </head>
 <body th:with="context='project'">
 <th:block th:insert="fragments/layout :: body-start" />
@@ -14,7 +14,7 @@
     <form th:action="@{/project/{projectId}/details/project-manager(projectId=${model.projectId})}" method="POST" >
         <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Resend invite to team member',size='heading-xlarge'" />
         <h2 class="heading-medium no-margin">Resend invite to team member</h2>
-        <p>They will be reminded to accept the role of Project Manager.</p>
+        <p>They will be resent an email inviting them to join the project</p>
         <hr />
         <input type="hidden" id="resend-pm-invite" name="resend-pm-invite" th:value="${model.inviteId}"/>
         <button class="button" type="submit">Resend</button>
