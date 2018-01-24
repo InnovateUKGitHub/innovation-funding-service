@@ -164,6 +164,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
 
         try {
             Map<String, Object> globalArgs = createGlobalArgsForInternalUserInvite(roleInvite);
+
             ServiceResult<Void> inviteContactEmailSendResult = emailService.sendEmail(
                     singletonList(createInviteInternalUserNotificationTarget(roleInvite)),
                     globalArgs,
