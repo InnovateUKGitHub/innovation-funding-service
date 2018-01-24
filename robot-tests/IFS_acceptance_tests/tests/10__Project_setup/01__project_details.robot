@@ -289,7 +289,7 @@ The Project manager resends the invite to the Project manager
     [Documentation]  IFS-2642
     [Tags]    HappyPath    Email
     When the user clicks the button/link        jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
-    Then the user should see the element    jQuery=h2:contains("Resend invite to team member")
+    Then the user should see the element        jQuery=h2:contains("Resend invite to team member")
     And the user clicks the button/link         jQuery=button:contains("Resend")
     [Teardown]  logout as user
 
