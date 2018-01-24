@@ -36,6 +36,8 @@ import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
+import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -93,9 +95,6 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     @Autowired
     private CompetitionRepository competitionRepository;
 
-//    @Autowired
-//    private RejectionReasonRepository rejectionReasonRepository;
-
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
 
@@ -134,6 +133,9 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
 
     enum Notifications {
         INVITE_ASSESSOR_TO_PANEL,
@@ -470,7 +472,12 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         Competition competition = participant.getProcess();
         List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
         Role role = roleRepository.findOneByName(UserRoleType.PANEL_ASSESSOR.getName());
-        applicationsInPanel.forEach(application -> assessmentReviewRepository.save(new AssessmentReview(application, participant, role)));
+        applicationsInPanel.forEach(application -> {
+            // this is pretty much AssessmentPanelServiceImpl#createAssessmentReview
+            AssessmentReview assessmentReview = new AssessmentReview(application, participant, role); // add the initial state to the constructor?
+            assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING));
+            assessmentReviewRepository.save(assessmentReview);
+        });
         return serviceSuccess();
     }
 
