@@ -31,18 +31,6 @@ dependencies {
     testCompile "com.h2database:h2:1.4.196"
 }
 
-processResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
-
-processTestResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
-
 sourceSets {
     client {
         java {

@@ -1,31 +1,23 @@
 apply from: "database-support.gradle"
 
 subprojects {
-
-
     apply from: rootProject.file("java-spring-boot.gradle")
-    ext.ifsWebSystemUserId="8394d970-b250-4b15-9621-3534325691b4"
+    ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
 
-    // data-service-commons is not a docker project.
-    if (it.name != 'data-service-commons') {
+    afterEvaluate {
+        if (tasks.findByName('buildDocker')) {
+            ext.dockerDir = "$project.parent.projectDir/docker/"
 
-        apply from: rootProject.file("openshift-build.gradle")
-        apply from: rootProject.file("prepare-docker.gradle")
-
-        ext.dockerDir = "$project.parent.projectDir/docker/"
-
-        buildDocker.dependsOn prepareDockerInput
-        buildDocker.dependsOn ":docker:app-base-image:buildDocker"
-        buildDocker.tag="innovateuk/" + project.name.replaceAll(/ifs-/,"")+":latest"
-        buildDocker.inputDir = project.file("$project.buildDir/docker")
-        tagDocker.imageId="innovateuk/" + project.name.replaceAll(/ifs-/,"")+":latest"
-
+            buildDocker.dependsOn prepareDockerInput
+            buildDocker.dependsOn ":docker:app-base-image:buildDocker"
+            buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+            buildDocker.inputDir = project.file("$project.buildDir/docker")
+            tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+        }
     }
-
 }
 
 buildscript {
-
     repositories {
         mavenCentral()
         jcenter()

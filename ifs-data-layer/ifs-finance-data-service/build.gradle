@@ -1,5 +1,7 @@
-def targetBuild = hasProperty('profile') ? profile : 'docker';
-apply from: targetBuild + "-build.gradle";
+def targetBuild = hasProperty('profile') ? profile : 'docker'
+apply from: targetBuild + "-build.gradle"
+apply from: rootProject.file("openshift-build.gradle")
+apply from: rootProject.file("prepare-docker.gradle")
 
 apply plugin: 'base'
 apply plugin: 'org.flywaydb.flyway'

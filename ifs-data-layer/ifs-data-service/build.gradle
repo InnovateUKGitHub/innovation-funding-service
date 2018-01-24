@@ -1,13 +1,15 @@
 
 
-def targetBuild = hasProperty('profile') ? profile : 'docker';
-apply from: targetBuild + "-build.gradle";
+def targetBuild = hasProperty('profile') ? profile : 'docker'
+apply from: targetBuild + "-build.gradle"
 
 apply plugin: 'base'
-
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'org.asciidoctor.convert'
+
 apply from: "db-reset.gradle"
+apply from: rootProject.file("openshift-build.gradle")
+apply from: rootProject.file("prepare-docker.gradle")
 
 task('copyFreemarkerResources', type: Copy) {
 //Copy freemarker resources to build path to support running as a jar.
