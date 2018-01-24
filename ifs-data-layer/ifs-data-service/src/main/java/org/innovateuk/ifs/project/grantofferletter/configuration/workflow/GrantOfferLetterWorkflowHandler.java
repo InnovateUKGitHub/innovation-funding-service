@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +25,7 @@ import java.util.function.BiFunction;
 
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER;
+
 /**
  * {@code GOLWorkflowService} is the entry point for triggering the workflow.
  *

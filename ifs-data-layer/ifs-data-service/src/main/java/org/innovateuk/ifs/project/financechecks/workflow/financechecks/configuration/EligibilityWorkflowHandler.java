@@ -17,13 +17,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_ELIGIBILITY;
-
 
 /**
  * {@code EligibilityWorkflowService} is the entry point for triggering the workflow.

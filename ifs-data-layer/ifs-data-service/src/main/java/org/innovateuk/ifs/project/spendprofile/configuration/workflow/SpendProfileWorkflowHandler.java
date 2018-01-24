@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +27,7 @@ import static org.innovateuk.ifs.project.spendprofile.resource.SpendProfileEvent
 
 @Component
 public class SpendProfileWorkflowHandler extends BaseWorkflowEventHandler<SpendProfileProcess, SpendProfileState, SpendProfileEvent, Project, ProjectUser> {
+
     @Autowired
     @Qualifier("spendProfileStateMachineFactory")
     private StateMachineFactory<SpendProfileState, SpendProfileEvent> stateMachineFactory;
