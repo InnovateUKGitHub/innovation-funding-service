@@ -103,6 +103,7 @@ task prepareDockerInput {
     }
 }
 
+buildDocker.dependsOn ":docker:oracle-jre:buildDocker"
 buildDocker.dependsOn prepareDockerInput
 buildDocker.tag="innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 buildDocker.inputDir = project.file("$project.buildDir/docker")
