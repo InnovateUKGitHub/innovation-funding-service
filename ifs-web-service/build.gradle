@@ -1,5 +1,3 @@
-
-
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild + "-build.gradle";
 apply from: "fractal.gradle";
@@ -12,91 +10,18 @@ subprojects {
     if (it.name != 'ifs-web-core') {
 
         apply from: rootProject.file("openshift-build.gradle")
+        apply from: rootProject.file("prepare-docker.gradle")
 
-
-
-        task getNewRelicAgent {
-            if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() ||
-                 !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists() ) {
-                exec {
-                    executable = 'curl'
-                    args = ['--connect-timeout', '30',
-                            '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar",
-                            'https://tools.innovateuk.org/holding/newrelic/newrelic.jar'
-                    ]
-                }
-                exec {
-                    executable = 'curl'
-                    args = ['--connect-timeout', '30',
-                            '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml",
-                            'https://tools.innovateuk.org/holding/newrelic/newrelic.yml'
-                    ]
-                }
-            }
-        }
-
-        /**
-         * This task creates a `docker` directory in the $BUILD/docker` directory of the project,
-         * where it will write all the necessary files to build a docker container.
-         * In other words, after this task is executed, one could manually run `docker build .`
-         * in the output directory.
-         */
-        task prepareDockerInput {
-            dependsOn getNewRelicAgent
-            dependsOn bootRepackage
-            def inputDir = project.file("$project.buildDir/docker")
-
-            doFirst {
-                copy {
-                    from '../docker/'
-                    into inputDir
-                    include 'Dockerfile-template'
-                    rename 'Dockerfile-template', 'Dockerfile'
-                    filter {
-                        it.replaceAll('@version@', project.properties['version']).replaceAll('@app_name@', jar.baseName)
-                    }
-                }
-                copy {
-                    from bootRepackage.outputs
-                    into inputDir
-                }
-                copy {
-                    from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
-                    into inputDir
-                }
-                copy {
-                    from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
-                    from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
-                    into inputDir
-                }
-            }
-        }
+        ext.dockerDir = "$project.parent.projectDir/docker/"
 
         buildDocker.dependsOn ":docker:app-base-image:buildDocker"
         buildDocker.dependsOn prepareDockerInput
         buildDocker.tag = "innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
         buildDocker.inputDir = project.file("$project.buildDir/docker")
         tagDocker.imageId="innovateuk/"+project.name.replaceAll(/ifs-/,"")+":latest"
-
-        // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
-        // Can reinstate excludeDevtools in the bootRepackage task in next release
-        springBoot {
-            excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-        }
-
-        bootRepackage {
-            mainClass = 'org.innovateuk.ifs.Application'
-            classifier = "autostart"
-        //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-
-            // By explicitly adding the inputs and outputs to this task, we can utilize the `incremental build' feature.
-            inputs.files(jar.outputs)
-            outputs.file file(jar.archiveName.toString().replace(".jar", "-autostart.jar"))
-        }
     }
 }
 apply from: "documentation.gradle"
-
 
 endpointDocumentation.dependsOn "ifs-application-service:test"
 endpointDocumentation.dependsOn "ifs-assessment-service:test"
@@ -104,4 +29,3 @@ endpointDocumentation.dependsOn "ifs-competition-mgt-service:test"
 endpointDocumentation.dependsOn "ifs-project-setup-mgt-service:test"
 endpointDocumentation.dependsOn "ifs-project-setup-service:test"
 endpointDocumentation.dependsOn "ifs-front-door-service:test"
-
