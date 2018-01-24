@@ -27,7 +27,6 @@ allprojects {
     version project.version
 
     apply plugin: 'idea'
-//    apply plugin: 'com.bmuschko.docker-remote-api'
     apply plugin: 'com.github.ben-manes.versions'
     apply plugin: 'org.owasp.dependencycheck'
 
