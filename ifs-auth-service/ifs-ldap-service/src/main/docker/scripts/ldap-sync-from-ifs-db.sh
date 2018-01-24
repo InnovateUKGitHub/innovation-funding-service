@@ -1,9 +1,19 @@
 #!/bin/bash
 
-# A Munro: Put users in ifs db into the local ldap.
-# Ensure uids are correct.
-# Wipes all users on the ldap.
-# Uses the same password for all users.
+# Functionality to reset the users in ldap using the current values in the database.
+# Note the following:
+#
+# This script is put on the ldap server as part of the docker build. The ldap server
+# is only present in non named environments and so this script is only present there. 
+# For named environments a similar mechanism is present with an indentically named,
+# but slightly different, shell script being put on a stand alone built docker image. 
+# That process could be used instead of this, but it would lengthen build times. 
+#
+# This script does the following:
+# Wipes all users on the ldap
+# Put users from the ifs db into the local ldap
+# Uids are added as they are found in the database
+# All users get the same password
 #
 # Update history:
 # A Munro 10 Mar 2017 Big gotya, slapadd is intermittent with replication; sometimes it works
