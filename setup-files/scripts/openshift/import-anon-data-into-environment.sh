@@ -27,7 +27,7 @@ function checkVariables() {
     if [ -z "${DESTINATION_SYSTEM_MAINTENANCE_USER_UID}" ]; then echo "Set DESTINATION_SYSTEM_MAINTENANCE_USER_UID environment variable"; exit -1; fi
     if [ -z "${DUMP_PASS}" ];                               then echo "Set DUMP_PASS environment variable"; exit -1; fi
 
-    DUMP_DIR_PATH=${DUMP_DIR_PATH:-"/tmp/anonymised/"}
+    DUMP_DIR_PATH=${DUMP_DIR_PATH:-"/tmp/"}
     DUMP_DIR_NAME=${DUMP_DIR_NAME:-"anonymised"}
     DUMP_NAME=${DUMP_NAME:-"anonymised-dump.sql.gpg"}
     DB_PORT=${DB_DESTINATION_PORT:-3306}
