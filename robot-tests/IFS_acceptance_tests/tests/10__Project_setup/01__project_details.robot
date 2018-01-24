@@ -281,7 +281,14 @@ Partner invites a project manager
     And the user enters text to a text field    id=email-project-manager    ${test_mailbox_one}+invitedprojectmanager@gmail.com
     And the user clicks the button/link    id=invite-project-manager
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    [Teardown]    logout as user
+
+The Partner resends the Project manager invite
+    [Documentation]  IFS-2642
+    [Tags]    HappyPath    Email
+    Given the user should see the element    jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
+    Then the user clicks the button/link     jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
+    And the user clicks the button/link      jQuery=button:contains("Resend")
+    [Teardown]  logout as user
 
 Invited project manager registration flow
     [Documentation]  INFUND-3550 INFUND-3554
@@ -449,7 +456,14 @@ Partner invites a finance contact
     And the user enters text to a text field    id=email-finance-contact  ${invitedFinanceContact}
     And the user clicks the button/link    id=invite-finance-contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    [Teardown]    logout as user
+
+The Project manager resends the invite to the Finance contact
+    [Documentation]  IFS-2642
+    [Tags]    HappyPath    Email
+    Given the user should see the element    jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
+    Then the user clicks the button/link     jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
+    And the user clicks the button/link      jQuery=button:contains("Resend")
+    [Teardown]  logout as user
 
 Invited finance contact registration flow
     [Documentation]  INFUND-3524 INFUND-3530
