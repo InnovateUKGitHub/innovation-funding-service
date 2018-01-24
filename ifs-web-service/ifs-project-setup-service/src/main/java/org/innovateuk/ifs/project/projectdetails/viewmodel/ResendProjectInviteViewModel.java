@@ -1,8 +1,13 @@
 package org.innovateuk.ifs.project.projectdetails.viewmodel;
 
-// View model for the resend project invite non-javascript confirmation page
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Objects;
+
+/**
+ * View model for the resend project invite non-javascript confirmation page
+ */
 
 public class ResendProjectInviteViewModel {
 
@@ -36,16 +41,24 @@ public class ResendProjectInviteViewModel {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
+
         ResendProjectInviteViewModel that = (ResendProjectInviteViewModel) o;
-        return Objects.equals(projectId, that.projectId) &&
-                Objects.equals(organisationId, that.organisationId) &&
-                Objects.equals(inviteId, that.inviteId);
+
+        return new EqualsBuilder()
+                .append(projectId, that.projectId)
+                .append(organisationId, that.organisationId)
+                .append(inviteId, that.inviteId)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-
-        return Objects.hash(projectId, organisationId, inviteId);
+        return new HashCodeBuilder(17, 37)
+                .append(projectId)
+                .append(organisationId)
+                .append(inviteId)
+                .toHashCode();
     }
 }

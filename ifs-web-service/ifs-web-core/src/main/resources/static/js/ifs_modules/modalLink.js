@@ -78,10 +78,10 @@ IFS.core.modal = (function () {
         // update the form url of the modal if a data- attribute exists
         if (modalFormAction !== undefined) {
           this.setInputValues(form, jQuery(event.target))
-          target.find('form').attr('action', modalFormAction)
+          form.attr('action', modalFormAction)
         }
 
-        target.find('form').on('submit', function (event) {
+        form.on('submit', function (event) {
           // Validate the modal form fields before submitting
           // @requires: formValidation.js
           var form = this
