@@ -61,9 +61,6 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     @Autowired
     private AssessmentPanelParticipantRepository assessmentPanelParticipantRepository;
 
-//    @Autowired
-//    private AssessmentPanelParticipantMapper assessmentPanelParticipantMapper;
-
     @Autowired
     private AssessmentReviewWorkflowHandler workflowHandler;
 
@@ -76,14 +73,8 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     @Autowired
     private ActivityStateRepository activityStateRepository;
 
-//    @Autowired
-//    private ProcessRoleRepository processsRoleRepository;
-
     @Autowired
     private NotificationSender notificationSender;
-
-//    @Autowired
-//    private NotificationTemplateRenderer renderer;
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
@@ -93,7 +84,6 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     @Autowired
     private AssessmentReviewRejectOutcomeMapper assessmentReviewRejectOutcomeMapper;
-
 
 
     @Value("${ifs.web.baseURL}")

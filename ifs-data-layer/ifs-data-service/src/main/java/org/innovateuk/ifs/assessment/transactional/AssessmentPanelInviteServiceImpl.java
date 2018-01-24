@@ -34,8 +34,8 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -456,26 +456,23 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     }
 
     @Override
-    public ServiceResult<Void> acceptInvite(String inviteHash, UserResource currentUser) {
-        final User user = userRepository.findOne(currentUser.getId());
+    public ServiceResult<Void> acceptInvite(String inviteHash) {
         return getParticipantByInviteHash(inviteHash)
-                .andOnSuccess(p -> accept(p, user))
+                .andOnSuccess(this::accept)
                 .andOnSuccess(this::assignAllPanelApplicationsToParticipant)
                 .andOnSuccessReturnVoid();
     }
 
-
     // TODO tidy and test
     private ServiceResult<Void> assignAllPanelApplicationsToParticipant(AssessmentPanelParticipant participant) {
-        // assume reviewer has no existing reviews
-        // get all applications on panel (i.e. inAssessmentPanel)
         Competition competition = participant.getProcess();
         List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
-        Role role = roleRepository.findOneByName(UserRoleType.PANEL_ASSESSOR.getName());
+        final Role panelAssessorRole = roleRepository.findOneByName(UserRoleType.PANEL_ASSESSOR.getName());
+        final ActivityState pendingActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING);
         applicationsInPanel.forEach(application -> {
-            // this is pretty much AssessmentPanelServiceImpl#createAssessmentReview
-            AssessmentReview assessmentReview = new AssessmentReview(application, participant, role); // add the initial state to the constructor?
-            assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING));
+            // TODO this is pretty much AssessmentPanelServiceImpl#createAssessmentReview
+            AssessmentReview assessmentReview = new AssessmentReview(application, participant, panelAssessorRole); // add the initial state to the constructor?
+            assessmentReview.setActivityState(pendingActivityState);
             assessmentReviewRepository.save(assessmentReview);
         });
         return serviceSuccess();
@@ -507,7 +504,8 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         return find(assessmentPanelInviteRepository.getByHash(inviteHash), notFoundError(CompetitionAssessmentInvite.class, inviteHash));
     }
 
-    private ServiceResult<AssessmentPanelParticipant> accept(AssessmentPanelParticipant participant, User user) {
+    private ServiceResult<AssessmentPanelParticipant> accept(AssessmentPanelParticipant participant) {
+        User user = participant.getUser();
         if (participant.getInvite().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
         } else if (participant.getStatus() == ACCEPTED) {
