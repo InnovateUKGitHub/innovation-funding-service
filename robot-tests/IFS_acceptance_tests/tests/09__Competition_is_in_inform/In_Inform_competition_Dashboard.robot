@@ -28,6 +28,8 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               IFS-1517 Internal user: competitions listing in Previous tab
 ...
 ...               IFS-2437 Viewing application details when feedback has been released
+...
+...               IFS-2256 Missing print button and sections of the application cannot be viewed when in 'feedback' status.
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
