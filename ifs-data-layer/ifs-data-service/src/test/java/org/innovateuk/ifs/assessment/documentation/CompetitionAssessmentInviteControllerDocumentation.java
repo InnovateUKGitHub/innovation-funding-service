@@ -528,7 +528,7 @@ public class CompetitionAssessmentInviteControllerDocumentation extends BaseCont
         AssessorInviteSendResource assessorInviteSendResource = assessorInviteSendResourceBuilder.build();
         when(competitionInviteServiceMock.resendInvite(inviteId, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competitioninvite/resendInvite/{inviteId}", inviteId)
+        mockMvc.perform(post("/competitioninvite/resendInternalUserInvite/{inviteId}", inviteId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
                 .andExpect(status().isOk())

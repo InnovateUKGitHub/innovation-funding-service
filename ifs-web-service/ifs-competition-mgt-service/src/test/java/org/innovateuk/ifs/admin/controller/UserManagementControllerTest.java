@@ -16,10 +16,8 @@ import org.innovateuk.ifs.user.builder.UserResourceBuilder;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.ZonedDateTime;
@@ -37,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * A mock MVC test for user management controller
  */
-@RunWith(MockitoJUnitRunner.class)
 public class UserManagementControllerTest extends BaseControllerMockMVCTest<UserManagementController>{
 
     private UserPageResource userPageResource;

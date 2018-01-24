@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -164,7 +165,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
         try {
             Map<String, Object> globalArgs = createGlobalArgsForInternalUserInvite(roleInvite);
             ServiceResult<Void> inviteContactEmailSendResult = emailService.sendEmail(
-                    Collections.singletonList(createInviteInternalUserNotificationTarget(roleInvite)),
+                    singletonList(createInviteInternalUserNotificationTarget(roleInvite)),
                     globalArgs,
                     Notifications.INVITE_INTERNAL_USER);
 
@@ -245,6 +246,15 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
                                         getProjectInvitesAsExternalInviteResource(prjInvites).stream()).collect(Collectors.toList())))
                         )
         );
+    }
+
+    @Override
+    public ServiceResult<Void> resendInternalUserInvite(long inviteId) {
+        return findRoleInvite(inviteId).andOnSuccess(this::inviteInternalUser);
+    }
+
+    private ServiceResult<RoleInvite> findRoleInvite(long inviteId) {
+        return find(ofNullable(inviteRoleRepository.findOne(inviteId)), notFoundError(RoleInvite.class, inviteId));
     }
 
     private ServiceResult<Void> validateSearchString(String searchString) {

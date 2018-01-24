@@ -737,7 +737,7 @@ public class CompetitionAssessmentInviteControllerTest extends BaseControllerMoc
 
         when(competitionInviteServiceMock.resendInvite(inviteId, assessorInviteSendResource)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competitioninvite/resendInvite/{inviteId}", inviteId)
+        mockMvc.perform(post("/competitioninvite/resendInternalUserInvite/{inviteId}", inviteId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(assessorInviteSendResource)))
                 .andExpect(status().isOk());

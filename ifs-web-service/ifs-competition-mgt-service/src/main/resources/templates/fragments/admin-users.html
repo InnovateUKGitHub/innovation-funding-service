@@ -44,7 +44,7 @@
                 <td><th:block th:text="${invite.name}"/></td>
                 <td th:text="${invite.getRoleDisplayName()}">IFS Admin</td>
                 <td><a th:href="${'mailto:' + invite.email}" th:text="${invite.email}">steve.smith@empire.com</a></td>
-                <td><span class="form-hint"></span></td>
+                <td><span class="form-hint"><a th:href="@{/admin/users/pending/resend-invite?inviteId={inviteId}(inviteId=${invite.id})}">Resend invite</a></span></td>
             </tr>
             </tbody>
         </table>
