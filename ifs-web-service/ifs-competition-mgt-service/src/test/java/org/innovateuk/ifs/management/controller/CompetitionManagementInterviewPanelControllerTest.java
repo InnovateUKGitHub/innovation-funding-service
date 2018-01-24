@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentPanelKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
-import org.innovateuk.ifs.management.model.AssessmentPanelModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.AssessmentPanelViewModel;
+import org.innovateuk.ifs.management.model.InterviewPanelModelPopulator;
+import org.innovateuk.ifs.management.viewmodel.InterviewPanelViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -25,10 +23,7 @@ public class CompetitionManagementInterviewPanelControllerTest extends BaseContr
 
     @Spy
     @InjectMocks
-    private AssessmentPanelModelPopulator assessmentPanelModelPopulator;
-
-    @Mock
-    private AssessmentPanelKeyStatisticsResource assessmentPanelKeyStatisticsResource;
+    private InterviewPanelModelPopulator interviewPanelModelPopulator;
 
     @Override
     protected CompetitionManagementInterviewPanelController supplyControllerUnderTest() {
@@ -54,7 +49,7 @@ public class CompetitionManagementInterviewPanelControllerTest extends BaseContr
                 .andExpect(view().name("competition/manage-interview-panel"))
                 .andReturn();
 
-        AssessmentPanelViewModel model = (AssessmentPanelViewModel) result.getModelAndView().getModel().get("model");
+        InterviewPanelViewModel model = (InterviewPanelViewModel) result.getModelAndView().getModel().get("model");
 
         verify(competitionService, only()).getById(competitionId);
 
