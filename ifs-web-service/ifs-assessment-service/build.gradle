@@ -28,10 +28,3 @@ dependencies {
 
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
-
-
-processResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
