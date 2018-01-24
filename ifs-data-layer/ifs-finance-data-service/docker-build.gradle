@@ -17,5 +17,3 @@ project.ext['flyway.password']="password"
 
 def flywayPatchesPath = "filesystem:" + project.buildDir.path + "/resources/main/db"
 project.ext['flyway.locations']=flywayPatchesPath + "/migration"
-
-ext.ifsFileStorageLocation="/mnt/ifs_storage"
