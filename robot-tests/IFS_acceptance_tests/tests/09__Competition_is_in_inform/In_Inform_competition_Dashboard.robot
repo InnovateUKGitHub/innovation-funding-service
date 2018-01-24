@@ -130,7 +130,7 @@ Question scores and application details are correct
     Then the application question scores are correct
     And the application details are correct
 
-User can see the Appplication details along with feedback
+User can see the Application details along with feedback
     [Documentation]    INF-2473  IFS-2256
     [Tags]
     Given the user should see the element    jQuery=h2:contains("Application details")
