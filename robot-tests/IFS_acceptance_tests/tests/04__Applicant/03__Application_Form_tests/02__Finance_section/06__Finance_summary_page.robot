@@ -182,8 +182,8 @@ Support User can see read only view of Your organisation
     [Tags]  Support
     When the user clicks the button/link           jQuery=a:contains("Your finances")
     Then the user should see the text in the page  Please complete your project finances.
-    When the user clicks the button/link           jQuery=a:contains("Your organisation")
-    Then the user should see the element           jQuery=dt:contains("Size")
+    When the user clicks the button/link           link=Your organisation
+    Then the user should see the element           jQuery=dt:contains("Size") + dd:contains("Micro")
     And the user should see the element            jQuery=dt:contains("Turnover") + dd:contains("150")
     And the user should see the element            jQuery=dt:contains("employees") + dd:contains("3")
 
@@ -243,7 +243,7 @@ Innovation lead can see read only view of Your organisation
     When the user clicks the button/link           jQuery=a:contains("Your finances")
     Then the user should see the text in the page  Please complete your project finances.
     When the user clicks the button/link           jQuery=a:contains("Your organisation")
-    Then the user should see the element           jQuery=dt:contains("Size")
+    Then the user should see the element           jQuery=dt:contains("Size") + dd:contains("Micro")
     And the user should see the element            jQuery=dt:contains("employees") + dd:contains("4560")
 
 Innovation lead can see read only view of Your funding
