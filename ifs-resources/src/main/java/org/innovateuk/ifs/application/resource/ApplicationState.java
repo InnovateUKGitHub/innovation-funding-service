@@ -4,6 +4,7 @@ package org.innovateuk.ifs.application.resource;
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -17,7 +18,6 @@ public enum ApplicationState implements ProcessState {
     REJECTED(State.REJECTED),
     OPEN(State.OPEN),
     IN_PANEL(State.IN_PANEL);
-
     final State backingState;
 
     ApplicationState(State backingState) {
@@ -38,5 +38,13 @@ public enum ApplicationState implements ProcessState {
 
     public static ApplicationState fromState(State state) {
         return ProcessState.fromState(ApplicationState.values(), state);
+    }
+
+    public static EnumSet<ApplicationState> wasSubmittedStates() {
+        return EnumSet.of(ApplicationState.SUBMITTED,
+                ApplicationState.INELIGIBLE,
+                ApplicationState.APPROVED,
+                ApplicationState.REJECTED,
+                ApplicationState.INELIGIBLE_INFORMED);
     }
 }

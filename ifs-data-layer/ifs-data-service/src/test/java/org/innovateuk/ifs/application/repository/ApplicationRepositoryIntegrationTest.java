@@ -22,7 +22,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
     }
 
     @Test
-    public void findByApplication() {
+    public void findByApplicationProcessActivityStateStateIn() {
         Collection<ApplicationState> SUBMITTED_STATUSES = asList(
                 ApplicationState.APPROVED,
                 ApplicationState.REJECTED,
@@ -33,5 +33,4 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
         List<Application> applications = repository.findByApplicationProcessActivityStateStateIn(states);
         assertEquals(5, applications.size());
     }
-
 }

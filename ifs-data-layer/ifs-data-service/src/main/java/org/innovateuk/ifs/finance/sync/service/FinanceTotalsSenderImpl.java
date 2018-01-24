@@ -11,7 +11,6 @@ import org.innovateuk.ifs.finance.sync.mapper.FinanceCostTotalResourceMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -19,12 +18,6 @@ import java.util.List;
  */
 @Service
 public class FinanceTotalsSenderImpl implements FinanceTotalsSender {
-
-    private EnumSet<ApplicationState> submitted = EnumSet.of(ApplicationState.SUBMITTED,
-            ApplicationState.INELIGIBLE,
-            ApplicationState.APPROVED,
-            ApplicationState.REJECTED,
-            ApplicationState.INELIGIBLE_INFORMED);
 
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
@@ -47,16 +40,16 @@ public class FinanceTotalsSenderImpl implements FinanceTotalsSender {
 
     @Override
     public ServiceResult<Void> sendFinanceTotalsForCompetition(Long competitionId) {
-        List<Application> applications = applicationService.getApplicationsByCompetitionIdAndState(competitionId, submitted).getSuccessObjectOrThrowException();
-        applications.forEach(app -> applicationFinanceHandler.getApplicationFinances(app.getId()));
+        List<Application> applications = applicationService.getApplicationsByCompetitionIdAndState(competitionId, ApplicationState.wasSubmittedStates()).getSuccessObjectOrThrowException();
+        applications.forEach(app -> sendFinanceTotalsForApplication(app.getId()));
 
         return ServiceResult.serviceSuccess();
     }
 
     @Override
     public ServiceResult<Void> sendAllFinanceTotals() {
-        List<Application> applications = applicationService.getApplicationsByState(submitted).getSuccessObjectOrThrowException();
-        applications.forEach(app -> applicationFinanceHandler.getApplicationFinances(app.getId()));
+        List<Application> applications = applicationService.getApplicationsByState(ApplicationState.wasSubmittedStates()).getSuccessObjectOrThrowException();
+        applications.forEach(app -> sendFinanceTotalsForApplication(app.getId()));
 
         return ServiceResult.serviceSuccess();
     }

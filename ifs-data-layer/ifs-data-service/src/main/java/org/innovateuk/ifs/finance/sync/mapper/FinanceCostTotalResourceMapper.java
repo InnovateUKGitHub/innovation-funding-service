@@ -28,7 +28,7 @@ public class FinanceCostTotalResourceMapper {
 
     public List<FinanceCostTotalResource> mapFromApplicationFinanceResourceToList(ApplicationFinanceResource applicationFinanceResource) {
         return applicationFinanceResource.getFinanceOrganisationDetails().entrySet().stream().map(
-                cat -> buildFinanceCostTotalResource(cat.getKey(), cat.getValue(), FinanceType.APPLICATION.getName(), applicationFinanceResource.getTarget())
+                cat -> buildFinanceCostTotalResource(cat.getKey(), cat.getValue(), FinanceType.APPLICATION.getName(), applicationFinanceResource.getId())
         ).collect(Collectors.toList());
     }
 
