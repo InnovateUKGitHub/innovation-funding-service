@@ -46,6 +46,9 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-7432 Terms and Conditions of grant offer takes you to the IFS ts and cs, not the grant ones
 ...
 ...               INFUND-9062 Validation missing when inviting self as finance contact or PM
+...
+...               IFS-2642 Resend invites in Project Setup
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup  Applicant
@@ -78,7 +81,7 @@ Internal users can see Project Details not yet completed
     And the user should see the element            jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
 
 Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
+    [Documentation]    INFUND-4049, INFUND-5507, INFUND-5543
     [Tags]    HappyPath
     [Setup]  log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_competition_status}
