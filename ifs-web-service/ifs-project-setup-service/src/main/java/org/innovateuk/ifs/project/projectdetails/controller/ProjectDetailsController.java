@@ -204,20 +204,21 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @PostMapping(value = "/{projectId}/details/finance-contact", params = RESEND_FC_INVITE)
     public String resendFinanceContactInvite(@P("projectId")@PathVariable("projectId") final Long projectId,
                                              @RequestParam(value="organisation") final Long organisation,
-                                             @RequestParam(RESEND_FC_INVITE) Long inviteId) {
+                                             @RequestParam(RESEND_FC_INVITE) Long inviteId
+    ) {
         resendInvite(inviteId, projectId, (project, inviteProjectResource) -> projectDetailsService.inviteFinanceContact(project, inviteProjectResource));
         return redirectToFinanceContact(projectId, organisation);
     }
 
     private void resendInvite(Long id, Long projectId, BiFunction<Long, InviteProjectResource, ServiceResult<Void>> sendInvite) {
 
-        List<InviteProjectResource> projectInvites = projectDetailsService
+        Optional<InviteProjectResource> existingInvite = projectDetailsService
                 .getInvitesByProject(projectId)
-                .getSuccessObjectOrThrowException();
+                .getSuccessObjectOrThrowException()
+                .stream()
+                .filter(i -> id.equals(i.getId()))
+                .findFirst();
 
-        Optional<InviteProjectResource> existingInvite =
-                simpleFindFirst(projectInvites, i -> id.equals(i.getId()));
-        
         existingInvite
                 .ifPresent(i -> sendInvite.apply(projectId, existingInvite.get()));
     }
@@ -283,7 +284,8 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_PROJECT_MANAGER_PAGE')")
     @PostMapping(value = "/{projectId}/details/project-manager", params = RESEND_PM_INVITE)
     public String resendProjectManagerInvite(@P("projectId")@PathVariable("projectId") final Long projectId,
-                                             @RequestParam(RESEND_PM_INVITE) Long userId) {
+                                             @RequestParam(RESEND_PM_INVITE) Long userId
+    ) {
         resendInvite(userId, projectId, (project, inviteProjectResource) -> projectDetailsService.inviteProjectManager(project, inviteProjectResource));
         return redirectToProjectManager(projectId);
     }

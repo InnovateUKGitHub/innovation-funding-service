@@ -841,7 +841,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .param("organisation", "21"))
                 .andExpect(status().is3xxRedirection());
 	    verify(projectDetailsService).getInvitesByProject(projectId);
-	    verify(projectDetailsService).inviteFinanceContact(projectId, existingInvites.get(0));
     }
 
     @Test
@@ -868,35 +867,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .param(RESEND_PM_INVITE, "12"))
                 .andExpect(status().is3xxRedirection());
         verify(projectDetailsService).getInvitesByProject(projectId);
-        verify(projectDetailsService).inviteProjectManager(projectId, existingInvites.get(0));
-    }
-
-    @Test
-    public void  testFinanceContactResendConfirmPage() throws Exception {
-
-	    long projectId = 3L;
-	    long inviteId = 4L;
-	    long organisationId = 22L;
-
-	    mockMvc.perform(get("/project/{id}/details/finance-contact/confirm", projectId)
-                .param("organisation", String.valueOf(organisationId) )
-                .param(RESEND_FC_INVITE, String.valueOf(inviteId)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/resend-fc-invite-confirm"));
-    }
-
-    @Test
-    public void testProjectManagerResendConfirmPage() throws Exception {
-
-        long projectId = 3L;
-        long inviteId = 4L;
-        long organisationId = 22L;
-
-        mockMvc.perform(get("/project/{id}/details/project-manager/confirm", projectId)
-                .param("organisation", String.valueOf(organisationId) )
-                .param(RESEND_PM_INVITE, String.valueOf(inviteId)))
-                .andExpect(status().isOk())
-                .andExpect(view().name("project/resend-pm-invite-confirm"));
     }
 
     @Test

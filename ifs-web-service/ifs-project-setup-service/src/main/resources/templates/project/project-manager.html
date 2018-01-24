@@ -35,7 +35,7 @@
                         <div class="multiple-choice" th:each="user : ${model.invitedUsers}">
                             <input th:id="'invite-'+${user.id}" value="" type="radio" disabled="disabled" />
                             <label th:for="'invite-'+${user.id}" th:text="${user.name}"></label>
-                            <a
+                            <a th:inline="text"
                                 data-js-modal="modal-resend-project-manager"
                                 th:attr="data-modal-form-action=@{/project/{projectId}/details/project-manager(projectId=${model.projectId})},data-modal-input-resend-pm-invite=${user.id}"
                                 th:href="@{/project/{projectId}/details/project-manager/confirm?resend-pm-invite={userId}(projectId=${model.projectId},userId=${user.id})}"
