@@ -285,7 +285,7 @@ Partner invites a project manager
     And the user clicks the button/link    id=invite-project-manager
     Then the user should be redirected to the correct page    ${project_in_setup_page}
 
-The Partner resends the Project manager invite
+The Project manager resends the invite to the Project manager
     [Documentation]  IFS-2642
     [Tags]    HappyPath    Email
     When the user clicks the button/link        jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
@@ -464,7 +464,7 @@ The Project manager resends the invite to the Finance contact
     [Documentation]  IFS-2642
     [Tags]    HappyPath    Email
     When the user clicks the button/link     jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
-    Then the user should see the element     jQuery=hh2:contains("Resend invite to team member")
+    Then the user should see the element     jQuery=h2:contains("Resend invite to team member")
     And the user clicks the button/link      jQuery=button:contains("Resend")
     [Teardown]  logout as user
 
