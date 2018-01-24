@@ -94,7 +94,7 @@ public class GrantOfferLetterController {
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_SIGNED_GRANT_OFFER_LETTER')")
     @PostMapping(params = "removeSignedGrantOfferLetterClicked")
-    public String deleteSignedGrantOfferLetterFile(
+    public String removeSignedGrantOfferLetterFile(
             @P("projectId")@PathVariable("projectId") final Long projectId,
             @ModelAttribute(FORM_ATTR) GrantOfferLetterForm form,
             @SuppressWarnings("unused") BindingResult bindingResult,
