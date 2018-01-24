@@ -36,6 +36,8 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-388 Assessment panels - Accept/Reject Panel applications for review
 ...
 ...               IFS-29 Assessment panels - Assessor Review applications
+...
+...               IFS-2375 Assessment Panels - Assessor review application with own feedback and scores
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -138,6 +140,8 @@ Bulk add assessor to invite list
     Given the user selects the checkbox       select-all-check
     And the user clicks the button/link       jQuery=button:contains("Add selected to invite list")
     And the user should see the element       jQuery=td:contains("${assessor_madeleine}") + td:contains("${panel_assessor_madeleine}")
+    When the user clicks the button/link      link=Review and send invites
+    Then the user clicks the button/link      jQuery=button:contains("Send invite")
     When the user clicks the button/link      link=Find
     Then the user should see the element      jQuery=td:contains("No available assessors found")
 
@@ -165,6 +169,10 @@ Assesor is able to accept the invitation from dashboard
     Then the user should see the element      jQuery=dt:contains("Competition:") ~ dd:contains("${CLOSED_COMPETITION_NAME}")
     And the user should see the element       jQuery=dt:contains("Innovation Lead:") ~ dd:contains("Ian Cooper")
     And the user should see the element       jQuery=h2:contains("Applications for panel") + ul li p:contains("No applications have been assigned to this panel.")
+    When log in as a different user           &{assessor2_credentials}
+    Then the user clicks the button/link      jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
+    And the user selects the radio button     acceptInvitation  true
+    And the user clicks the button/link       css=button[type="submit"]  # Confirm
 
 Assesor is able to reject the invitation from email
     [Documentation]  IFS-37
@@ -186,8 +194,8 @@ Comp Admin can see the rejected and accepted invitation
     And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Declined")
     When the user clicks the button/link       link=Accepted
     Then the user should see the element       jQuery=td:contains("${assessor_ben}") ~ td:contains("Materials, process and manufacturing design technologies")
-    And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Accepted")
-    And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Assessors on invite list")
+    And the user should see the element        jQuery=.column-quarter:contains(2) small:contains("Accepted")
+    And the user should see the element        jQuery=.column-quarter:contains(7) small:contains("Assessors on invite list")
     When the user clicks the button/link       link=Pending and rejected
     Then the user should not see the element   jQuery=td:contains("${assessor_ben}")
 
@@ -246,7 +254,7 @@ Assign applications to panel
     And the user reads his email            ${assessor_ben}  Applications ready for review   You have been allocated applications to review within the competition Machine learning for transport infrastructure.
 
 Assessors view of competition dashboard and applications in panel status
-    [Documentation]  IFS-1138  IFS-388  IFS-29
+    [Documentation]  IFS-1138  IFS-388
     [Tags]
     Given Log in as a different user            ${panel_assessor_ben}  ${short_password}
     When the user clicks the button/link        jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
@@ -262,19 +270,36 @@ Assessors view of competition dashboard and applications in panel status
     Then The user should see the text in the element    accept-application    You will still have the option to reject after accepting and viewing the full application.
     When the user clicks the button/link        jQuery=button:contains("Confirm")
     Then the user should see the element        jQuery=.progress-list div:contains("${computer_vision_application_name}") ~ div strong:contains("Accepted")
-    When the user clicks the button/link        link=${computer_vision_application_name}
-    Then the user should see the element        jQuery=h1 span:contains("${computer_vision_application_name}")
+
+Assessors view of application summary and feedback
+    [Documentation]  IFS-29   IFS-2375
+    [Tags]
+    # assessor view of application summery when he not assessed application at first place.
+    Given the user clicks the button/link       link=${computer_vision_application_name}
+    When the user should see the element        jQuery=h1 span:contains("${computer_vision_application_name}")
     And the user should see the element         jQuery=h1:contains("Application summary")
-    When the user clicks the button/link        jQuery=button:contains("Business opportunity")
-    Then the user should not see the element    jQuery=span:contains("Question score")
+    Then the user clicks the button/link        jQuery=button:contains("Business opportunity")
+    And the user should not see the element     jQuery=span:contains("Question score")
     And the user should not see the element     jQuery=label:contains("Feedback")
+    #assessor view of application summery when he has assessed application at first place.
+    When log in as a different user             &{assessor2_credentials}
+    And the user clicks the button/link         jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
+    Then the user clicks the button/link        JQuery=.progress-list div:contains("${CLOSED_COMPETITION_APPLICATION_TITLE}") ~ div a:contains("Accept or reject")
+    And the user selects the radio button       reviewAccept  true
+    And the user clicks the button/link         jQuery=button:contains("Confirm")
+    When the user clicks the button/link        link=${CLOSED_COMPETITION_APPLICATION_TITLE}
+    And the user clicks the button/link         jQuery=button:contains("Business opportunity")
+    Then the user should see the element        jQuery=p:contains("This is the business opportunity feedback")
+    And the user should see the element         jQuery=div:contains("Score") span:contains(8)
+
 
 Assessor cannot see competition on dashboard after funders panel date expiry
-    [Documentation]  IFS-1138
+    [Documentation]   IFS-1138
     [Tags]
-    Given the funders panel period changes in the db  2017-06-27 00:00:00
-    Then the user should not see the element         jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
-    [Teardown]  the funders panel period changes in the db   2068-06-27 00:00:00
+    Given the funders panel period changes in the db          2017-06-27 00:00:00
+    When the user clicks the button/link         link=Dashboard
+    Then the user should not see the element                  jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
+    [Teardown]  the funders panel period changes in the db    2068-06-27 00:00:00
 
 *** Keywords ***
 Custom Suite Setup
@@ -285,12 +310,12 @@ Custom Suite Setup
 the assessment panel period changes in the db
     [Arguments]  ${Date}
     Connect to Database    @{database}
-    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='ASSESSMENT_PANEL' AND competition_id=${CLOSED_COMPETITION};
+    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='ASSESSMENT_PANEL' AND competition_id='${CLOSED_COMPETITION}';
 
 the funders panel period changes in the db
     [Arguments]  ${Date}
     Connect to Database    @{database}
-    Execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE type='FUNDERS_PANEL' AND competition_id=${CLOSED_COMPETITION};
+    Execute sql string     UPDATE `${database_name}`.`milestone` SET `DATE`='${Date}' WHERE `type`='FUNDERS_PANEL' AND `competition_id`='${CLOSED_COMPETITION}'
 
 the user move the closed competition to in panel
     the user clicks the button/link     link=Competition
