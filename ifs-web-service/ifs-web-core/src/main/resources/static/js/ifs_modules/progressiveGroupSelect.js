@@ -35,7 +35,8 @@ IFS.core.progressiveGroupSelect = (function () {
       // create a <select> to pre-filter the original dropdown
       var parentSelectTitle = el.attr('data-progressive-group-select')
       var parentSelectInstruction = el.attr('data-progressive-group-select-instruction')
-      var parentSelect = jQuery('<select class="form-control width-full js-progressive-group-select" aria-label="' + parentSelectTitle + '"><option value="">' + parentSelectInstruction + '</option></select>')
+      var parentSelectId = el.attr('data-progressive-group-select-id')
+      var parentSelect = jQuery('<select class="form-control width-full js-progressive-group-select" aria-label="' + parentSelectTitle + '" id="' + parentSelectId + '"><option value="">' + parentSelectInstruction + '</option></select>')
       var optgroupsArray = el.find('optgroup')
       var optionsArray = []
       var parentOptionsArray = []
