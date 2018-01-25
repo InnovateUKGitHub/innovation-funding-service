@@ -24,8 +24,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.Clock;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,8 +74,14 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void dashboard() throws Exception {
+        final ZonedDateTime now = now();
+        final LocalDateTime time = LocalDateTime.of(now.getYear(),now.getMonth(),now.getDayOfMonth(),12,00,00);
+        Instant instant = time.toInstant(ZoneOffset.UTC);
+
+        Clock clock = Clock.fixed(instant,systemDefault());
+
         CompetitionResource competitionResource = newCompetitionResource()
-                .withFundersPanelDate(now().plusDays(30))
+                .withFundersPanelDate(now.plusDays(30))
                 .build();
 
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
@@ -86,12 +91,13 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
                 .withCompetition(competitionResource.getId())
                 .withCompetitionName("Juggling Craziness")
                 .withCompetitionStatus(IN_ASSESSMENT)
-                .withAssessorAcceptsDate(now().minusDays(2))
-                .withAssessorDeadlineDate(now().plusDays(4))
+                .withAssessorAcceptsDate(now.minusDays(2))
+                .withAssessorDeadlineDate(now.plusDays(4))
                 .withSubmittedAssessments(1L)
                 .withTotalAssessments(3L)
                 .withPendingAssessments(1L)
                 .build();
+        ReflectionTestUtils.setField(participant, "clock", clock, Clock.class);
         UserProfileStatusResource profileStatusResource = newUserProfileStatusResource()
                 .withSkillsComplete(true)
                 .withAffliliationsComplete(false)
@@ -129,7 +135,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         List<AssessorDashboardActiveCompetitionViewModel> expectedActiveCompetitions = singletonList(
                 new AssessorDashboardActiveCompetitionViewModel(competitionResource.getId(), "Juggling Craziness", 1, 3, 1,
-                        ZonedDateTime.now().plusDays(4).toLocalDate(),
+                        now.plusDays(4).toLocalDate(),
                         3,
                         50
                 )
@@ -149,7 +155,7 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(model.getAssessmentPanelInvites().get(0).getInviteHash(), singletonList(expectedAssessmentPanelInviteViewModel).get(0).getInviteHash());
         assertEquals(model.getAssessmentPanelInvites(), singletonList(expectedAssessmentPanelInviteViewModel));
     }
-    
+
     @Test
     public void dashboard_activeStartsToday() throws Exception {
         ZonedDateTime now = now();
