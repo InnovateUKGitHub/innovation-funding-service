@@ -41,7 +41,7 @@
 
                     <div class="column-half">
                         <h3 class="heading-small">Project timescales</h3>
-                        <p>Project start date: <br /><th:block th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" /></p>
+                        <p class="no-margin">Project start date: <br /><th:block th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" /></p>
                         <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
 
                         <h3 class="heading-small extra-margin">Total project cost</h3>
@@ -57,15 +57,20 @@
                             <li class="section-status">
                                 <div class="grid-row">
                                     <div class="column-two-thirds">
-                                        <h3 th:text="${question.shortName}" class="heading-small">Project summary</h3>
+                                        <h3 class="heading-small">
+                                            <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${currentApplication.id},qId=${question.id})}"
+                                            th:text="${question.shortName}" >Project summary</a>
+                                        </h3>
                                     </div>
                                     <div class="column-third">
-                                        <p th:unless="${question.shortName.equals('Scope')}" class="form-hint no-margin">No feedback provided</p>
                                         <th:block th:if="${question.shortName.equals('Scope')}">
                                             <p th:unless="${scores.scopeAssessed}" class="form-hint no-margin">No feedback provided</p>
                                             <p th:if="${scores.scopeAssessed}">
                                                 In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span>
                                             </p>
+                                        </th:block>
+                                        <th:block th:unless="${question.shortName.equals('Scope')}">
+                                            <p class="form-hint no-margin">No feedback provided</p>
                                         </th:block>
                                     </div>
                                 </div>

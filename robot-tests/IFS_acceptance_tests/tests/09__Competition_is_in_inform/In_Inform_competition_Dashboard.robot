@@ -26,6 +26,10 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               IFS-1459 View unsuccessful applications after Inform state: list
 ...
 ...               IFS-1517 Internal user: competitions listing in Previous tab
+...
+...               IFS-2437 Viewing application details when feedback has been released
+...
+...               IFS-2256 Missing print button and sections of the application cannot be viewed when in 'feedback' status.
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
@@ -94,8 +98,8 @@ Unsuccessful applicant sees unsuccessful alert
     [Tags]    Email
     [Setup]    log in as a different user    &{unsuccessful_released_credentials}
     Given the user should see the element    jQuery=.status:contains("Unsuccessful")
-    When the user clicks the button/link    jQuery=a:contains("Electric Drive")
-    And the user should see the element    jQuery=.warning-alert:contains("Your application has not been successful in this competition")
+    When the user clicks the button/link     jQuery=a:contains("Electric Drive")
+    And the user should see the element      jQuery=.warning-alert:contains("Your application has not been successful in this competition")
 
 Internal user can view ineligible and unsuccessful applications in previous tab
     [Documentation]  IFS-1458 IFS-1459 IFS-1517
@@ -112,8 +116,8 @@ Successful applicant see successful alert
     [Tags]    Email    HappyPath
     [Setup]    log in as a different user    &{successful_released_credentials}
     Given the user should see the element    jQuery=.status:contains("Successful")
-    When the user clicks the button/link    jQuery=.previous-applications a:contains("High Performance Gasoline Stratified")
-    Then the user should see the element    jQuery=.success-alert:contains("Congratulations, your application has been successful")
+    When the user clicks the button/link     jQuery=.previous-applications a:contains("High Performance Gasoline Stratified")
+    Then the user should see the element     jQuery=.success-alert:contains("Congratulations, your application has been successful")
 
 View feedback from each assessor
     [Documentation]    INFUND-8172
@@ -128,26 +132,36 @@ Question scores and application details are correct
     Then the application question scores are correct
     And the application details are correct
 
+User can see the Application details along with feedback
+    [Documentation]    INF-2473  IFS-2256
+    [Tags]
+    Given the user should see the element    jQuery=h2:contains("Application details")
+    Then the user should see the element     jQuery=h3:contains("Project title") ~ p:contains("High Performance Gasoline Stratified")
+    And the user checks the Project summary functionality
+    Given the user checks the Public description functionality
+    When the user checks the Scope functionality
+    Then the user should see the element      jQuery=h2:contains("Application details")
+
 User can see feedback to individual questions
     [Documentation]    INFUND-8005
     [Tags]
     Given the user clicks the button/link    jQuery=a:contains("6. Innovation")
-    Then the user should see the element    jQuery=h3:contains("Your answer") ~ div[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")
-    And the user should see the element    jQuery=h4:contains("Assessor 1") ~ div[data-md-to-html] p:contains("This is the innovation feedback")
+    Then the user should see the element     jQuery=h3:contains("Your answer") ~ div[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")
+    And the user should see the element      jQuery=h4:contains("Assessor 1") ~ div[data-md-to-html] p:contains("This is the innovation feedback")
     [Teardown]    the user clicks the button/link    jQuery=.link-back:contains("Feedback overview")
 
 The finance details are shown
     [Documentation]    INFUND-8168
     [Tags]    Email
-    When the user clicks the button/link    css=.collapsible button
-    Then the user should see the element    css=.collapsible div[aria-hidden="false"]
-    And the user should not see the element    css=.collapsible div[aria-hidden="true"]
+    When the user clicks the button/link     css=.collapsible button
+    Then the user should see the element     css=.collapsible div[aria-hidden="false"]
+    And the user should not see the element  css=.collapsible div[aria-hidden="true"]
 
 Selecting the dashboard link takes user back to the dashboard
     [Documentation]    INFUND-8876
     [Tags]
     Given the user clicks the button/link    jQuery=.link-back:contains("Dashboard")
-    Then the user should see the element    jQuery=h1:contains("Dashboard")
+    Then the user should see the element     jQuery=h1:contains("Dashboard")
 
 *** Keywords ***
 the application question scores are correct
@@ -180,3 +194,23 @@ User sends the notification to enable release feedback
     the user clicks the button/link    jQuery=button:contains("Write and send email")
     the internal sends the descision notification email to all applicants  EmailTextBody
     the user clicks the button/link    jQuery=.link-back:contains("Competition")
+
+The user checks the Project summary functionality
+    the user clicks the button/link    jQuery=a:contains("Project summary")
+    the user should see the element    jQuery=h1:contains("Project summary")
+    the user should see the element    jQuery=p:contains("This is the applicant response for project summary.")
+    the user clicks the button/link    jQuery=a:contains("Feedback overview")
+
+The user checks the Public description functionality
+    the user clicks the button/link    jQuery=a:contains("Public description")
+    the user should see the element    jQuery=h1:contains("Public description")
+    the user should see the element    jQuery=p:contains("This is the applicant response for public description.")
+    the user clicks the button/link    jQuery=a:contains("Feedback overview")
+
+The user checks the Scope functionality
+    the user clicks the button/link    jQuery=a:contains("Scope")
+    the user should see the element    jQuery=h1:contains("Scope")
+    the user should see the element    jQuery=p:contains("This is the applicant response for how does your project align with the scope of this competition?")
+    the user should see the element    jQuery=h4:contains("Assessor 1")
+    the user should see the element    jQuery=p:contains("This is the scope feedback")
+    the user clicks the button/link    jQuery=a:contains("Feedback overview")
