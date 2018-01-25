@@ -458,7 +458,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
     @Override
     public ServiceResult<Void> acceptInvite(String inviteHash) {
         return getParticipantByInviteHash(inviteHash)
-                .andOnSuccess(this::accept)
+                .andOnSuccess(AssessmentPanelInviteServiceImpl::accept)
                 .andOnSuccess(this::assignAllPanelApplicationsToParticipant)
                 .andOnSuccessReturnVoid();
     }
@@ -504,7 +504,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         return find(assessmentPanelInviteRepository.getByHash(inviteHash), notFoundError(CompetitionAssessmentInvite.class, inviteHash));
     }
 
-    private ServiceResult<AssessmentPanelParticipant> accept(AssessmentPanelParticipant participant) {
+    private static ServiceResult<AssessmentPanelParticipant> accept(AssessmentPanelParticipant participant) {
         User user = participant.getUser();
         if (participant.getInvite().getStatus() != OPENED) {
             return ServiceResult.serviceFailure(new Error(ASSESSMENT_PANEL_PARTICIPANT_CANNOT_ACCEPT_UNOPENED_INVITE, getInviteCompetitionName(participant)));
@@ -529,7 +529,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
         }
     }
 
-    private String getInviteCompetitionName(AssessmentPanelParticipant participant) {
+    private static String getInviteCompetitionName(AssessmentPanelParticipant participant) {
         return participant.getInvite().getTarget().getName();
     }
 
