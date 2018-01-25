@@ -3,7 +3,7 @@ package org.innovateuk.ifs.commons.service;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;

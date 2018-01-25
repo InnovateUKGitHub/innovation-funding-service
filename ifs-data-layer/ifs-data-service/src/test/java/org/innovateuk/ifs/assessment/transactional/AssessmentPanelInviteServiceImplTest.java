@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
-import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState;
+import org.innovateuk.ifs.assessment.review.domain.AssessmentReview;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
@@ -45,9 +45,9 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionAssessmentParticipantBuilder.newCompetitionAssessmentParticipant;
-import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
-import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelParticipantBuilder.newAssessmentPanelParticipant;
-import static org.innovateuk.ifs.assessment.panel.builder.AssessmentReviewBuilder.newAssessmentReview;
+import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
+import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelParticipantBuilder.newAssessmentPanelParticipant;
+import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewBuilder.newAssessmentReview;
 import static org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteServiceImpl.Notifications.INVITE_ASSESSOR_GROUP_TO_PANEL;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;

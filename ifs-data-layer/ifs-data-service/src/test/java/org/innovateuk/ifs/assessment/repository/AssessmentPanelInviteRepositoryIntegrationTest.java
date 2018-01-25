@@ -25,7 +25,7 @@ import java.util.List;
 
 import static com.google.common.collect.ImmutableSet.of;
 import static com.google.common.collect.Sets.newHashSet;
-import static org.innovateuk.ifs.assessment.panel.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
+import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
