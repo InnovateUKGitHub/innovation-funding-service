@@ -17,6 +17,7 @@ import java.util.Optional;
 public class FeedbackNavigationPopulator {
 
     private static final String PATH = "/application/{applicationId}/question/{questionId}/feedback";
+    private static final String APPLICATION_DETAILS = "Application details";
 
     @Autowired
     private QuestionService questionService;
@@ -45,7 +46,8 @@ public class FeedbackNavigationPopulator {
                                               NavigationViewModel navigationViewModel) {
         if (previousQuestionOptional.isPresent()) {
             QuestionResource previousQuestion = previousQuestionOptional.get();
-            if (Objects.equals(currentQuestion.getSection(), previousQuestion.getSection())) {
+            if (Objects.equals(currentQuestion.getSection(), previousQuestion.getSection())
+                    && !previousQuestion.getName().equals(APPLICATION_DETAILS)) {
                 navigationViewModel.setPreviousUrl(
                         UriComponentsBuilder.fromPath(PATH)
                                 .buildAndExpand(applicationId, previousQuestion.getId())

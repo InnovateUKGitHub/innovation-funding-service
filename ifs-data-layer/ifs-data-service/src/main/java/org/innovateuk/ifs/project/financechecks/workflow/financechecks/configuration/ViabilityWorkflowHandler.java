@@ -2,10 +2,10 @@ package org.innovateuk.ifs.project.financechecks.workflow.financechecks.configur
 
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
-import org.innovateuk.ifs.project.financechecks.repository.ViabilityProcessRepository;
 import org.innovateuk.ifs.project.finance.resource.ViabilityEvent;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
+import org.innovateuk.ifs.project.financechecks.domain.ViabilityProcess;
+import org.innovateuk.ifs.project.financechecks.repository.ViabilityProcessRepository;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -17,12 +17,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.ORGANISATION_IS_ACADEMIC;
-import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.PROJECT_CREATED;
-import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.VIABILITY_APPROVED;
+import static org.innovateuk.ifs.project.finance.resource.ViabilityEvent.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_VIABILITY;
 
 /**
@@ -35,8 +33,8 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_VIAB
 public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<ViabilityProcess, ViabilityState, ViabilityEvent, PartnerOrganisation, ProjectUser> {
 
     @Autowired
-    @Qualifier("viabilityStateMachine")
-    private StateMachine<ViabilityState, ViabilityEvent> stateMachine;
+    @Qualifier("viabilityStateMachineFactory")
+    private StateMachineFactory<ViabilityState, ViabilityEvent> stateMachineFactory;
 
     @Autowired
     private ViabilityProcessRepository viabilityProcessRepository;
@@ -94,8 +92,8 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
     }
 
     @Override
-    protected StateMachine<ViabilityState, ViabilityEvent> getStateMachine() {
-        return stateMachine;
+    protected StateMachineFactory<ViabilityState, ViabilityEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override
