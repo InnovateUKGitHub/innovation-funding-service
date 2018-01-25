@@ -16,14 +16,16 @@ Documentation
 ...
 ...               IFS-1882 Project Setup internal project dashboard: Query responses
 
-Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
 
 *** Variables ***
 ${opens_in_new_window}    (opens in a new window)
-${queryProjectId}  ${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}
+
+# TODO actually check the downlioading of the pdf files. In this suite is only checked that the link to the file is visible to the user.
+# But no actual download is happening. This suite used to click all the links and in that way increading the amount of browser tabs open. This is now removed.
 
 *** Test Cases ***
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
@@ -112,10 +114,6 @@ Project finance user can view the file
     [Documentation]    INFUND-4840
     [Tags]
     Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
-    And the file has been scanned for viruses
-    When the user opens the link in new window   ${valid_pdf}
-    Then the user goes back to the previous tab
-
 
 Project finance user can upload more than one file
     [Documentation]    INFUND-4840
@@ -126,12 +124,10 @@ Project finance user can upload more than one file
 Project finance user can still view and delete both files
     [Documentation]    INFUND-4840
     [Tags]
-    When the user clicks the button/link    jQuery=li:nth-of-type(1) a:contains("${valid_pdf} ${opens_in_new_window}")
-    Then the user goes back to the previous tab
-    And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
-    When the user clicks the button/link    jQuery=li:nth-of-type(1) a:contains("${valid_pdf} ${opens_in_new_window}")
-    Then the user goes back to the previous tab
-    And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
+    When the user should see the element  jQuery=li:nth-of-type(1) a:contains("${valid_pdf} ${opens_in_new_window}")
+    Then the user clicks the button/link  css=button[name='removeAttachment']:nth-last-of-type(1)
+    When the user should see the element  jQuery=li:nth-of-type(1) a:contains("${valid_pdf} ${opens_in_new_window}")
+    Then the user clicks the button/link  css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Post new query server side validations
     [Documentation]    INFUND-4840
@@ -162,8 +158,7 @@ New query can be cancelled
     [Documentation]    INFUND-4840
     [Tags]
     When the user clicks the button/link    jQuery=a:contains("Cancel")
-    Then the user should not see the text in the page    ${valid_pdf}
-    And the user should not see the element    id=queryTitle
+    Then the user should not see the element    id=queryTitle
     And the user should not see the element    css=.editor
 
 Query can be re-entered (Eligibility)
@@ -179,58 +174,57 @@ Query can be re-entered (Eligibility)
 New query can be posted
     [Documentation]    INFUND-4840 INFUND-9546
     [Tags]  HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Post query")
+    When the user clicks the button/link      jQuery=.button:contains("Post query")
     Then the user should not see the element  jQuery=.button:contains("Post query")
-    And the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
-    And the user should see the element  css=#post-new-response
+    When the user should see the element      jQuery=.heading-small:contains("Lee Bowman - Innovate UK (Finance team)")
+    Then the user should see the element      jQuery=.heading-small:contains("${today}")
+    And the user should see the element       css=#post-new-response  # Respond button
 
-Queries raised column updates to 'awaiting response' - Query Section dropdown filters the queries displayed
+Query Section dropdown filters the queries displayed
     [Documentation]    INFUND-4840 INFUND-4844
     [Tags]
-    When the user clicks the button/link  link=Finance checks
-    Then the user clicks the button/link  jQuery=th:contains("Empire") ~ td a:contains("Awaiting response")
-    And the user should see the element   css=.query.eligibility-section[aria=hidden="false"]
     When the user selects the option from the drop-down menu  viability  querySection
-    Then the user should see the element  css=.query.eligibility-section[aria=hidden="true"]
+    #Wait until keyword succeeds without screenshots  10   200ms  the user should see the element  css=.query.eligibility-section[aria=hidden="true"]
 
 Finance contact receives an email when new query is posted
     [Documentation]    INFUND-4841
     [Tags]    Email
     Then the user reads his email    ${successful_applicant_credentials["email"]}    Query regarding your finances    We have raised a query around your project finances.
 
-Project finance user can add another query
+Project finance user can add another query while he is awaiting for response
     [Documentation]    INFUND-4840
     [Tags]
-    Given the user clicks the button/link   jQuery=th:contains("${EMPIRE_LTD_NAME}") ~ td:contains("Awaiting response")
-    When the user clicks the button/link    css=a[id="post-new-query"]
-    And the user enters text to a text field    id=queryTitle    a viability query's title
-    And the user selects the option from the drop-down menu    VIABILITY    id=section
-    And the user enters text to a text field    css=.editor    another query body
-    And the user clicks the button/link      css=.column-half button[type="submit"]  # Post query
+    [Setup]  the user navigates to the page   ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Given the user clicks the button/link     jQuery=th:contains("${EMPIRE_LTD_NAME}") ~ td:contains("Awaiting response")
+    When the user clicks the button/link      css=a[id="post-new-query"]
+    And the user enters text to a text field  id=queryTitle  a viability query's title
+    And the user selects the option from the drop-down menu  VIABILITY    id=section
+    And the user enters text to a text field  css=.editor    another query body
+    And the user clicks the button/link       css=.column-half button[type="submit"]  # Post query
     Then the user should not see an error in the page
 
 Queries show in reverse chronological order
     [Documentation]    INFUND-4840 INFUND-4844
     [Tags]
     Given the user selects the option from the drop-down menu  all  querySection
-    When the user should see the element   jQuery=.queries-list .query:nth-of-type(1) h2:contains("a viability query's title")
+    When the user should see the element  jQuery=.queries-list .query:nth-of-type(1) h2:contains("a viability query's title")
     Then the user should see the element   jQuery=.queries-list .query:nth-of-type(2) h2:contains("an eligibility query's title")
     # Query responses tab
     When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status/queries
-    Then the user should not see the element  css=#table-project-organisation-query-status tr:contains("${EMPIRE_LTD_NAME}")
+    Then the user should see the element   jQuery=p:contains("There are no outstanding queries.")
 
 Finance contact can view query
     [Documentation]    INFUND-4843
     [Tags]
     Given log in as a different user      &{successful_applicant_credentials}
-    When the user navigates to the page   ${server}/project-setup/project/${queryProjectId}/finance-checks
+    When the user navigates to the page   ${server}/project-setup/project/${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}/finance-checks
     Then the user should see the element  jQuery=h2:contains("an eligibility query's title")
     And the user should see the element   jQuery=h2:contains("a viability query's title")
 
 Finance contact can view the project finance user's uploads
     [Documentation]    INFUND-4843
     [Tags]
-    When the user downloads the file  ${successful_applicant_credentials["email"]}  ${server}/project-setup/project/${queryProjectId}/finance-checks/attachment/4  ${DOWNLOAD_FOLDER}/${valid_pdf}
+    When the user downloads the file  ${successful_applicant_credentials["email"]}  ${server}/project-setup/project/${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}/finance-checks/attachment/4  ${DOWNLOAD_FOLDER}/${valid_pdf}
     Then remove the file from the operating system  testing.pdf
 
 Response to query server side validations
@@ -238,7 +232,7 @@ Response to query server side validations
     [Tags]
     When the user clicks the button/link    jQuery=h2:contains("an eligibility query's title") ~ a:contains("Respond")
     And the user clicks the button/link     jQuery=.button:contains("Post response")
-    Then the user should see a field error  this field cannot be left blank.
+    Then the user should see a field error  This field cannot be left blank.
 #    TODO commmented due to IFS-2622
 #    And the user should see a summary error            This field cannot be left blank.
 
@@ -266,7 +260,6 @@ Query response can be posted
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Post response")
     Then the user should not see the element   jQuery=.button:contains("Post response")
-    ${today} =  get today
     And the user should see the element  jQuery=.heading-small:contains("Sarah Peacock") small:contains("${today}")
     And the user should see the element  jQuery=.heading-small:contains("Sarah Peacock") ~ .heading-small:contains("Supporting documentation")
 
@@ -298,18 +291,15 @@ IFS Admin can see applicant's response flagged in Query responses tab
 Project finance user can view the response
     [Documentation]    INFUND-4843
     [Tags]
-    [Setup]    log in as a different user    &{internal_finance_credentials}
-    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(6)
-    Then the user should see the text in the page    this is some response text
+    [Setup]  log in as a different user   &{internal_finance_credentials}
+    Given the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    When the user clicks the button/link  css=table.table-progress tr:nth-child(1) td:nth-child(6)
+    Then the user should see the element  jQuery=.heading-small:contains("Sarah") + p:contains("this is some response text")
 
 Project finance user can view the finance contact's uploaded files
     [Documentation]    INFUND-4843
     [Tags]
-    When the user clicks the button/link    jQuery=.panel li:nth-of-type(1) > a:contains("${valid_pdf} ${opens_in_new_window}")
-    Then the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=.panel li:nth-of-type(2) > a:contains("${valid_pdf} ${opens_in_new_window}")
-    Then the user goes back to the previous tab
+    The user should see the element  jQuery=.panel li:nth-of-type(1) a:contains("${valid_pdf}")
 
 Project finance user can continue the conversation
     [Documentation]    INFUND-7752
@@ -396,10 +386,8 @@ Project finance can view the file in notes
     [Documentation]    INFUND-4845
     [Tags]
     Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
-    And the file has been scanned for viruses
-    When The user opens the link in new window   ${valid_pdf}
-    Then the user goes back to the previous tab
-    And the user should see the element    jQuery=button:contains("Save note")
+    When the file has been scanned for viruses
+    Then the user should see the element    jQuery=button:contains("Save note")
 
 Project finance can upload more than one file to notes
     [Documentation]    INFUND-4845
@@ -410,12 +398,8 @@ Project finance can upload more than one file to notes
 Project finance can still view both files in notes
     [Documentation]    INFUND-4845
     [Tags]
-    When the user clicks the button/link    jQuery=li:nth-of-type(1) > a:contains("${valid_pdf}")
-    Then the user should not see an error in the page
-    And the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=li:nth-of-type(2) > a:contains("${valid_pdf}")
-    Then the user should not see an error in the page
-    And the user goes back to the previous tab
+    When the user should see the element  jQuery=li:nth-of-type(1) > a:contains("${valid_pdf}")
+    Then the user should see the element  jQuery=li:nth-of-type(2) > a:contains("${valid_pdf}")
     And the user clicks the button/link   css=button[name='removeAttachment']:nth-last-of-type(1)
 
 Create new note server side validations
@@ -431,7 +415,7 @@ Create new note client side validations
     When the user moves focus to the element    link=Sign out
     And the user enters text to a text field    id=noteTitle    an eligibility query's title
     Then the user should not see the element    jQuery=label[for="noteTitle"] .error-message:contains(This field cannot be left blank.)
-    When the user enters text to a text field    css=.editor    this is some note text
+    When the user enters text to a text field   css=.editor    this is some note text
     Then the user should not see the element    jQuery=label[for="note"] .error-message:contains(This field cannot be left blank.)
 
 Word count validations for notes
@@ -445,10 +429,9 @@ Word count validations for notes
 New note can be cancelled
     [Documentation]    INFUND-4845
     [Tags]
-    When the user clicks the button/link    jQuery=a:contains("Cancel")
-    Then the user should not see the text in the page    ${valid_pdf}
-    And the user should not see the element    id=noteTitle
-    And the user should not see the element    css=.editor
+    When the user clicks the button/link      jQuery=a:contains("Cancel")
+    Then the user should not see the element  id=noteTitle
+    And the user should not see the element   css=.editor
 
 Note can be re-entered
     [Documentation]    INFUND-4845
@@ -516,9 +499,7 @@ Project finance can view the file in note comments
     [Documentation]    INFUND-7756
     [Tags]
     Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
-    And the file has been scanned for viruses
-    When the user opens the link in new window   ${valid_pdf}
-    And the user goes back to the previous tab
+    When the file has been scanned for viruses
     And the user should see the element    jQuery=button:contains("Save comment")
 
 Project finance can upload more than one file to note comments
@@ -530,13 +511,9 @@ Project finance can upload more than one file to note comments
 Project finance can still view both files in note comments
     [Documentation]    INFUND-7756
     [Tags]
-    When the user clicks the button/link    jQuery=form li:nth-of-type(1) > a:contains("${valid_pdf}")
-    Then the user should not see an error in the page
-    And the user goes back to the previous tab
-    When the user clicks the button/link    jQuery=form li:nth-of-type(2) > a:contains("${valid_pdf}")
-    Then the user should not see an error in the page
-    And the user goes back to the previous tab
-    And the user should see the element    jQuery=button:contains("Save comment")
+    When the user should see the element  jQuery=form li:nth-of-type(1) > a:contains("${valid_pdf}")
+    Then the user should see the element  jQuery=form li:nth-of-type(2) > a:contains("${valid_pdf}")
+    And the user should see the element   jQuery=button:contains("Save comment")
 
 Note comments server side validations
     [Documentation]    INFUND-7756
@@ -567,7 +544,9 @@ Note comment can be posted
     When the user clicks the button/link    jQuery=.button:contains("Save comment")
     Then the user should not see the element   jQuery=.button:contains("Save comment")
 
-Note comment section now becomes read-only
-    [Documentation]    INFUND-7756
-    [Tags]
-    When the user should not see the element    css=.editor
+
+*** Keywords ***
+Custom Suite Setup
+    ${today} =  get today
+    set suite variable  ${today}
+    Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
