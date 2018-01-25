@@ -75,10 +75,10 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     @Test
     public void dashboard() throws Exception {
         final ZonedDateTime now = now();
-        final LocalDateTime time = LocalDateTime.of(now.getYear(),now.getMonth(),now.getDayOfMonth(),12,00,00);
+        final LocalDateTime time = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 12,00,00);
         Instant instant = time.toInstant(ZoneOffset.UTC);
 
-        Clock clock = Clock.fixed(instant,systemDefault());
+        Clock clock = Clock.fixed(instant, systemDefault());
 
         CompetitionResource competitionResource = newCompetitionResource()
                 .withFundersPanelDate(now.plusDays(30))
