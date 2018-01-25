@@ -274,7 +274,7 @@ Assessors view of competition dashboard and applications in panel status
 Assessors view of application summary and feedback
     [Documentation]  IFS-29   IFS-2375
     [Tags]
-    # assessor view of application summery when he not assessed application at first place.
+    # assessor view of application summery when he has not assessed application at first place.
     Given the user clicks the button/link       link=${computer_vision_application_name}
     When the user should see the element        jQuery=h1 span:contains("${computer_vision_application_name}")
     And the user should see the element         jQuery=h1:contains("Application summary")

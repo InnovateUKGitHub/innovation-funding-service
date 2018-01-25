@@ -76,27 +76,27 @@ Assessor Progress page
     [Tags]
     Given the user clicks the button/link  jQuery=td:contains("Madeleine Martin") ~ td a:contains("Assign")
     Then the user should see the element   jQuery=h2:contains("Assigned") + p:contains("No applications have been assigned to this assessor")
-    And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${CLOSED_COMPETITION_APPLICATION}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("3")
+    And the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${CLOSED_COMPETITION_APPLICATION}") + td:contains("Neural") + td:contains("Neural Industries")
 
 Filtering applications on the assessor progress page
     [Documentation]    IFS-400
     [Tags]
     When the user enters text to a text field    css=#filterSearch    22
     And the user clicks the button/link    jQuery=.button:contains(Filter)
-    Then the user should not see the element    jQuery=h2:contains("Applications") ~ div td:contains("${CLOSED_COMPETITION_APPLICATION}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("3")
+    Then the user should not see the element    jQuery=h2:contains("Applications") ~ div td:contains("${CLOSED_COMPETITION_APPLICATION}") + td:contains("Neural") + td:contains("Neural Industries")
     When the user enters text to a text field  css=#filterSearch    ${CLOSED_COMPETITION_APPLICATION}
     And the user clicks the button/link    jQuery=.button:contains(Filter)
-    Then the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${CLOSED_COMPETITION_APPLICATION}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("3")
+    Then the user should see the element    jQuery=h2:contains("Applications") ~ div td:contains("${CLOSED_COMPETITION_APPLICATION}") + td:contains("Neural") + td:contains("Neural Industries")
 
 Assessor removal
     [Documentation]  IFS-1079
     [Tags]
     Given the user clicks the button/link     link=Allocate assessors
     When the user clicks the button/link      jQuery=td:contains("Benjamin Nixon") ~ td a:contains("Assign")
-    Then the user should see the element      jQuery=div td:contains("${CLOSED_COMPETITION_APPLICATION}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("3") + td:contains("Remove")
+    Then the user should see the element      jQuery=div td:contains("${CLOSED_COMPETITION_APPLICATION}") + td:contains("Neural") + td:contains("Neural Industries") ~ td:contains("Remove")
     When the user clicks the button/link      jQuery=td:contains("${CLOSED_COMPETITION_APPLICATION}") ~ td:contains("Remove")
     Then the user should not see the element  jQuery=td:contains("${CLOSED_COMPETITION_APPLICATION}") ~ td:contains("Remove")
-    And the user should see the element       jQuery=h2:contains("Applications") ~ div td:contains("${CLOSED_COMPETITION_APPLICATION}") + td:contains("Neural") + td:contains("Neural Industries") + td:contains("2")
+    And the user should see the element       jQuery=h2:contains("Applications") ~ div td:contains("${CLOSED_COMPETITION_APPLICATION}") + td:contains("Neural") + td:contains("Neural Industries")
 
 *** Keywords ***
 the assessor list is correct before changes
