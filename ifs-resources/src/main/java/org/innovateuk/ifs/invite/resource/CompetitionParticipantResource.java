@@ -172,7 +172,7 @@ public class CompetitionParticipantResource {
 
     @JsonIgnore
     public long getAssessmentDaysLeft() {
-        return DAYS.between(ZonedDateTime.now(clock),assessorDeadlineDate);
+        return DAYS.between(ZonedDateTime.now(clock), assessorDeadlineDate);
     }
 
     @JsonIgnore
