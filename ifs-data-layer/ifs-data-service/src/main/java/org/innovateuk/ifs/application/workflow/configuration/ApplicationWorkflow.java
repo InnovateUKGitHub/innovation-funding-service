@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.workflow.configuration;
 import org.innovateuk.ifs.application.resource.ApplicationEvent;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.workflow.actions.MarkIneligibleAction;
+import org.innovateuk.ifs.application.workflow.actions.SendFinanceTotalsAction;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,9 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
     @Autowired
     private MarkIneligibleAction markIneligibleAction;
 
+    @Autowired
+    private SendFinanceTotalsAction sendFinanceTotalsAction;
+
     @Override
     public void configure(StateMachineConfigurationConfigurer<ApplicationState, ApplicationEvent> config) throws Exception {
         config.withConfiguration().listener(new WorkflowStateMachineListener<>());
@@ -50,6 +54,7 @@ public class ApplicationWorkflow extends StateMachineConfigurerAdapter<Applicati
                 .withExternal()
                     .source(ApplicationState.OPEN)
                     .event(ApplicationEvent.SUBMITTED)
+                    .action(sendFinanceTotalsAction)
                     .target(ApplicationState.SUBMITTED)
                 .and()
                 .withExternal()

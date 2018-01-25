@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.sync.mapper;
 
-import org.assertj.core.api.AssertionsForClassTypes;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.DefaultCostCategory;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
@@ -13,11 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
@@ -51,7 +48,7 @@ public class FinanceCostTotalResourceMapperTest {
         DefaultCostCategory materialCostCategory = newDefaultCostCategory().withCosts(Arrays.asList(materialCost)).build();
         materialCostCategory.calculateTotal();
 
-        Map<FinanceRowType, FinanceRowCostCategory> costs = new HashMap<>();
+        Map<FinanceRowType, FinanceRowCostCategory> costs = new LinkedHashMap<>();
         costs.put(FinanceRowType.OTHER_COSTS, otherCostCategory);
         costs.put(FinanceRowType.MATERIALS, materialCostCategory);
 
@@ -74,8 +71,8 @@ public class FinanceCostTotalResourceMapperTest {
                 .withType(FinanceType.APPLICATION)
                 .withFinanceId(financeId).build();
 
-        AssertionsForClassTypes.assertThat(actualResult.get(0)).isEqualToComparingFieldByField(expectedOtherCostTotalResource);
-        AssertionsForClassTypes.assertThat(actualResult.get(1)).isEqualToComparingFieldByField(expectedMaterialCostTotalResource);
+        assertThat(actualResult.get(0)).isEqualToComparingFieldByField(expectedOtherCostTotalResource);
+        assertThat(actualResult.get(1)).isEqualToComparingFieldByField(expectedMaterialCostTotalResource);
     }
 
     @Test
@@ -93,7 +90,7 @@ public class FinanceCostTotalResourceMapperTest {
         DefaultCostCategory materialCostCategory = newDefaultCostCategory().withCosts(Arrays.asList(materialCost)).build();
         materialCostCategory.calculateTotal();
 
-        Map<FinanceRowType, FinanceRowCostCategory> costs = new HashMap<>();
+        Map<FinanceRowType, FinanceRowCostCategory> costs = new LinkedHashMap<>();
         costs.put(FinanceRowType.OTHER_COSTS, otherCostCategory);
         costs.put(FinanceRowType.MATERIALS, materialCostCategory);
 
@@ -116,9 +113,9 @@ public class FinanceCostTotalResourceMapperTest {
                 .withType(FinanceType.APPLICATION)
                 .withFinanceId(financeId).build();
 
-        AssertionsForClassTypes.assertThat(actualResult.get(0)).isEqualToComparingFieldByField(expectedOtherCostTotalResource);
-        AssertionsForClassTypes.assertThat(actualResult.get(1)).isEqualToComparingFieldByField(expectedMaterialCostTotalResource);
-        AssertionsForClassTypes.assertThat(actualResult.get(2)).isEqualToComparingFieldByField(expectedOtherCostTotalResource);
-        AssertionsForClassTypes.assertThat(actualResult.get(3)).isEqualToComparingFieldByField(expectedMaterialCostTotalResource);
+        assertThat(actualResult.get(0)).isEqualToComparingFieldByField(expectedOtherCostTotalResource);
+        assertThat(actualResult.get(1)).isEqualToComparingFieldByField(expectedMaterialCostTotalResource);
+        assertThat(actualResult.get(2)).isEqualToComparingFieldByField(expectedOtherCostTotalResource);
+        assertThat(actualResult.get(3)).isEqualToComparingFieldByField(expectedMaterialCostTotalResource);
     }
 }
