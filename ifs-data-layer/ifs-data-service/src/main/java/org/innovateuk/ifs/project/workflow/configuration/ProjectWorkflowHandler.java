@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,8 +29,8 @@ import org.springframework.stereotype.Component;
 public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProcess, ProjectState, ProjectEvent, Project, ProjectUser> {
 
     @Autowired
-    @Qualifier("projectStateMachine")
-    private StateMachine<ProjectState, ProjectEvent> stateMachine;
+    @Qualifier("projectStateMachineFactory")
+    private StateMachineFactory<ProjectState, ProjectEvent> stateMachineFactory;
 
     @Autowired
     private ProjectProcessRepository projectProcessRepository;
@@ -79,8 +79,8 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
     }
 
     @Override
-    protected StateMachine<ProjectState, ProjectEvent> getStateMachine() {
-        return stateMachine;
+    protected StateMachineFactory<ProjectState, ProjectEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override
