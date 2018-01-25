@@ -290,11 +290,6 @@ The Project manager resends the invite to the Project manager
     [Tags]    HappyPath    Email
     When the user clicks resend but cancels
     Then the user resends an invite
-    #When the user clicks the button/link        jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
-    #Then the user should see the element        jQuery=h2:contains("Resend invite to team member")
-    #And the user clicks the button/link         jQuery=button:contains("Cancel")
-    #When the user clicks the button/link        jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
-    #Then the user clicks the button/link         jQuery=button:contains("Resend")
     [Teardown]  logout as user
 
 Invited project manager registration flow
@@ -469,9 +464,6 @@ The Project manager resends the invite to the Finance contact
     [Tags]    HappyPath    Email
     When the user clicks resend but cancels
     Then the user resends an invite
-    #When the user clicks the button/link     jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
-    #Then the user should see the element     jQuery=h2:contains("Resend invite to team member")
-    #And the user clicks the button/link      jQuery=button:contains("Resend")
     [Teardown]  logout as user
 
 Invited finance contact registration flow
