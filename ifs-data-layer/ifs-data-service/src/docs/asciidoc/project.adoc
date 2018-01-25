@@ -552,7 +552,6 @@ include::{snippets}/inviteUser/internal/pending/inviteId/resend-internal-user-in
 
 ==== Response
 include::{snippets}/inviteUser/internal/pending/inviteId/resend-internal-user-invite/http-response.adoc[]
-include::{snippets}/inviteUser/internal/pending/inviteId/resend-internal-user-invite/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/inviteUser/internal/pending/inviteId/resend-internal-user-invite/curl-request.adoc[]
