@@ -25,6 +25,7 @@ import java.util.Collections;
 
 import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -136,7 +137,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
     public void updateUserSuccess() throws Exception {
 
         when(internalUserServiceMock.editInternalUser(Mockito.any()))
-                .thenReturn(ServiceResult.serviceSuccess());
+                .thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/admin/user/{userId}/edit", 1L).
                 param("firstName", "First").
@@ -339,6 +340,19 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
                 .andExpect(model().attribute("tab", "invites"))
                 .andExpect(model().attribute("mode", "search"))
                 .andExpect(model().attribute("invites", emptyList()));
+    }
+
+    @Test
+    public void resendInvite() throws Exception {
+
+        when(inviteUserRestServiceMock.resendInternalUserInvite(123L)).
+                thenReturn(restSuccess());
+
+        mockMvc.perform(get("/admin/users/pending/resend-invite?inviteId=" + 123L))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/admin/users/pending"));
+
+        verify(inviteUserRestServiceMock).resendInternalUserInvite(123L);
     }
 
     @Override
