@@ -118,9 +118,9 @@ Successful applicant see successful alert
 View feedback from each assessor
     [Documentation]    INFUND-8172
     [Tags]    Email    HappyPath
-    Then the user should see the element    jQuery=h3:contains("Assessor 1") ~ p:contains("I have no problem recommending this application")
-    And the user should see the element    jQuery=h3:contains("Assessor 2") ~ p:contains("Very good, but could have been better in areas")
-    And the user should see the element    jQuery=h3:contains("Assessor 3") ~ p:contains("I enjoyed reading this application, well done")
+    Then the user should see the element    jQuery=h3:contains("Assessor 1") ~ .wysiwyg-styles p:contains("I have no problem recommending this application")
+    And the user should see the element     jQuery=h3:contains("Assessor 2") ~ .wysiwyg-styles p:contains("Very good, but could have been better in areas")
+    And the user should see the element     jQuery=h3:contains("Assessor 3") ~ .wysiwyg-styles p:contains("I enjoyed reading this application, well done")
 
 Question scores and application details are correct
     [Documentation]    INFUND-8169 INFUND-7861
