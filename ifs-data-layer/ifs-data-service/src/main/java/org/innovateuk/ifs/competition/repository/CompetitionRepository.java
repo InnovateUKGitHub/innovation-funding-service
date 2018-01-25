@@ -49,9 +49,16 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "AND EXISTS (SELECT a.manageFundingEmailDate  FROM Application a WHERE a.competition.id = cp.competition.id AND a.fundingDecision = 'FUNDED' AND a.manageFundingEmailDate IS NOT NULL) " +
             "AND cp.competition.setupComplete = TRUE AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE";
 
+    String INNOVATION_LEAD_FEEDBACK_RELEASED_WHERE_CLAUSE = "WHERE cp.user.id = :userId AND " +
+            "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = cp.competition.id) AND " +
+            "cp.competition.setupComplete = TRUE AND cp.competition.template = FALSE AND cp.competition.nonIfs = FALSE";
+
+
     String INNOVATION_LEAD_PROJECT_SETUP_QUERY = "SELECT cp.competition FROM CompetitionAssessmentParticipant cp " + INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE;
 
     String INNOVATION_LEAD_PROJECT_SETUP_COUNT_QUERY = "SELECT count(distinct cp.competition.id) FROM CompetitionAssessmentParticipant cp " + INNOVATION_LEAD_PROJECT_SETUP_WHERE_CLAUSE;
+
+    String INNOVATION_LEAD_FEEDBACK_RELEASED_COUNT_QUERY = "SELECT count(distinct cp.competition.id) FROM CompetitionAssessmentParticipant cp " + INNOVATION_LEAD_FEEDBACK_RELEASED_WHERE_CLAUSE;
 
     /* Innovation leads should not access competitions in states: In preparation and Ready to open */
     String SEARCH_QUERY_LEAD_TECHNOLOGIST = "SELECT cp.competition FROM CompetitionAssessmentParticipant cp LEFT JOIN cp.competition.milestones m LEFT JOIN cp.competition.competitionType ct " +
@@ -201,6 +208,9 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     @Query(FEEDBACK_RELEASED_COUNT_QUERY)
     Long countFeedbackReleased();
+
+    @Query(INNOVATION_LEAD_FEEDBACK_RELEASED_COUNT_QUERY)
+    Long countFeedbackReleasedForInnovationLead(@Param("userId") Long userId);
 
     @Query(COUNT_OPEN_QUERIES)
     Long countOpenQueries(@Param("competitionId") Long competitionId);

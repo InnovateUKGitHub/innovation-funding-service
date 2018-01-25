@@ -329,7 +329,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                         getLiveCount(),
                         getPSCount(),
                         competitionRepository.countUpcoming(),
-                        competitionRepository.countFeedbackReleased(),
+                        getFeedbackReleasedCount(),
+                        //competitionRepository.countFeedbackReleased(),
                         competitionRepository.countNonIfs()));
     }
 
@@ -352,6 +353,18 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 count = competitionRepository.countProjectSetupForInnovationLead(user.getId());
             } else {
                 count = competitionRepository.countProjectSetup();
+            }
+            return count;
+        }).getSuccessObject();
+    }
+
+    private Long getFeedbackReleasedCount(){
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
+            Long count ;
+            if(isInnovationLead(user)) {
+                count = competitionRepository.countFeedbackReleasedForInnovationLead(user.getId());
+            } else {
+                count = competitionRepository.countFeedbackReleased();
             }
             return count;
         }).getSuccessObject();
