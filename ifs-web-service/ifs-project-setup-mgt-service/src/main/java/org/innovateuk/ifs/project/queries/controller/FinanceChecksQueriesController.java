@@ -91,7 +91,7 @@ public class FinanceChecksQueriesController {
         return QUERIES_VIEW;
     }
 
-    //@PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @PostMapping("/{queryId}/close")
     public String closeQuery(@P("projectId")@PathVariable Long projectId,
                              @PathVariable Long organisationId,

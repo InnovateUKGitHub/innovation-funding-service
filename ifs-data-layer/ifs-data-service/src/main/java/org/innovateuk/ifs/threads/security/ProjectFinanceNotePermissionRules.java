@@ -21,6 +21,11 @@ public class ProjectFinanceNotePermissionRules {
         return note.posts.size() == 1 && note.posts.get(0).author.getId().equals(user.getId());
     }
 
+    @PermissionRule(value = "PF_CLOSE", description = "Only project finance users can close notes")
+    public boolean onlyProjectFinanceUsersCanCloseNotes(final NoteResource note, final UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
     @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users can add posts to a note")
     public boolean onlyProjectFinanceUsersCanAddPosts(final NoteResource note, final UserResource user) {
         return isProjectFinanceUser(user);

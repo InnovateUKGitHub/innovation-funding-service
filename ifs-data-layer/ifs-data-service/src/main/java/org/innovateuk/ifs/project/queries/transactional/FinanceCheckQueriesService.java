@@ -25,7 +25,7 @@ public interface FinanceCheckQueriesService extends ThreadService<QueryResource,
     ServiceResult<Long> create(@P("queryResource") QueryResource queryResource);
 
     @Override
-    //@PreAuthorize("hasPermission(#queryResource, 'PF_CREATE')")
+    @PreAuthorize("hasPermission(#queryId, 'org.innovateuk.ifs.threads.resource.QueryResource', 'PF_CLOSE')")
     ServiceResult<Void> close(Long queryId);
 
     @Override

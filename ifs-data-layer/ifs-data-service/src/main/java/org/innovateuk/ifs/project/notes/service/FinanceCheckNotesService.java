@@ -25,7 +25,7 @@ public interface FinanceCheckNotesService extends ThreadService<NoteResource, Po
     ServiceResult<Long> create(@P("noteResource") NoteResource noteResource);
 
     @Override
-    //@PreAuthorize("hasPermission(#queryResource, 'PF_CREATE')")
+    @PreAuthorize("hasPermission(#noteId, 'org.innovateuk.ifs.threads.resource.NoteResource', 'PF_CLOSE')")
     ServiceResult<Void> close(Long noteId);
 
     @Override
