@@ -178,7 +178,6 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     private ServiceResult<Void> createAssessmentReview(AssessmentPanelParticipant assessor, Application application) {
         if (!assessmentReviewRepository.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor.getUser(), application, State.WITHDRAWN)) {
-//            final ProcessRole processRole = createProcessRoleForAssessmentReview(assessor, application);
             final Role assessorRole = roleRepository.findOneByName(PANEL_ASSESSOR.getName());
 
             AssessmentReview assessmentReview =  new AssessmentReview(application, assessor, assessorRole);
@@ -188,11 +187,6 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
         }
         return serviceSuccess();
     }
-
-//    private ProcessRole createProcessRoleForAssessmentReview(AssessmentPanelParticipant assessor, Application application) {
-//        final Role assessorRole = roleRepository.findOneByName(PANEL_ASSESSOR.getName());
-//        return processsRoleRepository.save(new ProcessRole(assessor.getUser(), application.getId(), assessorRole));
-//    }
 
     private ServiceResult<Application> getApplication(long applicationId) {
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId));

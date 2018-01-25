@@ -157,8 +157,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         Role panelAssessorRole = newRole().withType(UserRoleType.PANEL_ASSESSOR).build();
 
-        AssessmentReview assessmentReview = // new AssessmentReview(applications.get(0), processRoles.get(0));
-        new AssessmentReview(applications.get(0), assessmentPanelParticipants.get(0), panelAssessorRole);
+        AssessmentReview assessmentReview = new AssessmentReview(applications.get(0), assessmentPanelParticipants.get(0), panelAssessorRole);
         assessmentReview.setActivityState(acceptedActivityState);
 
         when(roleRepositoryMock.findOneByName(panelAssessorRole.getName())).thenReturn(panelAssessorRole);

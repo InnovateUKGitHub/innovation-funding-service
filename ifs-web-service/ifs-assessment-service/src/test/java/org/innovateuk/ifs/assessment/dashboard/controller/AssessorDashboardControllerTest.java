@@ -14,7 +14,6 @@ import org.innovateuk.ifs.invite.resource.CompetitionParticipantResource;
 import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -74,7 +73,6 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
         setLoggedInUser(user);
     }
 
-    @Ignore
     @Test
     public void dashboard() throws Exception {
         CompetitionResource competitionResource = newCompetitionResource()
