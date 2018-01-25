@@ -34,18 +34,6 @@ dependencies {
 
 }
 
-processResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
-
-processTestResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
-
 sourceSets {
     client {
         java {

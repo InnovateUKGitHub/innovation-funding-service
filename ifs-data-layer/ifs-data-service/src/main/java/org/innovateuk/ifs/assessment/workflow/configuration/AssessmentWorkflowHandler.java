@@ -2,9 +2,9 @@ package org.innovateuk.ifs.assessment.workflow.configuration;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
+import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentEvent;
 import org.innovateuk.ifs.assessment.resource.AssessmentState;
@@ -18,7 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.assessment.resource.AssessmentEvent.*;
@@ -33,8 +33,8 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESS
 public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessment, AssessmentState, AssessmentEvent, Application, ProcessRole> {
 
     @Autowired
-    @Qualifier("assessmentStateMachine")
-    private StateMachine<AssessmentState, AssessmentEvent> stateMachine;
+    @Qualifier("assessmentStateMachineFactory")
+    private StateMachineFactory<AssessmentState, AssessmentEvent> stateMachineFactory;
 
     @Autowired
     private AssessmentRepository assessmentRepository;
@@ -99,8 +99,8 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
     }
 
     @Override
-    protected StateMachine<AssessmentState, AssessmentEvent> getStateMachine() {
-        return stateMachine;
+    protected StateMachineFactory<AssessmentState, AssessmentEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override
