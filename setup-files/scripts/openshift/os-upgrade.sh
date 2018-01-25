@@ -39,7 +39,7 @@ function upgradeServices {
         oc apply -f $(getBuildLocation)/sil-stub/80-sil-stub.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
-    if $(isSysIntOrUat ${TARGET}); then
+    if ! $(isNamedEnvironment ${TARGET}); then
         oc apply -f $(getBuildLocation)/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
@@ -66,7 +66,7 @@ function forceReload {
         oc rollout latest dc/sil-stub ${SVC_ACCOUNT_CLAUSE}
     fi
 
-    if $(isSysIntOrUat ${TARGET}); then
+    if ! $(isNamedEnvironment ${TARGET}); then
         oc rollout latest dc/finance-data-service ${SVC_ACCOUNT_CLAUSE}
     fi
 
@@ -89,7 +89,7 @@ function watchStatus {
         rolloutStatus sil-stub
     fi
 
-    if $(isSysIntOrUat ${TARGET}); then
+    if ! $(isNamedEnvironment ${TARGET}); then
         rolloutStatus finance-data-service
     fi
 }
