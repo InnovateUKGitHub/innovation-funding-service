@@ -30,8 +30,7 @@ public class ProjectFinanceQueriesRestServiceTest extends BaseRestServiceUnitTes
     }
 
     private QueryResource queryWithId(Long id) {
-        return new QueryResource(id, null, null, null, null, false, null);
-
+        return new QueryResource(id, null, null, null, null, false, null, null, null);
     }
 
     @Test

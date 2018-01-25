@@ -34,7 +34,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
     public void findOne() throws Exception {
         final Long queryId = 3L;
         List<PostResource> posts = asList(new PostResource(97L, newUserResource().withId(7L).build(), "Post message", asList(), now()));
-        final QueryResource query = new QueryResource(3L, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", true, now());
+        final QueryResource query = new QueryResource(3L, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", true, now(), null, null);
         when(financeCheckQueriesService.findOne(queryId)).thenReturn(serviceSuccess(query));
 
         mockMvc.perform(get("/project/finance/queries/{queryId}", queryId))
@@ -49,7 +49,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
     public void findAll() throws Exception {
         final Long contextId = 22L;
         List<PostResource> posts = asList(new PostResource(33L, newUserResource().withId(7L).build(), "Post message", asList(), now()));
-        final QueryResource query = new QueryResource(3L, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", true, now());
+        final QueryResource query = new QueryResource(3L, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", true, now(), null, null);
         when(financeCheckQueriesService.findAll(contextId)).thenReturn(serviceSuccess(asList(query)));
 
         mockMvc.perform(get("/project/finance/queries/all/{projectFinanceId}", contextId))
@@ -78,7 +78,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
     @Test
     public void create() throws Exception {
         List<PostResource> posts = asList(new PostResource(null, newUserResource().withId(7L).build(), "Post message", asList(), null));
-        final QueryResource query = new QueryResource(null, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", false, null);
+        final QueryResource query = new QueryResource(null, 22L, posts, FinanceChecksSectionType.VIABILITY, "New query title", false, null, null, null);
 
         when(financeCheckQueriesService.create(query)).thenReturn(serviceSuccess(55L));
 
