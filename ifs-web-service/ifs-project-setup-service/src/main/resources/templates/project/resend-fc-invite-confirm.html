@@ -19,7 +19,6 @@
         <input type="hidden" id="resend-fc-invite" name="resend-fc-invite" th:value="${model.inviteId}"/>
         <input type="hidden" id="organisation" name="organisation" th:value="${model.organisationId}"/>
         <button class="button" type="submit">Resend</button>
-        <button class="button button-clear js-close" type="button">Cancel</button>
     </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
