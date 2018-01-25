@@ -45,7 +45,7 @@
 
     <p>Any queries we raise will appear here, with the most recent queries first. You can upload files to support your answers if necessary.</p>
 
-    <div class="collapsible">
+    <div class="collapsible" th:classappend="${model.isSingleQuery() ? 'collapsible-expanded' : ''}">
         <th:block th:each="query : ${model.getQueries()}">
             <h2 class="heading-medium" th:id="${'title-query-' + query.id}">
                 <th:block th:text="${query.title}">Query Thread Title</th:block>
@@ -72,7 +72,7 @@
                         </th:blocK>
                     </div>
                 </th:block>
-                <th:block th:unless="${model.queryId != null} or ${query.isClosed()}" >
+                <th:block th:unless="${model.queryId != null} or ${query.isClosed()}">
                     <a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response#form-query-__${query.id}__(baseUrl=${baseUrl},queryId=${query.id})}" class="extra-margin-top button">Respond</a>
                 </th:block>
                 <th:block th:if="${model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
