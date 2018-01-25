@@ -330,7 +330,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                         getPSCount(),
                         competitionRepository.countUpcoming(),
                         getFeedbackReleasedCount(),
-                        //competitionRepository.countFeedbackReleased(),
                         competitionRepository.countNonIfs()));
     }
 
