@@ -40,7 +40,7 @@ function deploy() {
     fi
 
     if ! $(isNamedEnvironment ${TARGET}); then
-        oc create -f $(getBuildLocation)/finance-service/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+        oc create -f $(getBuildLocation)/finance-data-service/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
     oc create -f $(getBuildLocation)/ ${SVC_ACCOUNT_CLAUSE}
