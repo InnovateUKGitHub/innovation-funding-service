@@ -40,7 +40,7 @@ function upgradeServices {
     fi
 
     if ! $(isNamedEnvironment ${TARGET}); then
-        oc apply -f $(getBuildLocation)/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+        oc apply -f $(getBuildLocation)/finance-data-service/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
     fi
 
 
