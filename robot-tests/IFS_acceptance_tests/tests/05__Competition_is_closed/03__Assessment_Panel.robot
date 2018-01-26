@@ -263,7 +263,7 @@ Assign applicaitons to assessor upon acceting invite in panel
     And the user clicks the button/link       css=button[type="submit"]  # Confirm
 
 Assessors view of competition dashboard and applications in panel status
-    [Documentation]  IFS-1138  IFS-388   IFS-2549
+    [Documentation]  IFS-1138  IFS-388
     [Tags]
     Given Log in as a different user            ${panel_assessor_ben}  ${short_password}
     When the user clicks the button/link        jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
@@ -281,7 +281,7 @@ Assessors view of competition dashboard and applications in panel status
     Then the user should see the element        jQuery=.progress-list div:contains("${computer_vision_application_name}") ~ div strong:contains("Accepted")
 
 Assessors view of application summary and feedback
-    [Documentation]  IFS-29   IFS-2375
+    [Documentation]  IFS-29   IFS-2375   IFS-2549
     [Tags]
     # assessor view of application summery when he has not assessed application at first place.
     Given the user clicks the button/link       link=${computer_vision_application_name}
