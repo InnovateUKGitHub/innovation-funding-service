@@ -16,6 +16,14 @@ osStageRemote.tag = financeDataServiceVersion
 tagDockerLocal.tag = financeDataServiceVersion
 osStageLocal.tag = financeDataServiceVersion
 
+ext.dockerDir = "$project.parent.projectDir/docker/"
+
+buildDocker.dependsOn prepareDockerInput
+buildDocker.dependsOn ":docker:app-base-image:buildDocker"
+buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+buildDocker.inputDir = project.file("$project.buildDir/docker")
+tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+
 sourceSets {
     client {
         java {

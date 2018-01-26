@@ -25,12 +25,19 @@ configurations {
     providedRuntime
 }
 
-
 project.version = dataServiceVersion
 tagDocker.tag = dataServiceVersion
 osStageRemote.tag = dataServiceVersion
 tagDockerLocal.tag = dataServiceVersion
 osStageLocal.tag = dataServiceVersion
+
+ext.dockerDir = "$project.parent.projectDir/docker/"
+
+buildDocker.dependsOn prepareDockerInput
+buildDocker.dependsOn ":docker:app-base-image:buildDocker"
+buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+buildDocker.inputDir = project.file("$project.buildDir/docker")
+tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 ext.companyHouseKey = ext.get('ifs.company-house.key')
