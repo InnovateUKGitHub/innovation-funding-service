@@ -221,7 +221,7 @@ public class InviteUserServiceImpl extends BaseTransactionalService implements I
     }
 
     private boolean handleInviteSuccess(RoleInvite roleInvite) {
-        inviteRoleRepository.save(roleInvite.send(loggedInUserSupplier.get(), ZonedDateTime.now()));
+        inviteRoleRepository.save(roleInvite.sendOrResend(loggedInUserSupplier.get(), ZonedDateTime.now()));
         return true;
     }
 

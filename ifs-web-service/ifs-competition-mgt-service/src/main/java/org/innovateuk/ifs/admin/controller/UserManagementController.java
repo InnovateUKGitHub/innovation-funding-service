@@ -241,7 +241,7 @@ public class UserManagementController extends AsyncAdaptor {
 
     @SecuredBySpring(value = "RESEND_INTERNAL_USER_INVITE", description = "Only the IFS Administrators can resend invites to internal users")
     @PreAuthorize("hasAuthority('ifs_administrator')")
-    @GetMapping("/users/pending/resend-invite")
+    @PostMapping("/users/pending/resend-invite")
     public String resendInvite(@RequestParam("inviteId") long inviteId) {
         inviteUserRestService.resendInternalUserInvite(inviteId).getSuccessObjectOrThrowException();
         return "redirect:/admin/users/pending";

@@ -348,7 +348,7 @@ public class UserManagementControllerTest extends BaseControllerMockMVCTest<User
         when(inviteUserRestServiceMock.resendInternalUserInvite(123L)).
                 thenReturn(restSuccess());
 
-        mockMvc.perform(get("/admin/users/pending/resend-invite?inviteId=" + 123L))
+        mockMvc.perform(post("/admin/users/pending/resend-invite?inviteId=" + 123L))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/admin/users/pending"));
 
