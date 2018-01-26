@@ -70,7 +70,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     @Autowired
     private ProjectUserRepository projectUserRepository;
 
-    LocalValidatorFactoryBean validator;
+    private LocalValidatorFactoryBean validator;
 
     public InviteProjectServiceImpl() {
         validator = new LocalValidatorFactoryBean();
@@ -151,9 +151,7 @@ public class InviteProjectServiceImpl extends BaseTransactionalService implement
     public ServiceResult<UserResource> getUserByInviteHash(@P("hash") String hash) {
         return getByHash(hash)
                 .andOnSuccessReturn(i -> userRepository.findByEmail(i.getEmail()).map(userMapper::mapToResource))
-                .andOnSuccess(u -> u.isPresent() ?
-                        serviceSuccess(u.get()) :
-                        serviceFailure(notFoundError(UserResource.class)));
+                .andOnSuccess(u -> u.map(ServiceResult::serviceSuccess).orElseGet(() -> serviceFailure(notFoundError(UserResource.class))));
     }
 
     private ServiceResult<Void> validateProjectInviteResource(InviteProjectResource inviteProjectResource) {

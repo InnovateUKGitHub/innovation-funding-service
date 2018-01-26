@@ -73,7 +73,7 @@ Project Finance is able to see the Overheads costs file
     [Tags]  CompAdmin
     [Setup]  log in as a different user  &{internal_finance_credentials}
     Given the competition is now in Project Setup
-    Then the project finance is able to download the Overheads file
+    Then the user is able to download the overheads file
 
 *** Keywords ***
 Custom Suite Setup
@@ -130,39 +130,14 @@ the lead is able to submit the application
     the user clicks the button/link  link=Finished
 
 the competition is now in Project Setup
-    moving competition to Closed
-    making the application a successful project
-    moving competition to Project Setup
+    moving competition to Closed                  ${openCompetitionPublicSector}
+    making the application a successful project   ${openCompetitionPublicSector}  ${publicLeadApp}
+    moving competition to Project Setup           ${openCompetitionPublicSector}
 
-moving competition to Closed
-    Connect to Database  @{database}
-    execute sql string   UPDATE `${database_name}`.`milestone` SET `date`='2017-09-09 11:00:00' WHERE `type`='SUBMISSION_DATE' AND `competition_id`='${openCompetitionPublicSector}';
-
-making the application a successful project
-    the user navigates to the page   ${compPublicPage}
-    the user clicks the button/link  css=button[type="submit"][formaction$="notify-assessors"]
-    ${status}  ${value} =  Run Keyword And Ignore Error Without Screenshots  page should contain element  css=button[type="submit"][formaction$="close-assessment"]
-    Run Keyword If  '${status}' == 'PASS'  the user clicks the button/link  css=button[type="submit"][formaction$="close-assessment"]
-    Run Keyword If  '${status}' == 'FAIL'  Run keywords    the user clicks the button/link    css=button[type="submit"][formaction$="notify-assessors"]
-    ...    AND  the user clicks the button/link    css=button[type="submit"][formaction$="close-assessment"]
-    run keyword and ignore error     the user clicks the button/link    css=button[type="submit"][formaction$="close-assessment"]
-    the user clicks the button/link  link=Input and review funding decision
-    the user clicks the button/link  jQuery=tr:contains("${publicLeadApp}") label
-    the user clicks the button/link  css=[type="submit"][value="FUNDED"]
-    the user navigates to the page   ${compPublicPage}/manage-funding-applications
-    the user clicks the button/link  jQuery=tr:contains("${publicLeadApp}") label
-    the user clicks the button/link  css=[name="write-and-send-email"]
-    the internal sends the descision notification email to all applicants  Successful!
-
-moving competition to Project Setup
-    the user navigates to the page   ${compPublicPage}
-    the user clicks the button/link  css=button[type="submit"][formaction$="release-feedback"]
-
-the project finance is able to download the Overheads file
+the user is able to download the overheads file
     ${projectId} =  get project id by name  ${publicLeadApp}
     ${organisationId} =  get organisation id by name  Dreambit
-    the user downloads the file  ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${projectId}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
-    remove the file from the operating system  ${excel_file}
+    the project finance user is able to download the overheads file    ${projectId}  ${organisationId}
 
 the internal user can see that the Generic competition has only one Application Question
     the user clicks the button/link  link=Application

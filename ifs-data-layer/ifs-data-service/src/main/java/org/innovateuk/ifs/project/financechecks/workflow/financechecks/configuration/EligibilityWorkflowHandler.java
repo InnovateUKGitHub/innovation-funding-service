@@ -2,10 +2,10 @@ package org.innovateuk.ifs.project.financechecks.workflow.financechecks.configur
 
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
-import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
 import org.innovateuk.ifs.project.finance.resource.EligibilityEvent;
 import org.innovateuk.ifs.project.finance.resource.EligibilityState;
+import org.innovateuk.ifs.project.financechecks.domain.EligibilityProcess;
+import org.innovateuk.ifs.project.financechecks.repository.EligibilityProcessRepository;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -17,15 +17,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
+import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
-
-import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.NOT_REQUESTING_FUNDING;
-import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.PROJECT_CREATED;
-import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.ELIGIBILITY_APPROVED;
+import static org.innovateuk.ifs.project.finance.resource.EligibilityEvent.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_ELIGIBILITY;
-
 
 /**
  * {@code EligibilityWorkflowService} is the entry point for triggering the workflow.
@@ -37,8 +33,8 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_ELIG
 public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<EligibilityProcess, EligibilityState, EligibilityEvent, PartnerOrganisation, ProjectUser> {
 
     @Autowired
-    @Qualifier("eligibilityStateMachine")
-    private StateMachine<EligibilityState, EligibilityEvent> stateMachine;
+    @Qualifier("eligibilityStateMachineFactory")
+    private StateMachineFactory<EligibilityState, EligibilityEvent> stateMachineFactory;
 
     @Autowired
     private EligibilityProcessRepository eligibilityProcessRepository;
@@ -96,8 +92,8 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
     }
 
     @Override
-    protected StateMachine<EligibilityState, EligibilityEvent> getStateMachine() {
-        return stateMachine;
+    protected StateMachineFactory<EligibilityState, EligibilityEvent> getStateMachineFactory() {
+        return stateMachineFactory;
     }
 
     @Override
