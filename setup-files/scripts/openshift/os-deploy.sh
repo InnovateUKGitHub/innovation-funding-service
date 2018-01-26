@@ -39,6 +39,10 @@ function deploy() {
         oc create -f $(getBuildLocation)/sil-stub/ ${SVC_ACCOUNT_CLAUSE}
     fi
 
+    if ! $(isNamedEnvironment ${TARGET}); then
+        oc create -f $(getBuildLocation)/finance-service/32-finance-data-service.yml ${SVC_ACCOUNT_CLAUSE}
+    fi
+
     oc create -f $(getBuildLocation)/ ${SVC_ACCOUNT_CLAUSE}
     oc create -f $(getBuildLocation)/shib/5-shib.yml ${SVC_ACCOUNT_CLAUSE}
     oc create -f $(getBuildLocation)/shib/56-idp.yml ${SVC_ACCOUNT_CLAUSE}
