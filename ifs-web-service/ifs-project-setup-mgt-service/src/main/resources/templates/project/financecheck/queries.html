@@ -82,7 +82,7 @@
                             <th:block th:text="${post.username}">Created by user</th:block>
                             <small>
                                 <th:block th:text="${#temporals.format(post.createdOn, 'd MMMM yyyy')}"/>
-                                <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'hh:mma'))}"/>
+                                <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'h:mma'))}"/>
                             </small>
                         </div>
                         <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
@@ -164,7 +164,12 @@
                     </form>
                 </th:block>
                 <th:block th:if="${query.isClosed()}">
-                    Resolved by
+                    <div class="message-alert">
+                        <p>This query has been marked as resolved by
+                            <th:block th:text="${query.getClosedBy().getName()}">Name</th:block> on
+                            <th:block th:text="${#temporals.format(query.getClosedDate(), 'd MMMM yyyy')}">Date</th:block>.</p>
+                        <p>If you wish to follow this up, please raise a new query.</p>
+                    </div>
                 </th:block>
             </div>
         </th:block>
