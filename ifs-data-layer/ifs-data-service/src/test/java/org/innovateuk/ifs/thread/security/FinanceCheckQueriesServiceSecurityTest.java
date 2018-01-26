@@ -54,7 +54,7 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
                 null, null, false, null, null, null));
 
         assertAccessDenied(() -> classUnderTest.close(queryId), () -> {
-            verify(queryRules).onlyProjectFinanceUsersCanCloseQueries(isA(QueryResource.class), isNull(UserResource.class));
+            verify(queryRules).onlyProjectFinanceUsersCanCloseQueries(isA(QueryResource.class), isA(UserResource.class));
             verifyNoMoreInteractions(queryRules);
         });
     }
