@@ -56,22 +56,22 @@
                 <div class="alignright">
                     <label for="querySection">Query section</label>
                     <select id="querySection" onchange="IFS.core.filtering.with(this.options[this.selectedIndex].dataset)" class="form-control">
-                        <option data-elements-to-show=".queries-list .query" value="all">All</option>
-                        <option data-elements-to-hide=".queries-list .query" data-elements-to-show=".queries-list .viability-section" value="viability">Viability only</option>
-                        <option data-elements-to-hide=".queries-list .query" data-elements-to-show=".queries-list .eligibility-section" value="eligibility">Eligibility only</option>
+                        <option data-elements-to-show=".queries-filter-list .query" value="all">All</option>
+                        <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .viability-section" value="viability">Viability only</option>
+                        <option data-elements-to-hide=".queries-filter-list .query" data-elements-to-show=".queries-filter-list .eligibility-section" value="eligibility">Eligibility only</option>
                     </select>
                 </div>
             </fieldset>
         </div>
     </div>
 
-    <div class="collapsible" th:classappend="${model.isSingleQuery() ? 'collapsible-expanded' : ''}">
-        <th:block th:each="query : ${model.getQueries()}" th:with="querySection=${query.sectionType.name().toLowerCase()}" th:class="${'query ' + querySection+'-section'}">
-            <h2 class="heading-medium" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-internal-query-' + query.getId()}">
+    <div class="queries-filter-list collapsible" th:classappend="${model.isSingleQuery() ? 'collapsible-expanded' : ''}">
+        <th:block th:each="query : ${model.getQueries()}" th:with="querySection=${query.sectionType.name().toLowerCase()}">
+            <h2 class="heading-medium" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-internal-query-' + query.getId()}" th:classappend="${'query ' + querySection+'-section'}">
                 <th:block th:text="${query.title}">Query Thread Title</th:block>
                 <th:block th:if="${query.isClosed()}"><span class="status yes">Resolved</span></th:block>
             </h2>
-            <div class="collapsible-content">
+            <div class="collapsible-content" th:classappend="${'query ' + querySection+'-section'}">
                 <h3 class="no-margin">
                     <span class="heading-small">Section: </span>
                     <span th:text="${#strings.capitalize(querySection)}">Section title</span>
