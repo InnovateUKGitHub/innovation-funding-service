@@ -285,7 +285,7 @@ Partner invites a project manager
     And the user clicks the button/link    id=invite-project-manager
     Then the user should be redirected to the correct page    ${project_in_setup_page}
 
-The Partner resends the invite to the Project manager
+Lead Applicant resends the invite to the Project manager
     [Documentation]  IFS-2642
     [Tags]    HappyPath    Email
     When the user clicks resend but cancels
@@ -459,7 +459,7 @@ Partner invites a finance contact
     And the user clicks the button/link    id=invite-finance-contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
 
-The Partner resends the invite to the Finance contact
+Lead applicant resends the invite to the Finance contact
     [Documentation]  IFS-2642
     [Tags]    HappyPath    Email
     When the user clicks resend but cancels
