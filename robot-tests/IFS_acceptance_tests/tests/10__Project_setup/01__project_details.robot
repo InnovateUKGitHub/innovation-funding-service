@@ -288,8 +288,10 @@ Partner invites a project manager
 Lead Applicant resends the invite to the Project manager
     [Documentation]  IFS-2642
     [Tags]    HappyPath    Email
-    When the user clicks resend but cancels
-    Then the user resends an invite
+    When the user resends and clicks the button    Cancel
+    Then the user resends and clicks the button    Resend
+    #When the user clicks resend but cancels
+    #Then the user resends an invite
     [Teardown]  logout as user
 
 Invited project manager registration flow
@@ -462,8 +464,10 @@ Partner invites a finance contact
 Lead applicant resends the invite to the Finance contact
     [Documentation]  IFS-2642
     [Tags]    HappyPath    Email
-    When the user clicks resend but cancels
-    Then the user resends an invite
+    When the user resends and clicks the button    Cancel
+    Then the user resends and clicks the button    Resend
+    #When the user clicks resend but cancels
+    #Then the user resends an invite
     [Teardown]  logout as user
 
 Invited finance contact registration flow
@@ -704,12 +708,18 @@ the user accepts invitation and signs in
     the user should see the element               jQuery=h1:contains("Account verified")
     the user clicks the button/link               jQuery=.button:contains("Sign in")
 
-The user clicks Resend but cancels
-    the user clicks the button/link        jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
-    the user should see the element        jQuery=h2:contains("Resend invite to team member")
-    the user clicks the button/link        jQuery=button:contains("Cancel")
+The user resends and clicks the button
+    [Arguments]  ${Resend_OR_Cancel}
+    The user clicks the button/link    jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
+    The user should see the element    jQuery=h2:contains("Resend invite to team member")
+    The user clicks the button/link    jQuery=button:contains("${Resend_OR_Cancel}")
 
-The user Resends an invite
-    the user clicks the button/link        jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
-    the user should see the element        jQuery=h2:contains("Resend invite to team member")
-    the user clicks the button/link        jQuery=button:contains("Resend")
+#The user clicks Resend but cancels
+#    the user clicks the button/link        jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
+#    the user should see the element        jQuery=h2:contains("Resend invite to team member")
+#    the user clicks the button/link        jQuery=button:contains("Cancel")
+
+#The user Resends an invite
+#    the user clicks the button/link        jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
+#    the user should see the element        jQuery=h2:contains("Resend invite to team member")
+#    the user clicks the button/link        jQuery=button:contains("Resend")
