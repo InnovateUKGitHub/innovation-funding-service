@@ -64,7 +64,7 @@ Summary:Questions should show as complete
     [Tags]    HappyPath
     [Setup]    Go to    ${SERVER}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
     Given The user clicks the button/link    link=Intelligent Building
-    And the assessor adds score and feedback for every question   11
+    And the assessor adds score and feedback for every question   11   # 11 is the number of questions to iterate through
     When the user clicks the button/link    link=Review and complete your assessment
     Then the user should see the text in the element    jQuery=button:contains("Scope")    Complete
     :FOR  ${ELEMENT}    IN   @{programme_questions}
@@ -88,7 +88,7 @@ Summary:Feedback should show in each section
 
 Summary:Assessor can return to each question
     [Documentation]    INFUND-4648
-    :FOR  ${INDEX}  IN RANGE  0  11
+    :FOR  ${INDEX}  IN RANGE  0  11    # 11 is the number of assessed questions to iterate through
      \    the user should see the element    jQuery=#collapsible-${INDEX} a:contains("Return to this question in the application")
     When the user clicks the button/link    jQuery=#collapsible-1 a:contains("Return to this question in the application")
     Then the user should see the text in the page    What is the business opportunity that your project addresses?
