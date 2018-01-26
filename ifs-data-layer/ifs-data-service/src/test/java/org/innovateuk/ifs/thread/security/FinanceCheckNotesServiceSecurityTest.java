@@ -55,7 +55,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
                 null, null));
 
         assertAccessDenied(() -> classUnderTest.close(noteId), () -> {
-            verify(noteRules).onlyProjectFinanceUsersCanCloseNotes(isA(NoteResource.class), isNull(UserResource.class));
+            verify(noteRules).onlyProjectFinanceUsersCanCloseNotes(isA(NoteResource.class), isA(UserResource.class));
             verifyNoMoreInteractions(noteRules);
         });
     }

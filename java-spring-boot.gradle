@@ -18,6 +18,12 @@ jacocoTestReport {
 
 }
 
+test {
+    beforeTest { desc ->
+        println "Executing test ${desc.className}.${desc.name}"
+    }
+}
+
 dependencies {
     if (project.hasProperty("cloud") && project.cloud == "development") {
         compile 'de.codecentric:spring-boot-admin-starter-client:1.3.5'
@@ -41,6 +47,30 @@ dependencies {
     testCompile 'org.mockito:mockito-core'
     testCompile group: 'org.hamcrest', name: 'hamcrest-library'
 
+}
+
+// Workaround for https://github.com/spring-projects/spring-boot/issues/8308
+// Can reinstate excludeDevtools in the bootRepackage task in next release
+springBoot {
+    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+}
+
+bootRepackage {
+    mainClass = 'org.innovateuk.ifs.Application'
+    //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+
+}
+
+processResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
+}
+
+processTestResources {
+    filesMatching("*.properties") {
+        expand project.properties
+    }
 }
 
 dependencyManagement {

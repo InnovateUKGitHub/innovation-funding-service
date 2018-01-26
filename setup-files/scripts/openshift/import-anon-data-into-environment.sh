@@ -27,17 +27,17 @@ function checkVariables() {
     if [ -z "${DESTINATION_SYSTEM_MAINTENANCE_USER_UID}" ]; then echo "Set DESTINATION_SYSTEM_MAINTENANCE_USER_UID environment variable"; exit -1; fi
     if [ -z "${DUMP_PASS}" ];                               then echo "Set DUMP_PASS environment variable"; exit -1; fi
 
-    DUMP_DIR_PATH=${DUMP_DIR_PATH:-"/tmp/anonymised/"}
+    DUMP_DIR_PATH=${DUMP_DIR_PATH:-"/tmp/"}
     DUMP_DIR_NAME=${DUMP_DIR_NAME:-"anonymised"}
     DUMP_NAME=${DUMP_NAME:-"anonymised-dump.sql.gpg"}
     DB_PORT=${DB_DESTINATION_PORT:-3306}
 }
 
 function copyDumpToMysqlClientPod() {
-  echo "Copying dump to /tmp/${DUMP_DIR_NAME}/${DUMP_NAME} on mysql-client pod"
+  echo "Syncing local directory ${DUMP_DIR_PATH}/${DUMP_DIR_NAME} with directory /tmp/${DUMP_DIR_NAME} on mysql-client pod"
   oc rsh ${SVC_ACCOUNT_CLAUSE} mysql-client mkdir -p /tmp/${DUMP_DIR_NAME}
-  oc rsync ${SVC_ACCOUNT_CLAUSE} ${DUMP_DIR_NAME}/${DUMP_NAME} mysql-client:/tmp/
-  echo "Copied dump to /tmp/${DUMP_DIR_NAME}/${DUMP_NAME} on mysql-client pod"
+  oc rsync ${SVC_ACCOUNT_CLAUSE} ${DUMP_DIR_PATH}/${DUMP_DIR_NAME} mysql-client:/tmp/
+  echo "Synced local directory ${DUMP_DIR_PATH}/${DUMP_DIR_NAME} with directory /tmp/${DUMP_DIR_NAME} on mysql-client pod"
 }
 
 function importDump() {
