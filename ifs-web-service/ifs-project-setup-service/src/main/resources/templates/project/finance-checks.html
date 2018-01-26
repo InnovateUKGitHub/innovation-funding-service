@@ -58,7 +58,7 @@
                             <th:block th:text="${post.username}">Created by user</th:block>
                             <small>
                                 <th:block th:text="${#temporals.format(post.createdOn, 'd MMMM yyyy')}"/>
-                                <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'hh:mma'))}"/>
+                                <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'h:mma'))}"/>
                             </small>
                         </div>
                         <p data-md-to-html="" class="wysiwyg-styles" th:text="${post.body}"></p>
