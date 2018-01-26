@@ -15,7 +15,8 @@ Documentation
 ...               INFUND-7756 Project finance can post an update to an existing note
 ...
 ...               IFS-1882 Project Setup internal project dashboard: Query responses
-
+...
+...               IFS-2639 External queries redesign: expand/collapse & green CTA
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
@@ -225,15 +226,18 @@ Finance contact can view query
     And the user should see the element   jQuery=h2:contains("a viability query's title")
 
 Finance contact can view the project finance user's uploads
-    [Documentation]    INFUND-4843
+    [Documentation]  INFUND-4843, IFS-2639
     [Tags]
+    Given the user expands the section  an eligibility query's title
     When the user downloads the file  ${successful_applicant_credentials["email"]}  ${server}/project-setup/project/${getProjectId("${FUNDERS_PANEL_APPLICATION_1_TITLE}")}/finance-checks/attachment/4  ${DOWNLOAD_FOLDER}/${valid_pdf}
     Then remove the file from the operating system  testing.pdf
 
 Response to query server side validations
-    [Documentation]    INFUND-4843
+    [Documentation]  INFUND-4843, IFS-2639
     [Tags]
-    When the user clicks the button/link    jQuery=h2:contains("an eligibility query's title") ~ a:contains("Respond")
+    Given The user expands the section      an eligibility query's title
+    When the user clicks the button/link    jQuery=h2:contains("an eligibility query's title") + [id^="collapsible"] a[id="post-new-response"]
+    capture large screenshot
     And the user clicks the button/link     jQuery=.button:contains("Post response")
     Then the user should see a field error  This field cannot be left blank.
 #    TODO commmented due to IFS-2622
