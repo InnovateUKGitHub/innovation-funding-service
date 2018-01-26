@@ -31,9 +31,23 @@ IFS.core.collapsible = (function () {
     initCollapsibleHTML: function (el, stateless, expanded) {
       jQuery(el).children('h2,h3').each(function () {
         var inst = jQuery(this)
-        var id = 'collapsible-' + index   // create unique id for a11y relationship
-        // don't save state if we've asked it not to
-        var showExpanded = (!stateless && IFS.core.collapsible.hasLoadstateFromCookie(id)) ? IFS.core.collapsible.getLoadstateFromCookie(id) : expanded
+
+        // use provided id for a11y relationship, or create one if none is explicitly provided
+        var explicitId = inst.attr('data-collapsible-id')
+
+        var id = 0
+        var showExpanded = false
+
+        if (explicitId) {
+          id = explicitId
+
+          // don't save state if we've asked it not to
+          showExpanded = (!stateless && IFS.core.collapsible.hasLoadstateFromCookieById(id)) ? IFS.core.collapsible.getLoadstateFromCookieById(id) : expanded
+        } else {
+          id = 'collapsible-' + index
+
+          showExpanded = (!stateless && IFS.core.collapsible.hasLoadstateFromCookie(id)) ? IFS.core.collapsible.getLoadstateFromCookie(id) : expanded
+        }
 
         // wrap the content and make it focusable
         inst.nextUntil('h2,h3').wrapAll('<div id="' + id + '" aria-hidden="' + !showExpanded + '">')
@@ -51,8 +65,38 @@ IFS.core.collapsible = (function () {
       inst.attr('aria-expanded', state)
       panel.attr('aria-hidden', !state)
       if (!stateless) {
-        IFS.core.collapsible.setLoadStateInCookie(panel.attr('id'), state)
+        if (inst.parent().attr('data-collapsible-id')) {
+          IFS.core.collapsible.setLoadStateInCookieById(panel.attr('id'), state)
+        } else {
+          IFS.core.collapsible.setLoadStateInCookie(panel.attr('id'), state)
+        }
       }
+    },
+    getLoadstateFromCookieById: function (id) {
+      if (typeof (Cookies.getJSON('collapsibleStates')) !== 'undefined') {
+        var json = Cookies.getJSON('collapsibleStates')
+        if (typeof (json[id]) !== 'undefined') {
+          return json[id]
+        }
+      }
+      return false
+    },
+    hasLoadstateFromCookieById: function (id) {
+      if (typeof (Cookies.getJSON('collapsibleStates')) !== 'undefined') {
+        var json = Cookies.getJSON('collapsibleStates')
+        return typeof (json[id]) !== 'undefined'
+      }
+      return false
+    },
+    setLoadStateInCookieById: function (id, state) {
+      var json = {}
+      if (typeof (Cookies.getJSON('collapsibleStates')) !== 'undefined') {
+        json = Cookies.getJSON('collapsibleStates')
+      }
+
+      json[id] = state
+
+      Cookies.set('collapsibleStates', json, { expires: 0.05 }) // defined in days, 0.05 = little bit more than one hour
     },
     getLoadstateFromCookie: function (index) {
       if (typeof (Cookies.getJSON('collapsibleStates')) !== 'undefined') {
