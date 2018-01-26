@@ -252,7 +252,7 @@ Assign applications to panel
 Assign applicaitons to assessor upon acceting invite in panel
     [Documentation]   IFS-2549
     [Tags]
-    # When at least 1 assessor accpeted invite and confirm action is selected.
+    # When subsequently an assessor is invited, assign application without clicking on 'Confirm action'
     Given the user clicks the button/link     link=Invite assessors to attend
     And the user clicks the button/link       link=Invite
     When the user clicks the button/link      link=Review and send invites
@@ -263,7 +263,7 @@ Assign applicaitons to assessor upon acceting invite in panel
     And the user clicks the button/link       css=button[type="submit"]  # Confirm
 
 Assessors view of competition dashboard and applications in panel status
-    [Documentation]  IFS-1138  IFS-388
+    [Documentation]  IFS-1138  IFS-388   IFS-2549
     [Tags]
     Given Log in as a different user            ${panel_assessor_ben}  ${short_password}
     When the user clicks the button/link        jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
