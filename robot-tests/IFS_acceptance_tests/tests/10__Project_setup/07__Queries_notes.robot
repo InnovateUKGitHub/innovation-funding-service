@@ -24,8 +24,9 @@ Resource          PS_Common.robot
 *** Variables ***
 ${opens_in_new_window}    (opens in a new window)
 
-# TODO actually check the downlioading of the pdf files. In this suite is only checked that the link to the file is visible to the user.
+# TODO actually check the downloading of the pdf files. In this suite is only checked that the link to the file is visible to the user.
 # But no actual download is happening. This suite used to click all the links and in that way increading the amount of browser tabs open. This is now removed.
+# TODO IFS-2716
 
 *** Test Cases ***
 Queries section is linked from eligibility and this selects eligibility on the query dropdown
@@ -184,7 +185,9 @@ Query Section dropdown filters the queries displayed
     [Documentation]    INFUND-4840 INFUND-4844
     [Tags]
     When the user selects the option from the drop-down menu  viability  querySection
-    #Wait until keyword succeeds without screenshots  10   200ms  the user should see the element  css=.query.eligibility-section[aria=hidden="true"]
+    Then the user should not see the element  css=#post-new-response
+    # that means that the eligibility queries are not visible or any other.
+    # Tried to catch with .query.eligibility-section[aria=hidden="true"], but without success
 
 Finance contact receives an email when new query is posted
     [Documentation]    INFUND-4841
@@ -385,15 +388,14 @@ Project finance can re-upload the file to notes
 Project finance can view the file in notes
     [Documentation]    INFUND-4845
     [Tags]
-    Given the user should see the element    link=${valid_pdf} ${opens_in_new_window}
-    When the file has been scanned for viruses
-    Then the user should see the element    jQuery=button:contains("Save note")
+    Given the user should see the element  link=${valid_pdf} ${opens_in_new_window}
+    Then the user should see the element   jQuery=button:contains("Save note")
 
 Project finance can upload more than one file to notes
     [Documentation]    INFUND-4845
     [Tags]
-    Then the user uploads the file      name=attachment    ${valid_pdf}
-    And the user should see the element    jQuery=form li:nth-of-type(2) > a:contains("${valid_pdf}")
+    When the user uploads the file        name=attachment  ${valid_pdf}
+    Then the user should see the element  jQuery=form li:nth-of-type(2) > a:contains("${valid_pdf}")
 
 Project finance can still view both files in notes
     [Documentation]    INFUND-4845
