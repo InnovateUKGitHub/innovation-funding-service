@@ -1,11 +1,11 @@
 -- Create the `terms_and_conditions`
 INSERT INTO terms_and_conditions (name, template, version) VALUES
-  ('Prince\'s Trust Terms and Conditions', 'princes-trust-terms-and-conditions', '1');
+  ('The Prince\'s Trust Terms and Conditions', 'the-princes-trust-terms-and-conditions', '1');
 SET @terms_and_conditions_id = LAST_INSERT_ID();
 
 -- Create the `competition_type`
 INSERT INTO `competition_type` (`name`, `state_aid`, `active`, `template_competition_id`)
-VALUES ('Prince\'s Trust', 1, 1, NULL);
+VALUES ('The Prince\'s Trust', 1, 1, NULL);
 SET @competition_type_id = LAST_INSERT_ID();
 
 
@@ -15,7 +15,7 @@ SET @word_count_validator = (SELECT `id` FROM form_validator WHERE `clazz_name` 
 -- Create `competition` that acts as template
 INSERT INTO `competition` (
   `name`,`max_research_ratio`,`academic_grant_percentage`,`budget_code`,`code`,`paf_code`,`executive_user_id`,`lead_technologist_user_id`,`competition_type_id`,`activity_code`,`innovate_budget`,`multi_stream`,`collaboration_level`,`stream_name`,`resubmission`,`setup_complete`,`full_application_finance`,`assessor_count`,`assessor_pay`,`template`,`use_resubmission_question`,`terms_and_conditions_id`)
-VALUES ('Template for the Prince\'s Trust competition type', 0, 100, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, 0, 0.00, 1, 1, @terms_and_conditions_id);
+VALUES ('Template for The Prince\'s Trust competition type', 0, 100, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, 0, 0.00, 1, 1, @terms_and_conditions_id);
 SET @competition_id = LAST_INSERT_ID();
 UPDATE competition_type SET template_competition_id = @competition_id WHERE id = @competition_type_id;
 

@@ -50,7 +50,7 @@ public class CompetitionTypeControllerIntegrationTest extends BaseControllerInte
                         "Expression of interest",
                         "Advanced Propulsion Centre",
                         "Aerospace Technology Institute",
-                        "Prince's Trust"
+                        "The Prince's Trust"
                 );
     }
 

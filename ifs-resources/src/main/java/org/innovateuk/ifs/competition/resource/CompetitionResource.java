@@ -28,7 +28,7 @@ public class CompetitionResource {
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
     public static final ImmutableSet<String> NON_FINANCE_TYPES = ImmutableSet.of(
             "Expression of interest",
-            "Prince's Trust"
+            "The Prince's Trust"
     );
 
     private Long id;
