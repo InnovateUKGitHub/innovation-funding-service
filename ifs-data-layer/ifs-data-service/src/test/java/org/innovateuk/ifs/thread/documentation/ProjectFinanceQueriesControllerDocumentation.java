@@ -102,7 +102,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("project/finance/queries/{method-name}",
-                        pathParameters(parameterWithName("threadId").description("Id of the Query which needs to be closed."))));
+                        pathParameters(parameterWithName("threadId").description("Id of the Query to which the Post is to be added to."))));
 
         verify(financeCheckQueriesService).close(threadId);
     }
