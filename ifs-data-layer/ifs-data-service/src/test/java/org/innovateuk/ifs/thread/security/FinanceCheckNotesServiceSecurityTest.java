@@ -48,6 +48,19 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
+    public void test_close() throws Exception {
+
+        Long noteId = 3L;
+        when(noteLookupStrategy.findById(noteId)).thenReturn(new NoteResource(noteId, null, new ArrayList<PostResource>(),
+                null, null));
+
+        assertAccessDenied(() -> classUnderTest.close(noteId), () -> {
+            verify(noteRules).onlyProjectFinanceUsersCanCloseNotes(isA(NoteResource.class), isNull(UserResource.class));
+            verifyNoMoreInteractions(noteRules);
+        });
+    }
+
+    @Test
     public void test_findOne() throws Exception {
         setLoggedInUser(null);
 
@@ -80,7 +93,6 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
         });
     }
 
-
     public static class TestFinanceCheckNotesService implements FinanceCheckNotesService {
 
         @Override
@@ -99,6 +111,11 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Long> create(NoteResource NoteResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> close(Long noteId) {
             return null;
         }
 

@@ -75,6 +75,12 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
+    public void testThatOnlyProjectFinanceUsersCanCloseNotes() throws Exception {
+        assertTrue(rules.onlyProjectFinanceUsersCanCloseNotes(noteResource, projectFinanceUserOne));
+        assertFalse(rules.onlyProjectFinanceUsersCanCloseNotes(noteResource, intruder));
+    }
+
+    @Test
     public void testThatOnlyProjectFinanceUsersViewNotes() {
         assertTrue(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, projectFinanceUserOne));
         assertTrue(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, projectFinanceUserTwo));

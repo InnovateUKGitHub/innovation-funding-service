@@ -47,6 +47,19 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
     }
 
     @Test
+    public void test_close() throws Exception {
+
+        Long queryId = 3L;
+        when(queryLookupStrategy.findById(queryId)).thenReturn(new QueryResource(queryId, null, new ArrayList<PostResource>(),
+                null, null, false, null, null, null));
+
+        assertAccessDenied(() -> classUnderTest.close(queryId), () -> {
+            verify(queryRules).onlyProjectFinanceUsersCanCloseQueries(isA(QueryResource.class), isNull(UserResource.class));
+            verifyNoMoreInteractions(queryRules);
+        });
+    }
+
+    @Test
     public void test_findOne() throws Exception {
         setLoggedInUser(null);
 
@@ -104,6 +117,11 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
 
         @Override
         public ServiceResult<Long> create(QueryResource QueryResource) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> close(Long queryId) {
             return null;
         }
 
