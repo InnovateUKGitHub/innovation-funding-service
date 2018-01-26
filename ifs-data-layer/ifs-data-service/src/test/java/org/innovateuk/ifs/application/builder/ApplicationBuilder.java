@@ -95,8 +95,8 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
         return withArray((fundingEmailDate, application) -> application.setManageFundingEmailDate(fundingEmailDate), manageFundingEmailDates);
     }
 
-    public ApplicationBuilder withAssessmentPanelStatus(Boolean... inAssessmentPanel) {
-        return withArray((assessmentPanelStatus, application) -> application.setInAssessmentPanel(assessmentPanelStatus), inAssessmentPanel);
+    public ApplicationBuilder withAssessmentReviewPanelStatus(Boolean... inAssessmentReviewPanel) {
+        return withArray((assessmentPanelStatus, application) -> application.setInAssessmentReviewPanel(assessmentPanelStatus), inAssessmentReviewPanel);
     }
 
     @Override
@@ -123,7 +123,10 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     public ApplicationBuilder withResearchCategory(ResearchCategory... researchCategories) {
         return withArray((researchCategory, application) -> application.setResearchCategory(researchCategory), researchCategories);
     }
-    public ApplicationBuilder withInAssessmentPanel(Boolean... inPanels) {
-        return withArray((inPanel, application) -> application.setInAssessmentPanel(inPanel), inPanels);
+    public ApplicationBuilder withInAssessmentReviewPanel(Boolean... inPanels) {
+        return withArray((inPanel, application) -> application.setInAssessmentReviewPanel(inPanel), inPanels);
+    }
+    public ApplicationBuilder withInAssessmentInterviewPanel(Boolean... inPanels) {
+        return withArray((inPanel, application) -> application.setInAssessmentReviewPanel(inPanel), inPanels);
     }
 }

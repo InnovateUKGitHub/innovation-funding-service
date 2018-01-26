@@ -104,7 +104,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     @Override
     public ServiceResult<Void> assignApplicationToPanel(long applicationId) {
         return getApplication(applicationId)
-                .andOnSuccessReturnVoid(application -> application.setInAssessmentPanel(true));
+                .andOnSuccessReturnVoid(application -> application.setInAssessmentReviewPanel(true));
     }
 
     @Override
@@ -115,7 +115,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
     }
 
     private ServiceResult<Application> unassignApplicationFromPanel(Application application) {
-        application.setInAssessmentPanel(false);
+        application.setInAssessmentReviewPanel(false);
         return serviceSuccess(application);
     }
 
@@ -208,7 +208,7 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     private List<Application> getAllApplicationsOnPanel(long competitionId) {
         return applicationRepository
-                .findByCompetitionIdAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
+                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
     }
 
     private ServiceResult<Void> notifyAllCreated(long competitionId) {

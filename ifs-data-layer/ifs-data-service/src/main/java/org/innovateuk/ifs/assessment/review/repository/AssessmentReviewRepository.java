@@ -25,7 +25,7 @@ public interface AssessmentReviewRepository extends ProcessRepository<Assessment
             "FROM Application a " +
             "INNER JOIN CompetitionAssessmentParticipant cap ON cap.competition = a.competition " +
             "WHERE " +
-            "  a.competition.id = :competitionId AND a.inAssessmentPanel=true " +
+            "  a.competition.id = :competitionId AND a.inAssessmentReviewPanel=true " +
             "AND " +
             "  cap.status = org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED AND " +
             "  cap.role=org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.PANEL_ASSESSOR AND " +

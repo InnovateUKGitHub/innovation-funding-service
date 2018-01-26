@@ -21,7 +21,7 @@ public enum AssessmentReviewState implements ProcessState {
 
     private final State backingState;
 
-    private static final Map<String, AssessmentReviewState> assessmentPanelApplicationInviteStateMap =
+    private static final Map<String, AssessmentReviewState> assessmentReviewStateMap =
             Stream.of(values()).collect(toMap(AssessmentReviewState::getStateName, identity()));
 
     // creates the enum with the chosen type.
@@ -40,11 +40,11 @@ public enum AssessmentReviewState implements ProcessState {
     }
 
     public static Set<String> getStates() {
-        return assessmentPanelApplicationInviteStateMap.keySet();
+        return assessmentReviewStateMap.keySet();
     }
 
     public static AssessmentReviewState getByState(String state) {
-        return assessmentPanelApplicationInviteStateMap.get(state);
+        return assessmentReviewStateMap.get(state);
     }
 
     public static AssessmentReviewState fromState(State state) {

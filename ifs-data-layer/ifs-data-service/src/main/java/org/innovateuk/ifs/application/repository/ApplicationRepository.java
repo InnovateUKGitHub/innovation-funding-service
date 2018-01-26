@@ -34,7 +34,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 			"AND (:funding IS NULL " +
 			"	OR (str(:funding) = 'UNDECIDED' AND a.fundingDecision IS NULL)" +
 			"	OR (a.fundingDecision = :funding)) " +
-			"AND (:inAssessmentPanel IS NULL OR a.inAssessmentPanel = :inAssessmentPanel)";
+			"AND (:inAssessmentReviewPanel IS NULL OR a.inAssessmentReviewPanel = :inAssessmentReviewPanel)";
 
 	String COMP_FUNDING_FILTER = "SELECT a FROM Application a WHERE " +
 			"a.competition.id = :compId " +
@@ -57,7 +57,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 																							@Param("states") Collection<State> applicationStates,
 																							@Param("filter") String filter,
 																							@Param("funding") FundingDecisionStatus funding,
-																							@Param("inAssessmentPanel") Boolean inAssessmentPanel,
+																							@Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel,
 																							Pageable pageable);
 
 	@Query(COMP_STATUS_FILTER)
@@ -65,7 +65,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 																							@Param("states") Collection<State> applicationStates,
 																							@Param("filter") String filter,
 																							@Param("funding") FundingDecisionStatus funding,
-																							@Param("inAssessmentPanel") Boolean inAssessmentPanel);
+																							@Param("inAssessmentReviewPanel") Boolean inAssessmentReviewPanel);
 
 	@Query(COMP_NOT_STATUS_FILTER)
 	Page<Application> findByCompetitionIdAndApplicationProcessActivityStateStateNotIn(@Param("compId") long competitionId,
@@ -111,5 +111,5 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	int countByProcessRolesUserIdAndCompetitionId(long userId, long competitionId);
 
-	List<Application> findByCompetitionIdAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(long competitionId, State applicationState);
+	List<Application> findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(long competitionId, State applicationState);
 }

@@ -247,7 +247,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .build();
         applicationRepository.save(application);
 
@@ -285,7 +285,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .build();
         applicationRepository.save(application);
 
@@ -339,7 +339,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .build();
         applicationRepository.save(application);
 

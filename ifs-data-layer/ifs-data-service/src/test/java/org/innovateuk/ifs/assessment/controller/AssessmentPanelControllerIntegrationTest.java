@@ -108,26 +108,26 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
     public void assignApplication() throws Exception {
         application = newApplication()
                 .withId(applicationId)
-                .withAssessmentPanelStatus(false)
+                .withAssessmentReviewPanelStatus(false)
                 .build();
         applicationRepository.save(application);
         RestResult<Void> result = controller.assignApplication(application.getId());
         assertTrue(result.isSuccess());
         application = applicationRepository.findOne(applicationId);
-        assertTrue(application.isInAssessmentPanel());
+        assertTrue(application.isInAssessmentReviewPanel());
     }
 
     @Test
     public void unAssignApplication() throws Exception {
         application = newApplication()
                 .withId(applicationId)
-                .withAssessmentPanelStatus(true)
+                .withAssessmentReviewPanelStatus(true)
                 .build();
         applicationRepository.save(application);
         RestResult<Void> result = controller.unAssignApplication(application.getId());
         assertTrue(result.isSuccess());
         application = applicationRepository.findOne(applicationId);
-        assertFalse(application.isInAssessmentPanel());
+        assertFalse(application.isInAssessmentReviewPanel());
     }
 
     @Test
@@ -173,7 +173,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
@@ -228,7 +228,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
@@ -281,7 +281,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
@@ -351,7 +351,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
@@ -422,7 +422,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
@@ -468,7 +468,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
@@ -508,7 +508,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);
@@ -548,7 +548,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
         Application application = newApplication()
                 .with(id(null))
                 .withCompetition(competition)
-                .withInAssessmentPanel(true)
+                .withInAssessmentReviewPanel(true)
                 .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION, State.SUBMITTED))
                 .build();
         applicationRepository.save(application);

@@ -84,7 +84,9 @@ public class Application implements ProcessActivity {
 
     private Boolean stateAidAgreed;
 
-    private boolean inAssessmentPanel;
+    private boolean inAssessmentReviewPanel;
+
+    private boolean inAssessmentInterviewPanel;
 
     public Application() {
     }
@@ -365,11 +367,19 @@ public class Application implements ProcessActivity {
                 (fundingDecision != null && fundingDecision.equals(FundingDecisionStatus.FUNDED)));
     }
 
-    public boolean isInAssessmentPanel() {
-        return inAssessmentPanel;
+    public boolean isInAssessmentReviewPanel() {
+        return inAssessmentReviewPanel;
     }
 
-    public void setInAssessmentPanel(boolean inAssessmentPanel) {
-        this.inAssessmentPanel = inAssessmentPanel;
+    public void setInAssessmentReviewPanel(boolean inAssessmentReviewPanel) {
+        this.inAssessmentReviewPanel = inAssessmentReviewPanel;
+    }
+
+    public boolean isInAssessmentInterviewPanel() {
+        return inAssessmentInterviewPanel;
+    }
+
+    public void setInAssessmentInterviewPanel(boolean inAssessmentInterviewPanel) {
+        this.inAssessmentInterviewPanel = inAssessmentInterviewPanel;
     }
 }

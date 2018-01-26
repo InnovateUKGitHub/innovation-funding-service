@@ -76,7 +76,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         ServiceResult<Void> result = service.assignApplicationToPanel(applicationId);
         assertTrue(result.isSuccess());
-        assertTrue(application.isInAssessmentPanel());
+        assertTrue(application.isInAssessmentReviewPanel());
 
         verify(applicationRepositoryMock).findOne(applicationId);
         verifyNoMoreInteractions(applicationRepositoryMock);
@@ -91,7 +91,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         ServiceResult<Void> result = service.unassignApplicationFromPanel(applicationId);
         assertTrue(result.isSuccess());
-        assertFalse(application.isInAssessmentPanel());
+        assertFalse(application.isInAssessmentReviewPanel());
 
         verify(applicationRepositoryMock).findOne(applicationId);
         verify(assessmentReviewRepositoryMock).findByTargetIdAndActivityStateStateNot(applicationId, State.WITHDRAWN);
@@ -109,7 +109,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         ServiceResult<Void> result = service.unassignApplicationFromPanel(applicationId);
         assertTrue(result.isSuccess());
-        assertFalse(application.isInAssessmentPanel());
+        assertFalse(application.isInAssessmentReviewPanel());
 
         assessmentReviews.forEach(a -> assertEquals(State.WITHDRAWN, a.getActivityState().getBackingState()));
 
@@ -157,7 +157,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED)))
                 .thenReturn(assessmentPanelParticipants);
         when(applicationRepositoryMock
-                .findByCompetitionIdAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED))
+                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED))
                 .thenReturn(applications);
 
         when(assessmentReviewRepositoryMock.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor, application, State.WITHDRAWN))
@@ -194,7 +194,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         inOrder.verify(assessmentPanelParticipantRepositoryMock)
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));
         inOrder.verify(applicationRepositoryMock)
-                .findByCompetitionIdAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
+                .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
         inOrder.verify(assessmentReviewRepositoryMock)
                 .existsByParticipantUserAndTargetAndActivityStateStateNot(assessor, applications.get(0), (State.WITHDRAWN));
         inOrder.verify(processRoleRepositoryMock).save(isA(ProcessRole.class));
