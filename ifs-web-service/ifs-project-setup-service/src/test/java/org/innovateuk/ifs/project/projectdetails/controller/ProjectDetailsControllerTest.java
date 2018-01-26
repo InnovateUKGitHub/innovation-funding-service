@@ -6,6 +6,7 @@ import org.innovateuk.ifs.address.resource.AddressTypeResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.invite.builder.ProjectInviteResourceBuilder;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.organisation.resource.OrganisationAddressResource;
@@ -67,10 +68,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<ProjectDetailsController> {
-    private static final String SAVE_FC = "save_fc";
-    private static final String INVITE_FC = "invite_fc";
-    private static final String SAVE_PM = "save_pm";
-    private static final String INVITE_PM = "invite_pm";
+    private static final String SAVE_FC = "save-fc";
+    private static final String INVITE_FC = "invite-fc";
+    private static final String SAVE_PM = "save-pm";
+    private static final String INVITE_PM = "invite-pm";
+    private static final String RESEND_FC_INVITE = "resend-fc-invite";
+    private static final String RESEND_PM_INVITE = "resend-pm-invite";
 
     @Mock
     SetupStatusViewModelPopulator setupStatusViewModelPopulatorMock;
@@ -811,6 +814,59 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         SelectFinanceContactViewModel model = (SelectFinanceContactViewModel) result.getModelAndView().getModel().get("model");
 
         assertTrue(model.getInvitedUsers().isEmpty());
+    }
+
+    @Test
+    public void testFinanceContactResend() throws Exception {
+        long projectId = 4L;
+        long organisationId = 21L;
+        long inviteId = 3L;
+
+        String invitedUserName = "test";
+        String invitedUserEmail = "test@test.com";
+
+        OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
+
+        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(inviteId)
+                .withProject(projectId).withNames("exist test", invitedUserName)
+                .withEmails("existing@test.com", invitedUserEmail)
+                .withOrganisation(organisationId)
+                .withStatus(OPENED)
+                .withLeadOrganisation(leadOrganisation.getId()).build(1);
+
+
+	    when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+	    mockMvc.perform(post("/project/{id}/details/finance-contact", projectId)
+                .param(RESEND_FC_INVITE, "3")
+                .param("organisation", "21"))
+                .andExpect(status().is3xxRedirection());
+	    verify(projectDetailsService).getInvitesByProject(projectId);
+    }
+
+    @Test
+    public void testProjectManagerResend() throws Exception {
+        long projectId = 4L;
+        long organisationId = 21L;
+        long inviteId = 12L;
+
+        String invitedUserName = "test";
+        String invitedUserEmail = "test@test.com";
+
+        OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
+
+        List<InviteProjectResource> existingInvites = newInviteProjectResource().withId(inviteId)
+                .withProject(projectId).withNames("exist test", invitedUserName)
+                .withEmails("existing@test.com", invitedUserEmail)
+                .withOrganisation(organisationId)
+                .withStatus(OPENED)
+                .withLeadOrganisation(leadOrganisation.getId()).build(1);
+
+
+        when(projectDetailsService.getInvitesByProject(projectId)).thenReturn(serviceSuccess(existingInvites));
+        mockMvc.perform(post("/project/{id}/details/project-manager", projectId)
+                .param(RESEND_PM_INVITE, "12"))
+                .andExpect(status().is3xxRedirection());
+        verify(projectDetailsService).getInvitesByProject(projectId);
     }
 
     @Test
