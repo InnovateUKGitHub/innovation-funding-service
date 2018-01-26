@@ -91,7 +91,7 @@ public class QueryTest {
         ZonedDateTime closedDateWithTolerance = closedDate.plus(50, ChronoUnit.MILLIS);
 
         ZonedDateTime now = ZonedDateTime.now();
-        assertTrue(closedDateWithTolerance.isAfter(now) && (closedDate.isEqual(now) || closedDate.isBefore(now)));
+        assertTrue(closedDateWithTolerance.isAfter(now) && !closedDate.isAfter(now));
     }
 
     private void addPostWithUserHavingRole(UserRoleType role) {
