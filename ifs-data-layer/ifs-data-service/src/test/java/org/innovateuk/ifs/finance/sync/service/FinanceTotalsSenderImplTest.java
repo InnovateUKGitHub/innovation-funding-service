@@ -9,6 +9,7 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
+import org.innovateuk.ifs.finance.resource.sync.FinanceType;
 import org.innovateuk.ifs.finance.sync.mapper.FinanceCostTotalResourceMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,7 +69,11 @@ public class FinanceTotalsSenderImplTest {
                 .build(1);
 
 
-        List<FinanceCostTotalResource> expectedFinanceCostTotalResource = newFinanceCostTotalResource().build(1);
+        List<FinanceCostTotalResource> expectedFinanceCostTotalResource = newFinanceCostTotalResource()
+                .withName(financeRowType.getType())
+                .withFinanceId(1L)
+                .withTotal(new BigDecimal(10000))
+                .withType(FinanceType.APPLICATION).build(1);
 
         when(messageQueueServiceStub.sendFinanceTotals(any())).thenReturn(ServiceResult.serviceSuccess());
         when(applicationFinanceHandler.getApplicationFinances(applicationId)).thenReturn(applicationFinanceResource);
@@ -95,7 +101,9 @@ public class FinanceTotalsSenderImplTest {
                 .withFinanceOrganisationDetails(costs)
                 .build(1);
 
-        List<FinanceCostTotalResource> expectedFinanceCostTotalResource = newFinanceCostTotalResource().build(1);
+        List<FinanceCostTotalResource> expectedFinanceCostTotalResource = newFinanceCostTotalResource()
+                .withName(financeRowType.getType())
+                .build(1);
 
         when(applicationService.getApplicationsByCompetitionIdAndState(any(), any())).thenReturn(
                 ServiceResult.serviceSuccess(
@@ -128,13 +136,15 @@ public class FinanceTotalsSenderImplTest {
                 .withFinanceOrganisationDetails(costs)
                 .build(1);
 
-        List<FinanceCostTotalResource> expectedFinanceCostTotalResource = newFinanceCostTotalResource().build(1);
+        List<FinanceCostTotalResource> expectedFinanceCostTotalResource = newFinanceCostTotalResource()
+                .withName(financeRowType.getType())
+                .build(1);
 
         when(applicationService.getApplicationsByState(any())).thenReturn(ServiceResult.serviceSuccess(applicationsComp1));
 
         when(applicationService.getApplicationsByCompetitionIdAndState(1L, ApplicationState.wasSubmittedStates())).thenReturn(
                 ServiceResult.serviceSuccess(
-                        applicationsComp2
+                        applicationsComp1
                 ));
 
         when(messageQueueServiceStub.sendFinanceTotals(any())).thenReturn(ServiceResult.serviceSuccess());

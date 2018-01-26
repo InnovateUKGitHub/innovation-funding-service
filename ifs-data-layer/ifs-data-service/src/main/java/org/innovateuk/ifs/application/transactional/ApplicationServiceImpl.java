@@ -396,10 +396,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 return serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN);
         }
 
-        if(ApplicationState.SUBMITTED.equals(state)) {
-            financeTotalsSender.sendFinanceTotalsForApplication(id);
-        }
-
         return find(application(id)).andOnSuccess((application) -> {
             applicationWorkflowHandler.notifyFromApplicationState(application, state);
             applicationRepository.save(application);
