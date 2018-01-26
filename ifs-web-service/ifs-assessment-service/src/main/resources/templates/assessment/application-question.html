@@ -65,8 +65,7 @@
                         <th:block th:if="${model.questionNumber != null}" th:text="${model.questionNumber} + '. '" />
                         <th:block th:text="${model.questionName}"  />
                     </h2>
-
-                    <p th:text="${model.applicantResponse}" />
+                    <p th:text="${model.applicantResponse}" data-md-to-html="" class="wysiwyg-styles" />
                 </div>
             </th:block>
             <input type="hidden" id="cacheTest" value="" />

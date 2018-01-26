@@ -393,6 +393,5 @@ moving competition to Project Setup
 
 The project finance user is able to download the Overheads file
     [Arguments]   ${ProjectID}  ${organisationId}
-    the user should see the element               jQuery=a:contains("${excel_file}")
     the user downloads the file                   ${internal_finance_credentials["email"]}  ${server}/project-setup-management/project/${ProjectID}/finance-check/organisation/${organisationId}/eligibility  ${DOWNLOAD_FOLDER}/${excel_file}
     remove the file from the operating system     ${excel_file}
