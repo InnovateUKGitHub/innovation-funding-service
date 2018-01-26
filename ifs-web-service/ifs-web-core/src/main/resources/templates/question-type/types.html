@@ -53,12 +53,15 @@
 
         </div>
 
-        <label class="form-label form-label-bold" th:for="formInput[__${formInput.id}__]" th:id="'form-label-'+${formInput.id}">
+        <label class="form-label form-label-bold"
+               th:for="formInput[__${formInput.id}__]"
+               th:id="'form-label-'+${formInput.id}"
+               th:unless="${question.name == 'Project summary'} or ${question.name == 'Public description'}">
             <th:block th:if="${model.closed}">
-                <span class="heading-medium" th:if="${question.name}" th:text="${question.name}" />
+                <span class="heading-small" th:if="${question.name}" th:text="${question.name}" />
             </th:block>
             <th:block th:unless="${model.closed}">
-              <span class="heading-medium" th:if="${question.name}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
+              <span class="heading-small" th:if="${question.name}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
               <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.description})" />
             </th:block>
             <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />

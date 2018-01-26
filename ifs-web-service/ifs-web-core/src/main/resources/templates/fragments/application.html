@@ -23,36 +23,33 @@
                  th:with="formInputIndex=(${status.index}), hideDetails=${hideDetails}, summary=true, readonly=true, appIsClosed=${!(currentApplication.isOpen() and isApplicant)}, response=(${responses.get(formInput.getId())}), questionAssignee=(${questionAssignees.containsKey(question.getId()) ? questionAssignees.get(question.getId()) : null})"
                  th:id="'form-input-'+${formInput.getId()}">
 
-
                 <th:block th:if="${formInput.type.displayableQuestionType && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FINANCE}">
                     <div th:replace="question-type/types :: ${formInput.type.nameLower} (${formInputViewModels.get(formInput.id)})" />
 
                     <th:block th:if="${question.questionNumber!=null && formInput.type != T(org.innovateuk.ifs.form.resource.FormInputType).FILEUPLOAD}">
-                        <div th:if="!${#lists.isEmpty(feedback)}">
-                            <ul>
-                                <li th:each="item : ${feedback}">
-                                    <div th:if="${formInput.getQuestion()} == ${item.question}">
-                                        <div class="column-half" style="padding: 0 0px;">
+                        <th:block th:if="!${#lists.isEmpty(feedback)}">
+                            <th:block th:each="item : ${feedback}">
+                                <div th:if="${formInput.getQuestion()} == ${item.question}" class="clear-floats">
+                                    <div class="grid-row">
+                                        <div class="column-half">
                                             <h3 class="heading-small">Feedback</h3>
                                         </div>
-                                        <div class="column-half alignright heading-small" style="padding: 0 0px;">
-                                            <ul>
-                                                <li th:each="score : ${score}">
-                                                    <div th:if="${formInput.getQuestion()} == ${score.question}">
-                                                        Score <span th:text="${score.value}">Feedback score</span>/10
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="grid-row">
-                                            <div class="column-one">
-                                                <p th:text="${item.value}">Feedback text</p>
-                                            </div>
+                                        <div class="column-half alignright heading-small">
+                                            <th:block th:each="score : ${score}">
+                                                <th:block th:if="${formInput.getQuestion()} == ${score.question}">
+                                                    Score <span th:text="${score.value}">Feedback score</span>/10
+                                                </th:block>
+                                            </th:block>
                                         </div>
                                     </div>
-                                </li>
-                            </ul>
-                        </div>
+                                    <div class="grid-row">
+                                        <div class="column-one">
+                                            <p th:text="${item.value}">Feedback text</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </th:block>
+                        </th:block>
                     </th:block>
 
                 </th:block>
