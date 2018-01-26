@@ -67,7 +67,7 @@
 
     <div class="collapsible" th:classappend="${model.isSingleQuery() ? 'collapsible-expanded' : ''}">
         <th:block th:each="query : ${model.getQueries()}" th:with="querySection=${query.sectionType.name().toLowerCase()}" th:class="${'query ' + querySection+'-section'}">
-            <h2 class="heading-medium" th:id="${'title-query-' + query.id}">
+            <h2 class="heading-medium" th:id="${'title-query-' + query.id}" th:attr="data-collapsible-id=${'finance-checks-internal-query-' + query.getId()}">
                 <th:block th:text="${query.title}">Query Thread Title</th:block>
                 <th:block th:if="${query.isClosed()}"><span class="status yes">Resolved</span></th:block>
             </h2>
