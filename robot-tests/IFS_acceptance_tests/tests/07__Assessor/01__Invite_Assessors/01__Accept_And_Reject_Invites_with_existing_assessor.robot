@@ -143,7 +143,7 @@ Upcoming competition should be visible
 The assessment period starts the comp moves to the comp for assessment
     [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
-    Given the assessment start period changes in the db in the past
+    Given the assessment start period changes in the db in the past     ${UPCOMING_COMPETITION_TO_ASSESS_ID}
     Then the user should not see the element   jQuery=h2:contains("Upcoming competitions to assess")
     [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${UPCOMING_COMPETITION_TO_ASSESS_ID}' and type IN ('OPEN_DATE', 'SUBMISSION_DATE', 'ASSESSORS_NOTIFIED');
 

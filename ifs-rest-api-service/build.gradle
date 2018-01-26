@@ -36,16 +36,3 @@ task client(type: Jar) {
         exclude "org/innovateuk/ifs/Application.class"
     }
 }
-
-//noinspection GroovyMissingReturnStatement
-processResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}
-
-processTestResources {
-    filesMatching("*.properties") {
-        expand project.properties
-    }
-}

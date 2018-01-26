@@ -7,7 +7,7 @@ import org.innovateuk.ifs.application.workflow.actions.SendFinanceTotalsAction;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.config.EnableStateMachine;
+import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
 import org.springframework.statemachine.config.builders.StateMachineStateConfigurer;
@@ -22,7 +22,7 @@ import static java.util.Arrays.asList;
  * transitions through an Application's lifecycle.
  */
 @Configuration
-@EnableStateMachine(name = "applicationProcessStateMachine")
+@EnableStateMachineFactory(name = "applicationProcessStateMachineFactory")
 public class ApplicationWorkflow extends StateMachineConfigurerAdapter<ApplicationState, ApplicationEvent> {
 
     @Autowired
