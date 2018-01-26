@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.client.HttpStatusCodeException;
 
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.fromException;
@@ -102,7 +102,12 @@ public abstract class AbstractInternalRestTemplateAdaptor extends AbstractRestTe
 
     // Asynchronous public calls
     @RestCacheResult
-    public <T> Future<RestResult<T>> getWithRestResultAsyc(String path, Class<T> returnType) {
+    public <T> CompletableFuture<RestResult<T>> getWithRestResultAsyc(String path, Class<T> returnType) {
+        return exchangeWithRestResultAsync(path, GET, returnType);
+    }
+
+    @RestCacheResult
+    public <T> CompletableFuture<RestResult<T>> getWithRestResultAsyc(String path, ParameterizedTypeReference<T> returnType) {
         return exchangeWithRestResultAsync(path, GET, returnType);
     }
 
@@ -144,19 +149,31 @@ public abstract class AbstractInternalRestTemplateAdaptor extends AbstractRestTe
     }
 
     // Asynchronous private calls
-    private <T> Future<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, Class<T> returnType) {
+    private <T> CompletableFuture<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, Class<T> returnType) {
         return exchangeWithRestResultAsync(path, method, returnType, OK);
     }
 
-    private <T> Future<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+    private <T> CompletableFuture<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, ParameterizedTypeReference<T> returnType) {
+        return exchangeWithRestResultAsync(path, method, returnType, OK);
+    }
+
+    private <T> CompletableFuture<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         return exchangeWithRestResultAsync(() -> getAsyncRestTemplate().exchange(path, method, jsonEntity(null), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
 
-    private <T> Future<RestResult<T>> exchangeWithRestResultAsync(Supplier<ListenableFuture<ResponseEntity<T>>> exchangeFn, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
-        Future<ResponseEntity<T>> raw = withEmptyCallback(exchangeFn.get());
-        return new FutureAdapterWithExceptionHandling<>(raw,
+    private <T> CompletableFuture<RestResult<T>> exchangeWithRestResultAsync(String path, HttpMethod method, ParameterizedTypeReference<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+        return exchangeWithRestResultAsync(() -> getAsyncRestTemplate().exchange(path, method, jsonEntity(null), returnType), expectedSuccessCode, otherExpectedStatusCodes);
+    }
+
+    private <T> CompletableFuture<RestResult<T>> exchangeWithRestResultAsync(Supplier<ListenableFuture<ResponseEntity<T>>> exchangeFn, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+
+        ListenableFuture<ResponseEntity<T>> raw = withEmptyCallback(exchangeFn.get());
+
+        ListenableFuture<RestResult<T>> listenableFuture = new FutureAdapterWithExceptionHandling<>(raw,
                 response -> fromResponse(response, expectedSuccessCode, otherExpectedStatusCodes),
                 e -> e instanceof HttpStatusCodeException ? right(fromException((HttpStatusCodeException) e)) : left());
+
+        return buildCompletableFutureFromListenableFuture(listenableFuture);
     }
 
     @Override

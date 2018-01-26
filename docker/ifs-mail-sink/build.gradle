@@ -1,0 +1,6 @@
+tagDocker.onlyIf { !isNamedEnv() }
+tagDocker.tag = mailSinkVersion
+tagDockerLocal.tag = mailSinkVersion
+osStageRemote.onlyIf { !isNamedEnv() }
+osStageRemote.tag = mailSinkVersion
+osStageLocal.tag = mailSinkVersion

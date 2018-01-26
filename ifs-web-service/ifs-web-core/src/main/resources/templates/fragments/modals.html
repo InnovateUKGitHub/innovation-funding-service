@@ -499,4 +499,42 @@
     </div>
 </th:block>
 
+<!-- confirmation of resending finance contact invite -->
+<th:block th:fragment="modal-resend-finance-contact">
+    <div class="modal-resend-finance-contact" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Resend invite to team member</h2>
+            <p>They will be resent an email inviting them to join the project.</p>
+        </div>
+        <hr />
+        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <div>
+                <input type="hidden" id="resend-fc-invite" name="resend-fc-invite" value=""/>
+                <input type="hidden" id="organisation" name="organisation" value=""/>
+                <button class="button" type="submit">Resend</button>
+                <button class="buttonlink js-close" type="button">Cancel</button>
+            </div>
+        </form>
+    </div>
+</th:block>
+
+<!-- confirmation of resending project manager invite -->
+<th:block th:fragment="modal-resend-project-manager">
+    <div class="modal-resend-project-manager" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <div class="modal-content">
+            <h2 class="heading-medium no-margin">Resend invite to team member</h2>
+            <p>They will be resent an email inviting them to join the project.</p>
+        </div>
+        <hr />
+        <form method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <div>
+                <input type="hidden" id="resend-pm-invite" name="resend-pm-invite" value=""/>
+                <button class="button" type="submit">Resend</button>
+                <button class="buttonlink js-close" type="button">Cancel</button>
+            </div>
+        </form>
+    </div>
+</th:block>
 </html>

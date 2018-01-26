@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:safe="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
 <!-- =========================== Form label =========================== -->
 <th:block th:fragment="form-label (name)">
@@ -139,10 +139,10 @@
             <div class="year">
                 <th:block th:insert="question-type/form-elements :: form-label (name='Year',id=${id}+'_year',bold=false)" />
                 <th:block th:if="${dateFieldPresent}">
-            		<th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_year', field=${field}+'.year',placeholder='YYYY',required=true)" />
+            		    <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_year', field=${field}+'.year',placeholder='YYYY',required=true)" />
                 </th:block>
                 <th:block th:unless="${dateFieldPresent}">
-               		<th:block th:insert="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_year',field=${field}+'.year', placeholder='YYYY',required=true)" />
+               		  <th:block th:insert="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_year',field=${field}+'.year', placeholder='YYYY',required=true)" />
                 </th:block>
             </div>
             <!--/* The hidden field below is used as a dummy value that is essentially ignored by the LocalDatePropertyEditor in order to allow
@@ -233,6 +233,12 @@
 
     </div>
 </th:block>
+
+<!-- ========================= read only text for form responses ==================== -->
+<th:block th:fragment="form-text-only (model)" th:with="formInput=${model.formInput}">
+    <div class="wysiwyg-styles" ifs:utext="*{formInput[__${formInput.id}__]}"/>
+</th:block>
+
 <!-- ========================= Current Assignee =========================== -->
 <th:block th:fragment="current-assignee(model)" th:with="question=${model.question}">
     <th:block th:if="${model.assigned}">

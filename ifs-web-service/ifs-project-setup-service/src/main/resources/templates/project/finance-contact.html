@@ -6,8 +6,10 @@
     </head>
 
     <body th:with="context='project'" class="project-detail finance-contact">
+        <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
+        <th:block th:insert="fragments/modals :: modal-resend-finance-contact" />
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
@@ -45,6 +47,13 @@
                         <div class="multiple-choice" th:each="user : ${model.invitedUsers}">
                             <input type="radio" th:field="*{financeContact}" th:value="${user.id}" th:attr="disabled=${user.status != 'EXISTING'} ? 'disabled' : null,data-required-errormessage=#{validation.financecontactform.financecontact.required}" required="required" />
                             <label data-set-section-valid="#finance-contact-section" data-clear-inputs="#name-finance-contact,#email-finance-contact" th:for="${#ids.prev('financeContact')}" th:text="${user.name}">Username</label>
+                            <a
+                                data-js-modal="modal-resend-finance-contact"
+                                th:attr="data-modal-form-action=@{/project/{projectId}/details/finance-contact?resend-fc-invite={userId}(projectId=${model.projectId},userId=${user.id})},data-modal-input-resend-fc-invite=${user.id},data-modal-input-organisation=${model.organisationId}"
+                                th:href="@{/project/{projectId}/details/finance-contact/confirm?resend-fc-invite={userId}&organisation={orgId}(projectId=${model.projectId},userId=${user.id}, orgId=${model.organisationId})}"
+                                class="button button-clear no-margin">
+                                Resend invite
+                            </a>
                         </div>
 
                         <div class="multiple-choice" data-target="finance-contact-table">
@@ -74,7 +83,7 @@
                                             <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail')} ? 'form-control-error'" name="inviteEmail" id="email-finance-contact" th:attr="data-required-errormessage=#{validation.project.invite.email.required}" required="required"/>
                                         </td>
                                         <td class="alignright">
-                                            <button class="buttonlink no-margin-bottom" name="invite_fc" id="invite-finance-contact">Invite to project</button>
+                                            <button class="buttonlink no-margin-bottom" name="invite-fc" id="invite-finance-contact">Invite to project</button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -87,7 +96,7 @@
 
                 <p>You can change your finance contact up until your grant offer letter is generated.</p>
 
-                <button class="button extra-margin" type="submit"  name="save_fc" id="save">Save finance contact</button>
+                <button class="button extra-margin" type="submit"  name="save-fc" id="save">Save finance contact</button>
             </form>
 
 

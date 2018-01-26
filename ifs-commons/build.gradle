@@ -1,4 +1,4 @@
-apply plugin: 'java'
+apply from: rootProject.file("java-spring-boot.gradle")
 
 dependencies {
     compile 'org.apache.commons:commons-lang3:3.5'
@@ -8,8 +8,7 @@ dependencies {
     compile "org.javassist:javassist:3.20.0-GA"
     compile project(":ifs-resources")
 
-
-    testCompile project(":ifs-resources").sourceSets.test.output
+    testCompile project (path: ":ifs-resources", configuration: 'testArtifacts')
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
 

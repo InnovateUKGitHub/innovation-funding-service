@@ -29,7 +29,8 @@ import org.mapstruct.Mappings;
                 CompetitionTypeMapper.class,
                 SectionMapper.class,
                 CompetitionFunderMapper.class,
-                OrganisationTypeMapper.class
+                OrganisationTypeMapper.class,
+                TermsAndConditionsMapper.class
         }
 )
 public abstract class CompetitionMapper extends BaseMapper<Competition, CompetitionResource, Long> {
@@ -39,7 +40,7 @@ public abstract class CompetitionMapper extends BaseMapper<Competition, Competit
             @Mapping(source = "innovationSector.name", target = "innovationSectorName"),
             @Mapping(source = "competitionType.name", target = "competitionTypeName"),
             @Mapping(source = "leadTechnologist.name", target = "leadTechnologistName"),
-            @Mapping(source = "executive.name", target = "executiveName")
+            @Mapping(source = "executive.name", target = "executiveName"),
     })
     @Override
     public abstract CompetitionResource mapToResource(Competition domain);

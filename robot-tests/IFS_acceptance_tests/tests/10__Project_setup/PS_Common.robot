@@ -81,7 +81,6 @@ ${PS_BD_Competition_Id}         ${competition_ids["Rolling stock future developm
 ${PS_BD_Competition_Name}       Rolling stock future developments
 ${PS_BD_APPLICATION_TITLE}      Grade crossing manufacture and supply
 ${PS_BD_APPLICATION_NUMBER}     ${application_ids["${PS_BD_APPLICATION_TITLE}"]}
-${PS_BD_APPLICATION_HEADER}     ${PS_BD_APPLICATION_TITLE}
 ${PS_BD_APPLICATION_PROJECT}    ${project_ids["${PS_BD_APPLICATION_TITLE}"]}
 ${PS_BD_APPLICATION_LEAD_ORGANISATION_ID}    ${Vitruvius_Id}
 ${PS_BD_APPLICATION_LEAD_ORGANISATION_NAME}  ${Vitruvius_Name}
@@ -211,6 +210,7 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
     the user navigates to the page  ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
     ${project_details}  ${completed}=  Run Keyword And Ignore Error Without Screenshots    the user should not see the element    jQuery=ul li.complete a:contains("Project details")
     run keyword if  '${project_details}' == 'PASS'  lead partner navigates to project and fills project details
+
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     log in as a different user              &{internal_finance_credentials}
     the user navigates to the page          ${server}/management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/funding

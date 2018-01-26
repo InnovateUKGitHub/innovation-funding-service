@@ -115,3 +115,24 @@
         </div>
     </div>
 </div>
+
+<!-- ======== Comp admin - send email to all applicants modal ======= -->
+<div th:fragment="comp-setup-mark-as-successful-modal">
+    <div class="mark-as-successful-modal" role="dialog" aria-hidden="true">
+        <th:block th:insert="fragments/modals :: close-button" />
+        <h2 class="heading-medium no-margin">Mark application as successful</h2>
+        <p>Are you sure?</p>
+        <p>Remember that:</p>
+        <ul class="list list-bullet">
+            <li>you cannot undo this</li>
+            <li>IFS will not inform the applicants, so you must contact them</li>
+        </ul>
+        <hr />
+        <form class="js-modal-url-target" method="post" th:action="@{${#ifsUtil.formPostUri(#httpServletRequest)}}">
+            <div>
+                <button name="mark-as-successful" class="button">I'm sure</button>
+                <button type="button" class="js-close buttonlink">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>

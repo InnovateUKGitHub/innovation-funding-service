@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
+import org.innovateuk.ifs.competition.domain.TermsAndConditions;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.transactional.template.CompetitionTemplatePersistorImpl;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.*;
@@ -153,11 +155,16 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
 
     @Test
     public void testInitializeCompetitionByCompetitionTemplate_templatePropertiesAreCopied() throws Exception {
+
         List<Section> templateSections = newSection().withId(1L, 2L, 3L).build(3);
+
+        TermsAndConditions templateTermsAndConditions = new TermsAndConditions();
+
         Competition competitionTemplate = newCompetition()
                 .withId(2L)
                 .withSections(templateSections)
                 .withFullApplicationFinance(false)
+                .withTermsAndConditions(templateTermsAndConditions)
                 .build();
         CompetitionType competitionType = newCompetitionType()
                 .withId(1L)
@@ -180,6 +187,7 @@ public class CompetitionSetupTemplateServiceImplTest extends BaseServiceUnitTest
         assertTrue(result.isSuccess());
 
         assertEquals(false, competition.isFullApplicationFinance());
+        assertSame(templateTermsAndConditions, competition.getTermsAndConditions());
     }
 
     @Test
