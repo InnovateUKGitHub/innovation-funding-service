@@ -31,7 +31,7 @@ public class CommonThreadController<R> {
 
     @PostMapping("/close/thread/{threadId}")
     public RestResult<Void> close(@PathVariable("threadId") final Long threadId) {
-        return service.close(threadId).toPostCreateResponse();
+        return service.close(threadId).toPostResponse();
     }
 
     @PostMapping("/{threadId}/post")
