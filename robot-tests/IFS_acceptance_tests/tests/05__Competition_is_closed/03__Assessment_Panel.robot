@@ -38,6 +38,8 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-29 Assessment panels - Assessor Review applications
 ...
 ...               IFS-2375 Assessment Panels - Assessor review application with own feedback and scores
+...
+...               IFS-2549 Assign assessment panel applications to assessors upon Invite acceptance
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -140,8 +142,6 @@ Bulk add assessor to invite list
     Given the user selects the checkbox       select-all-check
     And the user clicks the button/link       jQuery=button:contains("Add selected to invite list")
     And the user should see the element       jQuery=td:contains("${assessor_madeleine}") + td:contains("${panel_assessor_madeleine}")
-    When the user clicks the button/link      link=Review and send invites
-    Then the user clicks the button/link      jQuery=button:contains("Send invite")
     When the user clicks the button/link      link=Find
     Then the user should see the element      jQuery=td:contains("No available assessors found")
 
@@ -169,10 +169,6 @@ Assesor is able to accept the invitation from dashboard
     Then the user should see the element      jQuery=dt:contains("Competition:") ~ dd:contains("${CLOSED_COMPETITION_NAME}")
     And the user should see the element       jQuery=dt:contains("Innovation Lead:") ~ dd:contains("Ian Cooper")
     And the user should see the element       jQuery=h2:contains("Applications for panel") + ul li p:contains("No applications have been assigned to this panel.")
-    When log in as a different user           &{assessor2_credentials}
-    Then the user clicks the button/link      jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
-    And the user selects the radio button     acceptInvitation  true
-    And the user clicks the button/link       css=button[type="submit"]  # Confirm
 
 Assesor is able to reject the invitation from email
     [Documentation]  IFS-37
@@ -194,8 +190,8 @@ Comp Admin can see the rejected and accepted invitation
     And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Declined")
     When the user clicks the button/link       link=Accepted
     Then the user should see the element       jQuery=td:contains("${assessor_ben}") ~ td:contains("Materials, process and manufacturing design technologies")
-    And the user should see the element        jQuery=.column-quarter:contains(2) small:contains("Accepted")
-    And the user should see the element        jQuery=.column-quarter:contains(7) small:contains("Assessors on invite list")
+    And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Accepted")
+    And the user should see the element        jQuery=.column-quarter:contains(1) small:contains("Assessors on invite list")
     When the user clicks the button/link       link=Pending and rejected
     Then the user should not see the element   jQuery=td:contains("${assessor_ben}")
 
@@ -253,8 +249,21 @@ Assign applications to panel
     And the user clicks the button/link     jQuery=button:contains("Confirm actions")
     And the user reads his email            ${assessor_ben}  Applications ready for review   You have been allocated applications to review within the competition Machine learning for transport infrastructure.
 
+Assign applicaitons to assessor upon acceting invite in panel
+    [Documentation]   IFS-2549
+    [Tags]
+    # When subsequently an assessor is invited, assign application without clicking on 'Confirm action'
+    Given the user clicks the button/link     link=Invite assessors to attend
+    And the user clicks the button/link       link=Invite
+    When the user clicks the button/link      link=Review and send invites
+    Then the user clicks the button/link      jQuery=button:contains("Send invite")
+    When log in as a different user           &{assessor2_credentials}
+    Then the user clicks the button/link      jQuery=h2:contains("Invitations to attend panel") ~ ul a:contains("${CLOSED_COMPETITION_NAME}")
+    And the user selects the radio button     acceptInvitation  true
+    And the user clicks the button/link       css=button[type="submit"]  # Confirm
+
 Assessors view of competition dashboard and applications in panel status
-    [Documentation]  IFS-1138  IFS-388
+    [Documentation]  IFS-1138  IFS-388   IFS-2549
     [Tags]
     Given Log in as a different user            ${panel_assessor_ben}  ${short_password}
     When the user clicks the button/link        jQuery=h2:contains("Attend panel") + ul li h3:contains("${CLOSED_COMPETITION_NAME}")
