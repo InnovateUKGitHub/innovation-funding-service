@@ -7,7 +7,7 @@ import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Test;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
 
 import java.util.List;
 
@@ -17,6 +17,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.QueryFieldsDocs.queryResourceFields;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -82,13 +83,28 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
 
         when(financeCheckQueriesService.create(query)).thenReturn(serviceSuccess(55L));
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/project/finance/queries")
+        mockMvc.perform(post("/project/finance/queries")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(query)))
                 .andExpect(content().string(objectMapper.writeValueAsString(55L)))
                 .andExpect(status().isCreated())
                 .andDo(document("project/finance/queries/{method-name}",
                         requestFields(queryResourceFields())));
+    }
+
+    @Test
+    public void close() throws Exception {
+
+        Long threadId = 1L;
+        when(financeCheckQueriesService.close(threadId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/finance/queries/close/thread/{threadId}", threadId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("project/finance/queries/{method-name}",
+                        pathParameters(parameterWithName("threadId").description("Id of the Query to which the Post is to be added to."))));
+
+        verify(financeCheckQueriesService).close(threadId);
     }
 
     @Override
