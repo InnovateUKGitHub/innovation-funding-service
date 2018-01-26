@@ -144,6 +144,11 @@
     > h3 {
       @extend %toggle-button;
       padding-right:2px;
+
+      &.heading-medium{
+        @include core-24;
+        font-weight: bold;
+      }
     }
   }
 }

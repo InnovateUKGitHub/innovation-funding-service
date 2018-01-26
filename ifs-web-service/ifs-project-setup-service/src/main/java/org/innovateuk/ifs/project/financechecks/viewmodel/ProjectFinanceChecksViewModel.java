@@ -132,4 +132,8 @@ public class ProjectFinanceChecksViewModel {
     public void setAcademic(boolean academic) {
         isAcademic = academic;
     }
+
+    public boolean isSingleQuery() {
+        return queries.size() == 1;
+    }
 }
