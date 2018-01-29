@@ -561,7 +561,8 @@ Custom Suite Setup
 
 The query conversation can be resolved by
     [Arguments]  ${user}  ${section}
-    the user clicks the button/link  jQuery=h2:contains("${section}") + [id="finance-checks-internal-query-2"] a:contains("Mark as resolved")
+    the user clicks the button/link  jQuery=h2:contains("${section}") + [id^="finance-checks-internal-query"] a:contains("Mark as resolved")
     the user clicks the button/link  css=button[name="markAsResolved"]  # Submit
     the user should see the element  jQuery=h2:contains("${section}") .yes  # Resolved green check
-    the user should see the element  jQuery=.message-alert:contains("${user} on ${today}")
+    capture large screenshot
+    the user should see the element  jQuery=.message-alert:contains("marked as resolved by ${user} on ${today}")
