@@ -108,13 +108,13 @@
                     </li>
                     <li th:unless="${model.readOnly}">
                         <a class="disabled" aria-disabled="true"
-                           th:if="${!model.assessmentPanelEnabled or
-                            model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                           th:if="${!model.assessmentPanelEnabled
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">
                             Manage assessment panel
                         </a>
-                        <a th:unless="${!model.assessmentPanelEnabled or
-                            model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                        <a th:unless="${!model.assessmentPanelEnabled
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}"
                            th:href="@{/assessment/panel/competition/{competitionId}(competitionId=${model.competitionId})}">
                             Manage assessment panel
@@ -122,13 +122,13 @@
                     </li>
                     <li th:unless="${model.readOnly}">
                         <a class="disabled" aria-disabled="true"
-                           th:if="${!model.interviewPanelEnabled or
-                            model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                           th:if="${!model.interviewPanelEnabled
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}">
                             Manage interview panel
                         </a>
-                        <a th:unless="${!model.interviewPanelEnabled or
-                            model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
+                        <a th:unless="${!model.interviewPanelEnabled
+                            or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).READY_TO_OPEN
                             or model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).OPEN}"
                            th:href="@{/interview/panel/competition/{competitionId}(competitionId=${model.competitionId})}">
                             Manage interview panel
