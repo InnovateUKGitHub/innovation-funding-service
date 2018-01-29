@@ -463,15 +463,13 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
                 .andOnSuccessReturnVoid();
     }
 
-    // TODO tidy and test
     private ServiceResult<Void> assignAllPanelApplicationsToParticipant(AssessmentPanelParticipant participant) {
         Competition competition = participant.getProcess();
         List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
         final Role panelAssessorRole = roleRepository.findOneByName(UserRoleType.PANEL_ASSESSOR.getName());
         final ActivityState pendingActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING);
         applicationsInPanel.forEach(application -> {
-            // TODO this is pretty much AssessmentPanelServiceImpl#createAssessmentReview
-            AssessmentReview assessmentReview = new AssessmentReview(application, participant, panelAssessorRole); // add the initial state to the constructor?
+            AssessmentReview assessmentReview = new AssessmentReview(application, participant, panelAssessorRole);
             assessmentReview.setActivityState(pendingActivityState);
             assessmentReviewRepository.save(assessmentReview);
         });

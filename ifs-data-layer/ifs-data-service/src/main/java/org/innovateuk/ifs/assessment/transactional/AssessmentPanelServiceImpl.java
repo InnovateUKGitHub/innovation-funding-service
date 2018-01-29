@@ -2,9 +2,9 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewMapper;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReview;
 import org.innovateuk.ifs.assessment.panel.domain.AssessmentReviewRejectOutcome;
+import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewMapper;
 import org.innovateuk.ifs.assessment.panel.mapper.AssessmentReviewRejectOutcomeMapper;
 import org.innovateuk.ifs.assessment.panel.repository.AssessmentReviewRepository;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewRejectOutcomeResource;
@@ -13,18 +13,15 @@ import org.innovateuk.ifs.assessment.panel.workflow.configuration.AssessmentRevi
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
-import org.innovateuk.ifs.invite.mapper.AssessmentPanelParticipantMapper;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
-import org.innovateuk.ifs.notifications.service.NotificationTemplateRenderer;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
-import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -84,7 +81,6 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     @Autowired
     private AssessmentReviewRejectOutcomeMapper assessmentReviewRejectOutcomeMapper;
-
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -178,11 +174,11 @@ public class AssessmentPanelServiceImpl implements AssessmentPanelService {
 
     private ServiceResult<Void> createAssessmentReview(AssessmentPanelParticipant assessor, Application application) {
         if (!assessmentReviewRepository.existsByParticipantUserAndTargetAndActivityStateStateNot(assessor.getUser(), application, State.WITHDRAWN)) {
-            final Role assessorRole = roleRepository.findOneByName(PANEL_ASSESSOR.getName());
+            final Role panelAssessorRole = roleRepository.findOneByName(PANEL_ASSESSOR.getName());
+            final ActivityState createdActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED);
 
-            AssessmentReview assessmentReview =  new AssessmentReview(application, assessor, assessorRole);
-
-            assessmentReview.setActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED));
+            AssessmentReview assessmentReview =  new AssessmentReview(application, assessor, panelAssessorRole);
+            assessmentReview.setActivityState(createdActivityState);
             assessmentReviewRepository.save(assessmentReview);
         }
         return serviceSuccess();
