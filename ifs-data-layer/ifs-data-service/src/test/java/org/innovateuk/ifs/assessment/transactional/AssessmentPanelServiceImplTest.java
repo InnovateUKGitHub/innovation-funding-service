@@ -15,7 +15,9 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
@@ -24,6 +26,7 @@ import org.mockito.InOrder;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -45,6 +48,7 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOU
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE;
 import static org.junit.Assert.assertEquals;
@@ -71,7 +75,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
     }
 
     @Test
-    public void assignApplicationsToPanel() throws Exception {
+    public void assignApplicationsToPanel() {
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
 
         ServiceResult<Void> result = service.assignApplicationToPanel(applicationId);
@@ -83,7 +87,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
     }
 
     @Test
-    public void unAssignApplicationsFromPanel() throws Exception {
+    public void unAssignApplicationsFromPanel() {
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(assessmentReviewRepositoryMock
                 .findByTargetIdAndActivityStateStateNot(applicationId, State.WITHDRAWN))
@@ -99,7 +103,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
     }
 
     @Test
-    public void unAssignApplicationsFromPanel_existingReviews() throws Exception {
+    public void unAssignApplicationsFromPanel_existingReviews() {
         List<AssessmentReview> assessmentReviews = newAssessmentReview().withTarget(application).withState(AssessmentReviewState.WITHDRAWN).build(2);
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
@@ -129,7 +133,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
         Competition competition = newCompetition()
                 .withId(competitionId)
                 .withName(competitionName)
-                .withMilestones(asList(newMilestone()
+                .withMilestones(singletonList(newMilestone()
                         .withType(MilestoneType.ASSESSMENT_PANEL)
                         .withDate(panelDate)
                         .build())
@@ -148,10 +152,15 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         List<ProcessRole> processRoles = newProcessRole()
                 .withUser(assessor)
+                .withApplication(applications.toArray(new Application[1]))
                 .build(1);
 
-        AssessmentReview assessmentReview = new AssessmentReview(applications.get(0), processRoles.get(0));
+        Role panelAssessorRole = newRole().withType(UserRoleType.PANEL_ASSESSOR).build();
+
+        AssessmentReview assessmentReview = new AssessmentReview(applications.get(0), assessmentPanelParticipants.get(0), panelAssessorRole);
         assessmentReview.setActivityState(acceptedActivityState);
+
+        when(roleRepositoryMock.findOneByName(panelAssessorRole.getName())).thenReturn(panelAssessorRole);
 
         when(assessmentPanelParticipantRepositoryMock
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED)))
@@ -190,14 +199,14 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         InOrder inOrder = inOrder(assessmentPanelParticipantRepositoryMock, applicationRepositoryMock,
                 assessmentReviewRepositoryMock, activityStateRepositoryMock,  assessmentReviewRepositoryMock,
-                assessmentReviewRepositoryMock, assessmentReviewWorkflowHandlerMock, notificationSenderMock, processRoleRepositoryMock);
+                assessmentReviewRepositoryMock, assessmentReviewWorkflowHandlerMock, notificationSenderMock, processRoleRepositoryMock, roleRepositoryMock);
         inOrder.verify(assessmentPanelParticipantRepositoryMock)
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED));
         inOrder.verify(applicationRepositoryMock)
                 .findByCompetitionIdAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED);
         inOrder.verify(assessmentReviewRepositoryMock)
                 .existsByParticipantUserAndTargetAndActivityStateStateNot(assessor, applications.get(0), (State.WITHDRAWN));
-        inOrder.verify(processRoleRepositoryMock).save(isA(ProcessRole.class));
+        inOrder.verify(roleRepositoryMock).findOneByName(panelAssessorRole.getName());
         inOrder.verify(activityStateRepositoryMock)
                 .findOneByActivityTypeAndState(ASSESSMENT_PANEL_APPLICATION_INVITE, State.CREATED);
         inOrder.verify(assessmentReviewRepositoryMock)
@@ -208,13 +217,12 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
                 .notifyInvitation(assessmentReview);
         inOrder.verify(notificationSenderMock)
                 .sendNotification(isA(Notification.class));
-
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void isPendingReviewNotifications() {
-        boolean expectedPendingReviewNotifications = true;
+        final boolean expectedPendingReviewNotifications = true;
 
         when(assessmentReviewRepositoryMock.notifiable(competitionId)).thenReturn(expectedPendingReviewNotifications);
 
@@ -225,7 +233,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
     @Test
     public void isPendingReviewNotifications_none() {
-        boolean expectedPendingReviewNotifications = false;
+        final boolean expectedPendingReviewNotifications = false;
 
         when(assessmentReviewRepositoryMock.notifiable(competitionId)).thenReturn(expectedPendingReviewNotifications);
 
