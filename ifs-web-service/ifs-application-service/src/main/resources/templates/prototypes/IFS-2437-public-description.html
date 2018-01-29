@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body class="assessment-details">
+
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/IFS-2437-feedback-overview'})" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+    <h1 class="heading-xlarge">
+        <span class="heading-secondary">Machine learning in robots</span>
+        Public description
+    </h1>
+
+    <p>Wastage in our industry can be attributed in no small part to one issue. To date businesses have been reluctant
+        to tackle that problem and instead worked around it. That has stifled progress.</p>
+    <p>The end result of our project will be a novel tool to manage the issue and substantially reduce the wastage
+        caused by it.</p>
+
+    <ul class="pagination">
+        <li class="prev">
+            <a rel="prev" title="Navigate to previous part" href="/prototypes/IFS-2437-project-summary">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title">Project summary</span>
+            </a>
+        </li>
+        <li class="next">
+            <a rel="next" title="Navigate to next part" href="/prototypes/IFS-2437-scope">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title">Scope</span>
+            </a>
+        </li>
+    </ul>
+
+    <a href="/prototypes/IFS-2437-feedback-overview" class="button-secondary">Return to feedback overview</a>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+</body>
+</html>
