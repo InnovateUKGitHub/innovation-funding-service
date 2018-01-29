@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 
 public class ApplicationResourceTest {
     private ApplicationResource applicationResource;
@@ -35,10 +36,7 @@ public class ApplicationResourceTest {
         applicationFinances.add(new ApplicationFinance(2L, null, null));
         applicationFinances.add(new ApplicationFinance(3L, null, null));
 
-        processRoles = new ArrayList<>();
-        processRoles.add(new ProcessRole(1L, null, null, null, null));
-        processRoles.add(new ProcessRole(2L, null, null, null, null));
-        processRoles.add(new ProcessRole(3L, null, null, null, null));
+        processRoles = newProcessRole().build(3);
 
         applicationResource = newApplicationResource()
                 .withCompetition(competition.getId())
