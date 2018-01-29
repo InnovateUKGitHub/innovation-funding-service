@@ -4,7 +4,6 @@ Documentation   Suite description
 ...             IFS-2688 As a Portfolio manager I am able to create a Prince's Trust competition
 Suite Setup     custom suite setup
 Suite Teardown  Close browser and delete emails
-Force Tags      compAdmin  Applicant  Assessor
 Resource        ../../../resources/defaultResources.robot
 Resource        ../Applicant_Commons.robot
 Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
@@ -13,6 +12,7 @@ Resource        ../../02__Competition_Setup/CompAdmin_Commons.robot
 *** Variables ***
 ${comp_name}         The Prince Trust competition
 ${application_name}  The Prince Trust Application
+${comp_type}         The Prince's Trust
 
 *** Test Cases ***
 Comp Admin creates The Prince's Trust type competition
@@ -45,8 +45,7 @@ The competition admin creates The Prince's Trust Comp
     [Arguments]  ${orgType}  ${competition}  ${extraKeyword}
     the user navigates to the page   ${CA_UpcomingComp}
     the user clicks the button/link  jQuery=.button:contains("Create competition")
-    the user fills in the CS Initial details  ${competition}  ${month}  ${nextyear}  ${compType_EOI}
-    the user fills in the CS Funding Information
+    the user fills in the CS Initial details  ${competition}  ${month}  ${nextyear}  ${comp_type}
     the user fills in the CS Eligibility  ${orgType}  1  # 1 means 30%
     the user fills in the CS Milestones   ${month}  ${nextyear}
     the user marks the Application as done  no  ${compType_EOI}
@@ -66,7 +65,3 @@ the lead applicant fills all the questions and marks as complete(Prince's Trust 
     :FOR  ${ELEMENT}    IN    @{EOI_questions}
      \     the lead applicant marks every question as complete     ${ELEMENT}
 
-Milestones are updated in database to move competition to assessment state
-    ${competitionId} =  get comp id from comp title  ${comp_name}
-    Set suite variable  ${competitionId}
-    the assessment start period changes in the db in the past   ${competitionId}
