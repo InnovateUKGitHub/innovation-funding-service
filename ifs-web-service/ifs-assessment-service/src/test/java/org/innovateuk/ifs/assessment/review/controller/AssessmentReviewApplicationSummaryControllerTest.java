@@ -81,9 +81,6 @@ public class AssessmentReviewApplicationSummaryControllerTest extends BaseContro
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
- //   @Mock
- //   private AssessorFormInputResponseRestService assessorFormInputResponseService;
-
     @Override
     protected AssessmentReviewApplicationSummaryController supplyControllerUnderTest() {
         return new AssessmentReviewApplicationSummaryController();
