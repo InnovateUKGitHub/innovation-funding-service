@@ -46,6 +46,9 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-7432 Terms and Conditions of grant offer takes you to the IFS ts and cs, not the grant ones
 ...
 ...               INFUND-9062 Validation missing when inviting self as finance contact or PM
+...
+...               IFS-2642 Resend invites in Project Setup
+...
 Suite Setup       Custom suite setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup  Applicant
@@ -78,7 +81,7 @@ Internal users can see Project Details not yet completed
     And the user should see the element            jQuery=#project-details-finance tr:nth-child(3) td:nth-child(2):contains("Not yet completed")
 
 Status updates correctly for internal user's table
-    [Documentation]    INFUND-4049, INFUND-5507,INFUND-5543
+    [Documentation]    INFUND-4049, INFUND-5507, INFUND-5543
     [Tags]    HappyPath
     [Setup]  log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page    ${internal_competition_status}
@@ -281,7 +284,13 @@ Partner invites a project manager
     And the user enters text to a text field    id=email-project-manager    ${test_mailbox_one}+invitedprojectmanager@gmail.com
     And the user clicks the button/link    id=invite-project-manager
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    [Teardown]    logout as user
+
+Lead Applicant resends the invite to the Project manager
+    [Documentation]  IFS-2642
+    [Tags]    HappyPath    Email
+    When the user resends and clicks the button    Cancel
+    Then the user resends and clicks the button    Resend
+    [Teardown]  logout as user
 
 Invited project manager registration flow
     [Documentation]  INFUND-3550 INFUND-3554
@@ -449,7 +458,13 @@ Partner invites a finance contact
     And the user enters text to a text field    id=email-finance-contact  ${invitedFinanceContact}
     And the user clicks the button/link    id=invite-finance-contact
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    [Teardown]    logout as user
+
+Lead applicant resends the invite to the Finance contact
+    [Documentation]  IFS-2642
+    [Tags]    HappyPath    Email
+    When the user resends and clicks the button    Cancel
+    Then the user resends and clicks the button    Resend
+    [Teardown]  logout as user
 
 Invited finance contact registration flow
     [Documentation]  INFUND-3524 INFUND-3530
@@ -688,3 +703,9 @@ the user accepts invitation and signs in
     the user reads his email and clicks the link  ${email}  Please verify your email address  Dear ${name} ${famName}
     the user should see the element               jQuery=h1:contains("Account verified")
     the user clicks the button/link               jQuery=.button:contains("Sign in")
+
+The user resends and clicks the button
+    [Arguments]  ${Resend_OR_Cancel}
+    The user clicks the button/link    jQuery=label:contains("John Smith") ~ a:contains("Resend invite")
+    The user should see the element    jQuery=h2:contains("Resend invite to team member")
+    The user clicks the button/link    jQuery=button:contains("${Resend_OR_Cancel}")
