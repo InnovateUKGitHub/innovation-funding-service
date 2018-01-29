@@ -1,13 +1,15 @@
 
 
-def targetBuild = hasProperty('profile') ? profile : 'docker';
-apply from: targetBuild + "-build.gradle";
+def targetBuild = hasProperty('profile') ? profile : 'docker'
+apply from: targetBuild + "-build.gradle"
 
 apply plugin: 'base'
-
 apply plugin: 'org.flywaydb.flyway'
 apply plugin: 'org.asciidoctor.convert'
+
 apply from: "db-reset.gradle"
+apply from: rootProject.file("openshift-build.gradle")
+apply from: rootProject.file("prepare-docker.gradle")
 
 task('copyFreemarkerResources', type: Copy) {
 //Copy freemarker resources to build path to support running as a jar.
@@ -23,12 +25,19 @@ configurations {
     providedRuntime
 }
 
-
 project.version = dataServiceVersion
 tagDocker.tag = dataServiceVersion
 osStageRemote.tag = dataServiceVersion
 tagDockerLocal.tag = dataServiceVersion
 osStageLocal.tag = dataServiceVersion
+
+ext.dockerDir = "$project.parent.projectDir/docker/"
+
+buildDocker.dependsOn prepareDockerInput
+buildDocker.dependsOn ":docker:app-base-image:buildDocker"
+buildDocker.tag = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
+buildDocker.inputDir = project.file("$project.buildDir/docker")
+tagDocker.imageId = "innovateuk/" + project.name.replaceAll(/ifs-/, "") + ":latest"
 
 ext.idpRestKey = project.properties['idp.rest.key'] ?: "1234567890"
 ext.companyHouseKey = ext.get('ifs.company-house.key')
@@ -66,6 +75,7 @@ configurations {
 
 dependencies {
     compile project(":ifs-data-layer:data-service-commons")
+    compile project(":ifs-data-layer:data-service-file")
 
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.hibernate:hibernate-core:5.2.7.Final"
@@ -100,6 +110,7 @@ dependencies {
     testCompile project(':ifs-resources').sourceSets.test.output
     testCompile project(":ifs-commons").sourceSets.test.output
     testCompile project(":ifs-data-layer:data-service-commons").sourceSets.test.output
+    testCompile project(":ifs-data-layer:data-service-file").sourceSets.test.output
 
     testCompile "org.springframework.restdocs:spring-restdocs-mockmvc:1.1.2.RELEASE"
     testCompile "com.openpojo:openpojo:0.8.4"

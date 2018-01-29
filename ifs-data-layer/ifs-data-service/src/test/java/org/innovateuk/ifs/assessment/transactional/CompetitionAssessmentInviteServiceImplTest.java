@@ -2011,7 +2011,7 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
         );
     }
 
-    private CompetitionAssessmentParticipant createCompetitionParticipantExpectations(CompetitionAssessmentInvite competitionAssessmentInvite) {
+    private static CompetitionAssessmentParticipant createCompetitionParticipantExpectations(CompetitionAssessmentInvite competitionAssessmentInvite) {
         return createLambdaMatcher(competitionParticipant -> {
             assertNull(competitionParticipant.getId());
             assertEquals(competitionAssessmentInvite.getTarget(), competitionParticipant.getProcess());
