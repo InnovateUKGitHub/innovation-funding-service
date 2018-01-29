@@ -90,7 +90,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'FEEDBACK_RELEASED' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
-    String OPEN_QUERIES_WHERE_CLAUSE = "WHERE t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
+    String OPEN_QUERIES_WHERE_CLAUSE = "WHERE t.closedDate IS NULL " +
+            "AND t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
             "AND TYPE(t) = Query " +
             "AND 0 = (SELECT COUNT(id) FROM u.roles r WHERE r.name = 'project_finance') " +
             "AND a.competition.id = :competitionId " +
