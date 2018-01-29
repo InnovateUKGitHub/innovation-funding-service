@@ -106,7 +106,8 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
             "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "ORDER BY m.date";
 
-    String OPEN_QUERIES_WHERE_CLAUSE = "WHERE t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
+    String OPEN_QUERIES_WHERE_CLAUSE = "WHERE t.closedDate IS NULL " +
+            "AND t.className = 'org.innovateuk.ifs.finance.domain.ProjectFinance' " +
             "AND TYPE(t) = Query " +
             "AND 0 = (SELECT COUNT(id) FROM u.roles r WHERE r.name = 'project_finance') " +
             "AND a.competition.id = :competitionId " +
