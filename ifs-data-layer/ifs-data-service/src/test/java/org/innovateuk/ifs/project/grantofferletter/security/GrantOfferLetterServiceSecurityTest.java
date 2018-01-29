@@ -332,7 +332,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         ProjectResource project = newProjectResource().build();
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
-        assertAccessDenied(() -> classUnderTest.getGrantOfferLetterWorkflowState(123L), () -> {
+        assertAccessDenied(() -> classUnderTest.getGrantOfferLetterState(123L), () -> {
             verify(projectGrantOfferPermissionRules).internalAdminUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verify(projectGrantOfferPermissionRules).supportUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
             verify(projectGrantOfferPermissionRules).innovationLeadUserCanViewSendGrantOfferLetterStatus(project, getLoggedInUser());
@@ -454,7 +454,7 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
         }
 
         @Override
-        public ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
+        public ServiceResult<GrantOfferLetterState> getGrantOfferLetterState(Long projectId) {
             return null;
         }
 

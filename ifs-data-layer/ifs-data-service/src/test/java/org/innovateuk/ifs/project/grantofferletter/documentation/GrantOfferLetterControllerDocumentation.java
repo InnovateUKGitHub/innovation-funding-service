@@ -301,7 +301,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
 
         Long projectId = 123L;
 
-        when(grantOfferLetterServiceMock.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.APPROVED));
+        when(grantOfferLetterServiceMock.getGrantOfferLetterState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.APPROVED));
 
         mockMvc.perform(get("/project/{projectId}/grant-offer-letter/state", 123L))
                 .andExpect(status().isOk())
@@ -314,7 +314,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
                 )
                 .andReturn();
 
-        verify(grantOfferLetterServiceMock).getGrantOfferLetterWorkflowState(projectId);
+        verify(grantOfferLetterServiceMock).getGrantOfferLetterState(projectId);
     }
 
 }

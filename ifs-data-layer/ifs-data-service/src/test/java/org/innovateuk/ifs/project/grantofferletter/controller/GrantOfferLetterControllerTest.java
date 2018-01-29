@@ -149,7 +149,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     @Test
     public void getGrantOfferLetterWorkflowState() throws Exception {
 
-        when(grantOfferLetterServiceMock.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.APPROVED));
+        when(grantOfferLetterServiceMock.getGrantOfferLetterState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.APPROVED));
 
         mockMvc.perform(get("/project/{projectId}/grant-offer-letter/state", 123L))
                 .andExpect(status().isOk())
@@ -157,6 +157,6 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 .andDo(document("project/{method-name}"))
                 .andReturn();
 
-        verify(grantOfferLetterServiceMock).getGrantOfferLetterWorkflowState(projectId);
+        verify(grantOfferLetterServiceMock).getGrantOfferLetterState(projectId);
     }
 }

@@ -1069,7 +1069,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
 
-        ServiceResult<GrantOfferLetterState> result = service.getGrantOfferLetterWorkflowState(projectId);
+        ServiceResult<GrantOfferLetterState> result = service.getGrantOfferLetterState(projectId);
 
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(CommonErrors.notFoundError(Project.class, projectId)));
@@ -1083,7 +1083,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
         when(golWorkflowHandlerMock.getState(projectInDB)).thenReturn(GrantOfferLetterState.APPROVED);
 
-        ServiceResult<GrantOfferLetterState> result = service.getGrantOfferLetterWorkflowState(projectId);
+        ServiceResult<GrantOfferLetterState> result = service.getGrantOfferLetterState(projectId);
 
         assertTrue(result.isSuccess());
         assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());

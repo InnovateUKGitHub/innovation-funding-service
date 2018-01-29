@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.project.grantofferletter.service;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -92,9 +94,15 @@ public class GrantOfferLetterRestServiceImpl extends BaseRestService implements 
         return getWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer-letter/is-rejected", Boolean.class);
     }
 
+    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
     @Override
     public RestResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer-letter/state", GrantOfferLetterState.class);
+    }
+
+    @Override
+    public RestResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/grant-offer-letter/current-state", GrantOfferLetterStateResource.class);
     }
 
     @Override

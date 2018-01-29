@@ -1,17 +1,19 @@
 package org.innovateuk.ifs.project.grantofferletter.controller;
 
+import junit.framework.Assert;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.file.builder.FileEntryResourceBuilder;
+import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
-import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModelImproved;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
@@ -24,20 +26,18 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.unsupportedMediaTypeError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_CREATE_FILE;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.PENDING;
-import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.forNonPartnerView;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verify;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.MediaType.APPLICATION_ATOM_XML;
@@ -46,8 +46,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<GrantOfferLetterController> {
-
+@ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with GrantOfferLetterControllerTest")
+public class GrantOfferLetterControllerOldTest extends BaseControllerMockMVCTest<GrantOfferLetterController> {
     @Test
     public void testView() throws Exception {
         Long competitionId = 1L;
@@ -66,22 +66,22 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(golState(PENDING));
+
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
-        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/send-offer")).
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/send")).
                 andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 
-        GrantOfferLetterModelImproved golViewModel = (GrantOfferLetterModelImproved) result.getModelAndView().getModel().get("model");
+        GrantOfferLetterModel golViewModel = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
 
-        assertFalse(golViewModel.isSentToProjectTeam());
+        Assert.assertFalse(golViewModel.isSentToProjectTeam());
         assertEquals(null, golViewModel.getGrantOfferLetterFile());
         assertEquals(null, golViewModel.getAdditionalContractFile());
         assertEquals(null, golViewModel.getSignedGrantOfferLetterFile());
-        assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
-        assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
-        assertFalse(golViewModel.getSignedGrantOfferLetterRejected());
+        Assert.assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
+        Assert.assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
 
         GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(form.getAnnex(), null);
@@ -89,11 +89,57 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
     @Test
     public void testSendGOLSuccess() throws Exception {
+        Long competitionId = 1L;
         Long projectId = 123L;
+        Long applicationId = 789L;
 
-        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/send-offer")).
-                andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send-offer"));
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
+
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
+        when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummaryResource));
+
+        when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
+        when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
+
+        when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
+
+        // re-load model after sending GOL
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
+
+        competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
+        when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummaryResource));
+
+        when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.SENT));
+        when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
+
+
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/send")).
+                andExpect(view().name("project/grant-offer-letter-send")).
+                andReturn();
+
+        GrantOfferLetterModel golViewModel = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
+
+        assertTrue(golViewModel.isSentToProjectTeam());
+        assertEquals(null, golViewModel.getGrantOfferLetterFile());
+        assertEquals(null, golViewModel.getAdditionalContractFile());
+        assertEquals(null, golViewModel.getSignedGrantOfferLetterFile());
+        Assert.assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
+        Assert.assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
+        assertEquals(Boolean.TRUE, golViewModel.isSentToProjectTeam());
+
+        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
+        assertEquals(form.getAnnex(), null);
     }
 
     @Test
@@ -114,7 +160,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(golState(PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
@@ -129,24 +175,23 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(golState(PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
 
-        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/send-offer")).
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/send")).
                 andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 
-        GrantOfferLetterModelImproved golViewModel = (GrantOfferLetterModelImproved) result.getModelAndView().getModel().get("model");
+        GrantOfferLetterModel golViewModel = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
 
-        assertFalse(golViewModel.isSentToProjectTeam());
+        Assert.assertFalse(golViewModel.isSentToProjectTeam());
         assertEquals(null, golViewModel.getGrantOfferLetterFile());
         assertEquals(null, golViewModel.getAdditionalContractFile());
         assertEquals(null, golViewModel.getSignedGrantOfferLetterFile());
-        assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
-        assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
+        Assert.assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
+        Assert.assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
         assertEquals(Boolean.FALSE, golViewModel.isSentToProjectTeam());
-        assertFalse(golViewModel.getSignedGrantOfferLetterRejected());
 
         GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(form.getAnnex(), null);
@@ -200,6 +245,25 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     public void uploadGrantOfferLetterFile() throws Exception {
 
         Long projectId = 123L;
+        Long competitionId = 1L;
+        Long applicationId = 789L;
+
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
+
+        Optional<FileEntryResource> golFileEntryResource = Optional.of(FileEntryResourceBuilder.newFileEntryResource().withName("1").withMediaType("application/pdf").withFilesizeBytes(11).build());
+
+        // when the model is re-loaded after uploading
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
+        when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummaryResource));
+
+        when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(golFileEntryResource);
+        when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
+        when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
+
 
         FileEntryResource createdFileDetails = newFileEntryResource().withName("1").withMediaType("application/pdf").withFilesizeBytes(11).build();
 
@@ -208,13 +272,15 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetter", "grantOfferLetter.pdf", "application/pdf", "My content!".getBytes());
 
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 fileUpload("/project/"+ projectId  + "/grant-offer-letter/grant-offer-letter").
                         file(uploadedFile).param("uploadGrantOfferLetterClicked", "")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send-offer"));
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
+                andReturn();
 
-        verify(grantOfferLetterService).addGrantOfferLetter(123L, "application/pdf", 11, "grantOfferLetter.pdf", "My content!".getBytes());
+        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
+        assertEquals(uploadedFile, form.getGrantOfferLetter());
     }
 
     @Test
@@ -235,7 +301,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(golState(PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         MockMultipartFile uploadedFile = new MockMultipartFile("grantOfferLetter", "grantOfferLetter.txt", "text/plain", "My content!".getBytes());
@@ -262,18 +328,38 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     public void removeGrantOfferLetterFile() throws Exception {
 
         Long projectId = 123L;
+        Long competitionId = 1L;
+        Long applicationId = 789L;
 
-        when(grantOfferLetterService.removeGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
+
+        // when the model is re-loaded
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
+        when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummaryResource));
+
+        when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
+        when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
+
+        when(grantOfferLetterService.removeGrantOfferLetter(123L)).
+                thenReturn(serviceSuccess());
 
         MockMultipartFile fileToDelete = new MockMultipartFile("grantOfferLetter", "grantOfferLetter.pdf", "application/pdf", "My content!".getBytes());
 
-        mockMvc.perform(
+        MvcResult result = mockMvc.perform(
                 fileUpload("/project/"+ projectId  + "/grant-offer-letter/grant-offer-letter").
                         file(fileToDelete).param("removeGrantOfferLetterClicked", "")).
-                andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send-offer"));
+                andExpect(status().isOk()).
+                andExpect(view().name("project/grant-offer-letter-send")).
+                andReturn();
 
-        verify(grantOfferLetterService).removeGrantOfferLetter(projectId);
+        GrantOfferLetterModel model = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
+        Assert.assertFalse(model.getGrantOfferLetterFileContentAvailable());
+
     }
 
     @Test
@@ -340,7 +426,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(annexFileEntryResource);
-        when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(golState(PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
@@ -355,7 +441,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 fileUpload("/project/"+ projectId  + "/grant-offer-letter/upload-annex").
                         file(uploadedFile).param("uploadAnnexClicked", "")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send-offer")).
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
                 andReturn();
 
         GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
@@ -381,7 +467,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
         when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
-        when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(golState(PENDING));
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
         when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
@@ -400,44 +486,125 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(uploadedFile, form.getAnnex());
-        assertEquals(Boolean.FALSE, ((GrantOfferLetterModelImproved)result.getModelAndView().getModel().get("model")).getAdditionalContractFileContentAvailable());
+        assertEquals(Boolean.FALSE, ((GrantOfferLetterModel)result.getModelAndView().getModel().get("model")).getAdditionalContractFileContentAvailable());
     }
 
     @Test
     public void testApproveSignedGOLSuccess() throws Exception {
+        Long competitionId = 1L;
         Long projectId = 123L;
+        Long applicationId = 789L;
 
         FileEntryResource signedGolFileEntryResource = FileEntryResourceBuilder.newFileEntryResource()
                 .withName("signed-gol-file.pdf")
                 .build();
+
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
+
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
+
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
+        when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummaryResource));
+
+        when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
+        when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGolFileEntryResource));
 
         when(grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed?approvalType=" + ApprovalType.APPROVED)).
-                andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send-offer")).
+        // re-load model after sending GOL
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
+
+        competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
+        when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummaryResource));
+
+        when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.APPROVED));
+        when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGolFileEntryResource));
+
+
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed/" + ApprovalType.APPROVED)).
+                andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 
-        verify(grantOfferLetterService).approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
+        GrantOfferLetterModel golViewModel = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
+
+        assertTrue(golViewModel.isSentToProjectTeam());
+        assertEquals(null, golViewModel.getGrantOfferLetterFile());
+        assertEquals(null, golViewModel.getAdditionalContractFile());
+        assertEquals(new FileDetailsViewModel(signedGolFileEntryResource), golViewModel.getSignedGrantOfferLetterFile());
+        Assert.assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
+        Assert.assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
+        assertEquals(Boolean.TRUE, golViewModel.isSentToProjectTeam());
+        assertEquals(Boolean.TRUE, golViewModel.getSignedGrantOfferLetterApproved());
+        assertEquals(Boolean.TRUE, golViewModel.getSignedGrantOfferLetterFileAvailable());
+
+        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
+        assertEquals(form.getAnnex(), null);
     }
 
     @Test
-    public void testApproveSignedGOLRejectionSuccess() throws Exception {
-
+    public void testApproveSignedGOLFailureLowerCaseEnum() throws Exception {
+        Long competitionId = 1L;
         Long projectId = 123L;
+        Long applicationId = 789L;
 
-        FileEntryResource signedGolFileEntryResource = FileEntryResourceBuilder.newFileEntryResource()
-                .withName("signed-gol-file.pdf")
-                .build();
+        ApplicationResource applicationResource = newApplicationResource().withId(applicationId).build();
+        ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationResource).build();
 
-        when(grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.REJECTED)).thenReturn(serviceSuccess());
+        when(projectService.getById(projectId)).thenReturn(projectResource);
 
-        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed?approvalType=" + ApprovalType.REJECTED)).
-                andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send-offer")).
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
+
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
+        when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummaryResource));
+
+        when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.PENDING));
+        when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
+
+        when(grantOfferLetterService.approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+
+        // re-load model after sending GOL
+        when(projectService.getById(projectId)).thenReturn(projectResource);
+
+        when(applicationService.getById(applicationId)).thenReturn(newApplicationResource().withId(applicationId).withCompetition(competitionId).build());
+
+        competitionSummaryResource = newCompetitionSummaryResource().withId(competitionId).withCompetitionStatus(CompetitionStatus.OPEN).build();
+        when(applicationSummaryRestService.getCompetitionSummary(competitionId)).thenReturn(restSuccess(competitionSummaryResource));
+
+        when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.empty());
+        when(grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.SENT));
+        when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
+
+
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed/" + ApprovalType.APPROVED.toString().toLowerCase())).
+                andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 
-        verify(grantOfferLetterService).approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.REJECTED);
+        GrantOfferLetterModel golViewModel = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
+
+        assertTrue(golViewModel.isSentToProjectTeam());
+        assertEquals(null, golViewModel.getGrantOfferLetterFile());
+        assertEquals(null, golViewModel.getAdditionalContractFile());
+        assertEquals(null, golViewModel.getSignedGrantOfferLetterFile());
+        Assert.assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
+        Assert.assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
+        assertEquals(Boolean.TRUE, golViewModel.isSentToProjectTeam());
+        assertEquals(Boolean.FALSE, golViewModel.getSignedGrantOfferLetterApproved());
+        assertEquals(Boolean.FALSE, golViewModel.getSignedGrantOfferLetterFileAvailable());
+
+        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
+        assertEquals(form.getAnnex(), null);
     }
 
     @Test
@@ -483,10 +650,6 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertEquals("", response.getContentAsString());
         assertEquals(null, response.getHeader("Content-Disposition"));
         assertEquals(0, response.getContentLength());
-    }
-
-    private ServiceResult<GrantOfferLetterStateResource> golState(GrantOfferLetterState state) {
-        return serviceSuccess(forNonPartnerView(state, ""));
     }
 
     @Override

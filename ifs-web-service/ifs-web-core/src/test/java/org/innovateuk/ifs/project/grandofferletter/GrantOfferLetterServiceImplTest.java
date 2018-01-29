@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterServiceImpl;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import java.util.Optional;
 import static junit.framework.TestCase.assertEquals;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -238,6 +240,24 @@ public class GrantOfferLetterServiceImplTest {
         assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());
 
         verify(grantOfferLetterRestService).getGrantOfferLetterWorkflowState(projectId);
+
+    }
+
+    @Test
+    public void testGetGrantOfferLetterState() throws Exception {
+
+        Long projectId = 123L;
+
+        GrantOfferLetterStateResource state = GrantOfferLetterStateResource.forNonPartnerView(GrantOfferLetterState.APPROVED, "created");
+
+        when(grantOfferLetterRestService.getGrantOfferLetterState(projectId)).thenReturn(restSuccess(state));
+
+        ServiceResult<GrantOfferLetterStateResource> result = grantOfferLetterService.getGrantOfferLetterState(projectId);
+
+        assertTrue(result.isSuccess());
+        assertSame(state, result.getSuccessObject());
+
+        verify(grantOfferLetterRestService).getGrantOfferLetterState(projectId);
 
     }
 

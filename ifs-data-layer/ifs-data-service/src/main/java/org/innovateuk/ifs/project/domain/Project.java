@@ -3,11 +3,12 @@ package org.innovateuk.ifs.project.domain;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.file.domain.FileEntry;
-import org.innovateuk.ifs.user.domain.ProcessActivity;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
-import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.project.resource.ApprovalType;
+import org.innovateuk.ifs.project.spendprofile.domain.SpendProfile;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.ProcessActivity;
+import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static javax.persistence.EnumType.STRING;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -285,5 +287,15 @@ public class Project implements ProcessActivity {
 
     public void setSpendProfiles(List<SpendProfile> spendProfiles) {
         this.spendProfiles = spendProfiles;
+    }
+
+    public boolean isPartner(User user) {
+        return !getProjectUsers(projectUser -> projectUser.getUser().equals(user)).isEmpty();
+    }
+
+    public boolean isProjectManager(User user) {
+        return !getProjectUsers(projectUser ->
+                projectUser.getUser().equals(user) &&
+                projectUser.getUser().hasRole(PROJECT_MANAGER)).isEmpty();
     }
 }

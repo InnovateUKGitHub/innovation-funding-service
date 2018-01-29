@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.grantofferletter.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.junit.Test;
 import org.springframework.core.io.ByteArrayResource;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
@@ -197,6 +199,21 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
 
         assertTrue(result.isSuccess());
         assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetGrantOfferLetterState() {
+        long projectId = 123L;
+
+        String nonBaseUrl = projectRestURL + "/" + projectId + "/grant-offer-letter/current-state";
+        GrantOfferLetterStateResource state = GrantOfferLetterStateResource.forNonPartnerView(GrantOfferLetterState.APPROVED, "created");
+
+        setupGetWithRestResultExpectations(nonBaseUrl, GrantOfferLetterStateResource.class, state, OK);
+
+        RestResult<GrantOfferLetterStateResource> result = service.getGrantOfferLetterState(projectId);
+
+        assertTrue(result.isSuccess());
+        assertSame(state, result.getSuccessObject());
     }
 
     @Override

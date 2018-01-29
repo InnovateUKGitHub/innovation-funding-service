@@ -377,7 +377,7 @@
         <h2 class="heading-medium no-margin">Send grant offer letter</h2>
         <p>The Project Manager will be told by email.</p>
         <hr />
-        <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send'}" method="post">
+        <form th:action="@{'/project/' + ${projectId} + '/grant-offer-letter/send-offer'}" method="post">
             <div>
                 <button class="button" type="submit">Publish to project team</button>
                 <button type="button" class="js-close buttonlink">Cancel</button>

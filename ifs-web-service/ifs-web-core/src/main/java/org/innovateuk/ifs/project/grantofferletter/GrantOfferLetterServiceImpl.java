@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.grantofferletter;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,6 +99,11 @@ public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
     @Override
     public ServiceResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId) {
         return grantOfferLetterRestService.getGrantOfferLetterWorkflowState(projectId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId) {
+        return grantOfferLetterRestService.getGrantOfferLetterState(projectId).toServiceResult();
     }
 
     @Override

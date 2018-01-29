@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.configuration.workflow;
 
+import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
@@ -89,6 +90,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
         return fireEvent(externalUserEvent(project, projectManager, SIGNED_GOL_REMOVED), project);
     }
 
+    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
     public boolean isAlreadySent(Project project) {
         GOLProcess process = getCurrentProcess(project);
         return process != null && !GrantOfferLetterState.PENDING.equals(process.getActivityState());
@@ -128,6 +130,11 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
         if(projectUser == null)
             return false;
         return fn.apply(project, projectUser);
+    }
+
+    public String getLastProcessEvent(Project project) {
+        GOLProcess process = getCurrentProcess(project);
+        return process != null ? process.getProcessEvent() : null;
     }
 
     public boolean sign(Project project) {
