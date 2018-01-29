@@ -8,13 +8,14 @@ import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionMod
 import org.innovateuk.ifs.application.populator.forminput.FormInputViewModelGenerator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.ApplicationState;
-import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentFeedbackResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.review.populator.AssessmentReviewApplicationSummaryModelPopulator;
-import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.invite.resource.AssessorInvitesToSendResource;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -24,29 +25,36 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
-import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static java.util.Optional.ofNullable;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.applicant.builder.ApplicantQuestionResourceBuilder.newApplicantQuestionResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
-import static org.innovateuk.ifs.assessment.builder.ApplicationAssessmentFeedbackResourceBuilder.newApplicationAssessmentFeedbackResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentState.SUBMITTED;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
-import static org.innovateuk.ifs.invite.builder.AssessorInvitesToSendResourceBuilder.newAssessorInvitesToSendResource;
+import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
+import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
+import static org.innovateuk.ifs.form.resource.FormInputType.TEXTAREA;
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -73,8 +81,8 @@ public class AssessmentReviewApplicationSummaryControllerTest extends BaseContro
     @Mock
     private FormInputViewModelGenerator formInputViewModelGenerator;
 
-    @Mock
-    private AssessorFormInputResponseRestService assessorFormInputResponseService;
+ //   @Mock
+ //   private AssessorFormInputResponseRestService assessorFormInputResponseService;
 
     @Override
     protected AssessmentReviewApplicationSummaryController supplyControllerUnderTest() {
@@ -123,54 +131,111 @@ public class AssessmentReviewApplicationSummaryControllerTest extends BaseContro
 
     @Test
     public void testAssessorCanViewOwnFeedbackOnApplicationWhenInPanel() throws Exception {
-
         long reviewId = 1L;
+        long questionId = 2L;
+
         UserResource user = loggedInUser;
         ApplicationResource application = applications.get(0);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+        CompetitionResource competition = competitionResource;
+        String expectedAssessmentFeedback = "assessment feedback";
+        String expectedAssessmentComment = "assessment comment";
+        String expectedQuestionFeedback = "feedback";
+        String expectedQuestionScore = "10";
+
         application.setCompetition(competition.getId());
+        application.setApplicationState(ApplicationState.IN_PANEL);
 
         competition.setHasAssessmentPanel(true);
         competition.setCompetitionStatus(FUNDERS_PANEL);
-        application.setApplicationState(ApplicationState.IN_PANEL);
 
-        ApplicationAssessmentFeedbackResource feedback = newApplicationAssessmentFeedbackResource()
-                .withFeedback(asList("Feedback 1", "Feedback 2"))
-                .build();
+        List<FormInputResource> formInputs = setupAssessmentFormInputs(questionId, ASSESSOR_SCORE, TEXTAREA);
+        long formInputIdScore = formInputs.get(0).getId();
+        long formInputIdFeedback = formInputs.get(1).getId();
 
-        AssessmentResource assessment = newAssessmentResource()
+        OrganisationResource collaboratorOrganisation1 = newOrganisationResource().build();
+        OrganisationResource collaboratorOrganisation2 = newOrganisationResource().build();
+        OrganisationResource leadOrganisation = newOrganisationResource().withId(1L).build();
+        OrganisationResource otherOrganisation = newOrganisationResource().build();
+
+        List<UserResource> otherUsers = newUserResource().build(3);
+
+        List<ProcessRoleResource> processRoles = newProcessRoleResource()
+                .withOrganisation(collaboratorOrganisation1.getId(),
+                        leadOrganisation.getId(),
+                        collaboratorOrganisation2.getId(),
+                        otherOrganisation.getId())
+                .withUser(otherUsers.get(0), otherUsers.get(1), otherUsers.get(2), user)
+                .withRoleName(COLLABORATOR.getName(), LEADAPPLICANT.getName(), COLLABORATOR.getName(), ASSESSOR.getName())
+                .build(4);
+
+        List<AssessmentResource> assessment = newAssessmentResource()
                 .withApplication(application.getId())
                 .withApplicationName(application.getName())
                 .withActivityState(SUBMITTED)
                 .withCompetition(competition.getId())
-                .build();
+                .withProcessRole(processRoles.get(3).getId())
+                .withFundingDecision(newAssessmentFundingDecisionOutcomeResource()
+                        .withFundingConfirmation(true)
+                        .withFeedback(expectedAssessmentFeedback)
+                        .withComment(expectedAssessmentComment)
+                        .build())
+                .build(1);
 
-        ProcessRoleResource processRole = newProcessRoleResource()
-                .withUser(user)
-                .withApplication(application.getId())
-                .build();
+        List<AssessorFormInputResponseResource> responses = newAssessorFormInputResponseResource()
+                .with(id(null))
+                .withAssessment(assessment.get(0).getId())
+                .withFormInput(formInputIdScore, formInputIdFeedback)
+                .withValue(expectedQuestionScore, expectedQuestionFeedback)
+                .build(2);
 
-        AssessorFormInputResponseResource assessorFormInputResponse = newAssessorFormInputResponseResource()
-                .withAssessment(assessment.getId())
-                .build();
+        when(processRoleService.findProcessRolesByApplicationId(application.getId())).thenReturn(processRoles);
+        when(organisationService.getOrganisationById(otherOrganisation.getId())).thenReturn(otherOrganisation);
+        when(assessorFormInputResponseRestService.getAllAssessorFormInputResponsesForPanel(processRoles.get(3).getId())).thenReturn(restSuccess(responses));
+        when(assessmentRestService.getByUserAndApplication(user.getId(), application.getId())).thenReturn(restSuccess(assessment));
+        when(formInputRestService.getById(responses.get(0).getFormInput())).thenReturn(restSuccess(formInputs.get(0)));
+        when(formInputRestService.getById(responses.get(1).getFormInput())).thenReturn(restSuccess(formInputs.get(1)));
 
-        List<AssessorFormInputResponseResource> feedbackSummary = assessorFormInputResponseService.getAllAssessorFormInputResponsesForPanel(assessment.getId()).getSuccessObjectOrThrowException();
-
-        mockMvc.perform(get("/review/{reviewId}/application/{applicationId}", reviewId, application.getId()   ))
+        MvcResult result = mockMvc.perform(get("/review/{reviewId}/application/{applicationId}", reviewId, application.getId()   ))
                 .andExpect(status().isOk())
                 .andExpect(view().name("assessor-panel-application-overview"))
                 .andExpect(model().attribute("currentApplication", application))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(application.getCompetition())))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application1Organisations.size())))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(2)))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(0))))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(1))))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
                 .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
-//                .andExpect(model().attribute("feedback",null))
-//                .andExpect(model().attribute("score",null))
-                .andExpect(model().attribute("feedbackSummary",feedbackSummary));
+                .andExpect(model().attribute("score", Matchers.hasItem(responses.get(0))))
+                .andExpect(model().attribute("feedback", Matchers.hasItem(responses.get(1))))
+                .andExpect(model().attribute("feedbackSummary", assessment))
+                .andReturn();
+
+        List<AssessmentResource> resultAssessment = (List<AssessmentResource>) result.getModelAndView().getModel().get("feedbackSummary");
+        AssessmentFundingDecisionOutcomeResource fundingDecisionOutcome = resultAssessment.get(0).getFundingDecision();
+        assertEquals(true, fundingDecisionOutcome.getFundingConfirmation());
+        assertEquals(expectedAssessmentFeedback, fundingDecisionOutcome.getFeedback());
+        assertEquals(expectedAssessmentComment, fundingDecisionOutcome.getComment());
+
+        List<AssessorFormInputResponseResource> assessorScoreResponse = (List<AssessorFormInputResponseResource>) result.getModelAndView().getModel().get("score");
+        assertEquals(expectedQuestionScore, assessorScoreResponse.get(0).getValue());
+
+        List<AssessorFormInputResponseResource> assessorFeedbackResponse = (List<AssessorFormInputResponseResource>) result.getModelAndView().getModel().get("feedback");
+        assertEquals(expectedQuestionFeedback, assessorFeedbackResponse.get(0).getValue());
     }
 
+    private List<FormInputResource> setupAssessmentFormInputs(long questionId, FormInputType... formInputTypes) {
+        List<FormInputResource> formInputs = stream(formInputTypes).map(formInputType ->
+                newFormInputResource()
+                        .withType(formInputType)
+                        .withQuestion(questionId)
+                        .build()
+        ).collect(toList());
+
+        formInputs.get(0).setDescription("Question score");
+        formInputs.get(1).setDescription("Feedback");
+
+        return formInputs;
+    }
 }
