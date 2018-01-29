@@ -41,7 +41,7 @@
 
                     <div class="column-half">
                         <h3 class="heading-small">Project timescales</h3>
-                        <p>Project start date: <br /><th:block th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" /></p>
+                        <p class="no-margin">Project start date: <br /><th:block th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" /></p>
                         <p>Duration: <br /><th:block th:text="${currentApplication.durationInMonths}" /> months</p>
 
                         <h3 class="heading-small extra-margin">Total project cost</h3>
@@ -57,15 +57,20 @@
                             <li class="section-status">
                                 <div class="grid-row">
                                     <div class="column-two-thirds">
-                                        <h3 th:text="${question.shortName}" class="heading-small">Project summary</h3>
+                                        <h3 class="heading-small">
+                                            <a th:href="@{/application/{apId}/question/{qId}/feedback(apId=${currentApplication.id},qId=${question.id})}"
+                                            th:text="${question.shortName}" >Project summary</a>
+                                        </h3>
                                     </div>
                                     <div class="column-third">
-                                        <p th:unless="${question.shortName.equals('Scope')}" class="form-hint no-margin">No feedback provided</p>
                                         <th:block th:if="${question.shortName.equals('Scope')}">
                                             <p th:unless="${scores.scopeAssessed}" class="form-hint no-margin">No feedback provided</p>
                                             <p th:if="${scores.scopeAssessed}">
                                                 In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span>
                                             </p>
+                                        </th:block>
+                                        <th:block th:unless="${question.shortName.equals('Scope')}">
+                                            <p class="form-hint no-margin">No feedback provided</p>
                                         </th:block>
                                     </div>
                                 </div>
@@ -116,122 +121,13 @@
                     </div>
                 </div>
             </section>
-            <!--/*
-            <h2 class="heading-medium">Finances</h2>
-            <p class="form-hint">These finances were submitted at the application stage.</p>
-
-            <div class="collapsible section-overview">
-                <h3 class="heading-small no-margin">Finance summaries</h3>
-                <div class="table-overflow">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th scope="col">Partner</th>
-                                <th scope="col" class="numeric width-small">Total costs</th>
-                                <th scope="col" class="numeric width-small">% Grant</th>
-                                <th scope="col" class="numeric width-small-medium">Funding sought</th>
-                                <th scope="col" class="numeric width-medium">Other public sector funding</th>
-                                <th scope="col" class="numeric width-small-medium">Contribution to project</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Total</th>
-                                <td class="numeric">
-                                    <strong>&pound;280,000</strong>
-                                </td>
-                                <td class="numeric">
-                                    <strong>&pound;280,000</strong>
-                                </td>
-                                <td class="numeric">
-                                    <strong>&pound;280,000</strong>
-                                </td>
-                                <td class="numeric">
-                                    <strong>&pound;280,000</strong>
-                                </td>
-                                <td class="numeric">
-                                    <strong>&pound;280,000</strong>
-                                </td>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            <tr>
-                                <th scope="row">
-                                    Aptrans Ltd<br />
-                                    <small>Lead partner</small>
-                                </th>
-                                <td class="numeric">
-                                    <strong>&pound;100,000</strong>
-                                </td>
-                                <td class="numeric">70%</td>
-                                <td class="numeric">&pound;60,000</td>
-                                <td class="numeric">&pound;10,000</td>
-                                <td class="numeric">&pound;30,000</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="collapsible section-overview">
-                <h3 class="heading-small no-margin">Project cost breakdown</h3>
-                <div class="table-overflow">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th scope="col" class="width-large">Partner</th>
-                                <th scope="col" class="numeric width-small">Total</th>
-                                <th scope="col" class="numeric width-small">Labour</th>
-                                <th scope="col" class="numeric width-small">Overheads</th>
-                                <th scope="col" class="numeric width-small">Materials</th>
-                                <th scope="col" class="numeric width-small">Capital usage</th>
-                                <th scope="col" class="numeric width-small">Subcontracting cost</th>
-                                <th scope="col" class="numeric width-small">Travel and subsistence</th>
-                                <th scope="col" class="numeric width-small">Other Costs</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Total</th>
-                                <td class="numeric"><strong>£450,983</strong></td>
-                                <td class="numeric">&nbsp;</td>
-                                <td class="numeric">&nbsp;</td>
-                                <td class="numeric">&nbsp;</td>
-                                <td class="numeric">&nbsp;</td>
-                                <td class="numeric">&nbsp;</td>
-                                <td class="numeric">&nbsp;</td>
-                                <td class="numeric">&nbsp;</td>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            <tr>
-                                <th scope="row">
-                                    Aptrans Ltd<br />
-                                    <small class="width-large">
-                                        Lead partner<br />
-                                        <a>Detailed finances</a>
-                                    </small>
-                                </th>
-                                <td class="numeric"><strong>£257,033</strong></td>
-                                <td class="numeric">£126,207</td>
-                                <td class="numeric">£86,167</td>
-                                <td class="numeric">£44,659</td>
-                                <td class="numeric">£257,033</td>
-                                <td class="numeric">£126,207</td>
-                                <td class="numeric">£86,167</td>
-                                <td class="numeric">£44,659</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>*/-->
 
             <div th:if="!${#lists.isEmpty(feedback)}">
                 <h2 class="heading-medium">Assessor feedback</h2>
                 <ul class="boxed-list">
                     <li th:each="item, iterStat : ${feedback}">
                         <h3 class="heading-small" th:text="|Assessor ${iterStat.count}|">Assessor 1</h3>
-                        <p th:text="${item}">Feedback text</p>
+                        <div th:text="${item}" data-text-to-html="" class="wysiwyg-styles">Feedback text</div>
                     </li>
                 </ul>
             </div>
