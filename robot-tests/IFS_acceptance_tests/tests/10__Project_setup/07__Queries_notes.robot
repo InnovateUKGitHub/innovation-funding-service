@@ -294,6 +294,7 @@ IFS Admin can see applicant's response flagged in Query responses tab and mark d
     And the user should see the element   link=Post a new query
     When the user expands the section     a viability query's title
     Then the query conversation can be resolved by  Arden Pimenta  viability
+    [Teardown]  the user collapses the section      a viability query's title
 
 Project finance user can view the response and uploaded files
     [Documentation]    INFUND-4843
@@ -332,6 +333,7 @@ Project Finance user is able to mark a query discussion as complete
     When the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/query
     And the user expands the section     an eligibility query's title
     Then the query conversation can be resolved by  Lee Bowman  eligibility
+    [Teardown]  the user collapses the section      an eligibility query's title
 
 Link to notes from viability section
     [Documentation]    INFUND-4845
@@ -564,5 +566,5 @@ The query conversation can be resolved by
     the user clicks the button/link  jQuery=h2:contains("${section}") + [id^="finance-checks-internal-query"] a:contains("Mark as resolved")
     the user clicks the button/link  css=button[name="markAsResolved"]  # Submit
     the user should see the element  jQuery=h2:contains("${section}") .yes  # Resolved green check
-    capture large screenshot
-    the user should see the element  jQuery=.message-alert:contains("marked as resolved by ${user} on ${today}")
+    the user should see the element  jQuery=.message-alert:contains("${user} on")
+    the user should see the element  jQuery=.message-alert:contains("${today}")
