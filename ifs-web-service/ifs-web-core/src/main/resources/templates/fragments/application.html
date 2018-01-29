@@ -100,12 +100,12 @@
 
     <section th:if="!${#lists.isEmpty(feedbackSummary)}">
         <h2 class="heading-medium">Feedback summary</h2>
-        <h2 class="heading-small">Do you believe that this application is suitable for funding?</h2>
+        <h3 class="heading-small">Do you believe that this application is suitable for funding?</h3>
         <p th:if="${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">Yes</p>
         <p th:if="!${feedbackSummary[0].getFundingDecision().getFundingConfirmation()}">No</p>
-        <h2 class="heading-small">Your feedback</h2>
+        <h3 class="heading-small">Your feedback</h3>
         <p th:text="${feedbackSummary[0].getFundingDecision().getFeedback()}">Feedback text</p>
-        <h2 class="heading-small">Other comments</h2>
+        <h3 class="heading-small">Other comments</h3>
         <p th:text="${feedbackSummary[0].getFundingDecision().getComment()}">Feedback text</p>
     </section>
 

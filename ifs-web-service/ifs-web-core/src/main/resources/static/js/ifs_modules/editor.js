@@ -34,6 +34,11 @@ IFS.core.editor = (function () {
         var html = IFS.core.editor.markdownToHtml(content)
         jQuery(this).html(html)
       })
+      jQuery('[data-text-to-html]').each(function () {
+        var content = jQuery(this).html()
+        var html = IFS.core.editor.textToHtml(content)
+        jQuery(this).html(html)
+      })
     },
     prepareEditorHTML: function (textarea) {
       var el = jQuery(textarea)
@@ -55,7 +60,7 @@ IFS.core.editor = (function () {
         var editorDiv = el.prev()
         switch (editorType) {
           case 'md':
-            IFS.core.editor.textareaMarkdownToHtml(el, el.prev())
+            IFS.core.editor.textareaMarkdownToHtml(el, editorDiv)
             break
           case 'html':
             var html = jQuery.htmlClean(el.val(), s.editorOptions.plugins.hallocleanhtml)
@@ -98,9 +103,6 @@ IFS.core.editor = (function () {
     },
     textareaMarkdownToHtml: function (sourceEl, editorEl) {
       var sourceVal = sourceEl.val()
-      if (IFS.core.editor.htmlToMarkdown(jQuery(editorEl).html()) === sourceVal) {
-        return
-      }
       var html = IFS.core.editor.markdownToHtml(sourceVal)
       jQuery(editorEl).html(html)
     },
@@ -114,7 +116,6 @@ IFS.core.editor = (function () {
     htmlToMarkdown: function (content) {
       var html = jQuery.trim(content.replace(/(\r\n|\n|\r)/gm, ''))
       html = jQuery.htmlClean(html, s.editorOptions.plugins.hallocleanhtml)
-
       return md(html)
     },
     markdownToHtml: function (content) {
@@ -123,8 +124,18 @@ IFS.core.editor = (function () {
         html = '<p>&nbsp;</p>'
       } else {
         html = converter.makeHtml(content)
+        html = jQuery.htmlClean(html, s.editorOptions.plugins.hallocleanhtml)
       }
-      html = jQuery.htmlClean(html, s.editorOptions.plugins.hallocleanhtml)
+
+      return html
+    },
+    textToHtml: function (content) {
+      var html
+      if (content.length === 0) {
+        html = '<p>&nbsp;</p>'
+      } else {
+        html = '<p>' + content.replace(/\n/g, '<br />') + '</p>'
+      }
       return html
     }
   }

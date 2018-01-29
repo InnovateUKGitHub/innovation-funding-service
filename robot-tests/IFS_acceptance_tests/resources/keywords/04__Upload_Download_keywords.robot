@@ -42,6 +42,7 @@ remove the file from the operating system
     remove file    ${download_folder}/${filename}
 
 the file has been scanned for viruses
+    # THis keyword does not check about viruses at all ! It only adds delay.
     Sleep    5s    # this sleep statement is necessary as we wait for the antivirus scanner to work. Please do not remove during refactoring!
 
 
