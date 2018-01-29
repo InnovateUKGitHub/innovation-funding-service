@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation
-...
 ...             IFS-2688 As a Portfolio manager I am able to create a Prince's Trust competition
+...
 Suite Setup     custom suite setup
 Suite Teardown  Close browser and delete emails
 Resource        ../../../resources/defaultResources.robot
