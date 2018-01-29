@@ -11,6 +11,12 @@
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectId})}" />
+
+            <div th:if="${#fields.hasErrors('${form.*}')}" class="error-summary" role="alert" aria-labelledby="error-summary-heading" tabindex="-1">
+                <h2 class="heading-medium error-summary-heading"  id="error-summary-heading">We were unable to save your changes.</h2>
+                <th:block th:insert="fragments/elements :: error-summary-list(form)" />
+            </div>
+
             <th:block th:insert="fragments/layout :: page-title" th:with="pageTitle='Project address',subTitle=${model.projectName},size='heading-xlarge'" />
 
             <p>We will assign a Monitoring Officer who will visit your project at this address.</p>

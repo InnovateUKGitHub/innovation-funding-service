@@ -18,12 +18,15 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
     private ZonedDateTime submitDate;
-    private boolean offerApproved;
-    private boolean isGrantOfferLetterSent;
+    private boolean grantOfferLetterApproved;
+    private boolean grantOfferLetterSent;
+    private boolean grantOfferLetterRejected;
 
     public GrantOfferLetterModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                 ZonedDateTime submitDate, boolean offerApproved, boolean projectManager, boolean isGrantOfferLetterSent) {
+                                 ZonedDateTime submitDate, boolean projectManager, boolean grantOfferLetterApproved,
+                                 boolean grantOfferLetterSent, boolean grantOfferLetterRejected) {
+
         this.projectId = projectId;
         this.projectName = projectName;
         this.leadPartner = leadPartner;
@@ -31,9 +34,10 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
         this.submitDate = submitDate;
-        this.offerApproved = offerApproved;
+        this.grantOfferLetterApproved = grantOfferLetterApproved;
         this.projectManager = projectManager;
-        this.isGrantOfferLetterSent = isGrantOfferLetterSent;
+        this.grantOfferLetterSent = grantOfferLetterSent;
+        this.grantOfferLetterRejected = grantOfferLetterRejected;
     }
 
     @Override
@@ -58,24 +62,12 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         return grantOfferLetterFile;
     }
 
-    public boolean isOfferApproved() {
-        return offerApproved;
-    }
-
-    public void setOfferApproved(boolean offerApproved) {
-        this.offerApproved = offerApproved;
-    }
-
-    public void setGrantOfferLetterFile(FileDetailsViewModel grantOfferLetterFile) {
-        this.grantOfferLetterFile = grantOfferLetterFile;
+    public boolean isGrantOfferLetterApproved() {
+        return grantOfferLetterApproved;
     }
 
     public FileDetailsViewModel getAdditionalContractFile() {
         return additionalContractFile;
-    }
-
-    public void setAdditionalContractFile(FileDetailsViewModel additionalContractFile) {
-        this.additionalContractFile = additionalContractFile;
     }
 
     public boolean isOfferSigned() {
@@ -86,16 +78,8 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         return submitDate;
     }
 
-    public void setSubmitDate(ZonedDateTime submitDate) {
-        this.submitDate = submitDate;
-    }
-
     public FileDetailsViewModel getSignedGrantOfferLetterFile() {
         return signedGrantOfferLetterFile;
-    }
-
-    public void setSignedGrantOfferLetterFile(FileDetailsViewModel signedGrantOfferLetterFile) {
-        this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
     }
 
     public boolean isShowSubmitButton() {
@@ -111,6 +95,70 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isGrantOfferLetterSent() {
-        return isGrantOfferLetterSent;
+        return grantOfferLetterSent;
+    }
+
+    public boolean isGrantOfferLetterRejected() {
+        return grantOfferLetterRejected;
+    }
+
+    public boolean isShowGrantOfferLetterRejectedMessage() {
+
+        if (!isProjectManager()) {
+            return false;
+        }
+
+        return isGrantOfferLetterRejected();
+    }
+
+    public boolean isAbleToRemoveSignedGrantOffer() {
+
+        if (getSignedGrantOfferLetterFile() == null) {
+            return false;
+        }
+
+        if (isGrantOfferLetterApproved()) {
+            return false;
+        }
+
+        if (isGrantOfferLetterRejected()) {
+            return isProjectManager();
+        }
+
+        if (!isSubmitted()) {
+            return isLeadPartner();
+        }
+
+        return false;
+    }
+
+    public boolean isShowGrantOfferLetterReceivedByInnovateMessage() {
+
+        if (isGrantOfferLetterRejected() && !isLeadPartner()) {
+            return true;
+        }
+
+        if (isGrantOfferLetterApproved()) {
+            return false;
+        }
+
+        return isSubmitted();
+    }
+
+    public boolean isShowAwaitingSignatureFromLeadPartnerMessage() {
+
+        if (isLeadPartner()) {
+            return false;
+        }
+
+        if (!isGrantOfferLetterSent()) {
+            return false;
+        }
+
+        return !isSubmitted();
+    }
+
+    public boolean isShowGrantOfferLetterApprovedByInnovateMessage() {
+        return isGrantOfferLetterApproved();
     }
 }
