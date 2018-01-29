@@ -30,8 +30,6 @@ Documentation     INFUND-7365 Inflight competition dashboards: Inform dashboard
 ...               IFS-2437 Viewing application details when feedback has been released
 ...
 ...               IFS-2256 Missing print button and sections of the application cannot be viewed when in 'feedback' status.
-...
-...               IFS-2640 Innovation Leads can access ‘Previous’ tab
 Suite Setup       The user logs-in in new browser  &{Comp_admin1_credentials}
 Suite Teardown    Close browser and delete emails
 Force Tags        CompAdmin
@@ -46,7 +44,7 @@ Competition Dashboard
     [Documentation]    INFUND-7365
     [Tags]    HappyPath
     When The user clicks the button/link    link=${INFORM_COMPETITION_NAME}
-    Then The user should see the text in the page    delivery programme - low carbon vehicles
+    Then The user should see the text in the page   Integrated delivery programme - low carbon vehicles
     And The user should see the text in the page    Inform
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing
@@ -103,32 +101,15 @@ Unsuccessful applicant sees unsuccessful alert
     When the user clicks the button/link     jQuery=a:contains("Electric Drive")
     And the user should see the element      jQuery=.warning-alert:contains("Your application has not been successful in this competition")
 
-#Internal user can view ineligible and unsuccessful applications in previous tab
-#    [Documentation]  IFS-1458 IFS-1459 IFS-1517
-#    [Tags]  HappyPath
-#    [Setup]  log in as a different user      &{Comp_admin1_credentials}
-#    Given the user clicks the button/link    jQuery=a:contains("Previous")
-#    When the user clicks the button/link     link=${NOT_EDITABLE_COMPETITION_NAME}
-#    And the user clicks the button/link      link=Unsuccessful applications
-#    Then the user should see the element     jQuery=td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
-#    And the user should not see the element  jQuery=td:contains("${INFORM_COMPETITION_NAME_1}")
-
-#Innovation Lead can see the competition listed in the Previous tab and the unsuccessful application
-#    [Documentation]  IFS-2640
-#    [TAGS]  HappyPath
-#    [Setup]  log in as a different user      &{innovation_lead_one}
-#    Given the user clicks the button/link    jQuery=a:contains("Previous")
-#    When the user clicks the button/link     link=${INFORM_COMPETITION_NAME}}
-#    And the user clicks the button/link      link=Unsuccessful applications
-#    Then the user should see the element     tr:contains(Electric Drive) td:contains(Unsuccessful)
-
-Internal user can see ineligible and unsuccessful applications in previous tab
-    [Documentation]  IFS-1458  IFS-1459  IFS-1517  IFS-2640
+Internal user can view ineligible and unsuccessful applications in previous tab
+    [Documentation]  IFS-1458 IFS-1459 IFS-1517
     [Tags]  HappyPath
-    #When the user checks the ineligible and unsuccessful applications in previous tab    &{Comp_admin1_credentials}
-    #Then the user checks the ineligible and unsuccessful applications in previous tab    &{innovation_lead_one}
-    When the user checks the ineligible and unsuccessful applications in previous tab    john.doe@innovateuk.test  Passw0rd
-    Then the user checks the ineligible and unsuccessful applications in previous tab    ian.cooper@innovateuk.test  Passw0rd
+    [Setup]  log in as a different user      &{Comp_admin1_credentials}
+    Given the user clicks the button/link    jQuery=a:contains("Previous")
+    When the user clicks the button/link     link=${NOT_EDITABLE_COMPETITION_NAME}
+    And the user clicks the button/link      link=Unsuccessful applications
+    Then the user should see the element     jQuery=td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
+    And the user should not see the element  jQuery=td:contains("${INFORM_COMPETITION_NAME_1}")
 
 Successful applicant see successful alert
     [Documentation]    INFUND-7861
@@ -233,12 +214,3 @@ The user checks the Scope functionality
     the user should see the element    jQuery=h4:contains("Assessor 1")
     the user should see the element    jQuery=p:contains("This is the scope feedback")
     the user clicks the button/link    jQuery=a:contains("Feedback overview")
-
-The user checks the ineligible and unsuccessful applications in previous tab
-    [Arguments]  ${comp_admin_OR_innovation_lead_email}  ${comp_admin_OR_innovation_lead_password}
-    log in as a different user             ${comp_admin_OR_innovation_lead_email}  ${comp_admin_OR_innovation_lead_password}
-    the user clicks the button/link        jQuery=a:contains("Previous")
-    the user clicks the button/link        link=${NOT_EDITABLE_COMPETITION_NAME}
-    the user clicks the button/link        link=Unsuccessful applications
-    the user should see the element        jQuery=td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
-    the user should not see the element    jQuery=td:contains("${INFORM_COMPETITION_NAME_1}")
