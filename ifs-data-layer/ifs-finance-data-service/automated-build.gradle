@@ -10,10 +10,10 @@ ext.ifsDatasourcePassword=""
 ext.ifsFlywayLocations=""
 
 ext.testIfsDatasourceUrl="jdbc:mysql://127.0.0.1:3306/ifs_finance_test"
-ext.testIfsDatasourceUsername="ifs"
-ext.testIfsDatasourcePassword="ifs"
+ext.testIfsDatasourceUsername="root"
+ext.testIfsDatasourcePassword="password"
 
 project.ext['flyway.url']='jdbc:mysql://127.0.0.1:3306?characterEncoding=utf8'
 project.ext['flyway.schemas']='ifs_finance,ifs_finance_test'
-project.ext['flyway.user']="ifs"
-project.ext['flyway.password']="ifs"
+project.ext['flyway.user']="root"
+project.ext['flyway.password']="password"
