@@ -15,11 +15,15 @@ Documentation
 ...               INFUND-7756 Project finance can post an update to an existing note
 ...
 ...               IFS-1882 Project Setup internal project dashboard: Query responses
-
+...
+...               IFS-1987 Queries: close a conversation. See also IFS-2638, IFS-2639
 Suite Setup       Custom Suite Setup
 Suite Teardown    Close browser and delete emails
 Force Tags        Project Setup
 Resource          PS_Common.robot
+
+# This suite is using Competition: Internet of Things
+# and Application: Sensing & Control network using the lighting infrastructure
 
 *** Variables ***
 ${opens_in_new_window}    (opens in a new window)
@@ -90,16 +94,11 @@ Project finance user can upload a pdf file
     Then the user uploads the file      name=attachment    ${valid_pdf}
     And the user should see the text in the page    ${valid_pdf}
 
-Project finance user cannot add query for an organisation not part of the project
-    [Documentation]  IFS-281, IFS-379
-    [Tags]
-    When the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/23/query/new-query    ${403_error_message}
-    [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/query/new-query
-
 Project finance can remove the file
     [Documentation]    INFUND-4840
     [Tags]
-    When the user clicks the button/link    name=removeAttachment
+    Given the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/query/new-query
+    When the user clicks the button/link  name=removeAttachment
     Then the user should not see the text in the page    ${valid_pdf}
     And the user should not see an error in the page
 
@@ -165,7 +164,7 @@ New query can be cancelled
 Query can be re-entered (Eligibility)
     [Documentation]    INFUND-4840
     [Tags]  HappyPath
-    When the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/query?query_section=ELIGIBILITY
+    When the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/query
     And the user clicks the button/link    jQuery=.button:contains("Post a new query")
     And the user enters text to a text field    id=queryTitle    an eligibility query's title
     And the user enters text to a text field    css=.editor    this is some query text
@@ -279,19 +278,22 @@ Respond to older query
 IFS Admin can see queries raised column updates to 'view'
     [Documentation]    INFUND-4843, IFS-603
     [Tags]  #Administrator
-    Given log in as a different user    &{ifs_admin_user_credentials}
+    Given log in as a different user       &{ifs_admin_user_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Awaiting response")
 
-IFS Admin can see applicant's response flagged in Query responses tab
-    [Documentation]    IFS-1882
-    [Tags]
-    Given the user navigates to the page  ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status/all
+IFS Admin can see applicant's response flagged in Query responses tab and mark discussion as Resolved
+    [Documentation]  IFS-1882 IFS-1987
+    [Tags]  #Administrator
+    # Query responses tab
+    Given the user navigates to the page  ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION_NUMBER}/status/queries
     When the user clicks the button/link  link=Query responses (1)
-    Then the user should see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_NUMBER}")~td:contains("${EMPIRE_LTD_NAME}")
+    Then the user should see the element  jQuery=td:contains("${FUNDERS_PANEL_APPLICATION_1_TITLE}") + td:contains("${EMPIRE_LTD_NAME}")
     When the user clicks the button/link  link=${EMPIRE_LTD_NAME}
     Then the user should see the element  jQuery=h1:contains("${EMPIRE_LTD_NAME}")
     And the user should see the element   link=Post a new query
+    When the user expands the section     a viability query's title
+    Then the query conversation can be resolved by  Arden Pimenta  viability
 
 Project finance user can view the response and uploaded files
     [Documentation]    INFUND-4843
@@ -323,10 +325,17 @@ Finance contact can view the new response
     And the user clicks the button/link   link=Finance checks
     Then the user should see the text in the page  This is a response to a response
 
+Project Finance user is able to mark a query discussion as complete
+    [Documentation]  IFS-1987
+    [Tags]
+    Given log in as a different user     &{internal_finance_credentials}
+    When the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/${EMPIRE_LTD_ID}/query
+    And the user expands the section     an eligibility query's title
+    Then the query conversation can be resolved by  Lee Bowman  eligibility
+
 Link to notes from viability section
     [Documentation]    INFUND-4845
     [Tags]
-    Given log in as a different user    &{internal_finance_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     And the user clicks the button/link    css=table.table-progress tr:nth-child(1) td:nth-child(2)
     And the user clicks the button/link    jQuery=.button:contains("Notes")
@@ -549,3 +558,10 @@ Custom Suite Setup
     ${today} =  get today
     set suite variable  ${today}
     Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
+
+The query conversation can be resolved by
+    [Arguments]  ${user}  ${section}
+    the user clicks the button/link  jQuery=h2:contains("${section}") + [id="finance-checks-internal-query-2"] a:contains("Mark as resolved")
+    the user clicks the button/link  css=button[name="markAsResolved"]  # Submit
+    the user should see the element  jQuery=h2:contains("${section}") .yes  # Resolved green check
+    the user should see the element  jQuery=.message-alert:contains("${user} on ${today}")
