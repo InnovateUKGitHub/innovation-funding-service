@@ -324,11 +324,8 @@ public class AssessmentPanelInviteControllerDocumentation extends BaseController
     @Test
     public void acceptInvite() throws Exception {
         String hash = "invitehash";
-        UserResource user = newUserResource().build();
 
-        login(user);
-
-        when(assessmentPanelInviteServiceMock.acceptInvite(hash, user)).thenReturn(serviceSuccess());
+        when(assessmentPanelInviteServiceMock.acceptInvite(hash)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/assessmentpanelinvite/acceptInvite/{hash}", hash))
                 .andExpect(status().isOk())
