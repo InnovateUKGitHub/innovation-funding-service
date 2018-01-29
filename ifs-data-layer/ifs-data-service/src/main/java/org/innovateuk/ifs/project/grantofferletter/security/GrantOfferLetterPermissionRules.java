@@ -160,4 +160,9 @@ public class GrantOfferLetterPermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_REJECTED_STATUS", description = "Project manager can view signed grant offer letter rejection status")
+    public boolean projectManagerCanViewSignedGrantOfferLetterRejectedStatus(ProjectResource project, UserResource user) {
+        return project != null && isProjectManager(project.getId(), user.getId());
+    }
+
 }
