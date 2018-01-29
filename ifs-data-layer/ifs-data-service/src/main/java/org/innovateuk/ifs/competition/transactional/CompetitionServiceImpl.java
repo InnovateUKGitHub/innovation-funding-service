@@ -334,39 +334,24 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     private Long getLiveCount(){
-        return getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
-            Long count;
-            if(isInnovationLead(user)) {
-                count = competitionRepository.countLiveForInnovationLead(user.getId());
-            } else {
-                count = competitionRepository.countLive();
-            }
-            return count;
-        }).getSuccessObject();
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
+                isInnovationLead(user) ?
+                        competitionRepository.countLiveForInnovationLead(user.getId()) : competitionRepository.countLive()
+        ).getSuccessObject();
     }
 
     private Long getPSCount(){
-        return getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
-            Long count;
-            if(isInnovationLead(user)) {
-                count = competitionRepository.countProjectSetupForInnovationLead(user.getId());
-            } else {
-                count = competitionRepository.countProjectSetup();
-            }
-            return count;
-        }).getSuccessObject();
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
+                isInnovationLead(user) ?
+                        competitionRepository.countProjectSetupForInnovationLead(user.getId()) : competitionRepository.countProjectSetup()
+        ).getSuccessObject();
     }
 
     private Long getFeedbackReleasedCount(){
-        return getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
-            Long count ;
-            if(isInnovationLead(user)) {
-                count = competitionRepository.countFeedbackReleasedForInnovationLead(user.getId());
-            } else {
-                count = competitionRepository.countFeedbackReleased();
-            }
-            return count;
-        }).getSuccessObject();
+        return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
+                isInnovationLead(user) ?
+                        competitionRepository.countFeedbackReleasedForInnovationLead(user.getId()) : competitionRepository.countFeedbackReleased()
+        ).getSuccessObject();
     }
 
     @Override
