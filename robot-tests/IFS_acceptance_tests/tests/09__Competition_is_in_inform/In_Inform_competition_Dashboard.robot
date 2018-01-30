@@ -122,13 +122,13 @@ Unsuccessful applicant sees unsuccessful alert
 #    And the user clicks the button/link      link=Unsuccessful applications
 #    Then the user should see the element     tr:contains(Electric Drive) td:contains(Unsuccessful)
 
-Internal user can see ineligible and unsuccessful applications in previous tab
+Internal user can see ineligible and unsuccessful applications in the Previous tab
     [Documentation]  IFS-1458  IFS-1459  IFS-1517  IFS-2640
     [Tags]  HappyPath
     #When the user checks the ineligible and unsuccessful applications in previous tab    &{Comp_admin1_credentials}
     #Then the user checks the ineligible and unsuccessful applications in previous tab    &{innovation_lead_one}
-    When the user checks the ineligible and unsuccessful applications in previous tab    john.doe@innovateuk.test  Passw0rd
-    Then the user checks the ineligible and unsuccessful applications in previous tab    ian.cooper@innovateuk.test  Passw0rd
+    When the user checks the ineligible and unsuccessful applications in the Previous tab    john.doe@innovateuk.test  Passw0rd
+    Then the user checks the ineligible and unsuccessful applications in the Previous tab    ian.cooper@innovateuk.test  Passw0rd
 
 Successful applicant see successful alert
     [Documentation]    INFUND-7861
@@ -234,7 +234,7 @@ The user checks the Scope functionality
     the user should see the element    jQuery=p:contains("This is the scope feedback")
     the user clicks the button/link    jQuery=a:contains("Feedback overview")
 
-The user checks the ineligible and unsuccessful applications in previous tab
+The user checks the ineligible and unsuccessful applications in the Previous tab
     [Arguments]  ${comp_admin_OR_innovation_lead_email}  ${comp_admin_OR_innovation_lead_password}
     log in as a different user             ${comp_admin_OR_innovation_lead_email}  ${comp_admin_OR_innovation_lead_password}
     the user clicks the button/link        jQuery=a:contains("Previous")
