@@ -54,7 +54,7 @@ public class ProjectFinanceQueriesRestServiceTest extends BaseRestServiceUnitTes
     @Test
     public void test_close() throws Exception {
         Long threadId = 1L;
-        String postUrl = serviceURL + "/close/thread/" + threadId;
+        String postUrl = serviceURL + "/thread/" + threadId + "/close";
         setupPostWithRestResultExpectations(postUrl, OK);
         RestResult<Void> response = service.close(threadId);
         assertTrue(response.isSuccess());
