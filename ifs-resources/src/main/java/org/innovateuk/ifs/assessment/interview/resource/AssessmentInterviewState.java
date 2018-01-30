@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.interview;
+package org.innovateuk.ifs.assessment.interview.resource;
 
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -13,6 +13,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 public enum AssessmentInterviewState implements ProcessState {
     CREATED(State.CREATED),
+    PENDING(State.PENDING),
+    REJECTED(State.REJECTED),
     ACCEPTED(State.ACCEPTED),
     WITHDRAWN(State.WITHDRAWN);
 
