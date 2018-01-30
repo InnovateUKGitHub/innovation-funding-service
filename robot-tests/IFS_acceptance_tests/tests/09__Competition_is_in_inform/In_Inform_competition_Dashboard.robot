@@ -106,8 +106,9 @@ Unsuccessful applicant sees unsuccessful alert
 Internal user can see ineligible and unsuccessful applications in the Previous tab
     [Documentation]  IFS-1458  IFS-1459  IFS-1517  IFS-2640
     [Tags]  HappyPath
-    When the user checks the ineligible and unsuccessful applications in the Previous tab    john.doe@innovateuk.test  Passw0rd
-    Then the user checks the ineligible and unsuccessful applications in the Previous tab    ian.cooper@innovateuk.test  Passw0rd
+    When the user checks the ineligible and unsuccessful applications in the Previous tab    ${Comp_admin1_credentials}  ${short_password}
+    Then the user checks the ineligible and unsuccessful applications in the Previous tab    ${innovation_lead_one}  ${short_password}
+    #TODO IFS-2640 We need to pass emails as variables. Maybe in the user credentials or global file, but I've added these two emails as variables in the User_credentials.robot file for now.
 
 Successful applicant see successful alert
     [Documentation]    INFUND-7861
@@ -214,8 +215,8 @@ The user checks the Scope functionality
     the user clicks the button/link    jQuery=a:contains("Feedback overview")
 
 The user checks the ineligible and unsuccessful applications in the Previous tab
-    [Arguments]  ${comp_admin_OR_innovation_lead_email}  ${comp_admin_OR_innovation_lead_password}
-    log in as a different user             ${comp_admin_OR_innovation_lead_email}  ${comp_admin_OR_innovation_lead_password}
+    [Arguments]  ${email}  ${password}
+    log in as a different user             ${email}  ${password}
     the user clicks the button/link        jQuery=a:contains("Previous")
     the user clicks the button/link        link=${NOT_EDITABLE_COMPETITION_NAME}
     the user clicks the button/link        link=Unsuccessful applications
