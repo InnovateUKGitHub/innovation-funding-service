@@ -20,6 +20,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
@@ -27,6 +28,7 @@ import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.unsupportedMediaTypeError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_CREATE_FILE;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -43,6 +45,7 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.MediaType.APPLICATION_ATOM_XML;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
@@ -91,9 +94,13 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     public void testSendGOLSuccess() throws Exception {
         Long projectId = 123L;
 
+        when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
+
         mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/send-offer")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send-offer"));
+
+        verify(grantOfferLetterService).sendGrantOfferLetter(projectId);
     }
 
     @Test
@@ -117,7 +124,9 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(golState(PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
-        when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
+        List<Error> errors = asList(notFoundError(String.class), notFoundError(Long.class));
+
+        when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceFailure(errors));
 
         // re-load model after sending GOL
         when(projectService.getById(projectId)).thenReturn(projectResource);
@@ -132,24 +141,12 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(golState(PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
-
-        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/send-offer")).
+        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/send-offer")).
                 andExpect(view().name("project/grant-offer-letter-send")).
+                andExpect(model().errorCount(errors.size())).
                 andReturn();
 
-        GrantOfferLetterModelImproved golViewModel = (GrantOfferLetterModelImproved) result.getModelAndView().getModel().get("model");
-
-        assertFalse(golViewModel.isSentToProjectTeam());
-        assertEquals(null, golViewModel.getGrantOfferLetterFile());
-        assertEquals(null, golViewModel.getAdditionalContractFile());
-        assertEquals(null, golViewModel.getSignedGrantOfferLetterFile());
-        assertFalse(golViewModel.getAdditionalContractFileContentAvailable());
-        assertFalse(golViewModel.getGrantOfferLetterFileContentAvailable());
-        assertEquals(Boolean.FALSE, golViewModel.isSentToProjectTeam());
-        assertFalse(golViewModel.getSignedGrantOfferLetterRejected());
-
-        GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
-        assertEquals(form.getAnnex(), null);
+        verify(grantOfferLetterService).sendGrantOfferLetter(projectId);
     }
 
     @Test
