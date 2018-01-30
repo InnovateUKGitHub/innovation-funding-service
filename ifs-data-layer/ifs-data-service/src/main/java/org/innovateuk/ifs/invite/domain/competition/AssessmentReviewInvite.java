@@ -13,15 +13,15 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
  */
 @Entity
 @DiscriminatorValue("ASSESSMENT_PANEL")
-public class AssessmentPanelInvite extends CompetitionInvite<AssessmentPanelInvite>  {
+public class AssessmentReviewInvite extends CompetitionInvite<AssessmentReviewInvite>  {
 
-    public AssessmentPanelInvite() {
+    public AssessmentReviewInvite() {
     }
 
     /**
      * An existing User invited to an Assessment Panel.
      */
-    public AssessmentPanelInvite(final User existingUser, final String hash, Competition competition) {
+    public AssessmentReviewInvite(final User existingUser, final String hash, Competition competition) {
         super(competition, existingUser.getName(), existingUser.getEmail(), hash, CREATED);
         if (competition == null) {
             throw new NullPointerException("competition cannot be null");

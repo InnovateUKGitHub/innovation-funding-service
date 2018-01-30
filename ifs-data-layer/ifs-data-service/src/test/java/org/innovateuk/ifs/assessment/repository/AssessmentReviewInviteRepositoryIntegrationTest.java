@@ -5,7 +5,7 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewInvite;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.profile.repository.ProfileRepository;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -33,7 +33,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class AssessmentPanelInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentPanelInviteRepository> {
+public class AssessmentReviewInviteRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentPanelInviteRepository> {
 
     private Competition competition;
 
@@ -68,10 +68,10 @@ public class AssessmentPanelInviteRepositoryIntegrationTest extends BaseReposito
 
     @Test
     public void getByEmailAndCompetitionId() {
-        AssessmentPanelInvite invite = new AssessmentPanelInvite(userMapper.mapToDomain(getPaulPlum()), "hash", competition);
-        AssessmentPanelInvite saved = repository.save(invite);
+        AssessmentReviewInvite invite = new AssessmentReviewInvite(userMapper.mapToDomain(getPaulPlum()), "hash", competition);
+        AssessmentReviewInvite saved = repository.save(invite);
 
-        AssessmentPanelInvite retrievedInvite = repository.getByEmailAndCompetitionId("paul.plum@gmail.com", competition.getId());
+        AssessmentReviewInvite retrievedInvite = repository.getByEmailAndCompetitionId("paul.plum@gmail.com", competition.getId());
         assertNotNull(retrievedInvite);
 
         assertEquals(saved, retrievedInvite);
@@ -93,9 +93,9 @@ public class AssessmentPanelInviteRepositoryIntegrationTest extends BaseReposito
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
-        Page<AssessmentPanelInvite> pageResult = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
+        Page<AssessmentReviewInvite> pageResult = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED, pageable);
 
-        List<AssessmentPanelInvite> retrievedInvites = pageResult.getContent();
+        List<AssessmentReviewInvite> retrievedInvites = pageResult.getContent();
 
         assertEquals(1, retrievedInvites.size());
 
@@ -120,7 +120,7 @@ public class AssessmentPanelInviteRepositoryIntegrationTest extends BaseReposito
                 .withStatus(CREATED, CREATED, OPENED, OPENED, SENT, SENT)
                 .build(6));
 
-        List<AssessmentPanelInvite> retrievedInvites = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
+        List<AssessmentReviewInvite> retrievedInvites = repository.getByCompetitionIdAndStatus(competition.getId(), CREATED);
 
         assertEquals(1, retrievedInvites.size());
 
@@ -151,14 +151,14 @@ public class AssessmentPanelInviteRepositoryIntegrationTest extends BaseReposito
 
     @Test
     public void save() {
-        AssessmentPanelInvite invite = new AssessmentPanelInvite(userMapper.mapToDomain(getPaulPlum()), "hash", competition);
+        AssessmentReviewInvite invite = new AssessmentReviewInvite(userMapper.mapToDomain(getPaulPlum()), "hash", competition);
         repository.save(invite);
 
         flushAndClearSession();
 
         long id = invite.getId();
 
-        AssessmentPanelInvite retrievedInvite = repository.findOne(id);
+        AssessmentReviewInvite retrievedInvite = repository.findOne(id);
 
         assertEquals("Professor Plum", retrievedInvite.getName());
         assertEquals("paul.plum@gmail.com", retrievedInvite.getEmail());
@@ -168,13 +168,13 @@ public class AssessmentPanelInviteRepositoryIntegrationTest extends BaseReposito
 
     @Test(expected = DataIntegrityViolationException.class)
     public void save_duplicateHash() {
-        repository.save(new AssessmentPanelInvite(userMapper.mapToDomain(getPaulPlum()), "sameHash", competition));
-        repository.save(new AssessmentPanelInvite(userMapper.mapToDomain(getFelixWilson()), "sameHash", competition));
+        repository.save(new AssessmentReviewInvite(userMapper.mapToDomain(getPaulPlum()), "sameHash", competition));
+        repository.save(new AssessmentReviewInvite(userMapper.mapToDomain(getFelixWilson()), "sameHash", competition));
     }
 
     @Test
     public void deleteByCompetitionIdAndStatus() throws Exception {
-        List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
+        List<AssessmentReviewInvite> invites = newAssessmentPanelInvite()
                 .withCompetition(competition)
                 .withEmail("test1@test.com", "test2@test.com")
                 .withHash("hash1", "hash2")

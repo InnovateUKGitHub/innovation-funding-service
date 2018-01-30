@@ -90,7 +90,7 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<AssessmentPanelInviteServiceImpl> {
+public class AssessmentReviewInviteServiceImplTest extends BaseServiceUnitTest<AssessmentPanelInviteServiceImpl> {
     private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
     private static final String INVITE_HASH = "inviteHash";
     private Role assessorRole;
@@ -118,8 +118,8 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withSetupComplete(true)
                 .build();
 
-        AssessmentPanelInvite assessmentPanelInvite = setUpAssessmentPanelInvite(competition, SENT);
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentPanelInvite);
+        AssessmentReviewInvite assessmentReviewInvite = setUpAssessmentPanelInvite(competition, SENT);
+        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewInvite);
 
         AssessmentPanelInviteResource expected = newAssessmentPanelInviteResource().withCompetitionName("my competition").build();
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
@@ -133,9 +133,9 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(senderResource));
         when(userMapperMock.mapToDomain(senderResource)).thenReturn(sender);
 
-        when(assessmentPanelInviteRepositoryMock.getByHash(INVITE_HASH)).thenReturn(assessmentPanelInvite);
-        when(assessmentPanelInviteRepositoryMock.save(isA(AssessmentPanelInvite.class))).thenReturn(assessmentPanelInvite);
-        when(assessmentPanelInviteMapperMock.mapToResource(same(assessmentPanelInvite))).thenReturn(expected);
+        when(assessmentPanelInviteRepositoryMock.getByHash(INVITE_HASH)).thenReturn(assessmentReviewInvite);
+        when(assessmentPanelInviteRepositoryMock.save(isA(AssessmentReviewInvite.class))).thenReturn(assessmentReviewInvite);
+        when(assessmentPanelInviteMapperMock.mapToResource(same(assessmentReviewInvite))).thenReturn(expected);
         when(assessmentPanelParticipantRepositoryMock.getByInviteHash(INVITE_HASH)).thenReturn(assessmentPanelParticipant);
         when(rejectionReasonRepositoryMock.findOne(rejectionReason.getId())).thenReturn(rejectionReason);
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
@@ -359,7 +359,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withProfileId(profile4.getId())
                 .build();
 
-        List<AssessmentPanelInvite> existingUserInvites = newAssessmentPanelInvite()
+        List<AssessmentReviewInvite> existingUserInvites = newAssessmentPanelInvite()
                 .withId(1L, 2L, 3L, 4L)
                 .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero")
                 .withEmail("john@example.com", "dave@example.com", "richard@example.com", "oliver@example.com")
@@ -378,7 +378,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         long totalElements = 100L;
 
         Pageable pageable = new PageRequest(0, 20);
-        Page<AssessmentPanelInvite> page = new PageImpl<>(existingUserInvites, pageable, totalElements);
+        Page<AssessmentReviewInvite> page = new PageImpl<>(existingUserInvites, pageable, totalElements);
 
         when(assessmentPanelInviteRepositoryMock.getByCompetitionIdAndStatus(competitionId, CREATED, pageable)).thenReturn(page);
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
@@ -420,7 +420,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         when(userRepositoryMock.findOne(existingUsers.get(0).getId())).thenReturn(existingUsers.get(0));
         when(userRepositoryMock.findOne(existingUsers.get(1).getId())).thenReturn(existingUsers.get(1));
         when(competitionRepositoryMock.findOne(competition.getId())).thenReturn(competition);
-        when(assessmentPanelInviteRepositoryMock.save(isA(AssessmentPanelInvite.class))).thenReturn(new AssessmentPanelInvite());
+        when(assessmentPanelInviteRepositoryMock.save(isA(AssessmentReviewInvite.class))).thenReturn(new AssessmentReviewInvite());
 
         ServiceResult<Void> serviceResult = service.inviteUsers(existingAssessors);
         assertTrue(serviceResult.isSuccess());
@@ -446,7 +446,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withAssessorDeadlineDate(ZonedDateTime.parse("2017-08-30T12:00:00+01:00"))
                 .build();
 
-        List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
+        List<AssessmentReviewInvite> invites = newAssessmentPanelInvite()
                 .withCompetition(competition)
                 .withEmail(emails.get(0), emails.get(1))
                 .withHash(Invite.generateInviteHash())
@@ -521,7 +521,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withAssessorDeadlineDate(deadlineDate)
                 .build();
 
-        List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
+        List<AssessmentReviewInvite> invites = newAssessmentPanelInvite()
                 .withCompetition(competition)
                 .withEmail(emails.get(0), emails.get(1))
                 .withHash(Invite.generateInviteHash())
@@ -576,7 +576,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withAssessorDeadlineDate(deadlineDate)
                 .build();
 
-        List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
+        List<AssessmentReviewInvite> invites = newAssessmentPanelInvite()
                 .withCompetition(competition)
                 .withEmail(emails.get(0), emails.get(1))
                 .withHash(Invite.generateInviteHash())
@@ -628,7 +628,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withAssessorDeadlineDate(ZonedDateTime.parse("2017-05-30T12:00:00+01:00"))
                 .build();
 
-        List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
+        List<AssessmentReviewInvite> invites = newAssessmentPanelInvite()
                 .withCompetition(competition)
                 .withEmail(emails.get(0), emails.get(1))
                 .withHash(Invite.generateInviteHash())
@@ -691,7 +691,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                                 .withName("Name 1", "Name 2", "Name 3", "Name 4", "Name 5")
                                 .withSentOn(now())
                                 .withStatus(SENT)
-                                .buildArray(5, AssessmentPanelInvite.class)
+                                .buildArray(5, AssessmentReviewInvite.class)
                 )
                 .withStatus(PENDING)
                 .build(5);
@@ -742,7 +742,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withMilestones(singletonList(milestone))
                 .build();
 
-        List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
+        List<AssessmentReviewInvite> invites = newAssessmentPanelInvite()
                 .withEmail("paulplum@gmail.com")
                 .withHash("")
                 .withCompetition(competition)
@@ -793,7 +793,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withName("Competition in Assessor Panel")
                 .withMilestones(singletonList(milestone))
                 .build();
-        List<AssessmentPanelInvite> invites = newAssessmentPanelInvite()
+        List<AssessmentReviewInvite> invites = newAssessmentPanelInvite()
                 .withEmail("paulplum@gmail.com")
                 .withHash("")
                 .withCompetition(competition)
@@ -827,17 +827,17 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         String email = "tom@poly.io";
         long competitionId = 11L;
 
-        AssessmentPanelInvite assessmentPanelInvite = newAssessmentPanelInvite()
+        AssessmentReviewInvite assessmentReviewInvite = newAssessmentPanelInvite()
                 .withStatus(CREATED)
                 .build();
 
-        when(assessmentPanelInviteRepositoryMock.getByEmailAndCompetitionId(email, competitionId)).thenReturn(assessmentPanelInvite);
+        when(assessmentPanelInviteRepositoryMock.getByEmailAndCompetitionId(email, competitionId)).thenReturn(assessmentReviewInvite);
 
         service.deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
 
         InOrder inOrder = inOrder(assessmentPanelInviteRepositoryMock);
         inOrder.verify(assessmentPanelInviteRepositoryMock).getByEmailAndCompetitionId(email, competitionId);
-        inOrder.verify(assessmentPanelInviteRepositoryMock).delete(assessmentPanelInvite);
+        inOrder.verify(assessmentPanelInviteRepositoryMock).delete(assessmentReviewInvite);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -845,11 +845,11 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
     public void deleteInvite_sent() {
         String email = "tom@poly.io";
         long competitionId = 11L;
-        AssessmentPanelInvite assessmentPanelInvite = newAssessmentPanelInvite()
+        AssessmentReviewInvite assessmentReviewInvite = newAssessmentPanelInvite()
                 .withStatus(SENT)
                 .build();
 
-        when(assessmentPanelInviteRepositoryMock.getByEmailAndCompetitionId(email, competitionId)).thenReturn(assessmentPanelInvite);
+        when(assessmentPanelInviteRepositoryMock.getByEmailAndCompetitionId(email, competitionId)).thenReturn(assessmentReviewInvite);
 
         ServiceResult<Void> serviceResult = service.deleteInvite(email, competitionId);
 
@@ -887,11 +887,11 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withType(ASSESSMENT_PANEL)
                 .withDate(now().plusDays(1))
                 .build();
-        AssessmentPanelInvite assessmentPanelInvite = setUpAssessmentPanelInvite(newCompetition()
+        AssessmentReviewInvite assessmentReviewInvite = setUpAssessmentPanelInvite(newCompetition()
                 .withName("my competition")
                 .withMilestones(singletonList(milestone))
                 .build(), SENT);
-        when(assessmentPanelInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(assessmentPanelInvite);
+        when(assessmentPanelInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(assessmentReviewInvite);
         ServiceResult<AssessmentPanelInviteResource> inviteServiceResult = service.openInvite(INVITE_HASH);
 
         assertTrue(inviteServiceResult.isSuccess());
@@ -900,8 +900,8 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
         InOrder inOrder = inOrder(assessmentPanelInviteRepositoryMock, assessmentPanelInviteMapperMock);
         inOrder.verify(assessmentPanelInviteRepositoryMock).getByHash(INVITE_HASH);
-        inOrder.verify(assessmentPanelInviteRepositoryMock).save(isA(AssessmentPanelInvite.class));
-        inOrder.verify(assessmentPanelInviteMapperMock).mapToResource(isA(AssessmentPanelInvite.class));
+        inOrder.verify(assessmentPanelInviteRepositoryMock).save(isA(AssessmentReviewInvite.class));
+        inOrder.verify(assessmentPanelInviteMapperMock).mapToResource(isA(AssessmentReviewInvite.class));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -911,11 +911,11 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .withType(ASSESSMENT_PANEL)
                 .withDate(now().minusDays(1))
                 .build();
-        AssessmentPanelInvite assessmentPanelInvite = setUpAssessmentPanelInvite(newCompetition()
+        AssessmentReviewInvite assessmentReviewInvite = setUpAssessmentPanelInvite(newCompetition()
                 .withName("my competition")
                 .withMilestones(singletonList(milestone))
                 .build(), SENT);
-        when(assessmentPanelInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(assessmentPanelInvite);
+        when(assessmentPanelInviteRepositoryMock.getByHash(isA(String.class))).thenReturn(assessmentReviewInvite);
         ServiceResult<AssessmentPanelInviteResource> inviteServiceResult = service.openInvite("inviteHashExpired");
 
         assertTrue(inviteServiceResult.isFailure());
@@ -1001,7 +1001,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .build();
     }
 
-    private AssessmentPanelInvite setUpAssessmentPanelInvite(Competition competition, InviteStatus status) {
+    private AssessmentReviewInvite setUpAssessmentPanelInvite(Competition competition, InviteStatus status) {
         return newAssessmentPanelInvite()
                 .withCompetition(competition)
                 .withHash(Invite.generateInviteHash())
@@ -1009,7 +1009,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .build();
     }
 
-    private AssessmentPanelInvite createInviteExpectations(String name, String email, InviteStatus status, Competition competition) {
+    private AssessmentReviewInvite createInviteExpectations(String name, String email, InviteStatus status, Competition competition) {
         return createLambdaMatcher(invite -> {
                     assertEquals(name, invite.getName());
                     assertEquals(email, invite.getEmail());
@@ -1020,13 +1020,13 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         );
     }
 
-    private static AssessmentPanelParticipant createAssessmentPanelParticipantExpectations(AssessmentPanelInvite assessmentPanelInvite) {
+    private static AssessmentPanelParticipant createAssessmentPanelParticipantExpectations(AssessmentReviewInvite assessmentReviewInvite) {
         return createLambdaMatcher(assessmentPanelParticipant -> {
             assertNull(assessmentPanelParticipant.getId());
-            assertEquals(assessmentPanelInvite.getTarget(), assessmentPanelParticipant.getProcess());
-            assertEquals(assessmentPanelInvite, assessmentPanelParticipant.getInvite());
+            assertEquals(assessmentReviewInvite.getTarget(), assessmentPanelParticipant.getProcess());
+            assertEquals(assessmentReviewInvite, assessmentPanelParticipant.getInvite());
             assertEquals(PANEL_ASSESSOR, assessmentPanelParticipant.getRole());
-            assertEquals(assessmentPanelInvite.getUser(), assessmentPanelParticipant.getUser());
+            assertEquals(assessmentReviewInvite.getUser(), assessmentPanelParticipant.getUser());
         });
     }
 

@@ -15,7 +15,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewInvite;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.profile.domain.Profile;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -867,7 +867,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withAssessorDeadlineDate(deadlineDate)
                 .build();
 
-        List<AssessmentPanelInvite> panelInvites = newAssessmentPanelInvite()
+        List<AssessmentReviewInvite> panelInvites = newAssessmentPanelInvite()
                 .withCompetition(competition)
                 .withEmail(emails.get(0), emails.get(1))
                 .withHash(Invite.generateInviteHash())
@@ -876,7 +876,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withUser(user)
                 .build(2);
 
-        List<Long> panelInviteIds = simpleMap(panelInvites, AssessmentPanelInvite::getId);
+        List<Long> panelInviteIds = simpleMap(panelInvites, AssessmentReviewInvite::getId);
 
         List<Application> applications = newApplication()
                 .withCompetition(competition)
@@ -931,7 +931,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withAssessorDeadlineDate(deadlineDate)
                 .build();
 
-        List<AssessmentPanelInvite> panelInvites = newAssessmentPanelInvite()
+        List<AssessmentReviewInvite> panelInvites = newAssessmentPanelInvite()
                 .withCompetition(competition)
                 .withEmail(emails.get(0), emails.get(1))
                 .withHash(Invite.generateInviteHash())
@@ -940,7 +940,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withUser(user)
                 .build(2);
 
-        List<Long> panelInviteIds = simpleMap(panelInvites, AssessmentPanelInvite::getId);
+        List<Long> panelInviteIds = simpleMap(panelInvites, AssessmentReviewInvite::getId);
 
         when(assessmentPanelInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(2);
         when(assessmentPanelInviteRepositoryMock.getByCompetitionId(competitionId)).thenReturn(panelInvites);
