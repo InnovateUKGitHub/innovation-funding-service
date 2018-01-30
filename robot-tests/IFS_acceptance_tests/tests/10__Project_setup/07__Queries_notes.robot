@@ -337,7 +337,7 @@ Project Finance user is able to mark a query discussion as complete
 
 Applicant can see the the queries resolved
     [Documentation]  IFS-1987
-    [Tags]  HappyPath
+    [Tags]
     Given log in as a different user      &{successful_applicant_credentials}
     When the user navigates to the page   ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-checks
     Then the user should see the element  jQuery=h2:contains("an eligibility query's title") .yes
