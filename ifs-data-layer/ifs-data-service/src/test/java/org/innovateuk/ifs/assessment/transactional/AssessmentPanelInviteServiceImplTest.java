@@ -937,7 +937,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
                 .build();
 
         when(assessmentPanelParticipantRepositoryMock.getByInviteHash(openedInviteHash)).thenReturn(assessmentPanelParticipant);
-        when(applicationRepositoryMock.findByCompetitionAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED)).thenReturn(emptyList());
+        when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED)).thenReturn(emptyList());
         when(roleRepositoryMock.findOneByName(UserRoleType.PANEL_ASSESSOR.getName())).thenReturn(newRole().withType(UserRoleType.PANEL_ASSESSOR).build());
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING))
                 .thenReturn(new ActivityState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING));
@@ -948,7 +948,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
         InOrder inOrder = inOrder(assessmentPanelParticipantRepositoryMock, applicationRepositoryMock, roleRepositoryMock, activityStateRepositoryMock);
         inOrder.verify(assessmentPanelParticipantRepositoryMock).getByInviteHash(openedInviteHash);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
         inOrder.verify(roleRepositoryMock).findOneByName(UserRoleType.PANEL_ASSESSOR.getName());
         inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING);
         inOrder.verifyNoMoreInteractions();
@@ -967,7 +967,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         State expectedAssessmentReviewState = State.PENDING;
 
         when(assessmentPanelParticipantRepositoryMock.getByInviteHash(openedInviteHash)).thenReturn(assessmentPanelParticipant);
-        when(applicationRepositoryMock.findByCompetitionAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED)).thenReturn(applicationsOnPanel);
+        when(applicationRepositoryMock.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED)).thenReturn(applicationsOnPanel);
         when(roleRepositoryMock.findOneByName(UserRoleType.PANEL_ASSESSOR.getName())).thenReturn(newRole().withType(UserRoleType.PANEL_ASSESSOR).build());
         when(activityStateRepositoryMock.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING))
                 .thenReturn(new ActivityState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, expectedAssessmentReviewState));
@@ -978,7 +978,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
 
         InOrder inOrder = inOrder(assessmentPanelParticipantRepositoryMock, applicationRepositoryMock, roleRepositoryMock, activityStateRepositoryMock, assessmentReviewRepositoryMock);
         inOrder.verify(assessmentPanelParticipantRepositoryMock).getByInviteHash(openedInviteHash);
-        inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
         inOrder.verify(roleRepositoryMock).findOneByName(UserRoleType.PANEL_ASSESSOR.getName());
         inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, expectedAssessmentReviewState);
         inOrder.verify(assessmentReviewRepositoryMock, times(2)).save(any(AssessmentReview.class));

@@ -465,7 +465,7 @@ public class AssessmentPanelInviteServiceImpl implements AssessmentPanelInviteSe
 
     private ServiceResult<Void> assignAllPanelApplicationsToParticipant(AssessmentPanelParticipant participant) {
         Competition competition = participant.getProcess();
-        List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
+        List<Application> applicationsInPanel = applicationRepository.findByCompetitionAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competition, State.SUBMITTED);
         final Role panelAssessorRole = roleRepository.findOneByName(UserRoleType.PANEL_ASSESSOR.getName());
         final ActivityState pendingActivityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE, State.PENDING);
         applicationsInPanel.forEach(application -> {
