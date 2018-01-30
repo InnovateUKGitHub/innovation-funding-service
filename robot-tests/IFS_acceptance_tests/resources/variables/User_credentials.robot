@@ -28,5 +28,7 @@
 &{Research_lead_applicant_credentials}            email=heather.ross@example.com   password=Passw0rd
 &{PublicSector_lead_applicant_credentials}        email=becky.mason@gmail.com   password=Passw0rd
 
-${Comp_admin1_credentials}                        john.doe@innovateuk.test
-${innovation_lead_one}                            ian.cooper@innovateuk.test
+
+#Email Variables
+
+

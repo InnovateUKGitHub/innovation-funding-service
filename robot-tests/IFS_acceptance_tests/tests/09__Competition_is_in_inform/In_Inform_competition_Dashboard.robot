@@ -106,9 +106,9 @@ Unsuccessful applicant sees unsuccessful alert
 Internal user can see ineligible and unsuccessful applications in the Previous tab
     [Documentation]  IFS-1458  IFS-1459  IFS-1517  IFS-2640
     [Tags]  HappyPath
-    When the user checks the ineligible and unsuccessful applications in the Previous tab    ${Comp_admin1_credentials}  ${short_password}
-    Then the user checks the ineligible and unsuccessful applications in the Previous tab    ${innovation_lead_one}  ${short_password}
-    #TODO IFS-2640 We need to pass emails as variables. Maybe in the user credentials or global file, but I've added these two emails as variables in the User_credentials.robot file for now.
+    When the user checks the ineligible and unsuccessful applications in the Previous tab    ${Comp_admin1_credentials["email"]}  ${short_password}
+    Then the user checks the ineligible and unsuccessful applications in the Previous tab    ${innovation_lead_one["email"]}  ${short_password}
+    #TODO IFS-2640 Is there a better way to pass emails as variables? If not, we can continue to use what's in this test case.
 
 Successful applicant see successful alert
     [Documentation]    INFUND-7861
