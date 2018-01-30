@@ -45,55 +45,55 @@ ${proj_app_with_ineligible}  ${application_ids['Application with ineligible']}
 Competition Dashboard
     [Documentation]    INFUND-7365
     [Tags]    HappyPath
-    When The user clicks the button/link    link=${INFORM_COMPETITION_NAME}
-    Then The user should see the text in the page    delivery programme - low carbon vehicles
-    And The user should see the text in the page    Inform
-    And The user should see the text in the page    Programme
-    And The user should see the text in the page    Materials and manufacturing
-    And The user should see the text in the page    Digital manufacturing
-    And The user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
-    And the user should not see the element    link=View and update competition setup
+    When The user clicks the button/link            link=${INFORM_COMPETITION_NAME}
+    Then The user should see the element            jQuery=span:contains("${INFORM_COMPETITION_NAME}")
+    And The user should see the element             jQuery=h1:contains("Inform")
+    And The user should see the element             jQuery=dd:contains("Programme")
+    And The user should see the element             jQuery=dd:contains("Materials and manufacturing")
+    And The user should see the element             jQuery=dd:contains("Digital manufacturing")
+    And The user should see the element             jQuery=a:contains("Invite assessors to assess the competition")
+    And the user should not see the element         link=View and update competition setup
 
 Milestones for the In inform competition
     [Documentation]    INFUND-7561 INFUND-7950
     [Tags]
     Then the user should see the element    jQuery=.button:contains("Manage funding notifications")
-    And the user should see the element    jQuery=button:contains("Release feedback")
-    And the user should see the element    css=li:nth-child(13).done    #Verify that 12. Notifications
-    And the user should see the element    css=li:nth-child(14).not-done    #Verify that 13. Release feedback is not done
+    And the user should see the element     jQuery=button:contains("Release feedback")
+    And the user should see the element     css=li:nth-child(13).done    #Verify that 12. Notifications
+    And the user should see the element     css=li:nth-child(14).not-done    #Verify that 13. Release feedback is not done
 
 Filtering on the Manage funding applications page
     [Documentation]    INFUND-8066
     [Tags]
-    Given The user clicks the button/link    jQuery=.button:contains("Manage funding notifications")
-    And the user enters text to a text field    id=stringFilter    ${application_ids['Climate control solution']}
+    Given The user clicks the button/link                      jQuery=.button:contains("Manage funding notifications")
+    And the user enters text to a text field                   id=stringFilter    ${application_ids['Climate control solution']}
     And the user selects the option from the drop-down menu    Yes    id=sendFilter
     And the user selects the option from the drop-down menu    Successful    id=fundingFilter
-    When the user clicks the button/link    jQuery=button:contains("Filter")
-    Then the user should see the element    jQuery=td:nth-child(2):contains("${application_ids['Climate control solution']}")
-    And the user should not see the element    jQuery=td:nth-child(2):contains("${application_ids['Electric Drive']}")
-    And the user clicks the button/link    jQuery=.button:contains("Clear all filters")
-    And the user should see the element    jQuery=td:nth-child(2):contains("${application_ids['Electric Drive']}")
-    [Teardown]    The user clicks the button/link    link=Competition
+    When the user clicks the button/link                       jQuery=button:contains("Filter")
+    Then the user should see the element                       jQuery=td:nth-child(2):contains("${application_ids['Climate control solution']}")
+    And the user should not see the element                    jQuery=td:nth-child(2):contains("${application_ids['Electric Drive']}")
+    And the user clicks the button/link                        jQuery=.button:contains("Clear all filters")
+    And the user should see the element                        jQuery=td:nth-child(2):contains("${application_ids['Electric Drive']}")
+    [Teardown]    The user clicks the button/link              link=Competition
 
 Checking release feedback button state is correct
     [Documentation]    INFUND-7950
     [Tags]
-    Given the user clicks the button/link    link=Input and review funding decision
-    And the user selects the checkbox    app-row-3
-    And the user clicks the button/link    jQuery=button:contains("On hold")
-    When the user clicks the button/link    jQuery=.link-back:contains("Competition")
-    Then the user should see that the element is disabled    jQuery=button:contains("Release feedback")
+    Given the user clicks the button/link                                   link=Input and review funding decision
+    And the user selects the checkbox                                       app-row-3
+    And the user clicks the button/link                                     jQuery=button:contains("On hold")
+    When the user clicks the button/link                                    jQuery=.link-back:contains("Competition")
+    Then the user should see that the element is disabled                   jQuery=button:contains("Release feedback")
     [Teardown]    User sends the notification to enable release feedback
 
 Release feedback
     [Documentation]    INFUND-8050
     [Tags]    Email    HappyPath
-    When The user clicks the button/link    jQuery=button:contains("Release feedback")
-    Then The user should not see the text in the page    Inform
-    When The user clicks the button/link    jQuery=a:contains(Live)
-    Then The user should not see the text in the page    ${INFORM_COMPETITION_NAME}
-    And the user reads his email    ${test_mailbox_two}+releasefeedback@gmail.com    Feedback for your application    The feedback provided by the independent assessors has been reviewed by Innovate UK
+    When The user clicks the button/link                 jQuery=button:contains("Release feedback")
+    Then The user should not see the element             jQuery=h1:contains("Inform")
+    When The user clicks the button/link                 jQuery=a:contains("Live")
+    Then The user should not see the element             link=${INFORM_COMPETITION_NAME}
+    And the user reads his email                         ${test_mailbox_two}+releasefeedback@gmail.com    Feedback for your application    The feedback provided by the independent assessors has been reviewed by Innovate UK
 
 Unsuccessful applicant sees unsuccessful alert
     [Documentation]    INFUND-7861
@@ -103,30 +103,9 @@ Unsuccessful applicant sees unsuccessful alert
     When the user clicks the button/link     jQuery=a:contains("Electric Drive")
     And the user should see the element      jQuery=.warning-alert:contains("Your application has not been successful in this competition")
 
-#Internal user can view ineligible and unsuccessful applications in previous tab
-#    [Documentation]  IFS-1458 IFS-1459 IFS-1517
-#    [Tags]  HappyPath
-#    [Setup]  log in as a different user      &{Comp_admin1_credentials}
-#    Given the user clicks the button/link    jQuery=a:contains("Previous")
-#    When the user clicks the button/link     link=${NOT_EDITABLE_COMPETITION_NAME}
-#    And the user clicks the button/link      link=Unsuccessful applications
-#    Then the user should see the element     jQuery=td:contains("${proj_electric_drive}") ~ td:contains("Unsuccessful")
-#    And the user should not see the element  jQuery=td:contains("${INFORM_COMPETITION_NAME_1}")
-
-#Innovation Lead can see the competition listed in the Previous tab and the unsuccessful application
-#    [Documentation]  IFS-2640
-#    [TAGS]  HappyPath
-#    [Setup]  log in as a different user      &{innovation_lead_one}
-#    Given the user clicks the button/link    jQuery=a:contains("Previous")
-#    When the user clicks the button/link     link=${INFORM_COMPETITION_NAME}}
-#    And the user clicks the button/link      link=Unsuccessful applications
-#    Then the user should see the element     tr:contains(Electric Drive) td:contains(Unsuccessful)
-
 Internal user can see ineligible and unsuccessful applications in the Previous tab
     [Documentation]  IFS-1458  IFS-1459  IFS-1517  IFS-2640
     [Tags]  HappyPath
-    #When the user checks the ineligible and unsuccessful applications in previous tab    &{Comp_admin1_credentials}
-    #Then the user checks the ineligible and unsuccessful applications in previous tab    &{innovation_lead_one}
     When the user checks the ineligible and unsuccessful applications in the Previous tab    john.doe@innovateuk.test  Passw0rd
     Then the user checks the ineligible and unsuccessful applications in the Previous tab    ian.cooper@innovateuk.test  Passw0rd
 
@@ -154,12 +133,12 @@ Question scores and application details are correct
 User can see the Application details along with feedback
     [Documentation]    INF-2473  IFS-2256
     [Tags]
-    Given the user should see the element    jQuery=h2:contains("Application details")
-    Then the user should see the element     jQuery=h3:contains("Project title") ~ p:contains("High Performance Gasoline Stratified")
+    Given the user should see the element                           jQuery=h2:contains("Application details")
+    Then the user should see the element                            jQuery=h3:contains("Project title") ~ p:contains("High Performance Gasoline Stratified")
     And the user checks the Project summary functionality
     Given the user checks the Public description functionality
     When the user checks the Scope functionality
-    Then the user should see the element      jQuery=h2:contains("Application details")
+    Then the user should see the element                            jQuery=h2:contains("Application details")
 
 User can see feedback to individual questions
     [Documentation]    INFUND-8005
