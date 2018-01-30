@@ -215,6 +215,8 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query"))
                 .andReturn();
+
+        verify(financeCheckServiceMock).closeQuery(queryId);
     }
 
     @Test

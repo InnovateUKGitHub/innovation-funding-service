@@ -80,7 +80,7 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
         Long threadId = 1L;
         when(financeCheckQueriesService.close(threadId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/finance/queries/close/thread/{threadId}", threadId)
+        mockMvc.perform(post("/project/finance/queries/thread/{threadId}/close", threadId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 

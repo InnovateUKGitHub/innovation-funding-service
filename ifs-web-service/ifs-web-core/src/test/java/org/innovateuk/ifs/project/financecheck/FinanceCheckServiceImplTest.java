@@ -15,6 +15,7 @@ import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertTrue;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckResourceBuilder.newFinanceCheckResource;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -51,5 +52,6 @@ public class FinanceCheckServiceImplTest {
 
         ServiceResult<Void> result = service.closeQuery(queryId);
         assertTrue(result.isSuccess());
+        verify(projectFinanceQueriesRestServiceMock).close(queryId);
     }
 }

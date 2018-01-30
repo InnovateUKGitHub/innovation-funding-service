@@ -29,7 +29,7 @@ public class CommonThreadController<R> {
         return service.create(thread).toPostCreateResponse();
     }
 
-    @PostMapping("/close/thread/{threadId}")
+    @PostMapping("/thread/{threadId}/close")
     public RestResult<Void> close(@PathVariable("threadId") final Long threadId) {
         return service.close(threadId).toPostResponse();
     }

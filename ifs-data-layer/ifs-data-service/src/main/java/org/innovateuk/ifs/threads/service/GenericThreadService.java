@@ -52,7 +52,6 @@ public class GenericThreadService<E extends Thread, C> implements ThreadService<
                 .andOnSuccessReturnVoid(thread -> getCurrentlyLoggedInUser()
                         .andOnSuccess(currentUser -> {
                             thread.closeThread(currentUser);
-                            repository.save(thread);
                             return serviceSuccess();
                         }));
     }
