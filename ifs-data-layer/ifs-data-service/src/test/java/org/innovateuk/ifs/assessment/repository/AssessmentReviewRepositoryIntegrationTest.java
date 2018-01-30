@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewInvite;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
@@ -230,7 +230,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
 
         userRepository.save(user);
 
-        AssessmentPanelInvite assessmentPanelInvite = newAssessmentPanelInvite()
+        AssessmentReviewInvite assessmentReviewInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -238,9 +238,9 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
                 .withStatus(InviteStatus.SENT)
                 .withName("tom baldwin")
                 .build();
-        assessmentPanelInviteRepository.save(assessmentPanelInvite);
+        assessmentPanelInviteRepository.save(assessmentReviewInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentPanelInvite);
+        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewInvite);
         assessmentPanelParticipant.setStatus(ParticipantStatus.ACCEPTED);
         assessmentPanelParticipantRepository.save(assessmentPanelParticipant);
 
@@ -266,7 +266,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
 
         userRepository.save(user);
 
-        AssessmentPanelInvite competitionAssessmentInvite = newAssessmentPanelInvite()
+        AssessmentReviewInvite competitionAssessmentInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -322,7 +322,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
 
         userRepository.save(user);
 
-        AssessmentPanelInvite assessmentPanelInvite = newAssessmentPanelInvite()
+        AssessmentReviewInvite assessmentReviewInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -330,9 +330,9 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
                 .withStatus(InviteStatus.SENT)
                 .withName("tom baldwin")
                 .build();
-        assessmentPanelInviteRepository.save(assessmentPanelInvite);
+        assessmentPanelInviteRepository.save(assessmentReviewInvite);
 
-        AssessmentPanelParticipant competitionAssessmentParticipant = new AssessmentPanelParticipant(assessmentPanelInvite);
+        AssessmentPanelParticipant competitionAssessmentParticipant = new AssessmentPanelParticipant(assessmentReviewInvite);
         competitionAssessmentParticipant.setStatus(ParticipantStatus.ACCEPTED);
         assessmentPanelParticipantRepository.save(competitionAssessmentParticipant);
 

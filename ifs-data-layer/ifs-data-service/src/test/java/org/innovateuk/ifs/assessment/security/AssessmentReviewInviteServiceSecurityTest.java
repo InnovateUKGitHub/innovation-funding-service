@@ -26,7 +26,7 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.mockito.Mockito.*;
 
-public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurityTest<AssessmentPanelInviteService> {
+public class AssessmentReviewInviteServiceSecurityTest extends BaseServiceSecurityTest<AssessmentPanelInviteService> {
 
     private CompetitionParticipantPermissionRules competitionParticipantPermissionRules;
     private AssessmentPanelInvitePermissionRules assessmentPanelInvitePermissionRules;
@@ -38,7 +38,7 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
 
     @Override
     protected Class<? extends AssessmentPanelInviteService> getClassUnderTest() {
-        return TestAssessmentPanelInviteService.class;
+        return TestAssessmentReviewInviteService.class;
     }
 
     @Before
@@ -232,7 +232,7 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteAllInvites(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
-    public static class TestAssessmentPanelInviteService implements AssessmentPanelInviteService {
+    public static class TestAssessmentReviewInviteService implements AssessmentPanelInviteService {
 
         @Override
         public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {

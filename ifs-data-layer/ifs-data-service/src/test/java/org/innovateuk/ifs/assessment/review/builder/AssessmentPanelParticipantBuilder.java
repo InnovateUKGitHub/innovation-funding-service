@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.*;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewInvite;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
@@ -70,11 +70,11 @@ public class AssessmentPanelParticipantBuilder extends BaseBuilder<AssessmentPan
         return withCompetition(competitions.build());
     }
 
-    public AssessmentPanelParticipantBuilder withInvite(AssessmentPanelInvite... invites) {
+    public AssessmentPanelParticipantBuilder withInvite(AssessmentReviewInvite... invites) {
         return withArray((invite, i) -> setField("invite", invite, i), invites);
     }
 
-    public AssessmentPanelParticipantBuilder withInvite(Builder<AssessmentPanelInvite, ?> invite) {
+    public AssessmentPanelParticipantBuilder withInvite(Builder<AssessmentReviewInvite, ?> invite) {
         return withInvite(invite.build());
     }
 

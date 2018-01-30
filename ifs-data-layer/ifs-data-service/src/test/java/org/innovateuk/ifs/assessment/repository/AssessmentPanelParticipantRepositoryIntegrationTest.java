@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewInvite;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
@@ -210,7 +210,7 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
 
         userRepository.save(acceptedUser);
 
-        List<AssessmentPanelInvite> newAssessorInvites = newAssessmentPanelInviteWithoutId()
+        List<AssessmentReviewInvite> newAssessorInvites = newAssessmentPanelInviteWithoutId()
                 .withName("Jane Pritchard", "Charles Dance", "Claire Jenkins", "Anthony Hale")
                 .withEmail("jp@test.com", "cd@test.com", "cj@test.com", "ah@test2.com")
                 .withCompetition(competition)
@@ -245,11 +245,11 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
         assertEquals("Anthony Hale", content.get(0).getInvite().getName());
     }
 
-    private AssessmentPanelParticipant saveNewAssessmentPanelParticipant(AssessmentPanelInvite invite) {
+    private AssessmentPanelParticipant saveNewAssessmentPanelParticipant(AssessmentReviewInvite invite) {
         return repository.save(new AssessmentPanelParticipant(invite));
     }
 
-    private List<AssessmentPanelParticipant> saveNewAssessmentPanelParticipants(List<AssessmentPanelInvite> invites) {
+    private List<AssessmentPanelParticipant> saveNewAssessmentPanelParticipants(List<AssessmentReviewInvite> invites) {
         return invites.stream().map(assessmentPanelInvite ->
                 repository.save(new AssessmentPanelParticipant(assessmentPanelInvite))).collect(toList());
     }
