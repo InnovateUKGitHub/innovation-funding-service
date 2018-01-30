@@ -17,8 +17,8 @@ User navigates to the Manage interview panel
     Given the Interview Panel is activated in the db
     When the user clicks the button/link   link=${CLOSED_COMPETITION_NAME}
     Then the user clicks the button/link   jQuery=a:contains("Manage interview panel")
-    And the user checks Interview panel page and the links are inactive
-    #TODO The above tests will need to be removed/updated once the links are active IFS-2647.
+    And the user sees the Interview panel page and the Interview links
+    #TODO The above tests will need to be removed/updated once the Interview links are active IFS-2647.
 
 *** Keywords ***
 Custom Suite Setup
@@ -28,8 +28,9 @@ the Interview Panel is activated in the db
     Connect to Database    @{database}
     Execute sql string     UPDATE `${database_name}`.`competition` SET `has_interview_stage`=1 WHERE `id`='${CLOSED_COMPETITION}';
 
-the user checks Interview panel page and the links are inactive
+the user sees the Interview panel page and the Interview links
     And the user should see the element    jQuery=h1:contains("Manage interview panel")
     And the user should see the element    jQuery=a:contains("Assign applications")[aria-disabled="true"]
     And the user should see the element    jQuery=a:contains("Invite assessors")[aria-disabled="true"]
     And the user should see the element    jQuery=a:contains("Allocate applications to assessors")[aria-disabled="true"]
+    #TODO The above keyword will need to be removed/updated once the Interview links are active IFS-2647.
