@@ -108,7 +108,7 @@ Internal user can see ineligible and unsuccessful applications in the Previous t
     [Tags]  HappyPath
     When the user checks the ineligible and unsuccessful applications in the Previous tab    ${Comp_admin1_credentials["email"]}  ${short_password}
     Then the user checks the ineligible and unsuccessful applications in the Previous tab    ${innovation_lead_one["email"]}  ${short_password}
-    #TODO IFS-2640 Is there a better way to pass emails as variables? If not, we can continue to use what's in this test case.
+    #TODO IFS-2744 Is there a better way to pass emails as variables? If not, we can continue to use what's in this test case.
 
 Successful applicant see successful alert
     [Documentation]    INFUND-7861
@@ -144,17 +144,17 @@ User can see the Application details along with feedback
 User can see feedback to individual questions
     [Documentation]    INFUND-8005
     [Tags]
-    Given the user clicks the button/link    jQuery=a:contains("6. Innovation")
-    Then the user should see the element     jQuery=h3:contains("Your answer") ~ div[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")
-    And the user should see the element      jQuery=h4:contains("Assessor 1") ~ div[data-md-to-html] p:contains("This is the innovation feedback")
+    Given the user clicks the button/link            jQuery=a:contains("6. Innovation")
+    Then the user should see the element             jQuery=h3:contains("Your answer") ~ div[data-md-to-html] p:contains("This is the applicant response for what is innovative about your project?.")
+    And the user should see the element              jQuery=h4:contains("Assessor 1") ~ div[data-md-to-html] p:contains("This is the innovation feedback")
     [Teardown]    the user clicks the button/link    jQuery=.link-back:contains("Feedback overview")
 
 The finance details are shown
     [Documentation]    INFUND-8168
     [Tags]    Email
-    When the user clicks the button/link     css=.collapsible button
-    Then the user should see the element     css=.collapsible div[aria-hidden="false"]
-    And the user should not see the element  css=.collapsible div[aria-hidden="true"]
+    When the user clicks the button/link       css=.collapsible button
+    Then the user should see the element       css=.collapsible div[aria-hidden="false"]
+    And the user should not see the element    css=.collapsible div[aria-hidden="true"]
 
 Selecting the dashboard link takes user back to the dashboard
     [Documentation]    INFUND-8876
@@ -184,15 +184,15 @@ the application details are correct
     the user should see the element    jQuery=h3:contains("Total project cost")
 
 User sends the notification to enable release feedback
-    the user clicks the button/link    link=Input and review funding decision
-    the user selects the checkbox    app-row-3
-    the user clicks the button/link    jQuery=button:contains("Unsuccessful")
-    the user clicks the button/link    jQuery=.link-back:contains("Competition")
-    the user clicks the button/link    jQuery=a:contains("Manage funding notifications")
-    the user selects the checkbox     app-row-${application_ids['Electric Drive']}
-    the user clicks the button/link    jQuery=button:contains("Write and send email")
-    the internal sends the descision notification email to all applicants  EmailTextBody
-    the user clicks the button/link    jQuery=.link-back:contains("Competition")
+    the user clicks the button/link                                          link=Input and review funding decision
+    the user selects the checkbox                                            app-row-3
+    the user clicks the button/link                                          jQuery=button:contains("Unsuccessful")
+    the user clicks the button/link                                          jQuery=.link-back:contains("Competition")
+    the user clicks the button/link                                          jQuery=a:contains("Manage funding notifications")
+    the user selects the checkbox                                            app-row-${application_ids['Electric Drive']}
+    the user clicks the button/link                                          jQuery=button:contains("Write and send email")
+    the internal sends the descision notification email to all applicants    EmailTextBody
+    the user clicks the button/link                                          jQuery=.link-back:contains("Competition")
 
 The user checks the Project summary functionality
     the user clicks the button/link    jQuery=a:contains("Project summary")
