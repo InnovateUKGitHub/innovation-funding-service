@@ -41,7 +41,7 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void test_upload() throws Exception {
-        final QueryResource queryResource = new QueryResource(null, null, null, null, null, false, null);
+        final QueryResource queryResource = new QueryResource(null, null, null, null, null, false, null, null, null);
         when(projectLookupStrategy.getProjectResource(77L)).thenReturn(newProjectResource().withId(77L).build());
         assertAccessDenied(
                 () -> classUnderTest.upload("application.pdf", "3234", "filename.pdf", 77L, null),
