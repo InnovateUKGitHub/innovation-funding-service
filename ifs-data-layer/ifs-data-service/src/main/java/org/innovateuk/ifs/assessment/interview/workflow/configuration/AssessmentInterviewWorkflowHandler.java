@@ -2,11 +2,10 @@ package org.innovateuk.ifs.assessment.interview.workflow.configuration;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.review.domain.AssessmentReview;
-import org.innovateuk.ifs.assessment.review.domain.AssessmentReviewRejectOutcome;
-import org.innovateuk.ifs.assessment.review.repository.AssessmentReviewRepository;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewEvent;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState;
+import org.innovateuk.ifs.assessment.interview.domain.AssessmentInterview;
+import org.innovateuk.ifs.assessment.interview.repository.AssessmentInterviewRepository;
+import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewEvent;
+import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
@@ -20,21 +19,21 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewEvent.*;
+import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewEvent.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE;
 
 /**
- * Manages the process for assigning applications to assessors on an assessment panel.
+ * Manages the process for assigning applications to assessors for an assessment interview.
  */
 @Component
-public class AssessmentInterviewWorkflowHandler extends BaseWorkflowEventHandler<AssessmentReview, AssessmentReviewState, AssessmentReviewEvent, Application, ProcessRole> {
+public class AssessmentInterviewWorkflowHandler extends BaseWorkflowEventHandler<AssessmentInterview, AssessmentInterviewState, AssessmentInterviewEvent, Application, ProcessRole> {
 
     @Autowired
-    @Qualifier("assessmentReviewStateMachineFactory")
-    private StateMachineFactory<AssessmentReviewState, AssessmentReviewEvent> stateMachineFactory;
+    @Qualifier("assessmentInterviewStateMachineFactory")
+    private StateMachineFactory<AssessmentInterviewState, AssessmentInterviewEvent> stateMachineFactory;
 
     @Autowired
-    private AssessmentReviewRepository assessmentReviewRepository;
+    private AssessmentInterviewRepository assessmentInterviewRepository;
 
     @Autowired
     private ApplicationRepository applicationRepository;
@@ -43,37 +42,24 @@ public class AssessmentInterviewWorkflowHandler extends BaseWorkflowEventHandler
     private ProcessRoleRepository processRoleRepository;
 
     @Override
-    protected AssessmentReview createNewProcess(Application target, ProcessRole participant) {
-        return new AssessmentReview(target, participant);
+    protected AssessmentInterview createNewProcess(Application target, ProcessRole participant) {
+        return new AssessmentInterview(target, participant);
     }
 
-    public boolean notifyInvitation(AssessmentReview assessmentReview) {
-        return fireEvent(assessmentPanelApplicationInviteMessage(assessmentReview, NOTIFY), assessmentReview);
+    public boolean notifyInvitation(AssessmentInterview AssessmentInterview) {
+        return fireEvent(assessmentPanelApplicationInviteMessage(AssessmentInterview, NOTIFY), AssessmentInterview);
     }
 
-    public boolean rejectInvitation(AssessmentReview assessmentReview, AssessmentReviewRejectOutcome rejectOutcome) {
-        return fireEvent(rejectMessage(assessmentReview, rejectOutcome), assessmentReview);
+    public boolean rejectInvitation(AssessmentInterview AssessmentInterview) {
+        return fireEvent(assessmentPanelApplicationInviteMessage(AssessmentInterview, REJECT), AssessmentInterview);
     }
 
-    private static MessageBuilder<AssessmentReviewEvent> rejectMessage(AssessmentReview assessmentReview, AssessmentReviewRejectOutcome ineligibleOutcome) {
-        return assessmentPanelApplicationInviteMessage(assessmentReview, REJECT)
-                .setHeader("rejection", ineligibleOutcome);
+    public boolean acceptInvitation(AssessmentInterview AssessmentInterview) {
+        return fireEvent(assessmentPanelApplicationInviteMessage(AssessmentInterview, ACCEPT), AssessmentInterview);
     }
 
-    public boolean acceptInvitation(AssessmentReview assessmentReview) {
-        return fireEvent(assessmentPanelApplicationInviteMessage(assessmentReview, ACCEPT), assessmentReview);
-    }
-
-    public boolean markConflictOfInterest(AssessmentReview assessmentReview) {
-        return fireEvent(assessmentPanelApplicationInviteMessage(assessmentReview, MARK_CONFLICT_OF_INTEREST), assessmentReview);
-    }
-
-    public boolean unmarkConflictOfInterest(AssessmentReview assessmentReview) {
-        return fireEvent(assessmentPanelApplicationInviteMessage(assessmentReview, UNMARK_CONFLICT_OF_INTEREST), assessmentReview);
-    }
-
-    public boolean withdraw(AssessmentReview assessmentReview) {
-        return fireEvent(assessmentPanelApplicationInviteMessage(assessmentReview, WITHDRAW), assessmentReview);
+    public boolean withdraw(AssessmentInterview AssessmentInterview) {
+        return fireEvent(assessmentPanelApplicationInviteMessage(AssessmentInterview, WITHDRAW), AssessmentInterview);
     }
 
     @Override
@@ -82,8 +68,8 @@ public class AssessmentInterviewWorkflowHandler extends BaseWorkflowEventHandler
     }
 
     @Override
-    protected ProcessRepository<AssessmentReview> getProcessRepository() {
-        return assessmentReviewRepository;
+    protected ProcessRepository<AssessmentInterview> getProcessRepository() {
+        return assessmentInterviewRepository;
     }
 
     @Override
@@ -97,19 +83,19 @@ public class AssessmentInterviewWorkflowHandler extends BaseWorkflowEventHandler
     }
 
     @Override
-    protected StateMachineFactory<AssessmentReviewState, AssessmentReviewEvent> getStateMachineFactory() {
+    protected StateMachineFactory<AssessmentInterviewState, AssessmentInterviewEvent> getStateMachineFactory() {
         return stateMachineFactory;
     }
 
     @Override
-    protected AssessmentReview getOrCreateProcess(Message<AssessmentReviewEvent> message) {
-        return (AssessmentReview) message.getHeaders().get("target");
+    protected AssessmentInterview getOrCreateProcess(Message<AssessmentInterviewEvent> message) {
+        return (AssessmentInterview) message.getHeaders().get("target");
     }
 
 
-    private static MessageBuilder<AssessmentReviewEvent> assessmentPanelApplicationInviteMessage(AssessmentReview assessmentReview, AssessmentReviewEvent event) {
+    private static MessageBuilder<AssessmentInterviewEvent> assessmentPanelApplicationInviteMessage(AssessmentInterview AssessmentInterview, AssessmentInterviewEvent event) {
         return MessageBuilder
                 .withPayload(event)
-                .setHeader("target", assessmentReview);
+                .setHeader("target", AssessmentInterview);
     }
 }
