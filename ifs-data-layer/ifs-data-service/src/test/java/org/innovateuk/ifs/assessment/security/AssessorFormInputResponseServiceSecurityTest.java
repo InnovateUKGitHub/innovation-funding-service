@@ -54,6 +54,17 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     }
 
     @Test
+    public void getAllAssessorFormInputResponsesForPanel() {
+        Long assessmentId = 1L;
+
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.getAllAssessorFormInputResponsesForPanel(assessmentId),
+                () -> verify(assessmentPermissionRules).userCanReadAssessmentScore(isA(AssessmentResource.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
     public void getAllAssessorFormInputResponsesByAssessmentAndQuestion() {
         Long assessmentId = 1L;
         Long questionId = 3L;
@@ -105,6 +116,11 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         }
 
         @Override
+        public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(long assessmentId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId) {
             return null;
         }
@@ -126,6 +142,11 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
         @Override
         public ServiceResult<AssessmentDetailsResource> getAssessmentDetails(long assessmentId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<AssessmentDetailsResource> getAssessmentDetailsForPanel(long assessmentId) {
             return null;
         }
     }
