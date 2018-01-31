@@ -34,46 +34,50 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
     private InviteService inviteService;
 
     @Autowired
-    private InviteOrganisationRepository inviteOrganisationRespository;
+    private InviteOrganisationRepository inviteOrganisationRepository;
 
     @Autowired
     private OrganisationRepository organisationRepository;
 
     @Override
     @Transactional
-    public ServiceResult<OrganisationResource> createOrMatch(final OrganisationResource organisationToCreate) {
-        Optional<Organisation> matchedOrganisation = organisationMatchingService.findOrganisationMatch(organisationToCreate);
-        Organisation resultingOrganisation;
+    public ServiceResult<OrganisationResource> createOrMatch(OrganisationResource organisationToCreate) {
+        Optional<Organisation> matchedOrganisation =
+                organisationMatchingService.findOrganisationMatch(organisationToCreate);
 
-        if (matchedOrganisation.isPresent()) {
-            resultingOrganisation = matchedOrganisation.get();
-        } else {
-            resultingOrganisation = createNewOrganisation(organisationToCreate);
-        }
+        Organisation resultingOrganisation =
+                matchedOrganisation.orElseGet(() -> createNewOrganisation(organisationToCreate));
 
         return serviceSuccess(organisationMapper.mapToResource(resultingOrganisation));
     }
 
     @Override
     @Transactional
-    public ServiceResult<OrganisationResource> createAndLinkByInvite(final OrganisationResource organisationToCreate, String inviteHash) {
+    public ServiceResult<OrganisationResource> createAndLinkByInvite(
+            OrganisationResource organisationToCreate,
+            String inviteHash
+    ) {
         ApplicationInvite invite = inviteService.findOneByHash(inviteHash).getSuccessObjectOrThrowException();
 
         InviteOrganisation foundInviteOrganisation = invite.getInviteOrganisation();
         Organisation linkedOrganisation = invite.getInviteOrganisation().getOrganisation();
 
         if (linkedOrganisation == null) {
-            linkedOrganisation = createOrganisationAndLinkToInviteOrganisation(organisationToCreate, foundInviteOrganisation);
+            linkedOrganisation = createOrganisationAndLinkToInviteOrganisation(organisationToCreate,
+                    foundInviteOrganisation);
         }
 
         return serviceSuccess(organisationMapper.mapToResource(linkedOrganisation));
     }
 
-    private Organisation createOrganisationAndLinkToInviteOrganisation(OrganisationResource organisationResource, InviteOrganisation inviteOrganisation) {
+    private Organisation createOrganisationAndLinkToInviteOrganisation(
+            OrganisationResource organisationResource,
+            InviteOrganisation inviteOrganisation
+    ) {
         Organisation createdOrganisation = createNewOrganisation(organisationResource);
 
         inviteOrganisation.setOrganisation(createdOrganisation);
-        inviteOrganisationRespository.save(inviteOrganisation);
+        inviteOrganisationRepository.save(inviteOrganisation);
 
         return createdOrganisation;
     }
@@ -82,7 +86,7 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
         Organisation mappedOrganisation = organisationMapper.mapToDomain(organisationResource);
 
         //Add organisation to addresses to persist reference
-        mappedOrganisation.getAddresses().stream().forEach(address -> address.setOrganisation(mappedOrganisation));
+        mappedOrganisation.getAddresses().forEach(address -> address.setOrganisation(mappedOrganisation));
 
         return organisationRepository.save(mappedOrganisation);
     }
