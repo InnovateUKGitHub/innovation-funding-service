@@ -407,6 +407,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         when(competitionRepositoryMock.countLiveForInnovationLead(innovationLeadUser.getId())).thenReturn(countLive);
         when(competitionRepositoryMock.countProjectSetupForInnovationLead(innovationLeadUser.getId())).thenReturn(countProjectSetup);
+        when(competitionRepositoryMock.countFeedbackReleasedForInnovationLead(innovationLeadUser.getId())).thenReturn(countFeedbackReleased);
         when(userRepositoryMock.findOne(innovationLeadUser.getId())).thenReturn(newUser().withId(innovationLeadUser.getId()).withRoles(asLinkedSet(newRole().withType(INNOVATION_LEAD).build())).build());
 
         response = service.countCompetitions().getSuccessObjectOrThrowException();
