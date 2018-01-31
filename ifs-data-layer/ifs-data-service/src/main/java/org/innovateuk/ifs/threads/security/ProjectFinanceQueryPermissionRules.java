@@ -32,11 +32,6 @@ public class ProjectFinanceQueryPermissionRules  {
         return query.posts.size() == 1 && query.posts.get(0).author.getId().equals(user.getId());
     }
 
-    @PermissionRule(value = "PF_CLOSE", description = "Only project finance users can close queries")
-    public boolean onlyProjectFinanceUsersCanCloseQueries(final QueryResource query, final UserResource user) {
-        return isProjectFinanceUser(user);
-    }
-
     @PermissionRule(value = "PF_READ", description = "Project Finance can view Queries")
     public boolean projectFinanceUsersCanViewQueries(final QueryResource query, final UserResource user) {
         return isProjectFinanceUser(user);

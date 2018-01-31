@@ -89,12 +89,6 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
     }
 
     @Test
-    public void testThatOnlyProjectFinanceProjectFinanceUsersCanCloseQueries() throws Exception {
-        assertTrue(rules.onlyProjectFinanceUsersCanCloseQueries(queryResource, projectFinanceUser));
-        assertFalse(rules.onlyProjectFinanceUsersCanCloseQueries(queryResource, partner));
-    }
-
-    @Test
     public void testThatOnlyProjectFinanceUsersOrProjectUsersCanViewTheirQueries() {
         assertTrue(rules.projectFinanceUsersCanViewQueries(queryResource, projectFinanceUser));
         when(projectFinanceRepositoryMock.findOne(queryResource.contextClassPk))
