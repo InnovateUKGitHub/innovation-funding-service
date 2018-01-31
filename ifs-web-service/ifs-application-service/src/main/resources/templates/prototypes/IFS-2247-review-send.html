@@ -4,7 +4,7 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
-<body class="wide-page"  th:with="titleStatus=${param.status != null and param.status[0] == 'resendInvites' ? 'Resend' : 'Send'}">>
+<body class="wide-page"  th:with="titleStatus=${param.status != null and param.status[0] == 'resendInvites' ? 'Resend' : 'Send'}">
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
 <th:block th:insert="fragments/layout :: body-start" />
@@ -66,7 +66,7 @@ There are directions on the [Research Councils UK website](http://www.rcuk.ac.uk
 
 **Fee**
 
-We pay &pound;500 a day for your attendance and [£500 for pre-reading], plus travel and subsistence. Sign in to the Innovation Funding Service to see the travel and subsistence rates we offer. After the panel, please send your invoice and receipts for travel and subsistence to competitions.admin@innovateuk.gov.uk.
+We pay &pound;500 a day for your attendance and [£500 for pre-reading], plus travel and subsistence. Sign in to the [Innovation Funding Service](https://auth.apply-for-innovation-funding.service.gov.uk/idp/profile/SAML2/Redirect/SSO?execution=e2s1) to see the travel and subsistence rates we offer. After the panel, please send your invoice and receipts for travel and subsistence to [competitions.admin@innovateuk.gov.uk](mailto:competitions.admin@innovateuk.gov.uk).
 
             </textarea>
         </div>
