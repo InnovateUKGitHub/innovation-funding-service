@@ -198,7 +198,7 @@ Project finance user can add another query while he is awaiting for response
     [Documentation]    INFUND-4840
     [Tags]
     [Setup]  the user navigates to the page   ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    Given the user clicks the button/link     jQuery=th:contains("${EMPIRE_LTD_NAME}") ~ td:contains("Awaiting response")
+    Given the user clicks the button/link     jQuery=th:contains("${EMPIRE_LTD_NAME}") ~ td:contains("View")
     When the user clicks the button/link      css=a[id="post-new-query"]
     And the user enters text to a text field  id=queryTitle  a viability query's title
     And the user selects the option from the drop-down menu  VIABILITY    id=section
@@ -279,7 +279,7 @@ IFS Admin can see queries raised column updates to 'view'
     [Tags]  #Administrator
     Given log in as a different user       &{ifs_admin_user_credentials}
     When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("Awaiting response")
+    And the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(6) a:contains("View")
 
 IFS Admin can see applicant's response flagged in Query responses tab and mark discussion as Resolved
     [Documentation]  IFS-1882 IFS-1987
@@ -300,7 +300,7 @@ Project finance user can view the response and uploaded files
     [Tags]
     [Setup]  log in as a different user   &{internal_finance_credentials}
     Given the user navigates to the page  ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
-    When the user clicks the button/link  css=table.table-progress tr:nth-child(1) td:nth-child(6)  # Awaiting response
+    When the user clicks the button/link  css=table.table-progress tr:nth-child(1) td:nth-child(6)  # View
     And the user expands the section      an eligibility query's title
     Then the user should see the element  jQuery=.heading-small:contains("Sarah") + p:contains("This is some response text")
     And the user should see the element   jQuery=.panel li:nth-of-type(1) a:contains("${valid_pdf}")
