@@ -12,7 +12,7 @@ Please sign in to accept this invitation. If you haven't used this service befor
 
 ${inviteUrl}
 
-Yours sincerely
+Yours sincerely,
 
 <@layout.senderPlainText />
 </@layout.defaultPlainText>

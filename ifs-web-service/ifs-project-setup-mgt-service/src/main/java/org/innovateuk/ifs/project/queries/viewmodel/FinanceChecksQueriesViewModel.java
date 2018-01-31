@@ -156,4 +156,8 @@ public class FinanceChecksQueriesViewModel {
     public void setNewAttachmentLinks(Map<Long, String> newAttachmentLinks) {
         this.newAttachmentLinks = newAttachmentLinks;
     }
+
+    public boolean isSingleQuery() {
+        return queries.size() == 1;
+    }
 }
