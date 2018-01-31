@@ -876,7 +876,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
                 .withAccepted(4)
                 .build();
 
-        CompetitionInviteStatisticsResource statisticsResource = controller.getInviteStatistics(1L).getSuccessObject();
+        CompetitionInviteStatisticsResource statisticsResource = controller.getInviteStatistics(1L).getSuccess();
         assertEquals(expected, statisticsResource);
     }
 

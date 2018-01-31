@@ -69,7 +69,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Assessment assessment = setUpAssessment(getFelixWilson(), OPEN);
 
         loginFelixWilson();
-        AssessmentResource result = controller.findById(assessment.getId()).getSuccessObject();
+        AssessmentResource result = controller.findById(assessment.getId()).getSuccess();
         assertNotNull(result);
         assertEquals(assessment.getId(), result.getId());
 
@@ -100,7 +100,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Assessment assessment = setUpAssessment(getPaulPlum(), PENDING);
 
         loginPaulPlum();
-        AssessmentResource result = controller.findAssignableById(assessment.getId()).getSuccessObject();
+        AssessmentResource result = controller.findAssignableById(assessment.getId()).getSuccess();
         assertNotNull(result);
         assertEquals(assessment.getId(), result.getId());
     }
@@ -151,7 +151,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Assessment assessment = setUpAssessment(getFelixWilson(), OPEN);
 
         loginFelixWilson();
-        AssessmentResource result = controller.findRejectableById(assessment.getId()).getSuccessObject();
+        AssessmentResource result = controller.findRejectableById(assessment.getId()).getSuccess();
         assertNotNull(result);
         assertEquals(assessment.getId(), result.getId());
     }
@@ -217,7 +217,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         RestResult<Integer> result = controller.countByStateAndCompetition(CREATED, competitionId);
 
         assertTrue(result.isSuccess());
-        long count = result.getSuccessObject();
+        long count = result.getSuccess();
         assertEquals(1L, count);
     }
 
@@ -235,7 +235,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Long assessmentId = 2L;
 
         loginPaulPlum();
-        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
+        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccess();
         assertEquals(OPEN, assessmentResource.getAssessmentState());
 
         AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
@@ -248,7 +248,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         RestResult<Void> result = controller.recommend(assessmentResource.getId(), assessmentFundingDecisionOutcomeResource);
         assertTrue(result.isSuccess());
 
-        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
+        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccess();
         assertEquals(OPEN, assessmentResult.getAssessmentState());
         assertEquals(assessmentFundingDecisionOutcomeResource, assessmentResult.getFundingDecision());
     }
@@ -291,7 +291,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Long assessmentId = 2L;
 
         loginPaulPlum();
-        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
+        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccess();
         assertEquals(OPEN, assessmentResource.getAssessmentState());
 
         AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource()
@@ -311,7 +311,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Long assessmentId = 2L;
 
         loginPaulPlum();
-        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
+        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccess();
         assertEquals(OPEN, assessmentResource.getAssessmentState());
 
         AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource().build();
@@ -333,14 +333,14 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Long processRole = 17L;
 
         loginPaulPlum();
-        AssessmentResource assessmentResource = controller.findAssignableById(assessmentId).getSuccessObject();
+        AssessmentResource assessmentResource = controller.findAssignableById(assessmentId).getSuccess();
         assertEquals(AssessmentState.PENDING, assessmentResource.getAssessmentState());
         assertEquals(processRole, assessmentResource.getProcessRole());
 
         RestResult<Void> result = controller.acceptInvitation(assessmentResource.getId());
         assertTrue(result.isSuccess());
 
-        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
+        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccess();
         assertEquals(ACCEPTED, assessmentResult.getAssessmentState());
     }
 
@@ -349,7 +349,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Long assessmentId = 4L;
 
         loginPaulPlum();
-        AssessmentResource assessmentResource = controller.findAssignableById(assessmentId).getSuccessObject();
+        AssessmentResource assessmentResource = controller.findAssignableById(assessmentId).getSuccess();
         assertEquals(PENDING, assessmentResource.getAssessmentState());
 
         loginCompAdmin();

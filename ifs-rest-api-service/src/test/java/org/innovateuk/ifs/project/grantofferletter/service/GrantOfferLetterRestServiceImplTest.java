@@ -27,7 +27,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
 
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
 
-        ByteArrayResource retrievedFileEntry = service.getSignedGrantOfferLetterFile(123L).getSuccessObject().get();
+        ByteArrayResource retrievedFileEntry = service.getSignedGrantOfferLetterFile(123L).getSuccess().get();
 
         assertEquals(returnedFileContents, retrievedFileEntry);
     }
@@ -39,7 +39,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
 
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, null, NOT_FOUND);
 
-        Optional<ByteArrayResource> retrievedFileEntry = service.getSignedGrantOfferLetterFile(123L).getSuccessObject();
+        Optional<ByteArrayResource> retrievedFileEntry = service.getSignedGrantOfferLetterFile(123L).getSuccess();
 
         assertFalse(retrievedFileEntry.isPresent());
     }
@@ -52,7 +52,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
 
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, returnedFileContents, OK);
 
-        ByteArrayResource retrievedFileEntry = service.getGrantOfferFile(123L).getSuccessObject().get();
+        ByteArrayResource retrievedFileEntry = service.getGrantOfferFile(123L).getSuccess().get();
 
         assertEquals(returnedFileContents, retrievedFileEntry);
     }
@@ -64,7 +64,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
 
         setupGetWithRestResultExpectations(expectedUrl, ByteArrayResource.class, null, NOT_FOUND);
 
-        Optional<ByteArrayResource> retrievedFileEntry = service.getGrantOfferFile(123L).getSuccessObject();
+        Optional<ByteArrayResource> retrievedFileEntry = service.getGrantOfferFile(123L).getSuccess();
 
         assertFalse(retrievedFileEntry.isPresent());
     }
@@ -132,7 +132,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
         RestResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
 
         assertTrue(result.isSuccess());
-        assertEquals(Boolean.FALSE, result.getSuccessObject());
+        assertEquals(Boolean.FALSE, result.getSuccess());
     }
 
     @Test
@@ -145,7 +145,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
         RestResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
 
         assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
+        assertEquals(Boolean.TRUE, result.getSuccess());
     }
 
     @Test
@@ -196,7 +196,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
         RestResult<GrantOfferLetterState> result = service.getGrantOfferLetterWorkflowState(projectId);
 
         assertTrue(result.isSuccess());
-        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());
+        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccess());
     }
 
     @Override

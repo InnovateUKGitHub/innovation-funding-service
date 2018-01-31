@@ -35,7 +35,6 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.PrioritySorting;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -359,7 +358,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
         if(project.getAddress() != null && project.getAddress().getId() != null && project.getAddress().getOrganisations().size() > 0) {
             RestResult<OrganisationAddressResource> result = organisationAddressRestService.findOne(project.getAddress().getOrganisations().get(0));
             if (result.isSuccess()) {
-                form.setAddressType(OrganisationAddressType.valueOf(result.getSuccessObject().getAddressType().getName()));
+                form.setAddressType(OrganisationAddressType.valueOf(result.getSuccess().getAddressType().getName()));
             }
         }
         model.addAttribute("model", projectDetailsAddressViewModel);

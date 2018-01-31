@@ -39,7 +39,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
         long assessmentId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/assessment/%s", assessorFormInputResponseRestUrl, assessmentId), assessorFormInputResponseResourceListType(), expected, OK);
-        List<AssessorFormInputResponseResource> response = service.getAllAssessorFormInputResponses(assessmentId).getSuccessObject();
+        List<AssessorFormInputResponseResource> response = service.getAllAssessorFormInputResponses(assessmentId).getSuccess();
         assertSame(expected, response);
     }
 
@@ -50,7 +50,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
         long assessmentId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/panel/%s", assessorFormInputResponseRestUrl, assessmentId), assessorFormInputResponseResourceListType(), expected, OK);
-        List<AssessorFormInputResponseResource> response = service.getAllAssessorFormInputResponsesForPanel(assessmentId).getSuccessObject();
+        List<AssessorFormInputResponseResource> response = service.getAllAssessorFormInputResponsesForPanel(assessmentId).getSuccess();
         assertSame(expected, response);
     }
 
@@ -62,7 +62,7 @@ public class AssessorFormInputResponseRestServiceImplTest extends BaseRestServic
         long questionId = 2L;
 
         setupGetWithRestResultExpectations(format("%s/assessment/%s/question/%s", assessorFormInputResponseRestUrl, assessmentId, questionId), assessorFormInputResponseResourceListType(), expected, OK);
-        List<AssessorFormInputResponseResource> response = service.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId).getSuccessObject();
+        List<AssessorFormInputResponseResource> response = service.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId).getSuccess();
         assertSame(expected, response);
     }
 

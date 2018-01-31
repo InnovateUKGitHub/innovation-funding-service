@@ -416,7 +416,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
         when(inviteOrganisationRepositoryMock.findOne(inviteOrganisation.getId())).thenReturn(inviteOrganisation);
         when(inviteOrganisationMapper.mapToResource(inviteOrganisation)).thenReturn(expectedInviteOrganisationResoucr);
 
-        InviteOrganisationResource inviteOrganisationResource = inviteService.getInviteOrganisationByHash("an organisation hash").getSuccessObject();
+        InviteOrganisationResource inviteOrganisationResource = inviteService.getInviteOrganisationByHash("an organisation hash").getSuccess();
 
         assertEquals(expectedInviteOrganisationResoucr, inviteOrganisationResource);
     }

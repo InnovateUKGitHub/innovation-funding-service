@@ -68,7 +68,7 @@ public class MoveFileTest {
         assertEquals(3, namesFrom.size());
         final ServiceResult<List<File>> listServiceResult = MoveFiles.moveAllFiles(from, to, false);
         assertTrue(listServiceResult.isSuccess());
-        assertEquals(3, listServiceResult.getSuccessObject().size());
+        assertEquals(3, listServiceResult.getSuccess().size());
         final List<String> namesTo = to.all().stream().map(path -> path.getValue()).collect(toList());
         assertEquals(namesFrom, namesTo);
     }
@@ -110,8 +110,8 @@ public class MoveFileTest {
         reportsNonExistentFile.createFile(newFileEntry().with(id(124l)).build(), tempFileWithContents); // A legit file
         final ServiceResult<List<File>> listServiceResult = MoveFiles.moveAllFiles(reportsNonExistentFile , to, true); // Ignore already moved errors
         assertTrue(listServiceResult.isSuccess());
-        assertEquals(1, listServiceResult.getSuccessObject().size());
-        assertEquals("124", listServiceResult.getSuccessObject().get(0).getName());
+        assertEquals(1, listServiceResult.getSuccess().size());
+        assertEquals("124", listServiceResult.getSuccess().get(0).getName());
     }
 
     private final class AllWaysReportsFile123EvenWhenItDoesNotExist extends FlatFolderFileStorageStrategy {

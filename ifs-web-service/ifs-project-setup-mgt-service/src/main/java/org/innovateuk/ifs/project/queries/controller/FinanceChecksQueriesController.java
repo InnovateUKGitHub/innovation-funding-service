@@ -214,7 +214,7 @@ public class FinanceChecksQueriesController {
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),
                     file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
             result.ifSuccessful(uploadedAttachment -> {
-                attachments.add(result.getSuccessObject().id);
+                attachments.add(result.getSuccess().id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
                 saveFormToCookie(response, projectId, organisationId, queryId, form);
             });

@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.assessment.common.service.AssessmentService;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardApplicationViewModel;
 import org.innovateuk.ifs.assessment.dashboard.viewmodel.AssessorCompetitionForPanelDashboardViewModel;
 import org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewResource;
@@ -61,7 +60,7 @@ public class AssessorCompetitionForPanelDashboardModelPopulator {
     }
 
     private List<AssessorCompetitionForPanelDashboardApplicationViewModel> getApplications(long userId, long competitionId) {
-        List<AssessmentReviewResource> reviews = assessmentPanelRestService.getAssessmentReviews(userId, competitionId).getSuccessObject();
+        List<AssessmentReviewResource> reviews = assessmentPanelRestService.getAssessmentReviews(userId, competitionId).getSuccess();
         return simpleMap(reviews, review -> createApplicationViewModel(review));
     }
 

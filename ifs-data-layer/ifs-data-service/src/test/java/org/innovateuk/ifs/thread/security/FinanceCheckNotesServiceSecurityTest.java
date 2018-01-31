@@ -62,7 +62,7 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
         setLoggedInUser(null);
 
         ServiceResult<List<NoteResource>> results = classUnderTest.findAll(22L);
-        assertEquals(0, results.getSuccessObject().size());
+        assertEquals(0, results.getSuccess().size());
 
         verify(noteRules, times(2)).onlyProjectFinanceUsersCanViewNotes(isA(NoteResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(noteRules);
@@ -86,8 +86,8 @@ public class FinanceCheckNotesServiceSecurityTest extends BaseServiceSecurityTes
         @Override
         public ServiceResult<List<NoteResource>> findAll(Long contextClassPk) {
             List<NoteResource> notes = new ArrayList<>();
-            notes.add(findOne(2L).getSuccessObject());
-            notes.add(findOne(3L).getSuccessObject());
+            notes.add(findOne(2L).getSuccess());
+            notes.add(findOne(3L).getSuccess());
             return ServiceResult.serviceSuccess(notes);
         }
 

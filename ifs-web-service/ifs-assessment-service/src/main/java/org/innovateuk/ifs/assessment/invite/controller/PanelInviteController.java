@@ -89,7 +89,7 @@ public class PanelInviteController {
                         return format("redirect:/registration/%s/start", inviteHash);
                     }
                 })
-                .getSuccessObject();
+                .getSuccess();
     }
 
     /**

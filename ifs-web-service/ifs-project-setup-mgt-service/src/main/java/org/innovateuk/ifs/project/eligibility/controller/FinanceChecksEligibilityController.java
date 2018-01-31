@@ -162,7 +162,7 @@ public class FinanceChecksEligibilityController {
         } else {
             ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceByApplicationIdAndOrganisationId(application.getId(), organisation.getId());
             if (applicationFinanceResource.getFinanceFileEntry() != null) {
-                FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccessObject();
+                FileEntryResource jesFileEntryResource = financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).getSuccess();
                 jesFileDetailsViewModel = new FileDetailsViewModel(jesFileEntryResource);
             }
         }

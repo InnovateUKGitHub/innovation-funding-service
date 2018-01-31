@@ -29,7 +29,7 @@ public class FormInputRestServiceMocksTest extends BaseRestServiceUnitTest<FormI
 
         setupGetWithRestResultExpectations(formInputRestURL + "/findByQuestionId/1", formInputResourceListType(), returnedFormInputs);
 
-        List<FormInputResource> formInputs = service.getByQuestionId(1L).getSuccessObject();
+        List<FormInputResource> formInputs = service.getByQuestionId(1L).getSuccess();
         assertEquals(returnedFormInputs, formInputs);
     }
 
@@ -38,7 +38,7 @@ public class FormInputRestServiceMocksTest extends BaseRestServiceUnitTest<FormI
         FormInputResource formInputResource = new FormInputResource();
         setupGetWithRestResultExpectations(formInputRestURL + "/1", FormInputResource.class, formInputResource);
 
-        FormInputResource returnedFormInputs = service.getById(1L).getSuccessObject();
+        FormInputResource returnedFormInputs = service.getById(1L).getSuccess();
 
         assertNotNull(returnedFormInputs);
         Assert.assertEquals(formInputResource, returnedFormInputs);
@@ -49,7 +49,7 @@ public class FormInputRestServiceMocksTest extends BaseRestServiceUnitTest<FormI
         List<FormInputResource> formInputResources = Arrays.asList(1,2,3).stream().map(i -> new FormInputResource()).collect(Collectors.toList());;
         setupGetWithRestResultExpectations(formInputRestURL + "/findByCompetitionId/1", formInputResourceListType(), formInputResources);
 
-        List<FormInputResource> returnedFormInputResources = service.getByCompetitionId(1L).getSuccessObject();
+        List<FormInputResource> returnedFormInputResources = service.getByCompetitionId(1L).getSuccess();
 
         assertNotNull(returnedFormInputResources);
         assertEquals(formInputResources, returnedFormInputResources);

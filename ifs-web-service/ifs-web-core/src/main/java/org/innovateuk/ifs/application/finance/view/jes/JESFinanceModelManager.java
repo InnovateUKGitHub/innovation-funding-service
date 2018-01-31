@@ -132,7 +132,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
         organisationFinanceDetails.forEach((financeRowType, financeRowCostCategory) -> {
             if (costNeedsInitialising(financeRowType, financeRowCostCategory)) {
                 ApplicationResource applicationResource = applicationService.getById(applicationFinanceResource.getApplication());
-                QuestionResource questionResource = questionService.getQuestionByCompetitionIdAndFormInputType(applicationResource.getCompetition(), financeRowType.getFormInputType()).getSuccessObject();
+                QuestionResource questionResource = questionService.getQuestionByCompetitionIdAndFormInputType(applicationResource.getCompetition(), financeRowType.getFormInputType()).getSuccess();
                 List<String> costNames = TYPE_TO_COSTS.get(financeRowType.getFormInputType());
                 if (costNames != null) {
                     costNames.forEach(costName -> {

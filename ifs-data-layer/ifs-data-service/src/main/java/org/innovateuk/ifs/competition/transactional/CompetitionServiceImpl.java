@@ -300,7 +300,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         ZonedDateTime openDate;
         ServiceResult<MilestoneResource> openDateMilestone = milestoneService.getMilestoneByTypeAndCompetitionId(MilestoneType.OPEN_DATE, c.getId());
         if (openDateMilestone.isSuccess()) {
-            openDate = openDateMilestone.getSuccessObject().getDate();
+            openDate = openDateMilestone.getSuccess().getDate();
         } else {
             openDate = null;
         }
@@ -337,21 +337,21 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
                 isInnovationLead(user) ?
                         competitionRepository.countLiveForInnovationLead(user.getId()) : competitionRepository.countLive()
-        ).getSuccessObject();
+        ).getSuccess();
     }
 
     private Long getPSCount(){
         return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
                 isInnovationLead(user) ?
                         competitionRepository.countProjectSetupForInnovationLead(user.getId()) : competitionRepository.countProjectSetup()
-        ).getSuccessObject();
+        ).getSuccess();
     }
 
     private Long getFeedbackReleasedCount(){
         return getCurrentlyLoggedInUser().andOnSuccessReturn(user ->
                 isInnovationLead(user) ?
                         competitionRepository.countFeedbackReleasedForInnovationLead(user.getId()) : competitionRepository.countFeedbackReleased()
-        ).getSuccessObject();
+        ).getSuccess();
     }
 
     @Override

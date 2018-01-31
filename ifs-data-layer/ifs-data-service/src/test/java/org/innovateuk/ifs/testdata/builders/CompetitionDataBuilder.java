@@ -182,12 +182,12 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     private void markSetupApplicationQuestionsAsComplete(CompetitionData data) {
-        List<SectionResource> competitionSections = sectionService.getByCompetitionId(data.getCompetition().getId()).getSuccessObject();
+        List<SectionResource> competitionSections = sectionService.getByCompetitionId(data.getCompetition().getId()).getSuccess();
 
         SectionResource applicationSection = competitionSections.stream().filter(section -> section.getName().equals("Application questions")).findFirst().get();
         SectionResource projectDetails = competitionSections.stream().filter(section -> section.getName().equals("Project details")).findFirst().get();
 
-        List<QuestionResource> questionResources = questionService.findByCompetition(data.getCompetition().getId()).getSuccessObject();
+        List<QuestionResource> questionResources = questionService.findByCompetition(data.getCompetition().getId()).getSuccess();
         questionResources.stream()
                 .filter(question -> question.getSection().equals(applicationSection.getId())
                         || question.getSection().equals(projectDetails.getId()))

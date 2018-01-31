@@ -546,7 +546,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         ServiceResult<Void> result = service.deactivateUser(userToEdit.getId());
 
-        assertNull(result.getSuccessObject());
+        assertNull(result.getSuccess());
     }
 
     @Test
@@ -588,7 +588,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
 
         ServiceResult<Void> result = service.activateUser(userToEdit.getId());
 
-        assertNull(result.getSuccessObject());
+        assertNull(result.getSuccess());
     }
 
     @Test

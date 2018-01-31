@@ -33,7 +33,7 @@ public class ProcessRoleServiceImpl implements ProcessRoleService {
 
     @Override
     public Future<List<ProcessRoleResource>> findAssignableProcessRoles(Long applicationId) {
-        return adapt(userRestService.findAssignableProcessRoles(applicationId), re -> asList(re.getSuccessObject()));
+        return adapt(userRestService.findAssignableProcessRoles(applicationId), re -> asList(re.getSuccess()));
     }
 
     @Override

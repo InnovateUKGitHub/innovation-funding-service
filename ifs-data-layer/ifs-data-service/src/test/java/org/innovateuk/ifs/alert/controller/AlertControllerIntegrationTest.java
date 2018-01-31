@@ -156,6 +156,6 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
         controller.deleteAllByType(AlertType.MAINTENANCE);
 
         // make sure they can't be found
-        assertTrue(controller.findAllVisibleByType(MAINTENANCE).getSuccessObject().isEmpty());
+        assertTrue(controller.findAllVisibleByType(MAINTENANCE).getSuccess().isEmpty());
     }
 }

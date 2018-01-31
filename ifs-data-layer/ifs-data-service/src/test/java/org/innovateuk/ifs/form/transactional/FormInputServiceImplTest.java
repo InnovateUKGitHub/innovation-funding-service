@@ -42,7 +42,7 @@ public class FormInputServiceImplTest extends BaseServiceUnitTest<FormInputServi
         ServiceResult<FormInputResponseResource> serviceResult = service.findResponseByApplicationIdAndQuestionName(applicationId, questionName);
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(formInputResponseResource, serviceResult.getSuccessObject());
+        assertEquals(formInputResponseResource, serviceResult.getSuccess());
 
         verify(formInputResponseRepositoryMock, only()).findOneByApplicationIdAndFormInputQuestionName(applicationId,
                 questionName);

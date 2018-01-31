@@ -323,7 +323,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         assertTrue(result.isSuccess());
 
-        CompetitionProjectsStatusResource competitionProjectsStatusResource = result.getSuccessObject();
+        CompetitionProjectsStatusResource competitionProjectsStatusResource = result.getSuccess();
         assertTrue(projectsGetSortedByApplicationId(competitionProjectsStatusResource.getProjectStatusResources()));
         assertEquals(3, competitionProjectsStatusResource.getProjectStatusResources().size());
         assertEquals(new Integer(3), competitionProjectsStatusResource.getProjectStatusResources().get(0).getNumberOfPartners());
@@ -348,7 +348,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
@@ -387,7 +387,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
@@ -426,7 +426,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
@@ -457,7 +457,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(financeRowServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
@@ -489,7 +489,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
@@ -522,7 +522,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
@@ -554,7 +554,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
@@ -586,7 +586,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
@@ -618,7 +618,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
@@ -650,7 +650,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
@@ -691,7 +691,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
@@ -730,7 +730,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
@@ -765,7 +765,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
 
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
         assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
@@ -851,7 +851,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(monitoringOfficer);
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(SUPPORT).build())).build());
         ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
-        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
 
@@ -859,28 +859,28 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         when(monitoringOfficerRepositoryMock.findOneByProjectId(project.getId())).thenReturn(null);
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(SUPPORT).build())).build());
         result = service.getProjectStatusByProjectId(projectId);
-        returnedProjectStatusResource = result.getSuccessObject();
+        returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
 
         // Status shown to innovation lead user when MO is not set is NOT_STARTED and not ACTION_REQUIRED
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(INNOVATION_LEAD).build())).build());
         result = service.getProjectStatusByProjectId(projectId);
-        returnedProjectStatusResource = result.getSuccessObject();
+        returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getMonitoringOfficerStatus());
 
         // Status shown to comp admin user when MO is not set is ACTION_REQUIRED
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(COMP_ADMIN).build())).build());
         result = service.getProjectStatusByProjectId(projectId);
-        returnedProjectStatusResource = result.getSuccessObject();
+        returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getMonitoringOfficerStatus());
 
         // Status shown to project finance user when MO is not set is ACTION_REQUIRED
         when(loggedInUserSupplierMock.get()).thenReturn(newUser().withRoles(Sets.newLinkedHashSet(newRole().withType(PROJECT_FINANCE).build())).build());
         result = service.getProjectStatusByProjectId(projectId);
-        returnedProjectStatusResource = result.getSuccessObject();
+        returnedProjectStatusResource = result.getSuccess();
         assertTrue(result.isSuccess());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getMonitoringOfficerStatus());
     }
@@ -1019,7 +1019,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         // try without filtering
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.empty());
         assertTrue(result.isSuccess());
-        assertEquals(expectedProjectTeamStatusResource, result.getSuccessObject());
+        assertEquals(expectedProjectTeamStatusResource, result.getSuccess());
 
         List<ProjectPartnerStatusResource> expectedPartnerStatusesFilteredOnNonLead = newProjectPartnerStatusResource().
                 withName(organisations.get(2).getName()).
@@ -1043,7 +1043,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> resultWithNonLeadFilter = service.getProjectTeamStatus(p.getId(), Optional.of(users.get(2).getId()));
         assertTrue(resultWithNonLeadFilter.isSuccess());
-        assertEquals(expectedProjectTeamStatusResourceFilteredOnNonLead, resultWithNonLeadFilter.getSuccessObject());
+        assertEquals(expectedProjectTeamStatusResourceFilteredOnNonLead, resultWithNonLeadFilter.getSuccess());
 
         // try with filtering on a lead partner organisation
         ProjectTeamStatusResource expectedProjectTeamStatusResourceFilteredOnLead = newProjectTeamStatusResource().
@@ -1052,7 +1052,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> resultWithLeadFilter = service.getProjectTeamStatus(p.getId(), Optional.of(users.get(0).getId()));
         assertTrue(resultWithLeadFilter.isSuccess());
-        assertEquals(expectedProjectTeamStatusResourceFilteredOnLead, resultWithLeadFilter.getSuccessObject());
+        assertEquals(expectedProjectTeamStatusResourceFilteredOnLead, resultWithLeadFilter.getSuccess());
 
 
         // test MO status is pending and not action required when project details submitted
@@ -1081,7 +1081,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> resultForPSSubmmited = service.getProjectTeamStatus(p.getId(), Optional.empty());
         assertTrue(resultForPSSubmmited.isSuccess());
-        assertEquals(expectedProjectTeamStatusResourceWhenPSSubmitted, resultForPSSubmmited.getSuccessObject());
+        assertEquals(expectedProjectTeamStatusResourceWhenPSSubmitted, resultForPSSubmmited.getSuccess());
     }
 
     @Test
@@ -1111,7 +1111,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
-        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccessObject().getLeadPartnerStatus().getGrantOfferLetterStatus()));
+        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getGrantOfferLetterStatus()));
     }
 
     @Test
@@ -1141,7 +1141,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> resultWhenGolIsNotSent = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
-        assertTrue(resultWhenGolIsNotSent.isSuccess() && PENDING.equals(resultWhenGolIsNotSent.getSuccessObject().getLeadPartnerStatus().getGrantOfferLetterStatus()));
+        assertTrue(resultWhenGolIsNotSent.isSuccess() && PENDING.equals(resultWhenGolIsNotSent.getSuccess().getLeadPartnerStatus().getGrantOfferLetterStatus()));
 
         // Same flow but when GOL is in Ready To Approve state.
         Mockito.when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(TRUE);
@@ -1149,7 +1149,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         // Call the service again
         ServiceResult<ProjectTeamStatusResource> resultWhenGolIsReadyToApprove = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
-        assertTrue(resultWhenGolIsReadyToApprove.isSuccess() && PENDING.equals(resultWhenGolIsReadyToApprove.getSuccessObject().getLeadPartnerStatus().getGrantOfferLetterStatus()));
+        assertTrue(resultWhenGolIsReadyToApprove.isSuccess() && PENDING.equals(resultWhenGolIsReadyToApprove.getSuccess().getLeadPartnerStatus().getGrantOfferLetterStatus()));
     }
 
     @Test
@@ -1197,7 +1197,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
         // Call the service again
         ServiceResult<ProjectTeamStatusResource> resultWhenGolIsReadyToApprove = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
-        assertTrue(resultWhenGolIsReadyToApprove.isSuccess() && PENDING.equals(resultWhenGolIsReadyToApprove.getSuccessObject().getPartnerStatuses().get(0).getGrantOfferLetterStatus()));
+        assertTrue(resultWhenGolIsReadyToApprove.isSuccess() && PENDING.equals(resultWhenGolIsReadyToApprove.getSuccess().getPartnerStatuses().get(0).getGrantOfferLetterStatus()));
 
     }
 
@@ -1225,7 +1225,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
-        assertTrue(result.isSuccess() && COMPLETE.equals(result.getSuccessObject().getLeadPartnerStatus().getGrantOfferLetterStatus()));
+        assertTrue(result.isSuccess() && COMPLETE.equals(result.getSuccess().getLeadPartnerStatus().getGrantOfferLetterStatus()));
     }
 
     @Test
@@ -1246,7 +1246,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
-        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccessObject().getLeadPartnerStatus().getSpendProfileStatus()));
+        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
     }
 
     @Test
@@ -1264,7 +1264,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
-        assertTrue(result.isSuccess() && NOT_STARTED.equals(result.getSuccessObject().getLeadPartnerStatus().getSpendProfileStatus()));
+        assertTrue(result.isSuccess() && NOT_STARTED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
     }
 
     @Test
@@ -1283,7 +1283,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
-        assertTrue(result.isSuccess() && NOT_STARTED.equals(result.getSuccessObject().getLeadPartnerStatus().getSpendProfileStatus()));
+        assertTrue(result.isSuccess() && NOT_STARTED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
     }
 
     @Test
@@ -1304,7 +1304,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
-        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccessObject().getLeadPartnerStatus().getSpendProfileStatus()));
+        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
     }
 
     @Test
@@ -1325,7 +1325,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
-        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccessObject().getLeadPartnerStatus().getSpendProfileStatus()));
+        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
     }
 
     @Test
@@ -1344,7 +1344,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
-        assertTrue(result.isSuccess() && PENDING.equals(result.getSuccessObject().getLeadPartnerStatus().getSpendProfileStatus()));
+        assertTrue(result.isSuccess() && PENDING.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
     }
 
     @Test
@@ -1364,7 +1364,7 @@ public class StatusServiceImplTest extends BaseServiceUnitTest<StatusService> {
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
-        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccessObject().getLeadPartnerStatus().getSpendProfileStatus()));
+        assertTrue(result.isSuccess() && ACTION_REQUIRED.equals(result.getSuccess().getLeadPartnerStatus().getSpendProfileStatus()));
         assertTrue(project.getSpendProfileSubmittedDate() == null);
     }
 

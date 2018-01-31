@@ -159,12 +159,12 @@ public class FinanceChecksViabilityController {
         Long headCount = null;
         RestResult<Long> headCountResult = organisationDetailsService.getHeadCount(projectService.getById(projectId).getApplication(), organisationId);
         if (headCountResult.isSuccess()) {
-            headCount = headCountResult.getSuccessObject();
+            headCount = headCountResult.getSuccess();
         }
         Long turnover = null;
         RestResult<Long> turnOverResult = organisationDetailsService.getTurnover(projectService.getById(projectId).getApplication(), organisationId);
         if (turnOverResult.isSuccess()) {
-            turnover = turnOverResult.getSuccessObject();
+            turnover = turnOverResult.getSuccess();
         }
 
         String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();

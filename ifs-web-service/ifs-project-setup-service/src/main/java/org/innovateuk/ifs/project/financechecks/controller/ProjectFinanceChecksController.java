@@ -263,7 +263,7 @@ public class ProjectFinanceChecksController {
             ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(projectId, file.getContentType(),
                     file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
             if (result.isSuccess()) {
-                attachments.add(result.getSuccessObject().id);
+                attachments.add(result.getSuccess().id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
             }
             ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);

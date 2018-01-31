@@ -53,7 +53,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
         RestResult<ProjectResource> restResult = projectRestService.getByApplicationId(applicationId);
         if(restResult.isSuccess()){
-            return restResult.getSuccessObject();
+            return restResult.getSuccess();
         } else {
             return null;
         }

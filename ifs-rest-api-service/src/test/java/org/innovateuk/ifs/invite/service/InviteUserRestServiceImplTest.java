@@ -46,7 +46,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
         setupGetWithRestResultAnonymousExpectations(url + inviteHash, RoleInviteResource.class, roleInviteResource);
         RestResult<RoleInviteResource> result = service.getInvite(inviteHash);
         assertTrue(result.isSuccess());
-        assertEquals(roleInviteResource, result.getSuccessObject());
+        assertEquals(roleInviteResource, result.getSuccess());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
         setupGetWithRestResultAnonymousExpectations(url + inviteHash, Boolean.class, true);
         RestResult<Boolean> returnedResponse = service.checkExistingUser(inviteHash);
         assertTrue(returnedResponse.isSuccess());
-        assertTrue(returnedResponse.getSuccessObject());
+        assertTrue(returnedResponse.getSuccess());
     }
 
     @Test

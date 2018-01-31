@@ -840,7 +840,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         ServiceResult<List<SpendProfileStatusResource>> result = service.getPendingSpendProfiles(competitionId);
 
         assertTrue(result.isSuccess());
-        assertEquals(pendingSpendProfiles, result.getSuccessObject());
+        assertEquals(pendingSpendProfiles, result.getSuccess());
     }
 
     @Test
@@ -852,6 +852,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         ServiceResult<Long> result = service.countPendingSpendProfiles(competitionId);
 
         assertTrue(result.isSuccess());
-        assertEquals(pendingSpendProfileCount, result.getSuccessObject());
+        assertEquals(pendingSpendProfileCount, result.getSuccess());
     }
 }

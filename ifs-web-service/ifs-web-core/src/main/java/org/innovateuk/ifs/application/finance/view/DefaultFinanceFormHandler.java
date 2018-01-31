@@ -227,15 +227,15 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
             return addFinanceRowItem(costItem, userId, applicationId, question);
         } else {
             RestResult<ValidationMessages> messages = financeRowRestService.update(costItem);
-            ValidationMessages validationMessages = messages.getSuccessObject();
+            ValidationMessages validationMessages = messages.getSuccess();
 
             if (validationMessages == null || validationMessages.getErrors() == null || validationMessages.getErrors().isEmpty()) {
                 LOG.debug("no validation errors on cost items");
-                return messages.getSuccessObject();
+                return messages.getSuccess();
             } else {
-                messages.getSuccessObject().getErrors().stream()
+                messages.getSuccess().getErrors().stream()
                         .peek(e -> LOG.debug(String.format("Got cost item Field error: %s", e.getErrorKey())));
-                return messages.getSuccessObject();
+                return messages.getSuccess();
             }
         }
     }

@@ -49,7 +49,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         List<UserResource> userList = asList(user1, user2);
         setupGetWithRestResultExpectations(usersUrl + "/findAll/", userListType(), userList);
 
-        List<UserResource> users = service.findAll().getSuccessObject();
+        List<UserResource> users = service.findAll().getSuccess();
         assertEquals(2, users.size());
         assertEquals(user1, users.get(0));
         assertEquals(user2, users.get(1));
@@ -62,7 +62,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         setupGetWithRestResultExpectations(processRoleRestURL + "/findByUserId/" + userId, processRoleResourceListType(), processRoleList);
 
-        List<ProcessRoleResource> response = service.findProcessRoleByUserId(userId).getSuccessObject();
+        List<ProcessRoleResource> response = service.findProcessRoleByUserId(userId).getSuccess();
         assertEquals(10, response.size());
         assertEquals(processRoleList, response);
     }
@@ -73,7 +73,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         setupGetWithRestResultAnonymousExpectations(usersUrl + "/findByEmail/" + userResource.getEmail() + "/", UserResource.class, userResource);
 
-        UserResource user = service.findUserByEmail(userResource.getEmail()).getSuccessObject();
+        UserResource user = service.findUserByEmail(userResource.getEmail()).getSuccess();
         assertEquals(userResource, user);
     }
 
@@ -126,7 +126,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getDisability() != null ? userResource.getDisability().toString() : null,
                 organisationId,
                 userResource.getAllowMarketingEmails()
-        ).getSuccessObject();
+        ).getSuccess();
 
         assertEquals(userResource, receivedResource);
     }
@@ -165,7 +165,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getDisability() != null ? userResource.getDisability().toString() : null,
                 organisationId,
                 userResource.getAllowMarketingEmails()
-        ).getSuccessObject();
+        ).getSuccess();
 
         assertEquals(userResource, receivedResource);
     }
@@ -202,7 +202,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 organisationId,
                 competitionId,
                 userResource.getAllowMarketingEmails()
-        ).getSuccessObject();
+        ).getSuccess();
 
         assertEquals(userResource, receivedResource);
     }
@@ -242,7 +242,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 organisationId,
                 competitionId,
                 userResource.getAllowMarketingEmails()
-        ).getSuccessObject();
+        ).getSuccess();
 
         assertEquals(userResource, receivedResource);
     }
@@ -360,6 +360,6 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         assertTrue(result.isSuccess());
         assertEquals(OK, result.getStatusCode());
-        assertEquals(userOrganisationResources, result.getSuccessObject());
+        assertEquals(userOrganisationResources, result.getSuccess());
     }
 }

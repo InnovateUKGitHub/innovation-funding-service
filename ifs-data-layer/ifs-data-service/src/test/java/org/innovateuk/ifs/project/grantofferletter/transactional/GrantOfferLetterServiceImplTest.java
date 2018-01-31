@@ -796,7 +796,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         ServiceResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
 
-        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
+        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccess());
     }
 
     @Test
@@ -828,7 +828,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         ServiceResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
 
-        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
+        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccess());
     }
 
     @Test
@@ -1033,7 +1033,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         verify(projectRepositoryMock).findOne(projectId);
         verify(golWorkflowHandlerMock).isApproved(project);
 
-        assertTrue(result.isSuccess() && Boolean.TRUE == result.getSuccessObject());
+        assertTrue(result.isSuccess() && Boolean.TRUE == result.getSuccess());
     }
 
     @Test
@@ -1047,7 +1047,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         verify(projectRepositoryMock).findOne(projectId);
         verify(golWorkflowHandlerMock).isApproved(project);
 
-        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccessObject());
+        assertTrue(result.isSuccess() && Boolean.FALSE == result.getSuccess());
     }
 
     @Test
@@ -1061,7 +1061,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         verify(projectRepositoryMock).findOne(projectId);
         verify(golWorkflowHandlerMock).isRejected(project);
 
-        assertTrue(result.isSuccess() && Boolean.TRUE == result.getSuccessObject());
+        assertTrue(result.isSuccess() && Boolean.TRUE == result.getSuccess());
     }
 
     @Test
@@ -1086,7 +1086,7 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         ServiceResult<GrantOfferLetterState> result = service.getGrantOfferLetterWorkflowState(projectId);
 
         assertTrue(result.isSuccess());
-        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());
+        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccess());
 
     }
 

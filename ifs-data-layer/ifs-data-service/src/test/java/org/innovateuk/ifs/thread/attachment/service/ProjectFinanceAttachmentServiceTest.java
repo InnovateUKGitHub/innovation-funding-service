@@ -68,8 +68,8 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         ServiceResult<FileAndContents> response = service.attachmentFileAndContents(attachmentId);
 
         assert(response.isSuccess());
-        assertEquals(response.getSuccessObject().getFileEntry(), fileEntryResource);
-        assertEquals(response.getSuccessObject().getContentsSupplier(), contentSupplier);
+        assertEquals(response.getSuccess().getFileEntry(), fileEntryResource);
+        assertEquals(response.getSuccess().getContentsSupplier(), contentSupplier);
     }
 
     @Test

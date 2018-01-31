@@ -113,7 +113,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
         setupGetWithRestResultExpectations(expectedUrl, longsListType(), returnedResponse);
 
         // now run the method under test
-        List<Long> response = service.getCompletedSectionIds(123L, 456L).getSuccessObject();
+        List<Long> response = service.getCompletedSectionIds(123L, 456L).getSuccess();
         assertEquals(returnedResponse, response);
     }
 
@@ -126,7 +126,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
         setupGetWithRestResultExpectations(expectedUrl, longsListType(), returnedResponse);
 
         // now run the method under test
-        List<Long> response = service.getIncompletedSectionIds(123L).getSuccessObject();
+        List<Long> response = service.getIncompletedSectionIds(123L).getSuccess();
         assertEquals(returnedResponse, response);
     }
 
@@ -160,7 +160,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
         List<SectionResource> returnedResponse = Arrays.asList(new SectionResource());
         setupGetWithRestResultExpectations(expectedUrl, sectionResourceListType(), returnedResponse);
 
-        List<SectionResource> response = service.getSectionsByCompetitionIdAndType(123L, SectionType.FINANCE).getSuccessObject();
+        List<SectionResource> response = service.getSectionsByCompetitionIdAndType(123L, SectionType.FINANCE).getSuccess();
 
         assertEquals(returnedResponse, response);
     }
@@ -184,6 +184,6 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
         long competitionId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/getByCompetitionIdVisibleForAssessment/%s", sectionRestUrl, competitionId), sectionResourceListType(), expected);
-        assertSame(expected, service.getByCompetitionIdVisibleForAssessment(competitionId).getSuccessObject());
+        assertSame(expected, service.getByCompetitionIdVisibleForAssessment(competitionId).getSuccess());
     }
 }

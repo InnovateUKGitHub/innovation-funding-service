@@ -173,7 +173,7 @@ public class UserServiceImpl implements UserService {
             return false;
         }
 
-        UserResource execUser = result.getSuccessObject();
+        UserResource execUser = result.getSuccess();
 
         return execUser != null && execUser.hasRole(role);
     }

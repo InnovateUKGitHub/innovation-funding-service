@@ -45,7 +45,7 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
             GeneralSetupViewModel generalViewModel,
             CompetitionResource competitionResource
     ) {
-        List<OrganisationTypeResource> organisationTypes = organisationTypeRestService.getAll().getSuccessObject();
+        List<OrganisationTypeResource> organisationTypes = organisationTypeRestService.getAll().getSuccess();
         List<OrganisationTypeResource> leadApplicantTypes = simpleFilter(
                 organisationTypes,
                 OrganisationTypeResource::getVisibleInSetup

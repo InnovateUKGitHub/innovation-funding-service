@@ -65,7 +65,7 @@ public class GrantOfferLetterServiceImplTest {
                 grantOfferLetterService.addSignedGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
-        assertEquals(createdFile, result.getSuccessObject());
+        assertEquals(createdFile, result.getSuccess());
     }
 
     @Test
@@ -80,7 +80,7 @@ public class GrantOfferLetterServiceImplTest {
                 grantOfferLetterService.addGrantOfferLetter(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
-        assertEquals(createdFile, result.getSuccessObject());
+        assertEquals(createdFile, result.getSuccess());
     }
 
     @Test
@@ -138,7 +138,7 @@ public class GrantOfferLetterServiceImplTest {
                 grantOfferLetterService.addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
 
         assertTrue(result.isSuccess());
-        assertEquals(createdFile, result.getSuccessObject());
+        assertEquals(createdFile, result.getSuccess());
 
         verify(grantOfferLetterRestService).addAdditionalContractFile(123L, "text/plain", 1000, "filename.txt", "My content!".getBytes());
     }
@@ -164,7 +164,7 @@ public class GrantOfferLetterServiceImplTest {
         ServiceResult<Boolean> result = grantOfferLetterService.isSignedGrantOfferLetterApproved(123L);
 
         assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
+        assertEquals(Boolean.TRUE, result.getSuccess());
 
         verify(grantOfferLetterRestService).isSignedGrantOfferLetterApproved(123L);
 
@@ -178,7 +178,7 @@ public class GrantOfferLetterServiceImplTest {
         ServiceResult<Boolean> result = grantOfferLetterService.isSignedGrantOfferLetterRejected(123L);
 
         assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
+        assertEquals(Boolean.TRUE, result.getSuccess());
 
         verify(grantOfferLetterRestService).isSignedGrantOfferLetterRejected(123L);
 
@@ -192,7 +192,7 @@ public class GrantOfferLetterServiceImplTest {
         ServiceResult<Boolean> result = grantOfferLetterService.isGrantOfferLetterAlreadySent(123L);
 
         assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
+        assertEquals(Boolean.TRUE, result.getSuccess());
 
         verify(grantOfferLetterRestService).isGrantOfferLetterAlreadySent(123L);
 
@@ -206,7 +206,7 @@ public class GrantOfferLetterServiceImplTest {
         ServiceResult<Boolean> result = grantOfferLetterService.isSendGrantOfferLetterAllowed(123L);
 
         assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
+        assertEquals(Boolean.TRUE, result.getSuccess());
 
         verify(grantOfferLetterRestService).isSendGrantOfferLetterAllowed(123L);
 
@@ -235,7 +235,7 @@ public class GrantOfferLetterServiceImplTest {
         ServiceResult<GrantOfferLetterState> result = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId);
 
         assertTrue(result.isSuccess());
-        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());
+        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccess());
 
         verify(grantOfferLetterRestService).getGrantOfferLetterWorkflowState(projectId);
 

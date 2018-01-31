@@ -191,7 +191,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
         final List<AppendixResource> appendices = responses.stream().filter(fir -> fir.getFileEntry() != null).
                 map(fir -> {
                     FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccessObjectOrThrowException();
-                    FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccessObject();
+                    FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccess();
                     String title = formInputResource.getDescription() != null ? formInputResource.getDescription() : fileEntryResource.getName();
                     return new AppendixResource(applicationId, formInputResource.getId(), title, fileEntryResource);
                 }).

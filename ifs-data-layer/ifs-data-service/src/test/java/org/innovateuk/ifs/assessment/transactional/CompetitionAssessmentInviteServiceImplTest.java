@@ -1437,7 +1437,7 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
         when(competitionAssessmentInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED))).thenReturn(expected.getInviteList());
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED)).thenReturn(expected.getAccepted());
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED)).thenReturn(expected.getDeclined());
-        CompetitionInviteStatisticsResource actual = service.getInviteStatistics(competitionId).getSuccessObject();
+        CompetitionInviteStatisticsResource actual = service.getInviteStatistics(competitionId).getSuccess();
         assertEquals(expected, actual);
 
         InOrder inOrder = inOrder(competitionAssessmentInviteRepositoryMock, competitionParticipantRepositoryMock);
@@ -2273,7 +2273,7 @@ public class CompetitionAssessmentInviteServiceImplTest extends BaseServiceUnitT
         verify(competitionParticipantRepositoryMock).getAssessorsByCompetitionAndStatusContains(competitionId, asList(PENDING, REJECTED));
 
         assertTrue(result.isSuccess());
-        List<Long> returnedInviteIds = result.getSuccessObject();
+        List<Long> returnedInviteIds = result.getSuccess();
 
         assertEquals(5, returnedInviteIds.size());
         assertEquals(invites.get(0).getId(), returnedInviteIds.get(0));

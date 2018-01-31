@@ -90,7 +90,7 @@ public class CompetitionInviteController {
                         return format("redirect:/registration/%s/start", inviteHash);
                     }
                 })
-                .getSuccessObject();
+                .getSuccess();
     }
 
     /**

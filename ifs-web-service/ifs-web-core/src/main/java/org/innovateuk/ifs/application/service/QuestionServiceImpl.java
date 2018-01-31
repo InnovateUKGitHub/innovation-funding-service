@@ -47,7 +47,7 @@ public class QuestionServiceImpl implements QuestionService {
     public List<ValidationMessages> markAsComplete(Long questionId, Long applicationId, Long markedAsCompleteById) {
         questionRestService.assign(questionId, applicationId, 0L, 0L);
         LOG.debug(String.format("mark question(application details) as complete %s / %s /%s ", questionId, applicationId, markedAsCompleteById));
-        return questionRestService.markAsComplete(questionId, applicationId, markedAsCompleteById).getSuccessObject();
+        return questionRestService.markAsComplete(questionId, applicationId, markedAsCompleteById).getSuccess();
     }
 
     @Override

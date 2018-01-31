@@ -86,7 +86,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
         RestResult<List<AssessorFormInputResponseResource>> allResponsesBeforeResult = controller.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
         assertTrue(allResponsesBeforeResult.isSuccess());
 
-        Optional<AssessorFormInputResponseResource> toBeUpdated = allResponsesBeforeResult.getSuccessObject().stream()
+        Optional<AssessorFormInputResponseResource> toBeUpdated = allResponsesBeforeResult.getSuccess().stream()
                 .filter(assessorFormInputResponse -> formInputId.equals(assessorFormInputResponse.getFormInput()))
                 .findFirst();
         assertTrue(toBeUpdated.isPresent());
@@ -107,7 +107,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
                 .getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
         assertTrue(allResponsesAfterResult.isSuccess());
 
-        Optional<AssessorFormInputResponseResource> updated = allResponsesAfterResult.getSuccessObject().stream()
+        Optional<AssessorFormInputResponseResource> updated = allResponsesAfterResult.getSuccess().stream()
                 .filter(assessorFormInputResponse -> formInputId.equals(assessorFormInputResponse.getFormInput())).findFirst();
 
         assertTrue(updated.isPresent());

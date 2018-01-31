@@ -32,7 +32,7 @@ public class CompetitionKeyStatisticsRestServiceImplTest extends BaseRestService
         long competitionId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/%s/readyToOpen", competitionKeyStatisticsRestURL, competitionId), CompetitionReadyToOpenKeyStatisticsResource.class, expected);
-        assertSame(expected, service.getReadyToOpenKeyStatisticsByCompetition(competitionId).getSuccessObject());
+        assertSame(expected, service.getReadyToOpenKeyStatisticsByCompetition(competitionId).getSuccess());
 
     }
 
@@ -42,7 +42,7 @@ public class CompetitionKeyStatisticsRestServiceImplTest extends BaseRestService
         long competitionId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/%s/open", competitionKeyStatisticsRestURL, competitionId), CompetitionOpenKeyStatisticsResource.class, expected);
-        assertSame(expected, service.getOpenKeyStatisticsByCompetition(competitionId).getSuccessObject());
+        assertSame(expected, service.getOpenKeyStatisticsByCompetition(competitionId).getSuccess());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class CompetitionKeyStatisticsRestServiceImplTest extends BaseRestService
         long competitionId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/%s/closed", competitionKeyStatisticsRestURL, competitionId), CompetitionClosedKeyStatisticsResource.class, expected);
-        assertSame(expected, service.getClosedKeyStatisticsByCompetition(competitionId).getSuccessObject());
+        assertSame(expected, service.getClosedKeyStatisticsByCompetition(competitionId).getSuccess());
     }
 
     @Test
@@ -60,7 +60,7 @@ public class CompetitionKeyStatisticsRestServiceImplTest extends BaseRestService
         long competitionId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/%s/inAssessment", competitionKeyStatisticsRestURL, competitionId), CompetitionInAssessmentKeyStatisticsResource.class, expected);
-        assertSame(expected, service.getInAssessmentKeyStatisticsByCompetition(competitionId).getSuccessObject());
+        assertSame(expected, service.getInAssessmentKeyStatisticsByCompetition(competitionId).getSuccess());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class CompetitionKeyStatisticsRestServiceImplTest extends BaseRestService
         long competitionId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/%s/funded", competitionKeyStatisticsRestURL, competitionId), CompetitionFundedKeyStatisticsResource.class, expected);
-        assertSame(expected, service.getFundedKeyStatisticsByCompetition(competitionId).getSuccessObject());
+        assertSame(expected, service.getFundedKeyStatisticsByCompetition(competitionId).getSuccess());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class CompetitionKeyStatisticsRestServiceImplTest extends BaseRestService
         long competitionId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/%s/%s", competitionKeyStatisticsRestURL, competitionId, "panel"), AssessmentPanelKeyStatisticsResource.class, expected);
-        assertSame(expected, service.getAssessmentPanelKeyStatisticsByCompetition(competitionId).getSuccessObject());
+        assertSame(expected, service.getAssessmentPanelKeyStatisticsByCompetition(competitionId).getSuccess());
     }
 
     @Test
@@ -87,6 +87,6 @@ public class CompetitionKeyStatisticsRestServiceImplTest extends BaseRestService
         long competitionId = 1L;
 
         setupGetWithRestResultExpectations(format("%s/%s/%s", competitionKeyStatisticsRestURL, competitionId, "panelInvites"), AssessmentPanelInviteStatisticsResource.class, expected);
-        assertSame(expected, service.getAssessmentPanelInviteStatisticsByCompetition(competitionId).getSuccessObject());
+        assertSame(expected, service.getAssessmentPanelInviteStatisticsByCompetition(competitionId).getSuccess());
     }
 }

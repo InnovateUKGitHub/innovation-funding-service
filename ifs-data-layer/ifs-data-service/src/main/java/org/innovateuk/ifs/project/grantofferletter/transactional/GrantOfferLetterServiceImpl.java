@@ -314,7 +314,7 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
 
     private boolean isProjectReadyForGrantOffer(Long projectId) {
         Optional<Project> project = getProject(projectId).getOptionalSuccessObject();
-        ApprovalType spendProfileApproval = spendProfileService.getSpendProfileStatusByProjectId(projectId).getSuccessObject();
+        ApprovalType spendProfileApproval = spendProfileService.getSpendProfileStatusByProjectId(projectId).getSuccess();
 
         return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && ApprovalType.APPROVED.equals(project1.getOtherDocumentsApproved()) && project1.getGrantOfferLetter() == null).orElse(false);
     }

@@ -73,7 +73,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Method under test
         ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
         assertTrue(result.isSuccess());
-        assertEquals(expectedCct, result.getSuccessObject()); // We matched
+        assertEquals(expectedCct, result.getSuccess()); // We matched
     }
 
 
@@ -101,7 +101,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Method under test
         ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
         assertTrue(result.isSuccess());
-        assertEquals(expectedCct, result.getSuccessObject()); // We matched
+        assertEquals(expectedCct, result.getSuccess()); // We matched
     }
 
     @Test
@@ -129,7 +129,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Method under test
         ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
         assertTrue(result.isSuccess());
-        assertEquals(expectedCct, result.getSuccessObject()); // We matched
+        assertEquals(expectedCct, result.getSuccess()); // We matched
     }
 
     private CostCategoryType matcherForCostCategoryType(CostCategoryType expected) {

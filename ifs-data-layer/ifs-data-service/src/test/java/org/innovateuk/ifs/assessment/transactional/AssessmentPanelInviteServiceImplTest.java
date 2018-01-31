@@ -771,7 +771,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         when(assessmentPanelParticipantMapperMock.mapToResource(assessmentPanelParticipants.get(1))).thenReturn(expected.get(1));
         when(assessmentReviewRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(1L, competition.getId())).thenReturn(assessmentReviews);
 
-        List<AssessmentPanelParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccessObject();
+        List<AssessmentPanelParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccess();
         assertEquals(actual.get(0), expected.get(0));
         assertEquals(actual.get(1), expected.get(1));
         InOrder inOrder = inOrder(assessmentPanelParticipantRepositoryMock);
@@ -815,7 +815,7 @@ public class AssessmentPanelInviteServiceImplTest extends BaseServiceUnitTest<As
         when(assessmentPanelParticipantMapperMock.mapToResource(assessmentPanelParticipants.get(0))).thenReturn(expected.get(0));
         when(assessmentPanelParticipantMapperMock.mapToResource(assessmentPanelParticipants.get(1))).thenReturn(expected.get(1));
 
-        List<AssessmentPanelParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccessObject();
+        List<AssessmentPanelParticipantResource> actual = service.getAllInvitesByUser(1L).getSuccess();
         assertTrue(actual.isEmpty());
         InOrder inOrder = inOrder(assessmentPanelParticipantRepositoryMock);
         inOrder.verify(assessmentPanelParticipantRepositoryMock).findByUserIdAndRole(1L, PANEL_ASSESSOR);

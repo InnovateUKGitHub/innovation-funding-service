@@ -159,7 +159,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
 
     public void ifSuccessful(Consumer<? super T> successHandler) {
         if (isSuccess()) {
-            successHandler.accept(getSuccessObject());
+            successHandler.accept(getSuccess());
         }
     }
 
@@ -179,8 +179,8 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
     }
 
     @Override
-    public T getSuccessObject() {
-        return getRight();
+    public T getSuccess() {
+        return isRight() ? getRight() : findAndThrowException(getLeft());
     }
 
     @Override
@@ -295,7 +295,7 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         final List<FailureType> failures = new ArrayList<FailureType>();
         for (final Input i : input) {
             if (i.isSuccess()) {
-                items.add(i.getSuccessObject());
+                items.add(i.getSuccess());
             } else {
                 failures.add(i.getFailure());
             }
