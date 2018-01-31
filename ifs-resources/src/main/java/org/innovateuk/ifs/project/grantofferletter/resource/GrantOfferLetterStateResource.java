@@ -14,24 +14,26 @@ public class GrantOfferLetterStateResource {
 
     public static final List<GrantOfferLetterState> SIGNED_GRANT_OFFER_LETTER_WITH_INTERNAL_TEAM_STATES = asList(READY_TO_APPROVE, APPROVED);
     private GrantOfferLetterState state;
-    private String lastProcessEvent;
+    private GrantOfferLetterEvent lastEvent;
+    private boolean hideRejection;
 
-    private GrantOfferLetterStateResource(GrantOfferLetterState state, String lastProcessEvent) {
+    private GrantOfferLetterStateResource(GrantOfferLetterState state, GrantOfferLetterEvent lastEvent, boolean hideRejection) {
         this.state = state;
-        this.lastProcessEvent = lastProcessEvent;
+        this.lastEvent = lastEvent;
+        this.hideRejection = hideRejection;
     }
 
-    public static GrantOfferLetterStateResource forPartnerView(GrantOfferLetterState state, String lastProcessEvent) {
+    public static GrantOfferLetterStateResource forPartnerView(GrantOfferLetterState state, GrantOfferLetterEvent lastEvent) {
 
-        if (isRejectedInternal(state, lastProcessEvent)) {
-            return new GrantOfferLetterStateResource(SENT, null);
+        if (isRejectedInternal(state, lastEvent)) {
+            return new GrantOfferLetterStateResource(SENT, lastEvent, true);
         }
 
-        return new GrantOfferLetterStateResource(state, lastProcessEvent);
+        return new GrantOfferLetterStateResource(state, lastEvent, false);
     }
 
-    public static GrantOfferLetterStateResource forNonPartnerView(GrantOfferLetterState state, String lastProcessEvent) {
-        return new GrantOfferLetterStateResource(state, lastProcessEvent);
+    public static GrantOfferLetterStateResource forNonPartnerView(GrantOfferLetterState state, GrantOfferLetterEvent lastEvent) {
+        return new GrantOfferLetterStateResource(state, lastEvent, false);
     }
 
     // for json marshalling
@@ -39,7 +41,8 @@ public class GrantOfferLetterStateResource {
     GrantOfferLetterStateResource() {
     }
 
-    public GrantOfferLetterState getState() {
+    // for json marshalling
+    GrantOfferLetterState getState() {
         return state;
     }
 
@@ -49,26 +52,27 @@ public class GrantOfferLetterStateResource {
         this.state = state;
     }
 
-    public String getLastProcessEvent() {
-        return lastProcessEvent;
+    // for json marshalling
+    GrantOfferLetterEvent getLastEvent() {
+        return lastEvent;
     }
 
     // for json marshalling
     @SuppressWarnings("unused")
-    void setLastProcessEvent(String lastProcessEvent) {
-        this.lastProcessEvent = lastProcessEvent;
+    void setLastEvent(GrantOfferLetterEvent lastEvent) {
+        this.lastEvent = lastEvent;
     }
 
     public boolean isGeneratedGrantOfferLetterAlreadySentToProjectTeam() {
         return !PENDING.equals(state);
     }
 
-    public boolean isGeneratedGrantOfferLetterAbleToBeSent() {
-        return PENDING.equals(state);
+    public boolean isGeneratedGrantOfferLetterAbleToBeSentToProjectTeam() {
+        return !isGeneratedGrantOfferLetterAlreadySentToProjectTeam();
     }
 
     public boolean isSignedGrantOfferLetterRejected() {
-        return isRejectedInternal(state, lastProcessEvent);
+        return !hideRejection && isRejectedInternal(state, lastEvent);
     }
 
     public boolean isSignedGrantOfferLetterApproved() {
@@ -76,11 +80,10 @@ public class GrantOfferLetterStateResource {
     }
 
     public boolean isSignedGrantOfferLetterReceivedByInternalTeam() {
-        return SIGNED_GRANT_OFFER_LETTER_WITH_INTERNAL_TEAM_STATES.contains(state);
+        return hideRejection || SIGNED_GRANT_OFFER_LETTER_WITH_INTERNAL_TEAM_STATES.contains(state);
     }
 
-    private static boolean isRejectedInternal(GrantOfferLetterState state, String lastProcessEvent) {
-        return SENT.equals(state) && SIGNED_GOL_REJECTED.getType().equalsIgnoreCase(lastProcessEvent);
+    private static boolean isRejectedInternal(GrantOfferLetterState state, GrantOfferLetterEvent lastEvent) {
+        return SENT.equals(state) && SIGNED_GOL_REJECTED.equals(lastEvent);
     }
-
 }

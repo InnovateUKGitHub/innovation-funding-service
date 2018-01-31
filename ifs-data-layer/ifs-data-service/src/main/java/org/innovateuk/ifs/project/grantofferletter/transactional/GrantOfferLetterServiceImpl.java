@@ -25,6 +25,7 @@ import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.configuration.workflow.GrantOfferLetterWorkflowHandler;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
@@ -580,12 +581,12 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
                getCurrentlyLoggedInUser().andOnSuccessReturn(user -> {
 
             GrantOfferLetterState state = golWorkflowHandler.getState(project);
-            String lastProcessEvent = golWorkflowHandler.getLastProcessEvent(project);
+            GrantOfferLetterEvent lastProcessEvent = golWorkflowHandler.getLastProcessEvent(project);
 
             if (project.isPartner(user) && !project.isProjectManager(user)) {
                 return GrantOfferLetterStateResource.forPartnerView(state, lastProcessEvent);
             } else {
-                return GrantOfferLetterStateResource.forNonPartnerView(state ,lastProcessEvent);
+                return GrantOfferLetterStateResource.forNonPartnerView(state, lastProcessEvent);
             }
         }));
     }
