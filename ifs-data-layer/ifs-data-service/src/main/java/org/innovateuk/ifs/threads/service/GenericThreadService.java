@@ -4,22 +4,17 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Thread;
 import org.innovateuk.ifs.threads.repository.ThreadRepository;
-import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.transactional.UserTransactionalService;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
-public class GenericThreadService<E extends Thread, C> implements ThreadService<E, Post> {
+public class GenericThreadService<E extends Thread, C> extends UserTransactionalService implements ThreadService<E, Post> {
     private final ThreadRepository<E> repository;
-    private final UserRepository userRepository;
     private final Class<C> contextClass;
 
     GenericThreadService(ThreadRepository<E> repository, UserRepository userRepository, Class<C> contextClassName) {
@@ -62,19 +57,5 @@ public class GenericThreadService<E extends Thread, C> implements ThreadService<
             thread.addPost(post);
             return repository.save(thread);
         }).andOnSuccessReturnVoid();
-    }
-
-    private ServiceResult<User> getCurrentlyLoggedInUser() {
-        UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
-
-        if (currentUser == null) {
-            return serviceFailure(forbiddenError());
-        }
-
-        return getUser(currentUser.getId());
-    }
-
-    private ServiceResult<User> getUser(final Long id) {
-        return find(userRepository.findOne(id), notFoundError(User.class, id));
     }
 }
