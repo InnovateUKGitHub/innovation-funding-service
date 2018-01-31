@@ -42,7 +42,7 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
 
     private QueryResource queryWithoutPosts() {
         return new QueryResource(1L, 22L, new ArrayList<>(),
-                FinanceChecksSectionType.VIABILITY, "First Query", true, ZonedDateTime.now());
+                FinanceChecksSectionType.VIABILITY, "First Query", true, ZonedDateTime.now(), null, null);
     }
 
     @Override

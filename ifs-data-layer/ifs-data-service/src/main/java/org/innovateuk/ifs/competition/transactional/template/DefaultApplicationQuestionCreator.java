@@ -43,6 +43,7 @@ public class DefaultApplicationQuestionCreator {
 
         Question question = new Question();
         question.setCompetition(competition);
+        question.setMarkAsCompletedEnabled(true);
         question.setAssessorMaximumScore(DEFAULT_MAXIMUM_SCORE);
         question.setFormInputs(Arrays.asList(maxWordCountInput, questionScoreInput, feedbackInput, appendixInput));
 

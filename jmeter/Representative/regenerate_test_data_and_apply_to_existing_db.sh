@@ -7,7 +7,7 @@ count=1
 file="files-to-generate.csv"
 lines=`cat ${file} | wc -l | sed -e 's/^[ \t]*//'`
 
-mysql ifs -hifs-database -uroot -ppassword --skip-column-names < add-indexes.sql 2> /dev/null
+mysql ifs -hifs-database -uroot -ppassword --skip-column-names < add-indexes.sql
 
 cat ${file} | while read line
 do
@@ -16,9 +16,9 @@ do
         csv=`echo $line | cut -d'"' -f6`     # get the first name
 
         echo "${count} / ${lines} - ${text}"
-        mysql ifs -hifs-database -uroot -ppassword --skip-column-names < ${sql} > ${csv} 2> /dev/null
+        mysql ifs -hifs-database -uroot -ppassword --skip-column-names < ${sql} > ${csv}
         echo "------------------"
         count=$count+1
 done
 
-mysql ifs -hifs-database -uroot -ppassword --skip-column-names < remove-indexes.sql 2> /dev/null
+mysql ifs -hifs-database -uroot -ppassword --skip-column-names < remove-indexes.sql

@@ -29,6 +29,9 @@ public interface AssessmentService {
     @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
     ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId);
 
+    @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
+    ServiceResult<List<AssessmentResource>> findByUserAndApplication(long userId, long applicationId);
+
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(
             value = "READ_BY_STATE_AND_COMPETITION",
