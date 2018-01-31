@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.grantofferletter.controller;
 
-import org.innovateuk.ifs.async.annotations.AsyncMethod;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -44,7 +43,6 @@ public class GrantOfferLetterController {
     @Autowired
     private GrantOfferLetterModelPopulator grantOfferLetterViewModelPopulator;
 
-    @AsyncMethod
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @GetMapping
     public String viewGrantOfferLetterPage(@P("projectId")@PathVariable("projectId") Long projectId, Model model,
