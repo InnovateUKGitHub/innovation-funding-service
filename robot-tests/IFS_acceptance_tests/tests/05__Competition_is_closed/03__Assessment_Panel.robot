@@ -40,6 +40,8 @@ Documentation     IFS-786 Assessment panels - Manage assessment panel link on co
 ...               IFS-2375 Assessment Panels - Assessor review application with own feedback and scores
 ...
 ...               IFS-2549 Assign assessment panel applications to assessors upon Invite acceptance
+...
+...               INF-2637 Manage interview panel link on competition dashboard - Internal
 Suite Setup       Custom Suite Setup
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin  Assessor
@@ -61,10 +63,11 @@ ${computer_vision_application}     ${application_ids["${computer_vision_applicat
 
 *** Test Cases ***
 Assement panel link is deactivated if the assessment panel is not set
-    [Documentation]  IFS-786
+    [Documentation]  IFS-786 INF-2637
     [Tags]  HappyPath
     Given The user clicks the button/link  link=${CLOSED_COMPETITION_NAME}
     Then the user should see the element   jQuery=.disabled:contains("Manage assessment panel")
+    And the user should see the element    jQuery=.disabled:contains("Manage interview panel")
 
 Confirm changes button unavailable before sending invite
     [Documentation]  IFS-1125
