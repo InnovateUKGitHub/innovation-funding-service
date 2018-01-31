@@ -15,9 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * Transactional service responsible for deciding if and how to create organisations upon user sign up.
@@ -59,15 +61,51 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
     ) {
         ApplicationInvite invite = inviteService.findOneByHash(inviteHash).getSuccessObjectOrThrowException();
 
-        InviteOrganisation foundInviteOrganisation = invite.getInviteOrganisation();
+        InviteOrganisation inviteOrganisation = invite.getInviteOrganisation();
         Organisation linkedOrganisation = invite.getInviteOrganisation().getOrganisation();
 
         if (linkedOrganisation == null) {
-            linkedOrganisation = createOrganisationAndLinkToInviteOrganisation(organisationToCreate,
-                    foundInviteOrganisation);
+            Optional<Organisation> organisationMatch =
+                    organisationMatchingService.findOrganisationMatch(organisationToCreate);
+
+            if (organisationMatch.isPresent()) {
+                linkedOrganisation = findExistingOrganisationInvite(organisationMatch.get(), invite.getTarget().getId())
+                        .map(existing -> {
+                            // This seems counter-intuitive, but for now we need to avoid a
+                            // new collaborator being able to add themselves to any existing
+                            // application organisations (including the lead applicant's).
+                            // Consequently, if there is an existing matching organisation,
+                            // we just ignore it for now and create a new organisation.
+                            return createOrganisationAndLinkToInviteOrganisation(
+                                    organisationToCreate,
+                                    inviteOrganisation
+                            );
+                        })
+                        .orElseGet(() ->
+                                linkOrganisation(inviteOrganisation, organisationMatch.get()).getOrganisation()
+                        );
+            } else {
+                linkedOrganisation = createOrganisationAndLinkToInviteOrganisation(
+                        organisationToCreate,
+                        inviteOrganisation
+                );
+            }
         }
 
         return serviceSuccess(organisationMapper.mapToResource(linkedOrganisation));
+    }
+
+    private Optional<InviteOrganisation> findExistingOrganisationInvite(
+            Organisation matchedOrganisation,
+            long applicationId
+    ) {
+        List<InviteOrganisation> inviteOrganisations =
+                inviteOrganisationRepository.findDistinctByInvitesApplicationId(applicationId);
+
+        return simpleFindFirst(
+                inviteOrganisations,
+                inviteOrganisation -> inviteOrganisation.getOrganisation().getId().equals(matchedOrganisation.getId())
+        );
     }
 
     private Organisation createOrganisationAndLinkToInviteOrganisation(
@@ -75,11 +113,15 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
             InviteOrganisation inviteOrganisation
     ) {
         Organisation createdOrganisation = createNewOrganisation(organisationResource);
+        return linkOrganisation(inviteOrganisation, createdOrganisation).getOrganisation();
+    }
 
-        inviteOrganisation.setOrganisation(createdOrganisation);
-        inviteOrganisationRepository.save(inviteOrganisation);
-
-        return createdOrganisation;
+    private InviteOrganisation linkOrganisation(
+            InviteOrganisation inviteOrganisation,
+            Organisation organisation
+    ) {
+        inviteOrganisation.setOrganisation(organisation);
+        return inviteOrganisationRepository.save(inviteOrganisation);
     }
 
     private Organisation createNewOrganisation(OrganisationResource organisationResource) {
