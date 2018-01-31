@@ -18,6 +18,8 @@ public interface AssessmentRestService {
 
     RestResult<List<AssessmentResource>> getByUserAndCompetition(long userId, long competitionId);
 
+    RestResult<List<AssessmentResource>> getByUserAndApplication(long userId, long applicationId);
+
     RestResult<Long> countByStateAndCompetition(AssessmentState state, long competitionId);
 
     RestResult<AssessmentTotalScoreResource> getTotalScore(long id);
