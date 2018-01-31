@@ -92,6 +92,18 @@ public class FinanceChecksQueriesController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
+    @PostMapping("/{queryId}/close")
+    public String closeQuery(@PathVariable Long projectId,
+                             @PathVariable Long organisationId,
+                             @PathVariable Long queryId,
+                             Model model) {
+
+        financeCheckService.closeQuery(queryId);
+
+        return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/query";
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @GetMapping("/attachment/{attachmentId}")
     public
     @ResponseBody

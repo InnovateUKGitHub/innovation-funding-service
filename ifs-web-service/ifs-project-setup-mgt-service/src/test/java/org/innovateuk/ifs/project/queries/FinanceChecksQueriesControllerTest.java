@@ -206,6 +206,20 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     }
 
     @Test
+    public void testCloseQuery() throws Exception {
+
+        Long queryId = 1L;
+        when(financeCheckServiceMock.closeQuery(queryId)).thenReturn(ServiceResult.serviceSuccess());
+
+        mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/{queryId}/close", queryId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query"))
+                .andReturn();
+
+        verify(financeCheckServiceMock).closeQuery(queryId);
+    }
+
+    @Test
     public void testQueriesPageWhenFCIsProvided() throws Exception {
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);

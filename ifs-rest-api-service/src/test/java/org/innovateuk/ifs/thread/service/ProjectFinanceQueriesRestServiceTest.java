@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.thread.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesRestService;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Test;
@@ -10,6 +11,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.queryResourceListType;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -47,6 +49,16 @@ public class ProjectFinanceQueriesRestServiceTest extends BaseRestServiceUnitTes
         setupPostWithRestResultExpectations(serviceURL, Long.class, query1, 33L, CREATED);
         final Long response = service.create(query1).getSuccessObject();
         assertSame(query1.id, response);
+    }
+
+    @Test
+    public void test_close() throws Exception {
+        Long threadId = 1L;
+        String postUrl = serviceURL + "/thread/" + threadId + "/close";
+        setupPostWithRestResultExpectations(postUrl, OK);
+        RestResult<Void> response = service.close(threadId);
+        assertTrue(response.isSuccess());
+        setupPostWithRestResultVerifications(postUrl, Void.class);
     }
 
 }
