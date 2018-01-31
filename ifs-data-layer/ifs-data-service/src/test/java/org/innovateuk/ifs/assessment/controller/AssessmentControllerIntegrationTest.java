@@ -205,7 +205,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         loginPaulPlum();
         RestResult<List<AssessmentResource>> result = controller.findByUserAndCompetition(userId, competitionId);
         assertTrue(result.isSuccess());
-        List<AssessmentResource> assessmentResources = result.getSuccessObjectOrThrowException();
+        List<AssessmentResource> assessmentResources = result.getSuccess();
         assertEquals(4, assessmentResources.size());
     }
 
@@ -225,7 +225,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
     public void getTotalScore() throws Exception {
         loginPaulPlum();
 
-        AssessmentTotalScoreResource result = controller.getTotalScore(1L).getSuccessObjectOrThrowException();
+        AssessmentTotalScoreResource result = controller.getTotalScore(1L).getSuccess();
         assertEquals(72, result.getTotalScoreGiven());
         assertEquals(100, result.getTotalScorePossible());
     }
@@ -282,7 +282,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
         assertTrue(result.isSuccess());
 
-        ApplicationAssessmentFeedbackResource feedbackResource = result.getSuccessObjectOrThrowException();
+        ApplicationAssessmentFeedbackResource feedbackResource = result.getSuccess();
         assertEquals(asList("Feedback 1", "Feedback 2"), feedbackResource.getFeedback());
     }
 

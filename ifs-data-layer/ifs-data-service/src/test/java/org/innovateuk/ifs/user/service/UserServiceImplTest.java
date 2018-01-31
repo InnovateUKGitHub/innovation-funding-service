@@ -70,7 +70,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(passwordPolicyValidatorMock.validatePassword("mypassword", userResource)).thenReturn(ServiceResult.serviceSuccess());
         when(idpServiceMock.updateUserPassword("myuid", "mypassword")).thenReturn(ServiceResult.serviceSuccess("mypassword"));
 
-        service.changePassword("myhash", "mypassword").getSuccessObjectOrThrowException();
+        service.changePassword("myhash", "mypassword").getSuccess();
 
         verify(tokenRepositoryMock).delete(token);
     }
@@ -143,7 +143,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
 
         when(notificationServiceMock.sendNotification(any(), eq(NotificationMedium.EMAIL))).thenReturn(ServiceResult.serviceSuccess());
 
-        service.sendPasswordResetNotification(user).getSuccessObjectOrThrowException();
+        service.sendPasswordResetNotification(user).getSuccess();
 
         verify(notificationServiceMock).sendNotification(notificationArgumentCaptor.capture(), eq(NotificationMedium.EMAIL));
 
@@ -196,7 +196,7 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         when(tokenRepositoryMock.findByTypeAndClassNameAndClassPk(TokenType.VERIFY_EMAIL_ADDRESS, User.class.getCanonicalName(), user.getId())).thenReturn(Optional.of(new Token()));
         when(registrationServiceMock.resendUserVerificationEmail(user)).thenReturn(ServiceResult.serviceSuccess());
 
-        service.sendPasswordResetNotification(user).getSuccessObjectOrThrowException();
+        service.sendPasswordResetNotification(user).getSuccess();
 
         verify(tokenRepositoryMock).findByTypeAndClassNameAndClassPk(any(), any(), any());
     }

@@ -129,7 +129,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
         if (question != null && !question.isEmpty()) {
             Long questionId = Long.parseLong(question);
-            financeRowRestService.add(applicationFinanceResource.getId(), questionId, costItem).getSuccessObjectOrThrowException();
+            financeRowRestService.add(applicationFinanceResource.getId(), questionId, costItem).getSuccess();
         }
     }
 
@@ -183,7 +183,7 @@ public class JESFinanceFormHandler implements FinanceFormHandler {
 
         if (params.containsKey(REMOVE_FINANCE_DOCUMENT)) {
             ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
-            financeService.removeFinanceDocument(applicationFinance.getId()).getSuccessObjectOrThrowException();
+            financeService.removeFinanceDocument(applicationFinance.getId()).getSuccess();
         } else if(params.containsKey(UPLOAD_FINANCE_DOCUMENT)) {
             final Map<String, MultipartFile> fileMap = ((StandardMultipartHttpServletRequest) request).getFileMap();
             final String formInputJesId = getJesFormInputId(fileMap.keySet());

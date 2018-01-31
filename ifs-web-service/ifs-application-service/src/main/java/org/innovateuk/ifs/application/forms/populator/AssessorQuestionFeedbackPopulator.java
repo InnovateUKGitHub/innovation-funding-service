@@ -38,11 +38,11 @@ public class AssessorQuestionFeedbackPopulator {
         long applicationId = applicationResource.getId();
 
         List<FormInputResponseResource> responseResource = formInputResponseRestService.getByApplicationIdAndQuestionId(
-                applicationId, questionResource.getId()).getSuccessObjectOrThrowException();
+                applicationId, questionResource.getId()).getSuccess();
 
         AssessmentFeedbackAggregateResource aggregateResource = assessorFormInputResponseRestService
                 .getAssessmentAggregateFeedback(applicationId, questionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
         NavigationViewModel navigationViewModel = feedbackNavigationPopulator.addNavigation(questionResource, applicationId);
 
       return new AssessQuestionFeedbackViewModel(applicationResource,

@@ -40,7 +40,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
 
         RestResult<List<ValidationMessages>> result = service.markAsComplete(sectionId, applicationId, markedAsCompleteById);
 
-        assertEquals(messages, result.getSuccessObjectOrThrowException());
+        assertEquals(messages, result.getSuccess());
     }
 
     @Test
@@ -78,7 +78,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
 
         RestResult<SectionResource> result = service.getById(sectionId);
 
-        assertEquals(sectionResource, result.getSuccessObjectOrThrowException());
+        assertEquals(sectionResource, result.getSuccess());
     }
 
     @Test
@@ -90,7 +90,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
 
         RestResult<List<SectionResource>> result = service.getByCompetition(competitionId);
 
-        assertEquals(sectionResources, result.getSuccessObjectOrThrowException());
+        assertEquals(sectionResources, result.getSuccess());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
 
         RestResult<Map<Long, Set<Long>>> result = service.getCompletedSectionsByOrganisation(applicationId);
 
-        assertEquals(expectedResult, result.getSuccessObjectOrThrowException());
+        assertEquals(expectedResult, result.getSuccess());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
 
         RestResult<SectionResource> result = service.getSectionByQuestionId(questionId);
 
-        assertEquals(sectionResource, result.getSuccessObjectOrThrowException());
+        assertEquals(sectionResource, result.getSuccess());
     }
 
     @Test
@@ -151,7 +151,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
 
         RestResult<Set<Long>> result = service.getQuestionsForSectionAndSubsections(sectionId);
 
-        assertEquals(questions, result.getSuccessObjectOrThrowException());
+        assertEquals(questions, result.getSuccess());
     }
 
     @Test
@@ -174,7 +174,7 @@ public class SectionRestServiceImplTest extends BaseRestServiceUnitTest<SectionR
 
         RestResult<SectionResource> result = service.getFinanceSectionForCompetition(competitionId);
 
-        assertEquals(resource, result.getSuccessObjectOrThrowException());
+        assertEquals(resource, result.getSuccess());
     }
 
     @Test

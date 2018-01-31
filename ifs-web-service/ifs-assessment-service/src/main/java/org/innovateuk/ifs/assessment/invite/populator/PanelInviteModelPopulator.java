@@ -17,7 +17,7 @@ public class PanelInviteModelPopulator extends InviteModelPopulator<PanelInviteV
 
     @Override
     public PanelInviteViewModel populateModel(String inviteHash, boolean userLoggedIn) {
-        AssessmentPanelInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccessObjectOrThrowException();
+        AssessmentPanelInviteResource invite = inviteRestService.openInvite(inviteHash).getSuccess();
 
         return new PanelInviteViewModel(inviteHash, invite, userLoggedIn);
     }

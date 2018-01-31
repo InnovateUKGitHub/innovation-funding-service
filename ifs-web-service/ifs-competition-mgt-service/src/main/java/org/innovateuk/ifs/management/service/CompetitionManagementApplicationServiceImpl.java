@@ -82,7 +82,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
                                              Optional<Long> assessorId) {
         form.setAdminMode(true);
 
-        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccessObjectOrThrowException();
+        List<FormInputResponseResource> responses = formInputResponseRestService.getResponsesByApplicationId(application.getId()).getSuccess();
 
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
@@ -190,7 +190,7 @@ public class CompetitionManagementApplicationServiceImpl implements CompetitionM
     private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {
         final List<AppendixResource> appendices = responses.stream().filter(fir -> fir.getFileEntry() != null).
                 map(fir -> {
-                    FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccessObjectOrThrowException();
+                    FormInputResource formInputResource = formInputRestService.getById(fir.getFormInput()).getSuccess();
                     FileEntryResource fileEntryResource = fileEntryRestService.findOne(fir.getFileEntry()).getSuccess();
                     String title = formInputResource.getDescription() != null ? formInputResource.getDescription() : fileEntryResource.getName();
                     return new AppendixResource(applicationId, formInputResource.getId(), title, fileEntryResource);

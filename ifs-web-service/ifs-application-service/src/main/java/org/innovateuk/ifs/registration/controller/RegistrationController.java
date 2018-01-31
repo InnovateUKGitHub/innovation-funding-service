@@ -141,7 +141,7 @@ public class RegistrationController {
     }
 
     private List<EthnicityResource> getEthnicityOptions() {
-        return ethnicityRestService.findAllActive().getSuccessObjectOrThrowException();
+        return ethnicityRestService.findAllActive().getSuccess();
     }
 
     private boolean processOrganisation(HttpServletRequest request, Model model) {

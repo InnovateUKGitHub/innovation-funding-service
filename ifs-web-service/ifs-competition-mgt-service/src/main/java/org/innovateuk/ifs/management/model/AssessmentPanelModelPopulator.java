@@ -29,11 +29,11 @@ public class AssessmentPanelModelPopulator {
         CompetitionResource competition = competitionService.getById(competitionId);
         AssessmentPanelKeyStatisticsResource keyStatistics = competitionKeyStatisticsRestService
                 .getAssessmentPanelKeyStatisticsByCompetition(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         boolean pendingReviewNotifications = assessmentPanelRestService
                 .isPendingReviewNotifications(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         return new AssessmentPanelViewModel(
                 competition.getId(),

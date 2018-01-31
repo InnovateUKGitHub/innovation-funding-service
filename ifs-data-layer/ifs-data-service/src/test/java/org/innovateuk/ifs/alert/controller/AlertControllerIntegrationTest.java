@@ -53,15 +53,15 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
         AlertResource created1 = controller.create(newAlertResource()
                 .withValidFromDate(oneDayAgo)
                 .withValidToDate(oneDayAhead)
-                .build()).getSuccessObjectOrThrowException();
+                .build()).getSuccess();
 
         AlertResource created2 = controller.create(newAlertResource()
                 .withValidFromDate(oneSecondAgo)
                 .withValidToDate(oneHourAhead)
-                .build()).getSuccessObjectOrThrowException();
+                .build()).getSuccess();
 
         setLoggedInUser(basicSecurityUser);
-        List<AlertResource> found = controller.findAllVisible().getSuccessObjectOrThrowException();
+        List<AlertResource> found = controller.findAllVisible().getSuccess();
 
         assertEquals(2, found.size());
         assertEquals(created1, found.get(0));
@@ -81,15 +81,15 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
         AlertResource created1 = controller.create(newAlertResource()
                 .withValidFromDate(oneDayAgo)
                 .withValidToDate(oneDayAhead)
-                .build()).getSuccessObjectOrThrowException();
+                .build()).getSuccess();
 
         AlertResource created2 = controller.create(newAlertResource()
                 .withValidFromDate(oneSecondAgo)
                 .withValidToDate(oneHourAhead)
-                .build()).getSuccessObjectOrThrowException();
+                .build()).getSuccess();
 
         setLoggedInUser(basicSecurityUser);
-        List<AlertResource> found = controller.findAllVisibleByType(MAINTENANCE).getSuccessObjectOrThrowException();
+        List<AlertResource> found = controller.findAllVisibleByType(MAINTENANCE).getSuccess();
 
         assertEquals(2, found.size());
         assertEquals(created1, found.get(0));
@@ -99,7 +99,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
     @Test
     public void test_findById() throws Exception {
         setLoggedInUser(basicSecurityUser);
-        AlertResource found = controller.findById(1L).getSuccessObjectOrThrowException();
+        AlertResource found = controller.findById(1L).getSuccess();
 
         assertEquals(Long.valueOf(1L), found.getId());
         assertEquals("Sample message", found.getMessage());
@@ -115,7 +115,7 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
         AlertResource alertResource = newAlertResource()
                 .build();
 
-        AlertResource created = controller.create(alertResource).getSuccessObjectOrThrowException();
+        AlertResource created = controller.create(alertResource).getSuccess();
         assertNotNull(created.getId());
         assertEquals("Sample message", created.getMessage());
         assertEquals(MAINTENANCE, created.getType());
@@ -135,15 +135,15 @@ public class AlertControllerIntegrationTest extends BaseControllerIntegrationTes
                 .withId()
                 .build();
 
-        AlertResource created = controller.create(alertResource).getSuccessObjectOrThrowException();
+        AlertResource created = controller.create(alertResource).getSuccess();
 
         // check that it can be found
         assertNotNull(created.getId());
         alertResource.setId(created.getId());
-        assertEquals(alertResource, controller.findById(created.getId()).getSuccessObjectOrThrowException());
+        assertEquals(alertResource, controller.findById(created.getId()).getSuccess());
 
         // now delete it
-        controller.delete(created.getId()).getSuccessObjectOrThrowException();
+        controller.delete(created.getId()).getSuccess();
 
         // make sure it can't be found
         assertTrue(controller.findById(created.getId()).isFailure());

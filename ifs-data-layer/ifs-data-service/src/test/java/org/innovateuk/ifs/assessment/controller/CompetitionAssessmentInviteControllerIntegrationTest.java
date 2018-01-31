@@ -154,7 +154,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         RestResult<AssessorInvitesToSendResource> serviceResult = controller.getAllInvitesToSend(competition.getId());
         assertTrue(serviceResult.isSuccess());
 
-        AssessorInvitesToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
+        AssessorInvitesToSendResource inviteResource = serviceResult.getSuccess();
         assertEquals(1L, inviteResource.getCompetitionId());
         assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
         assertEquals(2, inviteResource.getRecipients().size());
@@ -185,7 +185,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         RestResult<AssessorInvitesToSendResource> serviceResult = controller.getAllInvitesToResend(competition.getId(), inviteIds);
         assertTrue(serviceResult.isSuccess());
 
-        AssessorInvitesToSendResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
+        AssessorInvitesToSendResource inviteResource = serviceResult.getSuccess();
         assertEquals(1L, inviteResource.getCompetitionId());
         assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
         assertEquals(2, inviteResource.getRecipients().size());
@@ -208,7 +208,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         RestResult<CompetitionInviteResource> serviceResult = controller.getInvite("hash");
         assertTrue(serviceResult.isSuccess());
 
-        CompetitionInviteResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
+        CompetitionInviteResource inviteResource = serviceResult.getSuccess();
         assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
     }
 
@@ -233,7 +233,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         RestResult<CompetitionInviteResource> serviceResult = controller.openInvite("hash");
         assertTrue(serviceResult.isSuccess());
 
-        CompetitionInviteResource inviteResource = serviceResult.getSuccessObjectOrThrowException();
+        CompetitionInviteResource inviteResource = serviceResult.getSuccess();
         assertEquals("Connected digital additive manufacturing", inviteResource.getCompetitionName());
     }
 
@@ -265,7 +265,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         RestResult<Boolean> serviceResult = controller.checkExistingUser("hash");
         assertTrue(serviceResult.isSuccess());
 
-        Boolean existingUser = serviceResult.getSuccessObjectOrThrowException();
+        Boolean existingUser = serviceResult.getSuccess();
         assertTrue(existingUser);
     }
 
@@ -290,7 +290,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         RestResult<Boolean> serviceResult = controller.checkExistingUser("hash");
         assertTrue(serviceResult.isSuccess());
 
-        Boolean existingUser = serviceResult.getSuccessObjectOrThrowException();
+        Boolean existingUser = serviceResult.getSuccess();
         assertTrue(existingUser);
     }
 
@@ -310,7 +310,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         RestResult<Boolean> serviceResult = controller.checkExistingUser("hash");
         assertTrue(serviceResult.isSuccess());
 
-        Boolean existingUser = serviceResult.getSuccessObjectOrThrowException();
+        Boolean existingUser = serviceResult.getSuccess();
         assertFalse(existingUser);
     }
 
@@ -666,7 +666,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
 
         assertTrue(serviceResult.isSuccess());
 
-        CompetitionInviteResource resource = serviceResult.getSuccessObjectOrThrowException();
+        CompetitionInviteResource resource = serviceResult.getSuccess();
 
         assertEquals(competition.getName(), resource.getCompetitionName());
         assertEquals(CREATED, resource.getStatus());
@@ -846,7 +846,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
 
         loginCompAdmin();
 
-        controller.sendAllInvites(competition.getId(), assessorInviteSendResource).getSuccessObjectOrThrowException();
+        controller.sendAllInvites(competition.getId(), assessorInviteSendResource).getSuccess();
 
         User invitedUser = userRepository.findByEmail(applicantUser.getEmail()).get();
         assertTrue(invitedUser.getRoles().contains(roleRepository.findOneByName(UserRoleType.ASSESSOR.getName())));
@@ -890,7 +890,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         Optional<Long> innovationArea = Optional.of(5L);
 
         AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, innovationArea)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertEquals(20, availableAssessorPageResource.getSize());
         assertEquals(0, availableAssessorPageResource.getNumber());
@@ -916,7 +916,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         Optional<Long> innovationArea = Optional.of(5L);
 
         AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, innovationArea)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertEquals(2, availableAssessorPageResource.getSize());
         assertEquals(1, availableAssessorPageResource.getNumber());
@@ -939,7 +939,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         Pageable pageable = new PageRequest(0, 6, new Sort(ASC, "firstName"));
 
         AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, empty())
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertEquals(6, availableAssessorPageResource.getSize());
         assertEquals(0, availableAssessorPageResource.getNumber());
@@ -987,7 +987,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         Pageable pageable = new PageRequest(0, 10, new Sort(ASC, "firstName", "lastName"));
 
         AvailableAssessorPageResource availableAssessorPageResource = controller.getAvailableAssessors(competition.getId(), pageable, empty())
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertEquals(10, availableAssessorPageResource.getSize());
         assertEquals(0, availableAssessorPageResource.getNumber());
@@ -1013,7 +1013,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         Optional<Long> innovationArea = Optional.of(5L);
 
         List<Long> availableAssessorIds = controller.getAvailableAssessorIds(competition.getId(), innovationArea)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertEquals(4, availableAssessorIds.size());
     }
@@ -1054,7 +1054,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "name"));
 
         AssessorCreatedInvitePageResource createdInvitesPageResource = controller.getCreatedInvites(competition.getId(), pageable)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertEquals(20, createdInvitesPageResource.getSize());
         assertEquals(6, createdInvitesPageResource.getTotalElements());
@@ -1081,7 +1081,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
         Pageable pageable = new PageRequest(1, 2, new Sort(ASC, "name"));
 
         AssessorCreatedInvitePageResource createdInvitesPageResource = controller.getCreatedInvites(competition.getId(), pageable)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertEquals(2, createdInvitesPageResource.getSize());
         assertEquals(6, createdInvitesPageResource.getTotalElements());
@@ -1156,7 +1156,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
                 innovationAreaId,
                 status,
                 hasContract
-        ).getSuccessObjectOrThrowException();
+        ).getSuccess();
 
         assertTrue(inviteIds.isEmpty());
 
@@ -1211,7 +1211,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
                 innovationAreaId,
                 status,
                 hasContract
-        ).getSuccessObjectOrThrowException();
+        ).getSuccess();
 
         assertEquals(2, inviteIds.size());
     }
@@ -1298,7 +1298,7 @@ public class CompetitionAssessmentInviteControllerIntegrationTest extends BaseCo
                 status,
                 hasContract
         )
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertEquals(0, pageResource.getNumber());
         assertEquals(20, pageResource.getSize());

@@ -103,7 +103,7 @@ public class InviteServiceImplTest extends BaseUnitTestMocksTest {
 
         ServiceResult<ApplicationInvite> result = inviteService.findOneByHash(hash);
 
-        assertEquals(applicationInvite, result.getSuccessObjectOrThrowException());
+        assertEquals(applicationInvite, result.getSuccess());
     }
 
     @Test

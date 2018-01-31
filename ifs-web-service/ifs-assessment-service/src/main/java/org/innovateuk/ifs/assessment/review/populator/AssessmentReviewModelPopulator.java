@@ -37,7 +37,7 @@ public class AssessmentReviewModelPopulator {
 
     public AssessmentReviewViewModel populateModel(long reviewId) {
         AssessmentReviewResource assessmentReviewResource =
-                assessmentPanelRestService.getAssessmentReview(reviewId).getSuccessObjectOrThrowException();
+                assessmentPanelRestService.getAssessmentReview(reviewId).getSuccess();
 
         String projectSummary = getProjectSummary(assessmentReviewResource);
         List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(assessmentReviewResource.getApplication());
@@ -56,7 +56,7 @@ public class AssessmentReviewModelPopulator {
     private Optional<OrganisationResource> getApplicationLeadOrganisation(List<ProcessRoleResource> userApplicationRoles) {
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .findFirst();
     }
 
@@ -68,13 +68,13 @@ public class AssessmentReviewModelPopulator {
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
                         || uar.getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
-                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
+                .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccess())
                 .collect(Collectors.toCollection(supplier));
     }
 
     private String getProjectSummary(AssessmentReviewResource assessmentReviewResource) {
         FormInputResponseResource formInputResponseResource = formInputResponseRestService.getByApplicationIdAndQuestionName(
-                assessmentReviewResource.getApplication(), "Project summary").getSuccessObjectOrThrowException();
+                assessmentReviewResource.getApplication(), "Project summary").getSuccess();
         return formInputResponseResource.getValue();
     }
 }

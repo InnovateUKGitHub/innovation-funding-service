@@ -209,7 +209,7 @@ public class FinanceChecksEligibilityController {
     String removeCostRow(@P("projectId")@PathVariable("projectId") Long projectId,
                          @PathVariable("organisationId") Long organisationId,
                          @PathVariable("costId") final Long costId) throws JsonProcessingException {
-        projectFinanceRowRestService.delete(projectId, organisationId, costId).getSuccessObjectOrThrowException();
+        projectFinanceRowRestService.delete(projectId, organisationId, costId).getSuccess();
         AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);

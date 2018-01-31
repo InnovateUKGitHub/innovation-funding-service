@@ -82,7 +82,7 @@ public class AcceptInviteAuthenticatedController extends AbstractAcceptInviteCon
                         return validateView;
                     }
                     // Success
-                    inviteRestService.acceptInvite(invite.getHash(), loggedInUser.getId()).getSuccessObjectOrThrowException();
+                    inviteRestService.acceptInvite(invite.getHash(), loggedInUser.getId()).getSuccess();
                     clearDownInviteFlowCookies(response);
                     return "redirect:/application/" + invite.getApplication();
                 })

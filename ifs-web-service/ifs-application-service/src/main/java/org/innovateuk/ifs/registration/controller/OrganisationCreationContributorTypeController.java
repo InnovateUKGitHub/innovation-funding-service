@@ -52,7 +52,7 @@ public class OrganisationCreationContributorTypeController extends AbstractOrgan
         }
 
         if (invite.isSuccess() && InviteStatus.SENT.equals(invite.getSuccess().getStatus())) {
-            List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccessObjectOrThrowException();
+            List<OrganisationTypeResource> types = organisationTypeRestService.getAll().getSuccess();
             types = types.stream()
                         .filter(t -> t.getParentOrganisationType() == null)
                         .collect(Collectors.toList());

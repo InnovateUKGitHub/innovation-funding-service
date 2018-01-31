@@ -127,7 +127,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId());
         boolean bankDetailsApproved = getBankDetailsApprovalStatus(projectId);
 
-        FinanceCheckOverviewResource overviewResource = getFinanceCheckOverview(projectId).getSuccessObjectOrThrowException();
+        FinanceCheckOverviewResource overviewResource = getFinanceCheckOverview(projectId).getSuccess();
 
         String spendProfileGeneratedBy = spendProfile.map(p -> p.getGeneratedBy().getName()).orElse(null);
         LocalDate spendProfileGeneratedDate = spendProfile.map(p -> LocalDate.from(p.getGeneratedDate().toInstant().atOffset(ZoneOffset.UTC))).orElse(null);
@@ -259,7 +259,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private Pair<Viability, ViabilityRagStatus> getViabilityStatus(ProjectOrganisationCompositeId compositeId) {
 
-        ViabilityResource viabilityDetails = getViability(compositeId).getSuccessObjectOrThrowException();
+        ViabilityResource viabilityDetails = getViability(compositeId).getSuccess();
 
         return Pair.of(viabilityDetails.getViability(), viabilityDetails.getViabilityRagStatus());
 
@@ -267,7 +267,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     private Pair<Eligibility, EligibilityRagStatus> getEligibilityStatus(ProjectOrganisationCompositeId compositeId) {
 
-        EligibilityResource eligibilityDetails = getEligibility(compositeId).getSuccessObjectOrThrowException();
+        EligibilityResource eligibilityDetails = getEligibility(compositeId).getSuccess();
 
         return Pair.of(eligibilityDetails.getEligibility(), eligibilityDetails.getEligibilityRagStatus());
     }

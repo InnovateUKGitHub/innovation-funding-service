@@ -58,12 +58,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public List<QuestionResource> findByCompetition(Long competitionId) {
-        return questionRestService.findByCompetition(competitionId).getSuccessObjectOrThrowException();
+        return questionRestService.findByCompetition(competitionId).getSuccess();
     }
 
     @Override
     public Map<Long, QuestionStatusResource> getQuestionStatusesForApplicationAndOrganisation(Long applicationId, Long userOrganisationId) {
-        return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId).getSuccessObjectOrThrowException());
+        return mapToQuestionIds(questionStatusRestService.findByApplicationAndOrganisation(applicationId, userOrganisationId).getSuccess());
     }
 
     private Map<Long, QuestionStatusResource> mapToQuestionIds(final List<QuestionStatusResource> questionStatusResources) {
@@ -96,12 +96,12 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public QuestionResource getById(Long questionId) {
-        return questionRestService.findById(questionId).getSuccessObjectOrThrowException();
+        return questionRestService.findById(questionId).getSuccess();
     }
 
     @Override
     public QuestionResource getByIdAndAssessmentId(Long questionId, Long assessmentId) {
-        return questionRestService.getByIdAndAssessmentId(questionId, assessmentId).getSuccessObjectOrThrowException();
+        return questionRestService.getByIdAndAssessmentId(questionId, assessmentId).getSuccess();
     }
 
     @Override
@@ -131,7 +131,7 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public QuestionStatusResource getByQuestionIdAndApplicationIdAndOrganisationId(Long questionId, Long applicationId, Long organisationId) {
-        List<QuestionStatusResource> questionStatuses = questionStatusRestService.findByQuestionAndApplicationAndOrganisation(questionId, applicationId, organisationId).getSuccessObjectOrThrowException();
+        List<QuestionStatusResource> questionStatuses = questionStatusRestService.findByQuestionAndApplicationAndOrganisation(questionId, applicationId, organisationId).getSuccess();
         if (questionStatuses == null || questionStatuses.isEmpty()) {
             return null;
         }
@@ -140,26 +140,26 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     public Map<Long, QuestionStatusResource> getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(List<Long> questionIds, Long applicationId, Long organisationId) {
-        return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccessObjectOrThrowException());
+        return mapToQuestionIds(questionStatusRestService.getQuestionStatusesByQuestionIdsAndApplicationIdAndOrganisationId(questionIds, applicationId, organisationId).getSuccess());
     }
 
     public List<QuestionStatusResource> findQuestionStatusesByQuestionAndApplicationId(Long questionId, Long applicationId) {
-        return questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId).getSuccessObjectOrThrowException();
+        return questionStatusRestService.findQuestionStatusesByQuestionAndApplicationId(questionId, applicationId).getSuccess();
     }
 
     @Override
     public List<QuestionResource> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type) {
-        return questionRestService.getQuestionsBySectionIdAndType(sectionId, type).getSuccessObjectOrThrowException();
+        return questionRestService.getQuestionsBySectionIdAndType(sectionId, type).getSuccess();
     }
 
     @Override
     public QuestionResource save(QuestionResource questionResource) {
-        return questionRestService.save(questionResource).getSuccessObjectOrThrowException();
+        return questionRestService.save(questionResource).getSuccess();
     }
 
     @Override
     public List<QuestionResource> getQuestionsByAssessment(long assessmentId) {
-        return questionRestService.getQuestionsByAssessment(assessmentId).getSuccessObjectOrThrowException();
+        return questionRestService.getQuestionsByAssessment(assessmentId).getSuccess();
     }
 
     @Override
@@ -170,7 +170,7 @@ public class QuestionServiceImpl implements QuestionService {
             Long questionId = extractQuestionProcessRoleIdFromAssignSubmit(request);
             Long assigneeId = extractAssigneeProcessRoleIdFromAssignSubmit(request);
 
-            assign(questionId, applicationId, assigneeId, assignedBy.getId()).getSuccessObjectOrThrowException();
+            assign(questionId, applicationId, assigneeId, assignedBy.getId()).getSuccess();
         }
     }
 

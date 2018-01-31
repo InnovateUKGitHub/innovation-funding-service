@@ -73,7 +73,7 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
     public void testEmptyGetAllPublicMilestonesByCompetitionId() throws Exception {
         loginSystemRegistrationUser();
         RestResult<List<MilestoneResource>> result = controller.getAllPublicMilestonesByCompetitionId(COMPETITION_ID_INVALID);
-        List<MilestoneResource> milestones = result.getSuccessObjectOrThrowException();
+        List<MilestoneResource> milestones = result.getSuccess();
         assertTrue(milestones.isEmpty());
         assertNotNull(milestones);
     }

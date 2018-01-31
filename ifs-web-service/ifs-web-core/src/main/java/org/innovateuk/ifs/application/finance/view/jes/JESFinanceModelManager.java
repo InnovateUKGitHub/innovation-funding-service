@@ -138,7 +138,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
                     costNames.forEach(costName -> {
                         FinanceRowItem financeRowItem = new AcademicCost(null, costName, BigDecimal.ZERO, null);
                         financeRowRestService.add(applicationFinanceResource.getId(), questionResource.getId(), financeRowItem)
-                                .getSuccessObjectOrThrowException();
+                                .getSuccess();
                     });
                 }
             }

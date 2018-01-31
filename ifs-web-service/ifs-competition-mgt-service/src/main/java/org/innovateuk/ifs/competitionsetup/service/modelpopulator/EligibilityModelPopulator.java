@@ -58,7 +58,7 @@ public class EligibilityModelPopulator implements CompetitionSetupSectionModelPo
                 .map(OrganisationTypeResource::getName)
                 .collect(Collectors.joining(", "));
 
-        List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccessObjectOrThrowException();
+        List<ResearchCategoryResource> researchCategories = categoryRestService.getResearchCategories().getSuccess();
         String researchCategoriesFormatted = categoryFormatter.format(
                 competitionResource.getResearchCategories(),
                 researchCategories

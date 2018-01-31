@@ -887,15 +887,15 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     }
 
     protected UserResource retrieveUserByEmail(String emailAddress) {
-        return doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccessObjectOrThrowException());
+        return doAs(systemRegistrar(), () -> userService.findByEmail(emailAddress).getSuccess());
     }
 
     protected OrganisationResource retrieveOrganisationById(Long id) {
-        return doAs(systemRegistrar(), () -> organisationService.findById(id).getSuccessObjectOrThrowException());
+        return doAs(systemRegistrar(), () -> organisationService.findById(id).getSuccess());
     }
 
     protected OrganisationResource retrieveOrganisationByUserId(Long id) {
-        return doAs(systemRegistrar(), () -> organisationService.getPrimaryForUser(id).getSuccessObjectOrThrowException());
+        return doAs(systemRegistrar(), () -> organisationService.getPrimaryForUser(id).getSuccess());
     }
 
     protected UserResource systemRegistrar() {
@@ -1067,14 +1067,14 @@ abstract class BaseGenerateTestData extends BaseIntegrationTest {
     protected void setDefaultSystemRegistrar() {
         setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
         testService.doWithinTransaction(() ->
-                setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccessObjectOrThrowException())
+                setLoggedInUser(userService.findByEmail(BaseDataBuilder.IFS_SYSTEM_REGISTRAR_USER_EMAIL).getSuccess())
         );
     }
 
     protected void setDefaultCompAdmin() {
         setLoggedInUser(newUserResource().withRolesGlobal(newRoleResource().withType(SYSTEM_REGISTRATION_USER).build(1)).build());
         testService.doWithinTransaction(() ->
-                setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccessObjectOrThrowException())
+                setLoggedInUser(userService.findByEmail(COMP_ADMIN_EMAIL).getSuccess())
         );
     }
 }

@@ -207,7 +207,7 @@ public class GrantOfferLetterController {
     private GrantOfferLetterModel populateGrantOfferLetterSendViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccessObjectOrThrowException();
+        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccess();
 
         Optional<FileEntryResource> grantOfferFileDetails = grantOfferLetterService.getGrantOfferFileDetails(projectId);
 
@@ -215,9 +215,9 @@ public class GrantOfferLetterController {
 
         Optional<FileEntryResource> signedGrantOfferLetterFile = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
 
-        Boolean grantOfferLetterRejected = grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).getSuccessObjectOrThrowException();
+        Boolean grantOfferLetterRejected = grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).getSuccess();
 
-        GrantOfferLetterState golState = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).getSuccessObjectOrThrowException();
+        GrantOfferLetterState golState = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).getSuccess();
 
         return new GrantOfferLetterModel(competitionSummary,
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),

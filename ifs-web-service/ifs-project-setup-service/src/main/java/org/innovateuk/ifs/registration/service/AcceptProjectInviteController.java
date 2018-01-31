@@ -116,7 +116,7 @@ public class AcceptProjectInviteController {
                     japvm.setProjectName(invite.getProjectName());
                     model.addAttribute("model", japvm);
                     return restSuccess(ACCEPT_INVITE_SHOW_PROJECT);
-                }).getSuccessObjectOrThrowException();
+                }).getSuccess();
     }
 
     //======================================================

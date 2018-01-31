@@ -199,7 +199,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userRepositoryMock.save(userToSave)).thenReturn(savedUser);
         when(userMapperMock.mapToResource(savedUser)).thenReturn(savedUserResource);
 
-        UserResource result = service.createUser(userToCreateResource).getSuccessObjectOrThrowException();
+        UserResource result = service.createUser(userToCreateResource).getSuccess();
 
         assertEquals(savedUserResource, result);
     }
@@ -271,7 +271,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
-        UserResource result = service.createOrganisationUser(123L, userToCreate).getSuccessObjectOrThrowException();
+        UserResource result = service.createOrganisationUser(123L, userToCreate).getSuccess();
 
         assertEquals(userToCreate, result);
     }
@@ -673,7 +673,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(userMapperMock.mapToResource(isA(User.class))).thenReturn(userToCreate);
         when(passwordPolicyValidatorMock.validatePassword("thepassword", userToCreate)).thenReturn(serviceSuccess());
 
-        UserResource result = service.createOrganisationUser(123L, userToCreate).getSuccessObjectOrThrowException();
+        UserResource result = service.createOrganisationUser(123L, userToCreate).getSuccess();
 
         assertEquals(userToCreate, result);
     }

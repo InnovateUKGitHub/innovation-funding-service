@@ -22,22 +22,22 @@ public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
 
     @Override
     public Optional<ByteArrayResource> getSignedGrantOfferLetterFile(Long projectId) {
-        return grantOfferLetterRestService.getSignedGrantOfferLetterFile(projectId).getSuccessObjectOrThrowException();
+        return grantOfferLetterRestService.getSignedGrantOfferLetterFile(projectId).getSuccess();
     }
 
     @Override
     public Optional<FileEntryResource> getSignedGrantOfferLetterFileDetails(Long projectId) {
-        return grantOfferLetterRestService.getSignedGrantOfferLetterFileDetails(projectId).getSuccessObjectOrThrowException();
+        return grantOfferLetterRestService.getSignedGrantOfferLetterFileDetails(projectId).getSuccess();
     }
 
     @Override
     public Optional<ByteArrayResource> getGrantOfferFile(Long projectId) {
-        return grantOfferLetterRestService.getGrantOfferFile(projectId).getSuccessObjectOrThrowException();
+        return grantOfferLetterRestService.getGrantOfferFile(projectId).getSuccess();
     }
 
     @Override
     public Optional<FileEntryResource> getGrantOfferFileDetails(Long projectId) {
-        return grantOfferLetterRestService.getGrantOfferFileDetails(projectId).getSuccessObjectOrThrowException();
+        return grantOfferLetterRestService.getGrantOfferFileDetails(projectId).getSuccess();
     }
 
     @Override
@@ -102,12 +102,12 @@ public class GrantOfferLetterServiceImpl implements GrantOfferLetterService {
 
     @Override
     public Optional<ByteArrayResource> getAdditionalContractFile(Long projectId) {
-        return grantOfferLetterRestService.getAdditionalContractFile(projectId).getSuccessObjectOrThrowException();
+        return grantOfferLetterRestService.getAdditionalContractFile(projectId).getSuccess();
     }
 
     @Override
     public Optional<FileEntryResource> getAdditionalContractFileDetails(Long projectId) {
-        return grantOfferLetterRestService.getAdditionalContractFileDetails(projectId).getSuccessObjectOrThrowException();
+        return grantOfferLetterRestService.getAdditionalContractFileDetails(projectId).getSuccess();
     }
 
     @Override

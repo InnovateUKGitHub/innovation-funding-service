@@ -29,9 +29,9 @@ public class GrantOfferLetterModelPopulator {
         Optional<FileEntryResource> grantOfferFileDetails = grantOfferLetterService.getGrantOfferFileDetails(projectId);
         Optional<FileEntryResource> additionalContractFile = grantOfferLetterService.getAdditionalContractFileDetails(projectId);
         boolean projectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
-        boolean grantOfferLetterApproved = grantOfferLetterService.isSignedGrantOfferLetterApproved(projectId).getSuccessObjectOrThrowException();
-        boolean grantOfferLetterSent = grantOfferLetterService.isGrantOfferLetterAlreadySent(projectId).getSuccessObjectOrThrowException();
-        boolean grantOfferLetterRejected = grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).getSuccessObjectOrThrowException();
+        boolean grantOfferLetterApproved = grantOfferLetterService.isSignedGrantOfferLetterApproved(projectId).getSuccess();
+        boolean grantOfferLetterSent = grantOfferLetterService.isGrantOfferLetterAlreadySent(projectId).getSuccess();
+        boolean grantOfferLetterRejected = grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).getSuccess();
 
         return new GrantOfferLetterModel(projectId, project.getName(),
                 leadPartner,

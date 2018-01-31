@@ -170,7 +170,7 @@ public class FinanceChecksViabilityController {
         String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
         LocalDate approvalDate = viability.getViabilityApprovalDate();
 
-        List<OrganisationSizeResource> sizes = organisationDetailsService.getOrganisationSizes().getSuccessObjectOrThrowException();
+        List<OrganisationSizeResource> sizes = organisationDetailsService.getOrganisationSizes().getSuccess();
         Optional<OrganisationSizeResource> organisationSizeResource = sizes.stream().filter(size -> size.getId().equals(financesForOrganisation.getOrganisationSize())).findAny();
         String organisationSizeDescription = organisationSizeResource.map(OrganisationSizeResource::getDescription).orElse(null);
         return new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,

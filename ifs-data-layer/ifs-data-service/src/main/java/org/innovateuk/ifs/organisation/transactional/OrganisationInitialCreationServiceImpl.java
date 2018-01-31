@@ -57,7 +57,7 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
     @Override
     @Transactional
     public ServiceResult<OrganisationResource> createAndLinkByInvite(final OrganisationResource organisationToCreate, String inviteHash) {
-        ApplicationInvite invite = inviteService.findOneByHash(inviteHash).getSuccessObjectOrThrowException();
+        ApplicationInvite invite = inviteService.findOneByHash(inviteHash).getSuccess();
 
         InviteOrganisation foundInviteOrganisation = invite.getInviteOrganisation();
         Organisation linkedOrganisation = invite.getInviteOrganisation().getOrganisation();

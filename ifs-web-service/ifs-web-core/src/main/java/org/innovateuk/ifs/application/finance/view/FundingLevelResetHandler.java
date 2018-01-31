@@ -57,7 +57,7 @@ public class FundingLevelResetHandler {
                                 (processRole.isPresent() ? processRole.get().getId() : null))
                 );
 
-        QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
+        QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccess();
 
         resetFundingLevel(applicationFinance, financeQuestion.getId());
     }
@@ -65,7 +65,7 @@ public class FundingLevelResetHandler {
     private void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
         if (applicationFinance.getGrantClaim() != null) {
             applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
-            financeRowRestService.add(applicationFinance.getId(), financeQuestionId, applicationFinance.getGrantClaim()).getSuccessObjectOrThrowException();
+            financeRowRestService.add(applicationFinance.getId(), financeQuestionId, applicationFinance.getGrantClaim()).getSuccess();
         }
     }
 }

@@ -62,7 +62,7 @@ public class FormInputServiceImplTest extends BaseServiceUnitTest<FormInputServi
         when(formInputResponseMapperMock.mapToResource(responses.get(0))).thenReturn(responseResources.get(0));
         when(formInputResponseMapperMock.mapToResource(responses.get(1))).thenReturn(responseResources.get(1));
 
-        List<FormInputResponseResource> serviceResult = service.findResponseByApplicationIdAndQuestionId(applicationId, questionId).getSuccessObjectOrThrowException();
+        List<FormInputResponseResource> serviceResult = service.findResponseByApplicationIdAndQuestionId(applicationId, questionId).getSuccess();
 
         assertEquals(responseResources, serviceResult);
 

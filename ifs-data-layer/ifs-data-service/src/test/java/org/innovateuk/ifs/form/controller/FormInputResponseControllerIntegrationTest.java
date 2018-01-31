@@ -138,7 +138,7 @@ public class FormInputResponseControllerIntegrationTest extends BaseControllerIn
         long applicationId = 1L;
         long questionId = 1L;
 
-        List<FormInputResponseResource> formInputResponseResource = controller.findByApplicationIdAndQuestionId(applicationId, questionId).getSuccessObjectOrThrowException();
+        List<FormInputResponseResource> formInputResponseResource = controller.findByApplicationIdAndQuestionId(applicationId, questionId).getSuccess();
         assertEquals(1, formInputResponseResource.size());
         assertEquals(1L, (long)formInputResponseResource.get(0).getId());
         assertTrue(formInputResponseResource.get(0).getValue().startsWith("Within the Industry one issue has caused progress"));

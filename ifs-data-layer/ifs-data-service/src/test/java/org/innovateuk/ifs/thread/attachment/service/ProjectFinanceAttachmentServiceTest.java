@@ -37,7 +37,7 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         when(attachmentRepositoryMock.findOne(attachmentId)).thenReturn(attachment);
         when(attachmentMapperMock.mapToResource(attachment)).thenReturn(attachmentResource);
 
-        AttachmentResource response = service.findOne(attachmentId).getSuccessObjectOrThrowException();
+        AttachmentResource response = service.findOne(attachmentId).getSuccess();
 
         assertEquals(attachmentResource, response);
     }
@@ -91,7 +91,7 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         when(attachmentRepositoryMock.findOne(attachmentId)).thenReturn(attachment);
         when(attachmentMapperMock.mapToResource(attachment)).thenReturn(attachmentResource);
 
-        AttachmentResource response = service.findOne(attachmentId).getSuccessObjectOrThrowException();
+        AttachmentResource response = service.findOne(attachmentId).getSuccess();
 
         assertEquals(attachmentResource, response);
     }

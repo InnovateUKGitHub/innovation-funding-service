@@ -264,7 +264,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         setupGetWithRestResultExpectations(format("%s/userHasApplicationForCompetition/%s/%s", processRoleRestURL, userId, competitionId), Boolean.class, expected, OK);
 
-        Boolean response = service.userHasApplicationForCompetition(userId, competitionId).getSuccessObjectOrThrowException();
+        Boolean response = service.userHasApplicationForCompetition(userId, competitionId).getSuccess();
         assertEquals(expected, response);
     }
 
@@ -274,7 +274,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         setupGetWithRestResultExpectations(buildPaginationUri(usersUrl + "/internal/active", 0, 5, null, new LinkedMultiValueMap<>()), UserPageResource.class, expected, OK);
 
-        UserPageResource result = service.getActiveInternalUsers(0, 5).getSuccessObjectOrThrowException();
+        UserPageResource result = service.getActiveInternalUsers(0, 5).getSuccess();
 
         assertEquals(expected, result);
     }
@@ -285,7 +285,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
 
         setupGetWithRestResultExpectations(buildPaginationUri(usersUrl + "/internal/inactive", 0, 5, null, new LinkedMultiValueMap<>()), UserPageResource.class, expected, OK);
 
-        UserPageResource result = service.getInactiveInternalUsers(0, 5).getSuccessObjectOrThrowException();
+        UserPageResource result = service.getInactiveInternalUsers(0, 5).getSuccess();
 
         assertEquals(expected, result);
     }

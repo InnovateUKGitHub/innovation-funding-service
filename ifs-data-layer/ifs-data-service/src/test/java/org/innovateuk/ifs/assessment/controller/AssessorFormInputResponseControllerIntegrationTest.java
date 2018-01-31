@@ -32,7 +32,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
         RestResult<List<AssessorFormInputResponseResource>> found = controller.getAllAssessorFormInputResponses(assessmentId);
 
         assertTrue(found.isSuccess());
-        List<AssessorFormInputResponseResource> responses = found.getSuccessObjectOrThrowException();
+        List<AssessorFormInputResponseResource> responses = found.getSuccess();
         assertEquals(13, responses.size());
     }
 
@@ -56,7 +56,7 @@ public class AssessorFormInputResponseControllerIntegrationTest extends BaseCont
         RestResult<List<AssessorFormInputResponseResource>> found = controller.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId);
 
         assertTrue(found.isSuccess());
-        List<AssessorFormInputResponseResource> responses = found.getSuccessObjectOrThrowException();
+        List<AssessorFormInputResponseResource> responses = found.getSuccess();
         assertEquals(2, responses.size());
         assertEquals(Long.valueOf(24L), responses.get(0).getId());
         assertEquals(Long.valueOf(25L), responses.get(1).getId());

@@ -179,6 +179,6 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         ApplicationIneligibleSendResource applicationIneligibleSendResource = newApplicationIneligibleSendResource().build();
 
         setupPostWithRestResultExpectations(applicationRestURL + "/informIneligible/" + applicationId, Void.class, applicationIneligibleSendResource, null, OK);
-        service.informIneligible(applicationId, applicationIneligibleSendResource).getSuccessObjectOrThrowException();
+        service.informIneligible(applicationId, applicationIneligibleSendResource).getSuccess();
     }
 }

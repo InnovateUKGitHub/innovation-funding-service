@@ -82,7 +82,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
 
-        AssessmentResource found = assessmentService.findById(assessmentId).getSuccessObjectOrThrowException();
+        AssessmentResource found = assessmentService.findById(assessmentId).getSuccess();
 
         assertSame(expected, found);
 
@@ -107,7 +107,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
 
         AssessmentResource found = assessmentService.findAssignableById(assessmentId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertSame(expected, found);
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentMapperMock);
@@ -151,7 +151,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
 
         AssessmentResource found = assessmentService.findRejectableById(assessmentId)
-                .getSuccessObjectOrThrowException();
+                .getSuccess();
 
         assertSame(expected, found);
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentMapperMock);
@@ -615,7 +615,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(expectedAssessmentResource, serviceResult.getSuccessObjectOrThrowException());
+        assertEquals(expectedAssessmentResource, serviceResult.getSuccess());
     }
 
     @Test
@@ -684,7 +684,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
-        assertEquals(expectedAssessmentResource, serviceResult.getSuccessObjectOrThrowException());
+        assertEquals(expectedAssessmentResource, serviceResult.getSuccess());
     }
 
 

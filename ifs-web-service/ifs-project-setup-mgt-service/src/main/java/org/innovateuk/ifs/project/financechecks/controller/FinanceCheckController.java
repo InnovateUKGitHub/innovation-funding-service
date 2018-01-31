@@ -93,7 +93,7 @@ public class FinanceCheckController {
     }
 
     private String doViewFinanceCheckSummary(Long projectId, Model model) {
-        FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccessObjectOrThrowException();
+        FinanceCheckSummaryResource financeCheckSummaryResource = financeCheckService.getFinanceCheckSummary(projectId).getSuccess();
         model.addAttribute("model", new ProjectFinanceCheckSummaryViewModel(financeCheckSummaryResource));
         return "project/financecheck/summary";
     }

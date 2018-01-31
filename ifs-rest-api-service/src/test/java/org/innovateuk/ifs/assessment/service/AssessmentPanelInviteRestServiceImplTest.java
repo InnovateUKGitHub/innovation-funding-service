@@ -194,7 +194,7 @@ public class AssessmentPanelInviteRestServiceImplTest extends BaseRestServiceUni
 
         setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAllInvitesByUser", userId), ParameterizedTypeReferences.assessmentPanelParticipantResourceListType(), expected, OK);
 
-        List<AssessmentPanelParticipantResource> actual = service.getAllInvitesByUser(userId).getSuccessObjectOrThrowException();
+        List<AssessmentPanelParticipantResource> actual = service.getAllInvitesByUser(userId).getSuccess();
         assertEquals(expected, actual);
     }
 

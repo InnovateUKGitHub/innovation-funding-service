@@ -63,7 +63,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
     public void getPendingInternalUsers() throws Exception {
         RoleInvitePageResource expected = new RoleInvitePageResource();
         setupGetWithRestResultExpectations(buildPaginationUri(inviteRestBaseUrl + "/internal/pending", 0, 5, null, new LinkedMultiValueMap<>()), RoleInvitePageResource.class, expected, OK);
-        RoleInvitePageResource result = service.getPendingInternalUserInvites(0, 5).getSuccessObjectOrThrowException();
+        RoleInvitePageResource result = service.getPendingInternalUserInvites(0, 5).getSuccess();
         assertEquals(expected, result);
     }
 
@@ -75,7 +75,7 @@ public class InviteUserRestServiceImplTest extends BaseRestServiceUnitTest<Invit
 
         List<ExternalInviteResource> expected = Collections.singletonList(new ExternalInviteResource());
         setupGetWithRestResultExpectations(inviteRestBaseUrl + "/findExternalInvites?searchString=" + searchString + "&searchCategory=" + searchCategory.name(), externalInviteResourceListType(), expected, OK);
-        List<ExternalInviteResource> result = service.findExternalInvites(searchString, searchCategory).getSuccessObjectOrThrowException();
+        List<ExternalInviteResource> result = service.findExternalInvites(searchString, searchCategory).getSuccess();
         assertEquals(expected, result);
     }
 }

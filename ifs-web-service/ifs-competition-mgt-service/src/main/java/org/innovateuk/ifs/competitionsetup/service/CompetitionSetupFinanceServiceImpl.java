@@ -25,6 +25,6 @@ public class CompetitionSetupFinanceServiceImpl implements CompetitionSetupFinan
 
     @Override
     public CompetitionSetupFinanceResource getByCompetitionId(Long competitionId) {
-        return competitionSetupFinanceRestService.getByCompetitionId(competitionId).getSuccessObjectOrThrowException();
+        return competitionSetupFinanceRestService.getByCompetitionId(competitionId).getSuccess();
     }
 }

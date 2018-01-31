@@ -29,7 +29,7 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
 
         setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "assign-application", applicationId), OK);
 
-        service.assignToPanel(applicationId).getSuccessObjectOrThrowException();
+        service.assignToPanel(applicationId).getSuccess();
     }
 
     @Test
@@ -38,7 +38,7 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
 
         setupPostWithRestResultExpectations(format("%s/%s/%s", restUrl, "unassign-application", applicationId), OK);
 
-        service.unassignFromPanel(applicationId).getSuccessObjectOrThrowException();
+        service.unassignFromPanel(applicationId).getSuccess();
     }
 
     @Test
@@ -57,7 +57,7 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
 
         setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "notify-assessors", competitionId), Boolean.class, expected, OK);
 
-        boolean response = service.isPendingReviewNotifications(competitionId).getSuccessObjectOrThrowException();
+        boolean response = service.isPendingReviewNotifications(competitionId).getSuccess();
         assertEquals(expected, response);
     }
 
@@ -69,7 +69,7 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
 
         setupGetWithRestResultExpectations(format("%s/user/%s/competition/%s", restUrl, userId, competitionId), assessmentReviewResourceListType(), assessmentReviews, OK);
 
-        List<AssessmentReviewResource> result = service.getAssessmentReviews(userId, competitionId).getSuccessObjectOrThrowException();
+        List<AssessmentReviewResource> result = service.getAssessmentReviews(userId, competitionId).getSuccess();
         assertEquals(assessmentReviews, result);
     }
 
@@ -81,7 +81,7 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
 
         setupGetWithRestResultExpectations(format("%s/review/%d", restUrl, assessmentReviewId), AssessmentReviewResource.class, assessmentReview, OK);
 
-        AssessmentReviewResource result = service.getAssessmentReview(assessmentReviewId).getSuccessObjectOrThrowException();
+        AssessmentReviewResource result = service.getAssessmentReview(assessmentReviewId).getSuccess();
         assertEquals(assessmentReview, result);
     }
 
@@ -90,7 +90,7 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
         long assessmentReviewId = 1L;
 
         setupPutWithRestResultExpectations(format("%s/review/%d/accept", restUrl, assessmentReviewId), null, OK);
-        service.acceptAssessmentReview(assessmentReviewId).getSuccessObjectOrThrowException();
+        service.acceptAssessmentReview(assessmentReviewId).getSuccess();
     }
 
     @Test
@@ -100,6 +100,6 @@ public class AssessmentPanelRestServiceImplTest extends BaseRestServiceUnitTest<
         AssessmentReviewRejectOutcomeResource assessmentReviewRejectOutcomeResource = newAssessmentReviewRejectOutcomeResource().build();
         setupPutWithRestResultExpectations(format("%s/review/%d/reject", restUrl, assessmentReviewId),
                 assessmentReviewRejectOutcomeResource, OK);
-        service.rejectAssessmentReview(assessmentReviewId, assessmentReviewRejectOutcomeResource).getSuccessObjectOrThrowException();
+        service.rejectAssessmentReview(assessmentReviewId, assessmentReviewRejectOutcomeResource).getSuccess();
     }
 }
