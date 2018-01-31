@@ -36,21 +36,7 @@ public interface GrantOfferLetterRestService {
 
     RestResult<Void> sendGrantOfferLetter(Long projectId);
 
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    RestResult<Boolean> isSendGrantOfferLetterAllowed(Long projectId);
-
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    RestResult<Boolean> isGrantOfferLetterAlreadySent(Long projectId);
-
     RestResult<Void> approveOrRejectSignedGrantOfferLetter(Long projectId, ApprovalType approvalType);
-
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    RestResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
-
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with usage of getGrantOfferLetterState()")
-    RestResult<Boolean> isSignedGrantOfferLetterRejected(Long projectId);
-
-    RestResult<GrantOfferLetterState> getGrantOfferLetterWorkflowState(Long projectId);
 
     RestResult<GrantOfferLetterStateResource> getGrantOfferLetterState(Long projectId);
 

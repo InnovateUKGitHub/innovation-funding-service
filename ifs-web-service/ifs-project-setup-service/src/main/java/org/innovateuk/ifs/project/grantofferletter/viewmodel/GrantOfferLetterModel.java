@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.grantofferletter.viewmodel;
 
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.projectdetails.viewmodel.BasicProjectDetailsViewModel;
 
 import java.time.ZonedDateTime;
@@ -18,14 +19,11 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     private FileDetailsViewModel signedGrantOfferLetterFile;
     private FileDetailsViewModel additionalContractFile;
     private ZonedDateTime submitDate;
-    private boolean grantOfferLetterApproved;
-    private boolean grantOfferLetterSent;
-    private boolean grantOfferLetterRejected;
+    private GrantOfferLetterStateResource golState;
 
     public GrantOfferLetterModel(Long projectId, String projectName, boolean leadPartner, FileDetailsViewModel grantOfferLetterFile,
                                  FileDetailsViewModel signedGrantOfferLetterFile, FileDetailsViewModel additionalContractFile,
-                                 ZonedDateTime submitDate, boolean projectManager, boolean grantOfferLetterApproved,
-                                 boolean grantOfferLetterSent, boolean grantOfferLetterRejected) {
+                                 ZonedDateTime submitDate, boolean projectManager, GrantOfferLetterStateResource golState) {
 
         this.projectId = projectId;
         this.projectName = projectName;
@@ -34,10 +32,8 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
         this.signedGrantOfferLetterFile = signedGrantOfferLetterFile;
         this.additionalContractFile = additionalContractFile;
         this.submitDate = submitDate;
-        this.grantOfferLetterApproved = grantOfferLetterApproved;
         this.projectManager = projectManager;
-        this.grantOfferLetterSent = grantOfferLetterSent;
-        this.grantOfferLetterRejected = grantOfferLetterRejected;
+        this.golState = golState;
     }
 
     @Override
@@ -63,7 +59,7 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isGrantOfferLetterApproved() {
-        return grantOfferLetterApproved;
+        return golState.isSignedGrantOfferLetterApproved();
     }
 
     public FileDetailsViewModel getAdditionalContractFile() {
@@ -95,11 +91,11 @@ public class GrantOfferLetterModel implements BasicProjectDetailsViewModel {
     }
 
     public boolean isGrantOfferLetterSent() {
-        return grantOfferLetterSent;
+        return golState.isGeneratedGrantOfferLetterAlreadySentToProjectTeam();
     }
 
     public boolean isGrantOfferLetterRejected() {
-        return grantOfferLetterRejected;
+        return golState.isSignedGrantOfferLetterRejected();
     }
 
     public boolean isShowGrantOfferLetterRejectedMessage() {

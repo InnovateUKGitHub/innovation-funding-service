@@ -126,32 +126,6 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
     }
 
     @Test
-    public void testIsSendGrantOfferLetterAllowed() {
-        long projectId = 123L;
-
-        String expectedUrl = projectRestURL + "/" + projectId + "/is-send-grant-offer-letter-allowed";
-        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.FALSE, OK);
-
-        RestResult<Boolean> result = service.isSendGrantOfferLetterAllowed(projectId);
-
-        assertTrue(result.isSuccess());
-        assertEquals(Boolean.FALSE, result.getSuccessObject());
-    }
-
-    @Test
-    public void testIsGrantOfferLetterAlreadySent() {
-        long projectId = 123L;
-
-        String expectedUrl = projectRestURL + "/" + projectId + "/is-grant-offer-letter-already-sent";
-        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.TRUE, OK);
-
-        RestResult<Boolean> result = service.isGrantOfferLetterAlreadySent(projectId);
-
-        assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
-    }
-
-    @Test
     public void testApproveSignedGrantOfferLetter() {
         long projectId = 123L;
 
@@ -163,43 +137,6 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
         setupPostWithRestResultVerifications(expectedUrl, Void.class, null);
 
         assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testIsSignedGrantOfferLetterApproved() {
-        long projectId = 123L;
-
-        String expectedUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter/approval";
-        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.TRUE, OK);
-
-        RestResult<Boolean> result = service.isSignedGrantOfferLetterApproved(projectId);
-
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testIsSignedGrantOfferLetterRejected() {
-        long projectId = 123L;
-
-        String expectedUrl = projectRestURL + "/" + projectId + "/signed-grant-offer-letter/is-rejected";
-        setupGetWithRestResultExpectations(expectedUrl, Boolean.class, Boolean.TRUE, OK);
-
-        RestResult<Boolean> result = service.isSignedGrantOfferLetterRejected(projectId);
-
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    public void testGetGrantOfferLetterWorkflowState() {
-        long projectId = 123L;
-
-        String nonBaseUrl = projectRestURL + "/" + projectId + "/grant-offer-letter/state";
-        setupGetWithRestResultExpectations(nonBaseUrl, GrantOfferLetterState.class, GrantOfferLetterState.APPROVED, OK);
-
-        RestResult<GrantOfferLetterState> result = service.getGrantOfferLetterWorkflowState(projectId);
-
-        assertTrue(result.isSuccess());
-        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());
     }
 
     @Test

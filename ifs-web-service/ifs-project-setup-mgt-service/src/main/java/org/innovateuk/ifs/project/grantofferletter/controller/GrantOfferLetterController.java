@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
-import org.innovateuk.ifs.commons.ZeroDowntime;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.CaseInsensitiveConverter;
@@ -14,10 +13,8 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterService;
 import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterForm;
-import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModelImproved;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -64,39 +61,16 @@ public class GrantOfferLetterController {
         binder.registerCustomEditor(ApprovalType.class, new CaseInsensitiveConverter<>(ApprovalType.class));
     }
 
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with viewGrantOfferLetterSendImproved")
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
     @GetMapping("/send")
     public String viewGrantOfferLetterSend(@P("projectId")@PathVariable Long projectId, Model model) {
-        GrantOfferLetterLetterForm form = new GrantOfferLetterLetterForm();
-        return doViewGrantOfferLetterSend(projectId, model, form);
-    }
-
-    @ZeroDowntime(reference = "IFS-2579", description = "Remove in Sprint 19 - replaced with sendGrantOfferLetterImproved")
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
-    @PostMapping("/send")
-    public String sendGrantOfferLetter(@P("projectId")@PathVariable Long projectId,
-                                       @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
-                                       Model model,
-                                       @SuppressWarnings("unused") BindingResult bindingResult,
-                                       ValidationHandler validationHandler) {
-        Supplier<String> failureView = () -> doViewGrantOfferLetterSend(projectId, model, form);
-        ServiceResult<Void> generateResult = grantOfferLetterService.sendGrantOfferLetter(projectId);
-
-        return validationHandler.addAnyErrors(generateResult).failNowOrSucceedWith(failureView, () -> {return doViewGrantOfferLetterSend(projectId, model, form);}
-        );
-    }
-
-    @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
-    @GetMapping("/send-offer")
-    public String viewGrantOfferLetterSendImproved(@P("projectId")@PathVariable Long projectId, Model model) {
         GrantOfferLetterLetterForm form = new GrantOfferLetterLetterForm();
         return doViewGrantOfferLetterSendImproved(projectId, model, form);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
-    @PostMapping("/send-offer")
-    public String sendGrantOfferLetterImproved(@P("projectId")@PathVariable Long projectId,
+    @PostMapping("/send")
+    public String sendGrantOfferLetter(@P("projectId")@PathVariable Long projectId,
                                        @ModelAttribute(FORM_ATTR) GrantOfferLetterLetterForm form,
                                        Model model,
                                        @SuppressWarnings("unused") BindingResult bindingResult,
@@ -109,17 +83,8 @@ public class GrantOfferLetterController {
                 redirectToGrantOfferLetterPage(projectId));
     }
 
-    private String doViewGrantOfferLetterSend(Long projectId, Model model, GrantOfferLetterLetterForm form) {
-        GrantOfferLetterModel viewModel = populateGrantOfferLetterSendViewModel(projectId);
-
-        model.addAttribute("model", viewModel);
-        model.addAttribute("form", form);
-
-        return "project/grant-offer-letter-send";
-    }
-
     private String doViewGrantOfferLetterSendImproved(Long projectId, Model model, GrantOfferLetterLetterForm form) {
-        GrantOfferLetterModelImproved viewModel = populateGrantOfferLetterSendViewModelImproved(projectId);
+        GrantOfferLetterModel viewModel = populateGrantOfferLetterSendViewModel(projectId);
 
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
@@ -173,7 +138,7 @@ public class GrantOfferLetterController {
     }
 
     private String redirectToGrantOfferLetterPage(Long projectId) {
-        return "redirect:/project/" + projectId + "/grant-offer-letter/send-offer";
+        return "redirect:/project/" + projectId + "/grant-offer-letter/send";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'org.innovateuk.ifs.project.resource.ProjectCompositeId', 'ACCESS_GRANT_OFFER_LETTER_SEND_SECTION')")
@@ -245,40 +210,9 @@ public class GrantOfferLetterController {
 
         Optional<FileEntryResource> signedGrantOfferLetterFile = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
 
-        Boolean grantOfferLetterRejected = grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).getSuccessObjectOrThrowException();
-
-        GrantOfferLetterState golState = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId).getSuccessObjectOrThrowException();
-
-        return new GrantOfferLetterModel(competitionSummary,
-                grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
-                additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
-                !GrantOfferLetterState.PENDING.equals(golState),
-                projectId,
-                project.getName(),
-                application.getId(),
-                grantOfferFileDetails.isPresent(),
-                additionalContractFile.isPresent(),
-                GrantOfferLetterState.APPROVED.equals(golState),
-                grantOfferLetterRejected,
-                GrantOfferLetterState.READY_TO_APPROVE.equals(golState) || GrantOfferLetterState.APPROVED.equals(golState),
-                signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null)
-        );
-    }
-
-    private GrantOfferLetterModelImproved populateGrantOfferLetterSendViewModelImproved(Long projectId) {
-        ProjectResource project = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(project.getApplication());
-        CompetitionSummaryResource competitionSummary = applicationSummaryRestService.getCompetitionSummary(application.getCompetition()).getSuccessObjectOrThrowException();
-
-        Optional<FileEntryResource> grantOfferFileDetails = grantOfferLetterService.getGrantOfferFileDetails(projectId);
-
-        Optional<FileEntryResource> additionalContractFile = grantOfferLetterService.getAdditionalContractFileDetails(projectId);
-
-        Optional<FileEntryResource> signedGrantOfferLetterFile = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
-
         GrantOfferLetterStateResource golState = grantOfferLetterService.getGrantOfferLetterState(projectId).getSuccessObjectOrThrowException();
 
-        return new GrantOfferLetterModelImproved(competitionSummary,
+        return new GrantOfferLetterModel(competitionSummary,
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
                 projectId,

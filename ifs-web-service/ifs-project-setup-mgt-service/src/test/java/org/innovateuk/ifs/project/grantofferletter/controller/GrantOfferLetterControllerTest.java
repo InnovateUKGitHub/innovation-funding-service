@@ -12,7 +12,7 @@ import org.innovateuk.ifs.project.grantofferletter.form.GrantOfferLetterLetterFo
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
-import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModelImproved;
+import org.innovateuk.ifs.project.grantofferletter.viewmodel.GrantOfferLetterModel;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.junit.Test;
@@ -73,11 +73,11 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(golState(PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
-        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/send-offer")).
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/grant-offer-letter/send")).
                 andExpect(view().name("project/grant-offer-letter-send")).
                 andReturn();
 
-        GrantOfferLetterModelImproved golViewModel = (GrantOfferLetterModelImproved) result.getModelAndView().getModel().get("model");
+        GrantOfferLetterModel golViewModel = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
 
         assertFalse(golViewModel.isSentToProjectTeam());
         assertEquals(null, golViewModel.getGrantOfferLetterFile());
@@ -97,9 +97,9 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         when(grantOfferLetterService.sendGrantOfferLetter(projectId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/send-offer")).
+        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/send")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send-offer"));
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send"));
 
         verify(grantOfferLetterService).sendGrantOfferLetter(projectId);
     }
@@ -142,7 +142,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         when(grantOfferLetterService.getGrantOfferLetterState(projectId)).thenReturn(golState(PENDING));
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.empty());
 
-        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/send-offer")).
+        mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/send")).
                 andExpect(view().name("project/grant-offer-letter-send")).
                 andExpect(model().errorCount(errors.size())).
                 andReturn();
@@ -210,7 +210,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 fileUpload("/project/"+ projectId  + "/grant-offer-letter/grant-offer-letter").
                         file(uploadedFile).param("uploadGrantOfferLetterClicked", "")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send-offer"));
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send"));
 
         verify(grantOfferLetterService).addGrantOfferLetter(123L, "application/pdf", 11, "grantOfferLetter.pdf", "My content!".getBytes());
     }
@@ -269,7 +269,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 fileUpload("/project/"+ projectId  + "/grant-offer-letter/grant-offer-letter").
                         file(fileToDelete).param("removeGrantOfferLetterClicked", "")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send-offer"));
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send"));
 
         verify(grantOfferLetterService).removeGrantOfferLetter(projectId);
     }
@@ -353,7 +353,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 fileUpload("/project/"+ projectId  + "/grant-offer-letter/upload-annex").
                         file(uploadedFile).param("uploadAnnexClicked", "")).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send-offer")).
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
                 andReturn();
 
         GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
@@ -398,7 +398,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         GrantOfferLetterLetterForm form = (GrantOfferLetterLetterForm) result.getModelAndView().getModel().get("form");
         assertEquals(uploadedFile, form.getAnnex());
-        assertEquals(Boolean.FALSE, ((GrantOfferLetterModelImproved)result.getModelAndView().getModel().get("model")).getAdditionalContractFileContentAvailable());
+        assertEquals(Boolean.FALSE, ((GrantOfferLetterModel)result.getModelAndView().getModel().get("model")).getAdditionalContractFileContentAvailable());
     }
 
     @Test
@@ -413,7 +413,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed?approvalType=" + ApprovalType.APPROVED)).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send-offer")).
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
                 andReturn();
 
         verify(grantOfferLetterService).approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.APPROVED);
@@ -432,7 +432,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         mockMvc.perform(post("/project/" + projectId + "/grant-offer-letter/signed?approvalType=" + ApprovalType.REJECTED)).
                 andExpect(status().is3xxRedirection()).
-                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send-offer")).
+                andExpect(view().name("redirect:/project/" + projectId + "/grant-offer-letter/send")).
                 andReturn();
 
         verify(grantOfferLetterService).approveOrRejectSignedGrantOfferLetter(projectId, ApprovalType.REJECTED);

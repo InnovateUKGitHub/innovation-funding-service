@@ -160,62 +160,6 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testIsSignedGrantOfferLetterApproved() {
-
-        when(grantOfferLetterRestService.isSignedGrantOfferLetterApproved(123L)).thenReturn(restSuccess(Boolean.TRUE));
-
-        ServiceResult<Boolean> result = grantOfferLetterService.isSignedGrantOfferLetterApproved(123L);
-
-        assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
-
-        verify(grantOfferLetterRestService).isSignedGrantOfferLetterApproved(123L);
-
-    }
-
-    @Test
-    public void testIsSignedGrantOfferLetterRejected() {
-
-        when(grantOfferLetterRestService.isSignedGrantOfferLetterRejected(123L)).thenReturn(restSuccess(Boolean.TRUE));
-
-        ServiceResult<Boolean> result = grantOfferLetterService.isSignedGrantOfferLetterRejected(123L);
-
-        assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
-
-        verify(grantOfferLetterRestService).isSignedGrantOfferLetterRejected(123L);
-
-    }
-
-    @Test
-    public void testGrantOfferLetterAlreadySent() {
-
-        when(grantOfferLetterRestService.isGrantOfferLetterAlreadySent(123L)).thenReturn(restSuccess(Boolean.TRUE));
-
-        ServiceResult<Boolean> result = grantOfferLetterService.isGrantOfferLetterAlreadySent(123L);
-
-        assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
-
-        verify(grantOfferLetterRestService).isGrantOfferLetterAlreadySent(123L);
-
-    }
-
-    @Test
-    public void testIsSendGrantOfferLetterAllowed() {
-
-        when(grantOfferLetterRestService.isSendGrantOfferLetterAllowed(123L)).thenReturn(restSuccess(Boolean.TRUE));
-
-        ServiceResult<Boolean> result = grantOfferLetterService.isSendGrantOfferLetterAllowed(123L);
-
-        assertTrue(result.isSuccess());
-        assertEquals(Boolean.TRUE, result.getSuccessObject());
-
-        verify(grantOfferLetterRestService).isSendGrantOfferLetterAllowed(123L);
-
-    }
-
-    @Test
     public void testSendGrantOfferLetter() {
 
         when(grantOfferLetterRestService.sendGrantOfferLetter(123L)).thenReturn(restSuccess());
@@ -225,22 +169,6 @@ public class GrantOfferLetterServiceImplTest {
         assertTrue(result.isSuccess());
 
         verify(grantOfferLetterRestService).sendGrantOfferLetter(123L);
-
-    }
-
-    @Test
-    public void testGetGrantOfferLetterWorkflowState() {
-
-        Long projectId = 123L;
-
-        when(grantOfferLetterRestService.getGrantOfferLetterWorkflowState(projectId)).thenReturn(restSuccess(GrantOfferLetterState.APPROVED));
-
-        ServiceResult<GrantOfferLetterState> result = grantOfferLetterService.getGrantOfferLetterWorkflowState(projectId);
-
-        assertTrue(result.isSuccess());
-        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());
-
-        verify(grantOfferLetterRestService).getGrantOfferLetterWorkflowState(projectId);
 
     }
 
@@ -261,5 +189,4 @@ public class GrantOfferLetterServiceImplTest {
         verify(grantOfferLetterRestService).getGrantOfferLetterState(projectId);
 
     }
-
 }
