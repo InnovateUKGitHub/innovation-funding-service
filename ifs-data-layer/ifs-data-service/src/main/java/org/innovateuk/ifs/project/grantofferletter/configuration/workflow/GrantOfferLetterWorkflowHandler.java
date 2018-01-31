@@ -134,7 +134,7 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
 
     public GrantOfferLetterEvent getLastProcessEvent(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null ? GrantOfferLetterEvent.valueOf(process.getProcessEvent()) : null;
+        return process != null ? GrantOfferLetterEvent.getByType(process.getProcessEvent()) : null;
     }
 
     public boolean sign(Project project) {
