@@ -80,6 +80,11 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
     }
 
     @Override
+    public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(long assessmentId) {
+        return serviceSuccess(simpleMap(assessorFormInputResponseRepository.findByAssessmentId(assessmentId), assessorFormInputResponseMapper::mapToResource));
+    }
+
+    @Override
     public ServiceResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(long assessmentId, long questionId) {
         return serviceSuccess(simpleMap(assessorFormInputResponseRepository.findByAssessmentIdAndFormInputQuestionId(assessmentId, questionId), assessorFormInputResponseMapper::mapToResource));
     }
@@ -171,6 +176,18 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
         return serviceSuccess(new AssessmentDetailsResource(questions, assessmentFormInputs, assessorFormInputResponses));
     }
 
+    @Override
+    public ServiceResult<AssessmentDetailsResource> getAssessmentDetailsForPanel(long assessmentId) {
+        final Assessment assessment = assessmentRepository.findOne(assessmentId);
+        final Map<Long, List<FormInputResource>> assessmentFormInputs = getAssessmentFormInputs(assessment.getTarget().getCompetition().getId());
+        final Map<Long, List<AssessorFormInputResponseResource>> assessorFormInputResponses = getAssessorResponsesForPanel(assessmentId);
+        final List<QuestionResource> questions = simpleFilter(
+                questionService.getQuestionsByAssessmentId(assessmentId).getSuccessObjectOrThrowException(),
+                question -> assessmentFormInputs.containsKey(question.getId())
+        );
+        return serviceSuccess(new AssessmentDetailsResource(questions, assessmentFormInputs, assessorFormInputResponses));
+    }
+
     private Map<Long, List<FormInputResource>> getAssessmentFormInputs(long competitionId) {
         List<FormInputResource> assessmentFormInputs = formInputService.findByCompetitionIdAndScope(competitionId, ASSESSMENT).getSuccessObjectOrThrowException();
         return assessmentFormInputs.stream().collect(groupingBy(FormInputResource::getQuestion));
@@ -178,6 +195,11 @@ public class AssessorFormInputResponseServiceImpl extends BaseTransactionalServi
 
     private Map<Long, List<AssessorFormInputResponseResource>> getAssessorResponses(long assessmentId) {
         List<AssessorFormInputResponseResource> assessorResponses = getAllAssessorFormInputResponses(assessmentId).getSuccessObjectOrThrowException();
+        return assessorResponses.stream().collect(groupingBy(AssessorFormInputResponseResource::getQuestion));
+    }
+
+    private Map<Long, List<AssessorFormInputResponseResource>> getAssessorResponsesForPanel(long assessmentId) {
+        List<AssessorFormInputResponseResource> assessorResponses = getAllAssessorFormInputResponsesForPanel(assessmentId).getSuccessObjectOrThrowException();
         return assessorResponses.stream().collect(groupingBy(AssessorFormInputResponseResource::getQuestion));
     }
 

@@ -26,7 +26,10 @@ public class CompetitionResource {
     public static final DateTimeFormatter START_DATE_FORMAT = DateTimeFormatter.ofPattern("dd/MM/YYYY");
 
     private static final DateTimeFormatter ASSESSMENT_DATE_FORMAT = DateTimeFormatter.ofPattern("MMMM YYYY");
-    public static final ImmutableSet<String> NON_FINANCE_TYPES = ImmutableSet.of("Expression of interest");
+    public static final ImmutableSet<String> NON_FINANCE_TYPES = ImmutableSet.of(
+            "Expression of interest",
+            "The Prince's Trust"
+    );
 
     private Long id;
     private List<Long> milestones = new ArrayList<>();

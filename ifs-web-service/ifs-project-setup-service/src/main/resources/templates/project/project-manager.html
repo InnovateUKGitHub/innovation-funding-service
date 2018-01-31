@@ -1,12 +1,14 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" >
     <head>
         <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Manager',hasFormErrors=${#fields.hasErrors('${form.*}')}" />
     </head>
 
     <body th:with="context='project'" class="project-detail project-manager">
+        <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
+        <th:block th:insert="fragments/modals :: modal-resend-project-manager"/>
 
         <main tabindex="-1" id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
@@ -33,6 +35,13 @@
                         <div class="multiple-choice" th:each="user : ${model.invitedUsers}">
                             <input th:id="'invite-'+${user.id}" value="" type="radio" disabled="disabled" />
                             <label th:for="'invite-'+${user.id}" th:text="${user.name}"></label>
+                            <a th:inline="text"
+                                data-js-modal="modal-resend-project-manager"
+                                th:attr="data-modal-form-action=@{/project/{projectId}/details/project-manager(projectId=${model.projectId})},data-modal-input-resend-pm-invite=${user.id}"
+                                th:href="@{/project/{projectId}/details/project-manager/confirm?resend-pm-invite={userId}(projectId=${model.projectId},userId=${user.id})}"
+                                class="button button-clear no-margin">
+                                Resend invite
+                            </a>
                         </div>
 
                         <div class="multiple-choice" data-target="project-manager-table">
@@ -67,7 +76,7 @@
                                         <input type="email" class="form-control width-full" th:value="*{inviteEmail}" th:classappend="${#fields.hasErrors('inviteEmail')} ? 'form-control-error'" name="inviteEmail" id="email-project-manager" required="required" th:attr="data-required-errormessage=#{validation.project.invite.email.required}"/>
                                     </td>
                                     <td class="alignright">
-                                        <button class="buttonlink no-margin-bottom" id="invite-project-manager" name="invite_pm">Invite to project</button>
+                                        <button class="buttonlink no-margin-bottom" id="invite-project-manager" name="invite-pm">Invite to project</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -77,7 +86,7 @@
 
                 <p>You can change your Project Manager up until your grant offer letter is generated.</p>
 
-                <button class="button extra-margin" type="submit" id="save" name="save_pm">Save</button>
+                <button class="button extra-margin" type="submit" id="save" name="save-pm">Save</button>
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
