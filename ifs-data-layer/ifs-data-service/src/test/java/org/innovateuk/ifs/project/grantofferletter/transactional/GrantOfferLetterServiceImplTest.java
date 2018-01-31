@@ -4,7 +4,6 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -17,12 +16,13 @@ import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.transactional.EmailService;
 import org.innovateuk.ifs.user.builder.UserBuilder;
-
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
@@ -59,6 +59,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -73,6 +74,10 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.*;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.*;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForNonPartnersView;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForPartnersView;
 import static org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterServiceImpl.GRANT_OFFER_LETTER_DATE_FORMAT;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
@@ -1069,10 +1074,10 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
 
-        ServiceResult<GrantOfferLetterState> result = service.getGrantOfferLetterState(projectId);
+        ServiceResult<GrantOfferLetterState> result = service.getGrantOfferLetterWorkflowState(projectId);
 
         assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonErrors.notFoundError(Project.class, projectId)));
+        assertTrue(result.getFailure().is(notFoundError(Project.class, projectId)));
     }
 
     @Test
@@ -1081,13 +1086,143 @@ public class GrantOfferLetterServiceImplTest extends BaseServiceUnitTest<GrantOf
         Project projectInDB = newProject().build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
-        when(golWorkflowHandlerMock.getState(projectInDB)).thenReturn(GrantOfferLetterState.APPROVED);
+        when(golWorkflowHandlerMock.getState(projectInDB)).thenReturn(APPROVED);
 
-        ServiceResult<GrantOfferLetterState> result = service.getGrantOfferLetterState(projectId);
+        ServiceResult<GrantOfferLetterState> result = service.getGrantOfferLetterWorkflowState(projectId);
 
         assertTrue(result.isSuccess());
-        assertEquals(GrantOfferLetterState.APPROVED, result.getSuccessObject());
+        assertEquals(APPROVED, result.getSuccessObject());
+    }
 
+    @Test
+    public void testGetGrantOfferLetterStateWhenProjectDoesNotExist() {
+
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(null);
+
+        ServiceResult<GrantOfferLetterStateResource> result = service.getGrantOfferLetterState(projectId);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(Project.class, projectId)));
+    }
+
+    @Test
+    public void testGetGrantOfferLetterStateAsPartner() {
+
+        User partnerUser = newUser().build();
+        User projectManagerUser = newUser().build();
+
+        Project project = newProject().
+                withProjectUsers(newProjectUser().
+                        withUser(partnerUser, projectManagerUser).
+                        withRole(PROJECT_PARTNER, PROJECT_MANAGER).
+                        build(2)).
+                build();
+
+        GrantOfferLetterStateResource expectedStateInformation = stateInformationForPartnersView(APPROVED, SIGNED_GOL_APPROVED);
+        assertGetGrantOfferLetterStateForUser(project, partnerUser, APPROVED, SIGNED_GOL_APPROVED, expectedStateInformation);
+    }
+
+    @Test
+    public void testGetGrantOfferLetterStateAsPartnerWhenRejected() {
+
+        User partnerUser = newUser().build();
+        User projectManagerUser = newUser().build();
+
+        Project project = newProject().
+                withProjectUsers(newProjectUser().
+                        withUser(partnerUser, projectManagerUser).
+                        withRole(PROJECT_PARTNER, PROJECT_MANAGER).
+                        build(2)).
+                build();
+
+        GrantOfferLetterStateResource expectedStateInformation = stateInformationForPartnersView(READY_TO_APPROVE, GOL_SIGNED);
+        assertGetGrantOfferLetterStateForUser(project, partnerUser, SENT, SIGNED_GOL_REJECTED, expectedStateInformation);
+    }
+
+    @Test
+    public void testGetGrantOfferLetterStateAsProjectManager() {
+
+        User partnerUser = newUser().build();
+        User projectManagerUser = newUser().build();
+
+        Project project = newProject().
+                withProjectUsers(newProjectUser().
+                        withUser(partnerUser, projectManagerUser).
+                        withRole(PROJECT_PARTNER, PROJECT_MANAGER).
+                        build(2)).
+                build();
+
+        GrantOfferLetterStateResource expectedStateInformation = stateInformationForNonPartnersView(APPROVED, SIGNED_GOL_APPROVED);
+        assertGetGrantOfferLetterStateForUser(project, projectManagerUser, APPROVED, SIGNED_GOL_APPROVED, expectedStateInformation);
+    }
+
+    @Test
+    public void testGetGrantOfferLetterStateAsProjectManagerWhenRejected() {
+
+        User partnerUser = newUser().build();
+        User projectManagerUser = newUser().build();
+
+        Project project = newProject().
+                withProjectUsers(newProjectUser().
+                        withUser(partnerUser, projectManagerUser).
+                        withRole(PROJECT_PARTNER, PROJECT_MANAGER).
+                        build(2)).
+                build();
+
+        GrantOfferLetterStateResource expectedStateInformation = stateInformationForNonPartnersView(SENT, SIGNED_GOL_REJECTED);
+        assertGetGrantOfferLetterStateForUser(project, projectManagerUser, SENT, SIGNED_GOL_REJECTED, expectedStateInformation);
+    }
+
+    @Test
+    public void testGetGrantOfferLetterStateAsInternalUser() {
+
+        User partnerUser = newUser().build();
+        User projectManagerUser = newUser().build();
+        User internalUser = newUser().build();
+
+        Project project = newProject().
+                withProjectUsers(newProjectUser().
+                        withUser(partnerUser, projectManagerUser).
+                        withRole(PROJECT_PARTNER, PROJECT_MANAGER).
+                        build(2)).
+                build();
+
+        GrantOfferLetterStateResource expectedStateInformation = stateInformationForNonPartnersView(APPROVED, SIGNED_GOL_APPROVED);
+        assertGetGrantOfferLetterStateForUser(project, internalUser, APPROVED, SIGNED_GOL_APPROVED, expectedStateInformation);
+    }
+
+    @Test
+    public void testGetGrantOfferLetterStateAsInternalUserWhenRejected() {
+
+        User partnerUser = newUser().build();
+        User projectManagerUser = newUser().build();
+        User internalUser = newUser().build();
+
+        Project project = newProject().
+                withProjectUsers(newProjectUser().
+                        withUser(partnerUser, projectManagerUser).
+                        withRole(PROJECT_PARTNER, PROJECT_MANAGER).
+                        build(2)).
+                build();
+
+        GrantOfferLetterStateResource expectedStateInformation = stateInformationForNonPartnersView(SENT, SIGNED_GOL_REJECTED);
+        assertGetGrantOfferLetterStateForUser(project, internalUser, SENT, SIGNED_GOL_REJECTED, expectedStateInformation);
+    }
+
+    private void assertGetGrantOfferLetterStateForUser(Project project, User currentUser, GrantOfferLetterState state, GrantOfferLetterEvent lastEvent, GrantOfferLetterStateResource expectedStateInformation) {
+
+        UserResource currentUserResource = newUserResource().withId(currentUser.getId()).build();
+        setLoggedInUser(currentUserResource);
+
+        when(userRepositoryMock.findOne(currentUserResource.getId())).thenReturn(currentUser);
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(golWorkflowHandlerMock.getState(project)).thenReturn(state);
+        when(golWorkflowHandlerMock.getLastProcessEvent(project)).thenReturn(lastEvent);
+
+        ServiceResult<GrantOfferLetterStateResource> result = service.getGrantOfferLetterState(projectId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(expectedStateInformation, result.getSuccessObject());
     }
 
     private static final String webBaseUrl = "https://ifs-local-dev/dashboard";

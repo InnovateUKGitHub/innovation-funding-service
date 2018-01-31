@@ -6,6 +6,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -18,6 +19,8 @@ import java.util.function.Function;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.GOL_SIGNED;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForNonPartnersView;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -149,12 +152,28 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     @Test
     public void getGrantOfferLetterWorkflowState() throws Exception {
 
-        when(grantOfferLetterServiceMock.getGrantOfferLetterState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.APPROVED));
+        when(grantOfferLetterServiceMock.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.APPROVED));
 
         mockMvc.perform(get("/project/{projectId}/grant-offer-letter/state", 123L))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(GrantOfferLetterState.APPROVED)))
-                .andDo(document("project/{method-name}"))
+                .andDo(document("project/grant-offer-letter/state/{method-name}"))
+                .andReturn();
+
+        verify(grantOfferLetterServiceMock).getGrantOfferLetterWorkflowState(projectId);
+    }
+
+    @Test
+    public void getGrantOfferLetterState() throws Exception {
+
+        GrantOfferLetterStateResource stateInformation = stateInformationForNonPartnersView(GrantOfferLetterState.APPROVED, GOL_SIGNED);
+
+        when(grantOfferLetterServiceMock.getGrantOfferLetterState(projectId)).thenReturn(serviceSuccess(stateInformation));
+
+        mockMvc.perform(get("/project/{projectId}/grant-offer-letter/current-state", 123L))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(stateInformation)))
+                .andDo(document("project/grant-offer-letter/current-state/{method-name}"))
                 .andReturn();
 
         verify(grantOfferLetterServiceMock).getGrantOfferLetterState(projectId);

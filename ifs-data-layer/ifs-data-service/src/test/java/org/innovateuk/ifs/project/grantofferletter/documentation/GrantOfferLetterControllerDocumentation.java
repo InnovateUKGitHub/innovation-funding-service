@@ -7,6 +7,7 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.service.FilesizeAndTypeFileValidator;
 import org.innovateuk.ifs.project.grantofferletter.controller.GrantOfferLetterController;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.transactional.GrantOfferLetterService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.junit.Test;
@@ -21,6 +22,9 @@ import java.util.function.Function;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.ProjectDocs.grantOfferLetterStateResourceFields;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.SIGNED_GOL_APPROVED;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForNonPartnersView;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
@@ -28,6 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -301,7 +306,7 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
 
         Long projectId = 123L;
 
-        when(grantOfferLetterServiceMock.getGrantOfferLetterState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.APPROVED));
+        when(grantOfferLetterServiceMock.getGrantOfferLetterWorkflowState(projectId)).thenReturn(serviceSuccess(GrantOfferLetterState.APPROVED));
 
         mockMvc.perform(get("/project/{projectId}/grant-offer-letter/state", 123L))
                 .andExpect(status().isOk())
@@ -310,6 +315,30 @@ public class GrantOfferLetterControllerDocumentation extends BaseControllerMockM
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which Grant Offer Letter Workflow state is being retrieved.")
                         )
+                        )
+                )
+                .andReturn();
+
+        verify(grantOfferLetterServiceMock).getGrantOfferLetterWorkflowState(projectId);
+    }
+
+    @Test
+    public void getGrantOfferLetterState() throws Exception {
+
+        Long projectId = 123L;
+
+        GrantOfferLetterStateResource stateInformation = stateInformationForNonPartnersView(GrantOfferLetterState.APPROVED, SIGNED_GOL_APPROVED);
+
+        when(grantOfferLetterServiceMock.getGrantOfferLetterState(projectId)).thenReturn(serviceSuccess(stateInformation));
+
+        mockMvc.perform(get("/project/{projectId}/grant-offer-letter/current-state", 123L))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(stateInformation)))
+                .andDo(document("project/grant-offer-letter/current-state/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which Grant Offer Letter state information is being retrieved.")
+                        ),
+                        responseFields(grantOfferLetterStateResourceFields)
                         )
                 )
                 .andReturn();

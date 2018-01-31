@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import static javax.persistence.EnumType.STRING;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -296,6 +295,6 @@ public class Project implements ProcessActivity {
     public boolean isProjectManager(User user) {
         return !getProjectUsers(projectUser ->
                 projectUser.getUser().equals(user) &&
-                projectUser.getUser().hasRole(PROJECT_MANAGER)).isEmpty();
+                projectUser.isProjectManager()).isEmpty();
     }
 }

@@ -5,8 +5,8 @@ import org.junit.Test;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.forNonPartnerView;
-import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.forPartnerView;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForNonPartnersView;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForPartnersView;
 
 public class GrantOfferLetterStateResourceTest {
 
@@ -15,8 +15,8 @@ public class GrantOfferLetterStateResourceTest {
 
         stream(GrantOfferLetterState.values()).forEach(state -> {
 
-            GrantOfferLetterStateResource partnerView = forPartnerView(state, null);
-            GrantOfferLetterStateResource nonPartnerView = forNonPartnerView(state, null);
+            GrantOfferLetterStateResource partnerView = stateInformationForPartnersView(state, null);
+            GrantOfferLetterStateResource nonPartnerView = stateInformationForNonPartnersView(state, null);
 
             if (GrantOfferLetterState.PENDING.equals(state)) {
                 assertThat(partnerView.isGeneratedGrantOfferLetterAlreadySentToProjectTeam()).isFalse();
@@ -33,8 +33,8 @@ public class GrantOfferLetterStateResourceTest {
 
         stream(GrantOfferLetterState.values()).forEach(state -> {
 
-            GrantOfferLetterStateResource partnerView = forPartnerView(state, null);
-            GrantOfferLetterStateResource nonPartnerView = forNonPartnerView(state, null);
+            GrantOfferLetterStateResource partnerView = stateInformationForPartnersView(state, null);
+            GrantOfferLetterStateResource nonPartnerView = stateInformationForNonPartnersView(state, null);
 
             if (GrantOfferLetterState.PENDING.equals(state)) {
                 assertThat(partnerView.isGeneratedGrantOfferLetterAbleToBeSentToProjectTeam()).isTrue();
@@ -51,8 +51,8 @@ public class GrantOfferLetterStateResourceTest {
 
         stream(GrantOfferLetterState.values()).forEach(state -> {
 
-            GrantOfferLetterStateResource partnerView = forPartnerView(state, null);
-            GrantOfferLetterStateResource nonPartnerView = forNonPartnerView(state, null);
+            GrantOfferLetterStateResource partnerView = stateInformationForPartnersView(state, null);
+            GrantOfferLetterStateResource nonPartnerView = stateInformationForNonPartnersView(state, null);
 
             if (asList(GrantOfferLetterState.READY_TO_APPROVE, GrantOfferLetterState.APPROVED).contains(state)) {
                 assertThat(partnerView.isSignedGrantOfferLetterReceivedByInternalTeam()).isTrue();
@@ -69,8 +69,8 @@ public class GrantOfferLetterStateResourceTest {
 
         stream(GrantOfferLetterState.values()).forEach(state -> {
 
-            GrantOfferLetterStateResource partnerView = forPartnerView(state, null);
-            GrantOfferLetterStateResource nonPartnerView = forNonPartnerView(state, null);
+            GrantOfferLetterStateResource partnerView = stateInformationForPartnersView(state, null);
+            GrantOfferLetterStateResource nonPartnerView = stateInformationForNonPartnersView(state, null);
 
             if (GrantOfferLetterState.APPROVED.equals(state)) {
                 assertThat(partnerView.isSignedGrantOfferLetterApproved()).isTrue();
@@ -87,8 +87,8 @@ public class GrantOfferLetterStateResourceTest {
 
         stream(GrantOfferLetterState.values()).forEach(state -> {
 
-            GrantOfferLetterStateResource partnerView = forPartnerView(state, GrantOfferLetterEvent.SIGNED_GOL_REJECTED);
-            GrantOfferLetterStateResource nonPartnerView = forNonPartnerView(state, GrantOfferLetterEvent.SIGNED_GOL_REJECTED);
+            GrantOfferLetterStateResource partnerView = stateInformationForPartnersView(state, GrantOfferLetterEvent.SIGNED_GOL_REJECTED);
+            GrantOfferLetterStateResource nonPartnerView = stateInformationForNonPartnersView(state, GrantOfferLetterEvent.SIGNED_GOL_REJECTED);
 
             if (GrantOfferLetterState.SENT.equals(state)) {
 

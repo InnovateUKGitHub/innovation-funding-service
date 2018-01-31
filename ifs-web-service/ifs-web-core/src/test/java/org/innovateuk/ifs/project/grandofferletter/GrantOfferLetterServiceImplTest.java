@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.grandofferletter;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.GrantOfferLetterServiceImpl;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.grantofferletter.service.GrantOfferLetterRestService;
@@ -129,7 +130,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testAddAdditionalContractFile() throws Exception {
+    public void testAddAdditionalContractFile() {
 
         FileEntryResource createdFile = newFileEntryResource().build();
 
@@ -146,7 +147,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testApproveOrRejectSignedGrantOfferLetter() throws Exception {
+    public void testApproveOrRejectSignedGrantOfferLetter() {
 
         when(grantOfferLetterRestService.approveOrRejectSignedGrantOfferLetter(123L, ApprovalType.APPROVED)).thenReturn(restSuccess());
 
@@ -159,7 +160,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testIsSignedGrantOfferLetterApproved() throws Exception {
+    public void testIsSignedGrantOfferLetterApproved() {
 
         when(grantOfferLetterRestService.isSignedGrantOfferLetterApproved(123L)).thenReturn(restSuccess(Boolean.TRUE));
 
@@ -173,7 +174,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testIsSignedGrantOfferLetterRejected() throws Exception {
+    public void testIsSignedGrantOfferLetterRejected() {
 
         when(grantOfferLetterRestService.isSignedGrantOfferLetterRejected(123L)).thenReturn(restSuccess(Boolean.TRUE));
 
@@ -187,7 +188,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testGrantOfferLetterAlreadySent() throws Exception {
+    public void testGrantOfferLetterAlreadySent() {
 
         when(grantOfferLetterRestService.isGrantOfferLetterAlreadySent(123L)).thenReturn(restSuccess(Boolean.TRUE));
 
@@ -201,7 +202,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testIsSendGrantOfferLetterAllowed() throws Exception {
+    public void testIsSendGrantOfferLetterAllowed() {
 
         when(grantOfferLetterRestService.isSendGrantOfferLetterAllowed(123L)).thenReturn(restSuccess(Boolean.TRUE));
 
@@ -215,7 +216,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testSendGrantOfferLetter() throws Exception {
+    public void testSendGrantOfferLetter() {
 
         when(grantOfferLetterRestService.sendGrantOfferLetter(123L)).thenReturn(restSuccess());
 
@@ -228,7 +229,7 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testGetGrantOfferLetterWorkflowState() throws Exception {
+    public void testGetGrantOfferLetterWorkflowState() {
 
         Long projectId = 123L;
 
@@ -244,11 +245,11 @@ public class GrantOfferLetterServiceImplTest {
     }
 
     @Test
-    public void testGetGrantOfferLetterState() throws Exception {
+    public void testGetGrantOfferLetterState() {
 
         Long projectId = 123L;
 
-        GrantOfferLetterStateResource state = GrantOfferLetterStateResource.forNonPartnerView(GrantOfferLetterState.APPROVED, "created");
+        GrantOfferLetterStateResource state = GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.APPROVED, GrantOfferLetterEvent.SIGNED_GOL_APPROVED);
 
         when(grantOfferLetterRestService.getGrantOfferLetterState(projectId)).thenReturn(restSuccess(state));
 

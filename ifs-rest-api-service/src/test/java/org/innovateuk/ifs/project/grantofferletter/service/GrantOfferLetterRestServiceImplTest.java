@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState;
 import org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource;
 import org.innovateuk.ifs.project.resource.ApprovalType;
@@ -206,7 +207,7 @@ public class GrantOfferLetterRestServiceImplTest extends BaseRestServiceUnitTest
         long projectId = 123L;
 
         String nonBaseUrl = projectRestURL + "/" + projectId + "/grant-offer-letter/current-state";
-        GrantOfferLetterStateResource state = GrantOfferLetterStateResource.forNonPartnerView(GrantOfferLetterState.APPROVED, "created");
+        GrantOfferLetterStateResource state = GrantOfferLetterStateResource.stateInformationForNonPartnersView(GrantOfferLetterState.APPROVED, GrantOfferLetterEvent.SIGNED_GOL_APPROVED);
 
         setupGetWithRestResultExpectations(nonBaseUrl, GrantOfferLetterStateResource.class, state, OK);
 

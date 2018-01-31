@@ -584,9 +584,9 @@ public class GrantOfferLetterServiceImpl extends BaseTransactionalService implem
             GrantOfferLetterEvent lastProcessEvent = golWorkflowHandler.getLastProcessEvent(project);
 
             if (project.isPartner(user) && !project.isProjectManager(user)) {
-                return GrantOfferLetterStateResource.forPartnerView(state, lastProcessEvent);
+                return GrantOfferLetterStateResource.stateInformationForPartnersView(state, lastProcessEvent);
             } else {
-                return GrantOfferLetterStateResource.forNonPartnerView(state, lastProcessEvent);
+                return GrantOfferLetterStateResource.stateInformationForNonPartnersView(state, lastProcessEvent);
             }
         }));
     }
