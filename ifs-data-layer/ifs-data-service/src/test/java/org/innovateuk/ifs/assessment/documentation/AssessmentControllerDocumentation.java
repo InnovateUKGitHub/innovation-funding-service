@@ -107,6 +107,27 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     }
 
     @Test
+    public void findByUserAndApplication() throws Exception {
+        long userId = 1L;
+        long applicationId = 2L;
+        List<AssessmentResource> assessmentResources = assessmentResourceBuilder.build(2);
+
+        when(assessmentServiceMock.findByUserAndApplication(userId, applicationId)).thenReturn(serviceSuccess(assessmentResources));
+
+        mockMvc.perform(get("/assessment/user/{userId}/application/{applicationId}", userId, applicationId))
+                .andExpect(status().isOk())
+                .andDo(document("assessment/{method-name}",
+                        pathParameters(
+                                parameterWithName("userId").description("Id of the user whose assessments are being requested"),
+                                parameterWithName("applicationId").description("Id of the application being requested")
+                        ),
+                        responseFields(
+                                fieldWithPath("[]").description("List of assessments the user is allowed to see")
+                        )
+                ));
+    }
+
+    @Test
     public void getTotalScore() throws Exception {
         Long assessmentId = 1L;
         AssessmentTotalScoreResource assessmentTotalScoreResource = assessmentTotalScoreResourceBuilder.build();
