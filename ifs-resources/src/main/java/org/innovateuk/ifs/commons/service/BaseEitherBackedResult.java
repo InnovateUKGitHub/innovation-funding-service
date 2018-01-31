@@ -203,10 +203,6 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         return isRight() ? getRight() : null;
     }
 
-    public T getSuccessObjectOrThrowException() {
-        return isRight() ? getRight() : findAndThrowException(getLeft());
-    }
-
     public abstract T findAndThrowException(FailureType failureType);
 
     protected <T1> T1 mapLeftOrRight(ExceptionThrowingFunction<? super FailureType, ? extends T1> lFunc, ExceptionThrowingFunction<? super T, ? extends T1> rFunc) {
