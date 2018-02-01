@@ -289,12 +289,16 @@ public class Project implements ProcessActivity {
     }
 
     public boolean isPartner(User user) {
-        return !getProjectUsers(projectUser -> projectUser.getUser().equals(user)).isEmpty();
+        return !getProjectUsers(projectUser -> projectUserForUser(user, projectUser)).isEmpty();
     }
 
     public boolean isProjectManager(User user) {
         return !getProjectUsers(projectUser ->
-                projectUser.getUser().equals(user) &&
+                projectUserForUser(user, projectUser) &&
                 projectUser.isProjectManager()).isEmpty();
+    }
+
+    private boolean projectUserForUser(User user, ProjectUser projectUser) {
+        return projectUser.getUser().getId().equals(user.getId());
     }
 }

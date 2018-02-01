@@ -70,9 +70,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertEquals(project.getId(), model.getProjectId());
         assertEquals(project.getName(), model.getProjectName());
         assertTrue(model.isOfferSigned());
-        assertNull(model.getSubmitDate());
         assertTrue(model.isShowSubmitButton());
-        assertNull(model.getSubmitDate());
         assertFalse(model.isSubmitted());
         assertFalse(model.isGrantOfferLetterApproved());
         assertFalse(model.isGrantOfferLetterRejected());
@@ -98,9 +96,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertEquals(project.getId(), model.getProjectId());
         assertEquals(project.getName(), model.getProjectName());
         assertTrue(model.isOfferSigned());
-        assertNull(model.getSubmitDate());
         assertTrue(model.isShowSubmitButton());
-        assertNull(model.getSubmitDate());
         assertFalse(model.isSubmitted());
         assertTrue(model.isGrantOfferLetterApproved());
         assertFalse(model.isGrantOfferLetterRejected());
@@ -126,9 +122,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertEquals(project.getId(), model.getProjectId());
         assertEquals(project.getName(), model.getProjectName());
         assertTrue(model.isOfferSigned());
-        assertNull(model.getSubmitDate());
         assertTrue(model.isShowSubmitButton());
-        assertNull(model.getSubmitDate());
         assertFalse(model.isSubmitted());
         assertFalse(model.isGrantOfferLetterApproved());
         assertTrue(model.isGrantOfferLetterRejected());

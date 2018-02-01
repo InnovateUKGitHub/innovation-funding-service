@@ -37,7 +37,6 @@ public class GrantOfferLetterModelPopulator {
                 grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
                 signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
                 additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
-                project.getOfferSubmittedDate(),
                 projectManager,
                 state);
     }
