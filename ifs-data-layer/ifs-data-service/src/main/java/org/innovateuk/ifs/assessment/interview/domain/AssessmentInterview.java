@@ -13,7 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
- * An invitation for an assessor to interview an application on an interview panel.
+ * An invitation for an assessor to interview an application's applicants on an interview panel.
  */
 @Entity
 public class AssessmentInterview extends Process<ProcessRole, Application, AssessmentInterviewState> {
