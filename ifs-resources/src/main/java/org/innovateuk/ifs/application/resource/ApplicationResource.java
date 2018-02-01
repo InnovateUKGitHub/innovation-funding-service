@@ -83,8 +83,6 @@ public class ApplicationResource {
 
     private boolean isInAssessmentReviewPanel;
 
-    private boolean isInAssessmentInterviewPanel;
-
     public Long getId() {
         return id;
     }
@@ -190,7 +188,6 @@ public class ApplicationResource {
                 .append(competition, that.competition)
                 .append(leadOrganisationName, that.leadOrganisationName)
                 .append(isInAssessmentReviewPanel, that.isInAssessmentReviewPanel)
-                .append(isInAssessmentInterviewPanel, that.isInAssessmentInterviewPanel)
                 .isEquals();
     }
 
@@ -206,7 +203,6 @@ public class ApplicationResource {
                 .append(competition)
                 .append(leadOrganisationName)
                 .append(isInAssessmentReviewPanel)
-                .append(isInAssessmentInterviewPanel)
                 .toHashCode();
     }
 
@@ -304,13 +300,5 @@ public class ApplicationResource {
 
     public void setInAssessmentReviewPanel(boolean inAssessmentReviewPanel) {
         this.isInAssessmentReviewPanel = inAssessmentReviewPanel;
-    }
-
-    public boolean isInAssessmentInterviewPanel() {
-        return isInAssessmentInterviewPanel;
-    }
-
-    public void setInAssessmentInterviewPanel(boolean inAssessmentInterviewPanel) {
-        isInAssessmentInterviewPanel = inAssessmentInterviewPanel;
     }
 }

@@ -86,8 +86,6 @@ public class Application implements ProcessActivity {
 
     private boolean inAssessmentReviewPanel;
 
-    private boolean inAssessmentInterviewPanel;
-
     public Application() {
     }
 
@@ -373,13 +371,5 @@ public class Application implements ProcessActivity {
 
     public void setInAssessmentReviewPanel(boolean inAssessmentReviewPanel) {
         this.inAssessmentReviewPanel = inAssessmentReviewPanel;
-    }
-
-    public boolean isInAssessmentInterviewPanel() {
-        return inAssessmentInterviewPanel;
-    }
-
-    public void setInAssessmentInterviewPanel(boolean inAssessmentInterviewPanel) {
-        this.inAssessmentInterviewPanel = inAssessmentInterviewPanel;
     }
 }

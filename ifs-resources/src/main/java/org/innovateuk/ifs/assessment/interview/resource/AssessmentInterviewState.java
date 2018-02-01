@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.assessment.interview;
+package org.innovateuk.ifs.assessment.interview.resource;
 
 import org.innovateuk.ifs.workflow.resource.ProcessState;
 import org.innovateuk.ifs.workflow.resource.State;

@@ -36,7 +36,6 @@ public class ApplicationDocs {
             fieldWithPath("ineligibleOutcome").description("Outcome describing why the application has been marked as ineligible"),
             fieldWithPath("leadOrganisationName").description("the name of the lead organisation"),
             fieldWithPath("inAssessmentReviewPanel").description("Whether the requested application has been chosen for assessment review panel"),
-            fieldWithPath("inAssessmentInterviewPanel").description("Whether the requested application has been chosen for assessment interview  panel")
     };
 
     public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
