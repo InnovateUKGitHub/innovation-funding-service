@@ -3,6 +3,8 @@ package org.innovateuk.ifs.thread.service;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -14,17 +16,21 @@ import org.innovateuk.ifs.project.queries.transactional.FinanceCheckQueriesServi
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.user.builder.RoleBuilder;
+import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -50,9 +56,12 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
 
@@ -261,6 +270,47 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void closeQueryWhenQueryNotFound() throws Exception {
+
+        Long queryId = 1L;
+
+        ServiceResult<Void> result = service.close(queryId);
+
+        assertTrue(result.isFailure());
+
+        List<Object> allArguments = new ArrayList<>();
+        allArguments.add(Thread.class.getSimpleName());
+        assertTrue(result.getFailure().is(new Error(CommonFailureKeys.GENERAL_NOT_FOUND, Thread.class.getSimpleName() + " not found", allArguments, NOT_FOUND)));
+    }
+
+    @Test
+    public void closeQuerySuccess() throws Exception {
+
+        Long queryId = 1L;
+        Long loggedInUserId = 18L;
+
+        Query queryInDB = new Query(queryId, 22L, ProjectFinance.class.getName(), null, null, null, null);
+        User loggedInUser = UserBuilder.newUser()
+                .withFirstName("Lee")
+                .withLastName("Bowman")
+                .build();
+
+        when(queryRepositoryMock.findOne(queryId)).thenReturn(queryInDB);
+        when(userRepositoryMock.findOne(loggedInUserId)).thenReturn(loggedInUser);
+        setLoggedInUser(newUserResource().withId(loggedInUserId)
+                .withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build());
+
+        assertNull(queryInDB.getClosedBy());
+        assertNull(queryInDB.getClosedDate());
+
+        ServiceResult<Void> result = service.close(queryId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(queryInDB.getClosedBy(), loggedInUser);
+        assertNotNull(queryInDB.getClosedDate());
+    }
+
+    @Test
     public void test_addPost() throws Exception {
         Long queryId = 1L;
 
@@ -460,4 +510,7 @@ public class FinanceCheckQueriesServiceTest extends BaseUnitTestMocksTest {
         assertTrue(service.addPost(post, queryId).isFailure());
     }
 
+    protected void setLoggedInUser(UserResource loggedInUser) {
+        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(loggedInUser));
+    }
 }

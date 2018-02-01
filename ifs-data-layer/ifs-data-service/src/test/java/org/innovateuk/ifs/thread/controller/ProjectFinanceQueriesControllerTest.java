@@ -75,6 +75,19 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
     }
 
     @Test
+    public void testClose() throws Exception {
+
+        Long threadId = 1L;
+        when(financeCheckQueriesService.close(threadId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/finance/queries/thread/{threadId}/close", threadId)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        verify(financeCheckQueriesService).close(threadId);
+    }
+
+    @Test
     public void testAddPost() throws Exception {
         Long threadId = 22L;
         PostResource post = new PostResource(33L, null, null, null, null);

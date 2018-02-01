@@ -30,18 +30,34 @@ IFS.core.collapsible = (function () {
     },
     initCollapsibleHTML: function (el, stateless, expanded) {
       jQuery(el).children('h2,h3').each(function () {
-        var inst = jQuery(this)
-        var id = 'collapsible-' + index   // create unique id for a11y relationship
-        // don't save state if we've asked it not to
-        var loadstate = expanded || (!stateless && IFS.core.collapsible.getLoadstateFromCookie(id))
+        var collapsibleSectionHeader = jQuery(this)
 
-        // wrap the content and make it focusable
-        inst.nextUntil('h2,h3').wrapAll('<div id="' + id + '" aria-hidden="' + !loadstate + '">')
+        // use provided id for a11y relationship, or create one if none is explicitly provided
+        var explicitId = collapsibleSectionHeader.attr('data-collapsible-id')
 
-        // Add the button inside the <h2> so both the heading and button semantics are read
-        inst.wrapInner('<button aria-expanded="' + loadstate + '" aria-controls="' + id + '" type="button">')
+        if (explicitId) {
+          IFS.core.collapsible.initLoadstate(collapsibleSectionHeader, stateless, expanded,
+            function () { return explicitId },
+            function (id) { return IFS.core.collapsible.getLoadstateFromCookieByExplicitId(id) })
+        } else {
+          IFS.core.collapsible.initLoadstate(collapsibleSectionHeader, stateless, expanded,
+            function () { return 'collapsible-' + index },
+            function (id) { return IFS.core.collapsible.getLoadstateFromCookieByGeneratedId(id) })
+        }
+
         index++
       })
+    },
+    initLoadstate: function (collapsibleSectionHeader, stateless, expanded, idFn, getLoadstateFromCookieFn) {
+      var id = idFn()
+
+      var showExpanded = (!stateless && getLoadstateFromCookieFn(id) != null) ? getLoadstateFromCookieFn(id) : expanded
+
+      // wrap the content and make it focusable
+      collapsibleSectionHeader.nextUntil('h2,h3').wrapAll('<div id="' + id + '" aria-hidden="' + !showExpanded + '">')
+
+      // Add the button inside the <h2> so both the heading and button semantics are read
+      collapsibleSectionHeader.wrapInner('<button aria-expanded="' + showExpanded + '" aria-controls="' + id + '" type="button">')
     },
     toggleCollapsible: function (el, stateless) {
       var inst = jQuery(el)
@@ -51,22 +67,49 @@ IFS.core.collapsible = (function () {
       inst.attr('aria-expanded', state)
       panel.attr('aria-hidden', !state)
       if (!stateless) {
-        IFS.core.collapsible.setLoadStateInCookie(panel.attr('id'), state)
+        if (inst.parent().attr('data-collapsible-id')) {
+          IFS.core.collapsible.setLoadStateInCookieByExplicitId(panel.attr('id'), state)
+        } else {
+          IFS.core.collapsible.setLoadStateInCookieByGeneratedId(panel.attr('id'), state)
+        }
       }
     },
-    getLoadstateFromCookie: function (index) {
+    getLoadstateFromCookieByExplicitId: function (id) {
+      if (typeof (Cookies.getJSON('collapsibleStates')) !== 'undefined') {
+        var json = Cookies.getJSON('collapsibleStates')
+        if (typeof (json[id]) !== 'undefined') {
+          return json[id]
+        } else {
+          return null
+        }
+      }
+      return null
+    },
+    setLoadStateInCookieByExplicitId: function (id, state) {
+      var json = {}
+      if (typeof (Cookies.getJSON('collapsibleStates')) !== 'undefined') {
+        json = Cookies.getJSON('collapsibleStates')
+      }
+
+      json[id] = state
+
+      Cookies.set('collapsibleStates', json, { expires: 0.05 }) // defined in days, 0.05 = little bit more than one hour
+    },
+    getLoadstateFromCookieByGeneratedId: function (id) {
       if (typeof (Cookies.getJSON('collapsibleStates')) !== 'undefined') {
         var json = Cookies.getJSON('collapsibleStates')
         var pathname = window.location.pathname
         if (typeof (json[pathname]) !== 'undefined') {
-          if (typeof (json[pathname][index]) !== 'undefined') {
-            return json[pathname][index]
+          if (typeof (json[pathname][id]) !== 'undefined') {
+            return json[pathname][id]
+          } else {
+            return null
           }
         }
       }
-      return false
+      return null
     },
-    setLoadStateInCookie: function (index, state) {
+    setLoadStateInCookieByGeneratedId: function (id, state) {
       var json = {}
       if (typeof (Cookies.getJSON('collapsibleStates')) !== 'undefined') {
         json = Cookies.getJSON('collapsibleStates')
@@ -75,22 +118,9 @@ IFS.core.collapsible = (function () {
       if ((typeof (json[pathname]) === 'undefined')) {
         json[pathname] = {}
       }
-      if (state === true) {
-        json[pathname][index] = state
-      } else if (typeof (json[pathname][index]) !== 'undefined') {
-        // removing of false and empty objects from the json object as we store this in a cookie,
-        // only == true will be opened on pageload so those are the only ones we have to store
-        delete json[pathname][index]
 
-        // options other than looping over for getting the object count break in ie8
-        var count = 0
-        jQuery.each(json[pathname], function () {
-          count++
-        })
-        if (count === 0) {
-          delete (json[pathname])
-        }
-      }
+      json[pathname][id] = state
+
       Cookies.set('collapsibleStates', json, { expires: 0.05 }) // defined in days, 0.05 = little bit more than one hour
     },
     destroy: function (type) {

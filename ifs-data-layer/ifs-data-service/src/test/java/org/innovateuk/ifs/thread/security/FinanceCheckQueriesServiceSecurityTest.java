@@ -108,6 +108,11 @@ public class FinanceCheckQueriesServiceSecurityTest extends BaseServiceSecurityT
         }
 
         @Override
+        public ServiceResult<Void> close(Long queryId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<Void> addPost(PostResource post, Long queryId) {
             return null;
         }
