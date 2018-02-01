@@ -16,7 +16,6 @@ public class FeedbackResponseAssessmentInterviewPanelAction extends BaseAssessme
         AssessmentInterviewPanelResponseOutcome assessmentInterviewPanelResponseOutcome =
                 (AssessmentInterviewPanelResponseOutcome) context.getMessageHeader("response");
 
-        // TODO set response on the panel
-
+        assessmentInterviewPanel.setResponse(assessmentInterviewPanelResponseOutcome);
     }
 }

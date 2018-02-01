@@ -22,7 +22,7 @@ public class AssessmentInterviewPanel extends Process<ProcessRole, Application, 
     private Application target;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
-    private AssessmentInterviewPanelMessageOutcome invite;
+    private AssessmentInterviewPanelMessageOutcome message;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "process", fetch = FetchType.LAZY)
     private AssessmentInterviewPanelResponseOutcome response;
@@ -50,5 +50,17 @@ public class AssessmentInterviewPanel extends Process<ProcessRole, Application, 
     @Override
     public AssessmentInterviewPanelState getActivityState() {
         return AssessmentInterviewPanelState.fromState(activityState.getState());
+    }
+
+    public void setResponse(AssessmentInterviewPanelResponseOutcome response) {
+        this.response = response;
+    }
+
+    public AssessmentInterviewPanelResponseOutcome getResponse() {
+        return response;
+    }
+
+    public void setMessage(AssessmentInterviewPanelMessageOutcome message) {
+        this.message = message;
     }
 }
