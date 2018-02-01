@@ -3,7 +3,7 @@ package org.innovateuk.ifs.finance.resource.sync;
 import java.math.BigDecimal;
 
 /**
- * Resource is used for sending finance cost totals data to the finance-data-service.
+ * Resource is used for sending finance cost totals to the finance-data-service.
  */
 public class FinanceCostTotalResource {
     private String name;
