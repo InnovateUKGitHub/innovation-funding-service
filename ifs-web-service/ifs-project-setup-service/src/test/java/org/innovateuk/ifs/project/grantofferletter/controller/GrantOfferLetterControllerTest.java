@@ -36,6 +36,7 @@ import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLet
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.READY_TO_APPROVE;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterState.SENT;
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForNonPartnersView;
+import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterStateResource.stateInformationForPartnersView;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,13 +52,13 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
     private GrantOfferLetterModelPopulator grantOfferLetterViewModelPopulator;
 
     @Test
-    public void testViewGrantOfferLetterPageWithSignedOffer() throws Exception {
+    public void testViewGrantOfferLetterPageWithSignedOfferAsProjectManager() throws Exception {
         long projectId = 123L;
         long userId = 1L;
 
         ProjectResource project = newProjectResource().withId(projectId).build();
 
-        setupSignedSentGrantOfferLetterExpectations(projectId, userId, project, stateInformationForNonPartnersView(READY_TO_APPROVE, GOL_SIGNED));
+        setupSignedSentGrantOfferLetterExpectations(projectId, userId, project, true, stateInformationForNonPartnersView(READY_TO_APPROVE, GOL_SIGNED));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/offer", project.getId())).
                 andExpect(status().isOk()).
@@ -70,8 +71,34 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertEquals(project.getId(), model.getProjectId());
         assertEquals(project.getName(), model.getProjectName());
         assertTrue(model.isOfferSigned());
-        assertTrue(model.isShowSubmitButton());
-        assertFalse(model.isSubmitted());
+        assertFalse(model.isShowSubmitButton());
+        assertTrue(model.isSubmitted());
+        assertFalse(model.isGrantOfferLetterApproved());
+        assertFalse(model.isGrantOfferLetterRejected());
+    }
+
+    @Test
+    public void testViewGrantOfferLetterPageWithSignedOfferAsNonProjectManager() throws Exception {
+        long projectId = 123L;
+        long userId = 1L;
+
+        ProjectResource project = newProjectResource().withId(projectId).build();
+
+        setupSignedSentGrantOfferLetterExpectations(projectId, userId, project, true, stateInformationForPartnersView(READY_TO_APPROVE, GOL_SIGNED));
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/offer", project.getId())).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/grant-offer-letter")).
+                andReturn();
+
+        GrantOfferLetterModel model = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
+
+        // test the view model
+        assertEquals(project.getId(), model.getProjectId());
+        assertEquals(project.getName(), model.getProjectName());
+        assertTrue(model.isOfferSigned());
+        assertFalse(model.isShowSubmitButton());
+        assertTrue(model.isSubmitted());
         assertFalse(model.isGrantOfferLetterApproved());
         assertFalse(model.isGrantOfferLetterRejected());
     }
@@ -83,7 +110,7 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
 
         ProjectResource project = newProjectResource().withId(projectId).build();
 
-        setupSignedSentGrantOfferLetterExpectations(projectId, userId, project, stateInformationForNonPartnersView(APPROVED, SIGNED_GOL_APPROVED));
+        setupSignedSentGrantOfferLetterExpectations(projectId, userId, project, false, stateInformationForNonPartnersView(APPROVED, SIGNED_GOL_APPROVED));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/offer", project.getId())).
                 andExpect(status().isOk()).
@@ -96,20 +123,20 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertEquals(project.getId(), model.getProjectId());
         assertEquals(project.getName(), model.getProjectName());
         assertTrue(model.isOfferSigned());
-        assertTrue(model.isShowSubmitButton());
-        assertFalse(model.isSubmitted());
+        assertFalse(model.isShowSubmitButton());
+        assertTrue(model.isSubmitted());
         assertTrue(model.isGrantOfferLetterApproved());
         assertFalse(model.isGrantOfferLetterRejected());
     }
 
     @Test
-    public void testViewGrantOfferLetterPageWithRejectedOffer() throws Exception {
+    public void testViewGrantOfferLetterPageWithRejectedOfferAsProjectManager() throws Exception {
         long projectId = 123L;
         long userId = 1L;
 
         ProjectResource project = newProjectResource().withId(projectId).build();
 
-        setupSignedSentGrantOfferLetterExpectations(projectId, userId, project, stateInformationForNonPartnersView(SENT, SIGNED_GOL_REJECTED));
+        setupSignedSentGrantOfferLetterExpectations(projectId, userId, project, true, stateInformationForNonPartnersView(SENT, SIGNED_GOL_REJECTED));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/offer", project.getId())).
                 andExpect(status().isOk()).
@@ -126,6 +153,32 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
         assertFalse(model.isSubmitted());
         assertFalse(model.isGrantOfferLetterApproved());
         assertTrue(model.isGrantOfferLetterRejected());
+    }
+
+    @Test
+    public void testViewGrantOfferLetterPageWithRejectedOfferAsNonProjectManager() throws Exception {
+        long projectId = 123L;
+        long userId = 1L;
+
+        ProjectResource project = newProjectResource().withId(projectId).build();
+
+        setupSignedSentGrantOfferLetterExpectations(projectId, userId, project, false, stateInformationForPartnersView(SENT, SIGNED_GOL_REJECTED));
+
+        MvcResult result = mockMvc.perform(get("/project/{projectId}/offer", project.getId())).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/grant-offer-letter")).
+                andReturn();
+
+        GrantOfferLetterModel model = (GrantOfferLetterModel) result.getModelAndView().getModel().get("model");
+
+        // test the view model
+        assertEquals(project.getId(), model.getProjectId());
+        assertEquals(project.getName(), model.getProjectName());
+        assertTrue(model.isOfferSigned());
+        assertFalse(model.isShowSubmitButton());
+        assertTrue(model.isSubmitted());
+        assertFalse(model.isGrantOfferLetterApproved());
+        assertFalse(model.isGrantOfferLetterRejected());
     }
 
     @Test
@@ -331,13 +384,13 @@ public class GrantOfferLetterControllerTest extends BaseControllerMockMVCTest<Gr
                 andExpect(view().name("redirect:/project/123/offer"));
     }
 
-    private void setupSignedSentGrantOfferLetterExpectations(long projectId, long userId, ProjectResource project, GrantOfferLetterStateResource state) {
+    private void setupSignedSentGrantOfferLetterExpectations(long projectId, long userId, ProjectResource project, boolean projectManager, GrantOfferLetterStateResource state) {
         FileEntryResource grantOfferLetter = newFileEntryResource().build();
         FileEntryResource signedGrantOfferLetter = newFileEntryResource().build();
         FileEntryResource additionalContractFile = newFileEntryResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
-        when(projectService.isProjectManager(userId, projectId)).thenReturn(true);
+        when(projectService.isProjectManager(userId, projectId)).thenReturn(projectManager);
         when(projectService.isUserLeadPartner(projectId, userId)).thenReturn(true);
         when(grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGrantOfferLetter));
         when(grantOfferLetterService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
