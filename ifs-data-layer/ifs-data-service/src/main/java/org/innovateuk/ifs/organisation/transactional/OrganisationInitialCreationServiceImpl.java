@@ -100,7 +100,7 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
             long applicationId
     ) {
         List<InviteOrganisation> inviteOrganisations =
-                inviteOrganisationRepository.findDistinctByInvitesApplicationId(applicationId);
+                inviteOrganisationRepository.findDistinctByOrganisationNotNullAndInvitesApplicationId(applicationId);
 
         return simpleFindFirst(
                 inviteOrganisations,

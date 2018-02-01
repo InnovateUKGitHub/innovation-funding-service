@@ -122,7 +122,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
 
         when(organisationMatchingService.findOrganisationMatch(organisationResource))
                 .thenReturn(Optional.of(matchingOrganisation));
-        when(inviteOrganisationRepositoryMock.findDistinctByInvitesApplicationId(invite.getTarget().getId()))
+        when(inviteOrganisationRepositoryMock.findDistinctByOrganisationNotNullAndInvitesApplicationId(invite.getTarget().getId()))
                 .thenReturn(
                         newInviteOrganisation()
                                 .withOrganisation(
@@ -156,7 +156,7 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
 
         when(organisationMatchingService.findOrganisationMatch(organisationResource))
                 .thenReturn(Optional.of(matchingOrganisation));
-        when(inviteOrganisationRepositoryMock.findDistinctByInvitesApplicationId(invite.getTarget().getId()))
+        when(inviteOrganisationRepositoryMock.findDistinctByOrganisationNotNullAndInvitesApplicationId(invite.getTarget().getId()))
                 .thenReturn(
                         newInviteOrganisation()
                                 .withOrganisation(

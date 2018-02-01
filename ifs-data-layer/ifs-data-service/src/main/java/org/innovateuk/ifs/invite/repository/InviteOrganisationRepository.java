@@ -10,4 +10,6 @@ public interface InviteOrganisationRepository extends PagingAndSortingRepository
     InviteOrganisation findOneByOrganisationIdAndInvitesApplicationId(long organisationId, long applicationId);
 
     List<InviteOrganisation> findDistinctByInvitesApplicationId(Long applicationId);
+
+    List<InviteOrganisation> findDistinctByOrganisationNotNullAndInvitesApplicationId(Long applicationId);
 }
