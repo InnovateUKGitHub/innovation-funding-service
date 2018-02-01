@@ -3,20 +3,20 @@ package org.innovateuk.ifs.assessment.mapper;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
 import org.innovateuk.ifs.invite.resource.AssessmentPanelInviteResource;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 /**
- * Mapper between {@link AssessmentReviewInvite} and {@link AssessmentPanelInviteResource}.
+ * Mapper between {@link AssessmentReviewPanelInvite} and {@link AssessmentPanelInviteResource}.
  */
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = { InnovationAreaMapper.class }
 )
-public abstract class AssessmentPanelInviteMapper extends BaseMapper<AssessmentReviewInvite, AssessmentPanelInviteResource, Long> {
+public abstract class AssessmentPanelInviteMapper extends BaseMapper<AssessmentReviewPanelInvite, AssessmentPanelInviteResource, Long> {
 
     @Mappings({
             @Mapping(source = "target.id", target = "competitionId"),
@@ -25,7 +25,7 @@ public abstract class AssessmentPanelInviteMapper extends BaseMapper<AssessmentR
             @Mapping(source = "target.assessmentPanelDate", target = "panelDate"),
     })
     @Override
-    public abstract AssessmentPanelInviteResource mapToResource(AssessmentReviewInvite domain);
+    public abstract AssessmentPanelInviteResource mapToResource(AssessmentReviewPanelInvite domain);
 
     @Mappings({
             @Mapping(target="id", ignore=true),
@@ -35,9 +35,9 @@ public abstract class AssessmentPanelInviteMapper extends BaseMapper<AssessmentR
             @Mapping(target="target", ignore=true),
     })
     @Override
-    public abstract AssessmentReviewInvite mapToDomain(AssessmentPanelInviteResource resource);
+    public abstract AssessmentReviewPanelInvite mapToDomain(AssessmentPanelInviteResource resource);
 
-    public Long mapAssessmentPanelInviteToId(AssessmentReviewInvite object) {
+    public Long mapAssessmentPanelInviteToId(AssessmentReviewPanelInvite object) {
         if (object == null) {
             return null;
         }

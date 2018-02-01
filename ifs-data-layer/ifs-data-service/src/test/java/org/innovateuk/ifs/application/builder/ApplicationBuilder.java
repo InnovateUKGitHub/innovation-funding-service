@@ -126,7 +126,4 @@ public class ApplicationBuilder extends BaseBuilder<Application, ApplicationBuil
     public ApplicationBuilder withInAssessmentReviewPanel(Boolean... inPanels) {
         return withArray((inPanel, application) -> application.setInAssessmentReviewPanel(inPanel), inPanels);
     }
-    public ApplicationBuilder withInAssessmentInterviewPanel(Boolean... inPanels) {
-        return withArray((inPanel, application) -> application.setInAssessmentReviewPanel(inPanel), inPanels);
-    }
 }

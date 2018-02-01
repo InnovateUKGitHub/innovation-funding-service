@@ -19,14 +19,14 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
  */
 @Entity
 @Table(name = "competition_user")
-public class AssessmentPanelParticipant extends CompetitionParticipant<AssessmentReviewInvite> {
+public class AssessmentPanelParticipant extends CompetitionParticipant<AssessmentReviewPanelInvite> {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "invite_id")
-    private AssessmentReviewInvite invite;
+    private AssessmentReviewPanelInvite invite;
 
     @Override
-    public AssessmentReviewInvite getInvite() {
+    public AssessmentReviewPanelInvite getInvite() {
         return this.invite;
     }
 
@@ -34,7 +34,7 @@ public class AssessmentPanelParticipant extends CompetitionParticipant<Assessmen
         super.setProcess(null);
     }
 
-    public AssessmentPanelParticipant(AssessmentReviewInvite invite) {
+    public AssessmentPanelParticipant(AssessmentReviewPanelInvite invite) {
         super();
         if (invite == null) {
             throw new NullPointerException("invite cannot be null");
@@ -62,7 +62,7 @@ public class AssessmentPanelParticipant extends CompetitionParticipant<Assessmen
         }
 
         if (getInvite().getStatus() != OPENED) {
-            throw new IllegalStateException("Cannot accept a AssessmentReviewInvite that hasn't been opened");
+            throw new IllegalStateException("Cannot accept a AssessmentReviewPanelInvite that hasn't been opened");
         }
 
         if (getStatus() == REJECTED) {

@@ -39,7 +39,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class AssessmentReviewInviteControllerTest extends BaseControllerMockMVCTest<AssessmentPanelInviteController> {
+public class AssessmentReviewPanelInviteControllerTest extends BaseControllerMockMVCTest<AssessmentPanelInviteController> {
 
     private static final long COMPETITION_ID = 1L;
 

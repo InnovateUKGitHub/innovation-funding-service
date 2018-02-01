@@ -187,11 +187,11 @@
                 <div class="progress-list"><h2 class="heading-medium">Invitations to attend panel (<span
                     th:text="${#lists.size(model.assessmentPanelInvites)}"/>)</h2>
                     <ul>
-                        <li th:each="assessmentReviewInvite : ${model.assessmentPanelInvites}" class="status-2-col">
+                        <li th:each="assessmentReviewPanelInvite : ${model.assessmentPanelInvites}" class="status-2-col">
                             <div class="task">
                                 <h3 class="heading-small">
-                                    <a th:href="@{/invite/panel/{inviteHash}(inviteHash=${assessmentReviewInvite.inviteHash})}"
-                                       th:text="${assessmentReviewInvite.competitionName}"/>
+                                    <a th:href="@{/invite/panel/{inviteHash}(inviteHash=${assessmentReviewPanelInvite.inviteHash})}"
+                                       th:text="${assessmentReviewPanelInvite.competitionName}"/>
                                 </h3>
                                 <p>You have been asked to attend this assessment panel. Please respond.</p>
                             </div>

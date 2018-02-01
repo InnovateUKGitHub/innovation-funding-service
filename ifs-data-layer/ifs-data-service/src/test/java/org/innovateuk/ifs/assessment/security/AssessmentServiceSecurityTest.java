@@ -96,6 +96,15 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
+    public void findByUserAndApplication() {
+        long userId = 3L;
+        long applicationId = 1L;
+
+        classUnderTest.findByUserAndApplication(userId, applicationId);
+        verify(assessmentPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadAssessmentOnDashboard(isA(AssessmentResource.class), isA(UserResource.class));
+    }
+
+    @Test
     public void findByStateAndCompetition() {
         AssessmentState state = AssessmentState.CREATED;
         long competitionId = 1L;
@@ -232,6 +241,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         @Override
         public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId) {
+            return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        }
+
+        @Override
+        public ServiceResult<List<AssessmentResource>> findByUserAndApplication(long userId, long applicationId) {
             return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
 

@@ -16,7 +16,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
@@ -153,7 +153,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         userRepository.save(user);
 
-        AssessmentReviewInvite assessmentReviewInvite = newAssessmentPanelInvite()
+        AssessmentReviewPanelInvite assessmentReviewPanelInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -162,9 +162,9 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(assessmentReviewInvite);
+        assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewInvite);
+        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewPanelInvite);
         assessmentPanelParticipant.getInvite().open();
         assessmentPanelParticipant.acceptAndAssignUser(user);
 
@@ -208,7 +208,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         userRepository.save(user);
 
-        AssessmentReviewInvite assessmentReviewInvite = newAssessmentPanelInvite()
+        AssessmentReviewPanelInvite assessmentReviewPanelInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -217,9 +217,9 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(assessmentReviewInvite);
+        assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewInvite);
+        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewPanelInvite);
         assessmentPanelParticipant.getInvite().open();
         assessmentPanelParticipant.acceptAndAssignUser(user);
 
@@ -261,7 +261,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         userRepository.save(user);
 
-        AssessmentReviewInvite assessmentReviewInvite = newAssessmentPanelInvite()
+        AssessmentReviewPanelInvite assessmentReviewPanelInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -270,9 +270,9 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(assessmentReviewInvite);
+        assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewInvite);
+        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewPanelInvite);
         assessmentPanelParticipant.getInvite().open();
         assessmentPanelParticipant.acceptAndAssignUser(user);
 
@@ -331,7 +331,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         userRepository.save(user);
 
-        AssessmentReviewInvite competitionAssessmentInvite = newAssessmentPanelInvite()
+        AssessmentReviewPanelInvite competitionAssessmentInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser(user)
@@ -402,7 +402,7 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         User assessor = userMapper.mapToDomain(getLoggedInUser());
 
-        AssessmentReviewInvite assessmentReviewInvite = newAssessmentPanelInvite()
+        AssessmentReviewPanelInvite assessmentReviewPanelInvite = newAssessmentPanelInvite()
                 .with(id(null))
                 .withCompetition(competition)
                 .withUser()
@@ -411,9 +411,9 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
                 .withName("tom baldwin")
                 .build();
 
-        assessmentPanelInviteRepository.save(assessmentReviewInvite);
+        assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewInvite);
+        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewPanelInvite);
         assessmentPanelParticipant.getInvite().open();
         assessmentPanelParticipant.acceptAndAssignUser(assessor);
 

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.assessment.review.builder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.*;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewInvite;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
@@ -32,7 +32,7 @@ public class AssessmentPanelParticipantBuilderTest {
         Competition expectedCompetition = newCompetition().withName("Juggling Craziness").build();
         RejectionReason expectedRejectionReason = newRejectionReason().withReason("Unavailable").build();
         String expectedRejectionComment = "Too busy";
-        AssessmentReviewInvite expectedInvite = newAssessmentPanelInvite().build();
+        AssessmentReviewPanelInvite expectedInvite = newAssessmentPanelInvite().build();
 
         AssessmentPanelParticipant participant = newAssessmentPanelParticipant()
                 .withId(expectedId)
@@ -62,7 +62,7 @@ public class AssessmentPanelParticipantBuilderTest {
         User[] expectedUsers = newUser().withId(5L, 11L).buildArray(2, User.class);
         CompetitionParticipantRole[] expectedRoles = { ASSESSOR, ASSESSOR };
         Competition[] expectedCompetitions = newCompetition().withName("Juggling Craziness", "Intermediate Juggling").buildArray(2, Competition.class);
-        AssessmentReviewInvite[] expectedCompetitionInvites = newAssessmentPanelInvite().buildArray(2, AssessmentReviewInvite.class);
+        AssessmentReviewPanelInvite[] expectedCompetitionInvites = newAssessmentPanelInvite().buildArray(2, AssessmentReviewPanelInvite.class);
         RejectionReason[] expectedRejectionReasons = { newRejectionReason().withReason("Unavailable").build(), null };
         String[] expectedRejectionComment = { "Too busy", null };
 
