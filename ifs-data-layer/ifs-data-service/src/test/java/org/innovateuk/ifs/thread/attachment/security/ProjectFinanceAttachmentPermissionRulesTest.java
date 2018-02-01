@@ -140,7 +140,7 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
 
     private QueryResource toResource(Query query) {
         return new QueryResource(query.id(), query.contextClassPk(), emptyList(),
-                query.section(), query.title(), query.isAwaitingResponse(), query.createdOn());
+                query.section(), query.title(), query.isAwaitingResponse(), query.createdOn(), null, null);
     }
 
     private Query query() {
