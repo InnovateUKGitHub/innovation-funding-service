@@ -6,10 +6,7 @@ import org.innovateuk.ifs.workflow.resource.ProcessEvent;
  * Events that can happen during the AssessmentInterview workflow.
  */
 public enum AssessmentInterviewEvent implements ProcessEvent {
-    NOTIFY("notify"),
-    ACCEPT("accept"),
-    REJECT("reject"),
-    WITHDRAW("withdraw");
+    NOTIFY("notify");
 
     String event;
 

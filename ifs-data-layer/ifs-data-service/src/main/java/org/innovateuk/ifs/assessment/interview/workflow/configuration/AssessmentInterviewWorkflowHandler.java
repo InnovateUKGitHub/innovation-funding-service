@@ -19,7 +19,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewEvent.*;
+import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewEvent.NOTIFY;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.ASSESSMENT_PANEL_APPLICATION_INVITE;
 
 /**
@@ -48,18 +48,6 @@ public class AssessmentInterviewWorkflowHandler extends BaseWorkflowEventHandler
 
     public boolean notifyInvitation(AssessmentInterview AssessmentInterview) {
         return fireEvent(assessmentPanelApplicationInviteMessage(AssessmentInterview, NOTIFY), AssessmentInterview);
-    }
-
-    public boolean rejectInvitation(AssessmentInterview AssessmentInterview) {
-        return fireEvent(assessmentPanelApplicationInviteMessage(AssessmentInterview, REJECT), AssessmentInterview);
-    }
-
-    public boolean acceptInvitation(AssessmentInterview AssessmentInterview) {
-        return fireEvent(assessmentPanelApplicationInviteMessage(AssessmentInterview, ACCEPT), AssessmentInterview);
-    }
-
-    public boolean withdraw(AssessmentInterview AssessmentInterview) {
-        return fireEvent(assessmentPanelApplicationInviteMessage(AssessmentInterview, WITHDRAW), AssessmentInterview);
     }
 
     @Override

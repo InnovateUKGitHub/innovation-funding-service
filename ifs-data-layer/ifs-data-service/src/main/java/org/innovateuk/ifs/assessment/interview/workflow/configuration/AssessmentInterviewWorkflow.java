@@ -13,8 +13,9 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import java.util.LinkedHashSet;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewEvent.*;
-import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState.*;
+import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewEvent.NOTIFY;
+import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState.CREATED;
+import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState.PENDING;
 
 
 /**
@@ -38,9 +39,6 @@ public class AssessmentInterviewWorkflow extends StateMachineConfigurerAdapter<A
     @Override
     public void configure(StateMachineTransitionConfigurer<AssessmentInterviewState, AssessmentInterviewEvent> transitions) throws Exception {
         configureNotifyInvitation(transitions);
-        configureAcceptInvitation(transitions);
-        configureRejectInvitation(transitions);
-        configureWithdraw(transitions);
     }
 
     private void configureNotifyInvitation(StateMachineTransitionConfigurer<AssessmentInterviewState, AssessmentInterviewEvent> transitions) throws Exception {
@@ -49,49 +47,5 @@ public class AssessmentInterviewWorkflow extends StateMachineConfigurerAdapter<A
                 .source(CREATED)
                 .event(NOTIFY)
                 .target(PENDING);
-    }
-
-    private void configureAcceptInvitation(StateMachineTransitionConfigurer<AssessmentInterviewState, AssessmentInterviewEvent> transitions) throws Exception {
-        transitions
-                .withExternal()
-                .source(PENDING)
-                .event(ACCEPT)
-                .target(ACCEPTED)
-                .and()
-                .withExternal()
-                .source(REJECTED)
-                .event(ACCEPT)
-                .target(ACCEPTED);
-    }
-
-    private void configureRejectInvitation(StateMachineTransitionConfigurer<AssessmentInterviewState, AssessmentInterviewEvent> transitions) throws Exception {
-        transitions
-                .withExternal()
-                .source(PENDING)
-                .event(REJECT)
-                .target(REJECTED);
-    }
-
-    private void configureWithdraw(StateMachineTransitionConfigurer<AssessmentInterviewState, AssessmentInterviewEvent> transitions) throws Exception {
-        transitions
-                .withExternal()
-                .source(CREATED)
-                .event(WITHDRAW)
-                .target(WITHDRAWN)
-                .and()
-                .withExternal()
-                .source(PENDING)
-                .event(WITHDRAW)
-                .target(WITHDRAWN)
-                .and()
-                .withExternal()
-                .source(REJECTED)
-                .event(WITHDRAW)
-                .target(WITHDRAWN)
-                .and()
-                .withExternal()
-                .source(ACCEPTED)
-                .event(WITHDRAW)
-                .target(WITHDRAWN);
     }
 }

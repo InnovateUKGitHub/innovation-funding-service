@@ -21,7 +21,8 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static org.innovateuk.ifs.assessment.interview.builder.AssessmentInterviewBuilder.newAssessmentInterview;
-import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState.*;
+import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState.CREATED;
+import static org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState.PENDING;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -57,36 +58,6 @@ public class AssessmentInterviewWorkflowHandlerIntegrationTest
     @Test
     public void notifyInvitation() {
         assertStateChangeOnWorkflowHandlerCall(CREATED, PENDING, invite -> workflowHandler.notifyInvitation(invite));
-    }
-
-    @Test
-    public void rejectInvitation() {
-        assertStateChangeOnWorkflowHandlerCall(PENDING, REJECTED, invite -> workflowHandler.rejectInvitation(invite));
-    }
-
-    @Test
-    public void acceptInvitation() {
-        assertStateChangeOnWorkflowHandlerCall(PENDING, ACCEPTED, invite -> workflowHandler.acceptInvitation(invite));
-    }
-
-    @Test
-    public void withdraw_created() {
-        assertStateChangeOnWorkflowHandlerCall(CREATED, WITHDRAWN, invite -> workflowHandler.withdraw(invite));
-    }
-
-    @Test
-    public void withdraw_pending() {
-        assertStateChangeOnWorkflowHandlerCall(PENDING, WITHDRAWN, invite -> workflowHandler.withdraw(invite));
-    }
-
-    @Test
-    public void withdraw_rejected() {
-        assertStateChangeOnWorkflowHandlerCall(REJECTED, WITHDRAWN, invite -> workflowHandler.withdraw(invite));
-    }
-
-    @Test
-    public void withdraw_accepted() {
-        assertStateChangeOnWorkflowHandlerCall(ACCEPTED, WITHDRAWN, invite -> workflowHandler.withdraw(invite));
     }
 
     @Override
