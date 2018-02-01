@@ -35,6 +35,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.swapOutForUser;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.*;
 
 @Rollback
@@ -117,15 +118,7 @@ public class FinanceRowControllerIntegrationTest extends BaseControllerIntegrati
                 new ActivityState(ActivityType.APPLICATION, State.CREATED)
         );
         application.setId(APPLICATION_ID);
-        proccessRoles.add(
-                new ProcessRole(
-                        leadApplicantProcessRole,
-                        null,
-                        application.getId(),
-                        null,
-                        null
-                )
-        );
+        proccessRoles.add(newProcessRole().withId(leadApplicantProcessRole).withApplication(application).build());
         User user = new User(leadApplicantId, "steve", "smith", "steve.smith@empire.com", "", "123abc");
         proccessRoles.get(0).setUser(user);
         swapOutForUser(userMapper.mapToResource(user));
