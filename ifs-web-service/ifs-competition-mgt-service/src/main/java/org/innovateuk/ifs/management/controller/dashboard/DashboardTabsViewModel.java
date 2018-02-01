@@ -28,6 +28,6 @@ public class DashboardTabsViewModel {
     }
 
     public boolean previous(){
-        return isInternalAdmin(userResource) || isSupport(userResource);
+        return isInternal(userResource);
     }
 }
