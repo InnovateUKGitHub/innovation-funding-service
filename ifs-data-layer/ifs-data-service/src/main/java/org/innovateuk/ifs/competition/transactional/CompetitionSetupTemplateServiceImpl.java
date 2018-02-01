@@ -116,7 +116,6 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
     private ServiceResult<Question> initializeAndPersistQuestion(Section applicationQuestionsSection, Competition competition) {
         Question question = defaultApplicationQuestionCreator.buildQuestion(competition);
         question.setSection(applicationQuestionsSection);
-        question.setCompetition(competition);
 
         Question createdQuestion = questionTemplatePersistorServiceImpl.persistByEntity(Arrays.asList(question)).get(0);
         Question prioritizedQuestion = questionPriorityService.prioritiseAssessedQuestionAfterCreation(createdQuestion);
