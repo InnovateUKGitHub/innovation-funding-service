@@ -112,6 +112,8 @@ public class AsyncTaskDecoratorIntegrationTest extends BaseIntegrationTest {
 
         testThreadLocalTransferredToChildThread(setNewThreadLocalValueFn,
                 AsyncAllowedThreadLocal::isAsyncAllowed);
+
+        AsyncAllowedThreadLocal.clearAsyncAllowed();
     }
 
     /**
