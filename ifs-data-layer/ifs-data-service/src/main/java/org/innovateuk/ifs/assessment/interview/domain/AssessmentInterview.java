@@ -7,7 +7,10 @@ import org.innovateuk.ifs.assessment.interview.resource.AssessmentInterviewState
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.Process;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  * An invitation for an assessor to interview an application on an interview panel.
