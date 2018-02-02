@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * ApplicationFinanceHandlerImpl handles the finance information on application level.
+ * ApplicationFinanceHandlerImpl handles the finance information on application
+ * level.
  */
 @Service
 public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler {
@@ -43,8 +44,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
                 applicationFinanceResourceId.getApplicationId(), applicationFinanceResourceId.getOrganisationId());
         ApplicationFinanceResource applicationFinanceResource = null;
 
-        //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a bunch of things in setApplicationFinanceDetails.  We should find a better way to handle this.
-        if(applicationFinance!=null) {
+        if (applicationFinance != null) {
             applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
             setApplicationFinanceDetails(applicationFinanceResource, applicationFinance.getApplication().getCompetition());
         }
@@ -66,8 +66,12 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         List<ApplicationFinance> applicationFinances = applicationFinanceRepository.findByApplicationId(applicationId);
         List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();
 
-        //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a bunch of things in setApplicationFinanceDetails.  We should find a better way to handle this.
-        for(ApplicationFinance applicationFinance : applicationFinances) {
+        /* TODO: INFUND-5102
+         * This to me seems like a very messy way of building resource object. You don't only need
+         * to map the domain object using the mapper, but then also do a bunch of things in
+         * setApplicationFinanceDetails. We should find a better way to handle this.
+         */
+        for (ApplicationFinance applicationFinance : applicationFinances) {
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getId());
             Map<FinanceRowType, FinanceRowCostCategory> costs = organisationFinanceHandler.getOrganisationFinances(applicationFinance.getId(), applicationFinance.getApplication().getCompetition());
 
@@ -80,7 +84,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
     }
 
     @Override
-    public BigDecimal getResearchParticipationPercentage(Long applicationId){
+    public BigDecimal getResearchParticipationPercentage(Long applicationId) {
         List<ApplicationFinanceResource> applicationFinanceResources = this.getApplicationTotals(applicationId);
 
         BigDecimal totalCosts = applicationFinanceResources.stream()
@@ -96,7 +100,7 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
 
         BigDecimal researchParticipation = BigDecimal.ZERO;
 
-        if(totalCosts.compareTo(BigDecimal.ZERO)!=0) {
+        if (totalCosts.compareTo(BigDecimal.ZERO) != 0) {
             researchParticipation = researchCosts.divide(totalCosts, 6, BigDecimal.ROUND_HALF_UP);
         }
         researchParticipation = researchParticipation.multiply(BigDecimal.valueOf(100));

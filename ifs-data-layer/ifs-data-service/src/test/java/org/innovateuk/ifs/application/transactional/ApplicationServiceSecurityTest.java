@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
 import static java.util.EnumSet.complementOf;
@@ -432,7 +433,8 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
         }
 
         @Override
-        public ServiceResult<List<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
+        public ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState>
+                                                                                        applicationStates) {
             return null;
         }
 

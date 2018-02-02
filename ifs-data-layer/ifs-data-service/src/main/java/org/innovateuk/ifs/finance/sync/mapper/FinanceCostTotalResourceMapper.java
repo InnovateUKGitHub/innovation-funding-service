@@ -7,32 +7,35 @@ import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
 import org.innovateuk.ifs.finance.resource.sync.FinanceType;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 
 /**
  * Maps ApplicationFinanceResource calculated finance totals to FinanceCostTotalResource costs.
  */
 @Component
 public class FinanceCostTotalResourceMapper {
-    public List<FinanceCostTotalResource> mapFromApplicationFinanceResourceListToList(List<ApplicationFinanceResource> applicationFinanceResources) {
-
-        List<FinanceCostTotalResource> financeCostTotalResourceList = new ArrayList<>();
-        applicationFinanceResources.stream().map(
-                financeResource -> mapFromApplicationFinanceResourceToList(financeResource)
-        ).collect(Collectors.toList()).forEach(financeCostTotalResourceList::addAll);
-
-        return financeCostTotalResourceList;
+    public List<FinanceCostTotalResource> mapFromApplicationFinanceResourceListToList
+            (List<ApplicationFinanceResource> applicationFinanceResources) {
+        return flattenLists(applicationFinanceResources, this::mapFromApplicationFinanceResourceToList);
     }
 
-    public List<FinanceCostTotalResource> mapFromApplicationFinanceResourceToList(ApplicationFinanceResource applicationFinanceResource) {
+    public List<FinanceCostTotalResource> mapFromApplicationFinanceResourceToList(ApplicationFinanceResource
+                                                                                           applicationFinanceResource) {
         return applicationFinanceResource.getFinanceOrganisationDetails().entrySet().stream().map(
-                cat -> buildFinanceCostTotalResource(cat.getKey(), cat.getValue(), FinanceType.APPLICATION.getName(), applicationFinanceResource.getId())
+                cat -> buildFinanceCostTotalResource(cat.getKey(),
+                        cat.getValue(),
+                        FinanceType.APPLICATION.getName(),
+                        applicationFinanceResource.getId())
         ).collect(Collectors.toList());
     }
 
-    private static FinanceCostTotalResource buildFinanceCostTotalResource(FinanceRowType financeRowType, FinanceRowCostCategory financeRowItem, String financeType, Long setFinanceId) {
+    private static FinanceCostTotalResource buildFinanceCostTotalResource(FinanceRowType financeRowType,
+                                                                          FinanceRowCostCategory financeRowItem,
+                                                                          String financeType,
+                                                                          Long setFinanceId) {
         FinanceCostTotalResource financeCostTotalResource = new FinanceCostTotalResource();
         financeCostTotalResource.setName(financeRowType.getName());
         financeCostTotalResource.setTotal(financeRowItem.getTotal());

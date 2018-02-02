@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.application.workflow.actions;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.finance.sync.service.FinanceTotalsSender;
+import org.innovateuk.ifs.finance.sync.service.ApplicationFinanceTotalsSender;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -18,7 +18,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class SendFinanceTotalsActionTest {
 
     @Mock
-    private FinanceTotalsSender financeTotalsSender;
+    private ApplicationFinanceTotalsSender financeTotalsSender;
 
     @InjectMocks
     private SendFinanceTotalsAction sendFinanceTotalsAction;

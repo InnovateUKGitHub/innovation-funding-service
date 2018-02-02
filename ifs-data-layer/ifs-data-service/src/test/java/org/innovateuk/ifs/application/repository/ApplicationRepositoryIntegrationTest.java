@@ -8,8 +8,8 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -30,7 +30,7 @@ public class ApplicationRepositoryIntegrationTest extends BaseRepositoryIntegrat
 
         Collection<State> states = SUBMITTED_STATUSES.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
 
-        List<Application> applications = repository.findByApplicationProcessActivityStateStateIn(states);
-        assertEquals(5, applications.size());
+        Stream<Application> applications = repository.findByApplicationProcessActivityStateStateIn(states);
+        assertEquals(5, applications.count());
     }
 }

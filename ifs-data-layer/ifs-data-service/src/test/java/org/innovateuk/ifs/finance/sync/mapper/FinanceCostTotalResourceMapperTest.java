@@ -8,22 +8,22 @@ import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.finance.resource.cost.OtherCost;
 import org.innovateuk.ifs.finance.resource.sync.FinanceCostTotalResource;
 import org.innovateuk.ifs.finance.resource.sync.FinanceType;
+import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
 import static org.innovateuk.ifs.finance.builder.MaterialsCostBuilder.newMaterials;
 import static org.innovateuk.ifs.finance.builder.OtherCostBuilder.newOtherCost;
 import static org.innovateuk.ifs.finance.builder.sync.FinanceCostTotalResourceBuilder.newFinanceCostTotalResource;
 
-/**
- * TODO: Add description
- */
 public class FinanceCostTotalResourceMapperTest {
 
     private FinanceCostTotalResourceMapper financeCostTotalResourceMapper;
@@ -48,9 +48,10 @@ public class FinanceCostTotalResourceMapperTest {
         DefaultCostCategory materialCostCategory = newDefaultCostCategory().withCosts(Arrays.asList(materialCost)).build();
         materialCostCategory.calculateTotal();
 
-        Map<FinanceRowType, FinanceRowCostCategory> costs = new LinkedHashMap<>();
-        costs.put(FinanceRowType.OTHER_COSTS, otherCostCategory);
-        costs.put(FinanceRowType.MATERIALS, materialCostCategory);
+        Map<FinanceRowType, FinanceRowCostCategory> costs = MapFunctions.asMap(
+                FinanceRowType.OTHER_COSTS, otherCostCategory,
+                FinanceRowType.MATERIALS, materialCostCategory
+        );
 
         ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
                 .withId(financeId)
@@ -71,8 +72,10 @@ public class FinanceCostTotalResourceMapperTest {
                 .withType(FinanceType.APPLICATION)
                 .withFinanceId(financeId).build();
 
-        assertThat(actualResult.get(0)).isEqualToComparingFieldByField(expectedOtherCostTotalResource);
-        assertThat(actualResult.get(1)).isEqualToComparingFieldByField(expectedMaterialCostTotalResource);
+        assertThat(actualResult)
+                .usingFieldByFieldElementComparator()
+                .contains(expectedOtherCostTotalResource, expectedMaterialCostTotalResource);
+
     }
 
     @Test
@@ -90,16 +93,17 @@ public class FinanceCostTotalResourceMapperTest {
         DefaultCostCategory materialCostCategory = newDefaultCostCategory().withCosts(Arrays.asList(materialCost)).build();
         materialCostCategory.calculateTotal();
 
-        Map<FinanceRowType, FinanceRowCostCategory> costs = new LinkedHashMap<>();
-        costs.put(FinanceRowType.OTHER_COSTS, otherCostCategory);
-        costs.put(FinanceRowType.MATERIALS, materialCostCategory);
+        Map<FinanceRowType, FinanceRowCostCategory> costs = MapFunctions.asMap(
+                FinanceRowType.OTHER_COSTS, otherCostCategory,
+                FinanceRowType.MATERIALS, materialCostCategory
+        );
 
-        List<ApplicationFinanceResource> applicationFinanceResource = newApplicationFinanceResource()
+        List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource()
                 .withId(financeId)
                 .withFinanceOrganisationDetails(costs).build(2);
 
         List<FinanceCostTotalResource> actualResult =
-                financeCostTotalResourceMapper.mapFromApplicationFinanceResourceListToList(applicationFinanceResource);
+                financeCostTotalResourceMapper.mapFromApplicationFinanceResourceListToList(applicationFinanceResources);
 
         FinanceCostTotalResource expectedOtherCostTotalResource = newFinanceCostTotalResource()
                 .withName(FinanceRowType.OTHER_COSTS.getName())
@@ -112,6 +116,11 @@ public class FinanceCostTotalResourceMapperTest {
                 .withTotal(BigDecimal.valueOf(5000))
                 .withType(FinanceType.APPLICATION)
                 .withFinanceId(financeId).build();
+
+        assertThat(actualResult).usingFieldByFieldElementComparator().contains(expectedOtherCostTotalResource,
+                expectedMaterialCostTotalResource,
+                expectedOtherCostTotalResource,
+                expectedMaterialCostTotalResource);
 
         assertThat(actualResult.get(0)).isEqualToComparingFieldByField(expectedOtherCostTotalResource);
         assertThat(actualResult.get(1)).isEqualToComparingFieldByField(expectedMaterialCostTotalResource);

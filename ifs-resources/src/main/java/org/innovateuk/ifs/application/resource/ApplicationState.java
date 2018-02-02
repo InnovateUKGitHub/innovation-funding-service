@@ -20,6 +20,12 @@ public enum ApplicationState implements ProcessState {
     IN_PANEL(State.IN_PANEL);
     final State backingState;
 
+    public static final EnumSet<ApplicationState> submittedStates = EnumSet.of(ApplicationState.SUBMITTED,
+            ApplicationState.INELIGIBLE,
+            ApplicationState.APPROVED,
+            ApplicationState.REJECTED,
+            ApplicationState.INELIGIBLE_INFORMED);
+
     ApplicationState(State backingState) {
         this.backingState = backingState;
     }
@@ -38,13 +44,5 @@ public enum ApplicationState implements ProcessState {
 
     public static ApplicationState fromState(State state) {
         return ProcessState.fromState(ApplicationState.values(), state);
-    }
-
-    public static EnumSet<ApplicationState> wasSubmittedStates() {
-        return EnumSet.of(ApplicationState.SUBMITTED,
-                ApplicationState.INELIGIBLE,
-                ApplicationState.APPROVED,
-                ApplicationState.REJECTED,
-                ApplicationState.INELIGIBLE_INFORMED);
     }
 }

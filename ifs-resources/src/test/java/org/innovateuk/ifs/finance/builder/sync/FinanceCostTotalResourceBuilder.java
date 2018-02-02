@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 
 public class FinanceCostTotalResourceBuilder extends BaseBuilder<FinanceCostTotalResource, FinanceCostTotalResourceBuilder> {
     protected FinanceCostTotalResourceBuilder(List<BiConsumer<Integer, FinanceCostTotalResource>> multiActions) {
@@ -39,7 +38,7 @@ public class FinanceCostTotalResourceBuilder extends BaseBuilder<FinanceCostTota
     }
 
     public FinanceCostTotalResourceBuilder withType(FinanceType... financeTypes) {
-        return withArray((financeType, totalResource) -> setField("financeType", financeType.getName(), totalResource), financeTypes);
+        return withArraySetFieldByReflection("financeType", financeTypes, "name");
     }
 
     public FinanceCostTotalResourceBuilder withFinanceId(Long... financeId) {

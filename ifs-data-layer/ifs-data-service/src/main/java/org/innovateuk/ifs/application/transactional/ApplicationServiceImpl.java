@@ -20,7 +20,6 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.resource.FileEntryResourceAssembler;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
-import org.innovateuk.ifs.finance.sync.service.FinanceTotalsSender;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -51,6 +50,7 @@ import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -102,8 +102,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ApplicationWorkflowHandler applicationWorkflowHandler;
     @Autowired
     private ActivityStateRepository activityStateRepository;
-    @Autowired
-    private FinanceTotalsSender financeTotalsSender;
 
 
     @Value("${ifs.web.baseURL}")
@@ -476,15 +474,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<List<Application>> getApplicationsByCompetitionIdAndState(Long competitionId, Collection<ApplicationState> applicationStates) {
-        Collection<State> states = applicationStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
+        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
         List<Application> applicationResults = applicationRepository.findByCompetitionIdAndApplicationProcessActivityStateStateIn(competitionId, states);
         return serviceSuccess(applicationResults);
     }
 
     @Override
-    public ServiceResult<List<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
-        Collection<State> states = applicationStates.stream().map(ApplicationState::getBackingState).collect(Collectors.toList());
-        List<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
+    public ServiceResult<Stream<Application>> getApplicationsByState(Collection<ApplicationState> applicationStates) {
+        Collection<State> states = simpleMap(applicationStates, ApplicationState::getBackingState);
+        Stream<Application> applicationResults = applicationRepository.findByApplicationProcessActivityStateStateIn(states);
         return serviceSuccess(applicationResults);
     }
 
