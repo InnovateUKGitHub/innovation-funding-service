@@ -6,10 +6,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
-import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
-import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
+import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.AssessorSelectionForm;
 import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
@@ -20,6 +17,7 @@ import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsFindModelPo
 import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInviteAssessorsOverviewModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInviteAssessorsFindViewModel;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -58,6 +56,9 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
 
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
+
+    @Autowired
+    private UserRestService userRestService;
 
     @Autowired
     private CompetitionInviteAssessorsFindModelPopulator inviteAssessorsFindModelPopulator;
@@ -318,21 +319,58 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                                                ValidationHandler validationHandler) {
         form.setVisible(true);
 
-        return validationHandler.failNowOrSucceedWith(
-                () -> invite(model, competitionId, form, page, queryParams),
-                () -> {
-                    RestResult<Void> restResult = competitionInviteRestService.inviteNewUsers(
-                            newInviteFormToResource(form, competitionId), competitionId
-                    );
 
-                    return validationHandler.addAnyErrors(restResult)
-                            .failNowOrSucceedWith(
-                                    () -> invite(model, competitionId, form, page, queryParams),
-                                    () -> redirectToInvite(competitionId, page)
-                            );
-                }
-        );
+        if(!validAssessorEmail(form,competitionId,page)){
+
+            return validationHandler.failNowOrSucceedWith(
+                    () -> invite(model, competitionId, form, page, queryParams),
+                    () -> redirectToInvite(competitionId, page));
+//            add an error message on return
+        }else {
+            return validationHandler.failNowOrSucceedWith(
+                    () -> invite(model, competitionId, form, page, queryParams),
+                    () -> {
+                        RestResult<Void> restResult = competitionInviteRestService.inviteNewUsers(
+                                newInviteFormToResource(form, competitionId), competitionId
+                        );
+
+                        return validationHandler.addAnyErrors(restResult)
+                                .failNowOrSucceedWith(
+                                        () -> invite(model, competitionId, form, page, queryParams),
+                                        () -> redirectToInvite(competitionId, page)
+                                );
+                    }
+            );
+        }
+
     }
+
+    private boolean validAssessorEmail(InviteNewAssessorsForm form, long competitionId, int page){
+        String userEmail = form.getInvites().get(0).getEmail();
+        String code = userRestService.findUserByEmail(userEmail).getStatusCode().toString();
+
+        AssessorCreatedInvitePageResource pageResource = competitionInviteRestService.getCreatedInvites(competitionId, page)
+                .getSuccessObjectOrThrowException();
+
+        List<String> emails = pageResource.getContent().stream()
+                .map(AssessorCreatedInviteResource::getEmail)
+                .collect(Collectors.toList());
+
+        List<String> userIsAlreadyInvitedList = emails.stream()
+                .filter(email -> email.equals(userEmail))
+                .collect(Collectors.toList());
+
+        boolean userIsAlreadyInvited = !userIsAlreadyInvitedList.isEmpty();
+
+        if(code.equals("200")){
+            return false;
+        }else if(userIsAlreadyInvited){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
 
     private String redirectToInvite(long competitionId, int page) {
         return "redirect:" + UriComponentsBuilder.fromPath("/competition/{competitionId}/assessors/invite")
