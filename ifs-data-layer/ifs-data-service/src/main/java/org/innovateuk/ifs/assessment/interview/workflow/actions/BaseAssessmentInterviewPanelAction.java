@@ -18,11 +18,11 @@ public abstract class BaseAssessmentInterviewPanelAction extends TestableTransit
 
     @Override
     public void doExecute(StateContext<AssessmentInterviewPanelState, AssessmentInterviewPanelEvent> context) {
-        AssessmentInterviewPanel assessment = getAssessmentFromContext(context);
-        doExecute(assessment, context);
+        AssessmentInterviewPanel assessmentInterviewPanel = getAssessmentInterviewPanelFromContext(context);
+        doExecute(assessmentInterviewPanel, context);
     }
 
-    private AssessmentInterviewPanel getAssessmentFromContext(StateContext<AssessmentInterviewPanelState, AssessmentInterviewPanelEvent> context) {
+    private AssessmentInterviewPanel getAssessmentInterviewPanelFromContext(StateContext<AssessmentInterviewPanelState, AssessmentInterviewPanelEvent> context) {
         return (AssessmentInterviewPanel) context.getMessageHeader("target");
     }
 

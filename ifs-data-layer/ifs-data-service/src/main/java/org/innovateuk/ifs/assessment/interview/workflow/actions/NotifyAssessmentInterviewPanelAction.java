@@ -14,6 +14,6 @@ public class NotifyAssessmentInterviewPanelAction extends BaseAssessmentIntervie
     protected void doExecute(AssessmentInterviewPanel assessmentInterviewPanel, StateContext<AssessmentInterviewPanelState, AssessmentInterviewPanelEvent> context) {
         AssessmentInterviewPanelMessageOutcome assessmentInterviewPanelMessageOutcome =
                 (AssessmentInterviewPanelMessageOutcome) context.getMessageHeader("message");
-        // TODO set message on the panel
+        assessmentInterviewPanel.setMessage(assessmentInterviewPanelMessageOutcome);
     }
 }
