@@ -84,7 +84,7 @@ Administrator can successfully invite a new user
     And the user clicks the button/link                      jQuery=.button:contains("Send invite")
     Then the user cannot see a validation error in the page
 
-Administrator can see finish the rest of the invitation
+Administrator can successfully finish the rest of the invitation
     #Wanted to split these two as it was getting too large.
     [Documentation]  IFS-2412
     [Tags]  HappyPath
