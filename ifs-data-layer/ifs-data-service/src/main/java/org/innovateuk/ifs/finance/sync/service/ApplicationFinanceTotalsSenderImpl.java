@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.sync.service;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Service sends cost totals for an {@Application}.
+ * Service sends cost totals for an {@link Application}.
  */
 @Service
 public class ApplicationFinanceTotalsSenderImpl implements ApplicationFinanceTotalsSender {

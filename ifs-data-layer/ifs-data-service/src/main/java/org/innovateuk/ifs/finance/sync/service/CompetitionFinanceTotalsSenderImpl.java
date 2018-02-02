@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationState;
 import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Service sends cost totals for all submitted {@Application}s within the {@Competition}.
+ * Service sends cost totals for all submitted {@link Application}s within the {@link Competition}.
  */
 @Service
 public class CompetitionFinanceTotalsSenderImpl implements CompetitionFinanceTotalsSender {

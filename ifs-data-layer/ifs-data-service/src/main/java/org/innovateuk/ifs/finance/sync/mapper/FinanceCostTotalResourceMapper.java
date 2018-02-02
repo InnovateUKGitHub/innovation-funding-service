@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 
 /**
- * Maps ApplicationFinanceResource calculated finance totals to FinanceCostTotalResource costs.
+ * Maps ApplicationFinanceResource calculated finance totals to {@link FinanceCostTotalResource} costs.
  */
 @Component
 public class FinanceCostTotalResourceMapper {

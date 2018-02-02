@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.stream.Stream;
 
 /**
- * Service sends cost totals for all submitted {@Application}s.
+ * Service sends cost totals for all submitted {@link Application}s.
  */
 @Service
 public class AllFinanceTotalsSenderImpl implements AllFinanceTotalsSender{

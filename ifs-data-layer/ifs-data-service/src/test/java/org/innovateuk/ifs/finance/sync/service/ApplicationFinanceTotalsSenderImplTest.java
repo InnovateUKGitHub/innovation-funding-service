@@ -27,9 +27,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
-/**
- * TODO: Add description
- */
 public class ApplicationFinanceTotalsSenderImplTest {
 
     @Mock
