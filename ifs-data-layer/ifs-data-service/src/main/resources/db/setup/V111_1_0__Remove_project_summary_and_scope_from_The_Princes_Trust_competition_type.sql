@@ -7,10 +7,6 @@ SET @princes_trust_competition_id = (SELECT id
                                                  FROM competition_type
                                                  WHERE competition_type.name = 'The Prince\'s Trust'));
 
-SET @princes_trust_competition_type_id = (SELECT id
-                                          FROM competition_type
-                                          WHERE competition_type.name = 'The Prince\'s Trust');
-
 DELETE form_input_validator FROM form_input_validator
   INNER JOIN form_input
     ON form_input_validator.form_input_id = form_input.id
@@ -19,8 +15,7 @@ DELETE form_input_validator FROM form_input_validator
        AND (question.short_name = 'Project summary' OR question.short_name = 'Scope')
   INNER JOIN competition
     ON form_input.competition_id = competition.id
-       AND (competition.id = @princes_trust_competition_id
-            OR competition.competition_type_id = @princes_trust_competition_type_id);
+       AND competition.id = @princes_trust_competition_id;
 
 DELETE guidance_row FROM guidance_row
   INNER JOIN form_input
@@ -30,8 +25,7 @@ DELETE guidance_row FROM guidance_row
        AND (question.short_name = 'Project summary' OR question.short_name = 'Scope')
   INNER JOIN competition
     ON form_input.competition_id = competition.id
-       AND (competition.id = @princes_trust_competition_id
-            OR competition.competition_type_id = @princes_trust_competition_type_id);
+       AND competition.id = @princes_trust_competition_id;
 
 DELETE form_input FROM form_input
   INNER JOIN question
@@ -39,12 +33,10 @@ DELETE form_input FROM form_input
        AND (question.short_name = 'Project summary' OR question.short_name = 'Scope')
   INNER JOIN competition
     ON form_input.competition_id = competition.id
-       AND (competition.id = @princes_trust_competition_id
-            OR competition.competition_type_id = @princes_trust_competition_type_id);
+       AND competition.id = @princes_trust_competition_id;
 
 DELETE question FROM question
   INNER JOIN competition
     ON question.competition_id = competition.id
-       AND (competition.id = @princes_trust_competition_id
-            OR competition.competition_type_id = @princes_trust_competition_type_id)
+       AND competition.id = @princes_trust_competition_id
 WHERE question.short_name = 'Project summary' OR question.short_name = 'Scope';
