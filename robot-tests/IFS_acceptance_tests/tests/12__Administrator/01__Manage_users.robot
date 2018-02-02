@@ -6,6 +6,7 @@ Documentation     IFS-604: IFS Admin user navigation to Manage users section
 ...               IFS-643: Complete internal user registration
 ...               IFS-644: Disable or reenable user profile
 ...               IFS-983: Manage users: Pending registration tab
+...               IFS-2412: Internal users resend invites
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Administrator  CompAdmin
