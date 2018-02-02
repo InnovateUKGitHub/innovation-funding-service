@@ -10,9 +10,9 @@ import java.time.ZonedDateTime;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
- * DTO for {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite}s.
+ * DTO for {@link org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvite}s.
  */
-public class AssessmentPanelInviteResource extends InviteResource {
+public class AssessmentInterviewPanelInviteResource extends InviteResource {
 
     private InviteStatus status;
     private String hash;
@@ -20,15 +20,15 @@ public class AssessmentPanelInviteResource extends InviteResource {
     private String competitionName;
     private long userId;
     private String email;
-    private ZonedDateTime panelDate;
+    private ZonedDateTime interviewDate;
 
-    public AssessmentPanelInviteResource(String hash,
-                                         long competitionId,
-                                         String competitionName,
-                                         InviteStatus status,
-                                         long userId,
-                                         String email,
-                                         ZonedDateTime panelDate
+    public AssessmentInterviewPanelInviteResource(String hash,
+                                                  long competitionId,
+                                                  String competitionName,
+                                                  InviteStatus status,
+                                                  long userId,
+                                                  String email,
+                                                  ZonedDateTime interviewDate
     ) {
         this.hash = hash;
         this.competitionId = competitionId;
@@ -36,10 +36,10 @@ public class AssessmentPanelInviteResource extends InviteResource {
         this.status = status;
         this.userId = userId;
         this.email = email;
-        this.panelDate = panelDate;
+        this.interviewDate = interviewDate;
     }
 
-    public AssessmentPanelInviteResource() {
+    public AssessmentInterviewPanelInviteResource() {
     }
 
     public String getHash() {
@@ -90,17 +90,17 @@ public class AssessmentPanelInviteResource extends InviteResource {
         this.email = email;
     }
 
-    public ZonedDateTime getPanelDate() {
-        return panelDate;
+    public ZonedDateTime getInterviewDate() {
+        return interviewDate;
     }
 
-    public void setPanelDate(ZonedDateTime panelDate) {
-        this.panelDate = panelDate;
+    public void setInterviewDate(ZonedDateTime interviewDate) {
+        this.interviewDate = interviewDate;
     }
 
     @JsonIgnore
-    public long getPanelDaysLeft() {
-        return DAYS.between(ZonedDateTime.now(), panelDate);
+    public long getInterviewDaysLeft() {
+        return DAYS.between(ZonedDateTime.now(), interviewDate);
     }
 
     @JsonIgnore
@@ -114,7 +114,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessmentPanelInviteResource that = (AssessmentPanelInviteResource) o;
+        AssessmentInterviewPanelInviteResource that = (AssessmentInterviewPanelInviteResource) o;
 
         return new EqualsBuilder()
                 .append(status, that.status)
@@ -123,7 +123,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
                 .append(userId, that.userId)
                 .append(competitionName, that.competitionName)
                 .append(email, that.email)
-                .append(panelDate, that.panelDate)
+                .append(interviewDate, that.interviewDate)
                 .isEquals();
     }
 
@@ -136,7 +136,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
                 .append(userId)
                 .append(competitionName)
                 .append(email)
-                .append(panelDate)
+                .append(interviewDate)
                 .toHashCode();
     }
 }

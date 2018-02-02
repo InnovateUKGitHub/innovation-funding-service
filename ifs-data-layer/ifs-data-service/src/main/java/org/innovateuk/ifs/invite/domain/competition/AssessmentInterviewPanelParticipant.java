@@ -15,26 +15,26 @@ import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 
 /**
- * A {@link AssessmentPanelParticipant} in a {@link Competition}.
+ * A {@link AssessmentInterviewPanelParticipant} in a {@link Competition}.
  */
 @Entity
 @Table(name = "competition_user")
-public class AssessmentPanelParticipant extends CompetitionParticipant<AssessmentReviewPanelInvite> {
+public class AssessmentInterviewPanelParticipant extends CompetitionParticipant<AssessmentInterviewPanelInvite> {
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "invite_id")
-    private AssessmentReviewPanelInvite invite;
+    private AssessmentInterviewPanelInvite invite;
 
     @Override
-    public AssessmentReviewPanelInvite getInvite() {
+    public AssessmentInterviewPanelInvite getInvite() {
         return this.invite;
     }
 
-    public AssessmentPanelParticipant() {
+    public AssessmentInterviewPanelParticipant() {
         super.setProcess(null);
     }
 
-    public AssessmentPanelParticipant(AssessmentReviewPanelInvite invite) {
+    public AssessmentInterviewPanelParticipant(AssessmentInterviewPanelInvite invite) {
         super();
         if (invite == null) {
             throw new NullPointerException("invite cannot be null");
@@ -53,24 +53,24 @@ public class AssessmentPanelParticipant extends CompetitionParticipant<Assessmen
         }
         super.setProcess(invite.getTarget());
         this.invite = invite;
-        super.setRole(CompetitionParticipantRole.PANEL_ASSESSOR);
+        super.setRole(CompetitionParticipantRole.INTERVIEW_ASSESSOR);
     }
 
-    private AssessmentPanelParticipant accept() {
+    private AssessmentInterviewPanelParticipant accept() {
         if (getUser() == null) {
-            throw new IllegalStateException("Illegal attempt to accept a CompetitionAssessmentParticipant with no User");
+            throw new IllegalStateException("Illegal attempt to accept a AssessmentInterviewPanelInvite with no User");
         }
 
         if (getInvite().getStatus() != OPENED) {
-            throw new IllegalStateException("Cannot accept a AssessmentReviewPanelInvite that hasn't been opened");
+            throw new IllegalStateException("Cannot accept a AssessmentInterviewPanelInvite that hasn't been opened");
         }
 
         if (getStatus() == REJECTED) {
-            throw new IllegalStateException("Cannot accept a AssessmentPanelParticipant that has been rejected");
+            throw new IllegalStateException("Cannot accept a AssessmentInterviewPanelInvite that has been rejected");
         }
 
         if (getStatus() == ACCEPTED) {
-            throw new IllegalStateException("AssessmentPanelParticipant has already been accepted");
+            throw new IllegalStateException("AssessmentInterviewPanelInvite has already been accepted");
         }
 
         super.setStatus(ACCEPTED);
@@ -82,12 +82,12 @@ public class AssessmentPanelParticipant extends CompetitionParticipant<Assessmen
         super.setStatus(status);
     }
 
-    public AssessmentPanelParticipant acceptAndAssignUser(User user) {
+    public AssessmentInterviewPanelParticipant acceptAndAssignUser(User user) {
         super.setUser(user);
         return accept();
     }
 
-    public AssessmentPanelParticipant reject() {
+    public AssessmentInterviewPanelParticipant reject() {
         if (getInvite().getStatus() != OPENED) {
             throw new IllegalStateException("Cannot accept a CompetitionAssessmentInvite that hasn't been opened");
         }
@@ -108,7 +108,7 @@ public class AssessmentPanelParticipant extends CompetitionParticipant<Assessmen
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessmentPanelParticipant that = (AssessmentPanelParticipant) o;
+        AssessmentInterviewPanelParticipant that = (AssessmentInterviewPanelParticipant) o;
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))

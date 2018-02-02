@@ -18,7 +18,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.AssessmentPanelParticipantResourceBuilder.newAssessmentPanelParticipantResource;
+import static org.innovateuk.ifs.invite.builder.AssessmentReviewPanelParticipantResourceBuilder.newAssessmentReviewPanelParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteSendResourceBuilder.newAssessorInviteSendResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -146,11 +146,11 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
                                 .build()
                         )
                 ).build();
-        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource().build();
+        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource().build();
 
         when(assessmentPanelParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash"))
-                .thenReturn(assessmentPanelParticipantResource);
-        when(assessmentPanelParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(assessmentPanelParticipantResource, assessorUserResource))
+                .thenReturn(assessmentReviewPanelParticipantResource);
+        when(assessmentPanelParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource))
                 .thenReturn(true);
 
         setLoggedInUser(assessorUserResource);
@@ -158,7 +158,7 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
         classUnderTest.acceptInvite("hash");
 
         verify(assessmentPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
-        verify(assessmentPanelParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(assessmentPanelParticipantResource, assessorUserResource);
+        verify(assessmentPanelParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource);
     }
 
     @Test
@@ -182,10 +182,10 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
                                 .build()
                         )
                 ).build();
-        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource().build();
+        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource().build();
         when(assessmentPanelParticipantLookupStrategy.getAssessmentPanelParticipantResource("hash"))
-                .thenReturn(assessmentPanelParticipantResource);
-        when(assessmentPanelParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(assessmentPanelParticipantResource, assessorUserResource))
+                .thenReturn(assessmentReviewPanelParticipantResource);
+        when(assessmentPanelParticipantPermissionRules.userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource))
                 .thenReturn(false);
 
         setLoggedInUser(assessorUserResource);
@@ -194,7 +194,7 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
                 () -> classUnderTest.acceptInvite("hash"),
                 () -> {
                     verify(assessmentPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
-                    verify(assessmentPanelParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(assessmentPanelParticipantResource, assessorUserResource);
+                    verify(assessmentPanelParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(assessmentReviewPanelParticipantResource, assessorUserResource);
                 }
         );
     }
@@ -287,12 +287,12 @@ public class AssessmentReviewPanelInviteServiceSecurityTest extends BaseServiceS
         }
 
         @Override
-        public ServiceResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId) {
-            return serviceSuccess(singletonList(newAssessmentPanelParticipantResource().withUser(1L).build()));
+        public ServiceResult<List<AssessmentReviewPanelParticipantResource>> getAllInvitesByUser(long userId) {
+            return serviceSuccess(singletonList(newAssessmentReviewPanelParticipantResource().withUser(1L).build()));
         }
 
         @Override
-        public ServiceResult<AssessmentPanelInviteResource> openInvite(@P("inviteHash") String inviteHash) {
+        public ServiceResult<AssessmentReviewPanelInviteResource> openInvite(@P("inviteHash") String inviteHash) {
             return null;
         }
 

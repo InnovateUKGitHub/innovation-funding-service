@@ -4,12 +4,10 @@ import org.innovateuk.ifs.assessment.transactional.AssessmentPanelInviteService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -76,7 +74,7 @@ public class AssessmentPanelInviteController {
     }
 
     @GetMapping("/getAllInvitesByUser/{userId}")
-    public RestResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(@PathVariable long userId) {
+    public RestResult<List<AssessmentReviewPanelParticipantResource>> getAllInvitesByUser(@PathVariable long userId) {
         return assessmentPanelInviteService.getAllInvitesByUser(userId).toGetResponse();
     }
 
@@ -94,7 +92,7 @@ public class AssessmentPanelInviteController {
     }
 
     @PostMapping("/openInvite/{inviteHash}")
-    public RestResult<AssessmentPanelInviteResource> openInvite(@PathVariable String inviteHash) {
+    public RestResult<AssessmentReviewPanelInviteResource> openInvite(@PathVariable String inviteHash) {
         return assessmentPanelInviteService.openInvite(inviteHash).toPostWithBodyResponse();
     }
 

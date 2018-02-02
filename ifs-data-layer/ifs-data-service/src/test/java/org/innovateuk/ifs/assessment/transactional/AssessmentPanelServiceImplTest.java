@@ -12,7 +12,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
@@ -26,7 +26,6 @@ import org.mockito.InOrder;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -42,9 +41,7 @@ import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewBuild
 import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewRejectOutcomeBuilder.newAssessmentReviewRejectOutcome;
 import static org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState.CREATED;
 import static org.innovateuk.ifs.assessment.transactional.AssessmentPanelServiceImpl.INVITE_DATE_FORMAT;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REVIEW_ACCEPT_FAILED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REVIEW_REJECT_FAILED;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -140,7 +137,7 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
                 )
                 .build();
 
-        List<AssessmentPanelParticipant> assessmentPanelParticipants =
+        List<AssessmentReviewPanelParticipant> assessmentReviewPanelParticipants =
                 newAssessmentPanelParticipant()
                         .withUser(assessor)
                         .build(1);
@@ -157,14 +154,14 @@ public class AssessmentPanelServiceImplTest extends BaseServiceUnitTest<Assessme
 
         Role panelAssessorRole = newRole().withType(UserRoleType.PANEL_ASSESSOR).build();
 
-        AssessmentReview assessmentReview = new AssessmentReview(applications.get(0), assessmentPanelParticipants.get(0), panelAssessorRole);
+        AssessmentReview assessmentReview = new AssessmentReview(applications.get(0), assessmentReviewPanelParticipants.get(0), panelAssessorRole);
         assessmentReview.setActivityState(acceptedActivityState);
 
         when(roleRepositoryMock.findOneByName(panelAssessorRole.getName())).thenReturn(panelAssessorRole);
 
         when(assessmentPanelParticipantRepositoryMock
                 .getPanelAssessorsByCompetitionAndStatusContains(competitionId, singletonList(ParticipantStatus.ACCEPTED)))
-                .thenReturn(assessmentPanelParticipants);
+                .thenReturn(assessmentReviewPanelParticipants);
         when(applicationRepositoryMock
                 .findByCompetitionIdAndInAssessmentReviewPanelTrueAndApplicationProcessActivityStateState(competitionId, State.SUBMITTED))
                 .thenReturn(applications);

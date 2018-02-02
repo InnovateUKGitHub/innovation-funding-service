@@ -3,12 +3,12 @@ package org.innovateuk.ifs.assessment.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
-import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewMapper;
 import org.innovateuk.ifs.assessment.review.domain.AssessmentReview;
+import org.innovateuk.ifs.assessment.review.mapper.AssessmentReviewMapper;
 import org.innovateuk.ifs.assessment.review.repository.AssessmentReviewRepository;
 import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewRejectOutcomeResource;
-import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState;
 import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewResource;
+import org.innovateuk.ifs.assessment.review.resource.AssessmentReviewState;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
@@ -17,7 +17,7 @@ import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -164,11 +164,11 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewPanelInvite);
-        assessmentPanelParticipant.getInvite().open();
-        assessmentPanelParticipant.acceptAndAssignUser(user);
+        AssessmentReviewPanelParticipant assessmentReviewPanelParticipant = new AssessmentReviewPanelParticipant(assessmentReviewPanelInvite);
+        assessmentReviewPanelParticipant.getInvite().open();
+        assessmentReviewPanelParticipant.acceptAndAssignUser(user);
 
-        assessmentPanelParticipantRepository.save(assessmentPanelParticipant);
+        assessmentPanelParticipantRepository.save(assessmentReviewPanelParticipant);
 
         Application application = newApplication()
                 .with(id(null))
@@ -219,11 +219,11 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewPanelInvite);
-        assessmentPanelParticipant.getInvite().open();
-        assessmentPanelParticipant.acceptAndAssignUser(user);
+        AssessmentReviewPanelParticipant assessmentReviewPanelParticipant = new AssessmentReviewPanelParticipant(assessmentReviewPanelInvite);
+        assessmentReviewPanelParticipant.getInvite().open();
+        assessmentReviewPanelParticipant.acceptAndAssignUser(user);
 
-        assessmentPanelParticipantRepository.save(assessmentPanelParticipant);
+        assessmentPanelParticipantRepository.save(assessmentReviewPanelParticipant);
 
         Application application = newApplication()
                 .with(id(null))
@@ -272,11 +272,11 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewPanelInvite);
-        assessmentPanelParticipant.getInvite().open();
-        assessmentPanelParticipant.acceptAndAssignUser(user);
+        AssessmentReviewPanelParticipant assessmentReviewPanelParticipant = new AssessmentReviewPanelParticipant(assessmentReviewPanelInvite);
+        assessmentReviewPanelParticipant.getInvite().open();
+        assessmentReviewPanelParticipant.acceptAndAssignUser(user);
 
-        assessmentPanelParticipantRepository.save(assessmentPanelParticipant);
+        assessmentPanelParticipantRepository.save(assessmentReviewPanelParticipant);
 
         Application application = newApplication()
                 .with(id(null))
@@ -342,11 +342,11 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         assessmentPanelInviteRepository.save(competitionAssessmentInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(competitionAssessmentInvite);
-        assessmentPanelParticipant.getInvite().open();
-        assessmentPanelParticipant.acceptAndAssignUser(user);
+        AssessmentReviewPanelParticipant assessmentReviewPanelParticipant = new AssessmentReviewPanelParticipant(competitionAssessmentInvite);
+        assessmentReviewPanelParticipant.getInvite().open();
+        assessmentReviewPanelParticipant.acceptAndAssignUser(user);
 
-        assessmentPanelParticipantRepository.save(assessmentPanelParticipant);
+        assessmentPanelParticipantRepository.save(assessmentReviewPanelParticipant);
 
         Application application = newApplication()
                 .with(id(null))
@@ -413,11 +413,11 @@ public class AssessmentPanelControllerIntegrationTest extends BaseControllerInte
 
         assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewPanelInvite);
-        assessmentPanelParticipant.getInvite().open();
-        assessmentPanelParticipant.acceptAndAssignUser(assessor);
+        AssessmentReviewPanelParticipant assessmentReviewPanelParticipant = new AssessmentReviewPanelParticipant(assessmentReviewPanelInvite);
+        assessmentReviewPanelParticipant.getInvite().open();
+        assessmentReviewPanelParticipant.acceptAndAssignUser(assessor);
 
-        assessmentPanelParticipantRepository.save(assessmentPanelParticipant);
+        assessmentPanelParticipantRepository.save(assessmentReviewPanelParticipant);
 
         Application application = newApplication()
                 .with(id(null))

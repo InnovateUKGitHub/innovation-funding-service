@@ -4,7 +4,6 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessmentPanelInviteController;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,8 +16,8 @@ import static com.google.common.primitives.Longs.asList;
 import static java.lang.Boolean.TRUE;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.AssessmentPanelInviteDocs.ASSESSMENT_REVIEW_PANEL_INVITE_RESOURCE_BUILDER;
 import static org.innovateuk.ifs.documentation.AssessmentPanelInviteDocs.assessmentPanelInviteFields;
-import static org.innovateuk.ifs.documentation.AssessmentPanelInviteDocs.assessmentPanelInviteResourceBuilder;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInvitePageResourceDocs.assessorCreatedInvitePageResourceBuilder;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInvitePageResourceDocs.assessorCreatedInvitePageResourceFields;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInviteResourceDocs.assessorCreatedInviteResourceFields;
@@ -28,11 +27,10 @@ import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs
 import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs.availableAssessorPageResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.availableAssessorResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
-import static org.innovateuk.ifs.invite.builder.AssessmentPanelParticipantResourceBuilder.newAssessmentPanelParticipantResource;
+import static org.innovateuk.ifs.invite.builder.AssessmentReviewPanelParticipantResourceBuilder.newAssessmentReviewPanelParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleJoiner;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -203,8 +201,8 @@ public class AssessmentReviewPanelInviteControllerDocumentation extends BaseCont
     @Test
     public void getAllInvitesByUser() throws Exception {
         final long userId = 12L;
-        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource().build();
-        when(assessmentPanelInviteServiceMock.getAllInvitesByUser(userId)).thenReturn(serviceSuccess(singletonList(assessmentPanelParticipantResource)));
+        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource().build();
+        when(assessmentPanelInviteServiceMock.getAllInvitesByUser(userId)).thenReturn(serviceSuccess(singletonList(assessmentReviewPanelParticipantResource)));
 
         mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesByUser/{userId}", userId))
                 .andExpect(status().isOk())
@@ -307,9 +305,9 @@ public class AssessmentReviewPanelInviteControllerDocumentation extends BaseCont
     @Test
     public void openInvite() throws Exception {
         String hash = "invitehash";
-        AssessmentPanelInviteResource assessmentPanelInviteResource = assessmentPanelInviteResourceBuilder.build();
+        AssessmentReviewPanelInviteResource assessmentReviewPanelInviteResource = ASSESSMENT_REVIEW_PANEL_INVITE_RESOURCE_BUILDER.build();
 
-        when(assessmentPanelInviteServiceMock.openInvite(hash)).thenReturn(serviceSuccess(assessmentPanelInviteResource));
+        when(assessmentPanelInviteServiceMock.openInvite(hash)).thenReturn(serviceSuccess(assessmentReviewPanelInviteResource));
 
         mockMvc.perform(post("/assessmentpanelinvite/openInvite/{hash}", hash))
                 .andExpect(status().isOk())
