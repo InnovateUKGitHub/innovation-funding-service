@@ -107,7 +107,7 @@ Academic finances JeS link showing
     [Setup]    log in as a different user     ${test_mailbox_one}+academictest@gmail.com    ${correct_password}
     When the user navigates to the academic application finances
     Then the user should not see the element  link=Your funding
-    And the user should see the element       jQuery=td:contains("100%")
+    And the user should see correct grant percentage
     When the user clicks the button/link      link=Your project costs
     Then the user can see JeS details
 
