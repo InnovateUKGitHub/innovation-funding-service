@@ -100,6 +100,7 @@ public class CompetitionSetupTemplateServiceImpl implements CompetitionSetupTemp
         competition.setSections(new ArrayList<>(template.getSections()));
         competition.setFullApplicationFinance(template.isFullApplicationFinance());
         competition.setTermsAndConditions(template.getTermsAndConditions());
+        competition.setAcademicGrantPercentage(template.getAcademicGrantPercentage());
         return competition;
     }
 
