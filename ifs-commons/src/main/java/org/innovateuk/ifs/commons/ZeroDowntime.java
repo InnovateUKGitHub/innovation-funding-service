@@ -15,7 +15,15 @@ import static java.lang.annotation.RetentionPolicy.SOURCE;
 @Target(value = {FIELD, METHOD, LOCAL_VARIABLE, PACKAGE, TYPE, CONSTRUCTOR, TYPE_PARAMETER, TYPE_USE})
 public @interface ZeroDowntime {
 
+    /**
+     * This is to be used to reference a piece of work that involves this ZDD consideration e.g. a Jira ticket
+     * reference number for a Story
+     */
     String reference();
 
+    /**
+     * A freeform description to explain the work that needs to be done with a piece of ZDD consideration e.g. to
+     * remove some code supporting backwards compatibility in a future release
+     */
     String description();
 }
