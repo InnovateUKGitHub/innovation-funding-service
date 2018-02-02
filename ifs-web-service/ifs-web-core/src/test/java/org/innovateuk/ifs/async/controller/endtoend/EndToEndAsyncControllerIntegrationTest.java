@@ -2,6 +2,7 @@ package org.innovateuk.ifs.async.controller.endtoend;
 
 import com.jayway.awaitility.core.ConditionTimeoutException;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.async.controller.AsyncAllowedThreadLocal;
 import org.innovateuk.ifs.async.exceptions.AsyncException;
 import org.innovateuk.ifs.async.generation.AsyncFuturesHolder;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
@@ -107,20 +108,22 @@ public class EndToEndAsyncControllerIntegrationTest extends BaseIntegrationTest 
      * Setup ThreadLocals that we would expect to have set on the main Thread prior to the Controller being called
      */
     @Before
-    public void setupHttpFilterThreadLocals() {
+    public void setupNewWorkerThreadLocals() {
         setLoggedInUser(loggedInUser);
         ServletRequestAttributes requestAttributes = new ServletRequestAttributes(new MockHttpServletRequest());
         RequestContextHolder.setRequestAttributes(requestAttributes);
         requestAttributes.setAttribute("REQUEST_UUID_KEY", requestCachingUuid, SCOPE_REQUEST);
+        AsyncAllowedThreadLocal.clearAsyncAllowed();
     }
 
     /**
      * Cleanup ThreadLocals that we would expect to have set on the main Thread prior to the Controller being called
      */
     @After
-    public void cleanupHttpFilterThreadLocals() {
+    public void cleanupNewWorkerThreadLocals() {
         setLoggedInUser(null);
         RequestContextHolder.setRequestAttributes(null);
+        AsyncAllowedThreadLocal.clearAsyncAllowed();
     }
 
     @Test

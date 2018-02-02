@@ -155,7 +155,7 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
 
         setLoggedInUser(assessorUserResource);
 
-        classUnderTest.acceptInvite("hash", getLoggedInUser());
+        classUnderTest.acceptInvite("hash");
 
         verify(assessmentPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
         verify(assessmentPanelParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(assessmentPanelParticipantResource, assessorUserResource);
@@ -165,7 +165,7 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
     public void acceptInvite_notLoggedIn() {
         setLoggedInUser(null);
         assertAccessDenied(
-                () -> classUnderTest.acceptInvite("hash", getLoggedInUser()),
+                () -> classUnderTest.acceptInvite("hash"),
                 () -> {
                     verify(assessmentPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
                     verifyZeroInteractions(assessmentPanelParticipantPermissionRules);
@@ -191,7 +191,7 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
         setLoggedInUser(assessorUserResource);
 
         assertAccessDenied(
-                () -> classUnderTest.acceptInvite("hash", getLoggedInUser()),
+                () -> classUnderTest.acceptInvite("hash"),
                 () -> {
                     verify(assessmentPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash");
                     verify(assessmentPanelParticipantPermissionRules, only()).userCanAcceptAssessmentPanelInvite(assessmentPanelParticipantResource, assessorUserResource);
@@ -214,7 +214,7 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
         setLoggedInUser(assessorUserResource);
 
         assertAccessDenied(
-                () -> classUnderTest.acceptInvite("hash not exists", getLoggedInUser()),
+                () -> classUnderTest.acceptInvite("hash not exists"),
                 () -> {
                     verify(assessmentPanelParticipantLookupStrategy, only()).getAssessmentPanelParticipantResource("hash not exists");
                     verifyZeroInteractions(assessmentPanelParticipantPermissionRules);
@@ -297,7 +297,7 @@ public class AssessmentPanelInviteServiceSecurityTest extends BaseServiceSecurit
         }
 
         @Override
-        public ServiceResult<Void> acceptInvite(@P("inviteHash") String inviteHash, UserResource userResource) {
+        public ServiceResult<Void> acceptInvite(@P("inviteHash") String inviteHash) {
             return null;
         }
 

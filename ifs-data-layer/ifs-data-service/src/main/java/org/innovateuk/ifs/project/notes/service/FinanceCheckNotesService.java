@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.notes.service;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.threads.service.ThreadService;
 import org.innovateuk.ifs.threads.resource.NoteResource;
@@ -23,6 +24,11 @@ public interface FinanceCheckNotesService extends ThreadService<NoteResource, Po
     @Override
     @PreAuthorize("hasPermission(#noteResource, 'PF_CREATE')")
     ServiceResult<Long> create(@P("noteResource") NoteResource noteResource);
+
+    @Override
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "CLOSE_NOTE", description = "Only project finance users can close notes")
+    ServiceResult<Void> close(Long noteId);
 
     @Override
     @PreAuthorize("hasPermission(#noteId, 'org.innovateuk.ifs.threads.resource.NoteResource', 'PF_ADD_POST')")

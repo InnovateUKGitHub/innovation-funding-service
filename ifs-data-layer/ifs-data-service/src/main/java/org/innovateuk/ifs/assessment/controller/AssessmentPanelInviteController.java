@@ -100,8 +100,7 @@ public class AssessmentPanelInviteController {
 
     @PostMapping("/acceptInvite/{inviteHash}")
     public RestResult<Void> acceptInvite(@PathVariable String inviteHash) {
-        final UserResource currentUser = (UserResource) SecurityContextHolder.getContext().getAuthentication().getDetails();
-        return assessmentPanelInviteService.acceptInvite(inviteHash, currentUser).toPostResponse();
+        return assessmentPanelInviteService.acceptInvite(inviteHash).toPostResponse();
     }
 
     @PostMapping("/rejectInvite/{inviteHash}")

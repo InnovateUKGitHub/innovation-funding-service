@@ -24,6 +24,11 @@ public class AssessorFormInputResponseController {
         return assessorFormInputResponseService.getAllAssessorFormInputResponses(assessmentId).toGetResponse();
     }
 
+    @GetMapping("/panel/{assessmentId}")
+    public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesForPanel(@PathVariable("assessmentId") long assessmentId) {
+        return assessorFormInputResponseService.getAllAssessorFormInputResponsesForPanel(assessmentId).toGetResponse();
+    }
+
     @GetMapping("/assessment/{assessmentId}/question/{questionId}")
     public RestResult<List<AssessorFormInputResponseResource>> getAllAssessorFormInputResponsesByAssessmentAndQuestion(@PathVariable("assessmentId") long assessmentId, @PathVariable("questionId") long questionId) {
         return assessorFormInputResponseService.getAllAssessorFormInputResponsesByAssessmentAndQuestion(assessmentId, questionId).toGetResponse();
@@ -48,5 +53,10 @@ public class AssessorFormInputResponseController {
     @GetMapping("/assessment/{assessmentId}/details")
     public RestResult<AssessmentDetailsResource> getAssessmentDetails(@PathVariable("assessmentId") long assessmentId) {
         return assessorFormInputResponseService.getAssessmentDetails(assessmentId).toGetResponse();
+    }
+
+    @GetMapping("/panel/{assessmentId}/details")
+    public RestResult<AssessmentDetailsResource> getAssessmentDetailsForPanel(@PathVariable("assessmentId") long assessmentId) {
+        return assessorFormInputResponseService.getAssessmentDetailsForPanel(assessmentId).toGetResponse();
     }
 }
