@@ -310,8 +310,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.isSignedGrantOfferLetterApproved(123L), () -> {
-            verify(projectGrantOfferPermissionRules).partnersOnProjectCanViewSignedGrantOfferStatus(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).internalUsersCanViewSignedGrantOfferStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).partnersOnProjectCanViewSignedGrantOfferLetterApprovedStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewSignedGrantOfferLetterApprovedStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
@@ -322,8 +322,8 @@ public class GrantOfferLetterServiceSecurityTest extends BaseServiceSecurityTest
 
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
         assertAccessDenied(() -> classUnderTest.isSignedGrantOfferLetterRejected(123L), () -> {
-            verify(projectGrantOfferPermissionRules).partnersOnProjectCanViewSignedGrantOfferStatus(project, getLoggedInUser());
-            verify(projectGrantOfferPermissionRules).internalUsersCanViewSignedGrantOfferStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).internalUsersCanViewSignedGrantOfferLetterRejectedStatus(project, getLoggedInUser());
+            verify(projectGrantOfferPermissionRules).projectManagerCanViewSignedGrantOfferLetterRejectedStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectGrantOfferPermissionRules);
         });
     }
