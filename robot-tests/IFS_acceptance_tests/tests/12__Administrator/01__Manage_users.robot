@@ -83,9 +83,15 @@ Administrator can successfully invite a new user
     And the user selects the option from the drop-down menu  IFS Administrator  id=role
     And the user clicks the button/link                      jQuery=.button:contains("Send invite")
     Then the user cannot see a validation error in the page
+
+Administrator can see finish the rest of the invitation
+    #Wanted to split these two as it was getting too large.
+    [Documentation]  IFS-2412
+    [Tags]  HappyPath
     Then the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
     And the user should see the element                      jQuery=.selected:contains("Pending")
+    And the user resends the invite
     Then the user verifies pending tab content
     When the user clicks the button/link                     jQuery=a:contains("Active")
     Then the user should not see the element                 jQuery=td:contains("Support User") ~ td:contains("IFS Administrator")
@@ -292,3 +298,7 @@ the re-activated user tries to login
     run keyword if  ${docker}==1  log in as a different user  ${localEmailInvtedUser}  ${correct_password}
     # On production the accepted domain is innovateuk.gov.uk
     run keyword if  ${docker}!=1  log in as a different user  ${remoteEmailInvtedUser}  ${correct_password}
+
+the user resends the invite
+    the user clicks the button/link    css=input.button.button-secondary
+    the user reads his email           ${localEmailInvtedUser}  Invitation to Innovation Funding  Your Innovation Funding Service
