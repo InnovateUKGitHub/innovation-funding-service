@@ -15,17 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
  * Transactional service responsible for deciding if and how to create organisations upon user sign up.
  */
 @Service
 public class OrganisationInitialCreationServiceImpl extends BaseTransactionalService implements OrganisationInitialCreationService {
+
     @Autowired
     private OrganisationMapper organisationMapper;
 
@@ -65,47 +64,41 @@ public class OrganisationInitialCreationServiceImpl extends BaseTransactionalSer
         Organisation linkedOrganisation = invite.getInviteOrganisation().getOrganisation();
 
         if (linkedOrganisation == null) {
-            Optional<Organisation> organisationMatch =
-                    organisationMatchingService.findOrganisationMatch(organisationToCreate);
-
-            if (organisationMatch.isPresent()) {
-                linkedOrganisation = findExistingOrganisationInvite(organisationMatch.get(), invite.getTarget().getId())
-                        .map(existing -> {
-                            // This seems counter-intuitive, but for now we need to avoid a
-                            // new collaborator being able to add themselves to any existing
-                            // application organisations (including the lead applicant's).
-                            // Consequently, if there is an existing matching organisation,
-                            // we just ignore it for now and create a new organisation.
-                            return createOrganisationAndLinkToInviteOrganisation(
-                                    organisationToCreate,
-                                    inviteOrganisation
-                            );
-                        })
-                        .orElseGet(() ->
-                                linkOrganisation(inviteOrganisation, organisationMatch.get()).getOrganisation()
-                        );
-            } else {
-                linkedOrganisation = createOrganisationAndLinkToInviteOrganisation(
-                        organisationToCreate,
-                        inviteOrganisation
-                );
-            }
+            linkedOrganisation = organisationMatchingService.findOrganisationMatch(organisationToCreate)
+                    .flatMap(match -> linkOrganisationIfNotExistingOrLeadOrganisation(match, invite))
+                    .orElseGet(() -> createOrganisationAndLinkToInviteOrganisation(
+                            organisationToCreate,
+                            inviteOrganisation
+                    ));
         }
 
         return serviceSuccess(organisationMapper.mapToResource(linkedOrganisation));
     }
 
-    private Optional<InviteOrganisation> findExistingOrganisationInvite(
-            Organisation matchedOrganisation,
-            long applicationId
+    private Optional<Organisation> linkOrganisationIfNotExistingOrLeadOrganisation(
+            Organisation organisationMatch,
+            ApplicationInvite invite
     ) {
-        List<InviteOrganisation> inviteOrganisations =
-                inviteOrganisationRepository.findDistinctByOrganisationNotNullAndInvitesApplicationId(applicationId);
+        if (organisationMatch.getId().equals(invite.getTarget().getLeadOrganisationId())) {
+            return Optional.empty();
+        }
 
-        return simpleFindFirst(
-                inviteOrganisations,
-                inviteOrganisation -> inviteOrganisation.getOrganisation().getId().equals(matchedOrganisation.getId())
-        );
+        Optional<InviteOrganisation> existingInvite =
+                inviteOrganisationRepository.findFirstByOrganisationIdAndInvitesApplicationId(
+                        organisationMatch.getId(),
+                        invite.getTarget().getId()
+                );
+
+        if (existingInvite.isPresent()) {
+            // This seems counter-intuitive, but for now we need to avoid a
+            // new collaborator being able to add themselves to any existing
+            // application organisations (including the lead applicant's).
+            // Consequently, if there is an existing matching organisation,
+            // we just ignore it for now and create a new organisation.
+            return Optional.empty();
+        }
+
+        return Optional.of(linkOrganisation(invite.getInviteOrganisation(), organisationMatch).getOrganisation());
     }
 
     private Organisation createOrganisationAndLinkToInviteOrganisation(

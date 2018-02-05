@@ -4,6 +4,7 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface InviteOrganisationRepository extends PagingAndSortingRepository<InviteOrganisation, Long> {
 
@@ -11,5 +12,5 @@ public interface InviteOrganisationRepository extends PagingAndSortingRepository
 
     List<InviteOrganisation> findDistinctByInvitesApplicationId(Long applicationId);
 
-    List<InviteOrganisation> findDistinctByOrganisationNotNullAndInvitesApplicationId(Long applicationId);
+    Optional<InviteOrganisation> findFirstByOrganisationIdAndInvitesApplicationId(Long organisationId, Long applicationId);
 }

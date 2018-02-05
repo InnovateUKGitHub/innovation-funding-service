@@ -126,27 +126,23 @@ public class InviteOrganisationRepositoryIntegrationTest extends BaseRepositoryI
     }
 
     @Test
-    public void findDistinctByOrganisationNotNullAndInvitesApplicationId() {
-        InviteOrganisation inviteOrganisation = newInviteOrganisation()
-                .with(id(null))
-                .build();
+    public void findFirstByOrganisationIdAndInvitesApplicationId_doesNotThrowExceptionIfMultipleOrganisationsWithSameId() {
+        InviteOrganisation inviteOrganisation = repository.save(
+                newInviteOrganisation()
+                        .with(id(null))
+                        .withOrganisation(organisation1)
+                        .build()
+        );
 
-        repository.save(inviteOrganisation);
+        createNewApplicationInvite(application1, inviteOrganisation, "app1.user3@org1.com");
+        createNewApplicationInvite(application1, inviteOrganisation, "app1.user4@org1.com");
 
-        createNewApplicationInvite(application2, inviteOrganisation, "app2.user3@neworg.com");
-
-        List<InviteOrganisation> allInviteOrganisationsForApplication2 =
-                repository.findDistinctByInvitesApplicationId(application2.getId());
-
-        assertThat(allInviteOrganisationsForApplication2).hasSize(2);
-
-        List<InviteOrganisation> inviteOrganisations =
-                repository.findDistinctByOrganisationNotNullAndInvitesApplicationId(application2.getId());
-
-        assertThat(inviteOrganisations)
-                .hasSize(1)
+        assertThat(repository.findFirstByOrganisationIdAndInvitesApplicationId(organisation1.getId(), application1.getId()))
+                .isPresent()
+                .get()
                 .extracting("id")
-                .contains(inviteOrgApplication2Org1.getId());
+                .containsAnyOf(inviteOrganisation.getId(), inviteOrgApplication1Org1.getId(), inviteOrgApplication1Org2.getId());
+
     }
 
     private ApplicationInvite createNewApplicationInvite(Application application, InviteOrganisation inviteOrganisation, String email) {

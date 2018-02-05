@@ -7,6 +7,7 @@ import org.innovateuk.ifs.invite.domain.InviteOrganisation;
 import org.innovateuk.ifs.organisation.service.OrganisationMatchingServiceImpl;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -19,6 +20,7 @@ import static org.innovateuk.ifs.invite.builder.ApplicationInviteBuilder.newAppl
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationBuilder.newInviteOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -108,11 +110,8 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void createAndLinkByInvite_organisationCreatedAndLinkedIfMatchingOrganisationFoundAndExistsOnApplication() {
-        ApplicationInvite invite = newApplicationInvite()
-                .withApplication(newApplication().withId(2L).build())
-                .withInviteOrganisation(newInviteOrganisation().build())
-                .build();
+    public void createAndLinkByInvite_organisationCreatedAndLinkedIfMatchingOrganisationExistsOnApplication() {
+        ApplicationInvite invite = createApplicationInviteWithLeadOrganisationId(2L);
 
         Organisation matchingOrganisation = newOrganisation()
                 .withId(1L)
@@ -122,16 +121,15 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
 
         when(organisationMatchingService.findOrganisationMatch(organisationResource))
                 .thenReturn(Optional.of(matchingOrganisation));
-        when(inviteOrganisationRepositoryMock.findDistinctByOrganisationNotNullAndInvitesApplicationId(invite.getTarget().getId()))
-                .thenReturn(
+        when(inviteOrganisationRepositoryMock.findFirstByOrganisationIdAndInvitesApplicationId(
+                matchingOrganisation.getId(),
+                invite.getTarget().getId()
+        ))
+                .thenReturn(Optional.of(
                         newInviteOrganisation()
-                                .withOrganisation(
-                                        newOrganisation().withId(4L).build(),
-                                        newOrganisation().withId(5L).build(),
-                                        matchingOrganisation
-                                )
-                                .build(3)
-                );
+                                .withOrganisation(matchingOrganisation)
+                                .build()
+                ));
 
         expectOrganisationToBeCreatedAndLinked();
 
@@ -142,11 +140,41 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
     }
 
     @Test
-    public void createAndLinkByInvite_organisationOnlyLinkedIfMatchingOrganisationFoundAndDoesNotExistOnApplication() {
-        ApplicationInvite invite = newApplicationInvite()
-                .withApplication(newApplication().withId(2L).build())
-                .withInviteOrganisation(newInviteOrganisation().build())
+    public void createAndLinkByInvite_organisationCreatedAndLinkedIfMatchingOrganisationIsLead() {
+        long leadOrganisationId = 1L;
+
+        ApplicationInvite invite = createApplicationInviteWithLeadOrganisationId(leadOrganisationId);
+
+        Organisation matchingOrganisation = newOrganisation()
+                .withId(leadOrganisationId)
                 .build();
+
+        when(inviteServiceMock.findOneByHash(testInviteHash)).thenReturn(serviceSuccess(invite));
+
+        when(organisationMatchingService.findOrganisationMatch(organisationResource))
+                .thenReturn(Optional.of(matchingOrganisation));
+        when(inviteOrganisationRepositoryMock.findFirstByOrganisationIdAndInvitesApplicationId(
+                matchingOrganisation.getId(),
+                invite.getTarget().getId()
+        ))
+                .thenReturn(Optional.empty());
+
+        when(inviteOrganisationRepositoryMock.save(any(InviteOrganisation.class)))
+                .thenReturn(
+                        newInviteOrganisation()
+                                .withOrganisation(newOrganisation().build())
+                                .build()
+                );
+
+        service.createAndLinkByInvite(organisationResource, testInviteHash);
+
+        verify(organisationRepositoryMock).save(any(Organisation.class));
+        verify(inviteOrganisationRepositoryMock).save(any(InviteOrganisation.class));
+    }
+
+    @Test
+    public void createAndLinkByInvite_organisationOnlyLinkedIfMatchingOrganisationIsNotLeadAndDoesNotExistOnApplication() {
+        ApplicationInvite invite = createApplicationInviteWithLeadOrganisationId(2L);
 
         Organisation matchingOrganisation = newOrganisation()
                 .withId(1L)
@@ -156,15 +184,11 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
 
         when(organisationMatchingService.findOrganisationMatch(organisationResource))
                 .thenReturn(Optional.of(matchingOrganisation));
-        when(inviteOrganisationRepositoryMock.findDistinctByOrganisationNotNullAndInvitesApplicationId(invite.getTarget().getId()))
-                .thenReturn(
-                        newInviteOrganisation()
-                                .withOrganisation(
-                                        newOrganisation().withId(4L).build(),
-                                        newOrganisation().withId(5L).build()
-                                )
-                                .build(3)
-                );
+        when(inviteOrganisationRepositoryMock.findFirstByOrganisationIdAndInvitesApplicationId(
+                matchingOrganisation.getId(),
+                invite.getTarget().getId()
+        ))
+                .thenReturn(Optional.empty());
 
         when(inviteOrganisationRepositoryMock.save(any(InviteOrganisation.class)))
                 .thenReturn(
@@ -177,6 +201,22 @@ public class OrganisationInitialCreationServiceImplTest extends BaseServiceUnitT
 
         verify(organisationRepositoryMock, never()).save(any(Organisation.class));
         verify(inviteOrganisationRepositoryMock).save(any(InviteOrganisation.class));
+    }
+
+    private ApplicationInvite createApplicationInviteWithLeadOrganisationId(long organisationId) {
+        return newApplicationInvite()
+                .withApplication(
+                        newApplication()
+                                .withProcessRoles(
+                                        newProcessRole()
+                                                .withRole(UserRoleType.LEADAPPLICANT)
+                                                .withOrganisationId(organisationId)
+                                                .build()
+                                )
+                                .build()
+                )
+                .withInviteOrganisation(newInviteOrganisation().build())
+                .build();
     }
 
     private void expectOrganisationToBeCreatedAndLinked() {
