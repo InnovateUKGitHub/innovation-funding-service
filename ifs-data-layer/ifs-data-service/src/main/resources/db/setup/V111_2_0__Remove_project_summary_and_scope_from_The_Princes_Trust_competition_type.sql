@@ -1,11 +1,9 @@
 -- IFS-2694 - Remove Scope and Project Summary questions from The Prince's Trust competition type that was
 -- added in patch V110_3_0 (IFS-2688).
 
-SET @princes_trust_competition_id = (SELECT id
-                                     FROM competition
-                                     WHERE id = (SELECT template_competition_id
-                                                 FROM competition_type
-                                                 WHERE competition_type.name = 'The Prince\'s Trust'));
+SET @princes_trust_competition_id = (SELECT template_competition_id
+                                     FROM competition_type
+                                     WHERE competition_type.name = 'The Prince\'s Trust');
 
 DELETE form_input_validator FROM form_input_validator
   INNER JOIN form_input
