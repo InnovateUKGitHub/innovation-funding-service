@@ -10,9 +10,9 @@ import java.time.ZonedDateTime;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 /**
- * DTO for {@link org.innovateuk.ifs.invite.domain.AssessmentPanelInvite}s.
+ * DTO for {@link org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite}s.
  */
-public class AssessmentPanelInviteResource extends InviteResource {
+public class AssessmentReviewPanelInviteResource extends InviteResource {
 
     private InviteStatus status;
     private String hash;
@@ -22,13 +22,13 @@ public class AssessmentPanelInviteResource extends InviteResource {
     private String email;
     private ZonedDateTime panelDate;
 
-    public AssessmentPanelInviteResource(String hash,
-                                         long competitionId,
-                                         String competitionName,
-                                         InviteStatus status,
-                                         long userId,
-                                         String email,
-                                         ZonedDateTime panelDate
+    public AssessmentReviewPanelInviteResource(String hash,
+                                               long competitionId,
+                                               String competitionName,
+                                               InviteStatus status,
+                                               long userId,
+                                               String email,
+                                               ZonedDateTime panelDate
     ) {
         this.hash = hash;
         this.competitionId = competitionId;
@@ -39,7 +39,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
         this.panelDate = panelDate;
     }
 
-    public AssessmentPanelInviteResource() {
+    public AssessmentReviewPanelInviteResource() {
     }
 
     public String getHash() {
@@ -114,7 +114,7 @@ public class AssessmentPanelInviteResource extends InviteResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessmentPanelInviteResource that = (AssessmentPanelInviteResource) o;
+        AssessmentReviewPanelInviteResource that = (AssessmentReviewPanelInviteResource) o;
 
         return new EqualsBuilder()
                 .append(status, that.status)

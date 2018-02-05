@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.assessment.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
@@ -10,7 +9,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.invite.domain.Invite;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
@@ -31,12 +30,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-
 import java.util.List;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInviteWithoutId;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
@@ -49,7 +48,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static org.junit.Assert.*;
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
-public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentPanelParticipantRepository> {
+public class AssessmentReviewPanelParticipantRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<AssessmentPanelParticipantRepository> {
 
     private Competition competition;
     private InnovationArea innovationArea;
@@ -116,7 +115,7 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
 
     @Test
     public void findAll() {
-        List<AssessmentPanelParticipant> savedParticipants = saveNewAssessmentPanelParticipants(
+        List<AssessmentReviewPanelParticipant> savedParticipants = saveNewAssessmentPanelParticipants(
                 newAssessmentPanelInviteWithoutId()
                         .withName("name1", "name2")
                         .withEmail("test1@test.com", "test2@test.com")
@@ -127,7 +126,7 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
         );
         flushAndClearSession();
 
-        List<AssessmentPanelParticipant> retrievedParticipants = repository.findAll();
+        List<AssessmentReviewPanelParticipant> retrievedParticipants = repository.findAll();
 
         assertEquals(10, retrievedParticipants.size());  // Including 8 pre-existing paricipants added via patch
         assertEqualParticipants(savedParticipants, retrievedParticipants);
@@ -135,7 +134,7 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
 
     @Test
     public void save() {
-        AssessmentPanelParticipant savedParticipant = saveNewAssessmentPanelParticipant(
+        AssessmentReviewPanelParticipant savedParticipant = saveNewAssessmentPanelParticipant(
                 newAssessmentPanelInviteWithoutId()
                         .withName("name1")
                         .withEmail("test1@test.com")
@@ -148,13 +147,13 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
 
         long id = savedParticipant.getId();
 
-        AssessmentPanelParticipant retrievedParticipant = repository.findOne(id);
+        AssessmentReviewPanelParticipant retrievedParticipant = repository.findOne(id);
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
     @Test
     public void save_accepted() {
-        AssessmentPanelParticipant savedParticipant = saveNewAssessmentPanelParticipant(
+        AssessmentReviewPanelParticipant savedParticipant = saveNewAssessmentPanelParticipant(
                 newAssessmentPanelInviteWithoutId()
                         .withName("name1")
                         .withEmail(user.getEmail())
@@ -169,13 +168,13 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
 
         long id = savedParticipant.getId();
 
-        AssessmentPanelParticipant retrievedParticipant = repository.findOne(id);
+        AssessmentReviewPanelParticipant retrievedParticipant = repository.findOne(id);
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
     @Test
     public void save_rejected() {
-        AssessmentPanelParticipant savedParticipant = saveNewAssessmentPanelParticipant(
+        AssessmentReviewPanelParticipant savedParticipant = saveNewAssessmentPanelParticipant(
                 newAssessmentPanelInviteWithoutId()
                         .withName("name1")
                         .withEmail("test1@test.com")
@@ -191,7 +190,7 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
 
         long id = savedParticipant.getId();
 
-        AssessmentPanelParticipant retrievedParticipant = repository.findOne(id);
+        AssessmentReviewPanelParticipant retrievedParticipant = repository.findOne(id);
         assertEqualParticipants(savedParticipant, retrievedParticipant);
     }
 
@@ -217,18 +216,18 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
                 .withStatus(SENT)
                 .build(4);
 
-        List<AssessmentPanelParticipant> assessmentPanelParticipants = saveNewAssessmentPanelParticipants(newAssessorInvites);
+        List<AssessmentReviewPanelParticipant> assessmentReviewPanelParticipants = saveNewAssessmentPanelParticipants(newAssessorInvites);
 
-        assessmentPanelParticipants.get(3).getInvite().open();
-        assessmentPanelParticipants.get(3).acceptAndAssignUser(acceptedUser);
+        assessmentReviewPanelParticipants.get(3).getInvite().open();
+        assessmentReviewPanelParticipants.get(3).acceptAndAssignUser(acceptedUser);
 
-        repository.save(assessmentPanelParticipants);
+        repository.save(assessmentReviewPanelParticipants);
         flushAndClearSession();
 
         assertEquals(12, repository.count()); // Including 8 pre-existing paricipants added via patch
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "invite.name"));
 
-        Page<AssessmentPanelParticipant> pagedResult = repository.getPanelAssessorsByCompetitionAndStatusContains(
+        Page<AssessmentReviewPanelParticipant> pagedResult = repository.getPanelAssessorsByCompetitionAndStatusContains(
                 competition.getId(),
                 singletonList(ACCEPTED),
                 pageable
@@ -239,23 +238,23 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
         assertEquals(20, pagedResult.getSize());
         assertEquals(0, pagedResult.getNumber());
 
-        List<AssessmentPanelParticipant> content = pagedResult.getContent();
+        List<AssessmentReviewPanelParticipant> content = pagedResult.getContent();
 
         assertEquals(1, content.size());
         assertEquals("Anthony Hale", content.get(0).getInvite().getName());
     }
 
-    private AssessmentPanelParticipant saveNewAssessmentPanelParticipant(AssessmentReviewPanelInvite invite) {
-        return repository.save(new AssessmentPanelParticipant(invite));
+    private AssessmentReviewPanelParticipant saveNewAssessmentPanelParticipant(AssessmentReviewPanelInvite invite) {
+        return repository.save(new AssessmentReviewPanelParticipant(invite));
     }
 
-    private List<AssessmentPanelParticipant> saveNewAssessmentPanelParticipants(List<AssessmentReviewPanelInvite> invites) {
+    private List<AssessmentReviewPanelParticipant> saveNewAssessmentPanelParticipants(List<AssessmentReviewPanelInvite> invites) {
         return invites.stream().map(assessmentPanelInvite ->
-                repository.save(new AssessmentPanelParticipant(assessmentPanelInvite))).collect(toList());
+                repository.save(new AssessmentReviewPanelParticipant(assessmentPanelInvite))).collect(toList());
     }
 
-    private void assertEqualParticipants(List<AssessmentPanelParticipant> expected, List<AssessmentPanelParticipant> actual) {
-        List<AssessmentPanelParticipant> subList = actual.subList(actual.size() - expected.size(), actual.size()); // Exclude pre-existing participants added via patch
+    private void assertEqualParticipants(List<AssessmentReviewPanelParticipant> expected, List<AssessmentReviewPanelParticipant> actual) {
+        List<AssessmentReviewPanelParticipant> subList = actual.subList(actual.size() - expected.size(), actual.size()); // Exclude pre-existing participants added via patch
         zip(expected, subList, this::assertEqualParticipants);
     }
 
@@ -275,7 +274,7 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
 
         userRepository.save(user);
 
-        List<AssessmentPanelParticipant> savedParticipants = saveNewAssessmentPanelParticipants(
+        List<AssessmentReviewPanelParticipant> savedParticipants = saveNewAssessmentPanelParticipants(
                 newAssessmentPanelInviteWithoutId()
                         .withName("name1")
                         .withHash(Invite.generateInviteHash())
@@ -292,12 +291,12 @@ public class AssessmentPanelParticipantRepositoryIntegrationTest extends BaseRep
 
         flushAndClearSession();
 
-        List<AssessmentPanelParticipant> retrievedParticipants = repository.findByUserIdAndRole(user.getId(), PANEL_ASSESSOR);
+        List<AssessmentReviewPanelParticipant> retrievedParticipants = repository.findByUserIdAndRole(user.getId(), PANEL_ASSESSOR);
         assertEquals(1, retrievedParticipants.size());
         assertEqualParticipants(savedParticipants, retrievedParticipants);
     }
 
-    private void assertEqualParticipants(AssessmentPanelParticipant expected, AssessmentPanelParticipant actual) {
+    private void assertEqualParticipants(AssessmentReviewPanelParticipant expected, AssessmentReviewPanelParticipant actual) {
         assertNotNull(expected);
         assertNotNull(actual);
 

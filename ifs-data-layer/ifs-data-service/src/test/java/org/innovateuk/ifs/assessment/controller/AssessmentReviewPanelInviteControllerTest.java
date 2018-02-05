@@ -15,9 +15,9 @@ import java.util.List;
 
 import static com.google.common.primitives.Longs.asList;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.assessment.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentReviewPanelInviteResourceBuilder.newAssessmentReviewPanelInviteResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.invite.builder.AssessmentPanelParticipantResourceBuilder.newAssessmentPanelParticipantResource;
+import static org.innovateuk.ifs.invite.builder.AssessmentReviewPanelParticipantResourceBuilder.newAssessmentReviewPanelParticipantResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewPageResourceBuilder.newAssessorInviteOverviewPageResource;
@@ -229,18 +229,18 @@ public class AssessmentReviewPanelInviteControllerTest extends BaseControllerMoc
     @Test
     public void getAllInvitesByUser() throws Exception {
         final long USER_ID = 12L;
-        AssessmentPanelInviteResource invite = newAssessmentPanelInviteResource()
+        AssessmentReviewPanelInviteResource invite = newAssessmentReviewPanelInviteResource()
                 .withCompetitionId(1L)
                 .withCompetitionName("Juggling craziness")
                 .withInviteHash("")
                 .withStatus(InviteStatus.SENT)
                 .build();
 
-        AssessmentPanelParticipantResource assessmentPanelParticipantResource = newAssessmentPanelParticipantResource()
+        AssessmentReviewPanelParticipantResource assessmentReviewPanelParticipantResource = newAssessmentReviewPanelParticipantResource()
                 .withStatus(PENDING)
                 .withInvite(invite)
                 .build();
-        when(assessmentPanelInviteServiceMock.getAllInvitesByUser(USER_ID)).thenReturn(serviceSuccess(singletonList(assessmentPanelParticipantResource)));
+        when(assessmentPanelInviteServiceMock.getAllInvitesByUser(USER_ID)).thenReturn(serviceSuccess(singletonList(assessmentReviewPanelParticipantResource)));
 
         mockMvc.perform(get("/assessmentpanelinvite/getAllInvitesByUser/{user_id}", USER_ID))
                 .andExpect(status().isOk());

@@ -12,14 +12,14 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 
 /**
- * DTO for {@link org.innovateuk.ifs.invite.domain.AssessmentPanelParticipants}s.
+ * DTO for {@link org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelParticipant}s.
  */
-public class AssessmentPanelParticipantResource {
+public class AssessmentInterviewPanelParticipantResource {
 
     private Long id;
     private Long competitionId;
     private Long userId;
-    private AssessmentPanelInviteResource invite;
+    private AssessmentInterviewPanelInviteResource invite;
     private RejectionReasonResource rejectionReason;
     private String rejectionReasonComment;
     private CompetitionParticipantRoleResource role;
@@ -67,11 +67,11 @@ public class AssessmentPanelParticipantResource {
         this.userId = userId;
     }
 
-    public AssessmentPanelInviteResource getInvite() {
+    public AssessmentInterviewPanelInviteResource getInvite() {
         return invite;
     }
 
-    public void setInvite(AssessmentPanelInviteResource invite) {
+    public void setInvite(AssessmentInterviewPanelInviteResource invite) {
         this.invite = invite;
     }
 
@@ -218,7 +218,7 @@ public class AssessmentPanelParticipantResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessmentPanelParticipantResource that = (AssessmentPanelParticipantResource) o;
+        AssessmentInterviewPanelParticipantResource that = (AssessmentInterviewPanelParticipantResource) o;
 
         return new EqualsBuilder()
                 .append(pendingAssessments, that.pendingAssessments)

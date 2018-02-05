@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelInviteRepository;
 import org.innovateuk.ifs.invite.repository.AssessmentPanelParticipantRepository;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -28,7 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelInviteBuilder.newAssessmentPanelInvite;
 import static org.innovateuk.ifs.assessment.review.builder.AssessmentReviewBuilder.newAssessmentReview;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -240,9 +240,9 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
                 .build();
         assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant assessmentPanelParticipant = new AssessmentPanelParticipant(assessmentReviewPanelInvite);
-        assessmentPanelParticipant.setStatus(ParticipantStatus.ACCEPTED);
-        assessmentPanelParticipantRepository.save(assessmentPanelParticipant);
+        AssessmentReviewPanelParticipant assessmentReviewPanelParticipant = new AssessmentReviewPanelParticipant(assessmentReviewPanelInvite);
+        assessmentReviewPanelParticipant.setStatus(ParticipantStatus.ACCEPTED);
+        assessmentPanelParticipantRepository.save(assessmentReviewPanelParticipant);
 
         Application application = newApplication()
                 .with(id(null))
@@ -277,7 +277,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
 
         assessmentPanelInviteRepository.save(competitionAssessmentInvite);
 
-        AssessmentPanelParticipant competitionAssessmentParticipant = new AssessmentPanelParticipant(competitionAssessmentInvite);
+        AssessmentReviewPanelParticipant competitionAssessmentParticipant = new AssessmentReviewPanelParticipant(competitionAssessmentInvite);
         competitionAssessmentParticipant.setStatus(ParticipantStatus.ACCEPTED);
 
         assessmentPanelParticipantRepository.save(competitionAssessmentParticipant);
@@ -332,7 +332,7 @@ public class AssessmentReviewRepositoryIntegrationTest extends BaseRepositoryInt
                 .build();
         assessmentPanelInviteRepository.save(assessmentReviewPanelInvite);
 
-        AssessmentPanelParticipant competitionAssessmentParticipant = new AssessmentPanelParticipant(assessmentReviewPanelInvite);
+        AssessmentReviewPanelParticipant competitionAssessmentParticipant = new AssessmentReviewPanelParticipant(assessmentReviewPanelInvite);
         competitionAssessmentParticipant.setStatus(ParticipantStatus.ACCEPTED);
         assessmentPanelParticipantRepository.save(competitionAssessmentParticipant);
 

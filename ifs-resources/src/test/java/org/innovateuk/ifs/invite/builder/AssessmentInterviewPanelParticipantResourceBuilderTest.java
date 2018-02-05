@@ -7,11 +7,11 @@ import org.junit.Test;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static org.innovateuk.ifs.assessment.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
-import static org.innovateuk.ifs.invite.builder.AssessmentPanelParticipantResourceBuilder.newAssessmentPanelParticipantResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentInterviewPanelInviteResourceBuilder.newAssessmentInterviewPanelInviteResource;
+import static org.innovateuk.ifs.invite.builder.AssessmentInterviewPanelParticipantResourceBuilder.newAssessmentInterviewPanelParticipantResource;
 import static org.junit.Assert.assertEquals;
 
-public class AssessmentPanelParticipantResourceBuilderTest {
+public class AssessmentInterviewPanelParticipantResourceBuilderTest {
 
     @Test
     public void buildOne() {
@@ -31,11 +31,11 @@ public class AssessmentPanelParticipantResourceBuilderTest {
         CompetitionStatus expectedCompetitionStatus = CompetitionStatus.IN_ASSESSMENT;
         long expectedAwaitingApplications = 3L;
 
-        AssessmentPanelParticipantResource competitionParticipant = newAssessmentPanelParticipantResource()
+        AssessmentInterviewPanelParticipantResource competitionParticipant = newAssessmentInterviewPanelParticipantResource()
                 .withId(expectedId)
                 .withUser(expectedUserId)
                 .withCompetition(expectedCompetitionId)
-                .withInvite(newAssessmentPanelInviteResource().build())
+                .withInvite(newAssessmentInterviewPanelInviteResource().build())
                 .withRejectionReason(expectedRejectionReason)
                 .withRejectionReasonComment(expectedRejectionReasonComment)
                 .withCompetitionParticipantRole(expectedRole)
@@ -86,11 +86,11 @@ public class AssessmentPanelParticipantResourceBuilderTest {
         CompetitionStatus[] expectedCompetitionStatuses = {CompetitionStatus.IN_ASSESSMENT, CompetitionStatus.FUNDERS_PANEL};
         Long[] expectedAwaitingApplications = {3L, 4L};
 
-        List<AssessmentPanelParticipantResource> competitionParticipants = newAssessmentPanelParticipantResource()
+        List<AssessmentInterviewPanelParticipantResource> competitionParticipants = newAssessmentInterviewPanelParticipantResource()
                 .withId(expectedIds)
                 .withUser(expectedUserIds)
                 .withCompetition(expectedCompetitionIds)
-                .withInvite(newAssessmentPanelInviteResource().buildArray(2, AssessmentPanelInviteResource.class))
+                .withInvite(newAssessmentInterviewPanelInviteResource().buildArray(2, AssessmentInterviewPanelInviteResource.class))
                 .withRejectionReason(expectedRejectionReasons)
                 .withRejectionReasonComment(expectedRejectionReasonComments)
                 .withCompetitionParticipantRole(expectedRoles)
@@ -105,7 +105,7 @@ public class AssessmentPanelParticipantResourceBuilderTest {
                 .withAwaitingApplications(expectedAwaitingApplications)
                 .build(2);
 
-        AssessmentPanelParticipantResource first = competitionParticipants.get(0);
+        AssessmentInterviewPanelParticipantResource first = competitionParticipants.get(0);
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedUserIds[0], first.getUserId());
         assertEquals(expectedCompetitionIds[0], first.getCompetitionId());
@@ -122,7 +122,7 @@ public class AssessmentPanelParticipantResourceBuilderTest {
         assertEquals(expectedCompetitionStatuses[0], first.getCompetitionStatus());
         assertEquals(expectedAwaitingApplications[0].longValue(), first.getAwaitingApplications());
 
-        AssessmentPanelParticipantResource second = competitionParticipants.get(1);
+        AssessmentInterviewPanelParticipantResource second = competitionParticipants.get(1);
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedUserIds[1], second.getUserId());
         assertEquals(expectedCompetitionIds[1], second.getCompetitionId());

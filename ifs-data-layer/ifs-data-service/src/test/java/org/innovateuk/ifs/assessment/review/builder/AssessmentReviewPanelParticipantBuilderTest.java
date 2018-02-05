@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.assessment.review.builder;
 
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.*;
+import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelInvite;
-import org.innovateuk.ifs.invite.domain.competition.AssessmentPanelParticipant;
+import org.innovateuk.ifs.invite.domain.competition.AssessmentReviewPanelParticipant;
 import org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole;
 import org.innovateuk.ifs.invite.domain.competition.RejectionReason;
 import org.innovateuk.ifs.user.domain.User;
@@ -15,13 +15,13 @@ import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelInvite
 import static org.innovateuk.ifs.assessment.review.builder.AssessmentPanelParticipantBuilder.newAssessmentPanelParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
-import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
+import static org.innovateuk.ifs.invite.domain.competition.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 
-public class AssessmentPanelParticipantBuilderTest {
+public class AssessmentReviewPanelParticipantBuilderTest {
 
     @Test
     public void buildOne() {
@@ -34,7 +34,7 @@ public class AssessmentPanelParticipantBuilderTest {
         String expectedRejectionComment = "Too busy";
         AssessmentReviewPanelInvite expectedInvite = newAssessmentPanelInvite().build();
 
-        AssessmentPanelParticipant participant = newAssessmentPanelParticipant()
+        AssessmentReviewPanelParticipant participant = newAssessmentPanelParticipant()
                 .withId(expectedId)
                 .withStatus(expectedStatus)
                 .withUser(expectedUser)
@@ -66,7 +66,7 @@ public class AssessmentPanelParticipantBuilderTest {
         RejectionReason[] expectedRejectionReasons = { newRejectionReason().withReason("Unavailable").build(), null };
         String[] expectedRejectionComment = { "Too busy", null };
 
-        List<AssessmentPanelParticipant> participants = newAssessmentPanelParticipant()
+        List<AssessmentReviewPanelParticipant> participants = newAssessmentPanelParticipant()
                 .withId(expectedIds)
                 .withStatus(expectedStatuses)
                 .withUser(expectedUsers)
@@ -77,7 +77,7 @@ public class AssessmentPanelParticipantBuilderTest {
                 .withRejectionComment(expectedRejectionComment)
                 .build(2);
 
-        AssessmentPanelParticipant first = participants.get(0);
+        AssessmentReviewPanelParticipant first = participants.get(0);
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedStatuses[0], first.getStatus());
         assertEquals(expectedUsers[0], first.getUser());
@@ -87,7 +87,7 @@ public class AssessmentPanelParticipantBuilderTest {
         assertEquals(expectedRejectionReasons[0], first.getRejectionReason());
         assertEquals(expectedRejectionComment[0], first.getRejectionReasonComment());
 
-        AssessmentPanelParticipant second = participants.get(1);
+        AssessmentReviewPanelParticipant second = participants.get(1);
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedStatuses[1], second.getStatus());
         assertEquals(expectedUsers[1], second.getUser());
