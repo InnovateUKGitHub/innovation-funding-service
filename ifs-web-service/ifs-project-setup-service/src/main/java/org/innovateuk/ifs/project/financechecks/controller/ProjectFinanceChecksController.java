@@ -50,6 +50,7 @@ import org.innovateuk.ifs.threads.resource.QueryResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
@@ -71,6 +72,7 @@ import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
 import static java.util.function.Function.identity;
@@ -379,9 +381,35 @@ public class ProjectFinanceChecksController {
 
         boolean approved = isApproved(compositeId);
 
+        ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(compositeId.getProjectId(), compositeId.getOrganisationId());
+
+        ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
+
+        List<Long> projectUserIds =
+                removeDuplicates(simpleMap(projectService.getProjectUsersForProject(compositeId.getProjectId()), ProjectUserResource::getUser));
+
+        List<ThreadViewModel> closedQueryThreads = emptyList();
+        List<ThreadViewModel> awaitingResponseQueryThreads = emptyList();
+        List<ThreadViewModel> pendingQueryThreads = emptyList();
+
+        if (queriesResult.isSuccess()) {
+
+            List<QueryResource> closedQueries = queriesResult.getSuccessObject().stream().filter(q -> q.closedDate != null).collect(Collectors.toList());
+            closedQueryThreads = getQueriesAndPopulateViewModel(compositeId.getProjectId(), compositeId.getOrganisationId(), closedQueries, projectUserIds);
+
+            List<QueryResource> awaitingResponseQueries = queriesResult.getSuccessObject().stream().filter(q -> !q.posts.get(q.posts.size()-1).author.hasRole(UserRoleType.PROJECT_FINANCE)).filter(q -> q.closedDate == null).collect(Collectors.toList());
+            awaitingResponseQueryThreads = getQueriesAndPopulateViewModel(compositeId.getProjectId(), compositeId.getOrganisationId(), awaitingResponseQueries, projectUserIds);
+
+            List<QueryResource> pendingQueries = queriesResult.getSuccessObject().stream().filter(q -> q.posts.get(q.posts.size()-1).author.hasRole(UserRoleType.PROJECT_FINANCE)).filter(q -> q.closedDate == null).collect(Collectors.toList());
+            pendingQueryThreads = getQueriesAndPopulateViewModel(compositeId.getProjectId(), compositeId.getOrganisationId(), pendingQueries, projectUserIds);
+
+        }
+
         return new ProjectFinanceChecksViewModel(projectResource,
                 organisationResource,
-                getQueriesAndPopulateViewModel(compositeId.getProjectId(), compositeId.getOrganisationId()),
+                pendingQueryThreads,
+                awaitingResponseQueryThreads,
+                closedQueryThreads,
                 approved,
                 attachmentLinks,
                 FinanceChecksQueryConstraints.MAX_QUERY_WORDS,
@@ -395,23 +423,11 @@ public class ProjectFinanceChecksController {
         return COMPLETE.equals(organisationStatus.map(ProjectPartnerStatusResource::getFinanceChecksStatus).orElse(null));
     }
 
-    private List<ThreadViewModel> getQueriesAndPopulateViewModel(Long projectId, Long organisationId) {
-
-        ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
-
-        ServiceResult<List<QueryResource>> queriesResult = financeCheckService.getQueries(projectFinance.getId());
-
-        List<Long> projectUserIds =
-                removeDuplicates(simpleMap(projectService.getProjectUsersForProject(projectId), ProjectUserResource::getUser));
-
-        if (queriesResult.isSuccess()) {
-            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queriesResult.getSuccessObject(), user ->
+    private List<ThreadViewModel> getQueriesAndPopulateViewModel(Long projectId, Long organisationId, List<QueryResource> queries, List<Long> projectUserIds) {
+            return threadViewModelPopulator.threadViewModelListFromQueries(projectId, organisationId, queries, user ->
                     projectUserIds.contains(user.getId()) ?
                             user.getName() + " - " + organisationService.getOrganisationForUser(user.getId()).getName() :
                             "Innovate UK - Finance team");
-        } else {
-            return emptyList();
-        }
     }
 
     private String redirectToQueries(Long projectId) {

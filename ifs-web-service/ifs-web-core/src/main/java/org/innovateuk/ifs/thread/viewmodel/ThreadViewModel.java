@@ -12,6 +12,7 @@ public class ThreadViewModel {
     private FinanceChecksSectionType sectionType;
     private String title;
     private boolean awaitingResponse;
+    private boolean pending;
     private ZonedDateTime createdOn;
     private Long id;
     private Long organisationId;
@@ -20,13 +21,14 @@ public class ThreadViewModel {
     private ZonedDateTime closedDate;
 
     public ThreadViewModel(List<ThreadPostViewModel> viewModelPosts, FinanceChecksSectionType sectionType,
-                           String title, boolean awaitingResponse, ZonedDateTime createdOn,
+                           String title, boolean awaitingResponse, Boolean pending, ZonedDateTime createdOn,
                            Long id, Long organisationId, Long projectId,
                            UserResource closedBy, ZonedDateTime closedDate) {
         this.viewModelPosts = viewModelPosts;
         this.sectionType = sectionType;
         this.title = title;
         this.awaitingResponse = awaitingResponse;
+        this.pending = pending;
         this.createdOn = createdOn;
         this.id = id;
         this.organisationId = organisationId;
@@ -78,4 +80,6 @@ public class ThreadViewModel {
     public boolean isClosed() {
         return closedDate != null;
     }
+
+    public boolean isPending() { return pending; }
 }
