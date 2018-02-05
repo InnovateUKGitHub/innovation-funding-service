@@ -1,36 +1,36 @@
 package org.innovateuk.ifs.user.domain;
 
 import org.innovateuk.ifs.application.domain.Application;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ProcessRoleTest {
-    ProcessRole processRoleTest;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.junit.Assert.assertEquals;
 
-    Long id;
-    User user;
-    Application application;
-    Role role;
-    Organisation organisation;
+public class ProcessRoleTest {
+    private ProcessRole processRoleTest;
+
+    private User user;
+    private Application application;
+    private Role role;
+    private Organisation organisation;
 
     @Before
     public void setUp() throws Exception {
-        id = 0L;
         user = new User();
-        application = new Application();
+        application = newApplication().build();
         role = new Role();
-        organisation = new Organisation();
+        organisation = newOrganisation().build();
 
-        processRoleTest = new ProcessRole(id, user, application.getId(), role, organisation.getId());
+        processRoleTest = new ProcessRole(user, application.getId(), role, organisation.getId());
     }
 
     @Test
     public void userApplicationRoleShouldReturnCorrectAttributeValues() throws Exception {
-        Assert.assertEquals(processRoleTest.getUser(), user);
-        Assert.assertEquals(processRoleTest.getId(), id);
-        Assert.assertEquals(processRoleTest.getApplicationId(), application.getId());
-        Assert.assertEquals(processRoleTest.getRole(), role);
-        Assert.assertEquals(processRoleTest.getOrganisationId(), organisation.getId());
+        assertEquals(processRoleTest.getUser(), user);
+        assertEquals(processRoleTest.getApplicationId(), application.getId());
+        assertEquals(processRoleTest.getRole(), role);
+        assertEquals(processRoleTest.getOrganisationId(), organisation.getId());
     }
 }

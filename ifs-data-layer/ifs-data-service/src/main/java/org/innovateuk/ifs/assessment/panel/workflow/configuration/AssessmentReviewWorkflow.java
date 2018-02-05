@@ -6,7 +6,6 @@ import org.innovateuk.ifs.assessment.panel.workflow.actions.AssessmentReviewReje
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
@@ -24,7 +23,7 @@ import static org.innovateuk.ifs.assessment.panel.resource.AssessmentReviewState
  * Describes the workflow for assessment reviews.
  */
 @Configuration
-@EnableStateMachineFactory(name = "assessmentReviewStateMachine")
+@EnableStateMachineFactory(name = "assessmentReviewStateMachineFactory")
 public class AssessmentReviewWorkflow extends StateMachineConfigurerAdapter<AssessmentReviewState, AssessmentReviewEvent> {
 
     @Autowired

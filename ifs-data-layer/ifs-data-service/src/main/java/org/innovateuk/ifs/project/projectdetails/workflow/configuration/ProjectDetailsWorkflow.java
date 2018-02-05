@@ -6,7 +6,6 @@ import org.innovateuk.ifs.project.resource.ProjectDetailsState;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.statemachine.config.EnableStateMachine;
 import org.springframework.statemachine.config.EnableStateMachineFactory;
 import org.springframework.statemachine.config.StateMachineConfigurerAdapter;
 import org.springframework.statemachine.config.builders.StateMachineConfigurationConfigurer;
@@ -17,13 +16,12 @@ import java.util.EnumSet;
 
 import static org.innovateuk.ifs.project.resource.ProjectDetailsEvent.*;
 import static org.innovateuk.ifs.project.resource.ProjectDetailsState.*;
-import static org.innovateuk.ifs.project.resource.ProjectDetailsState.PENDING;
 
 /**
  * Describes the workflow for the Project Details section for Project Setup.
  */
 @Configuration
-@EnableStateMachineFactory(name = "projectDetailsStateMachine")
+@EnableStateMachineFactory(name = "projectDetailsStateMachineFactory")
 public class ProjectDetailsWorkflow extends StateMachineConfigurerAdapter<ProjectDetailsState, ProjectDetailsEvent> {
 
     @Autowired

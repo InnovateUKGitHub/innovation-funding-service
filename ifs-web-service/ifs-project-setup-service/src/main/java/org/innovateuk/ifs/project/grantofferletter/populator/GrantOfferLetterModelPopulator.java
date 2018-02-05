@@ -12,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static java.util.function.Function.identity;
-
 @Service
 public class GrantOfferLetterModelPopulator {
 
@@ -30,19 +28,21 @@ public class GrantOfferLetterModelPopulator {
         Optional<FileEntryResource> signedGrantOfferLetterFile = grantOfferLetterService.getSignedGrantOfferLetterFileDetails(projectId);
         Optional<FileEntryResource> grantOfferFileDetails = grantOfferLetterService.getGrantOfferFileDetails(projectId);
         Optional<FileEntryResource> additionalContractFile = grantOfferLetterService.getAdditionalContractFileDetails(projectId);
-        Boolean grantOfferLetterApproved = grantOfferLetterService.isSignedGrantOfferLetterApproved(projectId).getSuccessObject();
-        boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
-        boolean isGrantOfferLetterSent = grantOfferLetterService.isGrantOfferLetterAlreadySent(projectId).getOptionalSuccessObject().map(identity()).orElse(false);
+        boolean projectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
+        boolean grantOfferLetterApproved = grantOfferLetterService.isSignedGrantOfferLetterApproved(projectId).getSuccessObjectOrThrowException();
+        boolean grantOfferLetterSent = grantOfferLetterService.isGrantOfferLetterAlreadySent(projectId).getSuccessObjectOrThrowException();
+        boolean grantOfferLetterRejected = grantOfferLetterService.isSignedGrantOfferLetterRejected(projectId).getSuccessObjectOrThrowException();
 
         return new GrantOfferLetterModel(projectId, project.getName(),
                 leadPartner,
-                grantOfferFileDetails.isPresent() ? grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null) : null,
-                signedGrantOfferLetterFile.isPresent() ? signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null) : null,
-                additionalContractFile.isPresent() ? additionalContractFile.map(FileDetailsViewModel::new).orElse(null) : null,
+                grantOfferFileDetails.map(FileDetailsViewModel::new).orElse(null),
+                signedGrantOfferLetterFile.map(FileDetailsViewModel::new).orElse(null),
+                additionalContractFile.map(FileDetailsViewModel::new).orElse(null),
                 project.getOfferSubmittedDate(),
+                projectManager,
                 grantOfferLetterApproved,
-                isProjectManager,
-                isGrantOfferLetterSent);
+                grantOfferLetterSent,
+                grantOfferLetterRejected);
     }
 
 }

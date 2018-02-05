@@ -41,16 +41,15 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
 
     @PostConstruct
     public void postConstruct() {
-        StateMachineFactory<StateType, EventType> stateMachine = getStateMachineFactory();
-        stateHandler = new GenericPersistStateMachineHandler<>(stateMachine);
+        stateHandler = new GenericPersistStateMachineHandler<>(getStateMachineFactory());
         stateHandler.addPersistStateChangeListener(new LocalStateChangeListener());
     }
 
-    protected ProcessType getProcessByParticipantId(Long participantId) {
+    protected ProcessType getProcessByParticipantId(long participantId) {
         return getProcessRepository().findOneByParticipantId(participantId);
     }
 
-    protected ProcessType getProcessByTargetId(Long targetId) {
+    protected ProcessType getProcessByTargetId(long targetId) {
         return getProcessRepository().findOneByTargetId(targetId);
     }
 

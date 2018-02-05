@@ -23,7 +23,11 @@ import java.util.List;
  *
  * In addition, this version uses a stateMachineListener rather than an Interceptor as it triggers more appropriate lifecycle
  * events for persisting state changes when dealing with events that cause self-transitions or when evaluating pseudo-state
- * effects
+ * effects.
+ *
+ * Finally we hold a StateMachineFactory as opposed to a single StateMachine instance, as StateMachine is stateful and
+ * as such is not safe to use in a multithreaded environment like the data layer.  Instead, we use the factory to generate
+ * a new StateMachine instance whenever we need to test and perform a transition.
  */
 public class GenericPersistStateMachineHandler<StateType, EventType> extends LifecycleObjectSupport {
 
@@ -36,7 +40,7 @@ public class GenericPersistStateMachineHandler<StateType, EventType> extends Lif
      * @param stateMachineFactory the state machine
      */
     public GenericPersistStateMachineHandler(StateMachineFactory<StateType, EventType> stateMachineFactory) {
-        Assert.notNull(stateMachineFactory, "State machine must be set");
+        Assert.notNull(stateMachineFactory, "State machine factory must be set");
         this.stateMachineFactory = stateMachineFactory;
     }
 
@@ -58,6 +62,7 @@ public class GenericPersistStateMachineHandler<StateType, EventType> extends Lif
      * @return true if event was accepted
      */
     public boolean handleEventWithState(Message<EventType> event, StateType state) {
+
         StateMachine<StateType, EventType> stateMachine = stateMachineFactory.getStateMachine();
         stateMachine.addStateListener(new PersistingStateMachineListener());
 

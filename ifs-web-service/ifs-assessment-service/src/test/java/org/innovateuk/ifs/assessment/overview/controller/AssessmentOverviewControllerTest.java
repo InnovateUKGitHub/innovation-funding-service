@@ -212,8 +212,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         when(formInputRestService.getByCompetitionIdAndScope(competition.getId(), ASSESSMENT)).thenReturn(restSuccess(assessorFormInputs));
         when(assessorFormInputResponseRestService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(restSuccess(assessorResponses));
         when(formInputResponseRestService.getResponsesByApplicationId(APPLICATION_ID)).thenReturn(restSuccess(applicantResponses));
-
-
     }
 
     @Test

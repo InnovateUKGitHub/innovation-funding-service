@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +29,7 @@ import org.springframework.stereotype.Component;
 public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProcess, ProjectState, ProjectEvent, Project, ProjectUser> {
 
     @Autowired
-    @Qualifier("projectStateMachine")
+    @Qualifier("projectStateMachineFactory")
     private StateMachineFactory<ProjectState, ProjectEvent> stateMachineFactory;
 
     @Autowired

@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.project.resource.ProjectState.SETUP;
  * Describes the workflow for Project Setup.
  */
 @Configuration
-@EnableStateMachineFactory(name = "projectStateMachine")
+@EnableStateMachineFactory(name = "projectStateMachineFactory")
 public class ProjectWorkflow extends StateMachineConfigurerAdapter<ProjectState, ProjectEvent> {
 
     @Override

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.grantofferletter.configuration.workflow;
 
+import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.grantofferletter.domain.GOLProcess;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +25,7 @@ import java.util.function.BiFunction;
 
 import static org.innovateuk.ifs.project.grantofferletter.resource.GrantOfferLetterEvent.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRANT_OFFER_LETTER;
+
 /**
  * {@code GOLWorkflowService} is the entry point for triggering the workflow.
  *
@@ -35,7 +36,7 @@ import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_GRAN
 public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GrantOfferLetterState, GrantOfferLetterEvent, Project, ProjectUser> {
 
     @Autowired
-    @Qualifier("golStateMachine")
+    @Qualifier("golStateMachineFactory")
     private StateMachineFactory<GrantOfferLetterState, GrantOfferLetterEvent> stateMachineFactory;
 
     @Autowired
@@ -60,11 +61,11 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
     }
 
     public boolean grantOfferLetterRejected(Project project, User internalUser) {
-        return fireEvent(internalUserEvent(project, internalUser, GOL_REJECTED), project);
+        return fireEvent(internalUserEvent(project, internalUser, SIGNED_GOL_REJECTED), project);
     }
 
     public boolean grantOfferLetterApproved(Project project, User internalUser) {
-        return fireEvent(internalUserEvent(project, internalUser, GOL_APPROVED), project);
+        return fireEvent(internalUserEvent(project, internalUser, SIGNED_GOL_APPROVED), project);
     }
 
     public boolean isSendAllowed(Project project) {
@@ -74,6 +75,18 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
 
     public boolean removeGrantOfferLetter(Project project, User internalUser) {
         return fireEvent(internalUserEvent(project, internalUser, GOL_REMOVED), project);
+    }
+
+    public boolean removeSignedGrantOfferLetter(Project project, User user) {
+
+        ProjectUser projectManager = projectUserRepository.findByProjectIdAndRoleAndUserId(project.getId(),
+                ProjectParticipantRole.PROJECT_MANAGER, user.getId());
+
+        if (projectManager == null) {
+            return false;
+        }
+
+        return fireEvent(externalUserEvent(project, projectManager, SIGNED_GOL_REMOVED), project);
     }
 
     public boolean isAlreadySent(Project project) {
@@ -88,7 +101,8 @@ public class GrantOfferLetterWorkflowHandler extends BaseWorkflowEventHandler<GO
 
     public boolean isRejected(Project project) {
         GOLProcess process = getCurrentProcess(project);
-        return process != null && GrantOfferLetterState.SENT.equals(process.getActivityState()) && GOL_REJECTED.getType().equalsIgnoreCase(process.getProcessEvent());
+        return process != null && GrantOfferLetterState.SENT.equals(process.getActivityState()) &&
+                SIGNED_GOL_REJECTED.getType().equalsIgnoreCase(process.getProcessEvent());
     }
 
     public boolean isReadyToApprove(Project project) {

@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.project.spendprofile.resource.SpendProfileState
  * Describes the workflow for the overall project Spend Profile section for Project Setup.
  */
 @Configuration
-@EnableStateMachineFactory(name = "spendProfileStateMachine")
+@EnableStateMachineFactory(name = "spendProfileStateMachineFactory")
 public class SpendProfileWorkflow extends StateMachineConfigurerAdapter<SpendProfileState, SpendProfileEvent> {
 
     @Override

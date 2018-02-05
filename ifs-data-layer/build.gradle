@@ -1,151 +1,20 @@
-import com.bmuschko.gradle.docker.tasks.image.DockerBuildImage
-import com.bmuschko.gradle.docker.tasks.image.DockerPushImage
-import com.bmuschko.gradle.docker.tasks.image.DockerTagImage
-
-apply from: "script-support.gradle"
-
-// This is necessary because the java plugin is also applied to
-// the ifs-data-layer project, which does _not_ build a jar.
-bootRepackage.enabled = false
-
+apply from: "database-support.gradle"
 
 subprojects {
+    apply from: rootProject.file("java-spring-boot.gradle")
+    ext.ifsWebSystemUserId = "8394d970-b250-4b15-9621-3534325691b4"
+}
 
-    ext.ifsWebSystemUserId="8394d970-b250-4b15-9621-3534325691b4"
-
-    // data-service-commons is not a docker project.
-    if (it.name != 'data-service-commons') {
-
-        task getNewRelicAgent {
-            if ( !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar").exists() || 
-                 !file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml").exists() ) {
-                exec {
-                    executable = 'curl'
-                   args = ['--connect-timeout', '30',
-                            '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar",
-                            'https://tools.innovateuk.org/holding/newrelic/newrelic.jar'
-                    ]
-                }
-                 exec {
-                    executable = 'curl'
-                    args = ['--connect-timeout', '30',
-                            '-o', "${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml",
-                            'https://tools.innovateuk.org/holding/newrelic/newrelic.yml'
-                    ]
-                }
-            }
-        }
-
-        /**
-         * This task creates a `docker` directory in the $BUILD/docker` directory of the project,
-         * where it will write all the necessary files to build a docker container.
-         * In other words, after this task is executed, one could manually run `docker build .`
-         * in the output directory.
-         */
-        task prepareDockerInput {
-            dependsOn getNewRelicAgent
-            dependsOn bootRepackage
-
-            def inputDir = project.file("$project.buildDir/docker")
-
-            doFirst {
-                copy {
-                    from '../docker/'
-                    into inputDir
-                    include 'Dockerfile-template'
-                    rename 'Dockerfile-template', 'Dockerfile'
-                    filter {
-                        it.replaceAll('@version@', project.properties['version']).replaceAll('@app_name@', jar.baseName)
-                    }
-                }
-                copy {
-                    from bootRepackage.outputs
-                    into inputDir
-                }
-                copy {
-                    from file("${rootProject.projectDir}/setup-files/scripts/docker/coscale-monitoring.sh")
-                    into inputDir
-                }
-                copy {
-                    from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.jar")
-                    from file("${rootProject.projectDir}/setup-files/scripts/docker/newrelic.yml")
-                    into inputDir
-                }
-            }
-        }
-
-        task buildDocker(type: DockerBuildImage, dependsOn: prepareDockerInput) {
-            dependsOn ":docker:app-base-image:buildDocker"
-
-            tag = "innovateuk/" + project.name.replaceAll(/ifs-/,"")+":latest"
-            inputDir = project.file("$project.buildDir/docker")
-        }
-
-        task tagDocker(type: DockerTagImage) {
-            dependsOn buildDocker
-            imageId = buildDocker.getTag()
-            repository = project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
-            tag = project.version
-        }
-
-
-        task osStageRemote(type: DockerPushImage) {
-            dependsOn tagDocker
-            registryCredentials=getRemoteOCCredentials()
-            imageName=project.dockerRegistry+"/"+openshiftEnv+"/"+project.name.replaceAll(/ifs-/,"")
-            tag=project.version
-        }
-
-        task tagDockerLocal(type: DockerTagImage) {
-            dependsOn buildDocker
-            imageId = buildDocker.getTag()
-            repository = "dummy"
-            doFirst {
-                repository = getLocalOCCredentials().url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
-                tag = project.version
-            }
-        }
-
-        task osStageLocal(type: DockerPushImage) {
-            dependsOn tagDockerLocal
-            imageName = "dummy"
-            doFirst {
-                registryCredentials = getLocalOCCredentials()
-                imageName = registryCredentials.url + "/" + openshiftEnv + "/" + project.name.replaceAll(/ifs-/, "")
-                tag = project.version
-            }
-        }
-
-        // Workaround for https://github.com/spring-projects/spring-boot/issues/8308
-        // Can reinstate excludeDevtools in the bootRepackage task in next release
-        springBoot {
-            excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-        }
-
-        bootRepackage {
-            mainClass = 'org.innovateuk.ifs.Application'
-            classifier = "autostart"
-        //    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
-
-            // By explicitly adding the inputs and outputs to this task, we can utilize the `incremental build' feature.
-            inputs.files(jar.outputs)
-            outputs.file file(jar.archiveName.toString().replace(".jar", "-autostart.jar"))
-        }
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
     }
 
-    //noinspection GroovyMissingReturnStatement
-    processResources {
-        filesMatching("*.properties") {
-            expand project.properties
-        }
+    dependencies {
+        classpath 'org.flywaydb:flyway-gradle-plugin:4.0'
+        classpath 'org.flywaydb:flyway-core:4.0'
     }
-
-    processTestResources {
-        filesMatching("*.properties") {
-            expand project.properties
-        }
-    }
-
 }
 
 task initDB {
