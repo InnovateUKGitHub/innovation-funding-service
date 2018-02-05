@@ -11,7 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 /**
- * Service for managing {@link InterviewPanelInvite}s.
+ * Service for managing {@link org.innovateuk.ifs.invite.domain.competition.AssessmentInterviewPanelInvite}s.
  */
 public interface InterviewPanelInviteService {
 
@@ -60,7 +60,7 @@ public interface InterviewPanelInviteService {
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'READ_INTERVIEW_PANEL_INVITES')")
     @SecuredBySpring(value = "READ_INTERVIEW_PANEL_INVITES",
             description = "An Assessor can view assessor panel invites provided that the invites belong to them")
-    ServiceResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(long userId);
+    ServiceResult<List<AssessmentInterviewPanelParticipantResource>> getAllInvitesByUser(long userId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INTERVIEW_PANEL_INVITE_OVERVIEW_BY_COMPETITION",
@@ -78,19 +78,7 @@ public interface InterviewPanelInviteService {
     @SecuredBySpring(value = "READ_INTERVIEW_PANEL_INVITE_ON_HASH",
             description = "The System Registration user can read an invite for a given hash",
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<AssessmentPanelInviteResource> openInvite(@P("inviteHash") String inviteHash);
-
-    @PreAuthorize("hasPermission(#inviteHash, 'org.innovateuk.ifs.invite.resource.AssessmentPanelParticipantResource', 'ACCEPT')")
-    @SecuredBySpring(value = "ACCEPT_INTERVIEW_PANEL_INVITE_ON_HASH",
-            description = "An Assessor can accept a given hash provided that they are the same user as the AssessmentPanelParticipant",
-            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> acceptInvite(@P("inviteHash") String inviteHash);
-
-    @PreAuthorize("hasAuthority('system_registrar')")
-    @SecuredBySpring(value = "REJECT_INVITE_ON_HASH",
-            description = "The System Registration user can read an invite for a given hash",
-            additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
-    ServiceResult<Void> rejectInvite(@P("inviteHash") String inviteHash);
+    ServiceResult<AssessmentInterviewPanelInviteResource> openInvite(@P("inviteHash") String inviteHash);
 
     @PreAuthorize("hasAuthority('system_registrar')")
     @SecuredBySpring(value = "CHECK_EXISTING_USER_ON_HASH",

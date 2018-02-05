@@ -74,7 +74,7 @@ public class InterviewPanelInviteController {
     }
 
     @GetMapping("/getAllInvitesByUser/{userId}")
-    public RestResult<List<AssessmentPanelParticipantResource>> getAllInvitesByUser(@PathVariable long userId) {
+    public RestResult<List<AssessmentInterviewPanelParticipantResource>> getAllInvitesByUser(@PathVariable long userId) {
         return interviewPanelInviteService.getAllInvitesByUser(userId).toGetResponse();
     }
 
@@ -92,18 +92,8 @@ public class InterviewPanelInviteController {
     }
 
     @PostMapping("/openInvite/{inviteHash}")
-    public RestResult<AssessmentPanelInviteResource> openInvite(@PathVariable String inviteHash) {
+    public RestResult<AssessmentInterviewPanelInviteResource> openInvite(@PathVariable String inviteHash) {
         return interviewPanelInviteService.openInvite(inviteHash).toPostWithBodyResponse();
-    }
-
-    @PostMapping("/acceptInvite/{inviteHash}")
-    public RestResult<Void> acceptInvite(@PathVariable String inviteHash) {
-        return interviewPanelInviteService.acceptInvite(inviteHash).toPostResponse();
-    }
-
-    @PostMapping("/rejectInvite/{inviteHash}")
-    public RestResult<Void> rejectInvite(@PathVariable String inviteHash) {
-        return interviewPanelInviteService.rejectInvite(inviteHash).toPostResponse();
     }
 
     @GetMapping("/checkExistingUser/{inviteHash}")
