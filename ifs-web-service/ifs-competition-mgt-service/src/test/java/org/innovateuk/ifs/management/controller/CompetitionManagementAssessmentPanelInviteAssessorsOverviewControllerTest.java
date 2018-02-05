@@ -8,10 +8,10 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewPageResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
-import org.innovateuk.ifs.management.model.PanelInviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.model.AssessmentPanelInviteAssessorsOverviewModelPopulator;
+import org.innovateuk.ifs.management.viewmodel.AssessmentPanelInviteAssessorsOverviewViewModel;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
 import org.innovateuk.ifs.management.viewmodel.OverviewAssessorRowViewModel;
-import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsOverviewViewModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -46,15 +46,15 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-public class CompetitionManagementPanelInviteAssessorsOverviewControllerTest extends BaseControllerMockMVCTest<CompetitionManagementPanelInviteAssessorsOverviewController> {
+public class CompetitionManagementAssessmentPanelInviteAssessorsOverviewControllerTest extends BaseControllerMockMVCTest<CompetitionManagementAssessmentPanelInviteAssessorsOverviewController> {
 
     @Spy
     @InjectMocks
-    private PanelInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
+    private AssessmentPanelInviteAssessorsOverviewModelPopulator panelInviteAssessorsOverviewModelPopulator;
 
     @Override
-    protected CompetitionManagementPanelInviteAssessorsOverviewController supplyControllerUnderTest() {
-        return new CompetitionManagementPanelInviteAssessorsOverviewController();
+    protected CompetitionManagementAssessmentPanelInviteAssessorsOverviewController supplyControllerUnderTest() {
+        return new CompetitionManagementAssessmentPanelInviteAssessorsOverviewController();
     }
 
     private CompetitionResource competition;
@@ -153,8 +153,8 @@ public class CompetitionManagementPanelInviteAssessorsOverviewControllerTest ext
     }
 
     private void assertInviteOverviews(List<AssessorInviteOverviewResource> expectedInviteOverviews, MvcResult result) {
-        assertTrue(result.getModelAndView().getModel().get("model") instanceof PanelInviteAssessorsOverviewViewModel);
-        PanelInviteAssessorsOverviewViewModel model = (PanelInviteAssessorsOverviewViewModel) result.getModelAndView().getModel().get("model");
+        assertTrue(result.getModelAndView().getModel().get("model") instanceof AssessmentPanelInviteAssessorsOverviewViewModel);
+        AssessmentPanelInviteAssessorsOverviewViewModel model = (AssessmentPanelInviteAssessorsOverviewViewModel) result.getModelAndView().getModel().get("model");
 
         assertEquals(expectedInviteOverviews.size(), model.getAssessors().size());
 

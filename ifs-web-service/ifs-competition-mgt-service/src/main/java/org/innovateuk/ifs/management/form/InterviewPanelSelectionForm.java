@@ -8,15 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Form for the selection of assessors on the Assessment Panel Overview assessors tab
+ * Form for the selection of assessors on the Find assessors for assessment interview tab
  */
-public class PanelOverviewSelectionForm extends BaseBindingResultTarget {
+public class InterviewPanelSelectionForm extends BaseBindingResultTarget {
 
     private boolean allSelected;
-    private List<Long> selectedInviteIds;
+    private List<Long> selectedAssessorIds;
 
-    public PanelOverviewSelectionForm() {
-        this.selectedInviteIds = new ArrayList<>();
+    public InterviewPanelSelectionForm() {
+        this.selectedAssessorIds = new ArrayList<>();
     }
 
     public boolean getAllSelected() {
@@ -27,16 +27,16 @@ public class PanelOverviewSelectionForm extends BaseBindingResultTarget {
         this.allSelected = allSelected;
     }
 
-    public List<Long> getSelectedInviteIds() {
-        return selectedInviteIds;
+    public List<Long> getSelectedAssessorIds() {
+        return selectedAssessorIds;
     }
 
-    public void setSelectedInviteIds(List<Long> selectedInviteIds) {
-        this.selectedInviteIds = selectedInviteIds;
+    public void setSelectedAssessorIds(List<Long> selectedAssessorIds) {
+        this.selectedAssessorIds = selectedAssessorIds;
     }
 
     public boolean anySelectionIsMade() {
-        return this.allSelected || this.selectedInviteIds.size() > 0;
+        return this.selectedAssessorIds.size() > 0;
     }
 
     @Override
@@ -45,11 +45,11 @@ public class PanelOverviewSelectionForm extends BaseBindingResultTarget {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        PanelOverviewSelectionForm that = (PanelOverviewSelectionForm) o;
+        InterviewPanelSelectionForm that = (InterviewPanelSelectionForm) o;
 
         return new EqualsBuilder()
                 .append(allSelected, that.allSelected)
-                .append(selectedInviteIds, that.selectedInviteIds)
+                .append(selectedAssessorIds, that.selectedAssessorIds)
                 .isEquals();
     }
 
@@ -57,8 +57,7 @@ public class PanelOverviewSelectionForm extends BaseBindingResultTarget {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(allSelected)
-                .append(selectedInviteIds)
+                .append(selectedAssessorIds)
                 .toHashCode();
     }
 }
-

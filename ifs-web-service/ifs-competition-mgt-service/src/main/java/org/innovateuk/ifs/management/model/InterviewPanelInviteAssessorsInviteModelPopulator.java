@@ -5,9 +5,9 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionRestService;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInvitePageResource;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
+import org.innovateuk.ifs.management.viewmodel.AssessmentPanelInviteAssessorsInviteViewModel;
 import org.innovateuk.ifs.management.viewmodel.InvitedAssessorRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
-import org.innovateuk.ifs.management.viewmodel.PanelInviteAssessorsInviteViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Build the model for the Invite assessors for Assessment Panel Invite view.
  */
 @Component
-public class PanelInviteAssessorsInviteModelPopulator extends PanelInviteAssessorsModelPopulator<PanelInviteAssessorsInviteViewModel> {
+public class InterviewPanelInviteAssessorsInviteModelPopulator extends AssessmentPanelInviteAssessorsModelPopulator<AssessmentPanelInviteAssessorsInviteViewModel> {
 
     @Autowired
     private AssessmentPanelInviteRestService assessmentPanelInviteRestService;
@@ -27,12 +27,12 @@ public class PanelInviteAssessorsInviteModelPopulator extends PanelInviteAssesso
     @Autowired
     private CompetitionRestService competitionRestService;
 
-    public PanelInviteAssessorsInviteViewModel populateModel(long competitionId, int page, String originQuery) {
+    public AssessmentPanelInviteAssessorsInviteViewModel populateModel(long competitionId, int page, String originQuery) {
         CompetitionResource competition = competitionRestService
                 .getCompetitionById(competitionId)
                 .getSuccessObjectOrThrowException();
 
-        PanelInviteAssessorsInviteViewModel model = super.populateModel(competition);
+        AssessmentPanelInviteAssessorsInviteViewModel model = super.populateModel(competition);
 
         AssessorCreatedInvitePageResource pageResource = assessmentPanelInviteRestService.getCreatedInvites(competition.getId(), page)
                 .getSuccessObjectOrThrowException();
@@ -57,7 +57,7 @@ public class PanelInviteAssessorsInviteModelPopulator extends PanelInviteAssesso
     }
 
     @Override
-    protected PanelInviteAssessorsInviteViewModel createModel() {
-        return new PanelInviteAssessorsInviteViewModel();
+    protected AssessmentPanelInviteAssessorsInviteViewModel createModel() {
+        return new AssessmentPanelInviteAssessorsInviteViewModel();
     }
 }
