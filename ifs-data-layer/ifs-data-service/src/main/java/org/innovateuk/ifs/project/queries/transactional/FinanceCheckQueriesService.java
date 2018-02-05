@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.project.queries.transactional;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.threads.service.ThreadService;
 import org.innovateuk.ifs.threads.resource.PostResource;
 import org.innovateuk.ifs.threads.resource.QueryResource;
@@ -23,6 +25,11 @@ public interface FinanceCheckQueriesService extends ThreadService<QueryResource,
     @Override
     @PreAuthorize("hasPermission(#queryResource, 'PF_CREATE')")
     ServiceResult<Long> create(@P("queryResource") QueryResource queryResource);
+
+    @Override
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "CLOSE_QUERY", description = "Only project finance users can close queries")
+    ServiceResult<Void> close(Long queryId);
 
     @Override
     @PreAuthorize("hasPermission(#queryId, 'org.innovateuk.ifs.threads.resource.QueryResource', 'PF_ADD_POST')")
