@@ -86,7 +86,7 @@ Administrator can successfully invite a new user
     Then the user cannot see a validation error in the page
 
 Administrator can successfully finish the rest of the invitation
-    [Documentation]  IFS-2412
+    [Documentation]  IFS-27  IFS-983  IFS-2412
     [Tags]  HappyPath
     Given the user should see the element                     jQuery=h1:contains("Manage users")
     #The Admin is redirected to the Manage Users page on Success
