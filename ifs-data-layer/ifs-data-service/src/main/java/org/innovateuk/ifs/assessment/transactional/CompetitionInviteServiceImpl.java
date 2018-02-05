@@ -49,6 +49,7 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
@@ -285,33 +286,30 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, Pageable pageable) {
-        Page<CompetitionAssessmentInvite> pagedResult = competitionAssessmentInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
+        return getInvitePageResource(competitionId, pageable);
+    }
 
-        List<AssessorCreatedInviteResource> createdInvites = simpleMap(
-                pagedResult.getContent(),
-                competitionInvite -> {
-                    AssessorCreatedInviteResource assessorCreatedInvite = new AssessorCreatedInviteResource();
-                    assessorCreatedInvite.setName(competitionInvite.getName());
-                    assessorCreatedInvite.setInnovationAreas(getInnovationAreasForInvite(competitionInvite));
-                    assessorCreatedInvite.setCompliant(isUserCompliant(competitionInvite));
-                    assessorCreatedInvite.setEmail(competitionInvite.getEmail());
-                    assessorCreatedInvite.setInviteId(competitionInvite.getId());
+    @Override
+    public ServiceResult<AssessorCreatedInvitePageResource> validateNonRegisteredAssessor(long competitionId, Pageable pageable, String email) {
+        ServiceResult<AssessorCreatedInvitePageResource> resource = getInvitePageResource(competitionId, pageable);
 
-                    if (competitionInvite.getUser() != null) {
-                        assessorCreatedInvite.setId(competitionInvite.getUser().getId());
-                    }
+        List<String> emails = resource.getSuccessObjectOrThrowException().getContent().stream()
+                .map(AssessorCreatedInviteResource::getEmail)
+                .collect(Collectors.toList());
 
-                    return assessorCreatedInvite;
-                }
-        );
+        List<String> userIsAlreadyInvitedList = emails.stream()
+                .filter(e -> e.equals(email))
+                .collect(Collectors.toList());
 
-        return serviceSuccess(new AssessorCreatedInvitePageResource(
-                pagedResult.getTotalElements(),
-                pagedResult.getTotalPages(),
-                createdInvites,
-                pagedResult.getNumber(),
-                pagedResult.getSize()
-        ));
+        Optional<User> userExists = userRepository.findByEmail(email);
+        boolean userIsAlreadyInvited = userIsAlreadyInvitedList.isEmpty();
+
+        if(userIsAlreadyInvited && !userExists.isPresent()) {
+            return resource;
+        }else{
+            return ServiceResult.serviceFailure(new Error(USERS_DUPLICATE_EMAIL_ADDRESS, email));
+        }
+
     }
 
     @Override
@@ -762,5 +760,35 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                     .map(innovationAreaMapper::mapToResource)
                     .collect(toList());
         }
+    }
+
+    public ServiceResult<AssessorCreatedInvitePageResource> getInvitePageResource(long competitionId, Pageable pageable) {
+        Page<CompetitionAssessmentInvite> pagedResult = competitionAssessmentInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED, pageable);
+
+        List<AssessorCreatedInviteResource> createdInvites = simpleMap(
+                pagedResult.getContent(),
+                competitionInvite -> {
+                    AssessorCreatedInviteResource assessorCreatedInvite = new AssessorCreatedInviteResource();
+                    assessorCreatedInvite.setName(competitionInvite.getName());
+                    assessorCreatedInvite.setInnovationAreas(getInnovationAreasForInvite(competitionInvite));
+                    assessorCreatedInvite.setCompliant(isUserCompliant(competitionInvite));
+                    assessorCreatedInvite.setEmail(competitionInvite.getEmail());
+                    assessorCreatedInvite.setInviteId(competitionInvite.getId());
+
+                    if (competitionInvite.getUser() != null) {
+                        assessorCreatedInvite.setId(competitionInvite.getUser().getId());
+                    }
+
+                    return assessorCreatedInvite;
+                }
+        );
+
+        return serviceSuccess(new AssessorCreatedInvitePageResource(
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                createdInvites,
+                pagedResult.getNumber(),
+                pagedResult.getSize()
+        ));
     }
 }

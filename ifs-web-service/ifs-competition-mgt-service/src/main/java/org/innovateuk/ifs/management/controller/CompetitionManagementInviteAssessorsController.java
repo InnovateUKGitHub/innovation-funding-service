@@ -319,58 +319,38 @@ public class CompetitionManagementInviteAssessorsController extends CompetitionM
                                                ValidationHandler validationHandler) {
         form.setVisible(true);
 
+        String email = form.getInvites().get(0).getEmail();
 
-        if(!validAssessorEmail(form,competitionId,page)){
-
-            return validationHandler.failNowOrSucceedWith(
-                    () -> invite(model, competitionId, form, page, queryParams),
-                    () -> redirectToInvite(competitionId, page));
-//            add an error message on return
-        }else {
             return validationHandler.failNowOrSucceedWith(
                     () -> invite(model, competitionId, form, page, queryParams),
                     () -> {
-                        RestResult<Void> restResult = competitionInviteRestService.inviteNewUsers(
-                                newInviteFormToResource(form, competitionId), competitionId
-                        );
+                        RestResult<AssessorCreatedInvitePageResource> restResult = competitionInviteRestService.validateNonRegisteredAssessor(competitionId, page, email);
 
                         return validationHandler.addAnyErrors(restResult)
                                 .failNowOrSucceedWith(
                                         () -> invite(model, competitionId, form, page, queryParams),
-                                        () -> redirectToInvite(competitionId, page)
+                                        () -> {
+                                            return validationHandler.failNowOrSucceedWith(
+                                                    () -> invite(model, competitionId, form, page, queryParams),
+                                                    () -> {
+                                                        RestResult<Void> result = competitionInviteRestService.inviteNewUsers(
+                                                                newInviteFormToResource(form, competitionId), competitionId
+                                                        );
+
+                                                        return validationHandler.addAnyErrors(result)
+                                                                .failNowOrSucceedWith(
+                                                                        () -> invite(model, competitionId, form, page, queryParams),
+                                                                        () -> redirectToInvite(competitionId, page)
+                                                                );
+                                                    }
+                                            );
+                                        }
                                 );
                     }
+
             );
-        }
 
     }
-
-    private boolean validAssessorEmail(InviteNewAssessorsForm form, long competitionId, int page){
-        String userEmail = form.getInvites().get(0).getEmail();
-        String code = userRestService.findUserByEmail(userEmail).getStatusCode().toString();
-
-        AssessorCreatedInvitePageResource pageResource = competitionInviteRestService.getCreatedInvites(competitionId, page)
-                .getSuccessObjectOrThrowException();
-
-        List<String> emails = pageResource.getContent().stream()
-                .map(AssessorCreatedInviteResource::getEmail)
-                .collect(Collectors.toList());
-
-        List<String> userIsAlreadyInvitedList = emails.stream()
-                .filter(email -> email.equals(userEmail))
-                .collect(Collectors.toList());
-
-        boolean userIsAlreadyInvited = !userIsAlreadyInvitedList.isEmpty();
-
-        if(code.equals("200")){
-            return false;
-        }else if(userIsAlreadyInvited){
-            return false;
-        }else{
-            return true;
-        }
-    }
-
 
     private String redirectToInvite(long competitionId, int page) {
         return "redirect:" + UriComponentsBuilder.fromPath("/competition/{competitionId}/assessors/invite")

@@ -38,6 +38,8 @@ public interface CompetitionInviteRestService {
 
     RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(long competitionId, int page);
 
+    RestResult<AssessorCreatedInvitePageResource> validateNonRegisteredAssessor(long competitionId, int page, String email);
+
     RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                          int page,
                                                                          Optional<Long> innovationArea,

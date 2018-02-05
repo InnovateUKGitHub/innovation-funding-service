@@ -116,6 +116,18 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
+    public RestResult<AssessorCreatedInvitePageResource> validateNonRegisteredAssessor(long competitionId, int page, String email) {
+        String baseUrl = format("%s/%s/%s", competitionInviteRestUrl, "validateNonRegisteredAssessor", competitionId);
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath(baseUrl)
+                .queryParam("page", page);
+
+        builder.queryParam("email", email);
+
+        return getWithRestResult(builder.toUriString(), AssessorCreatedInvitePageResource.class);
+    }
+
+    @Override
     public RestResult<AssessorInviteOverviewPageResource> getInvitationOverview(long competitionId,
                                                                                 int page,
                                                                                 Optional<Long> innovationArea,
