@@ -1,11 +1,11 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.assessment.builder.AssessmentPanelInviteResourceBuilder;
+import org.innovateuk.ifs.assessment.builder.AssessmentReviewPanelInviteResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import java.time.ZonedDateTime;
 
-import static org.innovateuk.ifs.assessment.builder.AssessmentPanelInviteResourceBuilder.newAssessmentPanelInviteResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentReviewPanelInviteResourceBuilder.newAssessmentReviewPanelInviteResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
@@ -21,7 +21,7 @@ public class AssessmentPanelInviteDocs {
             fieldWithPath("userId").description("Id of user invited"),
     };
 
-    public static final AssessmentPanelInviteResourceBuilder assessmentPanelInviteResourceBuilder = newAssessmentPanelInviteResource()
+    public static final AssessmentReviewPanelInviteResourceBuilder ASSESSMENT_REVIEW_PANEL_INVITE_RESOURCE_BUILDER = newAssessmentReviewPanelInviteResource()
             .withCompetitionId(1L)
             .withCompetitionName("Connected digital additive manufacturing")
             .withInviteHash("0519d73a-f062-4784-ae86-7a933a7de4c3")
